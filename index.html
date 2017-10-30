@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8">
-    <title>super-adventure</title>
+    <title>Super Adventure</title>
+
+    <!-- TODO: Save stylesheet locally. -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="dist/build.css">
   </head>
-  <body>
+  <!-- Add an inline style to prevent "jumps" in centering. This is the app's
+  only custom style outside a .vue file, so making it inline for now. -->
+  <body style="overflow-y: scroll">
     <div id="app"></div>
     <script src="dist/build.js"></script>
   </body>

@@ -16,7 +16,9 @@
     ]
   },
   "dependencies": {
-    "vue": "^2.0.1"
+    "axios": "^0.17.0",
+    "moment": "^2.19.1",
+    "vue": "^2.5.2"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
