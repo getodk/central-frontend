@@ -1,8 +1,6 @@
 {
   "name": "super-adventure",
   "version": "0.1.0",
-  "description": "A Vue.js project",
-  "author": "Matthew White <matthew-white@users.noreply.github.com>",
   "private": true,
   "scripts": {
     "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o dist/build.js",
