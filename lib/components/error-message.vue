@@ -1,10 +1,10 @@
 <template>
-  <div v-if="message" class="alert alert-danger" role="alert">{{ message }}</div>
+  <div v-show="message" class="alert alert-danger" role="alert">{{ message }}</div>
 </template>
 
 <script>
 export default {
-  name: 'error-message',
-  props: ['message']
+  name: 'ErrorMessage',
+  props: { message: String }
 };
 </script>

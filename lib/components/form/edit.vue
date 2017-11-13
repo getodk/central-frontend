@@ -1,7 +1,7 @@
 <template>
   <div>
     <error-message :message="error"/>
-    <form-form :initialXml="xml" @submit-record="update">
+    <form-form :initial-xml="form.xml" @submit-record="update">
       <button type="submit" class="btn btn-info">Save</button>
       <!-- Using <a> rather than <button> so that clicking does not trigger a
       submit. -->
@@ -19,9 +19,14 @@ import FormForm from './form.vue';
 import ListForms from './list.vue';
 
 export default {
-  props: ['xmlFormId', 'xml'],
+  props: {
+    form: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
-    error: null,
+    error: null
   }),
   methods: {
     update(data) {
@@ -34,17 +39,9 @@ export default {
   created: function() {
     this.$emit('breadcrumbs', [
       { title: 'Forms', view: ListForms },
-      { title: `Edit ${this.xmlFormId}` }
+      { title: `Edit ${this.form.xmlFormId}` }
     ]);
   },
-  components: {
-    'form-form': FormForm
-  }
+  components: { FormForm }
 };
 </script>
-
-<style scoped>
-h1 {
-  margin-bottom: 18px;
-}
-</style>

@@ -1,4 +1,4 @@
-<!-- Component for a heading at the top of a resource list -->
+<!-- Component for a heading at the top of a list -->
 <template>
   <div>
     <h1>{{ title }}</h1>
@@ -8,8 +8,13 @@
 
 <script>
 export default {
-  name: 'list-heading',
-  props: ['title']
+  name: 'ListHeading',
+  props: {
+    title: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "bootstrap": "^3.3.7",
     "moment": "^2.19.1",
     "vue": "^2.5.2"
   },

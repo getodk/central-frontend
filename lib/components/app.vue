@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar></navbar>
+    <navbar/>
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-offset-1 col-md-10">
@@ -19,7 +19,7 @@
           https://router.vuejs.org/en/
           -->
           <component :is="view" v-bind="viewProps"
-            @view="setView" @breadcrumbs="replaceBreadcrumbs">
+            @view="setView" @breadcrumbs="setBreadcrumbs">
           </component>
         </div>
       </div>
@@ -29,32 +29,24 @@
 
 <script>
 import Breadcrumbs from './breadcrumbs.vue';
-import Dashboard from './dashboard.vue';
+import FormList from './form/list.vue';
 import Navbar from './navbar.vue';
 
 export default {
   data: () => ({
-    breadcrumbs: [{ title: 'Dashboard', view: Dashboard }],
-    view: Dashboard,
+    breadcrumbs: [],
+    view: FormList,
     viewProps: {}
   }),
   methods: {
     setView(view, props) {
-      this.breadcrumbs.splice(1);
       this.view = view;
       this.viewProps = props != null ? props : {};
     },
-    // Replaces any existing breadcrumbs with those specified.
-    replaceBreadcrumbs(breadcrumbs) {
-      // Keep the top-level breadcrumb: splice starting at 1.
-      this.breadcrumbs.splice(1);
-      for (const breadcrumb of breadcrumbs)
-        this.breadcrumbs.push(breadcrumb);
-    },
+    setBreadcrumbs(breadcrumbs) {
+      this.breadcrumbs = breadcrumbs;
+    }
   },
-  components: {
-    breadcrumbs: Breadcrumbs,
-    navbar: Navbar
-  }
+  components: { Breadcrumbs, Navbar }
 };
 </script>

@@ -15,18 +15,16 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>Submission Date</th>
             <th>Instance ID</th>
-            <th>Submission Time</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <!-- TODO: Add :key. -->
           <tr v-for="(submission, index) in submissions">
             <td>{{ index + 1 }}</td>
+            <td>{{ submissionDate(submission) }}</td>
             <td>{{ submission.instanceId }}</td>
-            <!-- TODO: Format this. -->
-            <td>{{ submission.createdAt }}</td>
             <td>
               <a href="#" @click.prevent="deleteSubmission(index)">Delete</a>
             </td>
@@ -41,11 +39,15 @@
 import axios from 'axios';
 import moment from 'moment';
 
-import EditForm from '../form/edit.vue'
 import ListForms from '../form/list.vue';
 
 export default {
-  props: ['form'],
+  props: {
+    form: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
     submissions: null,
     error: null,
@@ -53,6 +55,9 @@ export default {
   methods: {
     listForms() {
       this.$emit('view', ListForms);
+    },
+    submissionDate(submission) {
+      return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');
     },
     deleteSubmission(index) {
       alert("The API doesn't have an endpoint for this yet.");
@@ -65,7 +70,6 @@ export default {
       { title: this.form.xmlFormId },
       { title: 'Submissions' }
     ]);
-    // TODO: Messaging in case fetch doesn't fail but does take a while.
     axios
       .get(`/forms/${this.form.xmlFormId}/submissions`)
       .then(response => this.submissions = response.data)

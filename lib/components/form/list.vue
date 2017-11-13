@@ -8,7 +8,7 @@
     <error-message :message="error"/>
     <!-- Render this element once the forms have been fetched. -->
     <template v-if="forms">
-      <p v-if="forms.length === 0">You haven’t created any forms yet.</p>
+      <p v-if="forms.length === 0">To get started, add a form.</p>
       <table v-else class="table table-hover">
         <thead>
           <tr>
@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(form, index) in forms" :key="form.xmlFormId">
+          <tr v-for="(form, index) in forms">
             <td>{{ form.xmlFormId }}</td>
             <td>{{ lastUpdate(form) }}</td>
             <td>
@@ -51,15 +51,14 @@ export default {
       this.$emit('view', NewForm);
     },
     lastUpdate(form) {
-      // TODO: Should we have Jubilant just always set updatedAt?
-      const lastUpdate = form.updatedAt || form.createdAt;
+      const lastUpdate = form.updatedAt != null ? form.updatedAt : form.createdAt;
       return moment.utc(lastUpdate).fromNow();
     },
     listSubmissions(form) {
       this.$emit('view', ListSubmissions, { form: form });
     },
     editForm(form) {
-      this.$emit('view', EditForm, form);
+      this.$emit('view', EditForm, { form: form });
     },
     deleteForm(index) {
       alert("The API doesn't have an endpoint for this yet.");
@@ -68,7 +67,6 @@ export default {
   },
   created: function() {
     this.$emit('breadcrumbs', [{ title: 'Forms' }]);
-    // TODO: Messaging in case fetch doesn't fail but does take a while.
     axios
       .get('/forms')
       .then(response => this.forms = response.data)
