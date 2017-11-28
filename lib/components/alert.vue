@@ -10,12 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="message" class="alert alert-danger" role="alert">{{ message }}</div>
+  <div v-show="message" :class="['alert', 'alert-' + type]" role="alert">{{ message }}</div>
 </template>
 
 <script>
 export default {
-  name: 'ErrorMessage',
-  props: { message: String }
+  name: 'Alert',
+  props: {
+    type: {
+      type: String,
+      required: true
+    },
+    message: String
+  }
 };
 </script>
