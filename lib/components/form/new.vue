@@ -52,7 +52,7 @@ export default {
       this.$emit('view', ListForms);
     }
   },
-  created: function() {
+  created() {
     this.$emit('breadcrumbs', [
       { title: 'Forms', view: ListForms },
       { title: 'New Form' }

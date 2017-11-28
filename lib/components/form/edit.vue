@@ -24,8 +24,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import axios from 'axios';
-
 import FormForm from './form.vue';
 import ListForms from './list.vue';
 
@@ -40,14 +38,15 @@ export default {
     error: null
   }),
   methods: {
-    update(data) {
+    update(data) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
       alert("The API doesn't have an endpoint for this yet.");
     },
     listForms() {
       this.$emit('view', ListForms);
     }
   },
-  created: function() {
+  created() {
     this.$emit('breadcrumbs', [
       { title: 'Forms', view: ListForms },
       { title: `Edit ${this.form.xmlFormId}` }

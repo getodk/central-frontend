@@ -55,7 +55,7 @@ import NewForm from './new.vue';
 export default {
   data: () => ({
     forms: null,
-    error: null,
+    error: null
   }),
   methods: {
     newForm() {
@@ -66,21 +66,22 @@ export default {
       return moment.utc(lastUpdate).fromNow();
     },
     listSubmissions(form) {
-      this.$emit('view', ListSubmissions, { form: form });
+      this.$emit('view', ListSubmissions, { form });
     },
     editForm(form) {
-      this.$emit('view', EditForm, { form: form });
+      this.$emit('view', EditForm, { form });
     },
-    deleteForm(index) {
+    deleteForm(index) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
       alert("The API doesn't have an endpoint for this yet.");
-      //this.forms.splice(index, 1);
+      // this.forms.splice(index, 1);
     }
   },
-  created: function() {
+  created() {
     this.$emit('breadcrumbs', [{ title: 'Forms' }]);
     axios
       .get('/forms')
-      .then(response => this.forms = response.data)
+      .then(response => { this.forms = response.data; })
       .catch(error => {
         console.error(error);
         this.error = 'Something went wrong while loading your forms.';

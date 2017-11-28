@@ -13,5 +13,14 @@ except according to the terms contained in the LICENSE file.
   "extends": "airbnb-base",
   "plugins": [
     "html"
-  ]
+  ],
+  "env": { "commonjs": true },
+  "globals": { "alert": false },
+  "rules": {
+    "arrow-parens": "off",
+    "comma-dangle": ["error", "never"],
+    "curly": "off",
+    "no-console": "off",
+    "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"]
+  }
 }

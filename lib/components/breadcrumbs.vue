@@ -32,7 +32,7 @@ export default {
   methods: {
     linkBreadcrumb(index) {
       const breadcrumb = this.breadcrumbs[index];
-      return breadcrumb.view != null && index != this.breadcrumbs.length - 1;
+      return breadcrumb.view != null && index !== this.breadcrumbs.length - 1;
     },
     view(breadcrumb) {
       this.$emit('view', breadcrumb.view, breadcrumb.props);

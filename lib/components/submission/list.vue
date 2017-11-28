@@ -61,7 +61,7 @@ export default {
   },
   data: () => ({
     submissions: null,
-    error: null,
+    error: null
   }),
   methods: {
     listForms() {
@@ -70,12 +70,13 @@ export default {
     submissionDate(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');
     },
-    deleteSubmission(index) {
+    deleteSubmission(index) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
       alert("The API doesn't have an endpoint for this yet.");
-      //this.submissions.splice(index, 1);
+      // this.submissions.splice(index, 1);
     }
   },
-  created: function() {
+  created() {
     this.$emit('breadcrumbs', [
       { title: 'Forms', view: ListForms },
       { title: this.form.xmlFormId },
@@ -83,7 +84,7 @@ export default {
     ]);
     axios
       .get(`/forms/${this.form.xmlFormId}/submissions`)
-      .then(response => this.submissions = response.data)
+      .then(response => { this.submissions = response.data; })
       .catch(error => {
         console.error(error);
         this.error = 'Something went wrong while loading the form’s submissions.';
