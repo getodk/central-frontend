@@ -25,9 +25,9 @@ export default {
   },
   methods: {
     toggleMessage() {
-      if (this.state) {
+      if (this.state === true) {
         setTimeout(() => {
-          if (this.state) this.show = true;
+          if (this.state === true) this.show = true;
         }, 250);
       }
       else {
