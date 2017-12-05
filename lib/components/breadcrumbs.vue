@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <ol v-show="breadcrumbs.length > 0" class="breadcrumb">
-    <li v-for="(breadcrumb, index) in breadcrumbs"
-      :class="{ active: index === breadcrumbs.length - 1 }">
+  <ol v-show="list.length > 0" class="breadcrumb">
+    <li v-for="(breadcrumb, index) in list"
+      :class="{ active: index === list.length - 1 }">
       <template v-if="linkBreadcrumb(index)">
-        <a href="#" @click.prevent="view(breadcrumb)">{{ breadcrumb.title }}</a>
+        <router-link :to="breadcrumb.to">{{ breadcrumb.title }}</router-link>
       </template>
       <template v-else>{{ breadcrumb.title }}</template>
     </li>
@@ -23,19 +23,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
+  name: 'Breadcrumbs',
   props: {
-    breadcrumbs: {
+    list: {
       type: Array,
       required: true
     }
   },
   methods: {
     linkBreadcrumb(index) {
-      const breadcrumb = this.breadcrumbs[index];
-      return breadcrumb.view != null && index != this.breadcrumbs.length - 1;
-    },
-    view(breadcrumb) {
-      this.$emit('view', breadcrumb.view, breadcrumb.props);
+      return this.list[index].to != null && index !== this.list.length - 1;
     }
   }
 };

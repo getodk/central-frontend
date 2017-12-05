@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <error-message :message="error"/>
-    <form-form :initial-xml="form.xml" @submit-record="update">
+    <breadcrumbs :list="breadcrumbs"/>
+    <alert type="danger" :message="error"/>
+    <loading :state="loading"/>
+    <form-form v-if="form" :initial-xml="form.xml" @submit-record="update">
       <button type="submit" class="btn btn-info">Save</button>
-      <!-- Using <a> rather than <button> so that clicking does not trigger a
-      submit. -->
-      <a href="#" class="btn btn-default" role="button" @click.prevent="listForms">
+      <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
-      </a>
+      </router-link>
     </form-form>
   </div>
 </template>
@@ -27,31 +27,54 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 
 import FormForm from './form.vue';
-import ListForms from './list.vue';
 
 export default {
-  props: {
-    form: {
-      type: Object,
-      required: true
-    }
+  data() {
+    return {
+      error: null,
+      loading: false,
+      form: null
+    };
   },
-  data: () => ({
-    error: null
-  }),
-  methods: {
-    update(data) {
-      alert("The API doesn't have an endpoint for this yet.");
+  computed: {
+    xmlFormId() {
+      return this.$route.params.xmlFormId;
     },
-    listForms() {
-      this.$emit('view', ListForms);
+    breadcrumbs() {
+      return [
+        { title: 'Forms', to: '/forms' },
+        { title: `Edit ${this.xmlFormId}` }
+      ];
     }
   },
-  created: function() {
-    this.$emit('breadcrumbs', [
-      { title: 'Forms', view: ListForms },
-      { title: `Edit ${this.form.xmlFormId}` }
-    ]);
+  created() {
+    this.fetchData();
+  },
+  watch: {
+    $route() {
+      this.error = null;
+      this.fetchData();
+    }
+  },
+  methods: {
+    fetchData() {
+      this.form = null;
+      this.loading = true;
+      axios
+        .get(`/forms/${this.xmlFormId}`)
+        .then(response => {
+          this.form = response.data;
+          this.loading = false;
+        })
+        .catch(error => {
+          this.error = 'Something went wrong while loading the form.';
+          this.loading = false;
+        });
+    },
+    update(data) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
+      alert("The API doesn't have an endpoint for this yet.");
+    }
   },
   components: { FormForm }
 };

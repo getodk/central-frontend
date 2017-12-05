@@ -11,16 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <error-message :message="error"/>
+    <breadcrumbs :list="breadcrumbs"/>
+    <alert type="danger" :message="error"/>
     <form-form focus @submit-record="create">
       <button type="submit" class="btn btn-success" :disabled="disabled">
         Create Form
       </button>
-      <!-- Using <a> rather than <button> so that clicking does not trigger a
-      submit. -->
-      <a href="#" class="btn btn-default" role="button" @click.prevent="listForms">
+      <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
-      </a>
+      </router-link>
     </form-form>
   </div>
 </template>
@@ -29,34 +28,31 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 
 import FormForm from './form.vue';
-import ListForms from './list.vue';
+
+const breadcrumbs = [
+  { title: 'Forms', to: '/forms' },
+  { title: 'New Form' }
+];
 
 export default {
-  data: () => ({
-    disabled: false,
-    error: null
-  }),
+  data() {
+    return {
+      breadcrumbs,
+      error: null,
+      disabled: false
+    }
+  },
   methods: {
     create(data) {
       this.disabled = true;
       axios
         .post('/forms', data)
-        .then(() => this.$emit('view', ListForms))
+        .then(() => this.$router.push('/forms'))
         .catch(error => {
-          console.error(error);
           this.error = 'Something went wrong while creating the form.';
           this.disabled = false;
         });
-    },
-    listForms() {
-      this.$emit('view', ListForms);
     }
-  },
-  created: function() {
-    this.$emit('breadcrumbs', [
-      { title: 'Forms', view: ListForms },
-      { title: 'New Form' }
-    ]);
   },
   components: { FormForm }
 };

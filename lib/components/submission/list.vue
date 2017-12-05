@@ -11,16 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <breadcrumbs :list="breadcrumbs"/>
     <list-heading title="Submissions">
-      <button type="button" class="btn btn-default" @click="listForms">
+      <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
-      </button>
+      </router-link>
     </list-heading>
-    <error-message :message="error"/>
+    <alert type="danger" :message="error"/>
+    <loading :state="loading"/>
     <!-- Render this element once the submissions have been fetched. -->
     <template v-if="submissions">
       <p v-if="submissions.length === 0">
-        There are no submissions yet for <em>{{ form.xmlFormId }}</em>.
+        There are no submissions yet for <em>{{ xmlFormId }}</em>.
       </p>
       <table v-else class="table table-hover">
         <thead>
@@ -50,44 +52,59 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 import moment from 'moment';
 
-import ListForms from '../form/list.vue';
-
 export default {
-  props: {
-    form: {
-      type: Object,
-      required: true
+  data() {
+    return {
+      error: null,
+      loading: false,
+      submissions: null
+    };
+  },
+  computed: {
+    xmlFormId() {
+      return this.$route.params.xmlFormId
+    },
+    breadcrumbs() {
+      return [
+        { title: 'Forms', to: '/forms' },
+        { title: this.xmlFormId },
+        { title: 'Submissions' }
+      ];
     }
   },
-  data: () => ({
-    submissions: null,
-    error: null,
-  }),
+  created() {
+    this.fetchData();
+  },
+  watch: {
+    $route() {
+      this.error = null;
+      this.fetchData();
+    }
+  },
   methods: {
-    listForms() {
-      this.$emit('view', ListForms);
+    fetchData() {
+      this.submissions = null;
+      this.loading = true;
+      axios
+        .get(`/forms/${this.xmlFormId}/submissions`)
+        .then(response => {
+          this.submissions = response.data;
+          this.loading = false;
+        })
+        .catch(error => {
+          console.error(error);
+          this.error = 'Something went wrong while loading the form’s submissions.';
+          this.loading = false;
+        });
     },
     submissionDate(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');
     },
-    deleteSubmission(index) {
+    deleteSubmission(index) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
       alert("The API doesn't have an endpoint for this yet.");
-      //this.submissions.splice(index, 1);
+      // this.submissions.splice(index, 1);
     }
-  },
-  created: function() {
-    this.$emit('breadcrumbs', [
-      { title: 'Forms', view: ListForms },
-      { title: this.form.xmlFormId },
-      { title: 'Submissions' }
-    ]);
-    axios
-      .get(`/forms/${this.form.xmlFormId}/submissions`)
-      .then(response => this.submissions = response.data)
-      .catch(error => {
-        console.error(error);
-        this.error = 'Something went wrong while loading the form’s submissions.';
-      });
   }
 };
 </script>

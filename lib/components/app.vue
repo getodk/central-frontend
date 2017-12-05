@@ -15,23 +15,7 @@ except according to the terms contained in the LICENSE file.
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-offset-1 col-md-10">
-          <!-- As with <component> below, listen for 'view' events from
-          <breadcrumbs>. -->
-          <breadcrumbs :breadcrumbs="breadcrumbs" @view="setView"/>
-
-          <!--
-          Now that we have rendered the app skeleton, render the single
-          component that holds the page content. Meanwhile, this App component
-          will listen for 'view' and 'breadcrumbs' events.
-          https://vuejs.org/v2/guide/components.html#Dynamic-Components
-
-          There is probably a better way to implement this. In particular, I
-          want to investigate the Vue.js router:
-          https://router.vuejs.org/en/
-          -->
-          <component :is="view" v-bind="viewProps"
-            @view="setView" @breadcrumbs="setBreadcrumbs">
-          </component>
+          <router-view></router-view>
         </div>
       </div>
     </div>
@@ -39,25 +23,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Breadcrumbs from './breadcrumbs.vue';
-import FormList from './form/list.vue';
 import Navbar from './navbar.vue';
 
 export default {
-  data: () => ({
-    breadcrumbs: [],
-    view: FormList,
-    viewProps: {}
-  }),
-  methods: {
-    setView(view, props) {
-      this.view = view;
-      this.viewProps = props != null ? props : {};
-    },
-    setBreadcrumbs(breadcrumbs) {
-      this.breadcrumbs = breadcrumbs;
-    }
-  },
-  components: { Breadcrumbs, Navbar }
+  components: { Navbar }
 };
 </script>

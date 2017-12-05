@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2017 Super Adventure Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/nafundi/super-adventure/blob/master/NOTICE.
@@ -8,14 +8,19 @@ the LICENSE file found in the top-level directory of this distribution and at
 https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
--->
-<template>
-  <div v-show="message" class="alert alert-danger" role="alert">{{ message }}</div>
-</template>
-
-<script>
-export default {
-  name: 'ErrorMessage',
-  props: { message: String }
-};
-</script>
+*/
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "html"
+  ],
+  "env": { "commonjs": true },
+  "globals": { "alert": false },
+  "rules": {
+    "arrow-parens": "off",
+    "comma-dangle": ["error", "never"],
+    "curly": "off",
+    "no-console": "off",
+    "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"]
+  }
+}

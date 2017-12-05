@@ -11,12 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <breadcrumbs :list="breadcrumbs"/>
     <list-heading title="Forms">
-      <button type="button" class="btn btn-success" @click="newForm">
+      <router-link to="forms/new" class="btn btn-success" role="button">
         New Form
-      </button>
+      </router-link>
     </list-heading>
-    <error-message :message="error"/>
+    <alert type="danger" :message="error"/>
+    <loading :state="loading"/>
     <!-- Render this element once the forms have been fetched. -->
     <template v-if="forms">
       <p v-if="forms.length === 0">To get started, add a form.</p>
@@ -33,8 +35,8 @@ except according to the terms contained in the LICENSE file.
             <td>{{ form.xmlFormId }}</td>
             <td>{{ lastUpdate(form) }}</td>
             <td>
-              <a href="#" @click.prevent="listSubmissions(form)">Submissions</a> |
-              <a href="#" @click.prevent="editForm(form)">Edit</a> |
+              <router-link :to="listSubmissions(form)">Submissions</router-link> |
+              <router-link :to="editForm(form)">Edit</router-link> |
               <a href="#" @click.prevent="deleteForm(index)">Delete</a>
             </td>
           </tr>
@@ -48,43 +50,47 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 import moment from 'moment';
 
-import EditForm from './edit.vue';
-import ListSubmissions from '../submission/list.vue';
-import NewForm from './new.vue';
+const breadcrumbs = [{ title: 'Forms' }];
 
 export default {
-  data: () => ({
-    forms: null,
-    error: null,
-  }),
+  data() {
+    return {
+      breadcrumbs,
+      error: null,
+      loading: false,
+      forms: null
+    };
+  },
+  created() {
+    this.loading = true;
+    axios
+      .get('/forms')
+      .then(response => {
+        this.forms = response.data;
+        this.loading = false;
+      })
+      .catch(error => {
+        console.error(error);
+        this.error = 'Something went wrong while loading your forms.';
+        this.loading = false;
+      });
+  },
   methods: {
-    newForm() {
-      this.$emit('view', NewForm);
-    },
     lastUpdate(form) {
       const lastUpdate = form.updatedAt != null ? form.updatedAt : form.createdAt;
       return moment.utc(lastUpdate).fromNow();
     },
     listSubmissions(form) {
-      this.$emit('view', ListSubmissions, { form: form });
+      return `forms/${form.xmlFormId}/submissions`;
     },
     editForm(form) {
-      this.$emit('view', EditForm, { form: form });
+      return `forms/${form.xmlFormId}/edit`;
     },
-    deleteForm(index) {
+    deleteForm(index) { // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-alert
       alert("The API doesn't have an endpoint for this yet.");
-      //this.forms.splice(index, 1);
+      // this.forms.splice(index, 1);
     }
-  },
-  created: function() {
-    this.$emit('breadcrumbs', [{ title: 'Forms' }]);
-    axios
-      .get('/forms')
-      .then(response => this.forms = response.data)
-      .catch(error => {
-        console.error(error);
-        this.error = 'Something went wrong while loading your forms.';
-      });
   }
 };
 </script>

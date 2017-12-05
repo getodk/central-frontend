@@ -31,13 +31,13 @@ export default {
     },
     focus: Boolean
   },
-  data: function() {
+  data() {
     return {
       xml: this.initialXml
     };
   },
-  mounted: function() {
-    if (focus) this.$refs.xml.focus();
+  mounted() {
+    if (this.focus) this.$refs.xml.focus();
   }
 };
 </script>
