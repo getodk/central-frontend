@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "watchify": "watchify -vd -p browserify-hmr -e lib/main.js -o dist/build.js",
-    "serve": "http-server -o -c 1 -a localhost",
-    "dev": "npm-run-all --parallel watchify serve",
+    "dev": "watchify -vd -p browserify-hmr -e lib/main.js -o dist/build.js",
     "lint": "eslint --ext .js,.vue lib",
     "build": "cross-env NODE_ENV=production browserify -g envify -p [ vueify/plugins/extract-css -o dist/build.css ] -e lib/main.js | uglifyjs -c warnings=false -m > dist/build.js"
   },
@@ -37,8 +35,6 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-html": "^4.0.0",
     "eslint-plugin-import": "^2.8.0",
-    "http-server": "^0.9.0",
-    "npm-run-all": "^2.3.0",
     "proxyquireify": "^3.0.1",
     "uglify-js": "^2.5.0",
     "vueify": "^9.0.0",
