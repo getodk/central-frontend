@@ -45,8 +45,9 @@ export default {
   methods: {
     create(data) {
       this.disabled = true;
+      const headers = { 'Content-Type': 'application/xml' };
       axios
-        .post('/forms', data)
+        .post('/forms', data, { headers })
         .then(() => this.$router.push('/forms'))
         .catch(error => {
           console.error(error.response.data);
