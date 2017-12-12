@@ -19,7 +19,7 @@ Super Adventure uses Vue.js to provide the front end for [Jubilant Garbanzo](htt
 
 Install npm, then install Node package dependencies with `npm install`.
 
-Install NGINX. Depending on how you install it, you may need to change the absolute paths in Super Adventure's [`nginx.conf`](/nginx.conf).
+Install NGINX. Depending on your OS and how you install NGINX, you may need to change the absolute paths in Super Adventure's [`nginx.conf`](/nginx.conf).
 
 You will also need to set up [Jubilant Garbanzo](https://github.com/nafundi/jubilant-garbanzo).
 
