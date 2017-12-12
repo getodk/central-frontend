@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- Component for a heading at the top of a list -->
 <template>
   <div>
     <h1>{{ title }}</h1>
@@ -20,7 +18,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'ListHeading',
+  name: 'Heading',
   props: {
     title: {
       type: String,

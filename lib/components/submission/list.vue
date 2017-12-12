@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <breadcrumbs :list="breadcrumbs"/>
-    <list-heading title="Submissions">
+    <heading title="Submissions">
       <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
       </router-link>
-    </list-heading>
+    </heading>
     <alert type="danger" :message="error"/>
     <loading :state="loading"/>
     <!-- Render this element once the submissions have been fetched. -->
