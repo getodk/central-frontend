@@ -40,7 +40,7 @@ export default {
       breadcrumbs,
       error: null,
       disabled: false
-    }
+    };
   },
   methods: {
     create(data) {

@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     xmlFormId() {
-      return this.$route.params.xmlFormId
+      return this.$route.params.xmlFormId;
     },
     breadcrumbs() {
       return [
