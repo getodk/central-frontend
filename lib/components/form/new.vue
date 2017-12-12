@@ -49,7 +49,8 @@ export default {
         .post('/forms', data)
         .then(() => this.$router.push('/forms'))
         .catch(error => {
-          this.error = 'Something went wrong while creating the form.';
+          console.error(error.response.data);
+          this.error = error.response.data.message;
           this.disabled = false;
         });
     }

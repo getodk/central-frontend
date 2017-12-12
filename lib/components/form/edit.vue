@@ -67,7 +67,8 @@ export default {
           this.loading = false;
         })
         .catch(error => {
-          this.error = 'Something went wrong while loading the form.';
+          console.error(error.response.data);
+          this.error = error.response.data.message;
           this.loading = false;
         });
     },

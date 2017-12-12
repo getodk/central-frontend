@@ -70,8 +70,8 @@ export default {
         this.loading = false;
       })
       .catch(error => {
-        console.error(error);
-        this.error = 'Something went wrong while loading your forms.';
+        console.error(error.response.data);
+        this.error = error.response.data.message;
         this.loading = false;
       });
   },

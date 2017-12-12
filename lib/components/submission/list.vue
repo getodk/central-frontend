@@ -92,8 +92,8 @@ export default {
           this.loading = false;
         })
         .catch(error => {
-          console.error(error);
-          this.error = 'Something went wrong while loading the form’s submissions.';
+          console.error(error.response.data);
+          this.error = error.response.data.message;
           this.loading = false;
         });
     },
