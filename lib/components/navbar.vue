@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Super Adventure</a>
+        <router-link to="/" class="navbar-brand">Open Data Kit</router-link>
       </div>
     </div>
   </nav>
