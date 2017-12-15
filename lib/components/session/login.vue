@@ -34,8 +34,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import axios from 'axios';
 
-import { safeBack } from '../../router';
-
 export default {
   data() {
     return {
@@ -58,9 +56,10 @@ export default {
           if (success) {
             const headers = axios.defaults.headers.common;
             headers.Authorization = `Bearer ${this.$session.token}`;
-            // Using safeBack() rather than this.$router.go(-1) in case the user
-            // navigated directly to /login rather than being redirected there.
-            safeBack('/forms');
+            const next = this.$route.query.next;
+            const nextPattern = /^(\/|(\/[\w-]+)+)$/;
+            const nextIsValid = next != null && nextPattern.test(next);
+            this.$router.push(nextIsValid ? next : '/forms');
           } else {
             console.error(response.data);
             this.error = 'Something went wrong while logging you in.';
