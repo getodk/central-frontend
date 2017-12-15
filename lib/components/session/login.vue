@@ -13,11 +13,11 @@ except according to the terms contained in the LICENSE file.
   <div>
     <heading title="Log in"/>
     <alert type="danger" :message="error"/>
-    <form @submit.prevent="logIn">
+    <app-form @submit="logIn">
       <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" v-model="email" ref="email" id="email"
-          class="form-control" placeholder="Email" required>
+        <input type="email" v-model="email" id="email" class="form-control"
+          placeholder="Email" required>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
       <button type="submit" class="btn btn-primary" :disabled="disabled">
         Log in
       </button>
-    </form>
+    </app-form>
   </div>
 </template>
 
@@ -42,9 +42,6 @@ export default {
       error: null,
       disabled: false
     };
-  },
-  mounted() {
-    this.$refs.email.focus();
   },
   methods: {
     logIn() {

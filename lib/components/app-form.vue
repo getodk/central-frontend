@@ -9,31 +9,23 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- Component for an HTML form to create/update an ODK form -->
 <template>
-  <app-form @submit="$emit('submit-record', xml)">
-    <div class="form-group">
-      <label for="xml">Form XML</label>
-      <textarea v-model="xml" id="xml" class="form-control" required rows="10">
-      </textarea>
-    </div>
+  <form ref="form" @submit.prevent="$emit('submit')">
     <slot></slot>
-  </app-form>
+  </form>
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
-  props: {
-    initialXml: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      xml: this.initialXml
-    };
+  name: 'AppForm',
+  mounted() {
+    $(this.$refs.form)
+      .find('input, select, textarea')
+      .filter(':enabled:not([read-only])')
+      .first()
+      .focus();
   }
 };
 </script>
