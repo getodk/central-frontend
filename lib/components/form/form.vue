@@ -28,8 +28,7 @@ export default {
     initialXml: {
       type: String,
       default: ''
-    },
-    focus: Boolean
+    }
   },
   data() {
     return {
@@ -37,7 +36,7 @@ export default {
     };
   },
   mounted() {
-    if (this.focus) this.$refs.xml.focus();
+    this.$refs.xml.focus();
   }
 };
 </script>

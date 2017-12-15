@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <breadcrumbs :list="breadcrumbs"/>
     <alert type="danger" :message="error"/>
-    <form-form focus @submit-record="create">
+    <form-form @submit-record="create">
       <button type="submit" class="btn btn-success" :disabled="disabled">
         Create Form
       </button>
