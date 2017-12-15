@@ -55,14 +55,13 @@ export default {
         .post('/sessions', { email: this.email, password: this.password })
         .then(response => {
           const success = this.$session.set(response.data);
-          const headers = axios.defaults.headers.common;
           if (success) {
+            const headers = axios.defaults.headers.common;
             headers.Authorization = `Bearer ${this.$session.token}`;
             // Using safeBack() rather than this.$router.go(-1) in case the user
             // navigated directly to /login rather than being redirected there.
             safeBack('/forms');
           } else {
-            delete headers.Authorization;
             console.error(response.data);
             this.error = 'Something went wrong while logging you in.';
             this.disabled = false;
