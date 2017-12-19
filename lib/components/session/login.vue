@@ -44,6 +44,19 @@ export default {
     };
   },
   methods: {
+    updateHeader() {
+      const headers = axios.defaults.headers.common;
+      headers.Authorization = `Bearer ${this.$session.token}`;
+    },
+    routeToNext() {
+      const { next } = this.$route.query;
+      const link = document.createElement('a');
+      link.href = next;
+      // Check that `next` is an absolute path.
+      const nextIsValid = next != null && next[0] === '/' &&
+        link.host === window.location.host;
+      this.$router.push(nextIsValid ? next : '/forms');
+    },
     logIn() {
       this.disabled = true;
       axios
@@ -51,12 +64,8 @@ export default {
         .then(response => {
           const success = this.$session.set(response.data);
           if (success) {
-            const headers = axios.defaults.headers.common;
-            headers.Authorization = `Bearer ${this.$session.token}`;
-            const next = this.$route.query.next;
-            const nextPattern = /^(\/|(\/[\w-]+)+)$/;
-            const nextIsValid = next != null && nextPattern.test(next);
-            this.$router.push(nextIsValid ? next : '/forms');
+            this.updateHeader();
+            this.routeToNext();
           } else {
             console.error(response.data);
             this.error = 'Something went wrong while logging you in.';
