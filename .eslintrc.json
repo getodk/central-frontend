@@ -15,7 +15,11 @@ except according to the terms contained in the LICENSE file.
     "html"
   ],
   "env": { "commonjs": true },
-  "globals": { "alert": false },
+  "globals": {
+    "alert": false,
+    "document": false,
+    "window": false
+  },
   "rules": {
     "arrow-parens": "off",
     "comma-dangle": ["error", "never"],
