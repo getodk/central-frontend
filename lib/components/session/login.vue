@@ -49,13 +49,14 @@ export default {
       headers.Authorization = `Bearer ${this.$session.token}`;
     },
     routeToNext() {
+      let path = '/forms';
       const { next } = this.$route.query;
-      const link = document.createElement('a');
-      link.href = next;
-      // Check that `next` is an absolute path.
-      const nextIsValid = next != null && next[0] === '/' &&
-        link.host === window.location.host;
-      this.$router.push(nextIsValid ? next : '/forms');
+      if (next != null) {
+        const link = document.createElement('a');
+        link.href = next;
+        if (link.host === window.location.host) path = link.pathname;
+      }
+      this.$router.push(path);
     },
     logIn() {
       this.disabled = true;
