@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <breadcrumbs :list="breadcrumbs"/>
     <alert type="danger" :message="error"/>
-    <form-form focus @submit-record="create">
+    <form-form @submit-record="create">
       <button type="submit" class="btn btn-success" :disabled="disabled">
         Create Form
       </button>
@@ -40,16 +40,18 @@ export default {
       breadcrumbs,
       error: null,
       disabled: false
-    }
+    };
   },
   methods: {
     create(data) {
       this.disabled = true;
+      const headers = { 'Content-Type': 'application/xml' };
       axios
-        .post('/forms', data)
+        .post('/forms', data, { headers })
         .then(() => this.$router.push('/forms'))
         .catch(error => {
-          this.error = 'Something went wrong while creating the form.';
+          console.error(error.response.data);
+          this.error = error.response.data.message;
           this.disabled = false;
         });
     }

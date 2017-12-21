@@ -29,8 +29,7 @@ export default {
         setTimeout(() => {
           if (this.state === true) this.show = true;
         }, 250);
-      }
-      else {
+      } else {
         this.show = false;
       }
     }

@@ -19,25 +19,17 @@ Super Adventure uses Vue.js to provide the front end for [Jubilant Garbanzo](htt
 
 Install npm, then install Node package dependencies with `npm install`.
 
-Install NGINX. Depending on how you install it, you may need to change the absolute paths in Super Adventure's [`nginx.conf`](/nginx.conf).
+Install NGINX. Depending on your OS and how you install NGINX, you may need to change the absolute paths in Super Adventure's [`nginx.conf`](/nginx.conf).
 
 You will also need to set up [Jubilant Garbanzo](https://github.com/nafundi/jubilant-garbanzo).
 
-## Serving files
+## Running in development
+
+Follow these instructions to run Super Adventure in development. For deploying to production, see the next section.
 
 First, run Jubilant Garbanzo.
 
-Next, build Super Adventure files using one of the two following commands. The files will be outputted to `dist/`.
-
-```bash
-# Build for development with hot reload.
-npm run dev
-
-# Build for production with minification.
-npm run build
-```
-
-For more information, see the [documentation for vueify](https://github.com/vuejs/vueify).
+Next, build Super Adventure files for development by running `npm run dev`. The files will be outputted to `dist/`, and hot reload will be available. For more details on this command, see the [documentation for vueify](https://github.com/vuejs/vueify).
 
 Finally, run NGINX by opening the command line, changing the working directory to the root directory of the repository, and typing the following:
 
@@ -50,6 +42,12 @@ We specify `-p "$PWD/"` so that relative paths in [`nginx.conf`](/nginx.conf) ar
 NGINX effectively places Super Adventure and Jubilant Garbanzo at the same origin, avoiding cross-origin requests.
 
 Super Adventure will be available on port 8080.
+
+## Deploying to production
+
+To build Super Adventure files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation for vueify](https://github.com/vuejs/vueify).
+
+For more information on deploying to production, see [effective-spork](https://github.com/nafundi/effective-spork).
 
 ## Testing
 

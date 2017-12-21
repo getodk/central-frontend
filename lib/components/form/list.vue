@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <breadcrumbs :list="breadcrumbs"/>
-    <list-heading title="Forms">
+    <heading title="Forms">
       <router-link to="forms/new" class="btn btn-success" role="button">
         New Form
       </router-link>
-    </list-heading>
+    </heading>
     <alert type="danger" :message="error"/>
     <loading :state="loading"/>
     <!-- Render this element once the forms have been fetched. -->
@@ -70,8 +70,8 @@ export default {
         this.loading = false;
       })
       .catch(error => {
-        console.error(error);
-        this.error = 'Something went wrong while loading your forms.';
+        console.error(error.response.data);
+        this.error = error.response.data.message;
         this.loading = false;
       });
   },

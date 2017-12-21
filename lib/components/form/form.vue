@@ -12,14 +12,14 @@ except according to the terms contained in the LICENSE file.
 
 <!-- Component for an HTML form to create/update an ODK form -->
 <template>
-  <form @submit.prevent="$emit('submit-record', xml)">
+  <app-form @submit="$emit('submit-record', xml)">
     <div class="form-group">
       <label for="xml">Form XML</label>
-      <textarea v-model="xml" ref="xml" id="xml" class="form-control" required rows="10">
+      <textarea v-model="xml" id="xml" class="form-control" required rows="10">
       </textarea>
     </div>
     <slot></slot>
-  </form>
+  </app-form>
 </template>
 
 <script>
@@ -28,16 +28,12 @@ export default {
     initialXml: {
       type: String,
       default: ''
-    },
-    focus: Boolean
+    }
   },
   data() {
     return {
       xml: this.initialXml
     };
-  },
-  mounted() {
-    if (this.focus) this.$refs.xml.focus();
   }
 };
 </script>

@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <breadcrumbs :list="breadcrumbs"/>
-    <list-heading title="Submissions">
+    <heading title="Submissions">
       <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
       </router-link>
-    </list-heading>
+    </heading>
     <alert type="danger" :message="error"/>
     <loading :state="loading"/>
     <!-- Render this element once the submissions have been fetched. -->
@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     xmlFormId() {
-      return this.$route.params.xmlFormId
+      return this.$route.params.xmlFormId;
     },
     breadcrumbs() {
       return [
@@ -92,8 +92,8 @@ export default {
           this.loading = false;
         })
         .catch(error => {
-          console.error(error);
-          this.error = 'Something went wrong while loading the form’s submissions.';
+          console.error(error.response.data);
+          this.error = error.response.data.message;
           this.loading = false;
         });
     },
