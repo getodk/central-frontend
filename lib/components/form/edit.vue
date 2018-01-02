@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <breadcrumbs :list="breadcrumbs"/>
-    <alert type="danger" :message="error"/>
-    <loading :state="loading"/>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
+    <loading :state="awaitingResponse"/>
     <form-form v-if="form" :initial-xml="form.xml" @submit-record="update">
       <button type="submit" class="btn btn-info">Save</button>
       <router-link to="/forms" class="btn btn-default" role="button">
@@ -24,15 +24,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import axios from 'axios';
-
 import FormForm from './form.vue';
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
 
 export default {
+  mixins: [alert, request],
   data() {
     return {
-      error: null,
-      loading: false,
+      alerts: [],
+      awaitingResponse: false,
       form: null
     };
   },
@@ -52,25 +53,22 @@ export default {
   },
   watch: {
     $route() {
-      this.error = null;
       this.fetchData();
+      this.alerts = [];
     }
   },
   methods: {
+    up() {
+      return 1;
+    },
     fetchData() {
       this.form = null;
-      this.loading = true;
-      axios
+      this
         .get(`/forms/${this.xmlFormId}`)
         .then(response => {
           this.form = response.data;
-          this.loading = false;
         })
-        .catch(error => {
-          console.error(error.response.data);
-          this.error = error.response.data.message;
-          this.loading = false;
-        });
+        .catch(error => console.error(error));
     },
     update(data) { // eslint-disable-line no-unused-vars
       // eslint-disable-next-line no-alert

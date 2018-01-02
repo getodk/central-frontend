@@ -10,18 +10,37 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="message" :class="['alert', 'alert-' + type]" role="alert">{{ message }}</div>
+  <div :class="htmlClass" role="alert">
+    <!-- Instead of using Boostrap's alert plugin, which would remove the alert
+    from the DOM, we simply emit a hide event, for which the parent component
+    should listen. -->
+    <button type="button" class="close" aria-label="Close"
+      @click="$emit('dismiss')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    {{ message }}
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Alert',
   props: {
+    id: Number,
     type: {
       type: String,
       required: true
     },
-    message: String
+    message: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    htmlClass() {
+      return ['alert', 'alert-dismissable', `alert-${this.type}`];
+    }
   }
 };
 </script>

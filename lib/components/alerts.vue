@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2017 Super Adventure Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/nafundi/super-adventure/blob/master/NOTICE.
@@ -8,28 +8,32 @@ the LICENSE file found in the top-level directory of this distribution and at
 https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
-*/
-import Vue from 'vue';
-import axios from 'axios';
+-->
+<template>
+  <div>
+    <alert v-for="(alert, index) in list" :key="alert.id" v-bind="alert"
+      @dismiss="$emit('dismiss', index)"/>
+  </div>
+</template>
 
-import App from './components/app.vue';
-import GlobalComponents from './global-components';
-import Session from './session';
-import router from './router';
+<script>
+import Alert from './alert.vue';
 
-axios.defaults.baseURL = '/api/v1';
-
-Vue.config.productionTip = false;
-GlobalComponents.register();
-Vue.prototype.$session = new Session();
-let uniqueId = 0;
-Vue.prototype.$uniqueId = () => {
-  uniqueId += 1;
-  return uniqueId;
+export default {
+  name: 'Alerts',
+  props: {
+    list: Array
+  },
+  components: { Alert }
 };
+</script>
 
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router
-});
+<style>
+.alert {
+  margin-bottom: 10px;
+}
+
+.alert:last-child {
+  margin-bottom: 20px;
+}
+</style>

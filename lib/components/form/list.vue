@@ -17,8 +17,8 @@ except according to the terms contained in the LICENSE file.
         New Form
       </router-link>
     </heading>
-    <alert type="danger" :message="error"/>
-    <loading :state="loading"/>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
+    <loading :state="awaitingResponse"/>
     <!-- Render this element once the forms have been fetched. -->
     <template v-if="forms">
       <p v-if="forms.length === 0">To get started, add a form.</p>
@@ -47,33 +47,30 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import axios from 'axios';
 import moment from 'moment';
+
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
 
 const breadcrumbs = [{ title: 'Forms' }];
 
 export default {
+  mixins: [alert, request],
   data() {
     return {
       breadcrumbs,
-      error: null,
-      loading: false,
+      alerts: [],
+      awaitingResponse: false,
       forms: null
     };
   },
   created() {
-    this.loading = true;
-    axios
+    this
       .get('/forms')
       .then(response => {
         this.forms = response.data;
-        this.loading = false;
       })
-      .catch(error => {
-        console.error(error.response.data);
-        this.error = error.response.data.message;
-        this.loading = false;
-      });
+      .catch(error => console.error(error));
   },
   methods: {
     lastUpdate(form) {

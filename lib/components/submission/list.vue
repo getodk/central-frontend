@@ -17,8 +17,8 @@ except according to the terms contained in the LICENSE file.
         Back to Forms
       </router-link>
     </heading>
-    <alert type="danger" :message="error"/>
-    <loading :state="loading"/>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
+    <loading :state="awaitingResponse"/>
     <!-- Render this element once the submissions have been fetched. -->
     <template v-if="submissions">
       <p v-if="submissions.length === 0">
@@ -49,14 +49,17 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import axios from 'axios';
 import moment from 'moment';
 
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
+
 export default {
+  mixins: [alert, request],
   data() {
     return {
-      error: null,
-      loading: false,
+      alerts: [],
+      awaitingResponse: false,
       submissions: null
     };
   },
@@ -77,25 +80,19 @@ export default {
   },
   watch: {
     $route() {
-      this.error = null;
       this.fetchData();
+      this.alerts = [];
     }
   },
   methods: {
     fetchData() {
       this.submissions = null;
-      this.loading = true;
-      axios
+      this
         .get(`/forms/${this.xmlFormId}/submissions`)
         .then(response => {
           this.submissions = response.data;
-          this.loading = false;
         })
-        .catch(error => {
-          console.error(error.response.data);
-          this.error = error.response.data.message;
-          this.loading = false;
-        });
+        .catch(error => console.error(error));
     },
     submissionDate(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');

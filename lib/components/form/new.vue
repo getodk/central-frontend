@@ -12,9 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <breadcrumbs :list="breadcrumbs"/>
-    <alert type="danger" :message="error"/>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
     <form-form @submit-record="create">
-      <button type="submit" class="btn btn-success" :disabled="disabled">
+      <button type="submit" class="btn btn-success" :disabled="awaitingResponse">
         Create Form
       </button>
       <router-link to="/forms" class="btn btn-default" role="button">
@@ -25,9 +25,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import axios from 'axios';
-
 import FormForm from './form.vue';
+
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
 
 const breadcrumbs = [
   { title: 'Forms', to: '/forms' },
@@ -35,25 +36,21 @@ const breadcrumbs = [
 ];
 
 export default {
+  mixins: [alert, request],
   data() {
     return {
       breadcrumbs,
-      error: null,
-      disabled: false
+      alerts: [],
+      awaitingResponse: false
     };
   },
   methods: {
     create(data) {
-      this.disabled = true;
       const headers = { 'Content-Type': 'application/xml' };
-      axios
+      this
         .post('/forms', data, { headers })
         .then(() => this.$router.push('/forms'))
-        .catch(error => {
-          console.error(error.response.data);
-          this.error = error.response.data.message;
-          this.disabled = false;
-        });
+        .catch(error => console.error(error));
     }
   },
   components: { FormForm }
