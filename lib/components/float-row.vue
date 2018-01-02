@@ -9,31 +9,28 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- Component for an HTML form to create/update an ODK form -->
 <template>
-  <app-form @submit="$emit('submit-record', xml)">
-    <div class="form-group">
-      <label for="xml">Form XML *</label>
-      <textarea v-model="xml" id="xml" class="form-control" required rows="10">
-      </textarea>
+  <div>
+    <div class="float-row-container">
+      <slot></slot>
     </div>
-    <slot></slot>
-  </app-form>
+    <div class="float-row-clear"></div>
+  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    initialXml: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      xml: this.initialXml
-    };
-  }
+  name: 'FloatRow'
 };
 </script>
+
+<style>
+.float-row-container > * {
+  float: right;
+}
+
+.float-row-clear {
+  clear: right;
+  margin-bottom: 20px;
+}
+</style>

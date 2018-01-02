@@ -10,50 +10,57 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <page-head>
-      <template slot="title">New Form</template>
-    </page-head>
-    <page-body>
-    <alerts :list="alerts" @dismiss="dismissAlert"/>
-    <form-form @submit-record="create">
-      <button type="submit" class="btn btn-success" :disabled="awaitingResponse">
-        Create Form
+  <modal :state="state" @hide="$emit('hide')" backdrop>
+    <template slot="title">Create Form</template>
+    <template slot="body">
+      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <app-form @submit="submit">
+        <div class="form-group">
+          <label for="xml">Form XML *</label>
+          <textarea v-model="xml" id="xml" class="form-control" required rows="10">
+          </textarea>
+        </div>
+      </app-form>
+    </template>
+    <template slot="footer">
+      <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
+        @click="submit">
+        Create
       </button>
-      <router-link to="/forms" class="btn btn-default" role="button">
-        Back to Forms
-      </router-link>
-    </form-form>
-    </page-body>
-  </div>
+    </template>
+  </modal>
 </template>
 
 <script>
-import FormForm from './form.vue';
-
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
+  name: 'FormNew',
   mixins: [alert, request],
+  props: {
+    state: Boolean
+  },
   data() {
     return {
       alerts: [],
+      xml: '',
       awaitingResponse: false
     };
   },
   methods: {
-    create(data) {
+    submit() {
       const headers = { 'Content-Type': 'application/xml' };
       this
-        .post('/forms', data, { headers })
+        .post('/forms', this.xml, { headers })
         .then(response => {
-          const query = { newForm: response.data.xmlFormId };
-          this.$router.push({ path: '/forms', query });
+          this.$emit('hide');
+          this.alerts = [];
+          this.xml = '';
+          this.$emit('create', response.data);
         })
         .catch(error => console.error(error));
     }
-  },
-  components: { FormForm }
+  }
 };
 </script>

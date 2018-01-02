@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
     <app-form @submit="logIn">
       <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" v-model="email" id="email" class="form-control"
+        <input type="email" v-model.trim="email" id="email" class="form-control"
           placeholder="Email" required>
       </div>
       <div class="form-group">
