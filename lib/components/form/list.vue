@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(form, index) in forms">
+          <tr v-for="(form, index) in forms" :class="highlight(form, 'xmlFormId')">
             <td>{{ form.xmlFormId }}</td>
             <td>{{ lastUpdate(form) }}</td>
             <td>
@@ -50,12 +50,13 @@ except according to the terms contained in the LICENSE file.
 import moment from 'moment';
 
 import alert from '../../mixins/alert';
+import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
 const breadcrumbs = [{ title: 'Forms' }];
 
 export default {
-  mixins: [alert, request],
+  mixins: [alert, request, highlight],
   data() {
     return {
       breadcrumbs,
@@ -63,6 +64,11 @@ export default {
       awaitingResponse: false,
       forms: null
     };
+  },
+  computed: {
+    highlighted() {
+      return this.$route.query.newForm;
+    }
   },
   created() {
     this

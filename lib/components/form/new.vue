@@ -49,7 +49,10 @@ export default {
       const headers = { 'Content-Type': 'application/xml' };
       this
         .post('/forms', data, { headers })
-        .then(() => this.$router.push('/forms'))
+        .then(response => {
+          const query = { newForm: response.data.xmlFormId };
+          this.$router.push({ path: '/forms', query });
+        })
         .catch(error => console.error(error));
     }
   },
