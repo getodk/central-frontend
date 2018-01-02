@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <app-form @submit="$emit('submit-record', xml)">
     <div class="form-group">
-      <label for="xml">Form XML</label>
+      <label for="xml">Form XML *</label>
       <textarea v-model="xml" id="xml" class="form-control" required rows="10">
       </textarea>
     </div>
