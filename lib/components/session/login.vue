@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <heading title="Log in"/>
+    <page-head title="Log in"/>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <app-form @submit="logIn">
       <div class="form-group">

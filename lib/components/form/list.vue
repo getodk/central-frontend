@@ -11,11 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <heading title="Forms">
+    <page-head title="Forms">
       <router-link to="forms/new" class="btn btn-success" role="button">
         New Form
       </router-link>
-    </heading>
+    </page-head>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <loading :state="awaitingResponse"/>
     <!-- Render this element once the forms have been fetched. -->

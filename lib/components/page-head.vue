@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'Heading',
+  name: 'PageHead',
   props: {
     title: {
       type: String,

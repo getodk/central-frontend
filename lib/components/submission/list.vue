@@ -11,11 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <heading title="Submissions">
+    <page-head title="Submissions">
       <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
       </router-link>
-    </heading>
+    </page-head>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <loading :state="awaitingResponse"/>
     <!-- Render this element once the submissions have been fetched. -->
