@@ -10,34 +10,40 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-    <span><slot></slot></span>
+  <div id="page-head" class="row">
+    <div class="col-xs-12">
+      <h1><slot name="title"></slot></h1>
+      <p><slot name="body"></slot></p>
+      <ul class="nav nav-tabs" role="tablist">
+        <slot name="tabs"></slot>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PageHead',
-  props: {
-    title: {
-      type: String,
-      required: true
-    }
-  }
+  name: 'PageHead'
 };
 </script>
 
-<style scoped>
-div {
-  margin-bottom: 18px;
+<style>
+#page-head {
+  background-color: #eee;
+  margin-bottom: 15px;
 }
 
-h1 {
-  display: inline;
+#page-head > .col-xs-12 > p {
+  max-width: 650px;
 }
 
-span {
-  float: right;
+#page-head > .col-xs-12 > .nav-tabs,
+#page-head > .col-xs-12 > .nav-tabs > li > a {
+  border-bottom: none;
+}
+
+#page-head > .col-xs-12 > .nav-tabs > li {
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 </style>

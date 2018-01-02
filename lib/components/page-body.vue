@@ -10,19 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <navbar/>
-    <div class="container-fluid">
-      <router-view></router-view>
+  <div class="row">
+    <div class="col-xs-12">
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import Navbar from './navbar.vue';
-
 export default {
-  name: 'App',
-  components: { Navbar }
+  name: 'PageBody'
 };
 </script>

@@ -11,6 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <page-head>
+      <template slot="title">Edit Form</template>
+    </page-head>
+    <page-body>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <loading :state="awaitingResponse"/>
     <form-form v-if="form" :initial-xml="form.xml" @submit-record="update">
@@ -19,6 +23,7 @@ except according to the terms contained in the LICENSE file.
         Back to Forms
       </router-link>
     </form-form>
+    </page-body>
   </div>
 </template>
 

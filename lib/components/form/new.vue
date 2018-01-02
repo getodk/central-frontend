@@ -11,6 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <page-head>
+      <template slot="title">New Form</template>
+    </page-head>
+    <page-body>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <form-form @submit-record="create">
       <button type="submit" class="btn btn-success" :disabled="awaitingResponse">
@@ -20,6 +24,7 @@ except according to the terms contained in the LICENSE file.
         Back to Forms
       </router-link>
     </form-form>
+    </page-body>
   </div>
 </template>
 

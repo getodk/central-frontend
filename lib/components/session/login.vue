@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head title="Log in"/>
+    <page-head>
+      <template slot="title">Log in</template>
+    </page-head>
+    <page-body>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <app-form @submit="logIn">
       <div class="form-group">
@@ -28,6 +31,7 @@ except according to the terms contained in the LICENSE file.
         Log in
       </button>
     </app-form>
+    </page-body>
   </div>
 </template>
 

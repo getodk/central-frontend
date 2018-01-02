@@ -11,11 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head title="Forms">
-      <router-link to="forms/new" class="btn btn-success" role="button">
-        New Form
-      </router-link>
+    <page-head>
+      <template slot="title">Forms</template>
     </page-head>
+    <page-body>
+    <router-link to="forms/new" class="btn btn-success" role="button">
+      New Form
+    </router-link>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <loading :state="awaitingResponse"/>
     <!-- Render this element once the forms have been fetched. -->
@@ -42,6 +44,7 @@ except according to the terms contained in the LICENSE file.
         </tbody>
       </table>
     </template>
+    </page-body>
   </div>
 </template>
 
