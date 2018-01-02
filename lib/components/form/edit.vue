@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :list="breadcrumbs"/>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <loading :state="awaitingResponse"/>
     <form-form v-if="form" :initial-xml="form.xml" @submit-record="update">
@@ -40,12 +39,6 @@ export default {
   computed: {
     xmlFormId() {
       return this.$route.params.xmlFormId;
-    },
-    breadcrumbs() {
-      return [
-        { title: 'Forms', to: '/forms' },
-        { title: `Edit ${this.xmlFormId}` }
-      ];
     }
   },
   created() {

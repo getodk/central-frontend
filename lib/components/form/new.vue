@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :list="breadcrumbs"/>
     <alerts :list="alerts" @dismiss="dismissAlert"/>
     <form-form @submit-record="create">
       <button type="submit" class="btn btn-success" :disabled="awaitingResponse">
@@ -30,16 +29,10 @@ import FormForm from './form.vue';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
-const breadcrumbs = [
-  { title: 'Forms', to: '/forms' },
-  { title: 'New Form' }
-];
-
 export default {
   mixins: [alert, request],
   data() {
     return {
-      breadcrumbs,
       alerts: [],
       awaitingResponse: false
     };

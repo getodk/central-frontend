@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :list="breadcrumbs"/>
     <heading title="Forms">
       <router-link to="forms/new" class="btn btn-success" role="button">
         New Form
@@ -53,13 +52,10 @@ import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
-const breadcrumbs = [{ title: 'Forms' }];
-
 export default {
   mixins: [alert, request, highlight],
   data() {
     return {
-      breadcrumbs,
       alerts: [],
       awaitingResponse: false,
       forms: null

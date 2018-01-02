@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :list="breadcrumbs"/>
     <heading title="Submissions">
       <router-link to="/forms" class="btn btn-default" role="button">
         Back to Forms
@@ -66,13 +65,6 @@ export default {
   computed: {
     xmlFormId() {
       return this.$route.params.xmlFormId;
-    },
-    breadcrumbs() {
-      return [
-        { title: 'Forms', to: '/forms' },
-        { title: this.xmlFormId },
-        { title: 'Submissions' }
-      ];
     }
   },
   created() {
