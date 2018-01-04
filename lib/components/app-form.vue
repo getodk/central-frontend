@@ -16,8 +16,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import $ from 'jquery';
-
 export default {
   name: 'AppForm',
   mounted() {

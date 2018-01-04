@@ -10,25 +10,40 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <navbar/>
-    <div class="container-fluid">
-      <router-view></router-view>
+  <div id="page-head" class="row">
+    <div class="col-xs-12">
+      <h1><slot name="title"></slot></h1>
+      <p><slot name="body"></slot></p>
+      <ul class="nav nav-tabs" role="tablist">
+        <slot name="tabs"></slot>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import Navbar from './navbar.vue';
-
 export default {
-  name: 'App',
-  components: { Navbar }
+  name: 'PageHead'
 };
 </script>
 
 <style>
-.table > thead {
-  background-color: #ddd;
+#page-head {
+  background-color: #eee;
+  margin-bottom: 15px;
+}
+
+#page-head > .col-xs-12 > p {
+  max-width: 650px;
+}
+
+#page-head > .col-xs-12 > .nav-tabs,
+#page-head > .col-xs-12 > .nav-tabs > li > a {
+  border-bottom: none;
+}
+
+#page-head > .col-xs-12 > .nav-tabs > li {
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 </style>

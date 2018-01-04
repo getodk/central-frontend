@@ -11,12 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <heading title="Log in"/>
-    <alert type="danger" :message="error"/>
+    <page-head>
+      <template slot="title">Log in</template>
+    </page-head>
+    <page-body>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
     <app-form @submit="logIn">
       <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" v-model="email" id="email" class="form-control"
+        <input type="email" v-model.trim="email" id="email" class="form-control"
           placeholder="Email" required>
       </div>
       <div class="form-group">
@@ -24,23 +27,29 @@ except according to the terms contained in the LICENSE file.
         <input type="password" v-model="password" id="password"
           class="form-control" placeholder="Password" required>
       </div>
-      <button type="submit" class="btn btn-primary" :disabled="disabled">
+      <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
         Log in
       </button>
     </app-form>
+    </page-body>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
+
 export default {
+  mixins: [alert, request],
   data() {
+    console.log(this);
     return {
+      alerts: [],
       email: '',
       password: '',
-      error: null,
-      disabled: false
+      awaitingResponse: false
     };
   },
   methods: {
@@ -59,25 +68,21 @@ export default {
       this.$router.push(path);
     },
     logIn() {
-      this.disabled = true;
-      axios
-        .post('/sessions', { email: this.email, password: this.password })
+      const data = { email: this.email, password: this.password };
+      this
+        .post('/sessions', data)
         .then(response => {
           const success = this.$session.set(response.data);
           if (success) {
             this.updateHeader();
             this.routeToNext();
           } else {
-            console.error(response.data);
-            this.error = 'Something went wrong while logging you in.';
-            this.disabled = false;
+            console.log(response.data);
+            this.danger.message = 'Something went wrong while logging you in.';
+            this.danger.state = true;
           }
         })
-        .catch(error => {
-          console.error(error.response.data);
-          this.error = error.response.data.message;
-          this.disabled = false;
-        });
+        .catch(error => console.error(error));
     }
   }
 };

@@ -10,34 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-    <span><slot></slot></span>
+  <div class="row">
+    <div class="col-xs-12">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Heading',
-  props: {
-    title: {
-      type: String,
-      required: true
-    }
-  }
+  name: 'PageBody'
 };
 </script>
-
-<style scoped>
-div {
-  margin-bottom: 18px;
-}
-
-h1 {
-  display: inline;
-}
-
-span {
-  float: right;
-}
-</style>

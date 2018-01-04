@@ -11,14 +11,23 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :list="breadcrumbs"/>
-    <heading title="Forms">
-      <router-link to="forms/new" class="btn btn-success" role="button">
-        New Form
-      </router-link>
-    </heading>
-    <alert type="danger" :message="error"/>
-    <loading :state="loading"/>
+    <page-head>
+      <template slot="title">Forms</template>
+      <template slot="body">
+        You collect data by <doc-link>designing a form</doc-link> on your
+        computer, and then <doc-link>loading that form onto a mobile
+        device</doc-link> to administer.
+      </template>
+    </page-head>
+    <page-body>
+    <alerts :list="alerts" @dismiss="dismissAlert"/>
+    <float-row>
+      <button type="button" class="btn btn-primary"
+        @click="newForm.state = true">
+        Create a New Form
+      </button>
+    </float-row>
+    <loading :state="awaitingResponse"/>
     <!-- Render this element once the forms have been fetched. -->
     <template v-if="forms">
       <p v-if="forms.length === 0">To get started, add a form.</p>
@@ -26,71 +35,99 @@ except according to the terms contained in the LICENSE file.
         <thead>
           <tr>
             <th>Form ID</th>
-            <th>Last Update</th>
-            <th>Actions</th>
+            <th>Last Modified</th>
+            <th>Last Submission</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(form, index) in forms">
-            <td>{{ form.xmlFormId }}</td>
-            <td>{{ lastUpdate(form) }}</td>
+          <router-link v-for="form of forms" :key="form.xmlFormId"
+            :to="`/forms/${form.xmlFormId}`" tag="tr"
+            :class="highlight(form, 'xmlFormId')">
             <td>
-              <router-link :to="listSubmissions(form)">Submissions</router-link> |
-              <router-link :to="editForm(form)">Edit</router-link> |
-              <a href="#" @click.prevent="deleteForm(index)">Delete</a>
+              <div>{{ form.xmlFormId }}</div>
+              <!-- TODO: Not yet implemented. -->
+              <div>??? submissions</div>
             </td>
-          </tr>
+            <td>
+              {{ updatedAt(form) }}
+            </td>
+            <!-- TODO: Not yet implemented. -->
+            <td>
+              ???
+            </td>
+          </router-link>
         </tbody>
       </table>
     </template>
+    <form-new v-bind="newForm" @hide="newForm.state = false"
+      @create="afterCreate"/>
+    </page-body>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import moment from 'moment';
 
-const breadcrumbs = [{ title: 'Forms' }];
+import FormNew from './new.vue';
+import alert from '../../mixins/alert';
+import highlight from '../../mixins/highlight';
+import request from '../../mixins/request';
 
 export default {
+  mixins: [alert, request, highlight],
   data() {
     return {
-      breadcrumbs,
-      error: null,
-      loading: false,
-      forms: null
+      alerts: [],
+      awaitingResponse: false,
+      forms: null,
+      highlighted: null,
+      newForm: {
+        state: false
+      }
     };
   },
   created() {
-    this.loading = true;
-    axios
-      .get('/forms')
-      .then(response => {
-        this.forms = response.data;
-        this.loading = false;
-      })
-      .catch(error => {
-        console.error(error.response.data);
-        this.error = error.response.data.message;
-        this.loading = false;
-      });
+    this.fetchData();
   },
   methods: {
-    lastUpdate(form) {
-      const lastUpdate = form.updatedAt != null ? form.updatedAt : form.createdAt;
-      return moment.utc(lastUpdate).fromNow();
+    fetchData() {
+      this.forms = null;
+      this
+        .get('/forms')
+        .then(response => {
+          this.forms = response.data;
+        })
+        .catch(error => console.error(error));
     },
-    listSubmissions(form) {
-      return `forms/${form.xmlFormId}/submissions`;
+    updatedAt(form) {
+      const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
+      return moment.utc(updatedAt).fromNow();
     },
-    editForm(form) {
-      return `forms/${form.xmlFormId}/edit`;
-    },
-    deleteForm(index) { // eslint-disable-line no-unused-vars
-      // eslint-disable-next-line no-alert
-      alert("The API doesn't have an endpoint for this yet.");
-      // this.forms.splice(index, 1);
+    afterCreate(form) {
+      this.fetchData();
+      this.alert('success', `Form ${form.xmlFormId} created successfully.`);
+      this.highlighted = form.xmlFormId;
     }
-  }
+  },
+  components: { FormNew }
 };
 </script>
+
+<style scoped>
+table > thead > tr > th:nth-child(n+2),
+table > tbody > tr > td:nth-child(n+2) {
+  width: 200px;
+}
+
+table > tbody {
+  cursor: pointer;
+}
+
+table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+table > tbody > tr > td:first-child > div:first-child {
+  font-size: 30px;
+}
+</style>

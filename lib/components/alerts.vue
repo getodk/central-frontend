@@ -11,24 +11,29 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <navbar/>
-    <div class="container-fluid">
-      <router-view></router-view>
-    </div>
+    <alert v-for="(alert, index) in list" :key="alert.id" v-bind="alert"
+      @dismiss="$emit('dismiss', index)"/>
   </div>
 </template>
 
 <script>
-import Navbar from './navbar.vue';
+import Alert from './alert.vue';
 
 export default {
-  name: 'App',
-  components: { Navbar }
+  name: 'Alerts',
+  props: {
+    list: Array
+  },
+  components: { Alert }
 };
 </script>
 
 <style>
-.table > thead {
-  background-color: #ddd;
+.alert {
+  margin-bottom: 10px;
+}
+
+.alert:last-child {
+  margin-bottom: 20px;
 }
 </style>

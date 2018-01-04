@@ -10,30 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <ol v-show="list.length > 0" class="breadcrumb">
-    <li v-for="(breadcrumb, index) in list"
-      :class="{ active: index === list.length - 1 }">
-      <template v-if="linkBreadcrumb(index)">
-        <router-link :to="breadcrumb.to">{{ breadcrumb.title }}</router-link>
-      </template>
-      <template v-else>{{ breadcrumb.title }}</template>
-    </li>
-  </ol>
+  <div>
+    <div class="float-row-container">
+      <slot></slot>
+    </div>
+    <div class="float-row-clear"></div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Breadcrumbs',
-  props: {
-    list: {
-      type: Array,
-      required: true
-    }
-  },
-  methods: {
-    linkBreadcrumb(index) {
-      return this.list[index].to != null && index !== this.list.length - 1;
-    }
-  }
+  name: 'FloatRow'
 };
 </script>
+
+<style>
+.float-row-container > * {
+  float: right;
+}
+
+.float-row-clear {
+  clear: right;
+  margin-bottom: 20px;
+}
+</style>
