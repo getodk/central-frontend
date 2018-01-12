@@ -19,13 +19,18 @@ except according to the terms contained in the LICENSE file.
           <label for="user-new-email">Email address *</label>
           <input type="email" v-model.trim="email" id="user-new-email"
             class="form-control" placeholder="Email" required
-            :disabled="awaitingResponse" @keyup.enter="submit">
+            :disabled="awaitingResponse">
         </div>
+        <!-- We include a visible button in the footer, but the form also
+        requires a button to work as expected. -->
+        <button type="submit" ref="submit" v-show="false" :disabled="awaitingResponse">
+          Create
+        </button>
       </form>
     </template>
     <template slot="footer">
       <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
-        @click="submit">
+        @click="triggerSubmit">
         Create <spinner :state="awaitingResponse"/>
       </button>
     </template>
@@ -63,6 +68,9 @@ export default {
           this.$emit('create', user);
         })
         .catch(() => {});
+    },
+    triggerSubmit() {
+      $(this.$refs.submit).click();
     }
   }
 };

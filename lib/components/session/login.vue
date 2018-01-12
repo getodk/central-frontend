@@ -10,28 +10,40 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <page-head>
-      <template slot="title">Log in</template>
-    </page-head>
-    <page-body>
+  <div id="session-login" class="row">
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+      <div class="panel panel-default">
+        <div id="session-login-heading" class="panel-heading">
+          <h1 class="panel-title">Log in</h1>
+        </div>
+        <div class="panel-body">
           <alerts :list="alerts" @dismiss="dismissAlert"/>
-          <app-form @submit="logIn">
+          <app-form @submit="submit">
             <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" v-model.trim="email" id="email"
-                class="form-control" placeholder="Email" required>
+              <label for="session-login-email">Email address *</label>
+              <input type="email" v-model.trim="email" id="session-login-email"
+                class="form-control" placeholder="Email address" required>
             </div>
             <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" v-model="password" id="password"
+              <label for="session-login-password">Password *</label>
+              <input type="password" v-model="password" id="session-login-password"
                 class="form-control" placeholder="Password" required>
             </div>
-            <button type="submit" class="btn btn-primary" :disabled="disabled">
-              Log in <spinner :state="disabled"/>
+            <!-- We include a visible button in the footer, but the form also
+            requires a button to work as expected. -->
+            <button type="submit" ref="submit" v-show="false" :disabled="disabled">
+              Log in
             </button>
           </app-form>
-    </page-body>
+        </div>
+        <div id="session-login-footer" class="panel-footer">
+          <button type="button" class="btn btn-primary" :disabled="disabled"
+            @click="triggerSubmit">
+            Log in <spinner :state="disabled"/>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,7 +113,7 @@ export default {
       delete query.next;
       this.$router.push({ path, query });
     },
-    logIn() {
+    submit() {
       this.disabled = true;
       this
         .post('/sessions', { email: this.email, password: this.password })
@@ -113,7 +125,27 @@ export default {
         .catch(() => {
           this.disabled = false;
         });
+    },
+    triggerSubmit() {
+      $(this.$refs.submit).click();
     }
   }
 };
 </script>
+
+<style lang="sass">
+@import '../../../assets/scss/variables';
+
+#session-login {
+  margin-top: 70px;
+}
+
+#session-login-heading {
+  color: white;
+  background-color: $heading-background-color;
+}
+
+#session-login-footer {
+  background-color: #eee;
+}
+</style>

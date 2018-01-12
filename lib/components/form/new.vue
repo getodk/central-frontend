@@ -21,11 +21,16 @@ except according to the terms contained in the LICENSE file.
             required :disabled="awaitingResponse" rows="10">
           </textarea>
         </div>
+        <!-- We include a visible button in the footer, but the form also
+        requires a button to work as expected. -->
+        <button type="submit" ref="submit" v-show="false" :disabled="awaitingResponse">
+          Create
+        </button>
       </form>
     </template>
     <template slot="footer">
       <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
-        @click="submit">
+        @click="triggerSubmit">
         Create <spinner :state="awaitingResponse"/>
       </button>
     </template>
@@ -61,6 +66,9 @@ export default {
           this.$emit('create', form);
         })
         .catch(() => {});
+    },
+    triggerSubmit() {
+      $(this.$refs.submit).click();
     }
   }
 };
