@@ -24,14 +24,14 @@ except according to the terms contained in the LICENSE file.
       <float-row>
         <button type="button" class="btn btn-primary"
           @click="newForm.state = true">
-          Create a New Form
+          <span class="icon-plus-circle"></span> Create a New Form
         </button>
       </float-row>
       <loading :state="awaitingResponse"/>
       <!-- Render this element once the forms have been fetched. -->
       <template v-if="forms">
         <p v-if="forms.length === 0">To get started, add a form.</p>
-        <table v-else class="table table-hover">
+        <table v-else id="form-list-table" class="table table-hover">
           <thead>
             <tr>
               <th>Form ID</th>
@@ -114,8 +114,8 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-table {
+<style lang="sass">
+#form-list-table {
   & > thead > tr > th:nth-child(n+2),
   & > tbody > tr > td:nth-child(n+2) {
     width: 200px;

@@ -30,6 +30,7 @@ export default {
 <style lang="sass">
 // Global styles should go here.
 
+@import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 
 body {
@@ -38,5 +39,9 @@ body {
 
 .table > thead {
   background-color: #ddd;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  vertical-align: middle;
 }
 </style>

@@ -40,11 +40,11 @@ except according to the terms contained in the LICENSE file.
           <float-row>
             <button type="button" class="btn btn-primary"
               @click="newUser.state = true">
-            Create Staff User
+            <span class="icon-plus-circle"></span> Create Staff User
             </button>
           </float-row>
           <loading :state="awaitingResponse"/>
-          <table v-if="users" class="table table-hover">
+          <table v-if="users" id="user-list-table" class="table table-hover">
             <thead>
               <tr>
                 <th>Email</th>
@@ -53,16 +53,30 @@ except according to the terms contained in the LICENSE file.
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user of users" :key="user.id"
+              <tr v-for="(user, index) in users" :key="user.id"
                 :class="highlight(user, 'id')">
                 <td>{{ user.email }}</td>
                 <!-- TODO: Once this is added to the API, pull it from
                 `user`. -->
                 <td>Yes</td>
                 <td>
-                  <a href="#" @click.prevent="showResetPassword(user)">
-                    Reset Password
-                  </a>
+                  <div class="dropdown">
+                    <button type="button" :id="actionsId(index)"
+                      class="btn btn-primary dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="true">
+                      <span class="icon-cog"></span>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right"
+                      :aria-labelledby="actionsId(index)">
+                      <li>
+                        <a href="#" @click.prevent="showResetPassword(user)">
+                          Reset Password
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -122,6 +136,9 @@ export default {
         })
         .catch(error => console.error(error));
     },
+    actionsId(index) {
+      return `user-list-actions${index}`;
+    },
     showResetPassword(user) {
       this.resetPassword.user = user;
       this.resetPassword.state = true;
@@ -136,16 +153,24 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-table {
+<style lang="sass">
+#user-list-table {
   & > thead > tr > th:nth-child(2),
   & > tbody > tr > td:nth-child(2) {
-    width: 175px;
+    width: 235px;
   }
 
   & > thead > tr > th:nth-child(3),
   & > tbody > tr > td:nth-child(3) {
-    width: 150px;
+    width: 90px;
+  }
+
+  & > tbody > tr > td {
+    vertical-align: middle;
+
+    .dropdown-menu {
+      margin-right: 23px;
+    }
   }
 }
 </style>
