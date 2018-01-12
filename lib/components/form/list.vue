@@ -20,47 +20,47 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-    <alerts :list="alerts" @dismiss="dismissAlert"/>
-    <float-row>
-      <button type="button" class="btn btn-primary"
-        @click="newForm.state = true">
-        Create a New Form
-      </button>
-    </float-row>
-    <loading :state="awaitingResponse"/>
-    <!-- Render this element once the forms have been fetched. -->
-    <template v-if="forms">
-      <p v-if="forms.length === 0">To get started, add a form.</p>
-      <table v-else class="table table-hover">
-        <thead>
-          <tr>
-            <th>Form ID</th>
-            <th>Last Modified</th>
-            <th>Last Submission</th>
-          </tr>
-        </thead>
-        <tbody>
-          <router-link v-for="form of forms" :key="form.xmlFormId"
-            :to="`/forms/${form.xmlFormId}`" tag="tr"
-            :class="highlight(form, 'xmlFormId')">
-            <td>
-              <div>{{ form.xmlFormId }}</div>
+      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <float-row>
+        <button type="button" class="btn btn-primary"
+          @click="newForm.state = true">
+          Create a New Form
+        </button>
+      </float-row>
+      <loading :state="awaitingResponse"/>
+      <!-- Render this element once the forms have been fetched. -->
+      <template v-if="forms">
+        <p v-if="forms.length === 0">To get started, add a form.</p>
+        <table v-else class="table table-hover">
+          <thead>
+            <tr>
+              <th>Form ID</th>
+              <th>Last Modified</th>
+              <th>Last Submission</th>
+            </tr>
+          </thead>
+          <tbody>
+            <router-link v-for="form of forms" :key="form.xmlFormId"
+              :to="`/forms/${form.xmlFormId}`" tag="tr"
+              :class="highlight(form, 'xmlFormId')">
+              <td>
+                <div>{{ form.xmlFormId }}</div>
+                <!-- TODO: Not yet implemented. -->
+                <div>??? submissions</div>
+              </td>
+              <td>
+                {{ updatedAt(form) }}
+              </td>
               <!-- TODO: Not yet implemented. -->
-              <div>??? submissions</div>
-            </td>
-            <td>
-              {{ updatedAt(form) }}
-            </td>
-            <!-- TODO: Not yet implemented. -->
-            <td>
-              ???
-            </td>
-          </router-link>
-        </tbody>
-      </table>
-    </template>
-    <form-new v-bind="newForm" @hide="newForm.state = false"
-      @create="afterCreate"/>
+              <td>
+                ???
+              </td>
+            </router-link>
+          </tbody>
+        </table>
+      </template>
+      <form-new v-bind="newForm" @hide="newForm.state = false"
+        @create="afterCreate"/>
     </page-body>
   </div>
 </template>

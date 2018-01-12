@@ -15,22 +15,22 @@ except according to the terms contained in the LICENSE file.
       <template slot="title">Log in</template>
     </page-head>
     <page-body>
-    <alerts :list="alerts" @dismiss="dismissAlert"/>
-    <app-form @submit="logIn">
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" v-model.trim="email" id="email" class="form-control"
-          placeholder="Email" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" v-model="password" id="password"
-          class="form-control" placeholder="Password" required>
-      </div>
-      <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-        Log in
-      </button>
-    </app-form>
+      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <app-form @submit="logIn">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" v-model.trim="email" id="email"
+            class="form-control" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" v-model="password" id="password"
+            class="form-control" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+          Log in
+        </button>
+      </app-form>
     </page-body>
   </div>
 </template>
