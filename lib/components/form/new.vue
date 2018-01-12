@@ -38,7 +38,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'FormNew',
-  mixins: [alert, request],
+  mixins: [alert(), request()],
   props: {
     state: Boolean
   },

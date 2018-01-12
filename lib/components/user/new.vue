@@ -38,7 +38,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'UserNew',
-  mixins: [alert, request],
+  mixins: [alert(), request()],
   props: {
     state: Boolean
   },

@@ -105,7 +105,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'UserList',
-  mixins: [alert, request, highlight],
+  mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
       alerts: [],

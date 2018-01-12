@@ -88,7 +88,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'FormShow',
-  mixins: [alert, request],
+  mixins: [alert({ login: true }), request()],
   data() {
     return {
       alerts: [],

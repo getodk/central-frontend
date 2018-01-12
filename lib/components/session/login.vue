@@ -46,7 +46,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'SessionLogin',
-  mixins: [alert, request],
+  mixins: [alert(), request()],
   data() {
     return {
       alerts: [],
