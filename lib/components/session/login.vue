@@ -36,8 +36,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Vue from 'vue';
 import axios from 'axios';
 
+import Session from '../../session';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
@@ -53,10 +55,6 @@ export default {
     };
   },
   methods: {
-    updateHeader() {
-      const headers = axios.defaults.headers.common;
-      headers.Authorization = `Bearer ${this.$session.token}`;
-    },
     routeToNext() {
       let path = '/forms';
       const { next } = this.$route.query;
@@ -70,15 +68,19 @@ export default {
     logIn() {
       this
         .post('/sessions', { email: this.email, password: this.password })
-        .then(session => {
-          const success = this.$session.set(session);
-          if (success) {
-            this.updateHeader();
-            this.routeToNext();
-          } else {
-            console.log(session); // eslint-disable-line no-console
+        .then(sessionJson => {
+          try {
+            return new Session(sessionJson);
+          } catch (e) {
+            console.log(sessionJson); // eslint-disable-line no-console
             this.alerts.push('danger', 'Something went wrong while logging you in.');
+            throw e;
           }
+        })
+        .then(session => {
+          Vue.prototype.$session = session;
+          axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
+          this.routeToNext();
         })
         .catch(() => {});
     }
