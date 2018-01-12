@@ -69,6 +69,11 @@ export default {
     };
   },
   methods: {
+    problemToAlert(problem) {
+      return problem.code === 401.2
+        ? 'Incorrect email address and/or password.'
+        : null;
+    },
     validateSessionJson(json) {
       try {
         return new Session(json);
