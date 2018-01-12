@@ -71,34 +71,33 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
 .navbar {
   background-color: #9f3468;
   margin-bottom: 0;
 }
 
-.navbar-default .navbar-brand,
-.navbar-default .navbar-brand:focus,
-.navbar-default .navbar-nav > li > a,
-.navbar-default .navbar-nav > li > a:focus,
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: white;
-}
+.navbar-default {
+  .navbar-brand,
+  .navbar-nav > li > a,
+  .navbar-nav > .active > a {
+    &, &:focus {
+      color: white;
+    }
 
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > .active > a:hover {
-  color: #e8e8e8;
-}
+    &:hover {
+      color: #e8e8e8;
+    }
+  }
 
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  /* border-top-width and padding-top must sum to 15px. */
-  border-top: white solid 2px;
-  padding-top: 13px;
+  .navbar-nav > .active > a {
+    &, &:hover, &:focus {
+      // border-top-width and padding-top must sum to 15px.
+      border-top: white solid 2px;
+      padding-top: 13px;
 
-  background-color: #973163;
+      background-color: #973163;
+    }
+  }
 }
 </style>

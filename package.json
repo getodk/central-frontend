@@ -36,6 +36,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-html": "^4.0.0",
     "eslint-plugin-import": "^2.8.0",
+    "node-sass": "^4.7.2",
     "proxyquireify": "^3.0.1",
     "uglify-js": "^2.5.0",
     "vueify": "^9.0.0",

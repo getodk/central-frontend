@@ -136,14 +136,16 @@ export default {
 };
 </script>
 
-<style>
-table > thead > tr > th:nth-child(2),
-table > tbody > tr > td:nth-child(2) {
-  width: 175px;
-}
+<style lang="sass">
+table {
+  & > thead > tr > th:nth-child(2),
+  & > tbody > tr > td:nth-child(2) {
+    width: 175px;
+  }
 
-table > thead > tr > th:nth-child(3),
-table > tbody > tr > td:nth-child(3) {
-  width: 150px;
+  & > thead > tr > th:nth-child(3),
+  & > tbody > tr > td:nth-child(3) {
+    width: 150px;
+  }
 }
 </style>

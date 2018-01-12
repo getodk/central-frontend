@@ -27,7 +27,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
 .table > thead {
   background-color: #ddd;
 }

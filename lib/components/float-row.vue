@@ -24,7 +24,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
 .float-row-container > * {
   float: right;
 }

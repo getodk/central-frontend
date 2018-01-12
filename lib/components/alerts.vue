@@ -28,12 +28,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
 .alert {
   margin-bottom: 10px;
-}
 
-.alert:last-child {
-  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 20px;
+  }
 }
 </style>

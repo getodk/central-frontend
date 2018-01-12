@@ -114,21 +114,23 @@ export default {
 };
 </script>
 
-<style scoped>
-table > thead > tr > th:nth-child(n+2),
-table > tbody > tr > td:nth-child(n+2) {
-  width: 200px;
-}
+<style lang="sass" scoped>
+table {
+  & > thead > tr > th:nth-child(n+2),
+  & > tbody > tr > td:nth-child(n+2) {
+    width: 200px;
+  }
 
-table > tbody {
-  cursor: pointer;
-}
+  & > tbody {
+    cursor: pointer;
 
-table > tbody > tr > td {
-  vertical-align: middle;
-}
+    & > tr > td {
+      vertical-align: middle;
 
-table > tbody > tr > td:first-child > div:first-child {
-  font-size: 30px;
+      &:first-child > div:first-child {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>
