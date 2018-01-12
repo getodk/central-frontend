@@ -36,12 +36,34 @@ except according to the terms contained in the LICENSE file.
             </router-link>
           </li>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li v-if="loggedOut">
+            <a href="#" @click.prevent>
+              <span class="icon-user-circle-o"></span> Not Logged in
+            </a>
+          </li>
+          <li v-else class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+              role="button" aria-haspopup="true" aria-expanded="false">
+              <span class="icon-user-circle-o"></span> {{ email }}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#" @click.prevent="logOut">Log out</a></li>
+            </ul>
+          </li>
+        </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
 </template>
 
 <script>
+import Vue from 'vue';
+import axios from 'axios';
+
+import { logRequestError } from '../mixins/request';
+
 class Link {
   constructor(component, text, to) {
     this.component = component;
@@ -67,8 +89,33 @@ export default {
       links: [
         new Link(this, 'Forms', '/forms'),
         new Link(this, 'Users', '/users')
-      ]
+      ],
+      loggedIn: false,
+      email: ''
     };
+  },
+  computed: {
+    loggedOut() {
+      return !this.loggedIn;
+    }
+  },
+  watch: {
+    $route() {
+      this.loggedIn = this.$session != null;
+      this.email = this.loggedIn ? this.$user.email : '';
+    }
+  },
+  methods: {
+    logOut() {
+      const encodedToken = encodeURIComponent(this.$session.token);
+      // Using axios directly rather than the request mixin, because multiple
+      // pending DELETE requests are possible and unproblematic.
+      axios.delete(`/sessions/${encodedToken}`).catch(logRequestError);
+      Vue.prototype.$session = null;
+      Vue.prototype.$user = null;
+      delete axios.defaults.headers.common.Authorization;
+      this.$router.push('/login');
+    }
   }
 };
 </script>
@@ -85,7 +132,8 @@ $hover-color: #ddd;
 
   .navbar-brand,
   .navbar-nav > li > a,
-  .navbar-nav > .active > a {
+  .navbar-nav > .active > a,
+  .navbar-nav > .open > a {
     &, &:focus {
       color: white;
     }
@@ -115,6 +163,12 @@ $hover-color: #ddd;
       & > li:first-child > a {
         margin-left: 30px;
       }
+
+      & > .open > a {
+        &, &:hover, &:focus {
+          background-color: $active-background-color;
+        }
+      }
     }
   }
 
@@ -129,12 +183,30 @@ $hover-color: #ddd;
         background-color: $hover-color;
       }
 
-      &:focus {
+      &:hover, &:focus {
         background-color: $heading-background-color;
       }
 
-      &:hover, &:not(.collapsed) {
+      &:not(.collapsed) {
         background-color: $active-background-color;
+      }
+    }
+
+    .navbar-nav > .open {
+      & > a {
+        &, &:hover, &:focus {
+          background-color: $heading-background-color;
+        }
+      }
+
+      .dropdown-menu > li > a {
+        &, &:focus {
+          color: white;
+        }
+
+        &:hover {
+          color: $hover-color;
+        }
       }
     }
   }

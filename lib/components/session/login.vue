@@ -27,8 +27,8 @@ except according to the terms contained in the LICENSE file.
           <input type="password" v-model="password" id="password"
             class="form-control" placeholder="Password" required>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-          Log in <spinner :state="awaitingResponse"/>
+        <button type="submit" class="btn btn-primary" :disabled="disabled">
+          Log in <spinner :state="disabled"/>
         </button>
       </app-form>
     </page-body>
@@ -40,6 +40,7 @@ import Vue from 'vue';
 import axios from 'axios';
 
 import Session from '../../session';
+import User from '../../user';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
@@ -50,11 +51,44 @@ export default {
     return {
       alerts: [],
       requestId: null,
+      disabled: false,
       email: '',
       password: ''
     };
   },
   methods: {
+    validateSessionJson(json) {
+      try {
+        return new Session(json);
+      } catch (e) {
+        console.log(json); // eslint-disable-line no-console
+        this.alerts.push('danger', 'Something went wrong while creating a session.');
+        throw e;
+      }
+    },
+    fetchUser(session) {
+      return new Promise((resolve, reject) => {
+        const headers = { Authorization: `Bearer ${session.token}` };
+        this
+          .get('/users/current', { headers })
+          .then(userJson => resolve({ session, userJson }))
+          .catch(error => reject(error));
+      });
+    },
+    validateUserJson({ session, userJson }) {
+      try {
+        return { session, user: new User(userJson) };
+      } catch (e) {
+        console.log(userJson); // eslint-disable-line no-console
+        this.alerts.push('danger', 'Something went wrong while retrieving the current user.');
+        throw e;
+      }
+    },
+    updateGlobals({ session, user }) {
+      Vue.prototype.$session = session;
+      Vue.prototype.$user = user;
+      axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
+    },
     routeToNext() {
       let path = '/forms';
       const { next } = this.$route.query;
@@ -68,23 +102,17 @@ export default {
       this.$router.push({ path, query });
     },
     logIn() {
+      this.disabled = true;
       this
         .post('/sessions', { email: this.email, password: this.password })
-        .then(sessionJson => {
-          try {
-            return new Session(sessionJson);
-          } catch (e) {
-            console.log(sessionJson); // eslint-disable-line no-console
-            this.alerts.push('danger', 'Something went wrong while logging you in.');
-            throw e;
-          }
-        })
-        .then(session => {
-          Vue.prototype.$session = session;
-          axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
-          this.routeToNext();
-        })
-        .catch(() => {});
+        .then(sessionJson => this.validateSessionJson(sessionJson))
+        .then(session => this.fetchUser(session))
+        .then(result => this.validateUserJson(result))
+        .then(result => this.updateGlobals(result))
+        .then(() => this.routeToNext())
+        .catch(() => {
+          this.disabled = false;
+        });
     }
   }
 };
