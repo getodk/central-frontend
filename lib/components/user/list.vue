@@ -109,7 +109,7 @@ export default {
   data() {
     return {
       alerts: [],
-      awaitingResponse: false,
+      requestId: null,
       users: null,
       highlighted: null,
       newUser: {
@@ -131,10 +131,10 @@ export default {
       this.users = null;
       this
         .get('/users')
-        .then(response => {
-          this.users = response.data;
+        .then(users => {
+          this.users = users;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     },
     actionsId(index) {
       return `user-list-actions${index}`;

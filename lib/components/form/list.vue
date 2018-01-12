@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       alerts: [],
-      awaitingResponse: false,
+      requestId: null,
       forms: null,
       highlighted: null,
       newForm: {
@@ -95,10 +95,10 @@ export default {
       this.forms = null;
       this
         .get('/forms')
-        .then(response => {
-          this.forms = response.data;
+        .then(forms => {
+          this.forms = forms;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     },
     updatedAt(form) {
       const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;

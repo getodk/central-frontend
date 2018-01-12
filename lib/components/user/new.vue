@@ -56,8 +56,8 @@ export default {
   data() {
     return {
       alerts: [],
-      form: this.blankForm(),
-      awaitingResponse: false
+      requestId: null,
+      form: this.blankForm()
     };
   },
   computed: {
@@ -77,13 +77,13 @@ export default {
       const data = { email: this.form.email, password: this.form.password };
       this
         .post('/users', data)
-        .then(response => {
+        .then(user => {
           this.$emit('hide');
           this.alerts = [];
           this.form = this.blankForm();
-          this.$emit('create', response.data);
+          this.$emit('create', user);
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     }
   }
 };

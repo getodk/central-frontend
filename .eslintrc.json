@@ -25,7 +25,6 @@ except according to the terms contained in the LICENSE file.
     "arrow-parens": "off",
     "comma-dangle": ["error", "never"],
     "curly": "off",
-    "no-console": "off",
     "no-multiple-empty-lines": ["error", { "max": 3 }],
     "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],

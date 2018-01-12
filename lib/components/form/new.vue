@@ -44,8 +44,8 @@ export default {
   data() {
     return {
       alerts: [],
-      xml: '',
-      awaitingResponse: false
+      requestId: null,
+      xml: ''
     };
   },
   methods: {
@@ -53,13 +53,13 @@ export default {
       const headers = { 'Content-Type': 'application/xml' };
       this
         .post('/forms', this.xml, { headers })
-        .then(response => {
+        .then(form => {
           this.$emit('hide');
           this.alerts = [];
           this.xml = '';
-          this.$emit('create', response.data);
+          this.$emit('create', form);
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     }
   }
 };

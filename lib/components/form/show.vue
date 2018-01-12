@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       alerts: [],
-      awaitingResponse: false,
+      requestId: null,
       submissions: null
     };
   },
@@ -115,18 +115,18 @@ export default {
       this.submissions = null;
       this
         .get(`/forms/${this.xmlFormId}/submissions`)
-        .then(response => {
+        .then(submissions => {
           // Add a unique ID to each submission so that we can use the ID as the
           // v-for key.
-          const submissions = [];
-          for (const submission of response.data) {
+          const submissionsWithIds = [];
+          for (const submission of submissions) {
             const id = { id: this.$uniqueId() };
             const submissionWithId = Object.assign(id, submission);
-            submissions.push(submissionWithId);
+            submissionsWithIds.push(submissionWithId);
           }
-          this.submissions = submissions;
+          this.submissions = submissionsWithIds;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     },
     createdAt(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');

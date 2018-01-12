@@ -47,9 +47,9 @@ export default {
   data() {
     return {
       alerts: [],
+      requestId: null,
       email: '',
-      password: '',
-      awaitingResponse: false
+      password: ''
     };
   },
   methods: {
@@ -68,20 +68,19 @@ export default {
       this.$router.push(path);
     },
     logIn() {
-      const data = { email: this.email, password: this.password };
       this
-        .post('/sessions', data)
-        .then(response => {
-          const success = this.$session.set(response.data);
+        .post('/sessions', { email: this.email, password: this.password })
+        .then(session => {
+          const success = this.$session.set(session);
           if (success) {
             this.updateHeader();
             this.routeToNext();
           } else {
-            console.log(response.data);
+            console.log(session); // eslint-disable-line no-console
             this.alerts.push('danger', 'Something went wrong while logging you in.');
           }
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     }
   }
 };
