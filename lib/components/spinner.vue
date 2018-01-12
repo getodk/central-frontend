@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <visibility-delay :state="state">
-    <p class="text-center text-muted">Loading…</p>
+  <visibility-delay :state="state" inline>
+    <div class="spinner">spinner</div>
   </visibility-delay>
 </template>
 
@@ -19,10 +19,17 @@ except according to the terms contained in the LICENSE file.
 import VisibilityDelay from './visibility-delay.vue';
 
 export default {
-  name: 'Loading',
+  name: 'Spinner',
   props: {
     state: Boolean
   },
   components: { VisibilityDelay }
 };
 </script>
+
+<style lang="sass">
+.spinner {
+  display: inline;
+  background-color: red;
+}
+</style>

@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
             class="form-control" placeholder="Password" required>
         </div>
         <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-          Log in
+          Log in <spinner :state="awaitingResponse"/>
         </button>
       </app-form>
     </page-body>

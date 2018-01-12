@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
     <template slot="footer">
       <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
         @click="submit">
-        Create
+        Create <spinner :state="awaitingResponse"/>
       </button>
     </template>
   </modal>
