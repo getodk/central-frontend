@@ -14,13 +14,14 @@ except according to the terms contained in the LICENSE file.
     <template slot="title">Create Form</template>
     <template slot="body">
       <alerts :list="alerts" @dismiss="dismissAlert"/>
-      <app-form @submit="submit">
+      <form @submit.prevent="submit">
         <div class="form-group">
-          <label for="xml">Form XML *</label>
-          <textarea v-model="xml" id="xml" class="form-control" required rows="10">
+          <label for="form-new-xml">Form XML *</label>
+          <textarea v-model="xml" id="form-new-xml" class="form-control"
+            required :disabled="awaitingResponse" rows="10">
           </textarea>
         </div>
-      </app-form>
+      </form>
     </template>
     <template slot="footer">
       <button type="button" class="btn btn-primary" :disabled="awaitingResponse"

@@ -10,29 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" backdrop>
+  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop>
     <template slot="title">Create Staff User</template>
     <template slot="body">
       <alerts :list="alerts" @dismiss="dismissAlert"/>
-      <app-form @submit="submit">
+      <form @submit.prevent="submit">
         <div class="form-group">
-          <label for="email">Email address *</label>
-          <input type="email" v-model.trim="form.email" id="email"
+          <label for="user-new-email">Email address *</label>
+          <input type="email" v-model.trim="email" id="user-new-email"
             class="form-control" placeholder="Email" required
-            @keyup.enter="submit">
+            :disabled="awaitingResponse" @keyup.enter="submit">
         </div>
-        <div class="form-group">
-          <label for="password">Password *</label>
-          <input :type="passwordType" v-model="form.password" id="password"
-            class="form-control" placeholder="Password" required
-            @keyup.enter="submit">
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" v-model="form.showPassword"> Show Password
-          </label>
-        </div>
-      </app-form>
+      </form>
     </template>
     <template slot="footer">
       <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
@@ -57,30 +46,20 @@ export default {
     return {
       alerts: [],
       requestId: null,
-      form: this.blankForm()
+      email: ''
     };
   },
-  computed: {
-    passwordType() {
-      return this.form.showPassword ? 'text' : 'password';
-    }
-  },
   methods: {
-    blankForm() {
-      return {
-        email: '',
-        showPassword: false,
-        password: ''
-      };
+    focusField() {
+      $('#user-new-email').focus();
     },
     submit() {
-      const data = { email: this.form.email, password: this.form.password };
       this
-        .post('/users', data)
+        .post('/users', { email: this.email })
         .then(user => {
           this.$emit('hide');
           this.alerts = [];
-          this.form = this.blankForm();
+          this.email = '';
           this.$emit('create', user);
         })
         .catch(() => {});

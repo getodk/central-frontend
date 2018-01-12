@@ -60,12 +60,18 @@ export default {
     }
   },
   mounted() {
+    $(this.$refs.modal)
+      .on('shown.bs.modal', () => this.$emit('shown'))
+      .on('hidden.bs.modal', () => this.$emit('hidden'));
     this.toggle(this.state);
   },
   watch: {
     state(newState) {
       this.toggle(newState);
     }
+  },
+  beforeDestroy() {
+    $(this.$refs.modal).off();
   },
   methods: {
     /* toggle() manually toggles the modal. It is the only way the modal is
