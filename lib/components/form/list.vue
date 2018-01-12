@@ -106,7 +106,7 @@ export default {
     },
     afterCreate(form) {
       this.fetchData();
-      this.alert('success', `Form ${form.xmlFormId} created successfully.`);
+      this.alert('success', `Form ${form.xmlFormId} was created successfully.`);
       this.highlighted = form.xmlFormId;
     }
   },

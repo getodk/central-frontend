@@ -51,10 +51,12 @@ class Link {
 
   get active() {
     const { path } = this.component.$route;
-    if (path === this.to || path.startsWith(`${this.to}/`)) return true;
+    if (path !== '/login')
+      return path === this.to || path.startsWith(`${this.to}/`);
     const { next } = this.component.$route.query;
-    if (path !== '/login' || next == null) return false;
-    return next === this.to || next.startsWith(`${this.to}/`);
+    return next == null
+      ? this.to === '/forms'
+      : next === this.to || next.startsWith(`${this.to}/`);
   }
 }
 

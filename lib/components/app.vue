@@ -28,6 +28,14 @@ export default {
 </script>
 
 <style lang="sass">
+// Global styles should go here.
+
+@import '../../assets/scss/variables';
+
+body {
+  background-color: $background-color;
+}
+
 .table > thead {
   background-color: #ddd;
 }

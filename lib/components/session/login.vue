@@ -45,7 +45,6 @@ export default {
   name: 'SessionLogin',
   mixins: [alert, request],
   data() {
-    console.log(this);
     return {
       alerts: [],
       email: '',
@@ -79,8 +78,7 @@ export default {
             this.routeToNext();
           } else {
             console.log(response.data);
-            this.danger.message = 'Something went wrong while logging you in.';
-            this.danger.state = true;
+            this.alerts.push('danger', 'Something went wrong while logging you in.');
           }
         })
         .catch(error => console.error(error));

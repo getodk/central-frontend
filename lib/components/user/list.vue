@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
                 `user`. -->
                 <td>Yes</td>
                 <td>
-                  <a href="#" @click.prevent="resetPassword.show(user)">
+                  <a href="#" @click.prevent="showResetPassword(user)">
                     Reset Password
                   </a>
                 </td>
@@ -105,10 +105,6 @@ export default {
         state: false,
         user: {
           email: ''
-        },
-        show(user) {
-          this.user = user;
-          this.state = true;
         }
       }
     };
@@ -126,9 +122,13 @@ export default {
         })
         .catch(error => console.error(error));
     },
+    showResetPassword(user) {
+      this.resetPassword.user = user;
+      this.resetPassword.state = true;
+    },
     afterCreate(user) {
       this.fetchData();
-      this.alert('success', `User created successfully for ${user.email}.`);
+      this.alert('success', `A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     }
   },
@@ -136,7 +136,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 table {
   & > thead > tr > th:nth-child(2),
   & > tbody > tr > td:nth-child(2) {

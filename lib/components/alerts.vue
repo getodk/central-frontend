@@ -22,13 +22,16 @@ import Alert from './alert.vue';
 export default {
   name: 'Alerts',
   props: {
-    list: Array
+    list: {
+      type: Array,
+      required: true
+    }
   },
   components: { Alert }
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .alert {
   margin-bottom: 10px;
 

@@ -62,9 +62,6 @@ export default {
   mounted() {
     this.toggle(this.state);
   },
-  beforeDestroy() {
-    $(this.$refs.modal).off();
-  },
   watch: {
     state(newState) {
       this.toggle(newState);

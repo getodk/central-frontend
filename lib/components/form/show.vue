@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div id="submissions" class="tab-pane active" role="tabpanel">
           <alerts :list="alerts" @dismiss="dismissAlert"/>
-          <loading :state="loading"/>
+          <loading :state="awaitingResponse"/>
           <!-- Render this element once the submissions have been fetched. -->
           <template v-if="submissions">
             <p v-if="submissions.length === 0">
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       alerts: [],
-      loading: false,
+      awaitingResponse: false,
       submissions: null
     };
   },

@@ -28,6 +28,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../assets/scss/variables';
+
 #page-head {
   background-color: #eee;
   margin-bottom: 15px;
@@ -46,6 +48,10 @@ export default {
 
         & > a {
           border-bottom: none;
+        }
+
+        &.active > a {
+          background-color: $background-color;
         }
       }
     }
