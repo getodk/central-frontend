@@ -63,7 +63,9 @@ export default {
         link.href = next;
         if (link.host === window.location.host) path = link.pathname;
       }
-      this.$router.push(path);
+      const query = Object.assign({}, this.$route.query);
+      delete query.next;
+      this.$router.push({ path, query });
     },
     logIn() {
       this
