@@ -74,6 +74,7 @@ import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
 export default {
+  name: 'FormList',
   mixins: [alert, request, highlight],
   data() {
     return {
