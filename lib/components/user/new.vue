@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop>
     <template slot="title">Create Staff User</template>
     <template slot="body">
-      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <alert v-bind="alert" @close="alert.state = false"/>
       <form @submit.prevent="submit">
         <div class="form-group">
           <label for="user-new-email">Email address *</label>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       email: ''
     };
@@ -63,7 +63,7 @@ export default {
         .post('/users', { email: this.email })
         .then(user => {
           this.$emit('hide');
-          this.alerts = [];
+          this.alert = alert.blank();
           this.email = '';
           this.$emit('create', user);
         })

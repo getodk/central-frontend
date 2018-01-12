@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <div class="tab-content">
         <div id="staff" class="tab-pane active" role="tabpanel">
-          <alerts :list="alerts" @dismiss="dismissAlert"/>
+          <alert v-bind="alert" @close="alert.state = false"/>
           <float-row>
             <button type="button" class="btn btn-primary"
               @click="newUser.state = true">
@@ -108,7 +108,7 @@ export default {
   mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       users: null,
       highlighted: null,
@@ -145,7 +145,7 @@ export default {
     },
     afterCreate(user) {
       this.fetchData();
-      this.alert('success', `A user was created successfully for ${user.email}.`);
+      this.alert = alert.success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     }
   },

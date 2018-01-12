@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
           Not yet implemented.
         </div>
         <div id="submissions" class="tab-pane active" role="tabpanel">
-          <alerts :list="alerts" @dismiss="dismissAlert"/>
+          <alert v-bind="alert" @close="alert.state = false"/>
           <loading :state="awaitingResponse"/>
           <!-- Render this element once the submissions have been fetched. -->
           <template v-if="submissions">
@@ -91,7 +91,7 @@ export default {
   mixins: [alert({ login: true }), request()],
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       submissions: null
     };
@@ -107,7 +107,7 @@ export default {
   watch: {
     $route() {
       this.fetchData();
-      this.alerts = [];
+      this.alert = alert.blank();
     }
   },
   methods: {

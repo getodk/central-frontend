@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" @hide="$emit('hide')" backdrop>
     <template slot="title">Create Form</template>
     <template slot="body">
-      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <alert v-bind="alert" @close="alert.state = false"/>
       <form @submit.prevent="submit">
         <div class="form-group">
           <label for="form-new-xml">Form XML *</label>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       xml: ''
     };
@@ -61,7 +61,7 @@ export default {
         .post('/forms', this.xml, { headers })
         .then(form => {
           this.$emit('hide');
-          this.alerts = [];
+          this.alert = alert.blank();
           this.xml = '';
           this.$emit('create', form);
         })

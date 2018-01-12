@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <alerts :list="alerts" @dismiss="dismissAlert"/>
+      <alert v-bind="alert" @close="alert.state = false"/>
       <float-row>
         <button type="button" class="btn btn-primary"
           @click="newForm.state = true">
@@ -78,7 +78,7 @@ export default {
   mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       forms: null,
       highlighted: null,
@@ -106,7 +106,7 @@ export default {
     },
     afterCreate(form) {
       this.fetchData();
-      this.alert('success', `Form ${form.xmlFormId} was created successfully.`);
+      this.alert = alert.success(`Form ${form.xmlFormId} was created successfully.`);
       this.highlighted = form.xmlFormId;
     }
   },

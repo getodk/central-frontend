@@ -10,15 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div :class="htmlClass" role="alert">
+  <div v-show="state" :class="htmlClass" role="alert">
     <!-- Instead of using Boostrap's alert plugin, which would remove the alert
-    from the DOM, we simply emit a hide event, for which the parent component
+    from the DOM, we simply emit a close event, for which the parent component
     should listen. -->
-    <button type="button" class="close" aria-label="Close"
-      @click="$emit('dismiss')">
+    <button type="button" class="close" aria-label="Close" @click="$emit('close')">
       <span aria-hidden="true">&times;</span>
     </button>
-
     {{ message }}
   </div>
 </template>
@@ -27,7 +25,7 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'Alert',
   props: {
-    id: Number,
+    state: Boolean,
     type: {
       type: String,
       required: true

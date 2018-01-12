@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
           <h1 class="panel-title">Log in</h1>
         </div>
         <div class="panel-body">
-          <alerts :list="alerts" @dismiss="dismissAlert"/>
+          <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <div class="form-group">
               <label for="session-login-email">Email address *</label>
@@ -61,7 +61,7 @@ export default {
   mixins: [alert(), request()],
   data() {
     return {
-      alerts: [],
+      alert: alert.blank(),
       requestId: null,
       disabled: false,
       email: '',
@@ -79,7 +79,7 @@ export default {
         return new Session(json);
       } catch (e) {
         console.log(json); // eslint-disable-line no-console
-        this.alerts.push('danger', 'Something went wrong while creating a session.');
+        this.alert = alert.danger('Something went wrong while creating a session.');
         throw e;
       }
     },
@@ -97,7 +97,7 @@ export default {
         return { session, user: new User(userJson) };
       } catch (e) {
         console.log(userJson); // eslint-disable-line no-console
-        this.alerts.push('danger', 'Something went wrong while retrieving the current user.');
+        this.alert = alert.danger('Something went wrong while retrieving the current user.');
         throw e;
       }
     },
