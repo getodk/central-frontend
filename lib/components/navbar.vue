@@ -74,12 +74,15 @@ export default {
 </script>
 
 <style lang="sass">
-.navbar {
-  background-color: #9f3468;
-  margin-bottom: 0;
-}
+@import '../../assets/scss/variables';
+
+$active-background-color: #973163;
+$hover-color: #ddd;
 
 .navbar-default {
+  background-color: $heading-background-color;
+  margin-bottom: 0;
+
   .navbar-brand,
   .navbar-nav > li > a,
   .navbar-nav > .active > a {
@@ -88,17 +91,51 @@ export default {
     }
 
     &:hover {
-      color: #e8e8e8;
+      color: $hover-color;
     }
   }
 
   .navbar-nav > .active > a {
     &, &:hover, &:focus {
-      // border-top-width and padding-top must sum to 15px.
-      border-top: white solid 2px;
-      padding-top: 13px;
+      background-color: $active-background-color;
+    }
+  }
 
-      background-color: #973163;
+  // Navbar is not collapsed.
+  @media (min-width: 768px) {
+    .navbar-nav {
+      & > .active > a {
+        &, &:hover, &:focus {
+          // border-top-width and padding-top must sum to 15px.
+          border-top: white solid 2px;
+          padding-top: 13px;
+        }
+      }
+
+      & > li:first-child > a {
+        margin-left: 30px;
+      }
+    }
+  }
+
+  // Navbar is collapsed.
+  @media (max-width: 767px) {
+    .navbar-toggle {
+      .icon-bar {
+        background-color: white;
+      }
+
+      &:hover .icon-bar {
+        background-color: $hover-color;
+      }
+
+      &:focus {
+        background-color: $heading-background-color;
+      }
+
+      &:hover, &:not(.collapsed) {
+        background-color: $active-background-color;
+      }
     }
   }
 }
