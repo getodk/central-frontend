@@ -35,8 +35,14 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'Modal',
   props: {
-    state: Boolean,
-    backdrop: Boolean
+    state: {
+      type: Boolean,
+      default: false
+    },
+    backdrop: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     const id = this.$uniqueId();
@@ -53,16 +59,16 @@ export default {
       return this.backdrop ? 'static' : 'false';
     }
   },
+  watch: {
+    state(newState) {
+      this.toggle(newState);
+    }
+  },
   mounted() {
     $(this.$refs.modal)
       .on('shown.bs.modal', () => this.$emit('shown'))
       .on('hidden.bs.modal', () => this.$emit('hidden'));
     this.toggle(this.state);
-  },
-  watch: {
-    state(newState) {
-      this.toggle(newState);
-    }
   },
   beforeDestroy() {
     $(this.$refs.modal).off();
