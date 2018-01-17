@@ -84,13 +84,10 @@ export default {
       }
     },
     fetchUser(session) {
-      return new Promise((resolve, reject) => {
-        const headers = { Authorization: `Bearer ${session.token}` };
-        this
-          .get('/users/current', { headers })
-          .then(userJson => resolve({ session, userJson }))
-          .catch(error => reject(error));
-      });
+      const headers = { Authorization: `Bearer ${session.token}` };
+      return this
+        .get('/users/current', { headers })
+        .then(userJson => ({ session, userJson }));
     },
     validateUserJson({ session, userJson }) {
       try {
