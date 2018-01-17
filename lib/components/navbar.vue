@@ -106,15 +106,26 @@ export default {
     }
   },
   methods: {
-    logOut() {
+    deleteSession() {
       const encodedToken = encodeURIComponent(this.$session.token);
       // Using axios directly rather than the request mixin, because multiple
       // pending DELETE requests are possible and unproblematic.
       axios.delete(`/sessions/${encodedToken}`).catch(logRequestError);
+    },
+    updateGlobals() {
       Vue.prototype.$session = null;
       Vue.prototype.$user = null;
       delete axios.defaults.headers.common.Authorization;
-      this.$router.push('/login');
+    },
+    routeToLogin() {
+      const query = Object.assign({}, this.$route.query);
+      query.next = this.$route.path;
+      this.$router.push({ path: '/login', query });
+    },
+    logOut() {
+      this.deleteSession();
+      this.updateGlobals();
+      this.routeToLogin();
     }
   }
 };
