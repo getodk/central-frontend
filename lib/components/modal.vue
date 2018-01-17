@@ -26,12 +26,6 @@ except according to the terms contained in the LICENSE file.
         <div class="modal-body">
           <slot name="body"></slot>
         </div>
-        <div class="modal-footer">
-          <slot name="footer"></slot>
-          <button type="button" class="btn btn-default" @click="$emit('hide')">
-            Close
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -60,15 +54,18 @@ export default {
     }
   },
   mounted() {
+    $(this.$refs.modal)
+      .on('shown.bs.modal', () => this.$emit('shown'))
+      .on('hidden.bs.modal', () => this.$emit('hidden'));
     this.toggle(this.state);
-  },
-  beforeDestroy() {
-    $(this.$refs.modal).off();
   },
   watch: {
     state(newState) {
       this.toggle(newState);
     }
+  },
+  beforeDestroy() {
+    $(this.$refs.modal).off();
   },
   methods: {
     /* toggle() manually toggles the modal. It is the only way the modal is

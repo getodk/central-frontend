@@ -24,13 +24,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
 .float-row-container > * {
   float: right;
+
+  &:last-child {
+    margin-bottom: 20px;
+  }
 }
 
 .float-row-clear {
   clear: right;
-  margin-bottom: 20px;
 }
 </style>

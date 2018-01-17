@@ -20,47 +20,47 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-    <alerts :list="alerts" @dismiss="dismissAlert"/>
-    <float-row>
-      <button type="button" class="btn btn-primary"
-        @click="newForm.state = true">
-        Create a New Form
-      </button>
-    </float-row>
-    <loading :state="awaitingResponse"/>
-    <!-- Render this element once the forms have been fetched. -->
-    <template v-if="forms">
-      <p v-if="forms.length === 0">To get started, add a form.</p>
-      <table v-else class="table table-hover">
-        <thead>
-          <tr>
-            <th>Form ID</th>
-            <th>Last Modified</th>
-            <th>Last Submission</th>
-          </tr>
-        </thead>
-        <tbody>
-          <router-link v-for="form of forms" :key="form.xmlFormId"
-            :to="`/forms/${form.xmlFormId}`" tag="tr"
-            :class="highlight(form, 'xmlFormId')">
-            <td>
-              <div>{{ form.xmlFormId }}</div>
+      <alert v-bind="alert" @close="alert.state = false"/>
+      <float-row>
+        <button type="button" class="btn btn-primary"
+          @click="newForm.state = true">
+          <span class="icon-plus-circle"></span> Create a New Form
+        </button>
+      </float-row>
+      <loading :state="awaitingResponse"/>
+      <!-- Render this element once the forms have been fetched. -->
+      <template v-if="forms">
+        <p v-if="forms.length === 0">To get started, add a form.</p>
+        <table v-else id="form-list-table" class="table table-hover">
+          <thead>
+            <tr>
+              <th>Form ID</th>
+              <th>Last Modified</th>
+              <th>Last Submission</th>
+            </tr>
+          </thead>
+          <tbody>
+            <router-link v-for="form of forms" :key="form.xmlFormId"
+              :to="`/forms/${form.xmlFormId}`" tag="tr"
+              :class="highlight(form, 'xmlFormId')">
+              <td>
+                <div>{{ form.xmlFormId }}</div>
+                <!-- TODO: Not yet implemented. -->
+                <div>??? submissions</div>
+              </td>
+              <td>
+                {{ updatedAt(form) }}
+              </td>
               <!-- TODO: Not yet implemented. -->
-              <div>??? submissions</div>
-            </td>
-            <td>
-              {{ updatedAt(form) }}
-            </td>
-            <!-- TODO: Not yet implemented. -->
-            <td>
-              ???
-            </td>
-          </router-link>
-        </tbody>
-      </table>
-    </template>
-    <form-new v-bind="newForm" @hide="newForm.state = false"
-      @create="afterCreate"/>
+              <td>
+                ???
+              </td>
+            </router-link>
+          </tbody>
+        </table>
+      </template>
+      <form-new v-bind="newForm" @hide="newForm.state = false"
+        @create="afterCreate"/>
     </page-body>
   </div>
 </template>
@@ -74,11 +74,12 @@ import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
 export default {
-  mixins: [alert, request, highlight],
+  name: 'FormList',
+  mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
-      alerts: [],
-      awaitingResponse: false,
+      alert: alert.blank(),
+      requestId: null,
       forms: null,
       highlighted: null,
       newForm: {
@@ -94,10 +95,10 @@ export default {
       this.forms = null;
       this
         .get('/forms')
-        .then(response => {
-          this.forms = response.data;
+        .then(forms => {
+          this.forms = forms;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     },
     updatedAt(form) {
       const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
@@ -105,7 +106,7 @@ export default {
     },
     afterCreate(form) {
       this.fetchData();
-      this.alert('success', `Form ${form.xmlFormId} created successfully.`);
+      this.alert = alert.success(`Form ${form.xmlFormId} was created successfully.`);
       this.highlighted = form.xmlFormId;
     }
   },
@@ -113,21 +114,23 @@ export default {
 };
 </script>
 
-<style scoped>
-table > thead > tr > th:nth-child(n+2),
-table > tbody > tr > td:nth-child(n+2) {
-  width: 200px;
-}
+<style lang="sass">
+#form-list-table {
+  & > thead > tr > th:nth-child(n+2),
+  & > tbody > tr > td:nth-child(n+2) {
+    width: 200px;
+  }
 
-table > tbody {
-  cursor: pointer;
-}
+  & > tbody {
+    cursor: pointer;
 
-table > tbody > tr > td {
-  vertical-align: middle;
-}
+    & > tr > td {
+      vertical-align: middle;
 
-table > tbody > tr > td:first-child > div:first-child {
-  font-size: 30px;
+      &:first-child > div:first-child {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>

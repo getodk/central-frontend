@@ -13,20 +13,21 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" @hide="$emit('hide')" backdrop>
     <template slot="title">Create Form</template>
     <template slot="body">
-      <alerts :list="alerts" @dismiss="dismissAlert"/>
-      <app-form @submit="submit">
+      <alert v-bind="alert" @close="alert.state = false"/>
+      <form @submit.prevent="submit">
         <div class="form-group">
-          <label for="xml">Form XML *</label>
-          <textarea v-model="xml" id="xml" class="form-control" required rows="10">
+          <label for="form-new-xml">Form XML *</label>
+          <textarea v-model="xml" id="form-new-xml" class="form-control"
+            required :disabled="awaitingResponse" rows="10">
           </textarea>
         </div>
-      </app-form>
-    </template>
-    <template slot="footer">
-      <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
-        @click="submit">
-        Create
-      </button>
+        <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+          Create <spinner :state="awaitingResponse"/>
+        </button>
+        <button type="button" class="btn btn-default" @click="$emit('hide')">
+          Close
+        </button>
+      </form>
     </template>
   </modal>
 </template>
@@ -37,15 +38,15 @@ import request from '../../mixins/request';
 
 export default {
   name: 'FormNew',
-  mixins: [alert, request],
+  mixins: [alert(), request()],
   props: {
     state: Boolean
   },
   data() {
     return {
-      alerts: [],
-      xml: '',
-      awaitingResponse: false
+      alert: alert.blank(),
+      requestId: null,
+      xml: ''
     };
   },
   methods: {
@@ -53,13 +54,13 @@ export default {
       const headers = { 'Content-Type': 'application/xml' };
       this
         .post('/forms', this.xml, { headers })
-        .then(response => {
+        .then(form => {
           this.$emit('hide');
-          this.alerts = [];
+          this.alert = alert.blank();
           this.xml = '';
-          this.$emit('create', response.data);
+          this.$emit('create', form);
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     }
   }
 };

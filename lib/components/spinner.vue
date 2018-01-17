@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!--
 Copyright 2017 Super Adventure Developers
 See the NOTICE file at the top-level directory of this distribution and at
@@ -10,16 +9,27 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Super Adventure</title>
+<template>
+  <visibility-delay :state="state" inline>
+    <div class="spinner">spinner</div>
+  </visibility-delay>
+</template>
 
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="dist/build.css">
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="dist/build.js"></script>
-  </body>
-</html>
+<script>
+import VisibilityDelay from './visibility-delay.vue';
+
+export default {
+  name: 'Spinner',
+  props: {
+    state: Boolean
+  },
+  components: { VisibilityDelay }
+};
+</script>
+
+<style lang="sass">
+.spinner {
+  display: inline;
+  background-color: red;
+}
+</style>

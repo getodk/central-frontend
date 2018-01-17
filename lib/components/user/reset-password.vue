@@ -13,14 +13,19 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" @hide="$emit('hide')">
     <template slot="title">Reset Password</template>
     <template slot="body">
-      Once you click <strong>Reset Password</strong> below, the password for
-      {{ user.email }} will be immediately invalidated. An email will be sent to
-      {{ user.email }} with instructions on how to proceed.
-    </template>
-    <template slot="footer">
-      <button type="button" class="btn btn-primary" @click="resetPassword">
-        Reset Password
-      </button>
+      <p>
+        Once you click <strong>Reset Password</strong> below, the password for
+        {{ user.email }} will be immediately invalidated. An email will be sent
+        to {{ user.email }} with instructions on how to proceed.
+      </p>
+      <div>
+        <button type="button" class="btn btn-primary" @click="resetPassword">
+          Reset Password
+        </button>
+        <button type="button" class="btn btn-default" @click="$emit('hide')">
+          Close
+        </button>
+      </div>
     </template>
   </modal>
 </template>

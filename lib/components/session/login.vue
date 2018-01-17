@@ -10,52 +10,90 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <page-head>
-      <template slot="title">Log in</template>
-    </page-head>
-    <page-body>
-    <alerts :list="alerts" @dismiss="dismissAlert"/>
-    <app-form @submit="logIn">
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" v-model.trim="email" id="email" class="form-control"
-          placeholder="Email" required>
+  <div id="session-login" class="row">
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+      <div class="panel panel-default">
+        <div id="session-login-heading" class="panel-heading">
+          <h1 class="panel-title">Log in</h1>
+        </div>
+        <div class="panel-body">
+          <alert v-bind="alert" @close="alert.state = false"/>
+          <app-form @submit="submit">
+            <div class="form-group">
+              <label for="session-login-email">Email address *</label>
+              <input type="email" v-model.trim="email" id="session-login-email"
+                class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="form-group">
+              <label for="session-login-password">Password *</label>
+              <input type="password" v-model="password" id="session-login-password"
+                class="form-control" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" :disabled="disabled">
+              Log in <spinner :state="disabled"/>
+            </button>
+          </app-form>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" v-model="password" id="password"
-          class="form-control" placeholder="Password" required>
-      </div>
-      <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-        Log in
-      </button>
-    </app-form>
-    </page-body>
+    </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import axios from 'axios';
 
+import Session from '../../session';
+import User from '../../user';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
-  mixins: [alert, request],
+  name: 'SessionLogin',
+  mixins: [alert(), request()],
   data() {
-    console.log(this);
     return {
-      alerts: [],
+      alert: alert.blank(),
+      requestId: null,
+      disabled: false,
       email: '',
-      password: '',
-      awaitingResponse: false
+      password: ''
     };
   },
   methods: {
-    updateHeader() {
-      const headers = axios.defaults.headers.common;
-      headers.Authorization = `Bearer ${this.$session.token}`;
+    problemToAlert(problem) {
+      return problem.code === 401.2
+        ? 'Incorrect email address and/or password.'
+        : null;
+    },
+    validateSessionJson(json) {
+      try {
+        return new Session(json);
+      } catch (e) {
+        console.log(json); // eslint-disable-line no-console
+        this.alert = alert.danger('Something went wrong while creating a session.');
+        throw e;
+      }
+    },
+    fetchUser(session) {
+      const headers = { Authorization: `Bearer ${session.token}` };
+      return this
+        .get('/users/current', { headers })
+        .then(userJson => ({ session, userJson }));
+    },
+    validateUserJson({ session, userJson }) {
+      try {
+        return { session, user: new User(userJson) };
+      } catch (e) {
+        console.log(userJson); // eslint-disable-line no-console
+        this.alert = alert.danger('Something went wrong while retrieving the current user.');
+        throw e;
+      }
+    },
+    updateGlobals({ session, user }) {
+      Vue.prototype.$session = session;
+      Vue.prototype.$user = user;
+      axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
     },
     routeToNext() {
       let path = '/forms';
@@ -65,25 +103,36 @@ export default {
         link.href = next;
         if (link.host === window.location.host) path = link.pathname;
       }
-      this.$router.push(path);
+      const query = Object.assign({}, this.$route.query);
+      delete query.next;
+      this.$router.push({ path, query });
     },
-    logIn() {
-      const data = { email: this.email, password: this.password };
+    submit() {
+      this.disabled = true;
       this
-        .post('/sessions', data)
-        .then(response => {
-          const success = this.$session.set(response.data);
-          if (success) {
-            this.updateHeader();
-            this.routeToNext();
-          } else {
-            console.log(response.data);
-            this.danger.message = 'Something went wrong while logging you in.';
-            this.danger.state = true;
-          }
-        })
-        .catch(error => console.error(error));
+        .post('/sessions', { email: this.email, password: this.password })
+        .then(sessionJson => this.validateSessionJson(sessionJson))
+        .then(session => this.fetchUser(session))
+        .then(result => this.validateUserJson(result))
+        .then(result => this.updateGlobals(result))
+        .then(() => this.routeToNext())
+        .catch(() => {
+          this.disabled = false;
+        });
     }
   }
 };
 </script>
+
+<style lang="sass">
+@import '../../../assets/scss/variables';
+
+#session-login {
+  margin-top: 70px;
+}
+
+#session-login-heading {
+  color: white;
+  background-color: $heading-background-color;
+}
+</style>

@@ -36,15 +36,15 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <div class="tab-content">
         <div id="staff" class="tab-pane active" role="tabpanel">
-          <alerts :list="alerts" @dismiss="dismissAlert"/>
+          <alert v-bind="alert" @close="alert.state = false"/>
           <float-row>
             <button type="button" class="btn btn-primary"
               @click="newUser.state = true">
-            Create Staff User
+            <span class="icon-plus-circle"></span> Create Staff User
             </button>
           </float-row>
           <loading :state="awaitingResponse"/>
-          <table v-if="users" class="table table-hover">
+          <table v-if="users" id="user-list-table" class="table table-hover">
             <thead>
               <tr>
                 <th>Email</th>
@@ -53,16 +53,30 @@ except according to the terms contained in the LICENSE file.
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user of users" :key="user.id"
+              <tr v-for="(user, index) in users" :key="user.id"
                 :class="highlight(user, 'id')">
                 <td>{{ user.email }}</td>
                 <!-- TODO: Once this is added to the API, pull it from
                 `user`. -->
                 <td>Yes</td>
                 <td>
-                  <a href="#" @click.prevent="resetPassword.show(user)">
-                    Reset Password
-                  </a>
+                  <div class="dropdown">
+                    <button type="button" :id="actionsId(index)"
+                      class="btn btn-primary dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="true">
+                      <span class="icon-cog"></span>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right"
+                      :aria-labelledby="actionsId(index)">
+                      <li>
+                        <a href="#" @click.prevent="showResetPassword(user)">
+                          Reset Password
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -91,11 +105,11 @@ import request from '../../mixins/request';
 
 export default {
   name: 'UserList',
-  mixins: [alert, request, highlight],
+  mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
-      alerts: [],
-      awaitingResponse: false,
+      alert: alert.blank(),
+      requestId: null,
       users: null,
       highlighted: null,
       newUser: {
@@ -105,10 +119,6 @@ export default {
         state: false,
         user: {
           email: ''
-        },
-        show(user) {
-          this.user = user;
-          this.state = true;
         }
       }
     };
@@ -121,14 +131,21 @@ export default {
       this.users = null;
       this
         .get('/users')
-        .then(response => {
-          this.users = response.data;
+        .then(users => {
+          this.users = users;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
+    },
+    actionsId(index) {
+      return `user-list-actions${index}`;
+    },
+    showResetPassword(user) {
+      this.resetPassword.user = user;
+      this.resetPassword.state = true;
     },
     afterCreate(user) {
       this.fetchData();
-      this.alert('success', `User created successfully for ${user.email}.`);
+      this.alert = alert.success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     }
   },
@@ -136,14 +153,24 @@ export default {
 };
 </script>
 
-<style>
-table > thead > tr > th:nth-child(2),
-table > tbody > tr > td:nth-child(2) {
-  width: 175px;
-}
+<style lang="sass">
+#user-list-table {
+  & > thead > tr > th:nth-child(2),
+  & > tbody > tr > td:nth-child(2) {
+    width: 235px;
+  }
 
-table > thead > tr > th:nth-child(3),
-table > tbody > tr > td:nth-child(3) {
-  width: 150px;
+  & > thead > tr > th:nth-child(3),
+  & > tbody > tr > td:nth-child(3) {
+    width: 90px;
+  }
+
+  & > tbody > tr > td {
+    vertical-align: middle;
+
+    .dropdown-menu {
+      margin-right: 23px;
+    }
+  }
 }
 </style>

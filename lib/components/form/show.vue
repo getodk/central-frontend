@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
           Not yet implemented.
         </div>
         <div id="submissions" class="tab-pane active" role="tabpanel">
-          <alerts :list="alerts" @dismiss="dismissAlert"/>
-          <loading :state="loading"/>
+          <alert v-bind="alert" @close="alert.state = false"/>
+          <loading :state="awaitingResponse"/>
           <!-- Render this element once the submissions have been fetched. -->
           <template v-if="submissions">
             <p v-if="submissions.length === 0">
@@ -87,11 +87,12 @@ import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
-  mixins: [alert, request],
+  name: 'FormShow',
+  mixins: [alert({ login: true }), request()],
   data() {
     return {
-      alerts: [],
-      loading: false,
+      alert: alert.blank(),
+      requestId: null,
       submissions: null
     };
   },
@@ -106,7 +107,7 @@ export default {
   watch: {
     $route() {
       this.fetchData();
-      this.alerts = [];
+      this.alert = alert.blank();
     }
   },
   methods: {
@@ -114,18 +115,18 @@ export default {
       this.submissions = null;
       this
         .get(`/forms/${this.xmlFormId}/submissions`)
-        .then(response => {
+        .then(submissions => {
           // Add a unique ID to each submission so that we can use the ID as the
           // v-for key.
-          const submissions = [];
-          for (const submission of response.data) {
+          const submissionsWithIds = [];
+          for (const submission of submissions) {
             const id = { id: this.$uniqueId() };
             const submissionWithId = Object.assign(id, submission);
-            submissions.push(submissionWithId);
+            submissionsWithIds.push(submissionWithId);
           }
-          this.submissions = submissions;
+          this.submissions = submissionsWithIds;
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     },
     createdAt(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');

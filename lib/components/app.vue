@@ -27,8 +27,21 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
+// Global styles should go here.
+
+@import '../../assets/scss/icomoon';
+@import '../../assets/scss/variables';
+
+body {
+  background-color: $background-color;
+}
+
 .table > thead {
   background-color: #ddd;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  vertical-align: middle;
 }
 </style>

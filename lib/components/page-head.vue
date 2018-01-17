@@ -27,23 +27,34 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass">
+@import '../../assets/scss/variables';
+
 #page-head {
   background-color: #eee;
   margin-bottom: 15px;
-}
 
-#page-head > .col-xs-12 > p {
-  max-width: 650px;
-}
+  & > .col-xs-12 {
+    & > p {
+      max-width: 650px;
+    }
 
-#page-head > .col-xs-12 > .nav-tabs,
-#page-head > .col-xs-12 > .nav-tabs > li > a {
-  border-bottom: none;
-}
+    & > .nav-tabs {
+      border-bottom: none;
 
-#page-head > .col-xs-12 > .nav-tabs > li {
-  margin-top: 10px;
-  margin-bottom: 0;
+      & > li {
+        margin-top: 10px;
+        margin-bottom: 0;
+
+        & > a {
+          border-bottom: none;
+        }
+
+        &.active > a {
+          background-color: $background-color;
+        }
+      }
+    }
+  }
 }
 </style>

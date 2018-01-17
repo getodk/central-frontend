@@ -10,35 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" backdrop>
+  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop>
     <template slot="title">Create Staff User</template>
     <template slot="body">
-      <alerts :list="alerts" @dismiss="dismissAlert"/>
-      <app-form @submit="submit">
+      <alert v-bind="alert" @close="alert.state = false"/>
+      <form @submit.prevent="submit">
         <div class="form-group">
-          <label for="email">Email address *</label>
-          <input type="email" v-model.trim="form.email" id="email"
+          <label for="user-new-email">Email address *</label>
+          <input type="email" v-model.trim="email" id="user-new-email"
             class="form-control" placeholder="Email" required
-            @keyup.enter="submit">
+            :disabled="awaitingResponse">
         </div>
-        <div class="form-group">
-          <label for="password">Password *</label>
-          <input :type="passwordType" v-model="form.password" id="password"
-            class="form-control" placeholder="Password" required
-            @keyup.enter="submit">
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" v-model="form.showPassword"> Show Password
-          </label>
-        </div>
-      </app-form>
-    </template>
-    <template slot="footer">
-      <button type="button" class="btn btn-primary" :disabled="awaitingResponse"
-        @click="submit">
-        Create
-      </button>
+        <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+          Create <spinner :state="awaitingResponse"/>
+        </button>
+        <button type="button" class="btn btn-default" @click="$emit('hide')">
+          Close
+        </button>
+      </form>
     </template>
   </modal>
 </template>
@@ -49,41 +38,31 @@ import request from '../../mixins/request';
 
 export default {
   name: 'UserNew',
-  mixins: [alert, request],
+  mixins: [alert(), request()],
   props: {
     state: Boolean
   },
   data() {
     return {
-      alerts: [],
-      form: this.blankForm(),
-      awaitingResponse: false
+      alert: alert.blank(),
+      requestId: null,
+      email: ''
     };
   },
-  computed: {
-    passwordType() {
-      return this.form.showPassword ? 'text' : 'password';
-    }
-  },
   methods: {
-    blankForm() {
-      return {
-        email: '',
-        showPassword: false,
-        password: ''
-      };
+    focusField() {
+      $('#user-new-email').focus();
     },
     submit() {
-      const data = { email: this.form.email, password: this.form.password };
       this
-        .post('/users', data)
-        .then(response => {
+        .post('/users', { email: this.email })
+        .then(user => {
           this.$emit('hide');
-          this.alerts = [];
-          this.form = this.blankForm();
-          this.$emit('create', response.data);
+          this.alert = alert.blank();
+          this.email = '';
+          this.$emit('create', user);
         })
-        .catch(error => console.error(error));
+        .catch(() => {});
     }
   }
 };
