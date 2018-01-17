@@ -26,12 +26,6 @@ except according to the terms contained in the LICENSE file.
         <div class="modal-body">
           <slot name="body"></slot>
         </div>
-        <div class="modal-footer">
-          <slot name="footer"></slot>
-          <button type="button" class="btn btn-default" @click="$emit('hide')">
-            Close
-          </button>
-        </div>
       </div>
     </div>
   </div>

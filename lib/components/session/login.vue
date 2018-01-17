@@ -29,18 +29,10 @@ except according to the terms contained in the LICENSE file.
               <input type="password" v-model="password" id="session-login-password"
                 class="form-control" placeholder="Password" required>
             </div>
-            <!-- We include a visible button in the footer, but the form also
-            requires a button to work as expected. -->
-            <button type="submit" ref="submit" v-show="false" :disabled="disabled">
-              Log in
+            <button type="submit" class="btn btn-primary" :disabled="disabled">
+              Log in <spinner :state="disabled"/>
             </button>
           </app-form>
-        </div>
-        <div id="session-login-footer" class="panel-footer">
-          <button type="button" class="btn btn-primary" :disabled="disabled"
-            @click="triggerSubmit">
-            Log in <spinner :state="disabled"/>
-          </button>
         </div>
       </div>
     </div>
@@ -127,9 +119,6 @@ export default {
         .catch(() => {
           this.disabled = false;
         });
-    },
-    triggerSubmit() {
-      $(this.$refs.submit).click();
     }
   }
 };
@@ -145,9 +134,5 @@ export default {
 #session-login-heading {
   color: white;
   background-color: $heading-background-color;
-}
-
-#session-login-footer {
-  background-color: #eee;
 }
 </style>
