@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
-          <app-form @submit="submit">
+          <app-form id="session-login-form" @submit="submit">
             <div class="form-group">
               <label for="session-login-email">Email address *</label>
               <input type="email" v-model.trim="email" id="session-login-email"

@@ -22,12 +22,14 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template slot="tabs">
         <li role="presentation" class="active">
-          <a href="#staff" aria-controls="staff" role="tab" data-toggle="tab">
+          <a href="#user-list-staff" aria-controls="user-list-staff"
+            role="tab" data-toggle="tab">
             Staff
           </a>
         </li>
         <li role="presentation">
-          <a href="#field-keys" aria-controls="field-keys" role="tab" data-toggle="tab">
+          <a href="#user-list-field-keys" aria-controls="user-list-field-keys"
+            role="tab" data-toggle="tab">
             Field Keys
           </a>
         </li>
@@ -35,7 +37,7 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <div class="tab-content">
-        <div id="staff" class="tab-pane active" role="tabpanel">
+        <div id="user-list-staff" class="tab-pane active" role="tabpanel">
           <alert v-bind="alert" @close="alert.state = false"/>
           <float-row>
             <button type="button" class="btn btn-primary"
@@ -82,7 +84,7 @@ except according to the terms contained in the LICENSE file.
             </tbody>
           </table>
         </div>
-        <div id="field-keys" class="tab-pane" role="tabpanel">
+        <div id="user-list-field-keys" class="tab-pane" role="tabpanel">
           Not yet implemented.
         </div>
       </div>
