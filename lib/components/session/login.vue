@@ -41,7 +41,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Vue from 'vue';
-import axios from 'axios';
 
 import Session from '../../session';
 import User from '../../user';
@@ -93,7 +92,8 @@ export default {
     updateGlobals({ session, user }) {
       Vue.prototype.$session = session;
       Vue.prototype.$user = user;
-      axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
+      const header = `Bearer ${session.token}`;
+      this.$http.defaults.headers.common.Authorization = header;
     },
     routeToNext() {
       let path = '/forms';
