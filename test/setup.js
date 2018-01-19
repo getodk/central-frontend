@@ -9,13 +9,4 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
-
-import App from './components/app.vue';
-import { router } from './setup';
-
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router
-});
+import '../lib/setup';
