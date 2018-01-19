@@ -59,8 +59,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Vue from 'vue';
-
+import { logOut } from '../auth';
 import { logRequestError } from '../util';
 
 class Link {
@@ -111,11 +110,6 @@ export default {
       // pending DELETE requests are possible and unproblematic.
       this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
     },
-    updateGlobals() {
-      Vue.prototype.$session = null;
-      Vue.prototype.$user = null;
-      delete this.$http.defaults.headers.common.Authorization;
-    },
     routeToLogin() {
       const query = Object.assign({}, this.$route.query);
       query.next = this.$route.path;
@@ -123,7 +117,7 @@ export default {
     },
     logOut() {
       this.deleteSession();
-      this.updateGlobals();
+      logOut();
       this.routeToLogin();
     }
   }

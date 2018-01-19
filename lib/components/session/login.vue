@@ -40,12 +40,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Vue from 'vue';
-
 import Session from '../../session';
 import User from '../../user';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
+import { logIn } from '../../auth';
 
 export default {
   name: 'SessionLogin',
@@ -89,12 +88,6 @@ export default {
         throw e;
       }
     },
-    updateGlobals({ session, user }) {
-      Vue.prototype.$session = session;
-      Vue.prototype.$user = user;
-      const header = `Bearer ${session.token}`;
-      this.$http.defaults.headers.common.Authorization = header;
-    },
     routeToNext() {
       let path = '/forms';
       const { next } = this.$route.query;
@@ -114,7 +107,7 @@ export default {
         .then(sessionJson => this.validateSessionJson(sessionJson))
         .then(session => this.fetchUser(session))
         .then(result => this.validateUserJson(result))
-        .then(result => this.updateGlobals(result))
+        .then(({ session, user }) => logIn(session, user))
         .then(() => this.routeToNext())
         .catch(() => {
           this.disabled = false;
