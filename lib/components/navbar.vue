@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import axios from 'axios';
 
-import { logRequestError } from '../mixins/request';
+import { logRequestError } from '../util';
 
 class Link {
   constructor(component, text, to) {
