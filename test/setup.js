@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import '../lib/setup';
-import { MockLogger } from './util';
+import { router } from '../lib/setup';
+import { MockLogger, mockRouteForRouter } from './util';
 
 Vue.prototype.$logger = new MockLogger();
+
+// eslint-disable-next-line import/prefer-default-export
+export const mockRoute = mockRouteForRouter(router);

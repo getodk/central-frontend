@@ -9,13 +9,18 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import Vue from 'vue';
+import { mount } from 'avoriaz';
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// LOGGING
+import App from '../lib/components/app.vue';
 
 export class MockLogger {
   log() {} // eslint-disable-line class-methods-use-this
   error() {} // eslint-disable-line class-methods-use-this
 }
+
+export const mockRouteForRouter = (router) => (path, callback) => {
+  const app = mount(App, { router });
+  router.push(path);
+  Vue.nextTick(() => callback(app, router));
+};
