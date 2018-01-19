@@ -19,6 +19,7 @@ export class MockLogger {
   error() {} // eslint-disable-line class-methods-use-this
 }
 
+// TODO: Should we use a different router instance for each test?
 export const mockRouteForRouter = (router) => (path, callback) => {
   const app = mount(App, { router });
   router.push(path);
