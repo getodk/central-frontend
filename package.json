@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "watchify -vd -p browserify-hmr -e lib/main.js -o dist/build.js",
-    "lint": "eslint --ext .js,.vue lib test/unit",
+    "lint": "eslint --ext .js,.vue lib test",
     "test": "karma start karma.conf.js",
     "build": "cross-env NODE_ENV=production browserify -g envify -p [ vueify/plugins/extract-css -o dist/build.css ] -e lib/main.js | uglifyjs -c warnings=false -m > dist/build.js"
   },
