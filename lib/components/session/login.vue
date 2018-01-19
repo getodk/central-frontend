@@ -70,7 +70,7 @@ export default {
       try {
         return new Session(json);
       } catch (e) {
-        console.log(json); // eslint-disable-line no-console
+        this.$logger.log(json);
         this.alert = alert.danger('Something went wrong while creating a session.');
         throw e;
       }
@@ -85,7 +85,7 @@ export default {
       try {
         return { session, user: new User(userJson) };
       } catch (e) {
-        console.log(userJson); // eslint-disable-line no-console
+        this.$logger.log(userJson);
         this.alert = alert.danger('Something went wrong while retrieving the current user.');
         throw e;
       }

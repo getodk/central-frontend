@@ -9,9 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 
-import '../lib/setup';
-import { MockLogger } from './util';
 
-Vue.prototype.$logger = new MockLogger();
+
+////////////////////////////////////////////////////////////////////////////////
+// LOGGING
+
+export class MockLogger {
+  log() {} // eslint-disable-line class-methods-use-this
+  error() {} // eslint-disable-line class-methods-use-this
+}
