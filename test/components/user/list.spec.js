@@ -67,23 +67,6 @@ describe('UserList', () => {
       });
     });
 
-    it('there is explanatory text', () => {
-      const p = mount(UserList).first('#page-head > * > p');
-      const text = 'Staff Users are granted access to this administration site';
-      expect(p.text().trim().startsWith(text)).toBe(true);
-    });
-
-    it('there is a table with the correct headers', done => {
-      mockHttp()
-        .beforeRequest(() => mount(UserList))
-        .respondWithData([{ id: 1, email: mockUser().email }])
-        .afterResponse(page => {
-          const headers = page.find('table > thead > tr > th').map(th => th.text());
-          expect(headers).toEqual(['Email', 'Is Administrator?', 'Actions']);
-          done();
-        });
-    });
-
     it('table is sorted correctly', done => {
       const users = [
         { id: 1, email: mockUser().email },
