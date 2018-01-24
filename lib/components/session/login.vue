@@ -133,6 +133,6 @@ export default {
 
 #session-login-heading {
   color: white;
-  background-color: $heading-background-color;
+  background-color: $color-accent-primary;
 }
 </style>

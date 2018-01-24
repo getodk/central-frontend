@@ -51,7 +51,7 @@ export default {
         }
 
         &.active > a {
-          background-color: $background-color;
+          background-color: $color-page-background;
         }
       }
     }

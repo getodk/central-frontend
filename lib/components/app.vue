@@ -33,8 +33,13 @@ export default {
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 
+html {
+  background-color: $color-accent-secondary;
+  min-height: 100%;
+}
 body {
-  background-color: $background-color;
+  background-color: $color-page-background;
+  min-height: 100vh;
 }
 
 .table > thead {

@@ -134,51 +134,76 @@ export default {
 <style lang="sass">
 @import '../../assets/scss/variables';
 
-$active-background-color: #973163;
-$hover-color: #ddd;
+$active-background-color: #b40066;
+$border-height: 3px;
+$shadow-color: #dedede;
 
 .navbar-default {
-  background-color: $heading-background-color;
+  background-color: $color-accent-primary;
+  border: none;
+  border-top: $border-height solid $color-accent-secondary;
+  box-shadow: 0 $border-height 0 $shadow-color;
+  height: 30px + $border-height; // the way bootstrap is set up, the border eats the body.
   margin-bottom: 0;
+  min-height: auto;
 
-  .navbar-brand,
-  .navbar-nav > li > a,
-  .navbar-nav > .active > a,
-  .navbar-nav > .open > a {
-    &, &:focus {
-      color: white;
-    }
+  .navbar-brand {
+    font-size: 12px;
+    font-weight: bold;
+    height: auto;
+    letter-spacing: -0.02em;
+    padding: 5px 15px;
 
-    &:hover {
-      color: $hover-color;
+    &, &:hover, &:focus {
+      color: #fff;
     }
   }
 
-  .navbar-nav > .active > a {
-    &, &:hover, &:focus {
-      background-color: $active-background-color;
+  .navbar-nav {
+    font-size: 12px;
+    margin-top: -1 * $border-height;
+
+    > li > a {
+      &, &:hover, &:focus {
+        color: #fff;
+      }
     }
   }
 
   // Navbar is not collapsed.
   @media (min-width: 768px) {
-    .navbar-nav {
-      & > .active > a {
-        &, &:hover, &:focus {
-          // border-top-width and padding-top must sum to 15px.
-          border-top: white solid 2px;
-          padding-top: 13px;
-        }
-      }
+    & {
+      border-radius: 0;
+    }
 
-      & > li:first-child > a {
+    .navbar-nav {
+      li:first-child a {
         margin-left: 30px;
       }
 
-      & > .open > a {
+      > li > a {
+        border-top: transparent solid $border-height;
+        margin-right: 10px;
+        padding: 5px 10px;
+        transition: 0.15s border-top-color;
+
+        &:hover {
+          border-top-color: transparentize(#fff, 0.3);
+        }
+      }
+
+      .active > a, .open > a {
+        box-shadow: 0 0 6px transparentize($color-accent-secondary, 0.7) inset;
+
         &, &:hover, &:focus {
           background-color: $active-background-color;
+          border-top-color: #fff;
+          color: #fff;
         }
+      }
+
+      &.navbar-right > li > a {
+        margin-right: -10px;
       }
     }
   }
@@ -186,37 +211,34 @@ $hover-color: #ddd;
   // Navbar is collapsed.
   @media (max-width: 767px) {
     .navbar-toggle {
-      .icon-bar {
-        background-color: white;
-      }
-
-      &:hover .icon-bar {
-        background-color: $hover-color;
-      }
+      border: none;
+      margin: -2px 5px;
 
       &:hover, &:focus {
-        background-color: $heading-background-color;
+        background-color: inherit;
       }
-
-      &:not(.collapsed) {
-        background-color: $active-background-color;
+      .icon-bar {
+        background-color: #fff;
       }
     }
 
-    .navbar-nav > .open {
-      & > a {
+    .navbar-collapse {
+      background-color: $color-accent-secondary;
+      border: none;
+      position: relative;
+      z-index: 99;
+    }
+
+    .navbar-nav {
+      margin-top: 0;
+
+      .active a {
+        border-left: $border-height solid #fff;
+        padding-left: 15px - $border-height;
+
         &, &:hover, &:focus {
-          background-color: $heading-background-color;
-        }
-      }
-
-      .dropdown-menu > li > a {
-        &, &:focus {
-          color: white;
-        }
-
-        &:hover {
-          color: $hover-color;
+          background-color: $color-accent-secondary;
+          color: #fff;
         }
       }
     }
