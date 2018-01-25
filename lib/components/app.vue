@@ -110,4 +110,15 @@ body {
     transition: 0.15s transform, 0.15s color;
   }
 }
+
+.table {
+  > thead {
+    background-color: $color-table-heading-background;
+    > tr > th {
+      border-bottom: 1px solid $color-table-heading-border;
+      font-size: 12px;
+      padding: 8px 9px 6px;
+    }
+  }
+}
 </style>
