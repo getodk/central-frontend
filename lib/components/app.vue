@@ -52,4 +52,62 @@ body {
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: middle;
 }
+
+.btn {
+  border: none;
+  border-radius: 2px;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 6px 10px 5px;
+  position: relative;
+}
+.btn-primary {
+  background-color: $color-action-background;
+  &:hover, &:focus {
+    background-color: $color-action-background-hover;
+  }
+}
+
+.form-group {
+  display: block;
+  font-weight: normal;
+  padding-bottom: 15px;
+
+  input {
+    background: $color-input-background;
+    border: none;
+    border-bottom: 1px solid $color-action-inactive;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    z-index: 1;
+
+    &:focus {
+      border-bottom-color: $color-action-foreground;
+      box-shadow: none;
+
+      + .form-label {
+        color: $color-action-foreground;
+      }
+    }
+
+    &::placeholder {
+      color: $color-text;
+    }
+
+    &:placeholder-shown + .form-label {
+      transform: translateY(-12px);
+    }
+  }
+
+  .form-label {
+    color: $color-action-inactive;
+    display: block;
+    font-size: 11px;
+    height: 0;
+    padding-left: 12px;
+    transform: translateY(2px);
+    transition: 0.15s transform, 0.15s color;
+  }
+}
 </style>
