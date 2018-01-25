@@ -14,19 +14,26 @@ except according to the terms contained in the LICENSE file.
     <template slot="title">Create Staff User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
+      <p class="modal-introduction">
+        Currently, all Staff Users are created with full access to all data and administrative
+        actions on this server. When you create this account, the email address you provide will
+        be sent instructions on how to set a password and proceed.
+      </p>
       <form @submit.prevent="submit">
-        <div class="form-group">
-          <label for="user-new-email">Email address *</label>
+        <label class="form-group">
           <input type="email" v-model.trim="email" id="user-new-email"
-            class="form-control" placeholder="Email" required
+            class="form-control" placeholder="Email address *" required
             :disabled="awaitingResponse">
+          <span class="form-label">Email address *</span>
+        </label>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+            Create <spinner :state="awaitingResponse"/>
+          </button>
+          <button type="button" class="btn btn-default" @click="$emit('hide')">
+            Close
+          </button>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-          Create <spinner :state="awaitingResponse"/>
-        </button>
-        <button type="button" class="btn btn-default" @click="$emit('hide')">
-          Close
-        </button>
       </form>
     </template>
   </modal>
