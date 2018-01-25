@@ -39,6 +39,9 @@ html {
 }
 body {
   background-color: $color-page-background;
+  background-image: linear-gradient(0deg, #e4e4e4, $color-page-background 40%);
+  box-shadow: 0 -2px 0 #777 inset;
+  color: #333;
   min-height: 100vh;
 }
 
