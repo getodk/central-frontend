@@ -31,7 +31,7 @@ First, run Jubilant Garbanzo.
 
 Next, build Super Adventure files for development by running `npm run dev`. The files will be outputted to `dist/`, and hot reload will be available. For more details on this command, see the [documentation for vueify](https://github.com/vuejs/vueify).
 
-Finally, run NGINX by opening the command line, changing the working directory to the root directory of the repository, and typing the following:
+Finally, run NGINX by changing the working directory to the root directory of the repository, then typing the following:
 
 ```bash
 nginx -c "$PWD/nginx.conf" -p "$PWD/"
@@ -51,10 +51,6 @@ For more information on deploying to production, see [effective-spork](https://g
 
 ## Testing
 
-```bash
-# run unit tests
-npm test
+To run unit tests, type `npm test`.
 
-# lint all *.js and *.vue files
-npm run lint
-```
+For linting, type `npm run lint`. We use [ESLint](https://eslint.org/) with [rules](/.eslintrc.json) based on the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript).

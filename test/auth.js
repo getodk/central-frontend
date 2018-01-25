@@ -9,13 +9,20 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
+import moment from 'moment';
 
-import App from './components/app.vue';
-import { router } from './setup';
+import Session from '../lib/session';
+import User from '../lib/user';
+import { logIn, logOut } from '../lib/auth';
 
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router
-});
+const mockSession = () => {
+  const token = 'a'.repeat(64);
+  const tomorrow = moment(new Date()).add(1, 'days');
+  return new Session({ token, expiresAt: tomorrow });
+};
+
+const mockUser = () => new User({ email: 'test@opendatakit.org' });
+
+const mockLogIn = () => logIn(mockSession(), mockUser());
+
+export { mockSession, mockUser, mockLogIn as logIn, logOut };

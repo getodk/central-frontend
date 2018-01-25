@@ -59,10 +59,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Vue from 'vue';
-import axios from 'axios';
-
-import { logRequestError } from '../mixins/request';
+import { logOut } from '../auth';
+import { logRequestError } from '../util';
 
 class Link {
   constructor(component, text, to) {
@@ -108,14 +106,9 @@ export default {
   methods: {
     deleteSession() {
       const encodedToken = encodeURIComponent(this.$session.token);
-      // Using axios directly rather than the request mixin, because multiple
+      // Using $http directly rather than the request mixin, because multiple
       // pending DELETE requests are possible and unproblematic.
-      axios.delete(`/sessions/${encodedToken}`).catch(logRequestError);
-    },
-    updateGlobals() {
-      Vue.prototype.$session = null;
-      Vue.prototype.$user = null;
-      delete axios.defaults.headers.common.Authorization;
+      this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
     },
     routeToLogin() {
       const query = Object.assign({}, this.$route.query);
@@ -124,7 +117,7 @@ export default {
     },
     logOut() {
       this.deleteSession();
-      this.updateGlobals();
+      logOut();
       this.routeToLogin();
     }
   }
