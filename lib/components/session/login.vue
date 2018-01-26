@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
-          <app-form @submit="submit">
+          <app-form id="session-login-form" @submit="submit">
             <label class="form-group">
               <input type="email" v-model.trim="email" id="session-login-email"
                 class="form-control" placeholder="Email address *" required autocomplete="off">
@@ -42,13 +42,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Vue from 'vue';
-import axios from 'axios';
-
 import Session from '../../session';
 import User from '../../user';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
+import { logIn } from '../../auth';
 
 export default {
   name: 'SessionLogin',
@@ -72,7 +70,7 @@ export default {
       try {
         return new Session(json);
       } catch (e) {
-        console.log(json); // eslint-disable-line no-console
+        this.$logger.log(json);
         this.alert = alert.danger('Something went wrong while creating a session.');
         throw e;
       }
@@ -87,15 +85,10 @@ export default {
       try {
         return { session, user: new User(userJson) };
       } catch (e) {
-        console.log(userJson); // eslint-disable-line no-console
+        this.$logger.log(userJson);
         this.alert = alert.danger('Something went wrong while retrieving the current user.');
         throw e;
       }
-    },
-    updateGlobals({ session, user }) {
-      Vue.prototype.$session = session;
-      Vue.prototype.$user = user;
-      axios.defaults.headers.common.Authorization = `Bearer ${session.token}`;
     },
     routeToNext() {
       let path = '/forms';
@@ -116,7 +109,7 @@ export default {
         .then(sessionJson => this.validateSessionJson(sessionJson))
         .then(session => this.fetchUser(session))
         .then(result => this.validateUserJson(result))
-        .then(result => this.updateGlobals(result))
+        .then(({ session, user }) => logIn(session, user))
         .then(() => this.routeToNext())
         .catch(() => {
           this.disabled = false;

@@ -10,12 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
+import { mount } from 'avoriaz';
 
-import App from './components/app.vue';
-import { router } from './setup';
+import App from '../lib/components/app.vue';
 
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router
-});
+export class MockLogger {
+  log() {} // eslint-disable-line class-methods-use-this
+  error() {} // eslint-disable-line class-methods-use-this
+}
+
+// TODO: Should we use a different router instance for each test?
+export const mockRouteForRouter = (router) => (path, callback) => {
+  const app = mount(App, { router });
+  router.push(path);
+  Vue.nextTick(() => callback(app, router));
+};

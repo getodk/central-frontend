@@ -9,13 +9,17 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+
+// TODO: Without this, PhantomJS throws an error indicating that Symbol is not
+// defined. Is Babel not defining Symbol? Should we switch to Headless Chrome
+// over PhantomJS?
+import 'babel-polyfill';
 import Vue from 'vue';
 
-import App from './components/app.vue';
-import { router } from './setup';
+import { router } from '../lib/setup';
+import { MockLogger, mockRouteForRouter } from './util';
 
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router
-});
+Vue.prototype.$logger = new MockLogger();
+
+// eslint-disable-next-line import/prefer-default-export
+export const mockRoute = mockRouteForRouter(router);
