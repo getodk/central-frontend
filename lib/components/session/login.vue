@@ -19,19 +19,21 @@ except according to the terms contained in the LICENSE file.
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
           <app-form id="session-login-form" @submit="submit">
-            <div class="form-group">
-              <label for="session-login-email">Email address *</label>
+            <label class="form-group">
               <input type="email" v-model.trim="email" id="session-login-email"
-                class="form-control" placeholder="Email address" required>
-            </div>
-            <div class="form-group">
-              <label for="session-login-password">Password *</label>
+                class="form-control" placeholder="Email address *" required autocomplete="off">
+              <span class="form-label">Email address *</span>
+            </label>
+            <label class="form-group">
               <input type="password" v-model="password" id="session-login-password"
-                class="form-control" placeholder="Password" required>
+                class="form-control" placeholder="Password *" required>
+              <span class="form-label">Password *</span>
+            </label>
+            <div class="panel-footer">
+              <button type="submit" class="btn btn-primary" :disabled="disabled">
+                Log in <spinner :state="disabled"/>
+              </button>
             </div>
-            <button type="submit" class="btn btn-primary" :disabled="disabled">
-              Log in <spinner :state="disabled"/>
-            </button>
           </app-form>
         </div>
       </div>
@@ -122,10 +124,33 @@ export default {
 
 #session-login {
   margin-top: 70px;
+
+  .panel {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+  }
+  .panel-body {
+    padding: 25px 15px;
+  }
+  .panel-footer {
+    background: $color-subpanel-background;
+    border-top-color: $color-subpanel-border;
+    margin: -15px;
+    margin-bottom: -25px;
+    margin-top: 20px;
+  }
 }
 
 #session-login-heading {
-  color: white;
-  background-color: $heading-background-color;
+  background-color: $color-accent-primary;
+  border-radius: 0;
+  color: #fff;
+
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+  }
 }
 </style>

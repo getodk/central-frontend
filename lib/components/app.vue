@@ -33,8 +33,16 @@ export default {
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 
+html {
+  background-color: $color-accent-secondary;
+  min-height: 100%;
+}
 body {
-  background-color: $background-color;
+  background-color: $color-page-background;
+  background-image: linear-gradient(0deg, #e4e4e4, $color-page-background 40%);
+  box-shadow: 0 -2px 0 #777 inset;
+  color: #333;
+  min-height: 100vh;
 }
 
 .table > thead {
@@ -43,5 +51,74 @@ body {
 
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: middle;
+}
+
+.btn {
+  border: none;
+  border-radius: 2px;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 6px 10px 5px;
+  position: relative;
+}
+.btn-primary {
+  background-color: $color-action-background;
+  &:hover, &:focus {
+    background-color: $color-action-background-hover;
+  }
+}
+
+.form-group {
+  display: block;
+  font-weight: normal;
+  padding-bottom: 15px;
+
+  input {
+    background: $color-input-background;
+    border: none;
+    border-bottom: 1px solid $color-action-inactive;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    z-index: 1;
+
+    &:focus {
+      border-bottom-color: $color-action-foreground;
+      box-shadow: none;
+
+      + .form-label {
+        color: $color-action-foreground;
+      }
+    }
+
+    &::placeholder {
+      color: $color-text;
+    }
+
+    &:placeholder-shown + .form-label {
+      transform: translateY(-12px);
+    }
+  }
+
+  .form-label {
+    color: $color-action-inactive;
+    display: block;
+    font-size: 11px;
+    height: 0;
+    padding-left: 12px;
+    transform: translateY(2px);
+    transition: 0.15s transform, 0.15s color;
+  }
+}
+
+.table {
+  > thead {
+    background-color: $color-table-heading-background;
+    > tr > th {
+      border-bottom: 1px solid $color-table-heading-border;
+      font-size: 12px;
+      padding: 8px 9px 6px;
+    }
+  }
 }
 </style>

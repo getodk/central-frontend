@@ -31,27 +31,48 @@ export default {
 @import '../../assets/scss/variables';
 
 #page-head {
-  background-color: #eee;
+  background-color: $color-subpanel-background;
+  border-bottom: 1px solid $color-subpanel-border-strong;
   margin-bottom: 15px;
 
-  & > .col-xs-12 {
-    & > p {
+  h1 {
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    margin-bottom: 3px;
+  }
+
+  > .col-xs-12 {
+    > p {
+      color: #555;
+      font-size: 15px;
+      letter-spacing: -0.01em;
       max-width: 650px;
     }
 
-    & > .nav-tabs {
+    > .nav-tabs {
       border-bottom: none;
 
-      & > li {
-        margin-top: 10px;
-        margin-bottom: 0;
+      > li {
+        margin-bottom: -1px;
+        margin-right: 10px;
+        margin-top: 5px;
 
-        & > a {
-          border-bottom: none;
+        > a {
+          border: none;
+          border-bottom: 2px solid transparent;
+          border-radius: 0;
+          color: $color-text;
+          padding: 7px 8px 6px;
+
+          &:hover {
+            border-bottom-color: $color-accent-primary;
+          }
         }
 
         &.active > a {
-          background-color: $background-color;
+          background-color: $color-subpanel-active;
+          border-bottom-color: $color-accent-primary;
         }
       }
     }

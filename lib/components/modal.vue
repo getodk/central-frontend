@@ -89,3 +89,56 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+@import '../../assets/scss/variables';
+
+.modal-dialog {
+  margin-top: 160px;
+
+  .modal-content {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+
+    .modal-header {
+      background-color: $color-accent-primary;
+      color: #fff;
+      padding: 10px 15px 9px;
+
+      .close {
+        color: #fff;
+        font-weight: normal;
+        margin-top: 0;
+        opacity: 1;
+      }
+
+      h4 {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: -0.02em;
+      }
+    }
+
+    .modal-introduction {
+      font-size: 14px;
+      line-height: 1.2em;
+      padding-bottom: 8px;
+    }
+
+    .modal-actions {
+      background: $color-subpanel-background;
+      border-top: 1px solid $color-subpanel-border;
+      margin: -15px;
+      margin-top: 20px;
+      padding: 10px 15px;
+
+      .btn-default {
+        background-color: transparent;
+        color: $color-action-foreground;
+      }
+    }
+  }
+}
+</style>
+
