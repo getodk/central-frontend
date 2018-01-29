@@ -101,14 +101,14 @@ export default {
       return this.$route.params.xmlFormId;
     }
   },
-  created() {
-    this.fetchData();
-  },
   watch: {
     $route() {
       this.fetchData();
       this.alert = alert.blank();
     }
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     fetchData() {

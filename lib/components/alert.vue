@@ -25,7 +25,10 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'Alert',
   props: {
-    state: Boolean,
+    state: {
+      type: Boolean,
+      default: false
+    },
     type: {
       type: String,
       required: true
@@ -34,7 +37,10 @@ export default {
       type: String,
       default: ''
     },
-    at: Date
+    at: {
+      type: Date,
+      required: true
+    }
   },
   computed: {
     htmlClass() {

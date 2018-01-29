@@ -28,9 +28,15 @@ export default {
     // state indicates the requested visibility of the component. The actual
     // visibility of the component (stored in this.show) may lag behind this by
     // a short interval.
-    state: Boolean,
+    state: {
+      type: Boolean,
+      default: false
+    },
     // Indicates whether the <div> is inline.
-    inline: Boolean
+    inline: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -58,11 +64,11 @@ export default {
       return this.inline ? { display: 'inline' } : {};
     }
   },
-  mounted() {
-    this.toggleVisibility();
-  },
   watch: {
     state: 'toggleVisibility'
+  },
+  mounted() {
+    this.toggleVisibility();
   },
   methods: {
     toggleVisibility() {

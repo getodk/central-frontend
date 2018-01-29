@@ -75,6 +75,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
+  components: { FormNew },
   mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
@@ -109,8 +110,7 @@ export default {
       this.alert = alert.success(`Form ${form.xmlFormId} was created successfully.`);
       this.highlighted = form.xmlFormId;
     }
-  },
-  components: { FormNew }
+  }
 };
 </script>
 

@@ -107,6 +107,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'UserList',
+  components: { UserNew, UserResetPassword },
   mixins: [alert({ login: true }), request(), highlight()],
   data() {
     return {
@@ -150,8 +151,7 @@ export default {
       this.alert = alert.success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     }
-  },
-  components: { UserNew, UserResetPassword }
+  }
 };
 </script>
 

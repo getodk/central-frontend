@@ -40,7 +40,10 @@ export default {
   name: 'FormNew',
   mixins: [alert(), request()],
   props: {
-    state: Boolean
+    state: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

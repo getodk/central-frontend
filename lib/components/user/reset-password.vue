@@ -34,8 +34,14 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'UserPasswordReset',
   props: {
-    state: Boolean,
-    user: Object
+    state: {
+      type: Boolean,
+      default: false
+    },
+    user: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     // TODO. Not yet implemented.

@@ -20,9 +20,12 @@ import VisibilityDelay from './visibility-delay.vue';
 
 export default {
   name: 'Loading',
+  components: { VisibilityDelay },
   props: {
-    state: Boolean
-  },
-  components: { VisibilityDelay }
+    state: {
+      type: Boolean,
+      default: false
+    }
+  }
 };
 </script>

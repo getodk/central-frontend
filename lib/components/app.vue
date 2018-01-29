@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <navbar/>
     <div class="container-fluid">
-      <router-view></router-view>
+      <router-view/>
     </div>
   </div>
 </template>

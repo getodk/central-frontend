@@ -19,7 +19,10 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'Spinner',
   props: {
-    state: Boolean
+    state: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>
@@ -67,7 +70,8 @@ $spinner-width: 3px;
     width: $spinner-size;
 
     .btn & {
-      box-shadow: 0 0 20px 10px $color-action-background, 0 0 6px 3px $color-action-background inset;
+      box-shadow: 0 0 20px 10px $color-action-background,
+                  0 0 6px 3px $color-action-background inset;
     }
   }
 
