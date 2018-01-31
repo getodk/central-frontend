@@ -41,7 +41,7 @@ We specify `-p "$PWD/"` so that relative paths in [`nginx.conf`](/nginx.conf) ar
 
 NGINX effectively places Super Adventure and Jubilant Garbanzo at the same origin, avoiding cross-origin requests.
 
-Super Adventure will be available on port 8080.
+Super Adventure will be available on port 8989.
 
 ## Deploying to production
 
