@@ -21,7 +21,7 @@ export class MockLogger {
   error() {}
 }
 
-export function mockRoute(path) {
+export function mockRoute(location, mountOptions = {}) {
   const session = Vue.prototype.$session;
   /* If the user is logged in, mounting the app with the router will redirect
   the user to the forms list, resulting in an HTTP request. To prevent that, if
@@ -30,8 +30,9 @@ export function mockRoute(path) {
   initial HTTP request. */
   if (session.loggedIn()) resetSession();
   const router = routerFactory();
-  const app = mount(App, { router });
+  const fullMountOptions = Object.assign({}, mountOptions, { router });
+  const app = mount(App, fullMountOptions);
   if (session.loggedIn()) session.updateGlobals();
-  router.push(path);
+  router.push(location);
   return Vue.nextTick().then(() => app);
 }
