@@ -15,7 +15,7 @@ const REQUEST_METHODS = ['get', 'post', 'delete'];
 const DELAY_AFTER_RESPONSES = 100;
 
 // Sets Vue.prototype.$http to a mock.
-const setHttp = (respond) => {
+export function setHttp(respond) {
   const http = () => respond();
   for (const method of REQUEST_METHODS)
     http[method] = respond;
@@ -24,12 +24,10 @@ const setHttp = (respond) => {
       common: {}
     }
   };
+  const previous = Vue.prototype.$http;
   Vue.prototype.$http = http;
-};
-
-const respondWithError = () =>
-  Promise.reject(new Error('automatically failing request'));
-export const failRequests = () => setHttp(respondWithError);
+  return previous;
+}
 
 class MockHttp {
   constructor() {
@@ -47,13 +45,14 @@ class MockHttp {
     return this;
   }
 
-  // Returns a function that responds to requests with each of the specified
-  // responses in turn, then responds with errors.
+  // Returns a function that responds with each of the specified responses in
+  // turn, then restores Vue.prototype.$http to its previous value.
   _respond() {
     return () => {
+      const response = this._responses.shift();
       if (this._responses.length === 0)
-        return Promise.reject(new Error('no response specified for request'));
-      return Promise.resolve({ data: this._responses.shift() });
+        Vue.prototype.$http = this._previousHttp;
+      return Promise.resolve({ data: response });
     };
   }
 
@@ -66,7 +65,8 @@ class MockHttp {
   afterResponses(callback) {
     if (this._beforeRequests == null)
       throw new Error('call to beforeRequests() required');
-    setHttp(this._respond());
+    if (this._responses.length !== 0)
+      this._previousHttp = setHttp(this._respond());
     // Invoke the callback specified to beforeRequests(). The callback should
     // consume the responses specified to respondWithData().
     const result = this._beforeRequests();
@@ -78,4 +78,6 @@ class MockHttp {
 MockHttp.prototype.beforeRequest = MockHttp.prototype.beforeRequests;
 MockHttp.prototype.afterResponse = MockHttp.prototype.afterResponses;
 
-export const mockHttp = () => new MockHttp();
+export default function mockHttp() {
+  return new MockHttp();
+}
