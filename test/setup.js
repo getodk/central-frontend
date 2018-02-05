@@ -15,6 +15,7 @@ except according to the terms contained in the LICENSE file.
 // over PhantomJS?
 import 'babel-polyfill';
 import Vue from 'vue';
+import 'should';
 
 import { router } from '../lib/setup';
 import { MockLogger, mockRouteForRouter } from './util';

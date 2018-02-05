@@ -21,7 +21,7 @@ describe('UserList', () => {
     describe('anonymous users', () => {
       it('are redirected to login', done => {
         mockRoute('/users', (app, router) => {
-          expect(router.currentRoute.path).toBe('/login');
+          router.currentRoute.path.should.equal('/login');
           done();
         });
       });
@@ -40,7 +40,7 @@ describe('UserList', () => {
             .respondWithData(mockSession())
             .respondWithData(mockUser())
             .afterResponses(() => {
-              expect(router.currentRoute.path).toBe('/users');
+              router.currentRoute.path.should.equal('/users');
               done();
             });
         });
@@ -49,8 +49,8 @@ describe('UserList', () => {
   });
 
   describe('after login', () => {
-    beforeAll(mockLogin);
-    afterAll(resetAuth);
+    before(mockLogin);
+    after(resetAuth);
 
     beforeEach(failRequests);
 
@@ -58,12 +58,12 @@ describe('UserList', () => {
       it('tab is active', () => {
         const tab = mount(UserList).first('.nav-tabs > .active');
         const link = tab.first('a');
-        expect(link.text().trim()).toBe('Staff');
+        link.text().trim().should.equal('Staff');
       });
 
       it('tab panel is active', () => {
         const panel = mount(UserList).first('.tab-content > .active');
-        expect(panel.is('#user-list-staff')).toBe(true);
+        panel.is('#user-list-staff').should.be.true();
       });
     });
 
@@ -84,12 +84,12 @@ describe('UserList', () => {
         .respondWithData(users)
         .afterResponse(page => {
           const tr = page.find('table > tbody > tr');
-          expect(tr.length === 2);
+          tr.length.should.equal(2);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
-            expect(td.length === 3);
-            expect(td[0].text()).toBe(users[i].email);
-            expect(td[1].text()).toBe('Yes');
+            td.length.should.equal(3);
+            td[0].text().should.equal(users[i].email);
+            td[1].text().should.equal('Yes');
           }
           done();
         });

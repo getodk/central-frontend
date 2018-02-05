@@ -2,7 +2,7 @@
 module.exports = function (config) {
   config.set({
     browsers: ['PhantomJS'],
-    frameworks: ['browserify', 'jasmine'],
+    frameworks: ['browserify', 'mocha'],
     files: ['test/**/*.js'],
     reporters: ['spec'],
     preprocessors: {
