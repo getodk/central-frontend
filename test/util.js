@@ -21,6 +21,10 @@ export class MockLogger {
   error() {}
 }
 
+export function detachFromDocument(wrapper) {
+  $(wrapper.element).remove();
+}
+
 export function mockRoute(location, mountOptions = {}) {
   const session = Vue.prototype.$session;
   /* If the user is logged in, mounting the app with the router will redirect
