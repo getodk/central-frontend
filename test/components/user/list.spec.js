@@ -19,15 +19,13 @@ import { mockRoute } from '../../util';
 
 describe('UserList', () => {
   describe('routing', () => {
-    describe('anonymous users', () => {
-      it('are redirected to login', () =>
-        mockRoute('/users')
-          .then(app => app.vm.$route.path.should.equal('/login')));
+    it('anonymous user is redirected to login', () =>
+      mockRoute('/users')
+        .then(app => app.vm.$route.path.should.equal('/login')));
 
-      it('return after login', () =>
-        mockRouteThroughLogin('/users')
-          .then(app => app.vm.$route.path.should.equal('/users')));
-    });
+    it('after login, user is redirected back', () =>
+      mockRouteThroughLogin('/users')
+        .then(app => app.vm.$route.path.should.equal('/users')));
   });
 
   describe('after login', () => {
