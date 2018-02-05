@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="modal" class="modal fade" tabindex="-1" role="dialog"
+  <div ref="modal" class="modal" tabindex="-1" role="dialog"
     :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
     data-keyboard="false" @keydown.esc="$emit('hide')"
     @mousedown="modalMousedown($event)" @click="modalClick($event)">
