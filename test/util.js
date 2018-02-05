@@ -33,5 +33,5 @@ export function mockRoute(path) {
   const app = mount(App, { router });
   if (session.loggedIn()) session.updateGlobals();
   router.push(path);
-  return Vue.nextTick().then(() => ({ app, router }));
+  return Vue.nextTick().then(() => app);
 }

@@ -21,13 +21,12 @@ describe('UserList', () => {
   describe('routing', () => {
     describe('anonymous users', () => {
       it('are redirected to login', () =>
-        mockRoute('/users').then(({ router }) => {
-          router.currentRoute.path.should.equal('/login');
-        }));
+        mockRoute('/users')
+          .then(app => app.vm.$route.path.should.equal('/login')));
 
       it('return after login', () =>
         mockRoute('/users')
-          .then(({ app, router }) => mockHttp()
+          .then(app => mockHttp()
             .request(() => {
               const element = app.vm.$el;
               const email = element.querySelector('#session-login-email');
@@ -38,9 +37,7 @@ describe('UserList', () => {
             })
             .respondWithData(mockSession())
             .respondWithData(mockUser())
-            .afterResponses(() => {
-              router.currentRoute.path.should.equal('/users');
-            })));
+            .afterResponses(() => app.vm.$route.path.should.equal('/users'))));
     });
   });
 
