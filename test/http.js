@@ -30,6 +30,40 @@ export function setHttp(respond) {
   return previous;
 }
 
+class SuccessfulResponse {
+  constructor(data) {
+    this._response = { data };
+  }
+
+  isSuccess() {
+    return true;
+  }
+
+  response() {
+    return this._response;
+  }
+}
+
+class ProblemResponse {
+  constructor(code, message) {
+    this._error = new Error();
+    this._error.response = {
+      data: {
+        code,
+        message
+      }
+    };
+  }
+
+  isSuccess() {
+    return false;
+  }
+
+  response() {
+    return this._error;
+  }
+}
+
 class MockHttp {
   constructor() {
     this._mountArgs = null;
@@ -52,7 +86,12 @@ class MockHttp {
   }
 
   respondWithData(data) {
-    this._responses.push(data);
+    this._responses.push(new SuccessfulResponse(data));
+    return this;
+  }
+
+  respondWithProblem(code = 500, message = 'There was a problem.') {
+    this._responses.push(new ProblemResponse(code, message));
     return this;
   }
 
@@ -79,7 +118,12 @@ class MockHttp {
       // updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
         .then(this._beforeEachResponse)
-        .then(() => ({ data: response }));
+        .then(() => new Promise((resolve, reject) => {
+          if (response.isSuccess())
+            resolve(response.response());
+          else
+            reject(response.response());
+        }));
     };
   }
 
