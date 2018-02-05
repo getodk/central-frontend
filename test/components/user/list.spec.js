@@ -14,7 +14,7 @@ import { mount } from 'avoriaz';
 import { mockRoute } from '../../setup';
 import UserList from '../../../lib/components/user/list.vue';
 import { mockHttp, failRequests } from '../../http';
-import { mockSession, mockUser, logIn, logOut } from '../../auth';
+import { mockLogin, mockSession, mockUser, resetAuth } from '../../auth';
 
 describe('UserList', () => {
   describe('routing', () => {
@@ -49,10 +49,10 @@ describe('UserList', () => {
   });
 
   describe('after login', () => {
-    beforeEach(failRequests);
+    beforeAll(mockLogin);
+    afterAll(resetAuth);
 
-    beforeAll(logIn);
-    afterAll(logOut);
+    beforeEach(failRequests);
 
     describe('page defaults to Staff tab', () => {
       it('tab is active', () => {

@@ -99,7 +99,7 @@ export default {
   },
   watch: {
     $route() {
-      this.loggedIn = this.$session != null;
+      this.loggedIn = this.$session.loggedIn();
       this.email = this.loggedIn ? this.$user.email : '';
     }
   },

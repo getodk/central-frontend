@@ -11,18 +11,20 @@ except according to the terms contained in the LICENSE file.
 */
 import moment from 'moment';
 
-import Session from '../lib/session';
-import User from '../lib/user';
-import { logIn, logOut } from '../lib/auth';
+import { logIn, resetAuth } from '../lib/auth';
 
-const mockSession = () => {
+export { resetAuth };
+
+export function mockSession() {
   const token = 'a'.repeat(64);
-  const tomorrow = moment(new Date()).add(1, 'days');
-  return new Session({ token, expiresAt: tomorrow });
-};
+  const tomorrow = moment(new Date()).add(1, 'days').utc().format();
+  return { token, expiresAt: tomorrow };
+}
 
-const mockUser = () => new User({ email: 'test@opendatakit.org' });
+export function mockUser() {
+  return { email: 'test@opendatakit.org' };
+}
 
-const mockLogIn = () => logIn(mockSession(), mockUser());
-
-export { mockSession, mockUser, mockLogIn as logIn, logOut };
+export function mockLogin() {
+  logIn(mockSession(), mockUser());
+}
