@@ -27,7 +27,7 @@ describe('UserList', () => {
       it('return after login', () =>
         mockRoute('/users')
           .then(({ app, router }) => mockHttp()
-            .beforeRequests(() => {
+            .request(() => {
               const element = app.vm.$el;
               const email = element.querySelector('#session-login-email');
               const password = element.querySelector('#session-login-password');
@@ -73,7 +73,7 @@ describe('UserList', () => {
         return 0;
       });
       return mockHttp()
-        .beforeRequest(() => mount(UserList))
+        .request(() => mount(UserList))
         .respondWithData(users)
         .afterResponse(page => {
           const tr = page.find('table > tbody > tr');

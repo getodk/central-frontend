@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 
 const REQUEST_METHODS = ['get', 'post', 'delete'];
-const DELAY_AFTER_RESPONSES = 100;
+const DELAY_BEFORE_RESPONSES = 100;
 
 // Sets Vue.prototype.$http to a mock.
 export function setHttp(respond) {
@@ -31,12 +31,12 @@ export function setHttp(respond) {
 
 class MockHttp {
   constructor() {
+    this._request = null;
     this._responses = [];
-    this._beforeRequests = null;
   }
 
-  beforeRequests(callback) {
-    this._beforeRequests = () => callback();
+  request(callback) {
+    this._request = () => callback();
     return this;
   }
 
@@ -59,23 +59,21 @@ class MockHttp {
   _waitForResponsesToBeProcessed() {
     // We may need to make this more robust at some point, using something more
     // than setTimeout.
-    return new Promise(resolve => setTimeout(resolve, DELAY_AFTER_RESPONSES));
+    return new Promise(resolve => setTimeout(resolve, DELAY_BEFORE_RESPONSES));
   }
 
   afterResponses(callback) {
-    if (this._beforeRequests == null)
-      throw new Error('call to beforeRequests() required');
+    if (this._request == null) throw new Error('call to request() required');
     if (this._responses.length !== 0)
       this._previousHttp = setHttp(this._respond());
-    // Invoke the callback specified to beforeRequests(). The callback should
-    // consume the responses specified to respondWithData().
-    const result = this._beforeRequests();
+    // Invoke the callback specified to request(). The callback should consume
+    // the responses specified to respondWithData().
+    const result = this._request();
     return this._waitForResponsesToBeProcessed().then(() => callback(result));
   }
 }
 
-// Alias methods.
-MockHttp.prototype.beforeRequest = MockHttp.prototype.beforeRequests;
+// Alias method.
 MockHttp.prototype.afterResponse = MockHttp.prototype.afterResponses;
 
 export default function mockHttp() {
