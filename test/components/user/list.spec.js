@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { mount } from 'avoriaz';
 
 import '../../setup';
+import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
 import { mockLogin, mockRouteThroughLogin, mockUser, resetSession } from '../../session';
@@ -45,6 +46,12 @@ describe('UserList', () => {
       });
     });
 
+    it('success message is shown', () => {
+      const alert = mount(UserList).first(Alert);
+      alert.getProp('state').should.be.true();
+      alert.getProp('type').should.equal('success');
+    });
+
     it('table is sorted correctly', () => {
       const users = [
         { id: 1, email: mockUser().email },
@@ -61,7 +68,7 @@ describe('UserList', () => {
         .mount(UserList)
         .respondWithData(users)
         .afterResponse(page => {
-          const tr = page.find('table > tbody > tr');
+          const tr = page.find('table tbody tr');
           tr.length.should.equal(2);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
