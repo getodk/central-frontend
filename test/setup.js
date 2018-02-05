@@ -12,13 +12,10 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import 'should';
 
-import { MockLogger, mockRouteForRouter } from './util';
-import { router } from '../lib/setup';
+import { MockLogger } from './util';
 import { setHttp } from './http';
+import '../lib/setup';
 
 Vue.prototype.$logger = new MockLogger();
 
 setHttp(() => Promise.reject(new Error('automatically failing request')));
-
-// eslint-disable-next-line import/prefer-default-export
-export const mockRoute = mockRouteForRouter(router);

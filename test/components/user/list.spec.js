@@ -11,10 +11,11 @@ except according to the terms contained in the LICENSE file.
 */
 import { mount } from 'avoriaz';
 
-import { mockRoute } from '../../setup';
+import '../../setup';
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
 import { mockLogin, mockSession, mockUser, resetAuth } from '../../auth';
+import { mockRoute } from '../../util';
 
 describe('UserList', () => {
   describe('routing', () => {

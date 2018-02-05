@@ -13,15 +13,16 @@ import Vue from 'vue';
 import { mount } from 'avoriaz';
 
 import App from '../lib/components/app.vue';
+import routerFactory from '../lib/router';
 
 export class MockLogger {
   log() {}
   error() {}
 }
 
-// TODO: Should we use a different router instance for each test?
-export const mockRouteForRouter = (router) => (path) => {
+export function mockRoute(path) {
+  const router = routerFactory();
   const app = mount(App, { router });
   router.push(path);
   return Vue.nextTick().then(() => ({ app, router }));
-};
+}
