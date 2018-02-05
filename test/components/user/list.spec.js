@@ -73,7 +73,7 @@ describe('UserList', () => {
         return 0;
       });
       return mockHttp()
-        .request(() => mount(UserList))
+        .mount(UserList)
         .respondWithData(users)
         .afterResponse(page => {
           const tr = page.find('table > tbody > tr');
