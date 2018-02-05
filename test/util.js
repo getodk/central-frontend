@@ -15,13 +15,13 @@ import { mount } from 'avoriaz';
 import App from '../lib/components/app.vue';
 
 export class MockLogger {
-  log() {} // eslint-disable-line class-methods-use-this
-  error() {} // eslint-disable-line class-methods-use-this
+  log() {}
+  error() {}
 }
 
 // TODO: Should we use a different router instance for each test?
-export const mockRouteForRouter = (router) => (path, callback) => {
+export const mockRouteForRouter = (router) => (path) => {
   const app = mount(App, { router });
   router.push(path);
-  Vue.nextTick(() => callback(app, router));
+  return Vue.nextTick().then(() => ({ app, router }));
 };

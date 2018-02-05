@@ -13,22 +13,20 @@ import { mount } from 'avoriaz';
 
 import { mockRoute } from '../../setup';
 import UserList from '../../../lib/components/user/list.vue';
-import { mockHttp, failRequests } from '../../http';
+import { failRequests, mockHttp } from '../../http';
 import { mockLogin, mockSession, mockUser, resetAuth } from '../../auth';
 
 describe('UserList', () => {
   describe('routing', () => {
     describe('anonymous users', () => {
-      it('are redirected to login', done => {
-        mockRoute('/users', (app, router) => {
+      it('are redirected to login', () =>
+        mockRoute('/users').then(({ router }) => {
           router.currentRoute.path.should.equal('/login');
-          done();
-        });
-      });
+        }));
 
-      it('return after login', done => {
-        mockRoute('/users', (app, router) => {
-          mockHttp()
+      it('return after login', () =>
+        mockRoute('/users')
+          .then(({ app, router }) => mockHttp()
             .beforeRequests(() => {
               const element = app.vm.$el;
               const email = element.querySelector('#session-login-email');
@@ -41,10 +39,7 @@ describe('UserList', () => {
             .respondWithData(mockUser())
             .afterResponses(() => {
               router.currentRoute.path.should.equal('/users');
-              done();
-            });
-        });
-      });
+            })));
     });
   });
 
@@ -67,7 +62,7 @@ describe('UserList', () => {
       });
     });
 
-    it('table is sorted correctly', done => {
+    it('table is sorted correctly', () => {
       const users = [
         { id: 1, email: mockUser().email },
         { id: 2, email: 'user2@test.com' }
@@ -79,7 +74,7 @@ describe('UserList', () => {
           return 1;
         return 0;
       });
-      mockHttp()
+      return mockHttp()
         .beforeRequest(() => mount(UserList))
         .respondWithData(users)
         .afterResponse(page => {
@@ -91,7 +86,6 @@ describe('UserList', () => {
             td[0].text().should.equal(users[i].email);
             td[1].text().should.equal('Yes');
           }
-          done();
         });
     });
   });

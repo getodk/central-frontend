@@ -57,6 +57,12 @@ class MockHttp {
     };
   }
 
+  _waitForResponsesToBeProcessed() {
+    // We may need to make this more robust at some point, using something more
+    // than setTimeout.
+    return new Promise(resolve => setTimeout(resolve, DELAY_AFTER_RESPONSES));
+  }
+
   afterResponses(callback) {
     if (this._beforeRequests == null)
       throw new Error('call to beforeRequests() required');
@@ -64,9 +70,7 @@ class MockHttp {
     // Invoke the callback specified to beforeRequests(). The callback should
     // consume the responses specified to respondWithData().
     const result = this._beforeRequests();
-    // We may need to make this more robust at some point, using something more
-    // than setTimeout.
-    setTimeout(() => callback(result), DELAY_AFTER_RESPONSES);
+    return this._waitForResponsesToBeProcessed().then(() => callback(result));
   }
 }
 
