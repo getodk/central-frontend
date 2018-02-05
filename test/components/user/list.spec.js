@@ -14,7 +14,7 @@ import { mount } from 'avoriaz';
 import '../../setup';
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
-import { mockLogin, mockSession, mockUser, resetSession } from '../../session';
+import { mockLogin, mockRouteThroughLogin, mockUser, resetSession } from '../../session';
 import { mockRoute } from '../../util';
 
 describe('UserList', () => {
@@ -25,19 +25,8 @@ describe('UserList', () => {
           .then(app => app.vm.$route.path.should.equal('/login')));
 
       it('return after login', () =>
-        mockRoute('/users')
-          .then(app => mockHttp()
-            .request(() => {
-              const element = app.vm.$el;
-              const email = element.querySelector('#session-login-email');
-              const password = element.querySelector('#session-login-password');
-              email.value = mockUser().email;
-              password.value = 'password';
-              app.first('#session-login-form').trigger('submit');
-            })
-            .respondWithData(mockSession())
-            .respondWithData(mockUser())
-            .afterResponses(() => app.vm.$route.path.should.equal('/users'))));
+        mockRouteThroughLogin('/users')
+          .then(app => app.vm.$route.path.should.equal('/users')));
     });
   });
 

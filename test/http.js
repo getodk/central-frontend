@@ -67,6 +67,8 @@ class ProblemResponse {
   }
 }
 
+const doNothing = () => {};
+
 class MockHttp {
   constructor() {
     this._mountArgs = null;
@@ -149,6 +151,10 @@ class MockHttp {
         else
           resolve(result);
       }));
+  }
+
+  point() {
+    return this.afterResponses(doNothing);
   }
 
   standardButton(buttonSelector) {

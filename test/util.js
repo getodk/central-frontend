@@ -40,3 +40,12 @@ export function mockRoute(location, mountOptions = {}) {
   router.push(location);
   return Vue.nextTick().then(() => app);
 }
+
+export function fillForm(wrapper, values) {
+  for (const [selector, value] of Object.entries(values)) {
+    const field = wrapper.first(selector);
+    field.element.value = value;
+    // If there is a v-model attribute, prompt it to sync.
+    field.trigger('input');
+  }
+}
