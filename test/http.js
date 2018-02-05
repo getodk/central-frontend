@@ -12,6 +12,9 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import { mount } from 'avoriaz';
 
+import Alert from '../lib/components/alert.vue';
+import Spinner from '../lib/components/spinner.vue';
+
 const REQUEST_METHODS = ['get', 'post', 'delete'];
 const DELAY_BEFORE_RESPONSES = 100;
 
@@ -146,6 +149,26 @@ class MockHttp {
         else
           resolve(result);
       }));
+  }
+
+  standardButton(buttonSelector) {
+    return this
+      .respondWithProblem()
+      .beforeEachResponse(component => {
+        const button = component.first(buttonSelector);
+        button.getAttribute('disabled').should.be.ok();
+        button.first(Spinner).getProp('state').should.be.true();
+        const alert = component.first(Alert);
+        alert.getProp('state').should.be.false();
+      })
+      .afterResponse(component => {
+        const button = component.first(buttonSelector);
+        button.element.disabled.should.be.false();
+        button.first(Spinner).getProp('state').should.be.false();
+        const alert = component.first(Alert);
+        alert.getProp('state').should.be.true();
+        alert.getProp('type').should.equal('danger');
+      });
   }
 }
 
