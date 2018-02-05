@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
-import { logIn } from '../../auth';
+import { logIn } from '../../session';
 
 export default {
   name: 'SessionLogin',

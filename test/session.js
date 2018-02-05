@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 import moment from 'moment';
 
-import { logIn, resetAuth } from '../lib/auth';
+import { logIn, resetSession } from '../lib/session';
 
-export { resetAuth };
+export { resetSession };
 
 export function mockSession() {
   const token = 'a'.repeat(64);
