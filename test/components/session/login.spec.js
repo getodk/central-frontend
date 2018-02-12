@@ -22,7 +22,7 @@ import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '
 describe('SessionLogin', () => {
   describe('user is logged out', () => {
     it('navbar indicates that the user is logged out', () =>
-      mockRoute('/login').complete().then(app => {
+      mockRoute('/login').then(app => {
         const link = app.first('.navbar-right > li > a');
         link.text().trim().should.equal('Not Logged in');
       }));
@@ -58,7 +58,6 @@ describe('SessionLogin', () => {
     it('navigating to login redirects to forms list', () =>
       mockRouteThroughLogin('/users')
         .respondWithProblem()
-        .complete()
         .then(app => mockHttp()
           .request(() => app.vm.$router.push('/login'))
           .respondWithProblem()
@@ -97,8 +96,7 @@ describe('SessionLogin', () => {
           .request(() => {
             trigger('click', dropdown.first('.dropdown-menu > li > a'));
           })
-          .respondWithProblem()
-          .complete());
+          .respondWithProblem());
 
         it('user is logged out', () => {
           Vue.prototype.$session.loggedOut().should.be.true();

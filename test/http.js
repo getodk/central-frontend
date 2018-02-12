@@ -172,6 +172,15 @@ class MockHttp {
     // than setTimeout.
     return new Promise(resolve => setTimeout(resolve, 50));
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // PROMISE METHODS
+
+  // The inclusion of these methods means that we can return a MockHttp to Mocha
+  // in lieu of a Promise.
+  then(p1, p2) { return this.complete().then(p1, p2); }
+  catch(onRejected) { return this.complete().catch(onRejected); }
+  finally(onFinally) { return this.complete().finally(onFinally); }
 }
 
 export default () => new MockHttp();

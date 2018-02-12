@@ -33,6 +33,5 @@ afterEach(removeComponent);
 // why that is, but we attach a component here so that the errors are shown
 // before the first tests, not in the middle of the tests.
 mockRoute('/login', { attachToDocument: true })
-  .complete()
   .then(removeComponent)
   .catch(e => console.log(e)); // eslint-disable-line no-console
