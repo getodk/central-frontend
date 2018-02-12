@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { mount } from 'avoriaz';
+import { mount as avoriazMount } from 'avoriaz';
 
 import Alert from '../lib/components/alert.vue';
 import Spinner from '../lib/components/spinner.vue';
@@ -57,65 +57,88 @@ class ProblemResponse {
 }
 
 class MockHttp {
-  constructor() {
-    this._mountArgs = null;
-    // The mounted component (if any)
-    this._component = null;
-    this._request = null;
-    this._responses = [];
-    this._errorFromBeforeEachResponse = null;
-    this._beforeEachResponse = null;
+  constructor(
+    mount = null,
+    request = null,
+    responses = [],
+    beforeEachResponse = null
+  ) {
+    this._mount = mount;
+    this._request = request;
+    this._responses = responses;
+    this._beforeEachResponse = beforeEachResponse;
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // REQUESTS
 
-  mount(...args) {
-    this._mountArgs = args;
-    return this;
+  mount(component, options = {}) {
+    const mount = () => avoriazMount(component, options);
+    return new MockHttp(
+      mount,
+      this._request,
+      this._responses,
+      this._beforeEachResponse
+    );
   }
 
   request(callback) {
-    this._request = () => callback(this._component);
-    return this;
+    // Wrap the callback in an arrow function so that when we call
+    // this._request, the callback is not bound to the MockHttp.
+    const request = (component) => callback(component);
+    return new MockHttp(
+      this._mount,
+      request,
+      this._responses,
+      this._beforeEachResponse
+    );
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
   respondWithData(data) {
-    this._responses.push(new SuccessfulResponse(data));
-    return this;
+    return this._respond(new SuccessfulResponse(data));
   }
 
   respondWithProblem(code = 500, message = 'There was a problem.') {
-    this._responses.push(new ProblemResponse(code, message));
-    return this;
+    return this._respond(new ProblemResponse(code, message));
+  }
+
+  _respond(response) {
+    const responses = this._responses.concat(response);
+    return new MockHttp(
+      this._mount,
+      this._request,
+      responses,
+      this._beforeEachResponse
+    );
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // BEFORE EACH
 
   beforeEachResponse(callback) {
-    this._beforeEachResponse = () => {
-      try {
-        callback(this._component);
-      } catch (e) {
-        if (this._errorFromBeforeEachResponse == null)
-          this._errorFromBeforeEachResponse = e;
-      }
-    };
-    return this;
+    // Wrap the callback in an arrow function so that when we call
+    // this._beforeEachResponse, the callback is not bound to the MockHttp.
+    const beforeEachResponse = (component) => callback(component);
+    return new MockHttp(
+      this._mount,
+      this._request,
+      this._responses,
+      beforeEachResponse
+    );
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // COMPLETE SERIES
 
   afterResponses(callback) {
+    this._errorFromBeforeEachResponse = null;
     if (this._responses.length !== 0)
-      this._previousHttp = setHttp(this._respond());
-    if (this._mountArgs != null) this._component = mount(...this._mountArgs);
-    if (this._request != null) this._request();
+      this._previousHttp = setHttp(this._http());
+    this._component = this._mount != null ? this._mount() : null;
+    if (this._request != null) this._request(this._component);
     return this._waitForResponsesToBeProcessed()
       .then(() => new Promise((resolve, reject) => {
         const result = callback(this._component);
@@ -149,17 +172,30 @@ class MockHttp {
       });
   }
 
+  _tryBeforeEachResponse() {
+    if (this._beforeEachResponse == null) return;
+    if (this._errorFromBeforeEachResponse != null) return;
+    try {
+      this._beforeEachResponse(this._component);
+    } catch (e) {
+      if (this._errorFromBeforeEachResponse == null)
+        this._errorFromBeforeEachResponse = e;
+    }
+  }
+
   // Returns a function that responds with each of the specified responses in
   // turn, then restores Vue.prototype.$http to its previous value.
-  _respond() {
+  _http() {
+    let responseIndex = 0;
     return () => {
-      const response = this._responses.shift();
-      if (this._responses.length === 0)
+      const response = this._responses[responseIndex];
+      responseIndex += 1;
+      if (responseIndex === this._responses.length)
         Vue.prototype.$http = this._previousHttp;
       // Wait a tick after request() or the previous response so that Vue is
       // updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
-        .then(this._beforeEachResponse)
+        .then(() => this._tryBeforeEachResponse())
         .then(() => new Promise((resolve, reject) => {
           const settle = response.isSuccess() ? resolve : reject;
           settle(response.response());
