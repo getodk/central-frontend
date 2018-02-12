@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { mount } from 'avoriaz';
-
 import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
@@ -22,11 +20,13 @@ describe('UserList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute('/users')
+        .complete()
         .then(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users')
-        .then(app => app.vm.$route.path.should.equal('/users')));
+        .respondWithData([mockUser()])
+        .afterResponses(app => app.vm.$route.path.should.equal('/users')));
   });
 
   describe('after login', () => {
@@ -34,23 +34,35 @@ describe('UserList', () => {
     after(resetSession);
 
     describe('page defaults to Staff tab', () => {
-      it('tab is active', () => {
-        const tab = mount(UserList).first('.nav-tabs > .active');
-        const link = tab.first('a');
-        link.text().trim().should.equal('Staff');
-      });
+      it('tab is active', () =>
+        mockHttp()
+          .mount(UserList)
+          .respondWithData([mockUser()])
+          .afterResponse(page => {
+            const tab = page.first('.nav-tabs > .active');
+            const title = tab.first('a').text().trim();
+            title.should.equal('Staff');
+          }));
 
-      it('tab panel is active', () => {
-        const panel = mount(UserList).first('.tab-content > .active');
-        panel.is('#user-list-staff').should.be.true();
-      });
+      it('tab panel is active', () =>
+        mockHttp()
+          .mount(UserList)
+          .respondWithData([mockUser()])
+          .afterResponse(page => {
+            const panel = page.first('.tab-content > .active');
+            panel.is('#user-list-staff').should.be.true();
+          }));
     });
 
-    it('success message is shown', () => {
-      const alert = mount(UserList).first(Alert);
-      alert.getProp('state').should.be.true();
-      alert.getProp('type').should.equal('success');
-    });
+    it('success message is shown', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData([mockUser()])
+        .afterResponse(page => {
+          const alert = page.first(Alert);
+          alert.getProp('state').should.be.true();
+          alert.getProp('type').should.equal('success');
+        }));
 
     it('table is sorted correctly', () => {
       const users = [

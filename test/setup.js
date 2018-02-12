@@ -18,7 +18,10 @@ import '../lib/setup';
 
 Vue.prototype.$logger = new MockLogger();
 
-setHttp(() => Promise.reject(new Error('automatically failing request')));
+setHttp((...args) => {
+  console.log('unhandled request', args); // eslint-disable-line no-console
+  return Promise.reject(new Error());
+});
 
 // Removes a component attached to the document if there is one.
 const removeComponent = () => $('body > script:last-of-type + *').remove();
@@ -30,5 +33,6 @@ afterEach(removeComponent);
 // why that is, but we attach a component here so that the errors are shown
 // before the first tests, not in the middle of the tests.
 mockRoute('/login', { attachToDocument: true })
+  .complete()
   .then(removeComponent)
   .catch(e => console.log(e)); // eslint-disable-line no-console

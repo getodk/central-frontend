@@ -31,22 +31,26 @@ describe('UserNew', () => {
   after(resetSession);
 
   describe('modal', () => {
-    it('is initially hidden', () => {
-      const page = mount(UserList);
-      page.first(UserNew).getProp('state').should.be.false();
-    });
+    it('is initially hidden', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData([mockUser()])
+        .afterResponse(page => {
+          page.first(UserNew).getProp('state').should.be.false();
+        }));
 
     describe('after button click', () => {
-      it('modal is shown', () => {
-        const page = mount(UserList);
-        return clickCreateButton(page).then(() => {
-          page.first(UserNew).getProp('state').should.be.true();
-        });
-      });
+      it('modal is shown', () =>
+        mockHttp()
+          .mount(UserList)
+          .respondWithData([mockUser()])
+          .afterResponse(clickCreateButton)
+          .then(page => page.first(UserNew).getProp('state').should.be.true()));
 
       it('first field is focused', () =>
         mockRoute('/users', { attachToDocument: true })
-          .then(clickCreateButton)
+          .respondWithData([mockUser()])
+          .afterResponse(clickCreateButton)
           .then(app => {
             const field = app.first('#user-new-email');
             (document.activeElement === field.element).should.be.true();

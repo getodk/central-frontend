@@ -19,7 +19,7 @@ const REQUEST_METHODS = ['get', 'post', 'delete'];
 
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
-  const http = () => respond();
+  const http = (...args) => respond(...args);
   for (const method of REQUEST_METHODS)
     http[method] = respond;
   http.defaults = {
@@ -55,8 +55,6 @@ class ProblemResponse {
   isSuccess() { return false; }
   response() { return this._error; }
 }
-
-const doNothing = () => {};
 
 class MockHttp {
   constructor() {
@@ -122,7 +120,7 @@ class MockHttp {
   _waitForResponsesToBeProcessed() {
     // We may need to make this more robust at some point, using something more
     // than setTimeout.
-    return new Promise(resolve => setTimeout(resolve, 100));
+    return new Promise(resolve => setTimeout(resolve, 50));
   }
 
   afterResponses(callback) {
@@ -140,7 +138,7 @@ class MockHttp {
       }));
   }
 
-  complete() { return this.afterResponses(doNothing); }
+  complete() { return this.afterResponses(component => component); }
 
   standardButton(buttonSelector) {
     return this

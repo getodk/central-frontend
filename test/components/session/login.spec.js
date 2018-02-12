@@ -22,7 +22,7 @@ import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '
 describe('SessionLogin', () => {
   describe('user is logged out', () => {
     it('navbar indicates that the user is logged out', () =>
-      mockRoute('/login').then(app => {
+      mockRoute('/login').complete().then(app => {
         const link = app.first('.navbar-right > li > a');
         link.text().trim().should.equal('Not Logged in');
       }));
@@ -56,16 +56,21 @@ describe('SessionLogin', () => {
     afterEach(resetSession);
 
     it('navigating to login redirects to forms list', () =>
-      mockRouteThroughLogin('/users').then(app => {
-        app.vm.$router.push('/login');
-        app.vm.$route.path.should.equal('/forms');
-      }));
+      mockRouteThroughLogin('/users')
+        .respondWithProblem()
+        .complete()
+        .then(app => mockHttp()
+          .request(() => app.vm.$router.push('/login'))
+          .respondWithProblem()
+          .afterResponse(() => app.vm.$route.path.should.equal('/forms'))));
 
     it("navbar shows the user's display name", () =>
-      mockRouteThroughLogin('/users').then(app => {
-        const link = app.first('.navbar-right > li > a');
-        link.text().trim().should.equal(mockUser().email);
-      }));
+      mockRouteThroughLogin('/users')
+        .respondWithData([mockUser()])
+        .afterResponses(app => {
+          const link = app.first('.navbar-right > li > a');
+          link.text().trim().should.equal(mockUser().email);
+        }));
 
     describe("after clicking the user's display name", () => {
       let app;
@@ -74,7 +79,8 @@ describe('SessionLogin', () => {
       // We need to attach the component to the document, because some of
       // Bootstrap's dropdown listeners are on the document.
       beforeEach(() => mockRouteThroughLogin('/users', { attachToDocument: true })
-        .then(component => {
+        .respondWithData([mockUser()])
+        .afterResponses(component => {
           app = component;
           dropdown = app.first('.navbar-right .dropdown');
           // Have the event bubble so that it triggers Bootstrap's dropdown
@@ -87,8 +93,12 @@ describe('SessionLogin', () => {
       });
 
       describe('after clicking logout button', () => {
-        beforeEach(() =>
-          trigger('click', dropdown.first('.dropdown-menu > li > a')));
+        beforeEach(() => mockHttp()
+          .request(() => {
+            trigger('click', dropdown.first('.dropdown-menu > li > a'));
+          })
+          .respondWithProblem()
+          .complete());
 
         it('user is logged out', () => {
           Vue.prototype.$session.loggedOut().should.be.true();

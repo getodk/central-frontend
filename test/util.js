@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { mount } from 'avoriaz';
 
 import App from '../lib/components/app.vue';
+import mockHttp from './http';
 import routerFactory from '../lib/router';
 import { resetSession } from '../lib/session';
 
@@ -29,12 +29,14 @@ export const mockRoute = (location, mountOptions = {}) => {
   mounting the app will first redirect the user to login, resulting in no
   initial HTTP request. */
   if (session.loggedIn()) resetSession();
-  const router = routerFactory();
-  const fullMountOptions = Object.assign({}, mountOptions, { router });
-  const app = mount(App, fullMountOptions);
-  if (session.loggedIn()) session.updateGlobals();
-  router.push(location);
-  return Vue.nextTick().then(() => app);
+  const fullMountOptions = Object.assign({}, mountOptions);
+  fullMountOptions.router = routerFactory();
+  return mockHttp()
+    .mount(App, fullMountOptions)
+    .request(app => {
+      if (session.loggedIn()) session.updateGlobals();
+      app.vm.$router.push(location);
+    });
 };
 
 export const trigger = (eventName, wrapper, bubbles = false) => {

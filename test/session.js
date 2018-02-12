@@ -9,10 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import Vue from 'vue';
 import moment from 'moment';
 
+import App from '../lib/components/app.vue';
 import mockHttp from './http';
-import { fillForm, mockRoute, trigger } from './util';
+import routerFactory from '../lib/router';
+import { fillForm, trigger } from './util';
 import { logIn, resetSession } from '../lib/session';
 
 export { resetSession };
@@ -37,11 +40,17 @@ export const submitLoginForm = (wrapper) => {
     .then(() => wrapper);
 };
 
-export const mockRouteThroughLogin = (location, mountOptions = {}) =>
-  mockRoute(location, mountOptions)
-    .then(app => mockHttp()
-      .request(() => submitLoginForm(app))
-      .respondWithData(mockSession())
-      .respondWithData(mockUser())
-      .complete()
-      .then(() => app));
+export const mockRouteThroughLogin = (location, mountOptions = {}) => {
+  if (Vue.prototype.$session.loggedIn())
+    throw new Error('session cannot be logged in');
+  const fullMountOptions = Object.assign({}, mountOptions);
+  fullMountOptions.router = routerFactory();
+  return mockHttp()
+    .mount(App, fullMountOptions)
+    .request(app => {
+      app.vm.$router.push(location);
+      Vue.nextTick().then(() => submitLoginForm(app));
+    })
+    .respondWithData(mockSession())
+    .respondWithData(mockUser());
+};
