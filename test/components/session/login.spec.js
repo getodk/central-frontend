@@ -16,7 +16,7 @@ import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import SessionLogin from '../../../lib/components/session/login.vue';
 import mockHttp from '../../http';
-import { detachFromDocument, mockRoute } from '../../util';
+import { detachFromDocument, mockRoute, trigger } from '../../util';
 import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '../../session';
 
 describe('SessionLogin', () => {
@@ -79,10 +79,9 @@ describe('SessionLogin', () => {
         .then(component => {
           app = component;
           dropdown = app.first('.navbar-right .dropdown');
-          // Using jQuery click() rather than avoriaz trigger(), because
-          // trigger() dispatches an event that does not bubble, and Bootstrap's
-          // dropdown listeners are attached to the document.
-          $(dropdown.element).find('.dropdown-toggle').click();
+          // Have the event bubble so that it triggers Bootstrap's dropdown
+          // listeners on the document.
+          return trigger('click', dropdown.first('.dropdown-toggle'), true);
         }));
       afterEach(() => detachFromDocument(app));
 
@@ -91,10 +90,8 @@ describe('SessionLogin', () => {
       });
 
       describe('after clicking logout button', () => {
-        beforeEach(() => {
-          dropdown.first('.dropdown-menu > li > a').trigger('click');
-          return Vue.nextTick();
-        });
+        beforeEach(() =>
+          trigger('click', dropdown.first('.dropdown-menu > li > a')));
 
         it('user is logged out', () => {
           Vue.prototype.$session.loggedOut().should.be.true();

@@ -41,11 +41,25 @@ export const mockRoute = (location, mountOptions = {}) => {
   return Vue.nextTick().then(() => app);
 };
 
-export const fillForm = (wrapper, values) => {
-  for (const [selector, value] of Object.entries(values)) {
-    const field = wrapper.first(selector);
-    field.element.value = value;
-    // If there is a v-model attribute, prompt it to sync.
-    field.trigger('input');
+export const trigger = (eventName, wrapper, bubbles = false) => {
+  if (!bubbles) {
+    // trigger() triggers an event that does not bubble.
+    wrapper.trigger(eventName);
+  } else {
+    $(wrapper.element).trigger(eventName);
   }
+  return Vue.nextTick();
+};
+
+export const fillForm = (wrapper, selectorsAndValues) => {
+  let promise = Promise.resolve();
+  for (const [selector, value] of selectorsAndValues) {
+    promise = promise.then(() => {
+      const field = wrapper.first(selector);
+      field.element.value = value;
+      // If there is a v-model attribute, prompt it to sync.
+      return trigger('input', field);
+    });
+  }
+  return promise;
 };

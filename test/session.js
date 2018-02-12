@@ -9,11 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 import moment from 'moment';
 
 import mockHttp from './http';
-import { fillForm, mockRoute } from './util';
+import { fillForm, mockRoute, trigger } from './util';
 import { logIn, resetSession } from '../lib/session';
 
 export { resetSession };
@@ -29,12 +28,13 @@ export const mockUser = () => ({ id: 1, email: 'user@test.com' });
 export const mockLogin = () => logIn(mockSession(), mockUser());
 
 export const submitLoginForm = (wrapper) => {
-  fillForm(wrapper, {
-    '#session-login-email': mockUser().email,
-    '#session-login-password': 'password'
-  });
-  wrapper.first('#session-login-form').trigger('submit');
-  return Vue.nextTick();
+  const promise = fillForm(wrapper, [
+    ['#session-login-email', mockUser().email],
+    ['#session-login-password', 'password']
+  ]);
+  return promise
+    .then(() => trigger('submit', wrapper.first('#session-login-form')))
+    .then(() => wrapper);
 };
 
 export const mockRouteThroughLogin = (location, mountOptions = {}) =>

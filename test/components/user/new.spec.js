@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 import { mount } from 'avoriaz';
 
 import '../../setup';
@@ -17,14 +16,15 @@ import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import mockHttp from '../../http';
-import { detachFromDocument, fillForm, mockRoute } from '../../util';
+import { detachFromDocument, fillForm, mockRoute, trigger } from '../../util';
 import { mockLogin, mockUser, resetSession } from '../../session';
 
-const submitForm = (wrapper) => {
-  fillForm(wrapper, { '#user-new-email': 'new-user@test.com' });
-  wrapper.first('#user-new form').trigger('submit');
-  return Vue.nextTick();
-};
+const clickCreateButton = (wrapper) =>
+  trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
+const submitForm = (wrapper) =>
+  fillForm(wrapper, [['#user-new-email', 'new-user@test.com']])
+    .then(() => trigger('submit', wrapper.first('#user-new form')))
+    .then(() => wrapper);
 
 describe('UserNew', () => {
   before(mockLogin);
@@ -39,18 +39,14 @@ describe('UserNew', () => {
     describe('after button click', () => {
       it('modal is shown', () => {
         const page = mount(UserList);
-        page.first('#user-list-new-button').trigger('click');
-        return Vue.nextTick().then(() => {
+        return clickCreateButton(page).then(() => {
           page.first(UserNew).getProp('state').should.be.true();
         });
       });
 
       it('first field is focused', () =>
         mockRoute('/users', { attachToDocument: true })
-          .then(app => {
-            app.first('#user-list-new-button').trigger('click');
-            return Vue.nextTick().then(() => app);
-          })
+          .then(clickCreateButton)
           .then(app => {
             const field = app.first('#user-new-email');
             const isFocused = document.activeElement === field.element;
@@ -77,10 +73,7 @@ describe('UserNew', () => {
       .respondWithData([mockUser()])
       .point());
 
-    beforeEach(() => {
-      page.first('#user-list-new-button').trigger('click');
-      return Vue.nextTick();
-    });
+    beforeEach(() => clickCreateButton(page));
 
     beforeEach(() => mockHttp()
       .request(() => submitForm(page))
