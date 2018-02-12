@@ -148,17 +148,15 @@ class MockHttp {
   // COMPLETE SERIES
 
   afterResponses(callback) {
+    if (this._mount == null && this._request == null)
+      throw new Error('mount() and/or request() required');
     const request = this._request != null ? () => this._request(this._component) : null;
     const promise = this._setHttpAndMount()
       .then(request)
       .then(() => this._waitForResponsesToBeProcessed())
-      .then(() => new Promise((resolve, reject) => {
-        const result = callback(this._component);
-        if (this._errorFromBeforeEachResponse != null)
-          reject(this._errorFromBeforeEachResponse);
-        else
-          resolve(result);
-      }));
+      .finally(() => this._restoreHttp())
+      .then(() => this._checkStateAfterResponses())
+      .then(() => callback(this._component));
     return new MockHttp(promise, this._component);
   }
 
@@ -197,14 +195,19 @@ class MockHttp {
   }
 
   // Returns a function that responds with each of the specified responses in
-  // turn, then restores Vue.prototype.$http to its previous value.
+  // turn.
   _http() {
     let responseIndex = 0;
     return () => {
+      if (responseIndex === this._responses.length - 1)
+        this._responseWithoutRequest = false;
+      else if (responseIndex === this._responses.length) {
+        this._requestWithoutResponse = true;
+        return Promise.reject(new Error());
+      }
+
       const response = this._responses[responseIndex];
       responseIndex += 1;
-      if (responseIndex === this._responses.length)
-        Vue.prototype.$http = this._previousHttp;
       // Wait a tick after request() or the previous response so that Vue is
       // updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
@@ -217,10 +220,11 @@ class MockHttp {
   }
 
   _setHttp() {
-    // Used by this._http() and for validation after the responses.
+    // Properties used by this._http() and for validation after the responses
+    this._requestWithoutResponse = false;
+    this._responseWithoutRequest = this._responses.length !== 0;
     this._errorFromBeforeEachResponse = null;
 
-    if (this._responses.length === 0) return;
     this._previousHttp = Vue.prototype.$http;
     setHttp(this._http());
   }
@@ -241,6 +245,17 @@ class MockHttp {
     // We may need to make this more robust at some point, using something more
     // than setTimeout.
     return new Promise(resolve => setTimeout(resolve, 50));
+  }
+
+  _restoreHttp() { Vue.prototype.$http = this._previousHttp; }
+
+  _checkStateAfterResponses() {
+    if (this._errorFromBeforeEachResponse != null)
+      throw this._errorFromBeforeEachResponse;
+    else if (this._requestWithoutResponse)
+      throw new Error('request without response: no response specified for request');
+    else if (this._responseWithoutRequest)
+      throw new Error('response without request: not all responses were requested');
   }
 
   //////////////////////////////////////////////////////////////////////////////
