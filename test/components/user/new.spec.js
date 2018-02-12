@@ -72,12 +72,9 @@ describe('UserNew', () => {
       .request(() => {
         page = mount(UserList);
       })
-      .respondWithData([mockUser()]));
-
-    beforeEach(() => clickCreateButton(page));
-
-    beforeEach(() => mockHttp()
-      .request(() => submitForm(page))
+      .respondWithData([mockUser()])
+      .complete()
+      .request(() => clickCreateButton(page).then(submitForm))
       .respondWithData(newUser)
       .respondWithData([mockUser(), newUser]));
 

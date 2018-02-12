@@ -58,10 +58,10 @@ describe('SessionLogin', () => {
     it('navigating to login redirects to forms list', () =>
       mockRouteThroughLogin('/users')
         .respondWithProblem()
-        .then(app => mockHttp()
-          .request(() => app.vm.$router.push('/login'))
-          .respondWithProblem()
-          .afterResponse(() => app.vm.$route.path.should.equal('/forms'))));
+        .complete()
+        .request(app => app.vm.$router.push('/login'))
+        .respondWithProblem()
+        .afterResponse(app => app.vm.$route.path.should.equal('/forms')));
 
     it("navbar shows the user's display name", () =>
       mockRouteThroughLogin('/users')

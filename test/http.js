@@ -27,9 +27,7 @@ export const setHttp = (respond) => {
       common: {}
     }
   };
-  const previous = Vue.prototype.$http;
   Vue.prototype.$http = http;
-  return previous;
 };
 
 class SuccessfulResponse {
@@ -58,11 +56,17 @@ class ProblemResponse {
 
 class MockHttp {
   constructor(
+    previousPromise = null,
+    component = null,
     mount = null,
     request = null,
     responses = [],
     beforeEachResponse = null
   ) {
+    this._previousPromise = previousPromise;
+    // The mounted component (if any)
+    this._component = component;
+
     this._mount = mount;
     this._request = request;
     this._responses = responses;
@@ -73,8 +77,12 @@ class MockHttp {
   // REQUESTS
 
   mount(component, options = {}) {
+    if (this._previousPromise != null)
+      throw new Error('cannot mount component after first series in chain');
     const mount = () => avoriazMount(component, options);
     return new MockHttp(
+      this._previousPromise,
+      this._component,
       mount,
       this._request,
       this._responses,
@@ -87,6 +95,8 @@ class MockHttp {
     // this._request, the callback is not bound to the MockHttp.
     const request = (component) => callback(component);
     return new MockHttp(
+      this._previousPromise,
+      this._component,
       this._mount,
       request,
       this._responses,
@@ -108,6 +118,8 @@ class MockHttp {
   _respond(response) {
     const responses = this._responses.concat(response);
     return new MockHttp(
+      this._previousPromise,
+      this._component,
       this._mount,
       this._request,
       responses,
@@ -123,6 +135,8 @@ class MockHttp {
     // this._beforeEachResponse, the callback is not bound to the MockHttp.
     const beforeEachResponse = (component) => callback(component);
     return new MockHttp(
+      this._previousPromise,
+      this._component,
       this._mount,
       this._request,
       this._responses,
@@ -134,12 +148,10 @@ class MockHttp {
   // COMPLETE SERIES
 
   afterResponses(callback) {
-    this._errorFromBeforeEachResponse = null;
-    if (this._responses.length !== 0)
-      this._previousHttp = setHttp(this._http());
-    this._component = this._mount != null ? this._mount() : null;
-    if (this._request != null) this._request(this._component);
-    return this._waitForResponsesToBeProcessed()
+    const request = this._request != null ? () => this._request(this._component) : null;
+    const promise = this._setHttpAndMount()
+      .then(request)
+      .then(() => this._waitForResponsesToBeProcessed())
       .then(() => new Promise((resolve, reject) => {
         const result = callback(this._component);
         if (this._errorFromBeforeEachResponse != null)
@@ -147,6 +159,7 @@ class MockHttp {
         else
           resolve(result);
       }));
+    return new MockHttp(promise, this._component);
   }
 
   afterResponse(callback) { return this.afterResponses(callback); }
@@ -203,6 +216,27 @@ class MockHttp {
     };
   }
 
+  _setHttp() {
+    // Used by this._http() and for validation after the responses.
+    this._errorFromBeforeEachResponse = null;
+
+    if (this._responses.length === 0) return;
+    this._previousHttp = Vue.prototype.$http;
+    setHttp(this._http());
+  }
+
+  _setHttpAndMount() {
+    if (this._previousPromise == null) {
+      // There is no previous promise, so this block can be synchronous.
+      this._setHttp();
+      // We need this to be synchronous, because in afterResponses(), we pass
+      // this._component synchronously to the next series in the chain.
+      if (this._mount != null) this._component = this._mount();
+      return Promise.resolve();
+    }
+    return this._previousPromise.then(() => this._setHttp());
+  }
+
   _waitForResponsesToBeProcessed() {
     // We may need to make this more robust at some point, using something more
     // than setTimeout.
@@ -212,11 +246,20 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // PROMISE METHODS
 
+  promise() {
+    const anySpecification = this._mount != null || this._request != null ||
+      this._responses.length !== 0 || this._beforeEachResponse != null;
+    if (anySpecification) return this.complete()._previousPromise;
+    return this._previousPromise != null
+      ? this._previousPromise
+      : Promise.resolve();
+  }
+
   // The inclusion of these methods means that we can return a MockHttp to Mocha
   // in lieu of a Promise.
-  then(p1, p2) { return this.complete().then(p1, p2); }
-  catch(onRejected) { return this.complete().catch(onRejected); }
-  finally(onFinally) { return this.complete().finally(onFinally); }
+  then(p1, p2) { return this.promise().then(p1, p2); }
+  catch(onRejected) { return this.promise().catch(onRejected); }
+  finally(onFinally) { return this.promise().finally(onFinally); }
 }
 
 export default () => new MockHttp();
