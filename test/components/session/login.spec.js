@@ -16,7 +16,7 @@ import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import SessionLogin from '../../../lib/components/session/login.vue';
 import mockHttp from '../../http';
-import { detachFromDocument, mockRoute, trigger } from '../../util';
+import { mockRoute, trigger } from '../../util';
 import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '../../session';
 
 describe('SessionLogin', () => {
@@ -30,9 +30,7 @@ describe('SessionLogin', () => {
     it('first field is focused', () => {
       const page = mount(SessionLogin, { attachToDocument: true });
       const field = page.first('#session-login-email');
-      const isFocused = document.activeElement === field.element;
-      detachFromDocument(page);
-      isFocused.should.be.true();
+      (document.activeElement === field.element).should.be.true();
     });
 
     it('standard button thinking things', () =>
@@ -83,7 +81,6 @@ describe('SessionLogin', () => {
           // listeners on the document.
           return trigger('click', dropdown.first('.dropdown-toggle'), true);
         }));
-      afterEach(() => detachFromDocument(app));
 
       it('a menu is shown', () => {
         dropdown.is('.open').should.be.true();

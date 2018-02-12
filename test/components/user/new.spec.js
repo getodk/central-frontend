@@ -16,7 +16,7 @@ import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import mockHttp from '../../http';
-import { detachFromDocument, fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, mockRoute, trigger } from '../../util';
 import { mockLogin, mockUser, resetSession } from '../../session';
 
 const clickCreateButton = (wrapper) =>
@@ -49,9 +49,7 @@ describe('UserNew', () => {
           .then(clickCreateButton)
           .then(app => {
             const field = app.first('#user-new-email');
-            const isFocused = document.activeElement === field.element;
-            detachFromDocument(app);
-            isFocused.should.be.true();
+            (document.activeElement === field.element).should.be.true();
           }));
     });
   });
