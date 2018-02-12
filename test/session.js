@@ -18,35 +18,30 @@ import { logIn, resetSession } from '../lib/session';
 
 export { resetSession };
 
-export function mockSession() {
+export const mockSession = () => {
   const token = 'a'.repeat(64);
   const tomorrow = moment(new Date()).add(1, 'days').utc().format();
   return { token, expiresAt: tomorrow };
-}
+};
 
-export function mockUser() {
-  return { email: 'test@opendatakit.org' };
-}
+export const mockUser = () => ({ email: 'test@opendatakit.org' });
 
-export function mockLogin() {
-  logIn(mockSession(), mockUser());
-}
+export const mockLogin = () => logIn(mockSession(), mockUser());
 
-export function submitLoginForm(wrapper) {
+export const submitLoginForm = (wrapper) => {
   fillForm(wrapper, {
     '#session-login-email': mockUser().email,
     '#session-login-password': 'password'
   });
   wrapper.first('#session-login-form').trigger('submit');
   return Vue.nextTick();
-}
+};
 
-export function mockRouteThroughLogin(location, mountOptions = {}) {
-  return mockRoute(location, mountOptions)
+export const mockRouteThroughLogin = (location, mountOptions = {}) =>
+  mockRoute(location, mountOptions)
     .then(app => mockHttp()
       .request(() => submitLoginForm(app))
       .respondWithData(mockSession())
       .respondWithData(mockUser())
       .point()
       .then(() => app));
-}

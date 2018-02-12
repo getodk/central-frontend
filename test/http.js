@@ -19,7 +19,7 @@ const REQUEST_METHODS = ['get', 'post', 'delete'];
 const DELAY_BEFORE_RESPONSES = 100;
 
 // Sets Vue.prototype.$http to a mock.
-export function setHttp(respond) {
+export const setHttp = (respond) => {
   const http = () => respond();
   for (const method of REQUEST_METHODS)
     http[method] = respond;
@@ -31,7 +31,7 @@ export function setHttp(respond) {
   const previous = Vue.prototype.$http;
   Vue.prototype.$http = http;
   return previous;
-}
+};
 
 class SuccessfulResponse {
   constructor(data) {
@@ -181,6 +181,4 @@ class MockHttp {
 // Alias method.
 MockHttp.prototype.afterResponse = MockHttp.prototype.afterResponses;
 
-export default function mockHttp() {
-  return new MockHttp();
-}
+export default () => new MockHttp();

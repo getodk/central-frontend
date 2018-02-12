@@ -21,11 +21,11 @@ export class MockLogger {
   error() {}
 }
 
-export function detachFromDocument(wrapper) {
+export const detachFromDocument = (wrapper) => {
   $(wrapper.element).remove();
-}
+};
 
-export function mockRoute(location, mountOptions = {}) {
+export const mockRoute = (location, mountOptions = {}) => {
   const session = Vue.prototype.$session;
   /* If the user is logged in, mounting the app with the router will redirect
   the user to the forms list, resulting in an HTTP request. To prevent that, if
@@ -39,13 +39,13 @@ export function mockRoute(location, mountOptions = {}) {
   if (session.loggedIn()) session.updateGlobals();
   router.push(location);
   return Vue.nextTick().then(() => app);
-}
+};
 
-export function fillForm(wrapper, values) {
+export const fillForm = (wrapper, values) => {
   for (const [selector, value] of Object.entries(values)) {
     const field = wrapper.first(selector);
     field.element.value = value;
     // If there is a v-model attribute, prompt it to sync.
     field.trigger('input');
   }
-}
+};
