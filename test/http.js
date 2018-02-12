@@ -54,6 +54,111 @@ class ProblemResponse {
   response() { return this._error; }
 }
 
+/*
+MockHttp mocks a series of request-response cycles. It allows you to mount a
+component, specify one or more requests, then examine the component once the
+responses to the requests have been processed.
+
+First, specify a component to mount. Some components will send a request after
+being mounted, for example:
+
+  mockHttp()
+    .mount(UserList)
+
+Other component will not send a request. Specify a request after mounting the
+component:
+
+  mockHttp()
+    // Redirects to login: no request.
+    .mount(App)
+    // Requests the user list.
+    .request(component => {
+      mockLogin();
+      component.vm.$router.push('/users')
+    })
+
+If you already have a mounted component, you can skip mount():
+
+  const component = mount(App);
+
+  ...
+
+  mockHttp()
+    .request(component => {
+      mockLogin();
+      component.vm.$router.push('/users');
+    })
+
+The important thing is that you call mount(), request(), or both.
+
+After specifying the request, specify the response:
+
+  mockHttp()
+    .mount(UserList)
+    .respondWithData([{ id: 1, email: 'user@test.com' }])
+
+Sometimes, mount() and/or request() will send more than one request. Simply
+specify all the responses, in order:
+
+  mockHttp()
+    .mount(App)
+    .request(submitLoginForm)
+    .respondWithData(mockSession())
+    .respondWithData(mockUser())
+
+In rare cases, you may know that mount() and/or request() will not send any
+request. For example, that's true for some uses of mockRoute(). In that case,
+simply do not specify a response. What is important is that the number of
+requests matches the number of responses.
+
+After specifying requests and responses, you can examine the state of the
+component once the responses have been processed:
+
+  mockHttp()
+    .mount(UserList)
+    .respondWithData([ ... 3 users ... ])
+    .afterResponse(component => {
+      component.find('table tbody tr').length.should.equal(3);
+    })
+
+It isn't until afterResponse() that the component is actually mounted and the
+request() callback is invoked. afterResponse() mounts the component, runs the
+request() callback, waits for the responses to be processed, then finally runs
+its own callback, thereby completing the series of request-response cycles.
+
+After afterResponse(), you can call any Promise method:
+
+  mockHttp()
+    .mount(UserList)
+    .respondWithData([ ... 3 users ... ])
+    .afterResponse(component => {
+      component.find('table tbody tr').length.should.equal(3);
+    })
+    .then(() => console.log('table has 3 rows'))
+    .catch(() => console.log('table does not have 3 rows'))
+
+Alternatively, you can follow the series with a new series of request-response
+cycles: series can be chained. For example:
+
+  mockHttp()
+    .mount(App)
+    .request(component => {
+      mockLogin();
+      component.vm.$router.push('/users')
+    })
+    .respondWithData([ ... 3 users ... ])
+    .afterResponse(component => {
+      component.find('table tbody tr').length.should.equal(3);
+    })
+    .request(component => component.vm.$router.push('/forms'))
+    .respondWithData([ ... 4 forms ... ])
+    .afterResponse(component => {
+      component.find('table tbody tr').length.should.equal(4);
+    })
+
+Notice how the mounted component is passed to each request() and afterResponse()
+callback, even in the second series.
+*/
 class MockHttp {
   constructor(
     previousPromise = null,
@@ -63,10 +168,13 @@ class MockHttp {
     responses = [],
     beforeEachResponse = null
   ) {
+    // State from the previous series of request-response cycles (if any)
+    // Promise from the previous series, used to chain series.
     this._previousPromise = previousPromise;
     // The mounted component (if any)
     this._component = component;
 
+    // State specific to the current series of request-response cycles
     this._mount = mount;
     this._request = request;
     this._responses = responses;
@@ -130,6 +238,7 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // BEFORE EACH
 
+  // Specifies a callback to run before each response is sent.
   beforeEachResponse(callback) {
     // Wrap the callback in an arrow function so that when we call
     // this._beforeEachResponse, the callback is not bound to the MockHttp.
@@ -147,6 +256,11 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // COMPLETE SERIES
 
+  /* afterResponses() specifies a callback to run after all responses have been
+  processed. It returns a new MockHttp that can be used to follow this series
+  with a new series of request-response cycles. The callback may return a
+  Promise or a non-Promise value, but it should not send a request. To do so,
+  use the returned MockHttp. */
   afterResponses(callback) {
     if (this._mount == null && this._request == null)
       throw new Error('mount() and/or request() required');
@@ -163,6 +277,7 @@ class MockHttp {
   afterResponse(callback) { return this.afterResponses(callback); }
   complete() { return this.afterResponses(component => component); }
 
+  // Tests standard button thinking things.
   standardButton(buttonSelector) {
     return this
       .respondWithProblem()
@@ -171,6 +286,8 @@ class MockHttp {
         button.getAttribute('disabled').should.be.ok();
         button.first(Spinner).getProp('state').should.be.true();
         const alert = component.first(Alert);
+        // There may be end up being tests for which this assertion does not
+        // pass. We will have to update it if/when that is the case.
         alert.getProp('state').should.be.false();
       })
       .afterResponse(component => {
@@ -186,6 +303,11 @@ class MockHttp {
   _tryBeforeEachResponse() {
     if (this._beforeEachResponse == null) return;
     if (this._errorFromBeforeEachResponse != null) return;
+    /* Adding a try/catch block here even though this._beforeEachResponse() is
+    called within a promise chain, because the promise is not returned to Mocha,
+    but rather to the app itself from $http. We want to eventually return a
+    rejected promise to Mocha, but we want to return the specified response to
+    the app regardless of whether this._beforeEachResponse() throws an error. */
     try {
       this._beforeEachResponse(this._component);
     } catch (e) {
