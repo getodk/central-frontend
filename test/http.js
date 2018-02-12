@@ -67,6 +67,9 @@ class MockHttp {
     this._beforeEachResponse = null;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // REQUESTS
+
   mount(...args) {
     this._mountArgs = args;
     return this;
@@ -76,6 +79,9 @@ class MockHttp {
     this._request = () => callback(this._component);
     return this;
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RESPONSES
 
   respondWithData(data) {
     this._responses.push(new SuccessfulResponse(data));
@@ -87,6 +93,9 @@ class MockHttp {
     return this;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // BEFORE EACH
+
   beforeEachResponse(callback) {
     this._beforeEachResponse = () => {
       try {
@@ -97,6 +106,47 @@ class MockHttp {
       }
     };
     return this;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // COMPLETE SERIES
+
+  afterResponses(callback) {
+    if (this._responses.length !== 0)
+      this._previousHttp = setHttp(this._respond());
+    if (this._mountArgs != null) this._component = mount(...this._mountArgs);
+    if (this._request != null) this._request();
+    return this._waitForResponsesToBeProcessed()
+      .then(() => new Promise((resolve, reject) => {
+        const result = callback(this._component);
+        if (this._errorFromBeforeEachResponse != null)
+          reject(this._errorFromBeforeEachResponse);
+        else
+          resolve(result);
+      }));
+  }
+
+  afterResponse(callback) { return this.afterResponses(callback); }
+  complete() { return this.afterResponses(component => component); }
+
+  standardButton(buttonSelector) {
+    return this
+      .respondWithProblem()
+      .beforeEachResponse(component => {
+        const button = component.first(buttonSelector);
+        button.getAttribute('disabled').should.be.ok();
+        button.first(Spinner).getProp('state').should.be.true();
+        const alert = component.first(Alert);
+        alert.getProp('state').should.be.false();
+      })
+      .afterResponse(component => {
+        const button = component.first(buttonSelector);
+        button.element.disabled.should.be.false();
+        button.first(Spinner).getProp('state').should.be.false();
+        const alert = component.first(Alert);
+        alert.getProp('state').should.be.true();
+        alert.getProp('type').should.equal('danger');
+      });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -122,46 +172,6 @@ class MockHttp {
     // than setTimeout.
     return new Promise(resolve => setTimeout(resolve, 50));
   }
-
-  afterResponses(callback) {
-    if (this._responses.length !== 0)
-      this._previousHttp = setHttp(this._respond());
-    if (this._mountArgs != null) this._component = mount(...this._mountArgs);
-    if (this._request != null) this._request();
-    return this._waitForResponsesToBeProcessed()
-      .then(() => new Promise((resolve, reject) => {
-        const result = callback(this._component);
-        if (this._errorFromBeforeEachResponse != null)
-          reject(this._errorFromBeforeEachResponse);
-        else
-          resolve(result);
-      }));
-  }
-
-  complete() { return this.afterResponses(component => component); }
-
-  standardButton(buttonSelector) {
-    return this
-      .respondWithProblem()
-      .beforeEachResponse(component => {
-        const button = component.first(buttonSelector);
-        button.getAttribute('disabled').should.be.ok();
-        button.first(Spinner).getProp('state').should.be.true();
-        const alert = component.first(Alert);
-        alert.getProp('state').should.be.false();
-      })
-      .afterResponse(component => {
-        const button = component.first(buttonSelector);
-        button.element.disabled.should.be.false();
-        button.first(Spinner).getProp('state').should.be.false();
-        const alert = component.first(Alert);
-        alert.getProp('state').should.be.true();
-        alert.getProp('type').should.equal('danger');
-      });
-  }
 }
-
-// Alias method.
-MockHttp.prototype.afterResponse = MockHttp.prototype.afterResponses;
 
 export default () => new MockHttp();
