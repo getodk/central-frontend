@@ -140,7 +140,7 @@ class MockHttp {
       }));
   }
 
-  point() { return this.afterResponses(doNothing); }
+  complete() { return this.afterResponses(doNothing); }
 
   standardButton(buttonSelector) {
     return this

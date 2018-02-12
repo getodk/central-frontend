@@ -43,5 +43,5 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) =>
       .request(() => submitLoginForm(app))
       .respondWithData(mockSession())
       .respondWithData(mockUser())
-      .point()
+      .complete()
       .then(() => app));

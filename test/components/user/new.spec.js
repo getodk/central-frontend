@@ -69,7 +69,7 @@ describe('UserNew', () => {
         page = mount(UserList);
       })
       .respondWithData([mockUser()])
-      .point());
+      .complete());
 
     beforeEach(() => clickCreateButton(page));
 
@@ -77,7 +77,7 @@ describe('UserNew', () => {
       .request(() => submitForm(page))
       .respondWithData(newUser)
       .respondWithData([mockUser(), newUser])
-      .point());
+      .complete());
 
     it('modal is hidden', () => {
       page.first(UserNew).getProp('state').should.be.false();
