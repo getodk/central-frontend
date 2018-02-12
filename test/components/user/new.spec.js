@@ -63,19 +63,18 @@ describe('UserNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(UserNew)
-      .request(modal => submitForm(modal))
+      .request(submitForm)
       .standardButton('button[type="submit"]'));
 
-  describe('after submit', () => {
+  describe('after successful submit', () => {
     let page;
-    const currentUser = { id: 1, email: mockUser().email };
     const newUser = { id: 2, email: 'new-user@test.com' };
 
     beforeEach(() => mockHttp()
       .request(() => {
         page = mount(UserList);
       })
-      .respondWithData([currentUser])
+      .respondWithData([mockUser()])
       .point());
 
     beforeEach(() => {
@@ -86,7 +85,7 @@ describe('UserNew', () => {
     beforeEach(() => mockHttp()
       .request(() => submitForm(page))
       .respondWithData(newUser)
-      .respondWithData([currentUser, newUser])
+      .respondWithData([mockUser(), newUser])
       .point());
 
     it('modal is hidden', () => {

@@ -38,13 +38,13 @@ describe('SessionLogin', () => {
     it('standard button thinking things', () =>
       mockHttp()
         .mount(SessionLogin)
-        .request(page => submitLoginForm(page))
+        .request(submitLoginForm)
         .standardButton('button[type="submit"]'));
 
     it('incorrect credentials result in error message', () =>
       mockHttp()
         .mount(SessionLogin)
-        .request(page => submitLoginForm(page))
+        .request(submitLoginForm)
         .respondWithProblem(401.2)
         .afterResponse(page => {
           const alert = page.first(Alert);
@@ -73,8 +73,8 @@ describe('SessionLogin', () => {
       let app;
       let dropdown;
 
-      // We need to attach the component to the document, because Bootstrap's
-      // dropdown listeners are attached to the document.
+      // We need to attach the component to the document, because some of
+      // Bootstrap's dropdown listeners are on the document.
       beforeEach(() => mockRouteThroughLogin('/users', { attachToDocument: true })
         .then(component => {
           app = component;

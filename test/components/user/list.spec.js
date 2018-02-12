@@ -54,7 +54,7 @@ describe('UserList', () => {
 
     it('table is sorted correctly', () => {
       const users = [
-        { id: 1, email: mockUser().email },
+        mockUser(),
         { id: 2, email: 'user2@test.com' }
       ];
       users.sort((a, b) => {

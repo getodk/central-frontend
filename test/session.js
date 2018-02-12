@@ -24,7 +24,7 @@ export const mockSession = () => {
   return { token, expiresAt: tomorrow };
 };
 
-export const mockUser = () => ({ email: 'test@opendatakit.org' });
+export const mockUser = () => ({ id: 1, email: 'user@test.com' });
 
 export const mockLogin = () => logIn(mockSession(), mockUser());
 

@@ -16,7 +16,6 @@ import Alert from '../lib/components/alert.vue';
 import Spinner from '../lib/components/spinner.vue';
 
 const REQUEST_METHODS = ['get', 'post', 'delete'];
-const DELAY_BEFORE_RESPONSES = 100;
 
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
@@ -38,13 +37,8 @@ class SuccessfulResponse {
     this._response = { data };
   }
 
-  isSuccess() {
-    return true;
-  }
-
-  response() {
-    return this._response;
-  }
+  isSuccess() { return true; }
+  response() { return this._response; }
 }
 
 class ProblemResponse {
@@ -58,13 +52,8 @@ class ProblemResponse {
     };
   }
 
-  isSuccess() {
-    return false;
-  }
-
-  response() {
-    return this._error;
-  }
+  isSuccess() { return false; }
+  response() { return this._error; }
 }
 
 const doNothing = () => {};
@@ -124,10 +113,8 @@ class MockHttp {
       return Vue.nextTick()
         .then(this._beforeEachResponse)
         .then(() => new Promise((resolve, reject) => {
-          if (response.isSuccess())
-            resolve(response.response());
-          else
-            reject(response.response());
+          const settle = response.isSuccess() ? resolve : reject;
+          settle(response.response());
         }));
     };
   }
@@ -135,7 +122,7 @@ class MockHttp {
   _waitForResponsesToBeProcessed() {
     // We may need to make this more robust at some point, using something more
     // than setTimeout.
-    return new Promise(resolve => setTimeout(resolve, DELAY_BEFORE_RESPONSES));
+    return new Promise(resolve => setTimeout(resolve, 100));
   }
 
   afterResponses(callback) {
@@ -153,9 +140,7 @@ class MockHttp {
       }));
   }
 
-  point() {
-    return this.afterResponses(doNothing);
-  }
+  point() { return this.afterResponses(doNothing); }
 
   standardButton(buttonSelector) {
     return this
