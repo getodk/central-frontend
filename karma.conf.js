@@ -1,8 +1,8 @@
 // https://github.com/Nikku/karma-browserify
 module.exports = function (config) {
   config.set({
-    browsers: ['PhantomJS'],
-    frameworks: ['browserify', 'jasmine'],
+    browsers: ['ChromeHeadless'],
+    frameworks: ['browserify', 'mocha'],
     files: ['test/**/*.js'],
     reporters: ['spec'],
     preprocessors: {

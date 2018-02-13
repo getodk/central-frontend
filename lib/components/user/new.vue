@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop>
+  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop
+    id="user-new">
     <template slot="title">Create Staff User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>

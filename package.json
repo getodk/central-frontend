@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "watchify -vd -p browserify-hmr -e lib/main.js -o dist/build.js",
     "lint": "eslint --ext .js,.vue lib test",
-    "test": "karma start karma.conf.js",
+    "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "build": "cross-env NODE_ENV=production browserify -g envify -p [ vueify/plugins/extract-css -o dist/build.css ] -e lib/main.js | uglifyjs -c warnings=false -m > dist/build.js"
   },
   "browserify": {
@@ -26,7 +26,6 @@
     "avoriaz": "~6.3.0",
     "babel-core": "~6.26.0",
     "babel-plugin-transform-runtime": "~6.23.0",
-    "babel-polyfill": "~6.26.0",
     "babel-preset-env": "~1.6.1",
     "babel-preset-stage-2": "~6.24.1",
     "babel-runtime": "~6.26.0",
@@ -39,15 +38,15 @@
     "eslint-config-airbnb-base": "~12.1.0",
     "eslint-plugin-import": "~2.8.0",
     "eslint-plugin-vue": "~4.2.2",
-    "jasmine-core": "~2.9.0",
     "karma": "~1.7.1",
     "karma-browserify": "~5.1.3",
-    "karma-jasmine": "~1.1.1",
-    "karma-phantomjs-launcher": "~1.0.4",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-mocha": "~1.3.0",
     "karma-spec-reporter": "0.0.32",
+    "mocha": "~5.0.0",
     "node-sass": "^4.7.2",
-    "phantomjs-prebuilt": "~2.1.16",
     "proxyquireify": "~3.2.1",
+    "should": "~13.2.1",
     "uglify-js": "^2.5.0",
     "vueify": "^9.0.0",
     "watchify": "^3.4.0"

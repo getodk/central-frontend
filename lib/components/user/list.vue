@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
         <div id="user-list-staff" class="tab-pane active" role="tabpanel">
           <alert v-bind="alert" @close="alert.state = false"/>
           <float-row>
-            <button type="button" class="btn btn-primary"
-              @click="newUser.state = true">
+            <button type="button" id="user-list-new-button"
+              class="btn btn-primary" @click="newUser.state = true">
             <span class="icon-plus-circle"></span> Create Staff User
             </button>
           </float-row>

@@ -10,18 +10,54 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { mount } from 'avoriaz';
 
 import App from '../lib/components/app.vue';
+import mockHttp from './http';
+import routerFactory from '../lib/router';
+import { resetSession } from '../lib/session';
 
 export class MockLogger {
-  log() {} // eslint-disable-line class-methods-use-this
-  error() {} // eslint-disable-line class-methods-use-this
+  log() {}
+  error() {}
 }
 
-// TODO: Should we use a different router instance for each test?
-export const mockRouteForRouter = (router) => (path, callback) => {
-  const app = mount(App, { router });
-  router.push(path);
-  Vue.nextTick(() => callback(app, router));
+export const mockRoute = (location, mountOptions = {}) => {
+  const session = Vue.prototype.$session;
+  /* If the user is logged in, mounting the app with the router will redirect
+  the user to the forms list, resulting in an HTTP request. To prevent that, if
+  the user is logged in, the user's session is temporarily reset. That way,
+  mounting the app will first redirect the user to login, resulting in no
+  initial HTTP request. */
+  if (session.loggedIn()) resetSession();
+  const fullMountOptions = Object.assign({}, mountOptions);
+  fullMountOptions.router = routerFactory();
+  return mockHttp()
+    .mount(App, fullMountOptions)
+    .request(app => {
+      if (session.loggedIn()) session.updateGlobals();
+      app.vm.$router.push(location);
+    });
+};
+
+export const trigger = (eventName, wrapper, bubbles = false) => {
+  if (!bubbles) {
+    // trigger() triggers an event that does not bubble.
+    wrapper.trigger(eventName);
+  } else {
+    $(wrapper.element).trigger(eventName);
+  }
+  return Vue.nextTick();
+};
+
+export const fillForm = (wrapper, selectorsAndValues) => {
+  let promise = Promise.resolve();
+  for (const [selector, value] of selectorsAndValues) {
+    promise = promise.then(() => {
+      const field = wrapper.first(selector);
+      field.element.value = value;
+      // If there is a v-model attribute, prompt it to sync.
+      return trigger('input', field);
+    });
+  }
+  return promise;
 };

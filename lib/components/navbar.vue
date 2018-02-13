@@ -59,7 +59,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { logOut } from '../auth';
+import { logOut } from '../session';
 import { logRequestError } from '../util';
 
 class Link {
@@ -99,8 +99,8 @@ export default {
   },
   watch: {
     $route() {
-      this.loggedIn = this.$session != null;
-      this.email = this.loggedIn ? this.$user.email : '';
+      this.loggedIn = this.$session.loggedIn();
+      this.email = this.loggedIn ? this.$session.user.email : '';
     }
   },
   methods: {

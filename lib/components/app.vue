@@ -30,6 +30,7 @@ export default {
 <style lang="sass">
 // Global styles should go here.
 
+@import '../../assets/scss/bootstrap';
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 

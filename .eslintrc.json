@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     "airbnb-base",
     "plugin:vue/recommended"
   ],
-  "env": { "jasmine": true },
+  "env": { "mocha": true },
   "globals": {
     "$": false,
     "alert": false,
@@ -23,11 +23,12 @@ except according to the terms contained in the LICENSE file.
   },
   "rules": {
     "arrow-parens": "off",
+    "class-methods-use-this": "off",
     "comma-dangle": ["error", "never"],
     "curly": "off",
     "no-multiple-empty-lines": ["error", { "max": 3 }],
     "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
-    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+    "no-underscore-dangle": "off",
     "spaced-comment": "off",
     "vue/html-indent": "off",
     "vue/html-self-closing": ["error", {

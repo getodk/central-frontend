@@ -42,11 +42,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Session from '../../session';
-import User from '../../user';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
-import { logIn } from '../../auth';
+import { logIn } from '../../session';
 
 export default {
   name: 'SessionLogin',
@@ -60,35 +58,21 @@ export default {
       password: ''
     };
   },
+  created() {
+    if (this.$session.changedSinceLastPoll())
+      this.alert = alert.success('You have logged out successfully.');
+  },
   methods: {
     problemToAlert(problem) {
       return problem.code === 401.2
         ? 'Incorrect email address and/or password.'
         : null;
     },
-    validateSessionJson(json) {
-      try {
-        return new Session(json);
-      } catch (e) {
-        this.$logger.log(json);
-        this.alert = alert.danger('Something went wrong while creating a session.');
-        throw e;
-      }
-    },
     fetchUser(session) {
       const headers = { Authorization: `Bearer ${session.token}` };
       return this
         .get('/users/current', { headers })
-        .then(userJson => ({ session, userJson }));
-    },
-    validateUserJson({ session, userJson }) {
-      try {
-        return { session, user: new User(userJson) };
-      } catch (e) {
-        this.$logger.log(userJson);
-        this.alert = alert.danger('Something went wrong while retrieving the current user.');
-        throw e;
-      }
+        .then(user => ({ session, user }));
     },
     routeToNext() {
       let path = '/forms';
@@ -106,9 +90,7 @@ export default {
       this.disabled = true;
       this
         .post('/sessions', { email: this.email, password: this.password })
-        .then(sessionJson => this.validateSessionJson(sessionJson))
         .then(session => this.fetchUser(session))
-        .then(result => this.validateUserJson(result))
         .then(({ session, user }) => logIn(session, user))
         .then(() => this.routeToNext())
         .catch(() => {
