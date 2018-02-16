@@ -31,6 +31,10 @@ except according to the terms contained in the LICENSE file.
               <button type="submit" class="btn btn-primary" :disabled="disabled">
                 Log in <spinner :state="disabled"/>
               </button>
+              <router-link :to="resetPasswordLocation" tag="button"
+                type="button" class="btn btn-link">
+                Reset Password
+              </router-link>
             </div>
           </app-form>
         </div>
@@ -57,6 +61,14 @@ export default {
       email: '',
       password: ''
     };
+  },
+  computed: {
+    resetPasswordLocation() {
+      return {
+        path: '/reset-password',
+        query: Object.assign({}, this.$route.query)
+      };
+    }
   },
   methods: {
     problemToAlert(problem) {

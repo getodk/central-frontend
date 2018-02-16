@@ -224,6 +224,10 @@ class MockHttp {
     return this._respond(new SuccessfulResponse(data));
   }
 
+  respondWithSuccess() {
+    return this.respondWithData({ success: true });
+  }
+
   respondWithProblem(code = 500, message = 'There was a problem.') {
     return this._respond(new ProblemResponse(code, message));
   }
@@ -286,7 +290,7 @@ class MockHttp {
   complete() { return this.afterResponses(component => component); }
 
   // Tests standard button thinking things.
-  standardButton(buttonSelector) {
+  standardButton(buttonSelector = 'button[type="submit"]') {
     return this
       .respondWithProblem()
       .beforeEachResponse(component => {

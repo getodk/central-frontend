@@ -62,7 +62,7 @@ describe('UserNew', () => {
     mockHttp()
       .mount(UserNew)
       .request(submitForm)
-      .standardButton('button[type="submit"]'));
+      .standardButton());
 
   describe('after successful submit', () => {
     let page;

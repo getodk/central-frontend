@@ -63,6 +63,8 @@ import alert from '../mixins/alert';
 import { logOut } from '../session';
 import { logRequestError } from '../util';
 
+const DEFAULT_ACTIVE_PATH = '/forms';
+
 class Link {
   constructor(component, text, to) {
     this.component = component;
@@ -70,14 +72,16 @@ class Link {
     this.to = to;
   }
 
+  _activePath() {
+    const routePath = this.component.$route.path;
+    return routePath !== '/login' && routePath !== '/reset-password'
+      ? routePath
+      : this.component.$route.query.next || DEFAULT_ACTIVE_PATH;
+  }
+
   get active() {
-    const { path } = this.component.$route;
-    if (path !== '/login')
-      return path === this.to || path.startsWith(`${this.to}/`);
-    const { next } = this.component.$route.query;
-    return next == null
-      ? this.to === '/forms'
-      : next === this.to || next.startsWith(`${this.to}/`);
+    const activePath = this._activePath();
+    return this.to === activePath || activePath.startsWith(`${this.to}/`);
   }
 }
 
