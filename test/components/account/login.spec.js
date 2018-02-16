@@ -9,15 +9,14 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 import { mount } from 'avoriaz';
 
 import '../../setup';
 import AccountLogin from '../../../lib/components/account/login.vue';
 import Alert from '../../../lib/components/alert.vue';
 import mockHttp from '../../http';
+import { logOut, mockRouteThroughLogin, mockUser, submitLoginForm } from '../../session';
 import { mockRoute, trigger } from '../../util';
-import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '../../session';
 
 describe('AccountLogin', () => {
   describe('user is logged out', () => {
@@ -53,7 +52,7 @@ describe('AccountLogin', () => {
   });
 
   describe('after login', () => {
-    afterEach(resetSession);
+    afterEach(logOut);
 
     it('navigating to login redirects to forms list', () =>
       mockRouteThroughLogin('/users')
@@ -99,7 +98,7 @@ describe('AccountLogin', () => {
           .respondWithProblem());
 
         it('user is logged out', () => {
-          Vue.prototype.$session.loggedOut().should.be.true();
+          app.vm.$session.loggedOut().should.be.true();
         });
 
         it('user is redirected to login', () => {

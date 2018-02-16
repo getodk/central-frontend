@@ -108,7 +108,7 @@ import request from '../../mixins/request';
 export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword },
-  mixins: [alert({ login: true }), request(), highlight()],
+  mixins: [alert({ global: true }), request(), highlight()],
   data() {
     return {
       alert: alert.blank(),

@@ -16,9 +16,9 @@ import App from '../lib/components/app.vue';
 import mockHttp from './http';
 import routerFactory from '../lib/router';
 import { fillForm, trigger } from './util';
-import { logIn, resetSession } from '../lib/session';
+import { logIn, logOut } from '../lib/session';
 
-export { resetSession };
+export { logOut };
 
 export const mockSession = () => {
   const token = 'a'.repeat(64);

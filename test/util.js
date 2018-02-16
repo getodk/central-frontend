@@ -14,7 +14,7 @@ import Vue from 'vue';
 import App from '../lib/components/app.vue';
 import mockHttp from './http';
 import routerFactory from '../lib/router';
-import { resetSession } from '../lib/session';
+import { logOut } from '../lib/session';
 
 export class MockLogger {
   log() {}
@@ -23,12 +23,12 @@ export class MockLogger {
 
 export const mockRoute = (location, mountOptions = {}) => {
   const session = Vue.prototype.$session;
-  /* If the user is logged in, mounting the app with the router will redirect
-  the user to the forms list, resulting in an HTTP request. To prevent that, if
-  the user is logged in, the user's session is temporarily reset. That way,
-  mounting the app will first redirect the user to login, resulting in no
-  initial HTTP request. */
-  if (session.loggedIn()) resetSession();
+  /* For users who are logged in, mounting the app with the router will redirect
+  the user to the forms list, resulting in an HTTP request. To prevent that,
+  users who are logged in are temporarily logged out. That way, mounting the
+  app will first redirect the user to login, resulting in no initial HTTP
+  request. */
+  if (session.loggedIn()) logOut();
   const fullMountOptions = Object.assign({}, mountOptions);
   fullMountOptions.router = routerFactory();
   return mockHttp()

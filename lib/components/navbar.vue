@@ -59,6 +59,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import alert from '../mixins/alert';
 import { logOut } from '../session';
 import { logRequestError } from '../util';
 
@@ -118,6 +119,7 @@ export default {
     logOut() {
       this.deleteSession();
       logOut();
+      this.$alert = alert.success('You have logged out successfully.');
       this.routeToLogin();
     }
   }

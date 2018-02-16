@@ -44,9 +44,11 @@ import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 import { logIn } from '../../session';
 
+const DEFAULT_NEXT_PATH = '/forms';
+
 export default {
   name: 'AccountLogin',
-  mixins: [alert(), request()],
+  mixins: [alert({ global: true }), request()],
   data() {
     return {
       alert: alert.blank(),
@@ -55,10 +57,6 @@ export default {
       email: '',
       password: ''
     };
-  },
-  created() {
-    if (this.$session.changedSinceLastPoll())
-      this.alert = alert.success('You have logged out successfully.');
   },
   methods: {
     problemToAlert(problem) {
@@ -72,17 +70,20 @@ export default {
         .get('/users/current', { headers })
         .then(user => ({ session, user }));
     },
-    routeToNext() {
-      let path = '/forms';
+    nextPath() {
       const { next } = this.$route.query;
-      if (next != null) {
-        const link = document.createElement('a');
-        link.href = next;
-        if (link.host === window.location.host) path = link.pathname;
-      }
+      if (next == null) return DEFAULT_NEXT_PATH;
+      const link = document.createElement('a');
+      link.href = next;
+      return link.host === window.location.host
+        ? link.pathname
+        : DEFAULT_NEXT_PATH;
+    },
+    routeToNext() {
+      this.$alert = alert.success('You have logged in successfully.');
       const query = Object.assign({}, this.$route.query);
       delete query.next;
-      this.$router.push({ path, query });
+      this.$router.push({ path: this.nextPath(), query });
     },
     submit() {
       this.disabled = true;
