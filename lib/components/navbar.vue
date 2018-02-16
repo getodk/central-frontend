@@ -74,9 +74,15 @@ class Link {
 
   _activePath() {
     const routePath = this.component.$route.path;
-    return routePath !== '/login' && routePath !== '/reset-password'
-      ? routePath
-      : this.component.$route.query.next || DEFAULT_ACTIVE_PATH;
+    switch (routePath) {
+      case '/login':
+      case '/reset-password':
+        return this.component.$route.query.next || DEFAULT_ACTIVE_PATH;
+      case '/account/claim':
+        return DEFAULT_ACTIVE_PATH;
+      default:
+        return routePath;
+    }
   }
 
   get active() {
