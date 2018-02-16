@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
           <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
             Create <spinner :state="awaitingResponse"/>
           </button>
-          <button type="button" class="btn btn-default" @click="$emit('hide')">
+          <button type="button" class="btn btn-link" @click="$emit('hide')">
             Close
           </button>
         </div>

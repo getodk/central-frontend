@@ -138,13 +138,7 @@ export default {
       margin: -15px;
       margin-top: 20px;
       padding: 10px 15px;
-
-      .btn-default {
-        background-color: transparent;
-        color: $color-action-foreground;
-      }
     }
   }
 }
 </style>
-

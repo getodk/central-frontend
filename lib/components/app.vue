@@ -62,11 +62,16 @@ body {
   padding: 6px 10px 5px;
   position: relative;
 }
+
 .btn-primary {
   background-color: $color-action-background;
   &:hover, &:focus {
     background-color: $color-action-background-hover;
   }
+}
+
+.btn-link {
+  color: $color-action-foreground;
 }
 
 .form-group {
