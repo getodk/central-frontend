@@ -10,22 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="session-login" class="row">
+  <div id="account-login" class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default">
-        <div id="session-login-heading" class="panel-heading">
+        <div id="account-login-heading" class="panel-heading">
           <h1 class="panel-title">Log in</h1>
         </div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
-          <app-form id="session-login-form" @submit="submit">
+          <app-form id="account-login-form" @submit="submit">
             <label class="form-group">
-              <input type="email" v-model.trim="email" id="session-login-email"
+              <input type="email" v-model.trim="email" id="account-login-email"
                 class="form-control" placeholder="Email address *" required autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <label class="form-group">
-              <input type="password" v-model="password" id="session-login-password"
+              <input type="password" v-model="password" id="account-login-password"
                 class="form-control" placeholder="Password *" required>
               <span class="form-label">Password *</span>
             </label>
@@ -47,7 +47,7 @@ import request from '../../mixins/request';
 import { logIn } from '../../session';
 
 export default {
-  name: 'SessionLogin',
+  name: 'AccountLogin',
   mixins: [alert(), request()],
   data() {
     return {
@@ -104,7 +104,7 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#session-login {
+#account-login {
   margin-top: 70px;
 
   .panel {
@@ -124,7 +124,7 @@ export default {
   }
 }
 
-#session-login-heading {
+#account-login-heading {
   background-color: $color-accent-primary;
   border-radius: 0;
   color: #fff;

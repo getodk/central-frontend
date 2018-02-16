@@ -13,13 +13,13 @@ import Vue from 'vue';
 import { mount } from 'avoriaz';
 
 import '../../setup';
+import AccountLogin from '../../../lib/components/account/login.vue';
 import Alert from '../../../lib/components/alert.vue';
-import SessionLogin from '../../../lib/components/session/login.vue';
 import mockHttp from '../../http';
 import { mockRoute, trigger } from '../../util';
 import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '../../session';
 
-describe('SessionLogin', () => {
+describe('AccountLogin', () => {
   describe('user is logged out', () => {
     it('navbar indicates that the user is logged out', () =>
       mockRoute('/login').then(app => {
@@ -28,20 +28,20 @@ describe('SessionLogin', () => {
       }));
 
     it('first field is focused', () => {
-      const page = mount(SessionLogin, { attachToDocument: true });
-      const field = page.first('#session-login-email');
+      const page = mount(AccountLogin, { attachToDocument: true });
+      const field = page.first('#account-login-email');
       (document.activeElement === field.element).should.be.true();
     });
 
     it('standard button thinking things', () =>
       mockHttp()
-        .mount(SessionLogin)
+        .mount(AccountLogin)
         .request(submitLoginForm)
         .standardButton('button[type="submit"]'));
 
     it('incorrect credentials result in error message', () =>
       mockHttp()
-        .mount(SessionLogin)
+        .mount(AccountLogin)
         .request(submitLoginForm)
         .respondWithProblem(401.2)
         .afterResponse(page => {
