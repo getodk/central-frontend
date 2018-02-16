@@ -32,11 +32,11 @@ export const mockLogin = () => logIn(mockSession(), mockUser());
 
 export const submitLoginForm = (wrapper) => {
   const promise = fillForm(wrapper, [
-    ['#account-login-email', mockUser().email],
-    ['#account-login-password', 'password']
+    ['#account-login input[type="email"]', mockUser().email],
+    ['#account-login input[type="password"]', 'password']
   ]);
   return promise
-    .then(() => trigger('submit', wrapper.first('#account-login-form')))
+    .then(() => trigger('submit', wrapper.first('#account-login form')))
     .then(() => wrapper);
 };
 

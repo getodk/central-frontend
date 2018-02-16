@@ -28,7 +28,7 @@ describe('AccountLogin', () => {
 
     it('first field is focused', () => {
       const page = mount(AccountLogin, { attachToDocument: true });
-      const field = page.first('#account-login-email');
+      const field = page.first('#account-login input[type="email"]');
       (document.activeElement === field.element).should.be.true();
     });
 

@@ -16,15 +16,15 @@ except according to the terms contained in the LICENSE file.
         <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
-          <app-form id="account-login-form" @submit="submit">
+          <app-form @submit="submit">
             <label class="form-group">
-              <input type="email" v-model.trim="email" id="account-login-email"
-                class="form-control" placeholder="Email address *" required autocomplete="off">
+              <input type="email" v-model.trim="email" class="form-control"
+                placeholder="Email address *" required autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <label class="form-group">
-              <input type="password" v-model="password" id="account-login-password"
-                class="form-control" placeholder="Password *" required>
+              <input type="password" v-model="password" class="form-control"
+                placeholder="Password *" required>
               <span class="form-label">Password *</span>
             </label>
             <div class="panel-footer">
