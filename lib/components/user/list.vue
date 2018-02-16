@@ -91,9 +91,9 @@ except according to the terms contained in the LICENSE file.
 
       <!-- Modals -->
       <user-new v-bind="newUser" @hide="newUser.state = false"
-        @create="afterCreate"/>
+        @success="afterCreate"/>
       <user-reset-password v-bind="resetPassword"
-        @hide="resetPassword.state = false"/>
+        @hide="resetPassword.state = false" @success="afterResetPassword"/>
     </page-body>
   </div>
 </template>
@@ -150,6 +150,9 @@ export default {
       this.fetchData();
       this.alert = alert.success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
+    },
+    afterResetPassword() {
+      this.alert = alert.success(`An email has been sent to ${this.resetPassword.user.email} with instructions on how to proceed.`);
     }
   }
 };

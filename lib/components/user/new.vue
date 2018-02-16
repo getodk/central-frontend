@@ -71,7 +71,7 @@ export default {
           this.$emit('hide');
           this.alert = alert.blank();
           this.email = '';
-          this.$emit('create', user);
+          this.$emit('success', user);
         })
         .catch(() => {});
     }
