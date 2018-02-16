@@ -12,10 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="account-login" class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default">
-        <div id="account-login-heading" class="panel-heading">
-          <h1 class="panel-title">Log in</h1>
-        </div>
+      <div class="panel panel-default panel-main">
+        <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
           <app-form id="account-login-form" @submit="submit">
@@ -100,39 +98,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-@import '../../../assets/scss/variables';
-
-#account-login {
-  margin-top: 70px;
-
-  .panel {
-    border: none;
-    border-radius: 0;
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
-  }
-  .panel-body {
-    padding: 25px 15px;
-  }
-  .panel-footer {
-    background: $color-subpanel-background;
-    border-top-color: $color-subpanel-border;
-    margin: -15px;
-    margin-bottom: -25px;
-    margin-top: 20px;
-  }
-}
-
-#account-login-heading {
-  background-color: $color-accent-primary;
-  border-radius: 0;
-  color: #fff;
-
-  h1 {
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: -0.02em;
-  }
-}
-</style>
