@@ -14,18 +14,18 @@ except according to the terms contained in the LICENSE file.
     <template slot="title">Reset Password</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
-      <p>
+      <p class="modal-introduction">
         Once you click <strong>Reset Password</strong> below, the password for
         {{ user.email }} will be immediately invalidated. An email will be sent
         to {{ user.email }} with instructions on how to proceed.
       </p>
-      <div>
+      <div class="modal-actions">
         <button type="button" id="user-reset-password-button"
           class="btn btn-primary" :disabled="awaitingResponse"
           @click="resetPassword">
           Reset Password <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-default" @click="$emit('hide')">
+        <button type="button" class="btn btn-link" @click="$emit('hide')">
           Close
         </button>
       </div>
