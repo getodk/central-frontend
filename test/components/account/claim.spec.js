@@ -9,10 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { mount } from 'avoriaz';
-
 import '../../setup';
-import AccountClaim from '../../../lib/components/account/claim.vue';
 import Alert from '../../../lib/components/alert.vue';
 import { fillForm, mockRoute, trigger } from '../../util';
 
@@ -23,11 +20,11 @@ const submitForm = (wrapper) =>
     .then(() => wrapper);
 
 describe('AccountClaim', () => {
-  it('field is focused', () => {
-    const page = mount(AccountClaim, { attachToDocument: true });
-    const field = page.first('input[type="password"]');
-    (document.activeElement === field.element).should.be.true();
-  });
+  it('field is focused', () =>
+    mockRoute(LOCATION, { attachToDocument: true }).then(app => {
+      const field = app.first('input[type="password"]');
+      (document.activeElement === field.element).should.be.true();
+    }));
 
   it('standard button thinking things', () =>
     // We need mockRoute() and not just mockHttp(), because the token is taken
