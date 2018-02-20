@@ -374,8 +374,8 @@ class MockHttp {
       return Promise.resolve();
     }
     // _restoreHttp() is run in a finally() call, so _setHttp() must be as well:
-    // otherwise, if _previousPromise is rejected, it would call _restoreHttp()
-    // but not _setHttp().
+    // otherwise, if _previousPromise is rejected, afterResponses() would call
+    // _restoreHttp() but not _setHttp().
     return this._previousPromise.finally(() => this._setHttp());
   }
 
