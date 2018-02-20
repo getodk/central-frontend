@@ -46,7 +46,7 @@ import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
-  name: 'AccountLogin',
+  name: 'AccountResetPassword',
   mixins: [alert({ global: true }), request()],
   data() {
     return {
