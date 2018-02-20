@@ -52,7 +52,7 @@ const DEFAULT_NEXT_PATH = '/forms';
 
 export default {
   name: 'AccountLogin',
-  mixins: [alert({ global: true }), request()],
+  mixins: [alert(), request()],
   data() {
     return {
       alert: alert.blank(),

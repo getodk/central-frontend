@@ -44,7 +44,7 @@ import request from '../../mixins/request';
 
 export default {
   name: 'AccountClaim',
-  mixins: [alert({ global: true }), request()],
+  mixins: [alert(), request()],
   data() {
     return {
       alert: alert.blank(),
