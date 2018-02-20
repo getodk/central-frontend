@@ -9,17 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
-import { mount } from 'avoriaz';
-
 import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
-import SessionLogin from '../../../lib/components/session/login.vue';
 import mockHttp from '../../http';
+import { logOut, mockRouteThroughLogin, mockUser, submitLoginForm } from '../../session';
 import { mockRoute, trigger } from '../../util';
-import { mockRouteThroughLogin, mockUser, resetSession, submitLoginForm } from '../../session';
 
-describe('SessionLogin', () => {
+describe('AccountLogin', () => {
   describe('user is logged out', () => {
     it('navbar indicates that the user is logged out', () =>
       mockRoute('/login').then(app => {
@@ -27,33 +23,40 @@ describe('SessionLogin', () => {
         link.text().trim().should.equal('Not Logged in');
       }));
 
-    it('first field is focused', () => {
-      const page = mount(SessionLogin, { attachToDocument: true });
-      const field = page.first('#session-login-email');
-      (document.activeElement === field.element).should.be.true();
-    });
+    it('first field is focused', () =>
+      // We need mockRoute() and not just mockHttp(), because AccountLogin uses
+      // $route at render.
+      mockRoute('/login', { attachToDocument: true }).then(app => {
+        const field = app.first('#account-login input[type="email"]');
+        (document.activeElement === field.element).should.be.true();
+      }));
 
     it('standard button thinking things', () =>
-      mockHttp()
-        .mount(SessionLogin)
+      mockRoute('/login')
+        .complete()
         .request(submitLoginForm)
-        .standardButton('button[type="submit"]'));
+        .standardButton());
 
     it('incorrect credentials result in error message', () =>
-      mockHttp()
-        .mount(SessionLogin)
+      mockRoute('/login')
+        .complete()
         .request(submitLoginForm)
         .respondWithProblem(401.2)
-        .afterResponse(page => {
-          const alert = page.first(Alert);
+        .afterResponse(app => {
+          const alert = app.first(Alert);
           alert.getProp('state').should.be.true();
           alert.getProp('type').should.equal('danger');
           alert.getProp('message').should.equal('Incorrect email address and/or password.');
         }));
+
+    it('clicking the reset password button navigates to that page', () =>
+      mockRoute('/login')
+        .then(app => trigger('click', app.first('.panel-footer .btn-link'))
+          .then(() => app.vm.$route.path.should.equal('/reset-password'))));
   });
 
   describe('after login', () => {
-    afterEach(resetSession);
+    afterEach(logOut);
 
     it('navigating to login redirects to forms list', () =>
       mockRouteThroughLogin('/users')
@@ -99,7 +102,7 @@ describe('SessionLogin', () => {
           .respondWithProblem());
 
         it('user is logged out', () => {
-          Vue.prototype.$session.loggedOut().should.be.true();
+          app.vm.$session.loggedOut().should.be.true();
         });
 
         it('user is redirected to login', () => {

@@ -59,8 +59,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import alert from '../mixins/alert';
 import { logOut } from '../session';
 import { logRequestError } from '../util';
+
+const DEFAULT_ACTIVE_PATH = '/forms';
 
 class Link {
   constructor(component, text, to) {
@@ -69,14 +72,22 @@ class Link {
     this.to = to;
   }
 
+  _activePath() {
+    const routePath = this.component.$route.path;
+    switch (routePath) {
+      case '/login':
+      case '/reset-password':
+        return this.component.$route.query.next || DEFAULT_ACTIVE_PATH;
+      case '/account/claim':
+        return DEFAULT_ACTIVE_PATH;
+      default:
+        return routePath;
+    }
+  }
+
   get active() {
-    const { path } = this.component.$route;
-    if (path !== '/login')
-      return path === this.to || path.startsWith(`${this.to}/`);
-    const { next } = this.component.$route.query;
-    return next == null
-      ? this.to === '/forms'
-      : next === this.to || next.startsWith(`${this.to}/`);
+    const activePath = this._activePath();
+    return this.to === activePath || activePath.startsWith(`${this.to}/`);
   }
 }
 
@@ -118,6 +129,7 @@ export default {
     logOut() {
       this.deleteSession();
       logOut();
+      this.$alert = alert.success('You have logged out successfully.');
       this.routeToLogin();
     }
   }

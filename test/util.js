@@ -14,7 +14,7 @@ import Vue from 'vue';
 import App from '../lib/components/app.vue';
 import mockHttp from './http';
 import routerFactory from '../lib/router';
-import { resetSession } from '../lib/session';
+import { logOut } from '../lib/session';
 
 export class MockLogger {
   log() {}
@@ -23,12 +23,12 @@ export class MockLogger {
 
 export const mockRoute = (location, mountOptions = {}) => {
   const session = Vue.prototype.$session;
-  /* If the user is logged in, mounting the app with the router will redirect
-  the user to the forms list, resulting in an HTTP request. To prevent that, if
-  the user is logged in, the user's session is temporarily reset. That way,
-  mounting the app will first redirect the user to login, resulting in no
-  initial HTTP request. */
-  if (session.loggedIn()) resetSession();
+  // If the user is logged in, mounting the app with the router will redirect
+  // the user to the forms list, resulting in an HTTP request. To prevent that,
+  // any user who is logged in is temporarily logged out. That way, mounting the
+  // app will first redirect the user to login, resulting in no initial HTTP
+  // request.
+  if (session.loggedIn()) logOut();
   const fullMountOptions = Object.assign({}, mountOptions);
   fullMountOptions.router = routerFactory();
   return mockHttp()
@@ -48,6 +48,10 @@ export const trigger = (eventName, wrapper, bubbles = false) => {
   }
   return Vue.nextTick();
 };
+
+const EVENT_NAMES = ['click', 'submit'];
+for (const name of EVENT_NAMES)
+  trigger[name] = (wrapper, bubbles = false) => trigger(name, wrapper, bubbles);
 
 export const fillForm = (wrapper, selectorsAndValues) => {
   let promise = Promise.resolve();

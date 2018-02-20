@@ -62,11 +62,16 @@ body {
   padding: 6px 10px 5px;
   position: relative;
 }
+
 .btn-primary {
   background-color: $color-action-background;
   &:hover, &:focus {
     background-color: $color-action-background-hover;
   }
+}
+
+.btn-link {
+  color: $color-action-foreground;
 }
 
 .form-group {
@@ -121,5 +126,39 @@ body {
       padding: 8px 9px 6px;
     }
   }
+}
+
+.panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+
+  .panel-heading {
+    background-color: $color-accent-primary;
+    border-radius: 0;
+    color: #fff;
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .panel-body {
+    padding: 25px 15px;
+  }
+
+  .panel-footer {
+    background: $color-subpanel-background;
+    border-top-color: $color-subpanel-border;
+    margin: -15px;
+    margin-bottom: -25px;
+    margin-top: 20px;
+  }
+}
+
+.panel-main {
+  margin-top: 70px;
 }
 </style>

@@ -76,7 +76,7 @@ import request from '../../mixins/request';
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert({ login: true }), request(), highlight()],
+  mixins: [alert(), request(), highlight()],
   data() {
     return {
       alert: alert.blank(),

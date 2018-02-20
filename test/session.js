@@ -16,9 +16,9 @@ import App from '../lib/components/app.vue';
 import mockHttp from './http';
 import routerFactory from '../lib/router';
 import { fillForm, trigger } from './util';
-import { logIn, resetSession } from '../lib/session';
+import { logIn, logOut } from '../lib/session';
 
-export { resetSession };
+export { logOut };
 
 export const mockSession = () => {
   const token = 'a'.repeat(64);
@@ -32,11 +32,11 @@ export const mockLogin = () => logIn(mockSession(), mockUser());
 
 export const submitLoginForm = (wrapper) => {
   const promise = fillForm(wrapper, [
-    ['#session-login-email', mockUser().email],
-    ['#session-login-password', 'password']
+    ['#account-login input[type="email"]', mockUser().email],
+    ['#account-login input[type="password"]', 'password']
   ]);
   return promise
-    .then(() => trigger('submit', wrapper.first('#session-login-form')))
+    .then(() => trigger('submit', wrapper.first('#account-login form')))
     .then(() => wrapper);
 };
 

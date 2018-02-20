@@ -13,7 +13,7 @@ import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
-import { mockLogin, mockRouteThroughLogin, mockUser, resetSession } from '../../session';
+import { logOut, mockLogin, mockRouteThroughLogin, mockUser } from '../../session';
 import { mockRoute } from '../../util';
 
 describe('UserList', () => {
@@ -28,9 +28,19 @@ describe('UserList', () => {
         .afterResponses(app => app.vm.$route.path.should.equal('/users')));
   });
 
+  it('success message is shown after login', () =>
+    mockRouteThroughLogin('/users')
+      .respondWithData([mockUser()])
+      .afterResponse(app => {
+        const alert = app.first('#user-list-staff').first(Alert);
+        alert.getProp('state').should.be.true();
+        alert.getProp('type').should.equal('success');
+      })
+      .finally(logOut));
+
   describe('after login', () => {
     before(mockLogin);
-    after(resetSession);
+    after(logOut);
 
     describe('page defaults to Staff tab', () => {
       it('tab is active', () =>
@@ -52,16 +62,6 @@ describe('UserList', () => {
             panel.is('#user-list-staff').should.be.true();
           }));
     });
-
-    it('success message is shown', () =>
-      mockHttp()
-        .mount(UserList)
-        .respondWithData([mockUser()])
-        .afterResponse(page => {
-          const alert = page.first(Alert);
-          alert.getProp('state').should.be.true();
-          alert.getProp('type').should.equal('success');
-        }));
 
     it('table is sorted correctly', () => {
       const users = [

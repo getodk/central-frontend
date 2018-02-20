@@ -10,29 +10,31 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="session-login" class="row">
+  <div id="account-login" class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default">
-        <div id="session-login-heading" class="panel-heading">
-          <h1 class="panel-title">Log in</h1>
-        </div>
+      <div class="panel panel-default panel-main">
+        <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
         <div class="panel-body">
           <alert v-bind="alert" @close="alert.state = false"/>
-          <app-form id="session-login-form" @submit="submit">
+          <app-form @submit="submit">
             <label class="form-group">
-              <input type="email" v-model.trim="email" id="session-login-email"
-                class="form-control" placeholder="Email address *" required autocomplete="off">
+              <input type="email" v-model.trim="email" class="form-control"
+                placeholder="Email address *" required autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <label class="form-group">
-              <input type="password" v-model="password" id="session-login-password"
-                class="form-control" placeholder="Password *" required>
+              <input type="password" v-model="password" class="form-control"
+                placeholder="Password *" required>
               <span class="form-label">Password *</span>
             </label>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary" :disabled="disabled">
                 Log in <spinner :state="disabled"/>
               </button>
+              <router-link :to="resetPasswordLocation" tag="button"
+                type="button" class="btn btn-link">
+                Reset Password
+              </router-link>
             </div>
           </app-form>
         </div>
@@ -46,8 +48,10 @@ import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 import { logIn } from '../../session';
 
+const DEFAULT_NEXT_PATH = '/forms';
+
 export default {
-  name: 'SessionLogin',
+  name: 'AccountLogin',
   mixins: [alert(), request()],
   data() {
     return {
@@ -58,9 +62,13 @@ export default {
       password: ''
     };
   },
-  created() {
-    if (this.$session.changedSinceLastPoll())
-      this.alert = alert.success('You have logged out successfully.');
+  computed: {
+    resetPasswordLocation() {
+      return {
+        path: '/reset-password',
+        query: Object.assign({}, this.$route.query)
+      };
+    }
   },
   methods: {
     problemToAlert(problem) {
@@ -74,17 +82,20 @@ export default {
         .get('/users/current', { headers })
         .then(user => ({ session, user }));
     },
-    routeToNext() {
-      let path = '/forms';
+    nextPath() {
       const { next } = this.$route.query;
-      if (next != null) {
-        const link = document.createElement('a');
-        link.href = next;
-        if (link.host === window.location.host) path = link.pathname;
-      }
+      if (next == null) return DEFAULT_NEXT_PATH;
+      const link = document.createElement('a');
+      link.href = next;
+      return link.host === window.location.host
+        ? link.pathname
+        : DEFAULT_NEXT_PATH;
+    },
+    routeToNext() {
+      this.$alert = alert.success('You have logged in successfully.');
       const query = Object.assign({}, this.$route.query);
       delete query.next;
-      this.$router.push({ path, query });
+      this.$router.push({ path: this.nextPath(), query });
     },
     submit() {
       this.disabled = true;
@@ -100,39 +111,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-@import '../../../assets/scss/variables';
-
-#session-login {
-  margin-top: 70px;
-
-  .panel {
-    border: none;
-    border-radius: 0;
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
-  }
-  .panel-body {
-    padding: 25px 15px;
-  }
-  .panel-footer {
-    background: $color-subpanel-background;
-    border-top-color: $color-subpanel-border;
-    margin: -15px;
-    margin-bottom: -25px;
-    margin-top: 20px;
-  }
-}
-
-#session-login-heading {
-  background-color: $color-accent-primary;
-  border-radius: 0;
-  color: #fff;
-
-  h1 {
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: -0.02em;
-  }
-}
-</style>
