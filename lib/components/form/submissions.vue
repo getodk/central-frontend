@@ -18,6 +18,15 @@ except according to the terms contained in the LICENSE file.
     There are no submissions yet for “{{ form.name || form.xmlFormId }}”.
   </p>
   <div v-else>
+    <float-row>
+      <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
+        class="hidden">
+      </a>
+      <button type="button" ref="downloadButton" class="btn btn-primary"
+        @click="download">
+        {{ downloadButtonText }}
+      </button>
+    </float-row>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -56,8 +65,20 @@ export default {
     return {
       alert: alert.blank(),
       requestId: null,
-      submissions: null
+      submissions: null,
+      downloadHref: '#'
     };
+  },
+  computed: {
+    downloadFilename() {
+      // The browser should sanitize the filename upon download.
+      return `${this.form.xmlFormId}.zip`;
+    },
+    downloadButtonText() {
+      if (this.submissions.length === 1) return 'Download 1 record';
+      const count = this.submissions.length.toLocaleString();
+      return `Download all ${count} records`;
+    }
   },
   watch: {
     alert() {
@@ -75,6 +96,22 @@ export default {
         .get(`/forms/${this.form.xmlFormId}/submissions`, { headers })
         .then(submissions => {
           this.submissions = submissions;
+        })
+        .catch(() => {});
+    },
+    download() {
+      const path = `/forms/${this.form.xmlFormId}/submissions.csv.zip`;
+      this
+        .get(path, { responseType: 'blob' })
+        .then(blob => {
+          // Revoke the previous URL.
+          if (this.downloadHref !== '#')
+            window.URL.revokeObjectURL(this.downloadHref);
+          this.downloadHref = window.URL.createObjectURL(blob);
+          this.$nextTick(() => {
+            this.$refs.downloadLink.click();
+            this.$refs.downloadButton.blur();
+          });
         })
         .catch(() => {});
     },
