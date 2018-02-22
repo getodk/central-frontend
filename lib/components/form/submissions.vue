@@ -15,27 +15,21 @@ except according to the terms contained in the LICENSE file.
     <loading :state="awaitingResponse"/>
   </div>
   <p v-else-if="submissions.length === 0">
-    There are no submissions yet for <em>{{ form.xmlFormId }}</em>.
+    There are no submissions yet for “{{ form.name || form.xmlFormId }}”.
   </p>
   <div v-else>
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>#</th>
           <th>Instance ID</th>
-          <th>Reviewed</th>
           <th>Submitted by</th>
           <th>Submitted at</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(submission, index) in submissions" :key="submission.id">
-          <td>{{ index + 1 }}</td>
+        <tr v-for="submission of submissions" :key="submission.instanceId">
           <td>{{ submission.instanceId }}</td>
-          <!-- TODO: Not yet implemented. -->
-          <td>???</td>
-          <!-- TODO: Not yet implemented. -->
-          <td>???</td>
+          <td>{{ submitter(submission) }}</td>
           <td>{{ createdAt(submission) }}</td>
         </tr>
       </tbody>
@@ -76,20 +70,17 @@ export default {
   methods: {
     fetchData() {
       this.submissions = null;
+      const headers = { 'X-Extended-Metadata': 'true' };
       this
-        .get(`/forms/${this.form.xmlFormId}/submissions`)
+        .get(`/forms/${this.form.xmlFormId}/submissions`, { headers })
         .then(submissions => {
-          // Add a unique ID to each submission so that we can use the ID as the
-          // v-for key.
-          const submissionsWithIds = [];
-          for (const submission of submissions) {
-            const id = { id: this.$uniqueId() };
-            const submissionWithId = Object.assign(id, submission);
-            submissionsWithIds.push(submissionWithId);
-          }
-          this.submissions = submissionsWithIds;
+          this.submissions = submissions;
         })
         .catch(() => {});
+    },
+    submitter(submission) {
+      const { submitter } = submission;
+      return submitter != null ? submitter.displayName : '';
     },
     createdAt(submission) {
       return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');
