@@ -53,6 +53,10 @@ export default {
     > .nav-tabs {
       border-bottom: none;
 
+      &:empty {
+        margin-top: 15px;
+      }
+
       > li {
         margin-bottom: -1px;
         margin-right: 10px;

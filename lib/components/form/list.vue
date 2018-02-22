@@ -34,28 +34,34 @@ except according to the terms contained in the LICENSE file.
         <table v-else id="form-list-table" class="table table-hover">
           <thead>
             <tr>
-              <th>Form ID</th>
+              <th>Name</th>
+              <th>Created by</th>
               <th>Last Modified</th>
               <th>Last Submission</th>
             </tr>
           </thead>
           <tbody>
-            <router-link v-for="form of forms" :key="form.xmlFormId"
-              :to="`/forms/${form.xmlFormId}`" tag="tr"
+            <tr v-for="form of forms" :key="form.xmlFormId"
               :class="highlight(form, 'xmlFormId')">
               <td>
-                <div>{{ form.xmlFormId }}</div>
-                <!-- TODO: Not yet implemented. -->
-                <div>??? submissions</div>
+                <div>
+                  <router-link :to="`/forms/${form.xmlFormId}`" tag="span">
+                    {{ form.name || form.xmlFormId }}
+                  </router-link>
+                </div>
+                <div v-if="form.name != null">{{ form.xmlFormId }}</div>
+                <div>{{ submissions(form) }}</div>
+              </td>
+              <td>
+                {{ form.createdBy != null ? form.createdBy.displayName : '' }}
               </td>
               <td>
                 {{ updatedAt(form) }}
               </td>
-              <!-- TODO: Not yet implemented. -->
               <td>
-                ???
+                {{ lastSubmission(form) }}
               </td>
-            </router-link>
+            </tr>
           </tbody>
         </table>
       </template>
@@ -94,20 +100,30 @@ export default {
   methods: {
     fetchData() {
       this.forms = null;
+      const headers = { 'X-Extended-Metadata': 'true' };
       this
-        .get('/forms')
+        .get('/forms', { headers })
         .then(forms => {
           this.forms = forms;
         })
         .catch(() => {});
     },
+    submissions(form) {
+      const s = form.submissions !== 1 ? 's' : '';
+      return `${form.submissions} submission${s}`;
+    },
     updatedAt(form) {
       const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
-      return moment.utc(updatedAt).fromNow();
+      return moment(updatedAt).fromNow();
+    },
+    lastSubmission(form) {
+      const { lastSubmission } = form;
+      return lastSubmission != null ? moment(lastSubmission).fromNow() : '';
     },
     afterCreate(form) {
       this.fetchData();
-      this.alert = alert.success(`Form ${form.xmlFormId} was created successfully.`);
+      const name = form.name || form.xmlFormId;
+      this.alert = alert.success(`The form “${name}” was created successfully.`);
       this.highlighted = form.xmlFormId;
     }
   }
@@ -116,19 +132,19 @@ export default {
 
 <style lang="sass">
 #form-list-table {
-  & > thead > tr > th:nth-child(n+2),
-  & > tbody > tr > td:nth-child(n+2) {
-    width: 200px;
-  }
+  td {
+    vertical-align: middle;
 
-  & > tbody {
-    cursor: pointer;
+    &:first-child {
+      div:first-child {
+        span {
+          cursor: pointer;
+          font-size: 30px;
+        }
+      }
 
-    & > tr > td {
-      vertical-align: middle;
-
-      &:first-child > div:first-child {
-        font-size: 30px;
+      div:nth-child(2):nth-last-child(2) {
+        font-size: 18px;
       }
     }
   }
