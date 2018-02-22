@@ -10,38 +10,36 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div v-if="submissions == null">
     <alert v-bind="alert" @close="alert.state = false"/>
     <loading :state="awaitingResponse"/>
-    <!-- Render this element once the submissions have been fetched. -->
-    <template v-if="submissions">
-      <p v-if="submissions.length === 0">
-        There are no submissions yet for <em>{{ form.xmlFormId }}</em>.
-      </p>
-      <table v-else class="table table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Instance ID</th>
-            <th>Reviewed</th>
-            <th>Submitted by</th>
-            <th>Submitted at</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(submission, index) in submissions"
-            :key="submission.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ submission.instanceId }}</td>
-            <!-- TODO: Not yet implemented. -->
-            <td>???</td>
-            <!-- TODO: Not yet implemented. -->
-            <td>???</td>
-            <td>{{ createdAt(submission) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </template>
+  </div>
+  <p v-else-if="submissions.length === 0">
+    There are no submissions yet for <em>{{ form.xmlFormId }}</em>.
+  </p>
+  <div v-else>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Instance ID</th>
+          <th>Reviewed</th>
+          <th>Submitted by</th>
+          <th>Submitted at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(submission, index) in submissions" :key="submission.id">
+          <td>{{ index + 1 }}</td>
+          <td>{{ submission.instanceId }}</td>
+          <!-- TODO: Not yet implemented. -->
+          <td>???</td>
+          <!-- TODO: Not yet implemented. -->
+          <td>???</td>
+          <td>{{ createdAt(submission) }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
