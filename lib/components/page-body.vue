@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="row">
+  <div id="page-body" class="row">
     <div class="col-xs-12">
       <slot></slot>
     </div>
@@ -22,3 +22,9 @@ export default {
   name: 'PageBody'
 };
 </script>
+
+<style lang="sass">
+#page-body {
+  margin-top: 15px;
+}
+</style>

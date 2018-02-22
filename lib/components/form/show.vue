@@ -10,9 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <page-body v-if="form == null">
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <loading :state="awaitingResponse"/>
+  </page-body>
+  <div v-else>
     <page-head>
-      <template slot="title">{{ xmlFormId }}</template>
+      <template slot="title">{{ form.name || form.xmlFormId }}</template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
@@ -28,7 +32,7 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <alert v-bind="alert" @close="alert.state = false"/>
       <keep-alive>
-        <router-view :xml-form-id="xmlFormId" @alert="hideAlert"/>
+        <router-view :form="form" @alert="hideAlert"/>
       </keep-alive>
     </page-body>
   </div>
@@ -36,13 +40,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import alert from '../../mixins/alert';
+import request from '../../mixins/request';
 
 export default {
   name: 'FormShow',
-  mixins: [alert()],
+  mixins: [alert(), request()],
   data() {
     return {
-      alert: alert.blank()
+      alert: alert.blank(),
+      requestId: null,
+      form: null
     };
   },
   computed: {
@@ -52,10 +59,23 @@ export default {
   },
   watch: {
     xmlFormId() {
+      this.fetchData();
       this.alert = alert.blank();
     }
   },
+  created() {
+    this.fetchData();
+  },
   methods: {
+    fetchData() {
+      this.form = null;
+      this
+        .get(`/forms/${this.xmlFormId}`)
+        .then(form => {
+          this.form = form;
+        })
+        .catch(() => {});
+    },
     tabPath(path) {
       const slash = path !== '' ? '/' : '';
       return `/forms/${this.xmlFormId}${slash}${path}`;

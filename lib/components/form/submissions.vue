@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <!-- Render this element once the submissions have been fetched. -->
     <template v-if="submissions">
       <p v-if="submissions.length === 0">
-        There are no submissions yet for <em>{{ xmlFormId }}</em>.
+        There are no submissions yet for <em>{{ form.xmlFormId }}</em>.
       </p>
       <table v-else class="table table-hover">
         <thead>
@@ -55,8 +55,8 @@ export default {
   name: 'FormSubmissions',
   mixins: [alert(), request()],
   props: {
-    xmlFormId: {
-      type: String,
+    form: {
+      type: Object,
       required: true
     }
   },
@@ -79,7 +79,7 @@ export default {
     fetchData() {
       this.submissions = null;
       this
-        .get(`/forms/${this.xmlFormId}/submissions`)
+        .get(`/forms/${this.form.xmlFormId}/submissions`)
         .then(submissions => {
           // Add a unique ID to each submission so that we can use the ID as the
           // v-for key.

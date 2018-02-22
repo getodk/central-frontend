@@ -17,8 +17,8 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'FormOverview',
   props: {
-    xmlFormId: {
-      type: String,
+    form: {
+      type: Object,
       required: true
     }
   }

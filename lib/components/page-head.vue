@@ -34,7 +34,6 @@ export default {
 #page-head {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
-  margin-bottom: 15px;
 
   h1 {
     font-size: 30px;
