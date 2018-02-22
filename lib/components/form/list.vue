@@ -41,8 +41,7 @@ except according to the terms contained in the LICENSE file.
             </tr>
           </thead>
           <tbody>
-            <tr v-for="form of forms" :key="form.xmlFormId"
-              :class="highlight(form, 'xmlFormId')">
+            <tr v-for="form of forms" :key="form.xmlFormId">
               <td>
                 <div>
                   <router-link :to="`/forms/${form.xmlFormId}`" tag="span">
@@ -65,8 +64,7 @@ except according to the terms contained in the LICENSE file.
           </tbody>
         </table>
       </template>
-      <form-new v-bind="newForm" @hide="newForm.state = false"
-        @create="afterCreate"/>
+      <form-new v-bind="newForm" @hide="newForm.state = false"/>
     </page-body>
   </div>
 </template>
@@ -76,19 +74,17 @@ import moment from 'moment';
 
 import FormNew from './new.vue';
 import alert from '../../mixins/alert';
-import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert(), request(), highlight()],
+  mixins: [alert(), request()],
   data() {
     return {
       alert: alert.blank(),
       requestId: null,
       forms: null,
-      highlighted: null,
       newForm: {
         state: false
       }
@@ -119,12 +115,6 @@ export default {
     lastSubmission(form) {
       const { lastSubmission } = form;
       return lastSubmission != null ? moment(lastSubmission).fromNow() : '';
-    },
-    afterCreate(form) {
-      this.fetchData();
-      const name = form.name || form.xmlFormId;
-      this.alert = alert.success(`The form “${name}” was created successfully.`);
-      this.highlighted = form.xmlFormId;
     }
   }
 };
