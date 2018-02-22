@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
             <tr v-for="form of forms" :key="form.xmlFormId">
               <td>
                 <div>
-                  <router-link :to="`/forms/${form.xmlFormId}`" tag="span">
+                  <router-link :to="`/forms/${form.xmlFormId}/submissions`" tag="span">
                     {{ form.name || form.xmlFormId }}
                   </router-link>
                 </div>

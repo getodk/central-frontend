@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12">
       <h1><slot name="title"></slot></h1>
       <p><slot name="body"></slot></p>
+      <!-- TODO: Remove the role attribute after adding the field keys page. -->
       <ul class="nav nav-tabs" role="tablist">
         <slot name="tabs"></slot>
       </ul>

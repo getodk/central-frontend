@@ -162,7 +162,7 @@ export default {
           this.$nextTick(() => {
             const name = form.name || form.xmlFormId;
             this.$alert = alert.success(`The form “${name}” was created successfully.`);
-            this.$router.push(`/forms/${form.xmlFormId}`);
+            this.$router.push(`/forms/${form.xmlFormId}/submissions`);
           });
         })
         .catch(() => {});
