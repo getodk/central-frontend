@@ -10,79 +10,35 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <page-body v-if="form == null">
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <loading :state="awaitingResponse"/>
+  </page-body>
+  <div v-else>
     <page-head>
-      <template slot="title">{{ xmlFormId }}</template>
+      <template slot="title">{{ form.name || form.xmlFormId }}</template>
       <template slot="tabs">
-        <li role="presentation">
-          <a href="#overview" aria-controls="overview" role="tab"
-            data-toggle="tab">
-            Overview
-          </a>
+        <li :class="tabClass('')" role="presentation">
+          <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li role="presentation" class="active">
-          <a href="#submissions" aria-controls="submissions" role="tab"
-            data-toggle="tab">
-            Submissions
-          </a>
+        <li :class="tabClass('submissions')" role="presentation">
+          <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
-        <li role="presentation">
-          <a href="#settings" aria-controls="settings" role="tab"
-            data-toggle="tab">
-            Settings
-          </a>
+        <li :class="tabClass('settings')" role="presentation">
+          <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>
     </page-head>
     <page-body>
-      <div class="tab-content">
-        <div id="overview" class="tab-pane" role="tabpanel">
-          Not yet implemented.
-        </div>
-        <div id="submissions" class="tab-pane active" role="tabpanel">
-          <alert v-bind="alert" @close="alert.state = false"/>
-          <loading :state="awaitingResponse"/>
-          <!-- Render this element once the submissions have been fetched. -->
-          <template v-if="submissions">
-            <p v-if="submissions.length === 0">
-              There are no submissions yet for <em>{{ xmlFormId }}</em>.
-            </p>
-            <table v-else class="table table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Instance ID</th>
-                  <th>Reviewed</th>
-                  <th>Submitted by</th>
-                  <th>Submitted at</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(submission, index) in submissions"
-                  :key="submission.id">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ submission.instanceId }}</td>
-                  <!-- TODO: Not yet implemented. -->
-                  <td>???</td>
-                  <!-- TODO: Not yet implemented. -->
-                  <td>???</td>
-                  <td>{{ createdAt(submission) }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </template>
-        </div>
-        <div id="settings" class="tab-pane" role="tabpanel">
-          Not yet implemented.
-        </div>
-      </div>
+      <alert v-bind="alert" @close="alert.state = false"/>
+      <keep-alive>
+        <router-view :form="form" @alert="hideAlert"/>
+      </keep-alive>
     </page-body>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
@@ -93,7 +49,7 @@ export default {
     return {
       alert: alert.blank(),
       requestId: null,
-      submissions: null
+      form: null
     };
   },
   computed: {
@@ -102,7 +58,7 @@ export default {
     }
   },
   watch: {
-    $route() {
+    xmlFormId() {
       this.fetchData();
       this.alert = alert.blank();
     }
@@ -112,24 +68,27 @@ export default {
   },
   methods: {
     fetchData() {
-      this.submissions = null;
+      this.form = null;
       this
-        .get(`/forms/${this.xmlFormId}/submissions`)
-        .then(submissions => {
-          // Add a unique ID to each submission so that we can use the ID as the
-          // v-for key.
-          const submissionsWithIds = [];
-          for (const submission of submissions) {
-            const id = { id: this.$uniqueId() };
-            const submissionWithId = Object.assign(id, submission);
-            submissionsWithIds.push(submissionWithId);
-          }
-          this.submissions = submissionsWithIds;
+        .get(`/forms/${this.xmlFormId}`)
+        .then(form => {
+          this.form = form;
         })
         .catch(() => {});
     },
-    createdAt(submission) {
-      return moment.utc(submission.createdAt).format('MMM D, Y H:mm:ss UTC');
+    tabPath(path) {
+      const slash = path !== '' ? '/' : '';
+      return `/forms/${this.xmlFormId}${slash}${path}`;
+    },
+    tabClass(path) {
+      return { active: this.$route.path === this.tabPath(path) };
+    },
+    // FormShow shows any alert passed from the previous page (the page that
+    // navigated to FormShow). However, once a component of FormShow indicates
+    // through an 'alert' event that it will show its own alert, FormShow hides
+    // the alert from the previous page.
+    hideAlert() {
+      this.alert = alert.blank();
     }
   }
 };

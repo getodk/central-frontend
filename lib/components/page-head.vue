@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12">
       <h1><slot name="title"></slot></h1>
       <p><slot name="body"></slot></p>
+      <!-- TODO: Remove the role attribute after adding the field keys page. -->
       <ul class="nav nav-tabs" role="tablist">
         <slot name="tabs"></slot>
       </ul>
@@ -33,7 +34,6 @@ export default {
 #page-head {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
-  margin-bottom: 15px;
 
   h1 {
     font-size: 30px;
@@ -52,6 +52,10 @@ export default {
 
     > .nav-tabs {
       border-bottom: none;
+
+      &:empty {
+        margin-top: 15px;
+      }
 
       > li {
         margin-bottom: -1px;

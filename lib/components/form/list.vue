@@ -34,33 +34,40 @@ except according to the terms contained in the LICENSE file.
         <table v-else id="form-list-table" class="table table-hover">
           <thead>
             <tr>
-              <th>Form ID</th>
+              <th>Name</th>
+              <th>Created by</th>
               <th>Last Modified</th>
               <th>Last Submission</th>
             </tr>
           </thead>
           <tbody>
-            <router-link v-for="form of forms" :key="form.xmlFormId"
-              :to="`/forms/${form.xmlFormId}`" tag="tr"
-              :class="highlight(form, 'xmlFormId')">
+            <tr v-for="form of forms" :key="form.xmlFormId">
               <td>
-                <div>{{ form.xmlFormId }}</div>
-                <!-- TODO: Not yet implemented. -->
-                <div>??? submissions</div>
+                <div>
+                  <router-link :to="`/forms/${form.xmlFormId}/submissions`"
+                    class="form-list-form-name">
+                    {{ form.name || form.xmlFormId }}
+                  </router-link>
+                </div>
+                <div v-if="form.name != null" class="form-list-form-id">
+                  {{ form.xmlFormId }}
+                </div>
+                <div>{{ submissions(form) }}</div>
+              </td>
+              <td>
+                {{ form.createdBy != null ? form.createdBy.displayName : '' }}
               </td>
               <td>
                 {{ updatedAt(form) }}
               </td>
-              <!-- TODO: Not yet implemented. -->
               <td>
-                ???
+                {{ lastSubmission(form) }}
               </td>
-            </router-link>
+            </tr>
           </tbody>
         </table>
       </template>
-      <form-new v-bind="newForm" @hide="newForm.state = false"
-        @create="afterCreate"/>
+      <form-new v-bind="newForm" @hide="newForm.state = false"/>
     </page-body>
   </div>
 </template>
@@ -70,19 +77,17 @@ import moment from 'moment';
 
 import FormNew from './new.vue';
 import alert from '../../mixins/alert';
-import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert(), request(), highlight()],
+  mixins: [alert(), request()],
   data() {
     return {
       alert: alert.blank(),
       requestId: null,
       forms: null,
-      highlighted: null,
       newForm: {
         state: false
       }
@@ -94,21 +99,26 @@ export default {
   methods: {
     fetchData() {
       this.forms = null;
+      const headers = { 'X-Extended-Metadata': 'true' };
       this
-        .get('/forms')
+        .get('/forms', { headers })
         .then(forms => {
           this.forms = forms;
         })
         .catch(() => {});
     },
+    submissions(form) {
+      const count = form.submissions.toLocaleString();
+      const s = form.submissions !== 1 ? 's' : '';
+      return `${count} submission${s}`;
+    },
     updatedAt(form) {
       const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
-      return moment.utc(updatedAt).fromNow();
+      return moment(updatedAt).fromNow();
     },
-    afterCreate(form) {
-      this.fetchData();
-      this.alert = alert.success(`Form ${form.xmlFormId} was created successfully.`);
-      this.highlighted = form.xmlFormId;
+    lastSubmission(form) {
+      const { lastSubmission } = form;
+      return lastSubmission != null ? moment(lastSubmission).fromNow() : '';
     }
   }
 };
@@ -116,20 +126,17 @@ export default {
 
 <style lang="sass">
 #form-list-table {
-  & > thead > tr > th:nth-child(n+2),
-  & > tbody > tr > td:nth-child(n+2) {
-    width: 200px;
-  }
+  tbody td {
+    vertical-align: middle;
 
-  & > tbody {
-    cursor: pointer;
+    .form-list-form-name {
+      color: unset;
+      font-size: 30px;
+      text-decoration: unset;
+    }
 
-    & > tr > td {
-      vertical-align: middle;
-
-      &:first-child > div:first-child {
-        font-size: 30px;
-      }
+    .form-list-form-id {
+      font-size: 18px;
     }
   }
 }
