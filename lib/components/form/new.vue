@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
           <doc-link>tools available</doc-link> to help you design your form.
         </p>
       </div>
-      <div id="drop-zone" class="text-center" :style="dropZoneStyle"
-        @dragover.prevent="dragover" @dragleave="dragleave" @drop.prevent="drop">
+      <div id="drop-zone" :class="dropZoneClass" @dragover.prevent="dragover"
+        @dragleave="dragleave" @drop.prevent="drop">
         <div :style="pointerEvents">
           Drop a file here, or
           <input type="file" ref="input" class="hidden"
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           to upload.
         </div>
-        <div :style="pointerEvents">{{ filename }}</div>
+        <div id="form-new-filename" :style="pointerEvents">{{ filename }}</div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
@@ -78,11 +78,12 @@ export default {
     droppable() {
       return !(this.reading || this.awaitingResponse);
     },
-    dropZoneStyle() {
-      const style = {};
-      if (this.isOverDropZone || !this.droppable) style.opacity = 0.65;
-      if (!this.droppable) style.cursor = 'not-allowed';
-      return style;
+    dropZoneClass() {
+      return {
+        'text-center': true,
+        droppable: this.droppable,
+        dragover: this.isOverDropZone
+      };
     },
     // Used to prevent child elements of #drop-zone from triggering dragleave
     // events upon hover. Does not work for IE9 or 10.
@@ -176,15 +177,24 @@ export default {
 
 #drop-zone {
   background-color: $color-input-background;
-  border: 1px dashed #dcdcdc;
+  border: 1px dashed $color-subpanel-border;
+
+  &.dragover {
+    opacity: 0.65;
+  }
+
+  &:not(.droppable) {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
 
   div {
     margin-bottom: 5px;
     margin-top: 5px;
+  }
 
-    &:last-child {
-      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-    }
+  #form-new-filename {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   }
 }
 </style>

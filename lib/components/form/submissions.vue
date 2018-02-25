@@ -75,9 +75,9 @@ export default {
       return `${this.form.xmlFormId}.zip`;
     },
     downloadButtonText() {
-      if (this.submissions.length === 1) return 'Download 1 record';
       const count = this.submissions.length.toLocaleString();
-      return `Download all ${count} records`;
+      const s = this.submissions.length !== 1 ? 's' : '';
+      return `Download all ${count} record${s}`;
     }
   },
   watch: {

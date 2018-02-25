@@ -44,11 +44,14 @@ except according to the terms contained in the LICENSE file.
             <tr v-for="form of forms" :key="form.xmlFormId">
               <td>
                 <div>
-                  <router-link :to="`/forms/${form.xmlFormId}/submissions`" tag="span">
+                  <router-link :to="`/forms/${form.xmlFormId}/submissions`"
+                    class="form-list-form-name">
                     {{ form.name || form.xmlFormId }}
                   </router-link>
                 </div>
-                <div v-if="form.name != null">{{ form.xmlFormId }}</div>
+                <div v-if="form.name != null" class="form-list-form-id">
+                  {{ form.xmlFormId }}
+                </div>
                 <div>{{ submissions(form) }}</div>
               </td>
               <td>
@@ -105,8 +108,9 @@ export default {
         .catch(() => {});
     },
     submissions(form) {
+      const count = form.submissions.toLocaleString();
       const s = form.submissions !== 1 ? 's' : '';
-      return `${form.submissions} submission${s}`;
+      return `${count} submission${s}`;
     },
     updatedAt(form) {
       const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
@@ -122,20 +126,17 @@ export default {
 
 <style lang="sass">
 #form-list-table {
-  td {
+  tbody td {
     vertical-align: middle;
 
-    &:first-child {
-      div:first-child {
-        span {
-          cursor: pointer;
-          font-size: 30px;
-        }
-      }
+    .form-list-form-name {
+      color: unset;
+      font-size: 30px;
+      text-decoration: unset;
+    }
 
-      div:nth-child(2):nth-last-child(2) {
-        font-size: 18px;
-      }
+    .form-list-form-id {
+      font-size: 18px;
     }
   }
 }
