@@ -32,7 +32,7 @@ describe('UserList', () => {
     mockRouteThroughLogin('/users')
       .respondWithData([mockUser()])
       .afterResponse(app => {
-        const alert = app.first('#user-list-staff').first(Alert);
+        const alert = app.first(Alert);
         alert.getProp('state').should.be.true();
         alert.getProp('type').should.equal('success');
       })
@@ -42,26 +42,14 @@ describe('UserList', () => {
     before(mockLogin);
     after(logOut);
 
-    describe('page defaults to Staff tab', () => {
-      it('tab is active', () =>
-        mockHttp()
-          .mount(UserList)
-          .respondWithData([mockUser()])
-          .afterResponse(page => {
-            const tab = page.first('.nav-tabs > .active');
-            const title = tab.first('a').text().trim();
-            title.should.equal('Staff');
-          }));
-
-      it('tab panel is active', () =>
-        mockHttp()
-          .mount(UserList)
-          .respondWithData([mockUser()])
-          .afterResponse(page => {
-            const panel = page.first('.tab-content > .active');
-            panel.is('#user-list-staff').should.be.true();
-          }));
-    });
+    it('page defaults to the Staff tab', () =>
+      mockRoute('/users')
+        .respondWithData([mockUser()])
+        .afterResponse(app => {
+          const tab = app.first('.nav-tabs > .active');
+          const title = tab.first('a').text().trim();
+          title.should.equal('Staff');
+        }));
 
     it('table is sorted correctly', () => {
       const users = [

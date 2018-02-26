@@ -11,90 +11,55 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head>
-      <template slot="title">Users</template>
-      <template slot="body">
-        Staff Users are granted access to this administration site, while Field
-        Keys give clients (like
-        <doc-link to="collect-intro/">Collect</doc-link>)
-        individual access to the forms to download, fill out, and submit.
-        <doc-link>Learn more</doc-link>
-      </template>
-      <template slot="tabs">
-        <li role="presentation" class="active">
-          <a href="#user-list-staff" aria-controls="user-list-staff"
-            role="tab" data-toggle="tab">
-            Staff
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#user-list-field-keys" aria-controls="user-list-field-keys"
-            role="tab" data-toggle="tab">
-            Field Keys
-          </a>
-        </li>
-      </template>
-    </page-head>
-    <page-body>
-      <div class="tab-content">
-        <div id="user-list-staff" class="tab-pane active" role="tabpanel">
-          <alert v-bind="alert" @close="alert.state = false"/>
-          <float-row>
-            <button type="button" id="user-list-new-button"
-              class="btn btn-primary" @click="newUser.state = true">
-            <span class="icon-plus-circle"></span> Create Staff User
-            </button>
-          </float-row>
-          <loading :state="awaitingResponse"/>
-          <table v-if="users" id="user-list-table" class="table table-hover">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Is Administrator?</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(user, index) in users" :key="user.id"
-                :class="highlight(user, 'id')">
-                <td>{{ user.email }}</td>
-                <!-- TODO: Once this is added to the API, pull it from
-                `user`. -->
-                <td>Yes</td>
-                <td>
-                  <div class="dropdown">
-                    <button type="button" :id="actionsId(index)"
-                      class="btn btn-primary dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="true">
-                      <span class="icon-cog"></span>
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right"
-                      :aria-labelledby="actionsId(index)">
-                      <li>
-                        <a href="#" @click.prevent="showResetPassword(user)">
-                          Reset Password
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div id="user-list-field-keys" class="tab-pane" role="tabpanel">
-          Not yet implemented.
-        </div>
-      </div>
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <float-row>
+      <button type="button" id="user-list-new-button" class="btn btn-primary"
+        @click="newUser.state = true">
+      <span class="icon-plus-circle"></span> Create Staff User
+      </button>
+    </float-row>
+    <loading :state="awaitingResponse"/>
+    <table v-if="users" id="user-list-table" class="table table-hover">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Is Administrator?</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(user, index) in users" :key="user.id"
+          :class="highlight(user, 'id')">
+          <td>{{ user.email }}</td>
+          <!-- TODO: Once this is added to the API, pull it from `user`. -->
+          <td>Yes</td>
+          <td>
+            <div class="dropdown">
+              <button type="button" :id="actionsId(index)"
+                class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+                <span class="icon-cog"></span>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right"
+                :aria-labelledby="actionsId(index)">
+                <li>
+                  <a href="#" @click.prevent="showResetPassword(user)">
+                    Reset Password
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- Modals -->
-      <user-new v-bind="newUser" @hide="newUser.state = false"
-        @success="afterCreate"/>
-      <user-reset-password v-bind="resetPassword"
-        @hide="resetPassword.state = false" @success="afterResetPassword"/>
-    </page-body>
+    <!-- Modals -->
+    <user-new v-bind="newUser" @hide="newUser.state = false"
+      @success="afterCreate"/>
+    <user-reset-password v-bind="resetPassword"
+      @hide="resetPassword.state = false" @success="afterResetPassword"/>
   </div>
 </template>
 
@@ -125,6 +90,11 @@ export default {
         }
       }
     };
+  },
+  watch: {
+    alert() {
+      this.$emit('alert');
+    }
   },
   created() {
     this.fetchData();

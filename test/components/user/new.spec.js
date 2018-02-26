@@ -87,7 +87,7 @@ describe('UserNew', () => {
     });
 
     it('success message is shown', () => {
-      const alert = page.first('#user-list-staff').first(Alert);
+      const alert = page.first(Alert);
       alert.getProp('state').should.be.true();
       alert.getProp('type').should.equal('success');
     });

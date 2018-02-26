@@ -41,10 +41,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
+import tab from '../../mixins/tab';
 
 export default {
   name: 'FormShow',
-  mixins: [alert(), request()],
+  mixins: [alert(), request(), tab()],
   data() {
     return {
       alert: alert.blank(),
@@ -76,19 +77,8 @@ export default {
         })
         .catch(() => {});
     },
-    tabPath(path) {
-      const slash = path !== '' ? '/' : '';
-      return `/forms/${this.xmlFormId}${slash}${path}`;
-    },
-    tabClass(path) {
-      return { active: this.$route.path === this.tabPath(path) };
-    },
-    // FormShow shows any alert passed from the previous page (the page that
-    // navigated to FormShow). However, once a component of FormShow indicates
-    // through an 'alert' event that it will show its own alert, FormShow hides
-    // the alert from the previous page.
-    hideAlert() {
-      this.alert = alert.blank();
+    tabPathPrefix() {
+      return `/forms/${this.xmlFormId}`;
     }
   }
 };
