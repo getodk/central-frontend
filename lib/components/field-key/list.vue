@@ -32,12 +32,14 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <tr v-for="fieldKey of fieldKeys" :key="fieldKey.id"
-          :class="highlight(fieldKey, 'id')">
+        <tr v-for="(fieldKey, index) in fieldKeys" :key="fieldKey.key"
+          :class="highlight(fieldKey, 'id')" :data-index="index">
           <td>{{ fieldKey.displayName }}</td>
-          <td>{{ created(fieldKey) }}</td>
-          <td>{{ lastUsed(fieldKey) }}</td>
-          <td>???</td>
+          <td>{{ fieldKey.created }}</td>
+          <td>{{ fieldKey.lastUsed }}</td>
+          <td>
+            <a class="field-key-list-popover-link" role="button">See code</a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -48,12 +50,78 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Vue from 'vue';
 import moment from 'moment';
+import qrcode from 'qrcode-generator';
+import { deflate } from 'pako/lib/deflate';
 
 import FieldKeyNew from './new.vue';
 import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
 import request from '../../mixins/request';
+
+const QR_CODE_TYPE_NUMBER = 0;
+// This is the level used in Collect.
+const QR_CODE_ERROR_CORRECTION_LEVEL = 'L';
+const QR_CODE_CELL_SIZE = 3;
+const QR_CODE_MARGIN = 0;
+
+class FieldKeyPresenter {
+  constructor(fieldKey) {
+    this._fieldKey = fieldKey;
+  }
+
+  get id() { return this._fieldKey.id; }
+  get displayName() { return this._fieldKey.displayName; }
+
+  get key() {
+    if (this._key != null) return this._key;
+    this._key = Vue.prototype.$uniqueId();
+    return this._key;
+  }
+
+  get created() {
+    const createdAt = moment(this._fieldKey.createdAt).fromNow();
+    const createdBy = this._fieldKey.createdBy.displayName;
+    return `${createdAt} by ${createdBy}`;
+  }
+
+  get lastUsed() {
+    const { lastUsed } = this._fieldKey;
+    return lastUsed != null ? moment(lastUsed).fromNow() : '';
+  }
+
+  get url() {
+    return `${window.location.origin}/api/v1/key/${this._fieldKey.token}`;
+  }
+
+  get qrCodeImgHtml() {
+    if (this._qrCodeImgHtml != null) return this._qrCodeImgHtml;
+    const code = qrcode(QR_CODE_TYPE_NUMBER, QR_CODE_ERROR_CORRECTION_LEVEL);
+    // Collect requires the JSON to have 'general' and 'admin' keys, even if the
+    // associated values are empty objects.
+    const settings = { general: { server_url: this.url }, admin: {} };
+    const deflated = deflate(JSON.stringify(settings), { to: 'string' });
+    code.addData(btoa(deflated));
+    code.make();
+    this._qrCodeImgHtml = code.createImgTag(QR_CODE_CELL_SIZE, QR_CODE_MARGIN);
+    return this._qrCodeImgHtml;
+  }
+}
+
+const POPOVER_CONTENT_TEMPLATE = `
+  <div id="field-key-list-popover-content">
+    <div class="field-key-list-img-container"></div>
+    <div class="well well-sm"></div>
+    <div>
+      <a href="https://docs.opendatakit.org/collect-import-export/" target="_blank">
+        What’s this?
+      </a>
+    </div>
+  </div>
+`;
+
+const IMG_CONTAINER_BORDER_WIDTH = 3;
 
 export default {
   name: 'FieldKeyList',
@@ -65,6 +133,9 @@ export default {
       requestId: null,
       fieldKeys: null,
       highlighted: null,
+      enabledPopoverLinks: new Set(),
+      // The <a> element whose popover is currently shown, as a jQuery object.
+      popoverLink: null,
       newFieldKey: {
         state: false
       }
@@ -78,24 +149,78 @@ export default {
   created() {
     this.fetchData();
   },
+  mounted() {
+    $('body').click(this.toggleFieldKeyListPopovers);
+  },
+  beforeDestroy() {
+    $('body').off('click', this.toggleFieldKeyListPopovers);
+  },
   methods: {
     fetchData() {
       this.fieldKeys = null;
+      this.enabledPopoverLinks = new Set();
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get('/field-keys', { headers })
         .then(fieldKeys => {
-          this.fieldKeys = fieldKeys;
+          this.fieldKeys = fieldKeys.map(fieldKey => new FieldKeyPresenter(fieldKey));
         })
         .catch(() => {});
     },
-    created(fieldKey) {
-      const createdAt = moment(fieldKey.createdAt).fromNow();
-      const createdBy = fieldKey.createdBy.displayName;
-      return `${createdAt} by ${createdBy}`;
+    popoverContent(fieldKey) {
+      const $content = $(POPOVER_CONTENT_TEMPLATE);
+      const $img = $(fieldKey.qrCodeImgHtml);
+      $content.find('.field-key-list-img-container').append($img);
+      const $well = $content.find('.well');
+      $well.text(fieldKey.url);
+      $well.width(Number($img.attr('width')) + (2 * IMG_CONTAINER_BORDER_WIDTH));
+      return $content[0].outerHTML;
     },
-    lastUsed(fieldKey) {
-      return fieldKey.lastUsed != null ? moment(fieldKey.lastUsed).fromNow() : '';
+    enablePopover($popoverLink) {
+      const index = $popoverLink.closest('tr').data('index');
+      if (this.enabledPopoverLinks.has(index)) return;
+      $popoverLink.popover({
+        container: 'body',
+        trigger: 'manual',
+        placement: 'left',
+        content: this.popoverContent(this.fieldKeys[index]),
+        html: true
+      });
+      this.enabledPopoverLinks.add(index);
+    },
+    showPopover($popoverLink) {
+      this.enablePopover($popoverLink);
+      $popoverLink.popover('show');
+      this.popoverLink = $popoverLink;
+    },
+    hidePopover() {
+      if (this.popoverLink == null) return;
+      this.popoverLink.popover('hide');
+      this.popoverLink = null;
+    },
+    popoverContainsElement($element) {
+      if (this.popoverLink == null) return false;
+      const element = $element[0];
+      const popover = $('#field-key-list-popover-content').closest('.popover')[0];
+      return element === popover || $.contains(popover, element);
+    },
+    // This method's name should be unique, because jQuery off() uses the name
+    // of the function passed to it.
+    toggleFieldKeyListPopovers(event) {
+      const $target = $(event.target);
+      if ($target.hasClass('field-key-list-popover-link')) {
+        // true if the user clicked on the link whose popover is currently shown
+        // and false if not.
+        const samePopover = this.popoverLink != null &&
+          event.target === this.popoverLink[0];
+        if (!samePopover) {
+          this.hidePopover();
+          this.showPopover($target);
+        }
+        $target.blur();
+      } else if (this.popoverLink != null && !this.popoverContainsElement($target)) {
+        this.hidePopover();
+      }
     },
     afterCreate(fieldKey) {
       this.fetchData();
@@ -107,7 +232,28 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 #field-key-list-table tbody td {
   vertical-align: middle;
+}
+
+#field-key-list-popover-content {
+  padding: 3px;
+
+  .field-key-list-img-container {
+    // This must match IMG_CONTAINER_BORDER_WIDTH.
+    border: 3px solid $color-subpanel-border;
+    margin-bottom: 3px;
+  }
+
+  .well {
+    margin-bottom: 6px;
+    overflow-x: scroll;
+  }
+
+  a {
+    color: white;
+  }
 }
 </style>
