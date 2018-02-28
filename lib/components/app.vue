@@ -161,4 +161,17 @@ body {
 .panel-main {
   margin-top: 70px;
 }
+
+.popover {
+  background-color: $color-action-background;
+  padding: 0;
+
+  &.left .arrow::after {
+    border-left-color: $color-action-background;
+  }
+
+  .popover-content {
+    padding: 0;
+  }
+}
 </style>
