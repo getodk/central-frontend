@@ -112,7 +112,6 @@ class FieldKeyPresenter {
 const POPOVER_CONTENT_TEMPLATE = `
   <div id="field-key-list-popover-content">
     <div class="field-key-list-img-container"></div>
-    <div class="well well-sm"></div>
     <div>
       <a href="https://docs.opendatakit.org/collect-import-export/" target="_blank">
         What’s this?
@@ -120,8 +119,6 @@ const POPOVER_CONTENT_TEMPLATE = `
     </div>
   </div>
 `;
-
-const IMG_CONTAINER_BORDER_WIDTH = 3;
 
 export default {
   name: 'FieldKeyList',
@@ -168,18 +165,14 @@ export default {
         .catch(() => {});
     },
     popoverContent(fieldKey) {
-      const $content = $(POPOVER_CONTENT_TEMPLATE);
-      const $img = $(fieldKey.qrCodeImgHtml);
-      $content.find('.field-key-list-img-container').append($img);
-      const $well = $content.find('.well');
-      $well.text(fieldKey.url);
-      $well.width(Number($img.attr('width')) + (2 * IMG_CONTAINER_BORDER_WIDTH));
-      return $content[0].outerHTML;
+      const content = $(POPOVER_CONTENT_TEMPLATE);
+      content.find('.field-key-list-img-container').append(fieldKey.qrCodeImgHtml);
+      return content[0].outerHTML;
     },
-    enablePopover($popoverLink) {
-      const index = $popoverLink.closest('tr').data('index');
+    enablePopover(popoverLink) {
+      const index = popoverLink.closest('tr').data('index');
       if (this.enabledPopoverLinks.has(index)) return;
-      $popoverLink.popover({
+      popoverLink.popover({
         container: 'body',
         trigger: 'manual',
         placement: 'left',
@@ -188,37 +181,35 @@ export default {
       });
       this.enabledPopoverLinks.add(index);
     },
-    showPopover($popoverLink) {
-      this.enablePopover($popoverLink);
-      $popoverLink.popover('show');
-      this.popoverLink = $popoverLink;
+    showPopover(popoverLink) {
+      this.enablePopover(popoverLink);
+      popoverLink.popover('show');
+      this.popoverLink = popoverLink;
     },
     hidePopover() {
       if (this.popoverLink == null) return;
       this.popoverLink.popover('hide');
       this.popoverLink = null;
     },
-    popoverContainsElement($element) {
+    popoverContainsElement(element) {
       if (this.popoverLink == null) return false;
-      const element = $element[0];
-      const popover = $('#field-key-list-popover-content').closest('.popover')[0];
-      return element === popover || $.contains(popover, element);
+      const popover = $('#field-key-list-popover-content').closest('.popover');
+      return element[0] === popover[0] || $.contains(popover[0], element[0]);
     },
     // This method's name should be unique, because jQuery off() uses the name
     // of the function passed to it.
     toggleFieldKeyListPopovers(event) {
-      const $target = $(event.target);
-      if ($target.hasClass('field-key-list-popover-link')) {
+      const target = $(event.target);
+      if (target.hasClass('field-key-list-popover-link')) {
         // true if the user clicked on the link whose popover is currently shown
         // and false if not.
         const samePopover = this.popoverLink != null &&
           event.target === this.popoverLink[0];
         if (!samePopover) {
           this.hidePopover();
-          this.showPopover($target);
+          this.showPopover(target);
         }
-        $target.blur();
-      } else if (this.popoverLink != null && !this.popoverContainsElement($target)) {
+      } else if (this.popoverLink != null && !this.popoverContainsElement(target)) {
         this.hidePopover();
       }
     },
@@ -242,14 +233,8 @@ export default {
   padding: 3px;
 
   .field-key-list-img-container {
-    // This must match IMG_CONTAINER_BORDER_WIDTH.
     border: 3px solid $color-subpanel-border;
     margin-bottom: 3px;
-  }
-
-  .well {
-    margin-bottom: 6px;
-    overflow-x: scroll;
   }
 
   a {
