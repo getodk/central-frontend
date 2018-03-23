@@ -16,6 +16,7 @@ import { MockLogger } from './util';
 import { destroyMarkedComponent } from './destroy';
 import { setHttp } from './http';
 import '../lib/setup';
+import './assertions';
 
 Vue.prototype.$logger = new MockLogger();
 

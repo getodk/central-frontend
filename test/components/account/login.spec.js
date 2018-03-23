@@ -26,8 +26,7 @@ describe('AccountLogin', () => {
       // We need mockRoute() and not just mockHttp(), because AccountLogin uses
       // $route at render.
       mockRoute('/login', { attachToDocument: true }).then(app => {
-        const field = app.first('#account-login input[type="email"]');
-        (document.activeElement === field.element).should.be.true();
+        app.first('#account-login input[type="email"]').should.be.focused();
       }));
 
     it('standard button thinking things', () =>

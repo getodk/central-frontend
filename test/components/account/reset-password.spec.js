@@ -26,7 +26,7 @@ describe('AccountResetPassword', () => {
     // uses $route at render.
     mockRoute('/reset-password', { attachToDocument: true }).then(app => {
       const field = app.first('#account-reset-password input[type="email"]');
-      (document.activeElement === field.element).should.be.true();
+      field.should.be.focused();
     }));
 
   it('standard button thinking things', () =>

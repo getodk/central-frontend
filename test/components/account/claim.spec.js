@@ -20,10 +20,8 @@ const submitForm = (wrapper) =>
 
 describe('AccountClaim', () => {
   it('field is focused', () =>
-    mockRoute(LOCATION, { attachToDocument: true }).then(app => {
-      const field = app.first('input[type="password"]');
-      (document.activeElement === field.element).should.be.true();
-    }));
+    mockRoute(LOCATION, { attachToDocument: true })
+      .then(app => app.first('input[type="password"]').should.be.focused()));
 
   it('standard button thinking things', () =>
     // We need mockRoute() and not just mockHttp(), because the token is taken

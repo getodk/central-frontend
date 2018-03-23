@@ -48,10 +48,7 @@ describe('UserNew', () => {
         mockRoute('/users', { attachToDocument: true })
           .respondWithData([mockUser()])
           .afterResponse(clickCreateButton)
-          .then(app => {
-            const field = app.first('#user-new-email');
-            (document.activeElement === field.element).should.be.true();
-          }));
+          .then(app => app.first('#user-new-email').should.be.focused()));
     });
   });
 
