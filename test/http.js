@@ -14,7 +14,7 @@ import Vue from 'vue';
 import Spinner from '../lib/components/spinner.vue';
 import { mountAndMark } from './destroy';
 
-const REQUEST_METHODS = ['get', 'post', 'delete'];
+const REQUEST_METHODS = ['request', 'get', 'post', 'delete'];
 
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
