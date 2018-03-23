@@ -3,7 +3,7 @@ module.exports = function (config) {
   config.set({
     browsers: ['ChromeHeadless'],
     frameworks: ['browserify', 'mocha'],
-    files: ['test/**/*.js'],
+    files: ['test/setup.js', 'test/components/*/*.spec.js'],
     reporters: ['spec'],
     preprocessors: {
       'test/**/*.js': ['browserify']

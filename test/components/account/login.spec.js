@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import mockHttp from '../../http';
 import { logOut, mockRouteThroughLogin, mockUser, submitLoginForm } from '../../session';

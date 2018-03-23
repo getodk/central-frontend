@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import { mount } from 'avoriaz';
 
-import '../../setup';
 import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
