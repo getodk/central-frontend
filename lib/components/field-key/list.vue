@@ -58,6 +58,7 @@ import { deflate } from 'pako/lib/deflate';
 import FieldKeyNew from './new.vue';
 import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 const QR_CODE_TYPE_NUMBER = 0;
@@ -123,7 +124,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { FieldKeyNew },
-  mixins: [alert(), request(), highlight()],
+  mixins: [alert(), request(), modal('newFieldKey'), highlight()],
   data() {
     return {
       alert: alert.blank(),

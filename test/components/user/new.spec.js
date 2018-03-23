@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { mount } from 'avoriaz';
-
 import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
@@ -68,11 +66,11 @@ describe('UserNew', () => {
     const newUser = { id: 2, email: 'new-user@test.com' };
 
     beforeEach(() => mockHttp()
-      .request(() => {
-        page = mount(UserList);
-      })
+      .mount(UserList)
       .respondWithData([mockUser()])
-      .complete()
+      .afterResponse(component => {
+        page = component;
+      })
       .request(() => clickCreateButton(page).then(submitForm))
       .respondWithData(newUser)
       .respondWithData([mockUser(), newUser]));

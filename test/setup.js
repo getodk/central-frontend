@@ -13,6 +13,7 @@ import Vue from 'vue';
 import 'should';
 
 import { MockLogger } from './util';
+import { destroyMarkedComponent } from './destroy';
 import { setHttp } from './http';
 import '../lib/setup';
 
@@ -24,6 +25,12 @@ setHttp((...args) => {
 });
 
 afterEach(() => {
-  // Remove a component attached to the document if there is one.
-  $('body > script:last-of-type + *').remove()
+  destroyMarkedComponent();
+
+  const afterScript = $('body > script:last-of-type + *');
+  if (afterScript.length > 0) {
+    // eslint-disable-next-line no-console
+    console.log(`Unexpected element: ${afterScript[0].outerHTML}`);
+    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+  }
 });

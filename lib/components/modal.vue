@@ -68,9 +68,10 @@ export default {
     $(this.$refs.modal)
       .on('shown.bs.modal', () => this.$emit('shown'))
       .on('hidden.bs.modal', () => this.$emit('hidden'));
-    this.toggle(this.state);
+    if (this.state) this.toggle(this.state);
   },
   beforeDestroy() {
+    this.toggle(false);
     $(this.$refs.modal).off();
   },
   methods: {
@@ -82,6 +83,10 @@ export default {
     modularity, because parent components can use this modal component without
     knowing that it uses Bootstrap. */
     toggle(state) {
+      // For tests in which the component is not attached to the document, we
+      // return immediately rather than calling modal(), because it has side
+      // effects on the document.
+      if (!$.contains(document.body, this.$refs.modal)) return;
       $(this.$refs.modal).modal(state ? 'show' : 'hide');
     },
     modalMousedown(e) {

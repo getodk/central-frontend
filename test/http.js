@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { mount as avoriazMount } from 'avoriaz';
 
 import Alert from '../lib/components/alert.vue';
 import Spinner from '../lib/components/spinner.vue';
+import { mountAndMark } from './destroy';
 
 const REQUEST_METHODS = ['get', 'post', 'delete'];
 
@@ -84,10 +84,14 @@ If you already have a mounted component, you can skip mockHttp().mount():
   ...
 
   mockHttp()
-    .request(component => {
+    .request(() => {
       mockLogin();
       component.vm.$router.push('/users');
     })
+
+  ...
+
+  // Destroy component.
 
 The important thing is that you call either mount() or request() (or both).
 
@@ -190,7 +194,7 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot mount component after first series in chain');
-    const mount = () => avoriazMount(component, options);
+    const mount = () => mountAndMark(component, options);
     return new MockHttp(
       this._previousPromise,
       this._component,

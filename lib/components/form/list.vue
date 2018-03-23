@@ -77,12 +77,13 @@ import moment from 'moment';
 
 import FormNew from './new.vue';
 import alert from '../../mixins/alert';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert(), request()],
+  mixins: [alert(), request(), modal('newForm')],
   data() {
     return {
       alert: alert.blank(),

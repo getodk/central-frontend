@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { mount } from 'avoriaz';
-
 import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
@@ -60,11 +58,11 @@ describe('UserResetPassword', () => {
   describe('after successful response', () => {
     let page;
     beforeEach(() => mockHttp()
-      .request(() => {
-        page = mount(UserList);
-      })
+      .mount(UserList)
       .respondWithData([mockUser()])
-      .complete()
+      .afterResponse(component => {
+        page = component;
+      })
       .request(() => openModal(page).then(confirmResetPassword))
       .respondWithSuccess());
 

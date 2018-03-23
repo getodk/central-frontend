@@ -68,12 +68,18 @@ import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword },
-  mixins: [alert(), request(), highlight()],
+  mixins: [
+    alert(),
+    request(),
+    modal(['newUser', 'resetPassword']),
+    highlight()
+  ],
   data() {
     return {
       alert: alert.blank(),
