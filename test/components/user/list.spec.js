@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
-import { logOut, mockLogin, mockRouteThroughLogin, mockUser } from '../../session';
+import testData from '../../data';
+import { logOut, mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../util';
 
 describe('UserList', () => {
@@ -22,44 +23,34 @@ describe('UserList', () => {
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users')
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => app.vm.$route.path.should.equal('/users')));
   });
 
   it('success message is shown after login', () =>
     mockRouteThroughLogin('/users')
-      .respondWithData([mockUser()])
+      .respondWithData(() => testData.administrators.sorted())
       .afterResponse(app => app.should.alert('success'))
       .finally(logOut));
 
   describe('after login', () => {
-    before(mockLogin);
-    after(logOut);
+    beforeEach(mockLogin);
+    afterEach(logOut);
 
     it('page defaults to the Staff tab', () =>
       mockRoute('/users')
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           const tab = app.first('.nav-tabs > .active');
           const title = tab.first('a').text().trim();
           title.should.equal('Staff');
         }));
 
-    it('table is sorted correctly', () => {
-      const users = [
-        mockUser(),
-        { id: 2, email: 'user2@test.com' }
-      ];
-      users.sort((a, b) => {
-        if (a.email < b.email)
-          return -1;
-        else if (a.email > b.email)
-          return 1;
-        return 0;
-      });
+    it('table contains the correct data', () => {
+      const users = testData.administrators.seed(1).sorted();
       return mockHttp()
         .mount(UserList)
-        .respondWithData(users)
+        .respondWithData(() => users)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
           tr.length.should.equal(2);

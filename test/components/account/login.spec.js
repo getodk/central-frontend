@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import mockHttp from '../../http';
-import { logOut, mockRouteThroughLogin, mockUser, submitLoginForm } from '../../session';
+import testData from '../../data';
+import { logOut, mockRouteThroughLogin, submitLoginForm } from '../../session';
 import { mockRoute, trigger } from '../../util';
 
 describe('AccountLogin', () => {
@@ -62,10 +63,10 @@ describe('AccountLogin', () => {
 
     it("navbar shows the user's display name", () =>
       mockRouteThroughLogin('/users')
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           const link = app.first('.navbar-right > li > a');
-          link.text().trim().should.equal(mockUser().email);
+          link.text().trim().should.equal(testData.administrators.first().email);
         }));
 
     describe("after clicking the user's display name", () => {
@@ -75,7 +76,7 @@ describe('AccountLogin', () => {
       // We need to attach the component to the document, because some of
       // Bootstrap's dropdown listeners are on the document.
       beforeEach(() => mockRouteThroughLogin('/users', { attachToDocument: true })
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(component => {
           app = component;
           dropdown = app.first('.navbar-right .dropdown');

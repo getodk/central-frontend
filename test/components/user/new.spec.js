@@ -12,25 +12,26 @@ except according to the terms contained in the LICENSE file.
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import mockHttp from '../../http';
+import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
-import { logOut, mockLogin, mockUser } from '../../session';
+import { logOut, mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
   trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
 const submitForm = (wrapper) =>
-  fillForm(wrapper, [['#user-new-email', 'new-user@test.com']])
+  fillForm(wrapper, [['#user-new-email', testData.administrators.create().email]])
     .then(() => trigger('submit', wrapper.first('#user-new form')))
     .then(() => wrapper);
 
 describe('UserNew', () => {
-  before(mockLogin);
-  after(logOut);
+  beforeEach(mockLogin);
+  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(page => {
           page.first(UserNew).getProp('state').should.be.false();
         }));
@@ -39,13 +40,13 @@ describe('UserNew', () => {
       it('modal is shown', () =>
         mockHttp()
           .mount(UserList)
-          .respondWithData([mockUser()])
+          .respondWithData(() => testData.administrators.sorted())
           .afterResponse(clickCreateButton)
           .then(page => page.first(UserNew).getProp('state').should.be.true()));
 
       it('first field is focused', () =>
         mockRoute('/users', { attachToDocument: true })
-          .respondWithData([mockUser()])
+          .respondWithData(() => testData.administrators.sorted())
           .afterResponse(clickCreateButton)
           .then(app => app.first('#user-new-email').should.be.focused()));
     });
@@ -59,17 +60,15 @@ describe('UserNew', () => {
 
   describe('after successful submit', () => {
     let page;
-    const newUser = { id: 2, email: 'new-user@test.com' };
-
     beforeEach(() => mockHttp()
       .mount(UserList)
-      .respondWithData([mockUser()])
+      .respondWithData(() => testData.administrators.sorted())
       .afterResponse(component => {
         page = component;
       })
       .request(() => clickCreateButton(page).then(submitForm))
-      .respondWithData(newUser)
-      .respondWithData([mockUser(), newUser]));
+      .respondWithData(() => testData.administrators.last())
+      .respondWithData(() => testData.administrators.sorted()));
 
     it('modal is hidden', () => {
       page.first(UserNew).getProp('state').should.be.false();

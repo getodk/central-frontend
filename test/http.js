@@ -30,12 +30,18 @@ export const setHttp = (respond) => {
 };
 
 class SuccessfulResponse {
-  constructor(data) {
-    this._response = { data };
+  constructor(callback) {
+    this._callback = callback;
   }
 
   isSuccess() { return true; }
-  response() { return this._response; }
+
+  response() {
+    if (this._response != null) return this._response;
+    const callback = this._callback;
+    this._response = { data: callback() };
+    return this._response;
+  }
 }
 
 class ProblemResponse {
@@ -52,6 +58,8 @@ class ProblemResponse {
   isSuccess() { return false; }
   response() { return this._error; }
 }
+
+const SUCCESS_RESPONSE_CALLBACK = () => ({ success: true });
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -94,11 +102,11 @@ If you already have a mounted component, you can skip mockHttp().mount():
 
 The important thing is that you call either mount() or request() (or both).
 
-After specifying the request, specify the response:
+After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(UserList)
-    .respondWithData([{ id: 1, email: 'user@test.com' }])
+    .respondWithData(() => testData.administrators.sorted())
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order:
@@ -106,8 +114,8 @@ specify all the responses, in order:
   mockHttp()
     .mount(App)
     .request(submitLoginForm)
-    .respondWithData(mockSession())
-    .respondWithData(mockUser())
+    .respondWithData(() => testData.sessions.create())
+    .respondWithData(() => testData.administrators.first())
 
 In rare cases, you may know that mount() and/or request() will not send any
 request. For example, that's true for some uses of mockRoute(). In that case,
@@ -118,8 +126,8 @@ After specifying requests and responses, you can examine the state of the
 component once the responses have been processed:
 
   mockHttp()
-    .mount(UserList)
-    .respondWithData([ ... 3 users ... ])
+    .mount(FormList)
+    .respondWithData(() => testData.extendedForms.seed(3).sorted())
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -132,8 +140,8 @@ its own callback, thereby completing the series of request-response cycles.
 After afterResponse(), you can call any Promise method:
 
   mockHttp()
-    .mount(UserList)
-    .respondWithData([ ... 3 users ... ])
+    .mount(FormList)
+    .respondWithData(() => testData.extendedForms.seed(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -147,15 +155,15 @@ cycles: series can be chained. For example:
     .mount(App)
     .request(component => {
       mockLogin();
-      component.vm.$router.push('/users');
+      component.vm.$router.push('/forms');
     })
-    .respondWithData([ ... 3 users ... ])
+    .respondWithData(() => testData.extendedForms.seed(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
     .complete()
-    .request(component => component.vm.$router.push('/forms'))
-    .respondWithData([ ... 4 forms ... ])
+    .request(component => component.vm.$router.push('/users/field-keys'))
+    .respondWithData(() => testData.extendedFieldKeys.seed(4))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(4);
     })
@@ -223,12 +231,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(data) {
-    return this._respond(new SuccessfulResponse(data));
+  respondWithData(callback) {
+    return this._respond(new SuccessfulResponse(callback));
   }
 
   respondWithSuccess() {
-    return this.respondWithData({ success: true });
+    return this.respondWithData(SUCCESS_RESPONSE_CALLBACK);
   }
 
   respondWithProblem(code = 500, message = 'There was a problem.') {
@@ -349,7 +357,13 @@ class MockHttp {
         .then(() => this._tryBeforeEachResponse())
         .then(() => new Promise((resolve, reject) => {
           const settle = response.isSuccess() ? resolve : reject;
-          settle(response.response());
+          try {
+            settle(response.response());
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.log(`mockHttp(): a response threw an error:\n${e.stack}`);
+            reject(e);
+          }
         }));
     };
   }

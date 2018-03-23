@@ -10,9 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
+import faker from 'faker';
 import 'should';
 
 import { MockLogger } from './util';
+import testData from './data';
 import { destroyMarkedComponent } from './destroy';
 import { setHttp } from './http';
 import '../lib/setup';
@@ -35,3 +37,6 @@ afterEach(() => {
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
 });
+
+faker.seed(899644669);
+afterEach(testData.reset);

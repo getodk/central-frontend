@@ -9,12 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
-import { mockUser } from '../../session';
 
 const submitForm = (wrapper) => {
-  const emailSelector = '#account-reset-password input[type="email"]';
-  return fillForm(wrapper, [[emailSelector, mockUser().email]])
+  const { email } = testData.administrators.seed(1).last();
+  return fillForm(wrapper, [['#account-reset-password input[type="email"]', email]])
     .then(() => trigger.submit(wrapper.first('#account-reset-password form')))
     .then(() => wrapper);
 };

@@ -10,29 +10,26 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import moment from 'moment';
 
 import App from '../lib/components/app.vue';
 import mockHttp from './http';
 import routerFactory from '../lib/router';
+import testData from './data';
 import { fillForm, trigger } from './util';
 import { logIn, logOut } from '../lib/session';
 
 export { logOut };
 
-export const mockSession = () => {
-  const token = 'a'.repeat(64);
-  const tomorrow = moment(new Date()).add(1, 'days').utc().format();
-  return { token, expiresAt: tomorrow };
+export const mockLogin = () => {
+  if (testData.administrators.size !== 0)
+    throw new Error('administrator already exists');
+  logIn(testData.sessions.create(), testData.administrators.seed(1).first());
 };
 
-export const mockUser = () => ({ id: 1, email: 'user@test.com' });
-
-export const mockLogin = () => logIn(mockSession(), mockUser());
-
 export const submitLoginForm = (wrapper) => {
+  const { email } = testData.administrators.firstOrSeed();
   const promise = fillForm(wrapper, [
-    ['#account-login input[type="email"]', mockUser().email],
+    ['#account-login input[type="email"]', email],
     ['#account-login input[type="password"]', 'password']
   ]);
   return promise
@@ -51,6 +48,6 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
       app.vm.$router.push(location);
       Vue.nextTick().then(() => submitLoginForm(app));
     })
-    .respondWithData(mockSession())
-    .respondWithData(mockUser());
+    .respondWithData(() => testData.sessions.create())
+    .respondWithData(() => testData.administrators.first());
 };

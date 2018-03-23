@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import mockHttp from '../../http';
-import { logOut, mockLogin, mockUser } from '../../session';
+import testData from '../../data';
+import { logOut, mockLogin } from '../../session';
 import { trigger } from '../../util';
 
 const openModal = (wrapper) => {
@@ -26,14 +27,14 @@ const confirmResetPassword = (wrapper) =>
     .then(() => wrapper);
 
 describe('UserResetPassword', () => {
-  before(mockLogin);
-  after(logOut);
+  beforeEach(mockLogin);
+  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(page => {
           page.first(UserResetPassword).getProp('state').should.be.false();
         }));
@@ -41,24 +42,26 @@ describe('UserResetPassword', () => {
     it('opens after button click', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(openModal)
         .then(page => {
           page.first(UserResetPassword).getProp('state').should.be.true();
         }));
   });
 
-  it('standard button thinking things', () =>
-    mockHttp()
-      .mount(UserResetPassword, { propsData: { user: mockUser() } })
+  it('standard button thinking things', () => {
+    const propsData = { user: testData.administrators.first() };
+    return mockHttp()
+      .mount(UserResetPassword, { propsData })
       .request(confirmResetPassword)
-      .standardButton('#user-reset-password-button'));
+      .standardButton('#user-reset-password-button');
+  });
 
   describe('after successful response', () => {
     let page;
     beforeEach(() => mockHttp()
       .mount(UserList)
-      .respondWithData([mockUser()])
+      .respondWithData(() => testData.administrators.sorted())
       .afterResponse(component => {
         page = component;
       })
