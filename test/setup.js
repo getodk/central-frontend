@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import 'should';
 
-import { MockLogger, mockRoute } from './util';
+import { MockLogger } from './util';
 import { setHttp } from './http';
 import '../lib/setup';
 
@@ -23,15 +23,7 @@ setHttp((...args) => {
   return Promise.reject(new Error());
 });
 
-// Removes a component attached to the document if there is one.
-const removeComponent = () => $('body > script:last-of-type + *').remove();
-
-afterEach(removeComponent);
-
-// TODO. The first time a component is attached to the document, 404 errors are
-// returned for /assets/fonts/icomoon.ttf and icomoon.woff. I am not sure yet
-// why that is, but we attach a component here so that the errors are shown
-// before the first tests, not in the middle of the tests.
-mockRoute('/login', { attachToDocument: true })
-  .then(removeComponent)
-  .catch(e => console.log(e)); // eslint-disable-line no-console
+afterEach(() => {
+  // Remove a component attached to the document if there is one.
+  $('body > script:last-of-type + *').remove()
+});

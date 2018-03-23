@@ -3,7 +3,14 @@ module.exports = function (config) {
   config.set({
     browsers: ['ChromeHeadless'],
     frameworks: ['browserify', 'mocha'],
-    files: ['test/setup.js', 'test/components/*/*.spec.js'],
+    files: [
+      'test/setup.js',
+      'test/components/*/*.spec.js',
+      { pattern: 'assets/fonts/icomoon.ttf', included: false, served: true }
+    ],
+    proxies: {
+      '/assets/': '/base/assets/'
+    },
     reporters: ['spec'],
     preprocessors: {
       'test/**/*.js': ['browserify']
