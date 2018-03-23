@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
     <float-row>
-      <button type="button" class="btn btn-primary" @click="newFieldKey.state = true">
+      <button type="button" id="field-key-list-new-button"
+        class="btn btn-primary" @click="newFieldKey.state = true">
         <span class="icon-plus-circle"></span> Create Field Key
       </button>
     </float-row>
@@ -150,7 +151,14 @@ export default {
   mounted() {
     $('body').click(this.toggleFieldKeyListPopovers);
   },
+  // Because of the use of <keep-alive> in UserHome, the route can be left
+  // without the component being destroyed.
+  beforeRouteLeave(to, from, next) {
+    this.hidePopover();
+    next();
+  },
   beforeDestroy() {
+    this.hidePopover();
     $('body').off('click', this.toggleFieldKeyListPopovers);
   },
   methods: {
@@ -174,6 +182,7 @@ export default {
       const index = popoverLink.closest('tr').data('index');
       if (this.enabledPopoverLinks.has(index)) return;
       popoverLink.popover({
+        animation: false,
         container: 'body',
         trigger: 'manual',
         placement: 'left',

@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop>
+  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop
+    id="field-key-new">
     <template slot="title">Create Field Key</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
