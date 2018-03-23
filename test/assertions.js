@@ -11,9 +11,18 @@ except according to the terms contained in the LICENSE file.
 */
 import should from 'should';
 
+import Alert from '../lib/components/alert.vue';
+
 should.Assertion.add('focused', function focused() {
   this.params = { operator: 'to be focused' };
   // If this.obj is an avoriaz wrapper, extract its element.
   const element = this.obj.element != null ? this.obj.element : this.obj;
   element.should.equal(document.activeElement);
+});
+
+should.Assertion.add('alert', function assertAlert(type = null, message = null) {
+  const alert = this.obj.first(Alert);
+  alert.getProp('state').should.be.true();
+  if (type != null) alert.getProp('type').should.equal(type);
+  if (message != null) alert.getProp('message').should.equal(message);
 });

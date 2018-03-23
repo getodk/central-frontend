@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import mockHttp from '../../http';
@@ -81,9 +80,7 @@ describe('UserNew', () => {
     });
 
     it('success message is shown', () => {
-      const alert = page.first(Alert);
-      alert.getProp('state').should.be.true();
-      alert.getProp('type').should.equal('success');
+      page.should.alert('success');
     });
   });
 });

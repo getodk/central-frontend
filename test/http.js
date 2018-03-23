@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import Alert from '../lib/components/alert.vue';
 import Spinner from '../lib/components/spinner.vue';
 import { mountAndMark } from './destroy';
 
@@ -301,19 +300,16 @@ class MockHttp {
         const button = component.first(buttonSelector);
         button.getAttribute('disabled').should.be.ok();
         button.first(Spinner).getProp('state').should.be.true();
-        const alert = component.first(Alert);
         // There may end up being tests for which this assertion does not pass,
         // but for good reason. We will have to update the assertion if/when
         // that is the case.
-        alert.getProp('state').should.be.false();
+        component.should.not.alert();
       })
       .afterResponse(component => {
         const button = component.first(buttonSelector);
         button.element.disabled.should.be.false();
         button.first(Spinner).getProp('state').should.be.false();
-        const alert = component.first(Alert);
-        alert.getProp('state').should.be.true();
-        alert.getProp('type').should.equal('danger');
+        component.should.alert('danger');
       });
   }
 

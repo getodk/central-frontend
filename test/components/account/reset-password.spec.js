@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Alert from '../../../lib/components/alert.vue';
 import { fillForm, mockRoute, trigger } from '../../util';
 import { mockUser } from '../../session';
 
@@ -49,11 +48,7 @@ describe('AccountResetPassword', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('shows a success message', () => {
-      const alert = app.first(Alert);
-      alert.getProp('state').should.be.true();
-      alert.getProp('type').should.equal('success');
-    });
+    it('shows a success message', () => app.should.alert('success'));
   });
 
   it('clicking cancel navigates to login', () =>

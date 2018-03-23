@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Alert from '../../../lib/components/alert.vue';
 import mockHttp from '../../http';
 import { logOut, mockRouteThroughLogin, mockUser, submitLoginForm } from '../../session';
 import { mockRoute, trigger } from '../../util';
@@ -41,10 +40,7 @@ describe('AccountLogin', () => {
         .request(submitLoginForm)
         .respondWithProblem(401.2)
         .afterResponse(app => {
-          const alert = app.first(Alert);
-          alert.getProp('state').should.be.true();
-          alert.getProp('type').should.equal('danger');
-          alert.getProp('message').should.equal('Incorrect email address and/or password.');
+          app.should.alert('danger', 'Incorrect email address and/or password.');
         }));
 
     it('clicking the reset password button navigates to that page', () =>
@@ -108,10 +104,7 @@ describe('AccountLogin', () => {
         });
 
         it('success message is shown', () => {
-          const alert = app.first(Alert);
-          alert.getProp('state').should.be.true();
-          alert.getProp('type').should.equal('success');
-          alert.getProp('message').should.equal('You have logged out successfully.');
+          app.should.alert('success', 'You have logged out successfully.');
         });
       });
     });
