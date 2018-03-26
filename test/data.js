@@ -63,6 +63,21 @@ const validateUniqueness = (propertyNames) => (object, store) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// SORT
+
+const sortByUpdatedAtOrCreatedAtDesc = (object1, object2) => {
+  const time1 = object1.updatedAt != null ? object1.updatedAt : object1.createdAt;
+  const time2 = object2.updatedAt != null ? object2.updatedAt : object2.createdAt;
+  if (time1 < time2)
+    return 1;
+  else if (time1 === time2)
+    return -1;
+  return 0;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
 
 const testData = Object.assign(
@@ -78,7 +93,7 @@ const testData = Object.assign(
     validate: [
       validateUniqueness(['email'])
     ],
-    sort: ['email']
+    sort: 'email'
   }),
 
   dataStore({
@@ -107,7 +122,7 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastUsed')
     ],
-    sort: [(fieldKey) => -(new Date(fieldKey.createdAt).getTime())],
+    sort: ['createdAt', false],
     views: {
       simpleFieldKeys: (extendedFieldKey) => {
         const fieldKey = omit(extendedFieldKey, ['lastUsed']);
@@ -171,7 +186,7 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastSubmission')
     ],
-    sort: [(form) => -(new Date(form.updatedAt || form.createdAt).getTime())],
+    sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {
       simpleForms: (extendedForm) => {
         const form = omit(extendedForm, ['lastSubmission', 'submissions']);
@@ -200,7 +215,7 @@ const testData = Object.assign(
       validateUniqueness(['formId', 'instanceId']),
       validateDateOrder('submitter.createdAt', 'createdAt')
     ],
-    sort: [(form) => -(new Date(form.updatedAt || form.createdAt).getTime())]
+    sort: sortByUpdatedAtOrCreatedAtDesc
   })
 );
 

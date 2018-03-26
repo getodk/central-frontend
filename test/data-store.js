@@ -89,8 +89,7 @@ class Collection {
   clear() { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   splice(start, deleteCount) { throw new Error('not implemented'); }
-  toArray() { throw new Error('not implemented'); }
-  _sortInstructions() { throw new Error('not implemented'); }
+  sorted() { throw new Error('not implemented'); }
 
   first() { return this.size !== 0 ? this.get(0) : null; }
   last() { return this.size !== 0 ? this.get(this.size - 1) : null; }
@@ -110,42 +109,37 @@ class Collection {
     this.createPast(1);
     return this.first();
   }
-
-  sorted() {
-    if (this._sortInstructions() == null) return this.toArray();
-    return this.toArray().sort((object1, object2) => {
-      for (const instruction of this._sortInstructions()) {
-        const compare = this._compareObjects(object1, object2, instruction);
-        if (compare !== 0) return compare;
-      }
-      return 0;
-    });
-  }
-
-  _compareObjects(object1, object2, instruction) {
-    if (typeof instruction === 'string')
-      return this._compareValues(object1[instruction], object2[instruction]);
-    else if (typeof instruction === 'function')
-      return this._compareValues(instruction(object1), instruction(object2));
-    throw new Error('invalid sort instruction');
-  }
-
-  _compareValues(value1, value2) {
-    if (value1 < value2)
-      return -1;
-    else if (value1 > value2)
-      return 1;
-    return 0;
-  }
 }
 
 class Store extends Collection {
-  constructor(factoryOptions, sortInstructions) {
+  constructor(factoryOptions, sort) {
     super();
     this._factory = new Factory(this, factoryOptions);
-    this._sort = sortInstructions;
+    this._setCompareFunction(sort);
     this._createdNew = false;
     this.clear();
+  }
+
+  _setCompareFunction(sort) {
+    if (sort == null) return;
+    if (typeof sort === 'function') {
+      this._compareFunction = sort;
+      return;
+    }
+    if (typeof sort === 'string') {
+      this._setCompareFunction([sort, true]);
+      return;
+    }
+    const [propertyName, asc] = sort;
+    this._compareFunction = (object1, object2) => {
+      const value1 = object1[propertyName];
+      const value2 = object2[propertyName];
+      if (value1 < value2)
+        return asc ? -1 : 1;
+      else if (value2 > value1)
+        return asc ? 1 : -1;
+      return 0;
+    };
   }
 
   createPast(count) {
@@ -174,8 +168,12 @@ class Store extends Collection {
   }
 
   splice(start, deleteCount) { return this._objects.splice(start, deleteCount); }
-  toArray() { return [...this._objects]; }
-  _sortInstructions() { return this._sort; }
+
+  sorted() {
+    if (this._compareFunction == null) return [...this._objects];
+    const compare = this._compareFunction;
+    return [...this._objects].sort(compare);
+  }
 
   factory() { return this._factory; }
 }
@@ -198,8 +196,13 @@ class View extends Collection {
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }
   splice(start, deleteCount) { return this._store.splice(start, deleteCount); }
-  toArray() { return this._store.toArray().map(object => this._transform(object)); }
-  _sortInstructions() { return this._store._sortInstructions(); }
+
+  sorted() {
+    const sorted = this._store.sorted();
+    for (let i = 0; i < sorted.length; i += 1)
+      sorted[i] = this._transform(sorted[i]);
+    return sorted;
+  }
 
   _transform(object) {
     if (this._cache.has(object)) return this._cache.get(object);
@@ -220,15 +223,15 @@ const splitOptions = (options) => {
   return {
     name: options.name,
     factoryOptions,
-    sortInstructions: options.sort,
+    sort: options.sort,
     views: options.views != null ? options.views : []
   };
 };
 
 export const dataStore = (options) => {
   // eslint-disable-next-line object-curly-newline
-  const { name, factoryOptions, sortInstructions, views } = splitOptions(options);
-  const store = new Store(factoryOptions, sortInstructions);
+  const { name, factoryOptions, sort, views } = splitOptions(options);
+  const store = new Store(factoryOptions, sort);
   stores.push(store);
   const collections = { [name]: store };
   for (const [viewName, transform] of Object.entries(views))
