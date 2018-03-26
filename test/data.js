@@ -20,16 +20,18 @@ import { dataStore, resetDataStores } from './data-store';
 const pathValue = (object, path) => {
   let node = object;
   for (const name of path.split('.')) {
+    if (node == null) return undefined;
     node = node[name];
-    if (node == null) return node;
   }
   return node;
 };
 
 const pick = (object, propertyNames) => {
   const result = {};
-  for (const name of propertyNames)
+  for (const name of propertyNames) {
+    if (!(name in object)) throw new Error('property is not in object');
     result[name] = object[name];
+  }
   return result;
 };
 
@@ -49,10 +51,10 @@ const validateDateOrder = (path1, path2) => (object) => {
   const date1 = pathValue(object, path1);
   if (date1 == null) return true;
   const date2 = pathValue(object, path2);
-  return date2 == null || new Date(date1).getTime() <= new Date(date2).getTime();
+  return date2 == null || date1 <= date2;
 };
 
-const validateUniqueness = (propertyNames) => (object, store) => {
+const validateUniqueCombination = (propertyNames) => (object, store) => {
   for (let i = 0; i < store.size; i += 1) {
     if (propertyNames.every(name => object[name] === store.get(i)[name]))
       return false;
@@ -91,7 +93,7 @@ const testData = Object.assign(
       meta: null
     }),
     validate: [
-      validateUniqueness(['email'])
+      validateUniqueCombination(['email'])
     ],
     sort: 'email'
   }),
@@ -138,10 +140,11 @@ const testData = Object.assign(
       const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
       const name = faker.random.arrayElement([faker.name.findName(), null]);
       const anySubmission = faker.random.boolean();
+      const version = faker.random.arrayElement([faker.random.number(), null]);
       return {
         xmlFormId,
         name,
-        version: faker.random.arrayElement([faker.random.number(), null]),
+        version,
         // This does not actually match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
@@ -155,7 +158,7 @@ const testData = Object.assign(
     <h:title>${name}</h:title>
     <model>
       <instance>
-        <data id="${xmlFormId}">
+        <data id="${xmlFormId}"${version != null ? ` version="${version}"` : ''}>
           <meta>
             <instanceID/>
           </meta>
@@ -182,7 +185,7 @@ const testData = Object.assign(
       };
     },
     validate: [
-      validateUniqueness(['xmlFormId']),
+      validateUniqueCombination(['xmlFormId']),
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastSubmission')
     ],
@@ -212,7 +215,7 @@ const testData = Object.assign(
       };
     },
     validate: [
-      validateUniqueness(['formId', 'instanceId']),
+      validateUniqueCombination(['formId', 'instanceId']),
       validateDateOrder('submitter.createdAt', 'createdAt')
     ],
     sort: sortByUpdatedAtOrCreatedAtDesc

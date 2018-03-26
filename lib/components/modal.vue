@@ -86,7 +86,7 @@ export default {
       // For tests in which the component is not attached to the document, we
       // return immediately rather than calling modal(), because it has side
       // effects on the document.
-      if (!$.contains(document.body, this.$refs.modal)) return;
+      if ($(this.$refs.modal).closest('body').length === 0) return;
       $(this.$refs.modal).modal(state ? 'show' : 'hide');
     },
     modalMousedown(e) {

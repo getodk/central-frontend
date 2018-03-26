@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import faker from 'faker';
 import 'should';
 
 import { MockLogger } from './util';
@@ -38,5 +37,4 @@ afterEach(() => {
   }
 });
 
-faker.seed(899644669);
 afterEach(testData.reset);

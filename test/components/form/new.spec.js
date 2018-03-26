@@ -97,17 +97,15 @@ describe('FormNew', () => {
 
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
-      it('clicking create button during file read shows info message', () => {
-        const test = () => Promise.resolve(mountAndMark(FormNew))
+      it('clicking create button during file read shows info message', () =>
+        Promise.resolve(mountAndMark(FormNew))
           .then(createForm)
           .then(selectFile)
           .then(clickCreateButtonInModal)
           .then(modal => {
             modal.data().reading.should.be.true();
             modal.should.alert('info');
-          });
-        return test();
-      });
+          }));
 
       it('modal is updated after file read', () =>
         Promise.resolve(mountAndMark(FormNew))

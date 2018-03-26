@@ -20,9 +20,9 @@ const fakerExtensions = {};
 
 const categoryProxy = (categoryName) => new Proxy({}, {
   get(_, name) {
-    const category = fakerExtensions[categoryName];
-    return category != null && name in category
-      ? category[name]
+    const extensionsCategory = fakerExtensions[categoryName];
+    return extensionsCategory != null && name in extensionsCategory
+      ? extensionsCategory[name]
       : fakerPackage[categoryName][name];
   }
 });

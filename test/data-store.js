@@ -9,14 +9,14 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
 import faker from './faker';
 import { uniqueSequence } from '../lib/util';
 
 const DEFAULT_FACTORY_OPTIONS = {
   id: true,
   createdAt: true,
-  updatedAt: true
+  updatedAt: true,
+  validate: []
 };
 
 class Factory {
@@ -31,7 +31,7 @@ class Factory {
     if (this._options.createdAt) this._lastCreatedAt = null;
   }
 
-  newObject({ past, constraints = null }) {
+  newObject({ past, constraints = [] }) {
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
@@ -61,17 +61,14 @@ class Factory {
   _updatedAt(object, past) {
     if (!this._options.updatedAt || 'updatedAt' in object) return null;
     if (!past || faker.random.boolean()) return { updatedAt: null };
-    const updatedAt = !this._options.createdAt
+    const updatedAt = this._options.createdAt
       ? faker.date.pastSince(object.createdAt)
       : faker.date.past();
     return { updatedAt: updatedAt.toISOString() };
   }
 
   _isValid(object, constraints) {
-    if (this._options.validate == null) return true;
-    const validators = constraints == null
-      ? this._options.validate
-      : [...this._options.validate, ...constraints];
+    const validators = [...this._options.validate, ...constraints];
     for (const validator of validators)
       if (!validator(object, this._store)) return false;
     return true;
@@ -91,11 +88,11 @@ class Collection {
   splice(start, deleteCount) { throw new Error('not implemented'); }
   sorted() { throw new Error('not implemented'); }
 
-  first() { return this.size !== 0 ? this.get(0) : null; }
-  last() { return this.size !== 0 ? this.get(this.size - 1) : null; }
+  first() { return this.size !== 0 ? this.get(0) : undefined; }
+  last() { return this.size !== 0 ? this.get(this.size - 1) : undefined; }
 
   random() {
-    if (this.size === 0) return null;
+    if (this.size === 0) return undefined;
     return this.get(faker.random.number({ max: this.size - 1 }));
   }
 
@@ -116,7 +113,6 @@ class Store extends Collection {
     super();
     this._factory = new Factory(this, factoryOptions);
     this._setCompareFunction(sort);
-    this._createdNew = false;
     this.clear();
   }
 
@@ -182,7 +178,7 @@ class View extends Collection {
   constructor(store, transform) {
     super();
     this._store = store;
-    this._transform = transform;
+    this._callback = transform;
     this._cache = new Map();
   }
 
@@ -205,8 +201,9 @@ class View extends Collection {
   }
 
   _transform(object) {
+    if (object == null) return object;
     if (this._cache.has(object)) return this._cache.get(object);
-    const transform = this._tranform();
+    const transform = this._callback;
     const result = transform(object);
     this._cache.set(object, result);
     return result;

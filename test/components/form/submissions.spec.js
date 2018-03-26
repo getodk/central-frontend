@@ -91,7 +91,7 @@ describe('FormSubmissions', () => {
           }));
 
       it('clicking download button downloads a .zip file', () => {
-        let clicked = true;
+        let clicked = false;
         let href;
         let download;
         const zipContents = 'zip contents';
