@@ -23,13 +23,13 @@ describe('FormList', () => {
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/forms')
-        .respondWithData(() => testData.extendedForms.seed(1).sorted())
+        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .afterResponses(app => app.vm.$route.path.should.equal('/forms')));
   });
 
   it('success message is shown after login', () =>
     mockRouteThroughLogin('/forms')
-      .respondWithData(() => testData.extendedForms.seed(1).sorted())
+      .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponse(app => app.should.alert('success'))
       .finally(logOut));
 
@@ -38,7 +38,7 @@ describe('FormList', () => {
     afterEach(logOut);
 
     it('table contains the correct data', () => {
-      const forms = testData.extendedForms.seed(2).sorted();
+      const forms = testData.extendedForms.createPast(2).sorted();
       // Mocking the route, because the table uses <router-link>.
       return mockRoute('/forms')
         .respondWithData(() => forms)

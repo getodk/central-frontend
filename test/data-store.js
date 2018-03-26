@@ -22,7 +22,7 @@ const DEFAULT_FACTORY_OPTIONS = {
 class Factory {
   constructor(store, options) {
     this._store = store;
-    this._options = Object.assign({}, DEFAULT_FACTORY_OPTIONS, options);
+    this._options = { ...DEFAULT_FACTORY_OPTIONS, ...options };
     this.reset();
   }
 
@@ -31,14 +31,14 @@ class Factory {
     if (this._options.createdAt) this._lastCreatedAt = null;
   }
 
-  newObject({ seed = false, constraints = null }) {
+  newObject({ past, constraints = null }) {
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
       const object = factory();
       Object.assign(object, this._id(object, id));
-      Object.assign(object, this._createdAt(object, seed));
-      Object.assign(object, this._updatedAt(object, seed));
+      Object.assign(object, this._createdAt(object, past));
+      Object.assign(object, this._updatedAt(object, past));
       if (this._isValid(object, constraints)) return object;
     }
   }
@@ -48,9 +48,9 @@ class Factory {
     return { id };
   }
 
-  _createdAt(object, seed) {
+  _createdAt(object, past) {
     if (!this._options.createdAt || 'createdAt' in object) return null;
-    if (!seed) return { createdAt: new Date().toISOString() };
+    if (!past) return { createdAt: new Date().toISOString() };
     const createdAt = this._lastCreatedAt == null
       ? faker.date.past()
       : faker.date.pastSince(this._lastCreatedAt);
@@ -58,9 +58,9 @@ class Factory {
     return { createdAt: createdAt.toISOString() };
   }
 
-  _updatedAt(object, seed) {
+  _updatedAt(object, past) {
     if (!this._options.updatedAt || 'updatedAt' in object) return null;
-    if (!seed || faker.random.boolean()) return { updatedAt: null };
+    if (!past || faker.random.boolean()) return { updatedAt: null };
     const updatedAt = !this._options.createdAt
       ? faker.date.pastSince(object.createdAt)
       : faker.date.past();
@@ -80,9 +80,9 @@ class Factory {
 
 class Collection {
   // eslint-disable-next-line no-unused-vars
-  seed(count) { throw new Error('not implemented'); }
+  createPast(count) { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
-  create(options) { throw new Error('not implemented'); }
+  createNew(options) { throw new Error('not implemented'); }
   get size() { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   get(index) { throw new Error('not implemented'); }
@@ -100,14 +100,14 @@ class Collection {
     return this.get(faker.random.number({ max: this.size - 1 }));
   }
 
-  firstOrSeed() {
-    if (this.size === 0) this.seed(1);
+  firstOrCreatePast() {
+    if (this.size === 0) this.createPast(1);
     return this.first();
   }
 
-  randomOrSeed() {
+  randomOrCreatePast() {
     if (this.size !== 0) return this.random();
-    this.seed(1);
+    this.createPast(1);
     return this.first();
   }
 
@@ -144,23 +144,24 @@ class Store extends Collection {
     super();
     this._factory = new Factory(this, factoryOptions);
     this._sort = sortInstructions;
-    this._seedable = true;
+    this._createdNew = false;
     this.clear();
   }
 
-  seed(count) {
-    if (!this._seedable) throw new Error('store has already been seeded');
+  createPast(count) {
+    if (this._createdNew)
+      throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1) {
-      const object = this._factory.newObject({ seed: true });
+      const object = this._factory.newObject({ past: true });
       this._objects.push(object);
     }
     return this;
   }
 
-  create(options = {}) {
-    const object = this._factory.newObject(options);
-    if (options.seed !== true) this._seedable = false;
+  createNew(options = {}) {
+    const object = this._factory.newObject({ ...options, past: true });
     this._objects.push(object);
+    this._createdNew = true;
     return object;
   }
 
@@ -169,7 +170,7 @@ class Store extends Collection {
 
   clear() {
     this._objects = [];
-    this._seedable = true;
+    this._createdNew = false;
   }
 
   splice(start, deleteCount) { return this._objects.splice(start, deleteCount); }
@@ -187,12 +188,12 @@ class View extends Collection {
     this._cache = new Map();
   }
 
-  seed(count) {
-    this._store.seed(count);
+  createPast(count) {
+    this._store.createPast(count);
     return this;
   }
 
-  create(options) { return this._transform(this._store.create(options)); }
+  createNew(options) { return this._transform(this._store.createNew(options)); }
   get size() { return this._store.size; }
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }
@@ -212,7 +213,7 @@ class View extends Collection {
 const stores = [];
 
 const splitOptions = (options) => {
-  const factoryOptions = Object.assign({}, options);
+  const factoryOptions = { ...options };
   delete factoryOptions.name;
   delete factoryOptions.sort;
   delete factoryOptions.views;

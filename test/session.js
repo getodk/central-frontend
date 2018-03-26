@@ -23,11 +23,11 @@ export { logOut };
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
     throw new Error('administrator already exists');
-  logIn(testData.sessions.create(), testData.administrators.seed(1).first());
+  logIn(testData.sessions.createNew(), testData.administrators.createPast(1).first());
 };
 
 export const submitLoginForm = (wrapper) => {
-  const { email } = testData.administrators.firstOrSeed();
+  const { email } = testData.administrators.firstOrCreatePast();
   const promise = fillForm(wrapper, [
     ['#account-login input[type="email"]', email],
     ['#account-login input[type="password"]', 'password']
@@ -48,6 +48,6 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
       app.vm.$router.push(location);
       Vue.nextTick().then(() => submitLoginForm(app));
     })
-    .respondWithData(() => testData.sessions.create())
+    .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.administrators.first());
 };

@@ -22,22 +22,22 @@ const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 describe('FormSubmissions', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute(submissionsPath(testData.simpleForms.seed(1).first()))
+      mockRoute(submissionsPath(testData.simpleForms.createPast(1).first()))
         .then(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () => {
-      const path = submissionsPath(testData.simpleForms.seed(1).first());
+      const path = submissionsPath(testData.simpleForms.createPast(1).first());
       return mockRouteThroughLogin(path)
         .respondWithData(() => testData.simpleForms.first())
-        .respondWithData(() => testData.extendedSubmissions.seed(1).sorted())
+        .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
         .afterResponses(app => app.vm.$route.path.should.equal(path));
     });
   });
 
   it('success message is shown after login', () =>
-    mockRouteThroughLogin(submissionsPath(testData.simpleForms.seed(1).first()))
+    mockRouteThroughLogin(submissionsPath(testData.simpleForms.createPast(1).first()))
       .respondWithData(() => testData.simpleForms.first())
-      .respondWithData(() => testData.extendedSubmissions.seed(1).sorted())
+      .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
       .afterResponses(app => app.should.alert('success'))
       .finally(logOut));
 
@@ -46,12 +46,12 @@ describe('FormSubmissions', () => {
     afterEach(logOut);
 
     const propsData = () => {
-      const props = { form: testData.simpleForms.firstOrSeed() };
+      const props = { form: testData.simpleForms.firstOrCreatePast() };
       return { propsData: props };
     };
 
     it('table contains the correct data', () => {
-      const submissions = testData.extendedSubmissions.seed(2).sorted();
+      const submissions = testData.extendedSubmissions.createPast(2).sorted();
       return mockHttp()
         .mount(FormSubmissions, propsData())
         .respondWithData(() => submissions)
@@ -83,7 +83,7 @@ describe('FormSubmissions', () => {
       it('download button shows number of submissions', () =>
         mockHttp()
           .mount(FormSubmissions, propsData())
-          .respondWithData(() => testData.extendedSubmissions.seed(2).sorted())
+          .respondWithData(() => testData.extendedSubmissions.createPast(2).sorted())
           .afterResponse(page => {
             const button = page.first('#form-submissions-download-button');
             const count = testData.extendedSubmissions.size;
@@ -97,7 +97,7 @@ describe('FormSubmissions', () => {
         const zipContents = 'zip contents';
         return mockHttp()
           .mount(FormSubmissions, propsData())
-          .respondWithData(() => testData.extendedSubmissions.seed(1).sorted())
+          .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
           .complete()
           .request(page => {
             $(page.element).find('a[download]').first().click((event) => {

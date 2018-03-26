@@ -20,7 +20,7 @@ const clickCreateButton = (wrapper) =>
   trigger.click(wrapper.first('#field-key-list-new-button'))
     .then(() => wrapper);
 const submitForm = (wrapper) => {
-  const nickname = testData.extendedFieldKeys.create().displayName;
+  const nickname = testData.extendedFieldKeys.createNew().displayName;
   fillForm(wrapper, [['#field-key-new input', nickname]])
     .then(() => trigger.submit(wrapper.first('#field-key-new form')))
     .then(() => wrapper);
@@ -34,7 +34,7 @@ describe('FieldKeyNew', () => {
     it('is initially hidden', () =>
       mockHttp()
         .mount(FieldKeyList)
-        .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(page => {
           page.first(FieldKeyNew).getProp('state').should.be.false();
         }));
@@ -43,13 +43,13 @@ describe('FieldKeyNew', () => {
       it('modal is shown', () =>
         mockHttp()
           .mount(FieldKeyList)
-          .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+          .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)
           .then(page => page.first(FieldKeyNew).getProp('state').should.be.true()));
 
       it('first field is focused', () =>
         mockRoute('/users/field-keys', { attachToDocument: true })
-          .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+          .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)
           .then(app => {
             app.first('#field-key-new input').should.be.focused();
@@ -67,7 +67,7 @@ describe('FieldKeyNew', () => {
     let page;
     beforeEach(() => mockHttp()
       .mount(FieldKeyList)
-      .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+      .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponse(component => {
         page = component;
       })

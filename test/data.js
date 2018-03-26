@@ -99,7 +99,7 @@ const testData = Object.assign(
       meta: null,
       lastUsed: faker.random.arrayElement([faker.date.past().toISOString(), null]),
       createdBy: pick(
-        testData.administrators.randomOrSeed(),
+        testData.administrators.randomOrCreatePast(),
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
       )
     }),
@@ -132,7 +132,7 @@ const testData = Object.assign(
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
         lastSubmission: anySubmission ? faker.date.past().toISOString() : null,
         createdBy: pick(
-          testData.administrators.randomOrSeed(),
+          testData.administrators.randomOrCreatePast(),
           ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
         ),
         xml: `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
@@ -184,14 +184,14 @@ const testData = Object.assign(
   dataStore({
     name: 'extendedSubmissions',
     factory: () => {
-      const form = testData.extendedForms.randomOrSeed();
+      const form = testData.extendedForms.randomOrCreatePast();
       const instanceId = faker.random.uuid();
       return {
         formId: form.id,
         instanceId,
         xml: `<data id="${form.id}"><orx:meta><orx:instanceID>${instanceId}</orx:instanceID></orx:meta><name>Alice</name><age>30</age></data>`,
         submitter: pick(
-          testData.administrators.randomOrSeed(),
+          testData.administrators.randomOrCreatePast(),
           ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
         )
       };

@@ -47,7 +47,7 @@ describe('UserList', () => {
         }));
 
     it('table contains the correct data', () => {
-      const users = testData.administrators.seed(1).sorted();
+      const users = testData.administrators.createPast(1).sorted();
       return mockHttp()
         .mount(UserList)
         .respondWithData(() => users)

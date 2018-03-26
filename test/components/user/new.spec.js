@@ -19,7 +19,7 @@ import { logOut, mockLogin } from '../../session';
 const clickCreateButton = (wrapper) =>
   trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
 const submitForm = (wrapper) =>
-  fillForm(wrapper, [['#user-new-email', testData.administrators.create().email]])
+  fillForm(wrapper, [['#user-new-email', testData.administrators.createNew().email]])
     .then(() => trigger('submit', wrapper.first('#user-new form')))
     .then(() => wrapper);
 

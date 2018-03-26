@@ -23,7 +23,7 @@ const openModal = (wrapper) => trigger
   .click(wrapper.first('#form-list-new-button'))
   .then(() => findModal(wrapper));
 const createForm = (modal) => {
-  testData.extendedForms.create();
+  testData.extendedForms.createNew();
   return modal;
 };
 const dataTransfer = () => {
@@ -70,13 +70,13 @@ describe('FormNew', () => {
     it('is initially hidden', () =>
       // Mocking the route, because the table uses <router-link>.
       mockRoute('/forms')
-        .respondWithData(() => testData.extendedForms.seed(1).sorted())
+        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
         .then(modal => modal.getProp('state').should.be.false()));
 
     it('is shown after button click', () =>
       mockRoute('/forms')
-        .respondWithData(() => testData.extendedForms.seed(1).sorted())
+        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
         .then(modal => modal.getProp('state').should.be.true()));
   });
@@ -134,11 +134,11 @@ describe('FormNew', () => {
         let app;
         let form;
         beforeEach(() => mockRoute('/forms')
-          .respondWithData(() => testData.extendedForms.seed(1).sorted())
+          .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
             const hasName = (extendedForm) => extendedForm.name != null;
-            form = testData.extendedForms.create({ constraints: [hasName] });
+            form = testData.extendedForms.createNew({ constraints: [hasName] });
           })
           .request(() => openModal(app)
             .then(selectFile)

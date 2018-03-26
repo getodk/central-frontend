@@ -114,7 +114,7 @@ specify all the responses, in order:
   mockHttp()
     .mount(App)
     .request(submitLoginForm)
-    .respondWithData(() => testData.sessions.create())
+    .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.administrators.first())
 
 In rare cases, you may know that mount() and/or request() will not send any
@@ -127,7 +127,7 @@ component once the responses have been processed:
 
   mockHttp()
     .mount(FormList)
-    .respondWithData(() => testData.extendedForms.seed(3).sorted())
+    .respondWithData(() => testData.extendedForms.createPast(3).sorted())
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -141,7 +141,7 @@ After afterResponse(), you can call any Promise method:
 
   mockHttp()
     .mount(FormList)
-    .respondWithData(() => testData.extendedForms.seed(3))
+    .respondWithData(() => testData.extendedForms.createPast(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -157,13 +157,13 @@ cycles: series can be chained. For example:
       mockLogin();
       component.vm.$router.push('/forms');
     })
-    .respondWithData(() => testData.extendedForms.seed(3))
+    .respondWithData(() => testData.extendedForms.createPast(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
     .complete()
     .request(component => component.vm.$router.push('/users/field-keys'))
-    .respondWithData(() => testData.extendedFieldKeys.seed(4))
+    .respondWithData(() => testData.extendedFieldKeys.createPast(4))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(4);
     })

@@ -26,7 +26,7 @@ describe('FieldKeyList', () => {
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users/field-keys')
-        .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/users/field-keys');
         }));
@@ -34,7 +34,7 @@ describe('FieldKeyList', () => {
 
   it('success message is shown after login', () =>
     mockRouteThroughLogin('/users/field-keys')
-      .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+      .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponse(app => {
         app.should.alert('success');
       })
@@ -46,7 +46,7 @@ describe('FieldKeyList', () => {
 
     it('field keys tab is active', () =>
       mockRoute('/users/field-keys')
-        .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(app => {
           const tab = app.first('.nav-tabs > .active');
           const title = tab.first('a').text().trim();
@@ -54,7 +54,7 @@ describe('FieldKeyList', () => {
         }));
 
     it('table contains the correct data', () => {
-      const fieldKeys = testData.extendedFieldKeys.seed(2).sorted();
+      const fieldKeys = testData.extendedFieldKeys.createPast(2).sorted();
       return mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() => fieldKeys)
@@ -82,7 +82,7 @@ describe('FieldKeyList', () => {
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
-        .respondWithData(() => testData.extendedFieldKeys.seed(1).sorted())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(component => {
           app = component;
         }));

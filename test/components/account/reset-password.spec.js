@@ -13,7 +13,7 @@ import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
 
 const submitForm = (wrapper) => {
-  const { email } = testData.administrators.seed(1).last();
+  const { email } = testData.administrators.createPast(1).last();
   return fillForm(wrapper, [['#account-reset-password input[type="email"]', email]])
     .then(() => trigger.submit(wrapper.first('#account-reset-password form')))
     .then(() => wrapper);
