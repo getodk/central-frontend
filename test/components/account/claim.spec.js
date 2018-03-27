@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import '../../setup';
-import Alert from '../../../lib/components/alert.vue';
 import { fillForm, mockRoute, trigger } from '../../util';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
@@ -21,10 +19,8 @@ const submitForm = (wrapper) =>
 
 describe('AccountClaim', () => {
   it('field is focused', () =>
-    mockRoute(LOCATION, { attachToDocument: true }).then(app => {
-      const field = app.first('input[type="password"]');
-      (document.activeElement === field.element).should.be.true();
-    }));
+    mockRoute(LOCATION, { attachToDocument: true })
+      .then(app => app.first('input[type="password"]').should.be.focused()));
 
   it('standard button thinking things', () =>
     // We need mockRoute() and not just mockHttp(), because the token is taken
@@ -48,10 +44,6 @@ describe('AccountClaim', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('success message is shown', () => {
-      const alert = app.first(Alert);
-      alert.getProp('state').should.be.true();
-      alert.getProp('type').should.equal('success');
-    });
+    it('success message is shown', () => app.should.alert('success'));
   });
 });

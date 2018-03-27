@@ -22,51 +22,49 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <alert v-bind="alert" @close="alert.state = false"/>
       <float-row>
-        <button type="button" class="btn btn-primary"
+        <button type="button" id="form-list-new-button" class="btn btn-primary"
           @click="newForm.state = true">
           <span class="icon-plus-circle"></span> Create a New Form
         </button>
       </float-row>
-      <loading :state="awaitingResponse"/>
-      <!-- Render this element once the forms have been fetched. -->
-      <template v-if="forms">
-        <p v-if="forms.length === 0">To get started, add a form.</p>
-        <table v-else id="form-list-table" class="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Created by</th>
-              <th>Last Modified</th>
-              <th>Last Submission</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="form of forms" :key="form.xmlFormId">
-              <td>
-                <div>
-                  <router-link :to="`/forms/${form.xmlFormId}/submissions`"
-                    class="form-list-form-name">
-                    {{ form.name || form.xmlFormId }}
-                  </router-link>
-                </div>
-                <div v-if="form.name != null" class="form-list-form-id">
-                  {{ form.xmlFormId }}
-                </div>
-                <div>{{ submissions(form) }}</div>
-              </td>
-              <td>
-                {{ form.createdBy != null ? form.createdBy.displayName : '' }}
-              </td>
-              <td>
-                {{ updatedAt(form) }}
-              </td>
-              <td>
-                {{ lastSubmission(form) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </template>
+      <loading v-if="forms == null" :state="awaitingResponse"/>
+      <p v-else-if="forms.length === 0">To get started, add a form.</p>
+      <table v-else id="form-list-table" class="table table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Created by</th>
+            <th>Last Modified</th>
+            <th>Last Submission</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="form of forms" :key="form.xmlFormId">
+            <td>
+              <div>
+                <router-link :to="`/forms/${form.xmlFormId}/submissions`"
+                  class="form-list-form-name">
+                  {{ form.name || form.xmlFormId }}
+                </router-link>
+              </div>
+              <div v-if="form.name != null" class="form-list-form-id">
+                {{ form.xmlFormId }}
+              </div>
+              <div class="form-list-submissions">{{ submissions(form) }}</div>
+            </td>
+            <td>
+              {{ form.createdBy != null ? form.createdBy.displayName : '' }}
+            </td>
+            <td>
+              {{ updatedAt(form) }}
+            </td>
+            <td>
+              {{ lastSubmission(form) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       <form-new v-bind="newForm" @hide="newForm.state = false"/>
     </page-body>
   </div>
@@ -77,12 +75,13 @@ import moment from 'moment';
 
 import FormNew from './new.vue';
 import alert from '../../mixins/alert';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert(), request()],
+  mixins: [alert(), request(), modal('newForm')],
   data() {
     return {
       alert: alert.blank(),

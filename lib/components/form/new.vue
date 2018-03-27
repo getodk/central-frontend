@@ -21,12 +21,10 @@ except according to the terms contained in the LICENSE file.
           <doc-link>tools available</doc-link> to help you design your form.
         </p>
       </div>
-      <div id="drop-zone" :class="dropZoneClass" @dragover.prevent="dragover"
-        @dragleave="dragleave" @drop.prevent="drop">
+      <div ref="dropZone" id="drop-zone" :class="dropZoneClass">
         <div :style="pointerEvents">
           Drop a file here, or
-          <input type="file" ref="input" class="hidden"
-            @change="readFile($event.target.files)">
+          <input type="file" ref="input" class="hidden">
           <button type="button" class="btn btn-primary" :disabled="!droppable"
             @click="clickFileButton">
             choose one
@@ -36,8 +34,8 @@ except according to the terms contained in the LICENSE file.
         <div id="form-new-filename" :style="pointerEvents">{{ filename }}</div>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :disabled="awaitingResponse" @click="create">
+        <button type="button" id="form-new-create-button"
+          class="btn btn-primary" :disabled="awaitingResponse" @click="create">
           Create <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link" @click="hide">
@@ -91,6 +89,18 @@ export default {
       return this.isOverDropZone ? { 'pointer-events': 'none' } : {};
     }
   },
+  mounted() {
+    $(this.$refs.input)
+      .on('change.app', (event) => this.readFile(event.target.files));
+    $(this.$refs.dropZone)
+      .on('dragover.app', this.dragover)
+      .on('dragleave.app', this.dragleave)
+      .on('drop.app', this.drop);
+  },
+  beforeDestroy() {
+    $(this.$refs.input).off('.app');
+    $(this.$refs.dropZone).off('.app');
+  },
   methods: {
     hide() {
       this.$emit('hide');
@@ -128,18 +138,20 @@ export default {
       this.$refs.modal.$el.focus();
     },
     dragover(event) {
+      event.preventDefault();
       // Putting this line in a dragenter listener did not work. Is it possible
       // that a child element of #drop-zone could trigger a dragleave event
       // before the dragenter listener is called?
       this.isOverDropZone = true;
       // eslint-disable-next-line no-param-reassign
-      if (this.droppable) event.dataTransfer.dropEffect = 'copy';
+      if (this.droppable) event.originalEvent.dataTransfer.dropEffect = 'copy';
     },
     dragleave() {
       this.isOverDropZone = false;
     },
     drop(event) {
-      if (this.droppable) this.readFile(event.dataTransfer.files);
+      event.preventDefault();
+      if (this.droppable) this.readFile(event.originalEvent.dataTransfer.files);
       this.isOverDropZone = false;
     },
     checkStateBeforeRequest() {

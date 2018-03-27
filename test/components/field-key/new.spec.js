@@ -9,69 +9,74 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import UserList from '../../../lib/components/user/list.vue';
-import UserNew from '../../../lib/components/user/new.vue';
+import FieldKeyList from '../../../lib/components/field-key/list.vue';
+import FieldKeyNew from '../../../lib/components/field-key/new.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
 import { logOut, mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
-  trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
-const submitForm = (wrapper) =>
-  fillForm(wrapper, [['#user-new-email', testData.administrators.createNew().email]])
-    .then(() => trigger('submit', wrapper.first('#user-new form')))
+  trigger.click(wrapper.first('#field-key-list-new-button'))
     .then(() => wrapper);
+const submitForm = (wrapper) => {
+  const nickname = testData.extendedFieldKeys.createNew().displayName;
+  fillForm(wrapper, [['#field-key-new input', nickname]])
+    .then(() => trigger.submit(wrapper.first('#field-key-new form')))
+    .then(() => wrapper);
+};
 
-describe('UserNew', () => {
+describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
   afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>
       mockHttp()
-        .mount(UserList)
-        .respondWithData(() => testData.administrators.sorted())
+        .mount(FieldKeyList)
+        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(page => {
-          page.first(UserNew).getProp('state').should.be.false();
+          page.first(FieldKeyNew).getProp('state').should.be.false();
         }));
 
     describe('after button click', () => {
       it('modal is shown', () =>
         mockHttp()
-          .mount(UserList)
-          .respondWithData(() => testData.administrators.sorted())
+          .mount(FieldKeyList)
+          .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)
-          .then(page => page.first(UserNew).getProp('state').should.be.true()));
+          .then(page => page.first(FieldKeyNew).getProp('state').should.be.true()));
 
       it('first field is focused', () =>
-        mockRoute('/users', { attachToDocument: true })
-          .respondWithData(() => testData.administrators.sorted())
+        mockRoute('/users/field-keys', { attachToDocument: true })
+          .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)
-          .then(app => app.first('#user-new-email').should.be.focused()));
+          .then(app => {
+            app.first('#field-key-new input').should.be.focused();
+          }));
     });
   });
 
   it('standard button thinking things', () =>
     mockHttp()
-      .mount(UserNew)
+      .mount(FieldKeyNew)
       .request(submitForm)
       .standardButton());
 
   describe('after successful submit', () => {
     let page;
     beforeEach(() => mockHttp()
-      .mount(UserList)
-      .respondWithData(() => testData.administrators.sorted())
+      .mount(FieldKeyList)
+      .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponse(component => {
         page = component;
       })
       .request(() => clickCreateButton(page).then(submitForm))
-      .respondWithData(() => testData.administrators.last())
-      .respondWithData(() => testData.administrators.sorted()));
+      .respondWithData(() => testData.simpleFieldKeys.last())
+      .respondWithData(() => testData.extendedFieldKeys.sorted()));
 
     it('modal is hidden', () => {
-      page.first(UserNew).getProp('state').should.be.false();
+      page.first(FieldKeyNew).getProp('state').should.be.false();
     });
 
     it('table has the correct number of rows', () => {

@@ -9,14 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { mount } from 'avoriaz';
-
-import '../../setup';
-import Alert from '../../../lib/components/alert.vue';
 import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import mockHttp from '../../http';
-import { logOut, mockLogin, mockUser } from '../../session';
+import testData from '../../data';
+import { logOut, mockLogin } from '../../session';
 import { trigger } from '../../util';
 
 const openModal = (wrapper) => {
@@ -30,14 +27,14 @@ const confirmResetPassword = (wrapper) =>
     .then(() => wrapper);
 
 describe('UserResetPassword', () => {
-  before(mockLogin);
-  after(logOut);
+  beforeEach(mockLogin);
+  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(page => {
           page.first(UserResetPassword).getProp('state').should.be.false();
         }));
@@ -45,27 +42,29 @@ describe('UserResetPassword', () => {
     it('opens after button click', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData([mockUser()])
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(openModal)
         .then(page => {
           page.first(UserResetPassword).getProp('state').should.be.true();
         }));
   });
 
-  it('standard button thinking things', () =>
-    mockHttp()
-      .mount(UserResetPassword, { propsData: { user: mockUser() } })
+  it('standard button thinking things', () => {
+    const propsData = { user: testData.administrators.first() };
+    return mockHttp()
+      .mount(UserResetPassword, { propsData })
       .request(confirmResetPassword)
-      .standardButton('#user-reset-password-button'));
+      .standardButton('#user-reset-password-button');
+  });
 
   describe('after successful response', () => {
     let page;
     beforeEach(() => mockHttp()
-      .request(() => {
-        page = mount(UserList);
+      .mount(UserList)
+      .respondWithData(() => testData.administrators.sorted())
+      .afterResponse(component => {
+        page = component;
       })
-      .respondWithData([mockUser()])
-      .complete()
       .request(() => openModal(page).then(confirmResetPassword))
       .respondWithSuccess());
 
@@ -73,10 +72,6 @@ describe('UserResetPassword', () => {
       page.first(UserResetPassword).getProp('state').should.be.false();
     });
 
-    it('success message is shown', () => {
-      const alert = page.first(Alert);
-      alert.getProp('state').should.be.true();
-      alert.getProp('type').should.equal('success');
-    });
+    it('success message is shown', () => page.should.alert('success'));
   });
 });

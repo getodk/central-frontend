@@ -10,12 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { mount as avoriazMount } from 'avoriaz';
 
-import Alert from '../lib/components/alert.vue';
 import Spinner from '../lib/components/spinner.vue';
+import { mountAndMark } from './destroy';
 
-const REQUEST_METHODS = ['get', 'post', 'delete'];
+const REQUEST_METHODS = ['request', 'get', 'post', 'delete'];
 
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
@@ -31,12 +30,18 @@ export const setHttp = (respond) => {
 };
 
 class SuccessfulResponse {
-  constructor(data) {
-    this._response = { data };
+  constructor(callback) {
+    this._callback = callback;
   }
 
   isSuccess() { return true; }
-  response() { return this._response; }
+
+  response() {
+    if (this._response != null) return this._response;
+    const callback = this._callback;
+    this._response = { data: callback() };
+    return this._response;
+  }
 }
 
 class ProblemResponse {
@@ -53,6 +58,8 @@ class ProblemResponse {
   isSuccess() { return false; }
   response() { return this._error; }
 }
+
+const SUCCESS_RESPONSE_CALLBACK = () => ({ success: true });
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -84,18 +91,22 @@ If you already have a mounted component, you can skip mockHttp().mount():
   ...
 
   mockHttp()
-    .request(component => {
+    .request(() => {
       mockLogin();
       component.vm.$router.push('/users');
     })
 
+  ...
+
+  // Destroy component.
+
 The important thing is that you call either mount() or request() (or both).
 
-After specifying the request, specify the response:
+After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(UserList)
-    .respondWithData([{ id: 1, email: 'user@test.com' }])
+    .respondWithData(() => testData.administrators.sorted())
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order:
@@ -103,8 +114,8 @@ specify all the responses, in order:
   mockHttp()
     .mount(App)
     .request(submitLoginForm)
-    .respondWithData(mockSession())
-    .respondWithData(mockUser())
+    .respondWithData(() => testData.sessions.createNew())
+    .respondWithData(() => testData.administrators.first())
 
 In rare cases, you may know that mount() and/or request() will not send any
 request. For example, that's true for some uses of mockRoute(). In that case,
@@ -115,8 +126,8 @@ After specifying requests and responses, you can examine the state of the
 component once the responses have been processed:
 
   mockHttp()
-    .mount(UserList)
-    .respondWithData([ ... 3 users ... ])
+    .mount(FormList)
+    .respondWithData(() => testData.extendedForms.createPast(3).sorted())
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -129,8 +140,8 @@ its own callback, thereby completing the series of request-response cycles.
 After afterResponse(), you can call any Promise method:
 
   mockHttp()
-    .mount(UserList)
-    .respondWithData([ ... 3 users ... ])
+    .mount(FormList)
+    .respondWithData(() => testData.extendedForms.createPast(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
@@ -144,15 +155,15 @@ cycles: series can be chained. For example:
     .mount(App)
     .request(component => {
       mockLogin();
-      component.vm.$router.push('/users');
+      component.vm.$router.push('/forms');
     })
-    .respondWithData([ ... 3 users ... ])
+    .respondWithData(() => testData.extendedForms.createPast(3))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(3);
     })
     .complete()
-    .request(component => component.vm.$router.push('/forms'))
-    .respondWithData([ ... 4 forms ... ])
+    .request(component => component.vm.$router.push('/users/field-keys'))
+    .respondWithData(() => testData.extendedFieldKeys.createPast(4))
     .afterResponse(component => {
       component.find('table tbody tr').length.should.equal(4);
     })
@@ -190,7 +201,7 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot mount component after first series in chain');
-    const mount = () => avoriazMount(component, options);
+    const mount = () => mountAndMark(component, options);
     return new MockHttp(
       this._previousPromise,
       this._component,
@@ -220,12 +231,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(data) {
-    return this._respond(new SuccessfulResponse(data));
+  respondWithData(callback) {
+    return this._respond(new SuccessfulResponse(callback));
   }
 
   respondWithSuccess() {
-    return this.respondWithData({ success: true });
+    return this.respondWithData(SUCCESS_RESPONSE_CALLBACK);
   }
 
   respondWithProblem(code = 500, message = 'There was a problem.') {
@@ -297,19 +308,16 @@ class MockHttp {
         const button = component.first(buttonSelector);
         button.getAttribute('disabled').should.be.ok();
         button.first(Spinner).getProp('state').should.be.true();
-        const alert = component.first(Alert);
         // There may end up being tests for which this assertion does not pass,
         // but for good reason. We will have to update the assertion if/when
         // that is the case.
-        alert.getProp('state').should.be.false();
+        component.should.not.alert();
       })
       .afterResponse(component => {
         const button = component.first(buttonSelector);
         button.element.disabled.should.be.false();
         button.first(Spinner).getProp('state').should.be.false();
-        const alert = component.first(Alert);
-        alert.getProp('state').should.be.true();
-        alert.getProp('type').should.equal('danger');
+        component.should.alert('danger');
       });
   }
 
@@ -349,7 +357,13 @@ class MockHttp {
         .then(() => this._tryBeforeEachResponse())
         .then(() => new Promise((resolve, reject) => {
           const settle = response.isSuccess() ? resolve : reject;
-          settle(response.response());
+          try {
+            settle(response.response());
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.log(`mockHttp(): a response threw an error:\n${e.stack}`);
+            reject(e);
+          }
         }));
     };
   }

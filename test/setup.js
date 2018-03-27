@@ -12,9 +12,12 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import 'should';
 
-import { MockLogger, mockRoute } from './util';
+import { MockLogger } from './util';
+import testData from './data';
+import { destroyMarkedComponent } from './destroy';
 import { setHttp } from './http';
 import '../lib/setup';
+import './assertions';
 
 Vue.prototype.$logger = new MockLogger();
 
@@ -23,15 +26,15 @@ setHttp((...args) => {
   return Promise.reject(new Error());
 });
 
-// Removes a component attached to the document if there is one.
-const removeComponent = () => $('body > script:last-of-type + *').remove();
+afterEach(() => {
+  destroyMarkedComponent();
 
-afterEach(removeComponent);
+  const afterScript = $('body > script:last-of-type + *');
+  if (afterScript.length > 0) {
+    // eslint-disable-next-line no-console
+    console.log(`Unexpected element: ${afterScript[0].outerHTML}`);
+    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+  }
+});
 
-// TODO. The first time a component is attached to the document, 404 errors are
-// returned for /assets/fonts/icomoon.ttf and icomoon.woff. I am not sure yet
-// why that is, but we attach a component here so that the errors are shown
-// before the first tests, not in the middle of the tests.
-mockRoute('/login', { attachToDocument: true })
-  .then(removeComponent)
-  .catch(e => console.log(e)); // eslint-disable-line no-console
+afterEach(testData.reset);
