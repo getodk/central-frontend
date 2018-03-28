@@ -46,7 +46,11 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
     .mount(App, fullMountOptions)
     .request(app => {
       app.vm.$router.push(location);
-      Vue.nextTick().then(() => submitLoginForm(app));
+      Vue.nextTick().then(() => {
+        if (app.vm.$route.path !== 'login')
+          throw new Error('user was not routed to login');
+        submitLoginForm(app);
+      });
     })
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.administrators.first());
