@@ -12,13 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog"
     :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
-    data-keyboard="false" @keydown.esc="$emit('hide')"
+    data-keyboard="false" @keydown.esc="hideIfCan"
     @mousedown="modalMousedown($event)" @click="modalClick($event)">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" aria-label="Close"
-            @click="$emit('hide')">
+            :disabled="!hideable" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 class="modal-title" :id="titleId"><slot name="title"></slot></h4>
@@ -40,6 +40,12 @@ export default {
       default: false
     },
     backdrop: {
+      type: Boolean,
+      default: false
+    },
+    // Indicates whether the user is able to hide the modal by clicking ×,
+    // pressing escape, or clicking outside the modal.
+    hideable: {
       type: Boolean,
       default: false
     }
@@ -89,13 +95,15 @@ export default {
       if ($(this.$refs.modal).closest('body').length === 0) return;
       $(this.$refs.modal).modal(state ? 'show' : 'hide');
     },
+    hideIfCan() {
+      if (this.hideable) this.$emit('hide');
+    },
     modalMousedown(e) {
       this.mousedownOutsideDialog = e.target === e.currentTarget;
     },
     modalClick(e) {
       const mouseupOutsideDialog = e.target === e.currentTarget;
-      if (this.mousedownOutsideDialog && mouseupOutsideDialog)
-        this.$emit('hide');
+      if (this.mousedownOutsideDialog && mouseupOutsideDialog) this.hideIfCan();
     }
   }
 };
@@ -122,6 +130,10 @@ export default {
         font-weight: normal;
         margin-top: 0;
         opacity: 1;
+
+        &[disabled] {
+          cursor: not-allowed;
+        }
       }
 
       h4 {

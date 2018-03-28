@@ -65,8 +65,13 @@ body {
 
 .btn-primary {
   background-color: $color-action-background;
+
   &:hover, &:focus {
     background-color: $color-action-background-hover;
+
+    &[disabled] {
+      background-color: $color-action-background;
+    }
   }
 }
 

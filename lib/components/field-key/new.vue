@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop
-    id="field-key-new">
+    :hideable="!awaitingResponse" id="field-key-new">
     <template slot="title">Create Field Key</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -25,7 +25,8 @@ except according to the terms contained in the LICENSE file.
           <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
             Create <spinner :state="awaitingResponse"/>
           </button>
-          <button type="button" class="btn btn-link" @click="$emit('hide')">
+          <button type="button" class="btn btn-link"
+            :disabled="awaitingResponse" @click="$emit('hide')">
             Close
           </button>
         </div>
