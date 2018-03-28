@@ -63,6 +63,7 @@ export default {
         .post('/users/reset/initiate?invalidate=true', data)
         .then(() => {
           this.$emit('hide');
+          this.alert = alert.blank();
           this.$emit('success');
         })
         .catch(() => {});
