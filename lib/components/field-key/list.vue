@@ -148,18 +148,12 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted() {
-    $('body').click(this.toggleFieldKeyListPopovers);
+  activated() {
+    $('body').on('click.app-field-key-list', this.togglePopovers);
   },
-  // Because of the use of <keep-alive> in UserHome, the route can be left
-  // without the component being destroyed.
-  beforeRouteLeave(to, from, next) {
+  deactivated() {
     this.hidePopover();
-    next();
-  },
-  beforeDestroy() {
-    this.hidePopover();
-    $('body').off('click', this.toggleFieldKeyListPopovers);
+    $('body').off('click.app-field-key-list', this.togglePopovers);
   },
   methods: {
     fetchData() {
@@ -206,9 +200,7 @@ export default {
       const popover = $('#field-key-list-popover-content').closest('.popover');
       return element[0] === popover[0] || $.contains(popover[0], element[0]);
     },
-    // This method's name should be unique, because jQuery off() uses the name
-    // of the function passed to it.
-    toggleFieldKeyListPopovers(event) {
+    togglePopovers(event) {
       const target = $(event.target);
       if (target.hasClass('field-key-list-popover-link')) {
         // true if the user clicked on the link whose popover is currently shown

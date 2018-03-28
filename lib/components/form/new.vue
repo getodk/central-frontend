@@ -93,15 +93,15 @@ export default {
   },
   mounted() {
     $(this.$refs.input)
-      .on('change.app', (event) => this.readFile(event.target.files));
+      .on('change.app-form-new', (event) => this.readFile(event.target.files));
     $(this.$refs.dropZone)
-      .on('dragover.app', this.dragover)
-      .on('dragleave.app', this.dragleave)
-      .on('drop.app', this.drop);
+      .on('dragover.app-form-new', this.dragover)
+      .on('dragleave.app-form-new', this.dragleave)
+      .on('drop.app-form-new', this.drop);
   },
   beforeDestroy() {
-    $(this.$refs.input).off('.app');
-    $(this.$refs.dropZone).off('.app');
+    $(this.$refs.input).off('.app-form-new');
+    $(this.$refs.dropZone).off('.app-form-new');
   },
   methods: {
     hide() {
