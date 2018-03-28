@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import FormList from '../../../lib/components/form/list.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../util';
 
 describe('FormList', () => {
@@ -30,12 +30,10 @@ describe('FormList', () => {
   it('success message is shown after login', () =>
     mockRouteThroughLogin('/forms')
       .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-      .afterResponse(app => app.should.alert('success'))
-      .finally(logOut));
+      .afterResponse(app => app.should.alert('success')));
 
   describe('after login', () => {
     beforeEach(mockLogin);
-    afterEach(logOut);
 
     it('table contains the correct data', () => {
       const forms = testData.extendedForms.createPast(2).sorted();

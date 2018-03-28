@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import UserList from '../../../lib/components/user/list.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../util';
 
 describe('UserList', () => {
@@ -30,12 +30,10 @@ describe('UserList', () => {
   it('success message is shown after login', () =>
     mockRouteThroughLogin('/users')
       .respondWithData(() => testData.administrators.sorted())
-      .afterResponse(app => app.should.alert('success'))
-      .finally(logOut));
+      .afterResponse(app => app.should.alert('success')));
 
   describe('after login', () => {
     beforeEach(mockLogin);
-    afterEach(logOut);
 
     it('page defaults to the Staff tab', () =>
       mockRoute('/users')

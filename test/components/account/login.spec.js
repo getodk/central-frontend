@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockRouteThroughLogin, submitLoginForm } from '../../session';
 import { mockRoute, trigger } from '../../util';
+import { mockRouteThroughLogin, submitLoginForm } from '../../session';
 
 describe('AccountLogin', () => {
   describe('user is logged out', () => {
@@ -51,8 +51,6 @@ describe('AccountLogin', () => {
   });
 
   describe('after login', () => {
-    afterEach(logOut);
-
     it('navigating to login redirects to forms list', () =>
       mockRouteThroughLogin('/users')
         .respondWithProblem()

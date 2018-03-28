@@ -15,6 +15,7 @@ import 'should';
 import { MockLogger } from './util';
 import testData from './data';
 import { destroyMarkedComponent } from './destroy';
+import { logOut } from '../lib/session';
 import { setHttp } from './http';
 import '../lib/setup';
 import './assertions';
@@ -35,6 +36,14 @@ afterEach(() => {
     console.log(`Unexpected element: ${afterScript[0].outerHTML}`);
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
+});
+
+// Reset global application state.
+afterEach(() => {
+  if (Vue.prototype.$session.loggedIn()) logOut();
+  // It's hard to imagine a use case where this would not be null already, but
+  // just in case...
+  Vue.prototype.$alert = null;
 });
 
 afterEach(testData.reset);

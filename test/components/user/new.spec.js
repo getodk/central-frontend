@@ -14,7 +14,7 @@ import UserNew from '../../../lib/components/user/new.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
-import { logOut, mockLogin } from '../../session';
+import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
   trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
@@ -25,7 +25,6 @@ const submitForm = (wrapper) =>
 
 describe('UserNew', () => {
   beforeEach(mockLogin);
-  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>

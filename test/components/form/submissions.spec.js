@@ -14,7 +14,7 @@ import axios from 'axios';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute, trigger } from '../../util';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
@@ -38,12 +38,10 @@ describe('FormSubmissions', () => {
     mockRouteThroughLogin(submissionsPath(testData.simpleForms.createPast(1).first()))
       .respondWithData(() => testData.simpleForms.first())
       .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
-      .afterResponses(app => app.should.alert('success'))
-      .finally(logOut));
+      .afterResponses(app => app.should.alert('success')));
 
   describe('after login', () => {
     beforeEach(mockLogin);
-    afterEach(logOut);
 
     const propsData = () => {
       const props = { form: testData.simpleForms.firstOrCreatePast() };

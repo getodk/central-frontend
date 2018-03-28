@@ -13,7 +13,7 @@ import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockLogin } from '../../session';
+import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
 const openModal = (wrapper) => {
@@ -28,7 +28,6 @@ const confirmResetPassword = (wrapper) =>
 
 describe('UserResetPassword', () => {
   beforeEach(mockLogin);
-  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>
