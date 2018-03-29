@@ -21,7 +21,7 @@ const clickCreateButton = (wrapper) =>
     .then(() => wrapper);
 const submitForm = (wrapper) => {
   const nickname = testData.extendedFieldKeys.createNew().displayName;
-  fillForm(wrapper, [['#field-key-new input', nickname]])
+  return fillForm(wrapper, [['#field-key-new input', nickname]])
     .then(() => trigger.submit(wrapper.first('#field-key-new form')))
     .then(() => wrapper);
 };
