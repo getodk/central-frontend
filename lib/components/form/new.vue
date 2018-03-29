@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <input type="file" ref="input" class="hidden">
           <button type="button" class="btn btn-primary" :disabled="!droppable"
             @click="clickFileButton">
-            choose one
+            <span class="icon-folder-open"></span> choose one
           </button>
           to upload.
         </div>

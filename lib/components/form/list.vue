@@ -45,6 +45,7 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="`/forms/${form.xmlFormId}/submissions`"
                   class="form-list-form-name">
                   {{ form.name || form.xmlFormId }}
+                  <span class="icon-angle-right"></span>
                 </router-link>
               </div>
               <div v-if="form.name != null" class="form-list-form-id">
@@ -132,6 +133,12 @@ export default {
       color: unset;
       font-size: 30px;
       text-decoration: unset;
+
+      .icon-angle-right {
+        font-size: 20px;
+        vertical-align: 2px;
+        margin-left: 3px;
+      }
     }
 
     .form-list-form-id {

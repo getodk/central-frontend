@@ -39,7 +39,10 @@ except according to the terms contained in the LICENSE file.
           <td>{{ fieldKey.created }}</td>
           <td>{{ fieldKey.lastUsed }}</td>
           <td>
-            <a class="field-key-list-popover-link" role="button">See code</a>
+            <a class="field-key-list-popover-link no-text-decoration" role="button">
+              <span class="icon-qrcode"></span>
+              <span class="underline-on-hover-or-focus">See code</span>
+            </a>
           </td>
         </tr>
       </tbody>
