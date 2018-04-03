@@ -201,20 +201,21 @@ export default {
     popoverContainsElement(element) {
       if (this.popoverLink == null) return false;
       const popover = $('#field-key-list-popover-content').closest('.popover');
-      return element[0] === popover[0] || $.contains(popover[0], element[0]);
+      return element === popover[0] || $.contains(popover[0], element);
     },
     togglePopovers(event) {
-      const target = $(event.target);
-      if (target.hasClass('field-key-list-popover-link')) {
+      const popoverLink = $(event.target).closest('.field-key-list-popover-link');
+      if (popoverLink.length !== 0) {
         // true if the user clicked on the link whose popover is currently shown
         // and false if not.
         const samePopover = this.popoverLink != null &&
-          event.target === this.popoverLink[0];
+          popoverLink[0] === this.popoverLink[0];
         if (!samePopover) {
           this.hidePopover();
-          this.showPopover(target);
+          this.showPopover(popoverLink);
         }
-      } else if (this.popoverLink != null && !this.popoverContainsElement(target)) {
+      } else if (this.popoverLink != null &&
+        !this.popoverContainsElement(event.target)) {
         this.hidePopover();
       }
     },
