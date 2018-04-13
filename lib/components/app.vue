@@ -153,7 +153,7 @@ body {
     }
 
     &:placeholder-shown + .form-label {
-      transform: translateY(-12px);
+      transform: translateY(-13px);
     }
   }
 

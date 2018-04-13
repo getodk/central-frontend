@@ -79,7 +79,7 @@ except according to the terms contained in the LICENSE file.
           <td>
             <p>
               <button type="button" v-if="backups.status == 'notConfigured'"
-                class="btn btn-primary">
+                class="btn btn-primary" @click="newBackup.state = true">
                 <span class="icon-plus-circle"></span> Set up Now
               </button>
               <button type="button" v-else class="btn btn-primary">
@@ -90,13 +90,18 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </tbody>
     </table>
+
+    <backup-new v-bind="newBackup" @hide="newBackup.state = false"
+      @success="afterCreate"/>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
 
+import BackupNew from './new.vue';
 import alert from '../../mixins/alert';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
@@ -128,12 +133,16 @@ const statusIs2xxOr404 = (status) =>
 
 export default {
   name: 'BackupList',
-  mixins: [alert(), request()],
+  components: { BackupNew },
+  mixins: [alert(), modal('newBackup'), request()],
   data() {
     return {
       alert: alert.blank(),
       requestId: null,
-      backups: null
+      backups: null,
+      newBackup: {
+        state: false
+      }
     };
   },
   computed: {
@@ -168,6 +177,10 @@ export default {
             : Backups.notConfigured();
         })
         .catch(() => {});
+    },
+    afterCreate() {
+      this.alert = alert.success('Success! Automatic backups are now configured.');
+      this.fetchData();
     }
   }
 };

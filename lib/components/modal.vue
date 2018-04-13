@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog"
-    :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
-    data-keyboard="false" @keydown.esc="hideIfCan"
+    :aria-labelledby="titleId" :data-backdrop="bsBackdrop" data-keyboard="false"
+    @keydown.esc="hideIfCan" @keydown="$emit('keydown', $event)"
     @mousedown="modalMousedown($event)" @click="modalClick($event)">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
