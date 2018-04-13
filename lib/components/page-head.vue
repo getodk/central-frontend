@@ -47,7 +47,7 @@ export default {
       color: #555;
       font-size: 15px;
       letter-spacing: -0.01em;
-      max-width: 650px;
+      max-width: 645px;
     }
 
     > .nav-tabs {

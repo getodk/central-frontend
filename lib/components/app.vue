@@ -46,6 +46,30 @@ body {
   min-height: 100vh;
 }
 
+.text-muted {
+  color: #999;
+}
+
+.text-success {
+  color: $color-feedback-success-foreground;
+
+  a {
+    &:hover, &:focus {
+      color: darken($color-feedback-success-foreground, 10%);
+    }
+  }
+}
+
+.text-danger {
+  color: $color-feedback-danger-foreground;
+
+  a {
+    &:hover, &:focus {
+      color: darken($color-feedback-danger-foreground, 10%);
+    }
+  }
+}
+
 .no-text-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
@@ -109,7 +133,7 @@ body {
   input {
     background: $color-input-background;
     border: none;
-    border-bottom: 1px solid $color-action-inactive;
+    border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
     box-shadow: none;
     position: relative;
@@ -134,7 +158,7 @@ body {
   }
 
   .form-label {
-    color: $color-action-inactive;
+    color: $color-input-inactive;
     display: block;
     font-size: 11px;
     height: 0;
