@@ -69,9 +69,14 @@ $spinner-width: 3px;
     height: $spinner-size;
     width: $spinner-size;
 
-    .btn & {
+    .btn-primary & {
       box-shadow: 0 0 20px 10px $color-action-background,
                   0 0 6px 3px $color-action-background inset;
+    }
+
+    .btn-danger & {
+      box-shadow: 0 0 20px 10px $color-action-danger-background,
+                  0 0 6px 3px $color-action-danger-background inset;
     }
   }
 
@@ -87,9 +92,14 @@ $spinner-width: 3px;
     transform: rotate(45deg);
     width: $spinner-width;
 
-    .btn & {
+    .btn-primary & {
       border-right-color: $color-action-background;
       border-top-color: $color-action-background;
+    }
+
+    .btn-danger & {
+      border-right-color: $color-action-danger-background;
+      border-top-color: $color-action-danger-background;
     }
   }
 }

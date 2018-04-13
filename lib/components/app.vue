@@ -121,6 +121,18 @@ body {
   }
 }
 
+.btn-danger {
+  background-color: $color-action-danger-background;
+
+  &:hover, &:focus {
+    background-color: $color-action-danger-background-hover;
+
+    &[disabled] {
+      background-color: $color-action-danger-background;
+    }
+  }
+}
+
 .btn-link {
   color: $color-action-foreground;
 }

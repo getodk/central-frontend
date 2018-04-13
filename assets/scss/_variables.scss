@@ -20,6 +20,8 @@ $color-text: #333;
 $color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
+$color-action-danger-background: #d9534f;
+$color-action-danger-background-hover: darken($color-action-danger-background, 10%);
 $color-input-inactive: #666;
 $color-input-background: #f7f7f7;
 

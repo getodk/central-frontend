@@ -82,7 +82,8 @@ except according to the terms contained in the LICENSE file.
                 class="btn btn-primary" @click="newBackup.state = true">
                 <span class="icon-plus-circle"></span> Set up Now
               </button>
-              <button type="button" v-else class="btn btn-primary">
+              <button type="button" v-else class="btn btn-primary"
+                :disabled="awaitingResponse" @click="terminate.state = true">
                 <span class="icon-times-circle"></span> Reconfigure
               </button>
             </p>
@@ -93,6 +94,8 @@ except according to the terms contained in the LICENSE file.
 
     <backup-new v-bind="newBackup" @hide="newBackup.state = false"
       @success="afterCreate"/>
+    <backup-terminate v-bind="terminate" @hide="terminate.state = false"
+      @success="afterTerminate"/>
   </div>
 </template>
 
@@ -100,6 +103,7 @@ except according to the terms contained in the LICENSE file.
 import moment from 'moment';
 
 import BackupNew from './new.vue';
+import BackupTerminate from './terminate.vue';
 import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -133,14 +137,17 @@ const statusIs2xxOr404 = (status) =>
 
 export default {
   name: 'BackupList',
-  components: { BackupNew },
-  mixins: [alert(), modal('newBackup'), request()],
+  components: { BackupNew, BackupTerminate },
+  mixins: [alert(), modal(['newBackup', 'terminate']), request()],
   data() {
     return {
       alert: alert.blank(),
       requestId: null,
       backups: null,
       newBackup: {
+        state: false
+      },
+      terminate: {
         state: false
       }
     };
@@ -181,6 +188,10 @@ export default {
     afterCreate() {
       this.alert = alert.success('Success! Automatic backups are now configured.');
       this.fetchData();
+    },
+    afterTerminate() {
+      this.alert = alert.success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
+      this.backups = Backups.notConfigured();
     }
   }
 };
