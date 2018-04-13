@@ -171,10 +171,11 @@ export default {
       const headers = { 'Content-Type': 'application/xml' };
       this
         .post('/forms', this.xml, { headers })
-        .then(form => {
+        .then(({ data }) => {
           this.$emit('hide');
           // Wait for the modal to hide.
           this.$nextTick(() => {
+            const form = data;
             const name = form.name || form.xmlFormId;
             this.$alert = alert.success(`The form “${name}” was created successfully.`);
             this.$router.push(`/forms/${form.xmlFormId}/submissions`);

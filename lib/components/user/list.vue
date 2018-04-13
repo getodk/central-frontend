@@ -110,8 +110,8 @@ export default {
       this.users = null;
       this
         .get('/users')
-        .then(users => {
-          this.users = users;
+        .then(({ data }) => {
+          this.users = data;
         })
         .catch(() => {});
     },

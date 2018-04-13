@@ -80,7 +80,7 @@ export default {
       const headers = { Authorization: `Bearer ${session.token}` };
       return this
         .get('/users/current', { headers })
-        .then(user => ({ session, user }));
+        .then(({ data }) => ({ session, user: data }));
     },
     nextPath() {
       const { next } = this.$route.query;
@@ -101,7 +101,7 @@ export default {
       this.disabled = true;
       this
         .post('/sessions', { email: this.email, password: this.password })
-        .then(session => this.fetchUser(session))
+        .then(({ data }) => this.fetchUser(data))
         .then(({ session, user }) => logIn(session, user))
         .then(() => this.routeToNext())
         .catch(() => {
