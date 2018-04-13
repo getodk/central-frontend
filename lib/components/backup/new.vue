@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal ref="modal" :state="state" @hide="$emit('hide')" @shown="focusField"
-    backdrop :hideable="!awaitingResponse" @keydown="keydown">
+    backdrop :hideable="!awaitingResponse" @keydown="keydown" id="backup-new">
     <template slot="title">Set up Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>

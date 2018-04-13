@@ -14,13 +14,14 @@ import Vue from 'vue';
 import Spinner from '../lib/components/spinner.vue';
 import { mountAndMark } from './destroy';
 
-const REQUEST_METHODS = ['request', 'get', 'post', 'delete'];
-
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
-  const http = (...args) => respond(...args);
-  for (const method of REQUEST_METHODS)
-    http[method] = respond;
+  const http = (config) => respond(config);
+  http.request = http;
+  http.get = (url, config) => http({ ...config, method: 'get', url });
+  // eslint-disable-next-line object-curly-newline
+  http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
+  http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
     headers: {
       common: {}
@@ -29,37 +30,7 @@ export const setHttp = (respond) => {
   Vue.prototype.$http = http;
 };
 
-class SuccessfulResponse {
-  constructor(callback) {
-    this._callback = callback;
-  }
-
-  isSuccess() { return true; }
-
-  response() {
-    if (this._response != null) return this._response;
-    const callback = this._callback;
-    this._response = { data: callback() };
-    return this._response;
-  }
-}
-
-class ProblemResponse {
-  constructor(code, message) {
-    this._error = new Error();
-    this._error.response = {
-      data: {
-        code,
-        message
-      }
-    };
-  }
-
-  isSuccess() { return false; }
-  response() { return this._error; }
-}
-
-const SUCCESS_RESPONSE_CALLBACK = () => ({ success: true });
+const statusIs2xx = (status) => status >= 200 && status < 300;
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -189,6 +160,7 @@ class MockHttp {
     // State specific to the current series of request-response cycles
     this._mount = mount;
     this._request = request;
+    // Array of response callbacks
     this._responses = responses;
     this._beforeEachResponse = beforeEachResponse;
   }
@@ -231,20 +203,36 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(callback) {
-    return this._respond(new SuccessfulResponse(callback));
+  respondWithData(dataCallback) {
+    return this._respond(() => ({
+      status: 200,
+      data: dataCallback()
+    }));
   }
 
   respondWithSuccess() {
-    return this.respondWithData(SUCCESS_RESPONSE_CALLBACK);
+    return this.respondWithData(() => ({
+      status: 200,
+      data: {
+        success: true
+      }
+    }));
   }
 
   respondWithProblem(code = 500, message = 'There was a problem.') {
-    return this._respond(new ProblemResponse(code, message));
+    const error = new Error();
+    error.response = {
+      status: Math.floor(code),
+      data: {
+        code,
+        message
+      }
+    };
+    return this._respond(() => error);
   }
 
-  _respond(response) {
-    const responses = this._responses.concat(response);
+  _respond(callback) {
+    const responses = [...this._responses, callback];
     return new MockHttp(
       this._previousPromise,
       this._component,
@@ -341,7 +329,7 @@ class MockHttp {
   // turn.
   _http() {
     let responseIndex = 0;
-    return () => {
+    return ({ validateStatus = statusIs2xx }) => {
       if (responseIndex === this._responses.length - 1)
         this._responseWithoutRequest = false;
       else if (responseIndex === this._responses.length) {
@@ -349,16 +337,20 @@ class MockHttp {
         return Promise.reject(new Error());
       }
 
-      const response = this._responses[responseIndex];
+      const responseCallback = this._responses[responseIndex];
       responseIndex += 1;
       // Wait a tick after _request() or the previous response so that Vue is
       // updated before _beforeEachResponse() is called.
       return Vue.nextTick()
         .then(() => this._tryBeforeEachResponse())
         .then(() => new Promise((resolve, reject) => {
-          const settle = response.isSuccess() ? resolve : reject;
+          const result = responseCallback();
+          const response = result instanceof Error ? result.response : result;
           try {
-            settle(response.response());
+            if (validateStatus(response.status))
+              resolve(response);
+            else
+              reject(result);
           } catch (e) {
             // eslint-disable-next-line no-console
             console.log(`mockHttp(): a response threw an error:\n${e.stack}`);

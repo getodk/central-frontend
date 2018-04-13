@@ -79,11 +79,13 @@ except according to the terms contained in the LICENSE file.
           <td>
             <p>
               <button type="button" v-if="backups.status == 'notConfigured'"
-                class="btn btn-primary" @click="newBackup.state = true">
+                class="btn btn-primary" id="backup-list-new-button"
+                @click="newBackup.state = true">
                 <span class="icon-plus-circle"></span> Set up Now
               </button>
               <button type="button" v-else class="btn btn-primary"
-                :disabled="awaitingResponse" @click="terminate.state = true">
+                :disabled="awaitingResponse" id="backup-list-terminate-button"
+                @click="terminate.state = true">
                 <span class="icon-times-circle"></span> Reconfigure
               </button>
             </p>

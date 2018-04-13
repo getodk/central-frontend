@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import moment from 'moment';
+
 import faker from './faker';
 import { dataStore, resetDataStores } from './data-store';
 
@@ -104,7 +106,7 @@ const testData = Object.assign(
     updatedAt: false,
     factory: () => ({
       token: faker.app.token(),
-      expiresAt: faker.date.future()
+      expiresAt: faker.date.future().toISOString()
     })
   }),
 
@@ -219,6 +221,50 @@ const testData = Object.assign(
       validateDateOrder('submitter.createdAt', 'createdAt')
     ],
     sort: sortByUpdatedAtOrCreatedAtDesc
+  }),
+
+  dataStore({
+    name: 'backups',
+    id: false,
+    createdAt: false,
+    updatedAt: false,
+    factory: () => {
+      const latest = ({ success, loggedAt }) => {
+        const details = { success };
+        if (!success) {
+          const error = new Error('error');
+          Object.assign(details, { message: error.message, stack: error.stack });
+        }
+        return {
+          actorId: null,
+          action: 'backup',
+          acteeId: null,
+          details,
+          loggedAt
+        };
+      };
+      const failure = latest({
+        success: false,
+        loggedAt: faker.date.past().toISOString()
+      });
+      const longAgoSuccess = latest({
+        success: true,
+        loggedAt: faker.date.between(
+          moment().subtract(1, 'year').toISOString(),
+          moment().subtract(4, 'days').toISOString()
+        )
+      });
+      const recentSuccess = latest({
+        success: true,
+        loggedAt: faker.date.pastSince(moment().subtract(2, 'days').toISOString())
+      });
+      return {
+        config: {
+          type: 'google'
+        },
+        latest: faker.random.arrayElement([null, failure, longAgoSuccess, recentSuccess])
+      };
+    }
   })
 );
 

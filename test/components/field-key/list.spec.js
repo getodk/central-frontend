@@ -27,7 +27,7 @@ describe('FieldKeyList', () => {
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users/field-keys')
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponses(app => {
+        .afterResponse(app => {
           app.vm.$route.path.should.equal('/users/field-keys');
         }));
   });

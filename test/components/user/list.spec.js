@@ -24,7 +24,7 @@ describe('UserList', () => {
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users')
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => app.vm.$route.path.should.equal('/users')));
+        .afterResponse(app => app.vm.$route.path.should.equal('/users')));
   });
 
   it('success message is shown after login', () =>
