@@ -51,21 +51,21 @@ body {
 }
 
 .text-success {
-  color: $color-feedback-success-foreground;
+  color: $color-success;
 
   a {
     &:hover, &:focus {
-      color: darken($color-feedback-success-foreground, 10%);
+      color: $color-success-dark;
     }
   }
 }
 
 .text-danger {
-  color: $color-feedback-danger-foreground;
+  color: $color-danger;
 
   a {
     &:hover, &:focus {
-      color: darken($color-feedback-danger-foreground, 10%);
+      color: $color-danger-dark;
     }
   }
 }
@@ -122,13 +122,13 @@ body {
 }
 
 .btn-danger {
-  background-color: $color-action-danger-background;
+  background-color: $color-danger;
 
   &:hover, &:focus {
-    background-color: $color-action-danger-background-hover;
+    background-color: $color-danger-dark;
 
     &[disabled] {
-      background-color: $color-action-danger-background;
+      background-color: $color-danger;
     }
   }
 }

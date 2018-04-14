@@ -69,14 +69,14 @@ export default {
   border-radius: 0;
 
   &.alert-danger {
-    background-color: $color-feedback-danger-background;
-    border-top-color: $color-feedback-danger-foreground;
-    color: $color-feedback-danger-foreground;
+    background-color: $color-danger-light;
+    border-top-color: $color-danger;
+    color: $color-danger;
   }
   &.alert-success {
-    background-color: $color-feedback-success-background;
-    border-top-color: $color-feedback-success-foreground;
-    color: $color-feedback-success-foreground;
+    background-color: $color-success-light;
+    border-top-color: $color-success;
+    color: $color-success;
   }
 }
 </style>

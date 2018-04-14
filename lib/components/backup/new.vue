@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" @hide="$emit('hide')" @shown="focusField"
-    backdrop :hideable="!awaitingResponse" @keydown="keydown" id="backup-new">
+  <modal ref="modal" :state="state" @hide="cancel" @shown="focusPassphraseInput"
+    backdrop :hideable="!awaitingResponse" id="backup-new">
     <template slot="title">Set up Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -132,7 +132,7 @@ export default {
         ? problem.message
         : `${problem.message} Please try again, and go to the community forum if the problem continues.`;
     },
-    focusField() {
+    focusPassphraseInput() {
       this.$refs.passphrase.focus();
     },
     initiate() {
@@ -144,8 +144,6 @@ export default {
           this.step += 1;
           this.googleUrl = data.url;
           this.authToken = data.token;
-          // Focus the modal so that pressing the enter key triggers an event on
-          // the modal.
           this.$refs.modal.$el.focus();
         })
         .catch(() => {});
@@ -176,10 +174,6 @@ export default {
       this.openGoogle();
       this.step += 1;
       this.$nextTick(() => this.$refs.confirmationText.focus());
-    },
-    keydown(event) {
-      if (this.step === 2 && event.key === 'Enter')
-        this.moveToStep3();
     },
     verify() {
       const data = { code: this.confirmationText };

@@ -75,8 +75,8 @@ $spinner-width: 3px;
     }
 
     .btn-danger & {
-      box-shadow: 0 0 20px 10px $color-action-danger-background,
-                  0 0 6px 3px $color-action-danger-background inset;
+      box-shadow: 0 0 20px 10px $color-danger,
+                  0 0 6px 3px $color-danger inset;
     }
   }
 
@@ -98,8 +98,8 @@ $spinner-width: 3px;
     }
 
     .btn-danger & {
-      border-right-color: $color-action-danger-background;
-      border-top-color: $color-action-danger-background;
+      border-right-color: $color-danger;
+      border-top-color: $color-danger;
     }
   }
 }

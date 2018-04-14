@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
     <loading v-if="backups == null" :state="awaitingResponse"/>
-    <table v-else id="backup-list-status-table" class="table">
+    <table v-else class="table">
       <thead>
         <tr>
           <th colspan="3">Current Status</th>
@@ -21,8 +21,10 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody>
         <tr>
-          <td><p><span :class="iconClasses"></span></p></td>
-          <td>
+          <td id="backup-list-status-icon-container">
+            <p><span :class="iconClasses"></span></p>
+          </td>
+          <td id="backup-list-status-message">
             <template v-if="backups.status === 'notConfigured'">
               <p>Backups are not configured.</p>
               <p>
@@ -44,8 +46,8 @@ except according to the terms contained in the LICENSE file.
             <template v-else-if="backups.status === 'neverRun'">
               <p>The configured backup has not yet run.</p>
               <p>
-                If you have configured backups within the last three days, this
-                is normal. Otherwise, something has gone wrong.
+                If you have configured backups within the last couple of days,
+                this is normal. Otherwise, something has gone wrong.
               </p>
               <p>
                 In that case, the most likely fixes are to
@@ -76,7 +78,7 @@ except according to the terms contained in the LICENSE file.
               </p>
             </template>
           </td>
-          <td>
+          <td id="backup-list-button-container">
             <p>
               <button type="button" v-if="backups.status == 'notConfigured'"
                 class="btn btn-primary" id="backup-list-new-button"
@@ -84,9 +86,9 @@ except according to the terms contained in the LICENSE file.
                 <span class="icon-plus-circle"></span> Set up Now
               </button>
               <button type="button" v-else class="btn btn-primary"
-                :disabled="awaitingResponse" id="backup-list-terminate-button"
+                id="backup-list-terminate-button"
                 @click="terminate.state = true">
-                <span class="icon-times-circle"></span> Reconfigure
+                <span class="icon-times-circle"></span> Terminate
               </button>
             </p>
           </td>
@@ -120,6 +122,12 @@ class Backups {
 
   static notConfigured() { return new Backups({}); }
 
+  static fromResponse(response) {
+    return response.status !== 404
+      ? new Backups(response.data)
+      : Backups.notConfigured();
+  }
+
   get config() { return this._config; }
   get latest() { return this._latest; }
 
@@ -134,7 +142,7 @@ class Backups {
   }
 }
 
-const statusIs2xxOr404 = (status) =>
+const validateBackupsResponseStatus = (status) =>
   (status >= 200 && status < 300) || status === 404;
 
 export default {
@@ -179,11 +187,9 @@ export default {
     fetchData() {
       this.backups = null;
       this
-        .get('/config/backups', { validateStatus: statusIs2xxOr404 })
+        .get('/config/backups', { validateStatus: validateBackupsResponseStatus })
         .then(response => {
-          this.backups = response.status !== 404
-            ? new Backups(response.data)
-            : Backups.notConfigured();
+          this.backups = Backups.fromResponse(response);
         })
         .catch(() => {});
     },
@@ -202,38 +208,38 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#backup-list-status-table {
-  td {
-    padding-top: 10px;
+#backup-list-status-icon-container,
+#backup-list-status-message,
+#backup-list-button-container {
+  padding-top: 10px;
+}
 
-    &:nth-child(1) {
-      padding-right: 5px;
-      width: 41px;
+#backup-list-status-icon-container {
+  padding-right: 5px;
+  width: 41px;
 
-      p {
-        font-size: 32px;
+  p {
+    font-size: 32px;
 
-        [class^="icon-"] {
-          vertical-align: 1px;
-        }
-      }
-    }
-
-    &:nth-child(2), &:nth-child(3) {
-      p:first-child {
-        font-size: 28px;
-      }
-    }
-
-    &:nth-child(2) {
-      p {
-        max-width: 585px;
-      }
-    }
-
-    &:nth-child(3) {
-      width: 113px;
+    [class^="icon-"] {
+      vertical-align: 1px;
     }
   }
+}
+
+#backup-list-status-message, #backup-list-button-container {
+  p:first-child {
+    font-size: 28px;
+  }
+}
+
+#backup-list-status-message {
+  p {
+    max-width: 585px;
+  }
+}
+
+#backup-list-button-container {
+  width: 113px;
 }
 </style>

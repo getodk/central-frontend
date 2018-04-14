@@ -11,25 +11,25 @@ except according to the terms contained in the LICENSE file.
 */
 
 // Core
+$color-text: #333;
 $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
 $color-page-background: #f7f7f7;
-$color-text: #333;
+
+// Contextual colors
+$color-success: #0d840f;
+$color-success-light: #ddf1d5;
+$color-success-dark: darken($color-success, 10%);
+$color-danger: #d42c2c;
+$color-danger-light: #ffe6e6;
+$color-danger-dark: darken($color-danger, 10%);
 
 // Buttons and inputs
 $color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
-$color-action-danger-background: #d9534f;
-$color-action-danger-background-hover: darken($color-action-danger-background, 10%);
 $color-input-inactive: #666;
 $color-input-background: #f7f7f7;
-
-// Feedback to the user (for example, alerts)
-$color-feedback-success-foreground: #0d840f;
-$color-feedback-success-background: #ddf1d5;
-$color-feedback-danger-foreground: #de0500;
-$color-feedback-danger-background: #ffe6e6;
 
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;

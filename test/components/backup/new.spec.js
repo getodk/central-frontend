@@ -52,7 +52,7 @@ const next3 = (wrapper) =>
   fillForm(wrapper, [['#backup-new input', faker.random.alphaNumeric(57)]])
     .then(() => trigger.submit(wrapper.first('#backup-new form')))
     .then(() => wrapper);
-const completeSetup = (component) => moveToStep3(component)
+const completeSetup = () => moveToStep3(BackupList)
   .request(next3)
   .respondWithSuccess()
   .respondWithData(() => testData.backups.createPast(1).last());
@@ -103,15 +103,16 @@ describe('BackupNew', () => {
 
   describe('after successful setup', () => {
     it('modal is hidden', () =>
-      completeSetup(BackupList).then(page => {
+      completeSetup().then(page => {
         page.first(BackupNew).getProp('state').should.be.false();
       }));
 
     it('backup status is updated', () =>
-      completeSetup(BackupList)
-        .then(page => page.data().backups.config.should.be.ok()));
+      completeSetup().then(page => {
+        page.data().backups.status.should.not.equal('notConfigured');
+      }));
 
     it('success message is shown', () =>
-      completeSetup(BackupList).then(page => page.should.alert('success')));
+      completeSetup().then(page => page.should.alert('success')));
   });
 });

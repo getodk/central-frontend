@@ -40,17 +40,24 @@ describe('BackupList', () => {
     beforeEach(mockLogin);
 
     describe('content', () => {
+      const assertContent = (iconClass, summaryText, buttonText) => (page) => {
+        const icon = page.first('#backup-list-status-icon-container span');
+        const messageSummary = page.first('#backup-list-status-message p');
+        const button = page.first('#backup-list-button-container button');
+        icon.hasClass(iconClass).should.be.true();
+        messageSummary.text().trim().should.equal(summaryText);
+        button.text().trim().should.equal(buttonText);
+      };
+
       it('is not configured', () =>
         mockHttp()
           .mount(BackupList)
           .respondWithProblem(404.1)
-          .afterResponse(page => {
-            const td = page.find('#backup-list-status-table tbody td');
-            td.length.should.equal(3);
-            td[0].first('span').hasClass('icon-question-circle').should.be.true();
-            td[1].first('p').text().trim().should.equal('Backups are not configured.');
-            td[2].first('button').text().trim().should.equal('Set up Now');
-          }));
+          .afterResponse(assertContent(
+            'icon-question-circle',
+            'Backups are not configured.',
+            'Set up Now'
+          )));
 
       it('has never run', () =>
         mockHttp()
@@ -59,13 +66,11 @@ describe('BackupList', () => {
             const constraint = (backups) => backups.latest == null;
             return testData.backups.createNew({ constraints: [constraint] });
           })
-          .afterResponse(page => {
-            const td = page.find('#backup-list-status-table tbody td');
-            td.length.should.equal(3);
-            td[0].first('span').hasClass('icon-question-circle').should.be.true();
-            td[1].first('p').text().trim().should.equal('The configured backup has not yet run.');
-            td[2].first('button').text().trim().should.equal('Reconfigure');
-          }));
+          .afterResponse(assertContent(
+            'icon-question-circle',
+            'The configured backup has not yet run.',
+            'Terminate'
+          )));
 
       it('failed', () =>
         mockHttp()
@@ -75,13 +80,11 @@ describe('BackupList', () => {
               backups.latest != null && !backups.latest.details.success;
             return testData.backups.createNew({ constraints: [constraint] });
           })
-          .afterResponse(page => {
-            const td = page.find('#backup-list-status-table tbody td');
-            td.length.should.equal(3);
-            td[0].first('span').hasClass('icon-times-circle').should.be.true();
-            td[1].first('p').text().trim().should.equal('Something is wrong!');
-            td[2].first('button').text().trim().should.equal('Reconfigure');
-          }));
+          .afterResponse(assertContent(
+            'icon-times-circle',
+            'Something is wrong!',
+            'Terminate'
+          )));
 
       it('succeeded more than three days ago', () =>
         mockHttp()
@@ -95,13 +98,11 @@ describe('BackupList', () => {
             };
             return testData.backups.createNew({ constraints: [constraint] });
           })
-          .afterResponse(page => {
-            const td = page.find('#backup-list-status-table tbody td');
-            td.length.should.equal(3);
-            td[0].first('span').hasClass('icon-times-circle').should.be.true();
-            td[1].first('p').text().trim().should.equal('Something is wrong!');
-            td[2].first('button').text().trim().should.equal('Reconfigure');
-          }));
+          .afterResponse(assertContent(
+            'icon-times-circle',
+            'Something is wrong!',
+            'Terminate'
+          )));
 
       it('succeeded in the last three days', () =>
         mockHttp()
@@ -115,13 +116,11 @@ describe('BackupList', () => {
             };
             return testData.backups.createNew({ constraints: [constraint] });
           })
-          .afterResponse(page => {
-            const td = page.find('#backup-list-status-table tbody td');
-            td.length.should.equal(3);
-            td[0].first('span').hasClass('icon-check-circle').should.be.true();
-            td[1].first('p').text().trim().should.equal('Backup is working.');
-            td[2].first('button').text().trim().should.equal('Reconfigure');
-          }));
+          .afterResponse(assertContent(
+            'icon-check-circle',
+            'Backup is working.',
+            'Terminate'
+          )));
     });
   });
 });
