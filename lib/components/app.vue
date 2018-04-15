@@ -46,12 +46,34 @@ body {
   min-height: 100vh;
 }
 
+.no-text-decoration {
+  &, &:hover, &:focus, &.focus {
+    text-decoration: none;
+  }
+}
+
+@media print {
+  a.no-text-decoration:visited {
+    text-decoration: none;
+  }
+}
+
+.underline-on-hover-or-focus {
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
+
+  @media print {
+    text-decoration: underline;
+  }
+}
+
 .table > thead {
   background-color: #ddd;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-  vertical-align: middle;
+  vertical-align: -1px;
 }
 
 .btn {
@@ -65,8 +87,13 @@ body {
 
 .btn-primary {
   background-color: $color-action-background;
+
   &:hover, &:focus {
     background-color: $color-action-background-hover;
+
+    &[disabled] {
+      background-color: $color-action-background;
+    }
   }
 }
 

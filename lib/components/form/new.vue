@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" @hide="hide" backdrop>
+  <modal ref="modal" :state="state" @hide="hide" backdrop
+    :hideable="!awaitingResponse">
     <template slot="title">Create Form</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -27,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <input type="file" ref="input" class="hidden">
           <button type="button" class="btn btn-primary" :disabled="!droppable"
             @click="clickFileButton">
-            choose one
+            <span class="icon-folder-open"></span> choose one
           </button>
           to upload.
         </div>
@@ -38,7 +39,8 @@ except according to the terms contained in the LICENSE file.
           class="btn btn-primary" :disabled="awaitingResponse" @click="create">
           Create <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" @click="hide">
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+          @click="hide">
           Close
         </button>
       </div>
@@ -91,15 +93,15 @@ export default {
   },
   mounted() {
     $(this.$refs.input)
-      .on('change.app', (event) => this.readFile(event.target.files));
+      .on('change.app-form-new', (event) => this.readFile(event.target.files));
     $(this.$refs.dropZone)
-      .on('dragover.app', this.dragover)
-      .on('dragleave.app', this.dragleave)
-      .on('drop.app', this.drop);
+      .on('dragover.app-form-new', this.dragover)
+      .on('dragleave.app-form-new', this.dragleave)
+      .on('drop.app-form-new', this.drop);
   },
   beforeDestroy() {
-    $(this.$refs.input).off('.app');
-    $(this.$refs.dropZone).off('.app');
+    $(this.$refs.input).off('.app-form-new');
+    $(this.$refs.dropZone).off('.app-form-new');
   },
   methods: {
     hide() {

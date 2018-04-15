@@ -14,21 +14,20 @@ import FieldKeyNew from '../../../lib/components/field-key/new.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
 import { fillForm, mockRoute, trigger } from '../../util';
-import { logOut, mockLogin } from '../../session';
+import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
   trigger.click(wrapper.first('#field-key-list-new-button'))
     .then(() => wrapper);
 const submitForm = (wrapper) => {
   const nickname = testData.extendedFieldKeys.createNew().displayName;
-  fillForm(wrapper, [['#field-key-new input', nickname]])
+  return fillForm(wrapper, [['#field-key-new input', nickname]])
     .then(() => trigger.submit(wrapper.first('#field-key-new form')))
     .then(() => wrapper);
 };
 
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
-  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>

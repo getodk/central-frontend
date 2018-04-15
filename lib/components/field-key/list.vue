@@ -39,7 +39,10 @@ except according to the terms contained in the LICENSE file.
           <td>{{ fieldKey.created }}</td>
           <td>{{ fieldKey.lastUsed }}</td>
           <td>
-            <a class="field-key-list-popover-link" role="button">See code</a>
+            <a class="field-key-list-popover-link no-text-decoration" role="button">
+              <span class="icon-qrcode"></span>
+              <span class="underline-on-hover-or-focus">See code</span>
+            </a>
           </td>
         </tr>
       </tbody>
@@ -148,18 +151,12 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted() {
-    $('body').click(this.toggleFieldKeyListPopovers);
+  activated() {
+    $('body').on('click.app-field-key-list', this.togglePopovers);
   },
-  // Because of the use of <keep-alive> in UserHome, the route can be left
-  // without the component being destroyed.
-  beforeRouteLeave(to, from, next) {
+  deactivated() {
     this.hidePopover();
-    next();
-  },
-  beforeDestroy() {
-    this.hidePopover();
-    $('body').off('click', this.toggleFieldKeyListPopovers);
+    $('body').off('click.app-field-key-list', this.togglePopovers);
   },
   methods: {
     fetchData() {
@@ -204,22 +201,21 @@ export default {
     popoverContainsElement(element) {
       if (this.popoverLink == null) return false;
       const popover = $('#field-key-list-popover-content').closest('.popover');
-      return element[0] === popover[0] || $.contains(popover[0], element[0]);
+      return element === popover[0] || $.contains(popover[0], element);
     },
-    // This method's name should be unique, because jQuery off() uses the name
-    // of the function passed to it.
-    toggleFieldKeyListPopovers(event) {
-      const target = $(event.target);
-      if (target.hasClass('field-key-list-popover-link')) {
+    togglePopovers(event) {
+      const popoverLink = $(event.target).closest('.field-key-list-popover-link');
+      if (popoverLink.length !== 0) {
         // true if the user clicked on the link whose popover is currently shown
         // and false if not.
         const samePopover = this.popoverLink != null &&
-          event.target === this.popoverLink[0];
+          popoverLink[0] === this.popoverLink[0];
         if (!samePopover) {
           this.hidePopover();
-          this.showPopover(target);
+          this.showPopover(popoverLink);
         }
-      } else if (this.popoverLink != null && !this.popoverContainsElement(target)) {
+      } else if (this.popoverLink != null &&
+        !this.popoverContainsElement(event.target)) {
         this.hidePopover();
       }
     },

@@ -13,7 +13,7 @@ import FormNew from '../../../lib/components/form/new.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
 import { mountAndMark } from '../../destroy';
-import { logOut, mockLogin } from '../../session';
+import { mockLogin } from '../../session';
 import { mockRoute, trigger } from '../../util';
 
 const XML_FILENAME = 'test.xml';
@@ -64,7 +64,6 @@ const FILE_SELECTION_METHODS = [
 
 describe('FormNew', () => {
   beforeEach(mockLogin);
-  afterEach(logOut);
 
   describe('modal', () => {
     it('is initially hidden', () =>

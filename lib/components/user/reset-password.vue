@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')">
+  <modal :state="state" @hide="$emit('hide')" :hideable="!awaitingResponse">
     <template slot="title">Reset Password</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -25,7 +25,8 @@ except according to the terms contained in the LICENSE file.
           @click="resetPassword">
           Reset Password <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" @click="$emit('hide')">
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+          @click="$emit('hide')">
           Close
         </button>
       </div>
@@ -63,6 +64,7 @@ export default {
         .post('/users/reset/initiate?invalidate=true', data)
         .then(() => {
           this.$emit('hide');
+          this.alert = alert.blank();
           this.$emit('success');
         })
         .catch(() => {});

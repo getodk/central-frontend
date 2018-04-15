@@ -16,9 +16,7 @@ import mockHttp from './http';
 import routerFactory from '../lib/router';
 import testData from './data';
 import { fillForm, trigger } from './util';
-import { logIn, logOut } from '../lib/session';
-
-export { logOut };
+import { logIn } from '../lib/session';
 
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
@@ -46,7 +44,11 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
     .mount(App, fullMountOptions)
     .request(app => {
       app.vm.$router.push(location);
-      Vue.nextTick().then(() => submitLoginForm(app));
+      return Vue.nextTick().then(() => {
+        if (app.vm.$route.path !== '/login')
+          throw new Error('user was not routed to login');
+        return submitLoginForm(app);
+      });
     })
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.administrators.first());

@@ -15,7 +15,7 @@ import { inflate } from 'pako/lib/inflate';
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import mockHttp from '../../http';
 import testData from '../../data';
-import { logOut, mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute, trigger } from '../../util';
 
 describe('FieldKeyList', () => {
@@ -37,12 +37,10 @@ describe('FieldKeyList', () => {
       .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponse(app => {
         app.should.alert('success');
-      })
-      .finally(logOut));
+      }));
 
   describe('after login', () => {
     beforeEach(mockLogin);
-    afterEach(logOut);
 
     it('field keys tab is active', () =>
       mockRoute('/users/field-keys')

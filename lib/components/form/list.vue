@@ -45,6 +45,7 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="`/forms/${form.xmlFormId}/submissions`"
                   class="form-list-form-name">
                   {{ form.name || form.xmlFormId }}
+                  <span class="icon-angle-right"></span>
                 </router-link>
               </div>
               <div v-if="form.name != null" class="form-list-form-id">
@@ -124,6 +125,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 #form-list-table {
   tbody td {
     vertical-align: middle;
@@ -132,6 +135,13 @@ export default {
       color: unset;
       font-size: 30px;
       text-decoration: unset;
+
+      .icon-angle-right {
+        color: $color-accent-primary;
+        font-size: 20px;
+        margin-left: 3px;
+        vertical-align: 2px;
+      }
     }
 
     .form-list-form-id {

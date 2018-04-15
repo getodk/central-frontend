@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
       <button type="button" ref="downloadButton"
         id="form-submissions-download-button" class="btn btn-primary"
         @click="download">
-        {{ downloadButtonText }}
+        <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
       </button>
     </float-row>
     <table class="table table-hover">
