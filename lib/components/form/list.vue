@@ -125,6 +125,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 #form-list-table {
   tbody td {
     vertical-align: middle;
@@ -135,9 +137,10 @@ export default {
       text-decoration: unset;
 
       .icon-angle-right {
+        color: $color-accent-primary;
         font-size: 20px;
-        vertical-align: 2px;
         margin-left: 3px;
+        vertical-align: 2px;
       }
     }
 
