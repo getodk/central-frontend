@@ -62,11 +62,11 @@ export default {
     submit() {
       this
         .post('/field-keys', { displayName: this.nickname })
-        .then(fieldKey => {
+        .then(({ data }) => {
           this.$emit('hide');
           this.alert = alert.blank();
           this.nickname = '';
-          this.$emit('success', fieldKey);
+          this.$emit('success', data);
         })
         .catch(() => {});
     }

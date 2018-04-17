@@ -22,8 +22,8 @@ import './assertions';
 
 Vue.prototype.$logger = new MockLogger();
 
-setHttp((...args) => {
-  console.log('unhandled request', args); // eslint-disable-line no-console
+setHttp(config => {
+  console.log('unhandled request', config); // eslint-disable-line no-console
   return Promise.reject(new Error());
 });
 

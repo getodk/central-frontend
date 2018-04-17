@@ -10,19 +10,30 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+// Core
 $color-text: #333;
-$color-page-background: #f7f7f7;
 $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
+$color-page-background: #f7f7f7;
+
+// Contextual colors
+$color-success: #0d840f;
+$color-success-light: #ddf1d5;
+$color-success-dark: darken($color-success, 10%);
+$color-danger: #d42c2c;
+$color-danger-light: #ffe6e6;
+$color-danger-dark: darken($color-danger, 10%);
+
+// Buttons and inputs
+$color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
-$color-action-foreground: #0c7bd1;
-$color-action-inactive: #666;
+$color-input-inactive: #666;
 $color-input-background: #f7f7f7;
+
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;
 $color-subpanel-border: #e6e6e6;
 $color-subpanel-border-strong: #c3c3c3;
 $color-table-heading-background: #ddd;
 $color-table-heading-border: #bbb;
-

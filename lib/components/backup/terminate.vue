@@ -1,0 +1,77 @@
+<!--
+Copyright 2017 Super Adventure Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/nafundi/super-adventure/blob/master/NOTICE.
+
+This file is part of Super Adventure. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal :state="state" @hide="$emit('hide')" backdrop
+    :hideable="!awaitingResponse" id="backup-terminate">
+    <template slot="title">Terminate Automatic Backups</template>
+    <template slot="body">
+      <alert v-bind="alert" @close="alert.state = false"/>
+      <div class="modal-introduction">
+        <p>Are you sure you want to terminate your automatic backups?</p>
+        <p>
+          You will have to reconfigure them again from scratch to start them
+          again, and this action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="terminate">
+          Yes, proceed <spinner :state="awaitingResponse"/>
+        </button>
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+          @click="$emit('hide')">
+          No, cancel
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script>
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
+
+export default {
+  name: 'BackupTerminate',
+  mixins: [alert(), request()],
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      alert: alert.blank(),
+      requestId: null
+    };
+  },
+  methods: {
+    terminate() {
+      this
+        .delete('/config/backups')
+        .then(() => {
+          this.$emit('hide');
+          this.alert = alert.blank();
+          this.$emit('success');
+        })
+        .catch(() => {});
+    }
+  }
+};
+</script>
+
+<style lang="sass">
+#backup-terminate .modal-introduction {
+  padding-bottom: 0;
+}
+</style>

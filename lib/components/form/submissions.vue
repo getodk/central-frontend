@@ -95,8 +95,8 @@ export default {
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get(`/forms/${this.form.xmlFormId}/submissions`, { headers })
-        .then(submissions => {
-          this.submissions = submissions;
+        .then(({ data }) => {
+          this.submissions = data;
         })
         .catch(() => {});
     },
@@ -104,11 +104,11 @@ export default {
       const path = `/forms/${this.form.xmlFormId}/submissions.csv.zip`;
       this
         .get(path, { responseType: 'blob' })
-        .then(blob => {
+        .then(({ data }) => {
           // Revoke the previous URL.
           if (this.downloadHref !== '#')
             window.URL.revokeObjectURL(this.downloadHref);
-          this.downloadHref = window.URL.createObjectURL(blob);
+          this.downloadHref = window.URL.createObjectURL(data);
           this.$nextTick(() => {
             this.$refs.downloadLink.click();
             this.$refs.downloadButton.blur();

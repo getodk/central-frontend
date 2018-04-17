@@ -46,6 +46,30 @@ body {
   min-height: 100vh;
 }
 
+.text-muted {
+  color: #999;
+}
+
+.text-success {
+  color: $color-success;
+
+  a {
+    &:hover, &:focus {
+      color: $color-success-dark;
+    }
+  }
+}
+
+.text-danger {
+  color: $color-danger;
+
+  a {
+    &:hover, &:focus {
+      color: $color-danger-dark;
+    }
+  }
+}
+
 .no-text-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
@@ -97,6 +121,18 @@ body {
   }
 }
 
+.btn-danger {
+  background-color: $color-danger;
+
+  &:hover, &:focus {
+    background-color: $color-danger-dark;
+
+    &[disabled] {
+      background-color: $color-danger;
+    }
+  }
+}
+
 .btn-link {
   color: $color-action-foreground;
 }
@@ -109,7 +145,7 @@ body {
   input {
     background: $color-input-background;
     border: none;
-    border-bottom: 1px solid $color-action-inactive;
+    border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
     box-shadow: none;
     position: relative;
@@ -129,12 +165,12 @@ body {
     }
 
     &:placeholder-shown + .form-label {
-      transform: translateY(-12px);
+      transform: translateY(-13px);
     }
   }
 
   .form-label {
-    color: $color-action-inactive;
+    color: $color-input-inactive;
     display: block;
     font-size: 11px;
     height: 0;

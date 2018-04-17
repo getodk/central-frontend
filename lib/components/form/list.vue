@@ -102,8 +102,8 @@ export default {
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get('/forms', { headers })
-        .then(forms => {
-          this.forms = forms;
+        .then(({ data }) => {
+          this.forms = data;
         })
         .catch(() => {});
     },

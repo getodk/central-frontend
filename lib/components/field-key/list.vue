@@ -165,8 +165,8 @@ export default {
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get('/field-keys', { headers })
-        .then(fieldKeys => {
-          this.fieldKeys = fieldKeys.map(fieldKey => new FieldKeyPresenter(fieldKey));
+        .then(({ data }) => {
+          this.fieldKeys = data.map(fieldKey => new FieldKeyPresenter(fieldKey));
         })
         .catch(() => {});
     },

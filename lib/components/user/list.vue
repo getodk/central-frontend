@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <float-row>
       <button type="button" id="user-list-new-button" class="btn btn-primary"
         @click="newUser.state = true">
-      <span class="icon-plus-circle"></span> Create Staff User
+        <span class="icon-plus-circle"></span> Create Staff User
       </button>
     </float-row>
     <loading :state="awaitingResponse"/>
@@ -110,8 +110,8 @@ export default {
       this.users = null;
       this
         .get('/users')
-        .then(users => {
-          this.users = users;
+        .then(({ data }) => {
+          this.users = data;
         })
         .catch(() => {});
     },

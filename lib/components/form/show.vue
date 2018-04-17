@@ -72,8 +72,8 @@ export default {
       this.form = null;
       this
         .get(`/forms/${this.xmlFormId}`)
-        .then(form => {
-          this.form = form;
+        .then(({ data }) => {
+          this.form = data;
         })
         .catch(() => {});
     },

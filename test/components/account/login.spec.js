@@ -62,7 +62,7 @@ describe('AccountLogin', () => {
     it("navbar shows the user's display name", () =>
       mockRouteThroughLogin('/users')
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => {
+        .afterResponse(app => {
           const link = app.first('.navbar-right > li > a');
           link.text().trim().should.equal(testData.administrators.first().email);
         }));
@@ -75,7 +75,7 @@ describe('AccountLogin', () => {
       // Bootstrap's dropdown listeners are on the document.
       beforeEach(() => mockRouteThroughLogin('/users', { attachToDocument: true })
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(component => {
+        .afterResponse(component => {
           app = component;
           dropdown = app.first('.navbar-right .dropdown');
           // Have the event bubble so that it triggers Bootstrap's dropdown

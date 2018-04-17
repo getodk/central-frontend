@@ -68,11 +68,11 @@ export default {
     submit() {
       this
         .post('/users', { email: this.email })
-        .then(user => {
+        .then(({ data }) => {
           this.$emit('hide');
           this.alert = alert.blank();
           this.email = '';
-          this.$emit('success', user);
+          this.$emit('success', data);
         })
         .catch(() => {});
     }

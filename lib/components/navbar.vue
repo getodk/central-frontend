@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         <ul class="nav navbar-nav">
           <li v-for="(link, index) in links" :key="index"
             :class="{ active: link.active }">
-            <router-link :to="link.to">
+            <router-link :to="link.to" :id="link.id">
               {{ link.text }}
               <span v-show="link.active" class="sr-only">(current)</span>
             </router-link>
@@ -66,10 +66,11 @@ import { logRequestError } from '../util';
 const DEFAULT_ACTIVE_PATH = '/forms';
 
 class Link {
-  constructor(component, text, to) {
+  constructor(component, text, to, id) {
     this.component = component;
     this.text = text;
     this.to = to;
+    this.id = id;
   }
 
   _activePath() {
@@ -96,8 +97,9 @@ export default {
   data() {
     return {
       links: [
-        new Link(this, 'Forms', '/forms'),
-        new Link(this, 'Users', '/users')
+        new Link(this, 'Forms', '/forms', 'navbar-forms-link'),
+        new Link(this, 'Users', '/users', 'navbar-users-link'),
+        new Link(this, 'System', '/system/backups', 'navbar-system-link')
       ],
       loggedIn: false,
       email: ''
@@ -182,10 +184,6 @@ $shadow-color: #dedede;
     }
 
     .navbar-nav {
-      li:first-child a {
-        margin-left: 30px;
-      }
-
       > li > a {
         border-top: transparent solid $border-height;
         margin-right: 10px;
@@ -205,6 +203,10 @@ $shadow-color: #dedede;
           border-top-color: #fff;
           color: #fff;
         }
+      }
+
+      #navbar-forms-link, #navbar-users-link {
+        margin-left: 30px;
       }
 
       &.navbar-right > li > a {
