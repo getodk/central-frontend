@@ -93,7 +93,7 @@ class FieldKeyPresenter {
 
   get lastUsed() { return formatDate(this._fieldKey.lastUsed); }
 
-  get url() {
+  get serverUrl() {
     return `${window.location.origin}/api/v1/key/${this._fieldKey.token}`;
   }
 
@@ -102,7 +102,7 @@ class FieldKeyPresenter {
     const code = qrcode(QR_CODE_TYPE_NUMBER, QR_CODE_ERROR_CORRECTION_LEVEL);
     // Collect requires the JSON to have 'general' and 'admin' keys, even if the
     // associated values are empty objects.
-    const settings = { general: { server_url: this.url }, admin: {} };
+    const settings = { general: { server_url: this.serverUrl }, admin: {} };
     const deflated = deflate(JSON.stringify(settings), { to: 'string' });
     code.addData(btoa(deflated));
     code.make();
@@ -195,10 +195,10 @@ export default {
       this.popoverLink.popover('hide');
       this.popoverLink = null;
     },
-    popoverContainsElement(element) {
-      if (this.popoverLink == null) return false;
+    elementIsOutsidePopover(element) {
+      if (this.popoverLink == null) return true;
       const popover = $('#field-key-list-popover-content').closest('.popover');
-      return element === popover[0] || $.contains(popover[0], element);
+      return !(element === popover[0] || $.contains(popover[0], element));
     },
     togglePopovers(event) {
       const popoverLink = $(event.target).closest('.field-key-list-popover-link');
@@ -212,7 +212,7 @@ export default {
           this.showPopover(popoverLink);
         }
       } else if (this.popoverLink != null &&
-        !this.popoverContainsElement(event.target)) {
+        this.elementIsOutsidePopover(event.target)) {
         this.hidePopover();
       }
     },
