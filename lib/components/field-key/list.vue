@@ -55,7 +55,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Vue from 'vue';
-import moment from 'moment';
 import qrcode from 'qrcode-generator';
 import { deflate } from 'pako/lib/deflate';
 
@@ -64,6 +63,7 @@ import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import { formatDate } from '../../util';
 
 const QR_CODE_TYPE_NUMBER = 0;
 // This is the level used in Collect.
@@ -86,15 +86,12 @@ class FieldKeyPresenter {
   }
 
   get created() {
-    const createdAt = moment(this._fieldKey.createdAt).fromNow();
+    const createdAt = formatDate(this._fieldKey.createdAt);
     const createdBy = this._fieldKey.createdBy.displayName;
     return `${createdAt} by ${createdBy}`;
   }
 
-  get lastUsed() {
-    const { lastUsed } = this._fieldKey;
-    return lastUsed != null ? moment(lastUsed).fromNow() : '';
-  }
+  get lastUsed() { return formatDate(this._fieldKey.lastUsed); }
 
   get url() {
     return `${window.location.origin}/api/v1/key/${this._fieldKey.token}`;
