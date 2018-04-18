@@ -61,7 +61,7 @@ describe('FieldKeyList', () => {
           tr.length.should.equal(2);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
-            td.length.should.equal(4);
+            td.length.should.equal(5);
             td[0].text().trim().should.equal(fieldKeys[i].displayName);
             // We test the QR code below.
           }

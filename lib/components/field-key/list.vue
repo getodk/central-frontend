@@ -30,6 +30,7 @@ except according to the terms contained in the LICENSE file.
           <th>Created</th>
           <th>Last Used</th>
           <th>Auto-Configure</th>
+          <th class="field-key-list-actions">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +44,20 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-qrcode"></span>
               <span class="underline-on-hover-or-focus">See code</span>
             </a>
+          </td>
+          <td class="field-key-list-actions">
+            <div class="dropdown">
+              <button type="button" :id="actionsId(index)"
+                class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="icon-cog"></span>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right"
+                :aria-labelledby="actionsId(index)">
+                <li><a href="#" @click.prevent>Revoke</a></li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -216,6 +231,9 @@ export default {
         this.hidePopover();
       }
     },
+    actionsId(index) {
+      return `field-key-list-actions${index}`;
+    },
     afterCreate(fieldKey) {
       this.fetchData();
       this.alert = alert.success(`The field key “${fieldKey.displayName}” was created successfully.`);
@@ -228,8 +246,30 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#field-key-list-table tbody td {
-  vertical-align: middle;
+// 8px is the Bootstrap default.
+$padding-left-actions: 8px;
+$padding-right-actions: 23px;
+$width-dropdown: 44px;
+$width-dropdown-toggle: 42px;
+
+#field-key-list-table {
+  th, td {
+    &.field-key-list-actions {
+      padding-left: $padding-left-actions;
+      padding-right: $padding-right-actions;
+      // Setting the width so that the .dropdown-menu-right is correctly
+      // aligned.
+      width: $width-dropdown + $padding-left-actions + $padding-right-actions;
+
+      .dropdown-menu-right {
+        margin-right: $width-dropdown - $width-dropdown-toggle;
+      }
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
 }
 
 #field-key-list-popover-content {
