@@ -133,7 +133,7 @@ export default {
       fieldKeys: null,
       highlighted: null,
       enabledPopoverLinks: new Set(),
-      // The <a> element whose popover is currently shown, as a jQuery object.
+      // The <a> element whose popover is currently shown.
       popoverLink: null,
       newFieldKey: {
         state: false
@@ -168,14 +168,14 @@ export default {
         .catch(() => {});
     },
     popoverContent(fieldKey) {
-      const content = $(POPOVER_CONTENT_TEMPLATE);
-      content.find('.field-key-list-img-container').append(fieldKey.qrCodeImgHtml);
-      return content[0].outerHTML;
+      const $content = $(POPOVER_CONTENT_TEMPLATE);
+      $content.find('.field-key-list-img-container').append(fieldKey.qrCodeImgHtml);
+      return $content[0].outerHTML;
     },
-    enablePopover(popoverLink) {
-      const index = popoverLink.closest('tr').data('index');
+    enablePopover($popoverLink) {
+      const index = $popoverLink.closest('tr').data('index');
       if (this.enabledPopoverLinks.has(index)) return;
-      popoverLink.popover({
+      $popoverLink.popover({
         animation: false,
         container: 'body',
         trigger: 'manual',
@@ -185,31 +185,31 @@ export default {
       });
       this.enabledPopoverLinks.add(index);
     },
-    showPopover(popoverLink) {
-      this.enablePopover(popoverLink);
-      popoverLink.popover('show');
-      this.popoverLink = popoverLink;
+    showPopover($popoverLink) {
+      this.enablePopover($popoverLink);
+      $popoverLink.popover('show');
+      this.popoverLink = $popoverLink.get(0);
     },
     hidePopover() {
       if (this.popoverLink == null) return;
-      this.popoverLink.popover('hide');
+      $(this.popoverLink).popover('hide');
       this.popoverLink = null;
     },
     elementIsOutsidePopover(element) {
       if (this.popoverLink == null) return true;
-      const popover = $('#field-key-list-popover-content').closest('.popover');
-      return !(element === popover[0] || $.contains(popover[0], element));
+      const popover = $('#field-key-list-popover-content').closest('.popover')[0];
+      return !(element === popover || $.contains(popover, element));
     },
     togglePopovers(event) {
-      const popoverLink = $(event.target).closest('.field-key-list-popover-link');
-      if (popoverLink.length !== 0) {
+      const $popoverLink = $(event.target).closest('.field-key-list-popover-link');
+      if ($popoverLink.length !== 0) {
         // true if the user clicked on the link whose popover is currently shown
         // and false if not.
         const samePopover = this.popoverLink != null &&
-          popoverLink[0] === this.popoverLink[0];
+          $popoverLink[0] === this.popoverLink;
         if (!samePopover) {
           this.hidePopover();
-          this.showPopover(popoverLink);
+          this.showPopover($popoverLink);
         }
       } else if (this.popoverLink != null &&
         this.elementIsOutsidePopover(event.target)) {
