@@ -55,7 +55,9 @@ except according to the terms contained in the LICENSE file.
               </button>
               <ul class="dropdown-menu dropdown-menu-right"
                 :aria-labelledby="actionsId(index)">
-                <li><a href="#" @click.prevent>Revoke</a></li>
+                <li>
+                  <a href="#" @click.prevent="showRevoke(fieldKey)">Revoke</a>
+                </li>
               </ul>
             </div>
           </td>
@@ -65,6 +67,8 @@ except according to the terms contained in the LICENSE file.
 
     <field-key-new v-bind="newFieldKey" @hide="newFieldKey.state = false"
       @success="afterCreate"/>
+    <field-key-revoke v-bind="revoke" @hide="revoke.state = false"
+      @success="afterRevoke"/>
   </div>
 </template>
 
@@ -74,6 +78,7 @@ import qrcode from 'qrcode-generator';
 import { deflate } from 'pako/lib/deflate';
 
 import FieldKeyNew from './new.vue';
+import FieldKeyRevoke from './revoke.vue';
 import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
 import modal from '../../mixins/modal';
@@ -139,8 +144,13 @@ const POPOVER_CONTENT_TEMPLATE = `
 
 export default {
   name: 'FieldKeyList',
-  components: { FieldKeyNew },
-  mixins: [alert(), request(), modal('newFieldKey'), highlight()],
+  components: { FieldKeyNew, FieldKeyRevoke },
+  mixins: [
+    alert(),
+    request(),
+    modal(['newFieldKey', 'revoke']),
+    highlight()
+  ],
   data() {
     return {
       alert: alert.blank(),
@@ -152,6 +162,12 @@ export default {
       popoverLink: null,
       newFieldKey: {
         state: false
+      },
+      revoke: {
+        state: false,
+        fieldKey: {
+          displayName: ''
+        }
       }
     };
   },
@@ -234,10 +250,19 @@ export default {
     actionsId(index) {
       return `field-key-list-actions${index}`;
     },
+    showRevoke(fieldKey) {
+      this.revoke.fieldKey = fieldKey;
+      this.revoke.state = true;
+    },
     afterCreate(fieldKey) {
       this.fetchData();
       this.alert = alert.success(`The field key “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
+    },
+    afterRevoke() {
+      this.fetchData();
+      this.alert = alert.success(`The field key “${this.revoke.fieldKey.displayName}” was revoked.`);
+      this.highlighted = null;
     }
   }
 };
