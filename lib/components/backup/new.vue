@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
           </div>
         </form>
       </template>
-      <div v-else-if="step === 2" class="backup-new-step-2">
+      <template v-else-if="step === 2">
         <div class="modal-introduction">
           <p>
             For safekeeping, I send your data to Google Drive. You can sign up
@@ -67,7 +67,7 @@ except according to the terms contained in the LICENSE file.
             Cancel
           </button>
         </div>
-      </div>
+      </template>
       <template v-if="step === 3">
         <div class="modal-introduction">
           <p>
@@ -190,9 +190,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-.modal-dialog .modal-content .backup-new-step-2 .modal-introduction {
-  padding-bottom: 0;
-}
-</style>

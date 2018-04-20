@@ -146,7 +146,7 @@ export default {
     .modal-introduction {
       font-size: 14px;
       line-height: 1.2em;
-      padding-bottom: 8px;
+      margin-bottom: 18px;
     }
 
     .modal-actions {

@@ -69,9 +69,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-#backup-terminate .modal-introduction {
-  padding-bottom: 0;
-}
-</style>

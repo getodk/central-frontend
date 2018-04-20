@@ -38,7 +38,7 @@ const next1 = (wrapper) =>
     .then(() => wrapper);
 // For step 2, clicks the Next button.
 const next2 = (wrapper) =>
-  trigger.click(wrapper.first('.backup-new-step-2 .btn-primary'))
+  trigger.click(wrapper.first('#backup-new .btn-primary'))
     .then(() => wrapper);
 const moveToStep3 = (component) => moveToStep1(component)
   .request(next1)
