@@ -40,10 +40,15 @@ except according to the terms contained in the LICENSE file.
           <td>{{ fieldKey.created }}</td>
           <td>{{ fieldKey.lastUsed }}</td>
           <td>
-            <a class="field-key-list-popover-link no-text-decoration" role="button">
+            <a v-if="!fieldKey.isRevoked()"
+              class="field-key-list-popover-link no-text-decoration"
+              role="button">
               <span class="icon-qrcode"></span>
               <span class="underline-on-hover-or-focus">See code</span>
             </a>
+            <template v-else>
+              Revoked
+            </template>
           </td>
           <td class="field-key-list-actions">
             <div class="dropdown">
@@ -55,7 +60,7 @@ except according to the terms contained in the LICENSE file.
               </button>
               <ul class="dropdown-menu dropdown-menu-right"
                 :aria-labelledby="actionsId(index)">
-                <li>
+                <li :class="{ disabled: fieldKey.isRevoked() }">
                   <a href="#" @click.prevent="showRevoke(fieldKey)">Revoke</a>
                 </li>
               </ul>
@@ -98,6 +103,9 @@ class FieldKeyPresenter {
 
   get id() { return this._fieldKey.id; }
   get displayName() { return this._fieldKey.displayName; }
+  get token() { return this._fieldKey.token; }
+
+  isRevoked() { return this._fieldKey.token == null; }
 
   get key() {
     if (this._key != null) return this._key;
@@ -251,6 +259,9 @@ export default {
       return `field-key-list-actions${index}`;
     },
     showRevoke(fieldKey) {
+      // Bootstrap does not actually disable dropdown menu items marked as
+      // disabled.
+      if (fieldKey.isRevoked()) return;
       this.revoke.fieldKey = fieldKey;
       this.revoke.state = true;
     },
