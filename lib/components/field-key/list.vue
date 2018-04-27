@@ -237,7 +237,7 @@ export default {
     elementIsOutsidePopover(element) {
       if (this.popoverLink == null) return true;
       const popover = $('#field-key-list-popover-content').closest('.popover')[0];
-      return !(element === popover || $.contains(popover, element));
+      return element !== popover && !$.contains(popover, element);
     },
     togglePopovers(event) {
       const $popoverLink = $(event.target).closest('.field-key-list-popover-link');
