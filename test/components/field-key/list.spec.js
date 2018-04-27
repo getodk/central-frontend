@@ -63,7 +63,7 @@ describe('FieldKeyList', () => {
             const td = tr[i].find('td');
             td.length.should.equal(5);
             td[0].text().trim().should.equal(fieldKeys[i].displayName);
-            // We test the QR code below.
+            // We test the Auto-Configure column below.
           }
         });
     });
@@ -117,5 +117,15 @@ describe('FieldKeyList', () => {
         });
       });
     });
+
+    it('revoked field key is marked accordingly', () =>
+      mockHttp()
+        .mount(FieldKeyList)
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+        .afterResponse(page => {
+          const td = page.find('#field-key-list-table td')[3];
+          td.text().trim().should.equal('Revoked');
+        }));
   });
 });

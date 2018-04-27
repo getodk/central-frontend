@@ -1,0 +1,113 @@
+/*
+Copyright 2017 Super Adventure Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/nafundi/super-adventure/blob/master/NOTICE.
+
+This file is part of Super Adventure. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+*/
+import FieldKeyList from '../../../lib/components/field-key/list.vue';
+import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
+import mockHttp from '../../http';
+import testData from '../../data';
+import { mockLogin } from '../../session';
+import { trigger } from '../../util';
+
+const clickRevokeInMenu = (wrapper) =>
+  trigger.click(wrapper.first('#field-key-list-table .dropdown-menu a'))
+    .then(() => wrapper);
+const confirmRevoke = (wrapper) =>
+  trigger.click(wrapper.first('#field-key-revoke .btn-danger'))
+    .then(() => wrapper);
+
+describe('FieldKeyRevoke', () => {
+  beforeEach(mockLogin);
+
+  describe('modal', () => {
+    it('opens upon click for field key that is not revoked', () =>
+      mockHttp()
+        .mount(FieldKeyList)
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'active').sorted())
+        .afterResponse(page => {
+          page.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return page;
+        })
+        .then(clickRevokeInMenu)
+        .then(page => {
+          page.first(FieldKeyRevoke).getProp('state').should.be.true();
+        }));
+
+    it('does not open upon click for revoked field key', () =>
+      mockHttp()
+        .mount(FieldKeyList)
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+        .afterResponse(page => {
+          page.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return page;
+        })
+        .then(clickRevokeInMenu)
+        .then(page => {
+          page.first(FieldKeyRevoke).getProp('state').should.be.false();
+        }));
+  });
+
+  it('revoke button is disabled for revoked field key', () =>
+    mockHttp()
+      .mount(FieldKeyList)
+      .respondWithData(() =>
+        testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+      .afterResponse(page => {
+        page.first('.dropdown-menu li').hasClass('disabled').should.be.true();
+      }));
+
+  it('standard button thinking things', () => {
+    const fieldKey = testData.extendedFieldKeys.createPast(1, 'active').last();
+    const propsData = { fieldKey };
+    return mockHttp()
+      .mount(FieldKeyRevoke, { propsData })
+      .request(confirmRevoke)
+      .standardButton('.btn-danger');
+  });
+
+  describe('after successful response', () => {
+    let page;
+    beforeEach(() => mockHttp()
+      .mount(FieldKeyList)
+      .respondWithData(() =>
+        testData.extendedFieldKeys.createPast(2, 'active').sorted())
+      .afterResponse(component => {
+        page = component;
+      })
+      .request(() => clickRevokeInMenu(page)
+        .then(confirmRevoke)
+        .then(() => {
+          const first = testData.extendedFieldKeys.sorted()[0];
+          testData.extendedFieldKeys.update(first, () => {
+            first.token = null;
+          });
+        }))
+      .respondWithSuccess()
+      .respondWithData(() => testData.extendedFieldKeys.sorted()));
+
+    it('modal hides', () => {
+      page.first(FieldKeyRevoke).getProp('state').should.be.false();
+    });
+
+    it('success message is shown', () => {
+      page.should.alert('success');
+    });
+
+    it('list is updated', () => {
+      const tr = page.find('#field-key-list-table tbody tr');
+      tr.length.should.equal(2);
+      tr[0].find('td')[3].find('a').length.should.equal(1);
+      tr[1].find('td')[3].find('a').length.should.equal(0);
+      tr[1].find('td')[3].text().trim().should.equal('Revoked');
+    });
+  });
+});
