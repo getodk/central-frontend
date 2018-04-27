@@ -149,7 +149,7 @@ class Store extends Collection {
   }
 
   createNew(options = {}) {
-    const object = this._factory.newObject({ ...options, past: true });
+    const object = this._factory.newObject({ ...options, past: false });
     this._objects.push(object);
     this._createdNew = true;
     return object;

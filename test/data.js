@@ -84,6 +84,9 @@ const sortByUpdatedAtOrCreatedAtDesc = (object1, object2) => {
 ////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
 
+// Must be greater than 1 for the code below.
+const DAYS_BEFORE_BACKUPS_WARNING = 3;
+
 const testData = Object.assign(
   {},
 
@@ -240,23 +243,24 @@ const testData = Object.assign(
           action: 'backup',
           acteeId: null,
           details,
-          loggedAt
+          loggedAt: loggedAt.toISOString()
         };
       };
       const failure = latest({
         success: false,
-        loggedAt: faker.date.past().toISOString()
+        loggedAt: faker.date.past()
       });
       const longAgoSuccess = latest({
         success: true,
         loggedAt: faker.date.between(
           moment().subtract(1, 'year').toISOString(),
-          moment().subtract(4, 'days').toISOString()
+          moment().subtract(DAYS_BEFORE_BACKUPS_WARNING + 1, 'days').toISOString()
         )
       });
+      const recentDate = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING - 1, 'days');
       const recentSuccess = latest({
         success: true,
-        loggedAt: faker.date.pastSince(moment().subtract(2, 'days').toISOString())
+        loggedAt: faker.date.pastSince(recentDate.toISOString())
       });
       return {
         config: {
