@@ -31,7 +31,7 @@ class Factory {
     if (this._options.createdAt) this._lastCreatedAt = null;
   }
 
-  newObject({ past, constraints = [] }) {
+  newObject({ past, constraints = undefined }) {
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
@@ -68,10 +68,29 @@ class Factory {
   }
 
   _isValid(object, constraints) {
-    const validators = [...this._options.validate, ...constraints];
+    const validators = [
+      ...this._options.validate,
+      ...this._constraintValidators(constraints)
+    ];
     for (const validator of validators)
       if (!validator(object, this._store)) return false;
     return true;
+  }
+
+  _constraintValidators(constraints) {
+    if (constraints == null) return [];
+    if (typeof constraints === 'string')
+      return this._constraintValidators([constraints]);
+    if (constraints.length === 0) return [];
+    if (this._options.constraints == null)
+      throw new Error('no constraints are defined for the factory');
+    const validators = [];
+    for (const name of constraints) {
+      const validator = this._options.constraints[name];
+      if (validator == null) throw new Error('unknown constraint');
+      validators.push(validator);
+    }
+    return validators;
   }
 }
 
@@ -79,7 +98,7 @@ class Collection {
   // eslint-disable-next-line no-unused-vars
   createPast(count) { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
-  createNew(options) { throw new Error('not implemented'); }
+  createNew(constraints = undefined) { throw new Error('not implemented'); }
   get size() { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   get(index) { throw new Error('not implemented'); }
@@ -148,8 +167,8 @@ class Store extends Collection {
     return this;
   }
 
-  createNew(options = {}) {
-    const object = this._factory.newObject({ ...options, past: false });
+  createNew(constraints = undefined) {
+    const object = this._factory.newObject({ past: false, constraints });
     this._objects.push(object);
     this._createdNew = true;
     return object;
@@ -187,7 +206,10 @@ class View extends Collection {
     return this;
   }
 
-  createNew(options) { return this._transform(this._store.createNew(options)); }
+  createNew(constraints = undefined) {
+    return this._transform(this._store.createNew(constraints));
+  }
+
   get size() { return this._store.size; }
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }

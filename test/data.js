@@ -194,6 +194,9 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastSubmission')
     ],
+    constraints: {
+      withName: (form) => form.name != null
+    },
     sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {
       simpleForms: (extendedForm) => {
@@ -268,6 +271,23 @@ const testData = Object.assign(
         },
         latest: faker.random.arrayElement([null, failure, longAgoSuccess, recentSuccess])
       };
+    },
+    constraints: {
+      neverRun: (backups) => backups.latest == null,
+      failed: (backups) =>
+        backups.latest != null && !backups.latest.details.success,
+      longAgoSuccess: (backups) => {
+        const { latest } = backups;
+        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
+        return latest != null && latest.details.success &&
+          moment(latest.loggedAt) < threshold;
+      },
+      recentSuccess: (backups) => {
+        const { latest } = backups;
+        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
+        return latest != null && latest.details.success &&
+           moment(latest.loggedAt) >= threshold;
+      }
     }
   })
 );

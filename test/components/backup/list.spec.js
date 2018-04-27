@@ -35,8 +35,6 @@ describe('BackupList', () => {
       .afterResponse(app => app.should.alert('success')));
 
   describe('after login', () => {
-    const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
-
     beforeEach(mockLogin);
 
     describe('content', () => {
@@ -62,10 +60,7 @@ describe('BackupList', () => {
       it('has never run', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => {
-            const constraint = (backups) => backups.latest == null;
-            return testData.backups.createNew({ constraints: [constraint] });
-          })
+          .respondWithData(() => testData.backups.createNew('neverRun'))
           .afterResponse(assertContent(
             'icon-question-circle',
             'The configured backup has not yet run.',
@@ -75,11 +70,7 @@ describe('BackupList', () => {
       it('failed', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => {
-            const constraint = (backups) =>
-              backups.latest != null && !backups.latest.details.success;
-            return testData.backups.createNew({ constraints: [constraint] });
-          })
+          .respondWithData(() => testData.backups.createNew('failed'))
           .afterResponse(assertContent(
             'icon-times-circle',
             'Something is wrong!',
@@ -89,15 +80,7 @@ describe('BackupList', () => {
       it('succeeded more than three days ago', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => {
-            const constraint = (backups) => {
-              const { latest } = backups;
-              const threeDaysAgo = Date.now() - (3 * MILLISECONDS_IN_A_DAY);
-              return latest != null && latest.details.success &&
-                 new Date(latest.loggedAt).getTime() < threeDaysAgo;
-            };
-            return testData.backups.createNew({ constraints: [constraint] });
-          })
+          .respondWithData(() => testData.backups.createNew('longAgoSuccess'))
           .afterResponse(assertContent(
             'icon-times-circle',
             'Something is wrong!',
@@ -107,15 +90,7 @@ describe('BackupList', () => {
       it('succeeded in the last three days', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => {
-            const constraint = (backups) => {
-              const { latest } = backups;
-              const threeDaysAgo = Date.now() - (3 * MILLISECONDS_IN_A_DAY);
-              return latest != null && latest.details.success &&
-                 new Date(latest.loggedAt).getTime() >= threeDaysAgo;
-            };
-            return testData.backups.createNew({ constraints: [constraint] });
-          })
+          .respondWithData(() => testData.backups.createNew('recentSuccess'))
           .afterResponse(assertContent(
             'icon-check-circle',
             'Backup is working.',
