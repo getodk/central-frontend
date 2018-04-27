@@ -117,7 +117,7 @@ const testData = Object.assign(
     name: 'extendedFieldKeys',
     factory: () => ({
       displayName: faker.name.findName(),
-      token: faker.app.token(),
+      token: faker.random.arrayElement([faker.app.token(), null]),
       meta: null,
       lastUsed: faker.random.arrayElement([faker.date.past().toISOString(), null]),
       createdBy: pick(
@@ -129,7 +129,23 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastUsed')
     ],
-    sort: ['createdAt', false],
+    constraints: {
+      active: (fieldKey) => fieldKey.token != null,
+      revoked: (fieldKey) => fieldKey.token == null
+    },
+    sort: (fieldKey1, fieldKey2) => {
+      const isRevoked1 = fieldKey1.token == null;
+      const isRevoked2 = fieldKey2.token == null;
+      if (isRevoked1 !== isRevoked2) {
+        if (isRevoked1) return 1;
+        if (isRevoked2) return -1;
+      }
+      if (fieldKey1.createdAt < fieldKey2.createdAt)
+        return 1;
+      else if (fieldKey1.createdAt > fieldKey2.createdAt)
+        return -1;
+      return 0;
+    },
     views: {
       simpleFieldKeys: (extendedFieldKey) => {
         const fieldKey = omit(extendedFieldKey, ['lastUsed']);

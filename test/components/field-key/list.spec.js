@@ -80,7 +80,8 @@ describe('FieldKeyList', () => {
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
-        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'active').sorted())
         .afterResponse(component => {
           app = component;
         }));

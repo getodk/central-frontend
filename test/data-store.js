@@ -96,7 +96,7 @@ class Factory {
 
 class Collection {
   // eslint-disable-next-line no-unused-vars
-  createPast(count) { throw new Error('not implemented'); }
+  createPast(count, constraints = undefined) { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   createNew(constraints = undefined) { throw new Error('not implemented'); }
   get size() { throw new Error('not implemented'); }
@@ -157,11 +157,11 @@ class Store extends Collection {
     };
   }
 
-  createPast(count) {
+  createPast(count, constraints = undefined) {
     if (this._createdNew)
       throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1) {
-      const object = this._factory.newObject({ past: true });
+      const object = this._factory.newObject({ past: true, constraints });
       this._objects.push(object);
     }
     return this;
@@ -201,8 +201,8 @@ class View extends Collection {
     this._cache = new Map();
   }
 
-  createPast(count) {
-    this._store.createPast(count);
+  createPast(count, constraints = undefined) {
+    this._store.createPast(count, constraints);
     return this;
   }
 
