@@ -66,8 +66,9 @@ export default {
   },
   methods: {
     revoke() {
+      const encodedToken = encodeURIComponent(this.fieldKey.token);
       this
-        .delete(`/field-keys/${this.fieldKey.id}`)
+        .delete(`/sessions/${encodedToken}`)
         .then(() => {
           this.$emit('hide');
           this.alert = alert.blank();
