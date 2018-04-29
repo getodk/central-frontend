@@ -10,18 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="modal" class="modal" tabindex="-1" role="dialog"
-    :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
+  <div ref="modal" :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
+    class="modal" tabindex="-1" role="dialog"
     data-keyboard="false" @keydown.esc="hideIfCan"
     @mousedown="modalMousedown($event)" @click="modalClick($event)">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" aria-label="Close"
-            :disabled="!hideable" @click="hideIfCan">
+          <button :disabled="!hideable" type="button" class="close"
+            aria-label="Close" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" :id="titleId"><slot name="title"></slot></h4>
+          <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div class="modal-body">
           <slot name="body"></slot>

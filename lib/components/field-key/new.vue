@@ -10,23 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop
-    :hideable="!awaitingResponse" id="field-key-new">
+  <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')" @shown="focusField">
     <template slot="title">Create Field Key</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <input v-model.trim="nickname" ref="nickname" class="form-control"
-            placeholder="Nickname *" required :disabled="awaitingResponse">
+          <input ref="nickname" v-model.trim="nickname"
+            :disabled="awaitingResponse" class="form-control"
+            placeholder="Nickname *" required>
           <span class="form-label">Nickname *</span>
         </label>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+          <button :disabled="awaitingResponse" type="submit"
+            class="btn btn-primary">
             Create <spinner :state="awaitingResponse"/>
           </button>
-          <button type="button" class="btn btn-link"
-            :disabled="awaitingResponse" @click="$emit('hide')">
+          <button :disabled="awaitingResponse" type="button"
+            class="btn btn-link" @click="$emit('hide')">
             Close
           </button>
         </div>

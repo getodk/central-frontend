@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="navbar-collapse">
+      <div id="navbar-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li v-for="(link, index) in links" :key="index"
             :class="{ active: link.active }">

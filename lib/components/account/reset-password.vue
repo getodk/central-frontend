@@ -22,12 +22,13 @@ except according to the terms contained in the LICENSE file.
           <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
-              <input type="email" v-model.trim="email" class="form-control"
+              <input v-model.trim="email" type="email" class="form-control"
                 placeholder="Email address *" required autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <div class="panel-footer">
-              <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+              <button :disabled="awaitingResponse" type="submit"
+                class="btn btn-primary">
                 Reset Password <spinner :state="awaitingResponse"/>
               </button>
               <button type="button" class="btn btn-link" @click="routeToLogin">

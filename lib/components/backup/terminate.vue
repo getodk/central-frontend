@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" backdrop
-    :hideable="!awaitingResponse" id="backup-terminate">
+  <modal id="backup-terminate" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')">
     <template slot="title">Terminate Automatic Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -23,11 +23,11 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :disabled="awaitingResponse" @click="terminate">
+        <button :disabled="awaitingResponse" type="button"
+          class="btn btn-danger" @click="terminate">
           Yes, proceed <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
           No, cancel
         </button>

@@ -22,12 +22,13 @@ except according to the terms contained in the LICENSE file.
           <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
-              <input type="password" v-model="password" class="form-control"
+              <input v-model="password" type="password" class="form-control"
                 placeholder="New Password *" required>
               <span class="form-label">New Password *</span>
             </label>
             <div class="panel-footer">
-              <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+              <button :disabled="awaitingResponse" type="submit"
+                class="btn btn-primary">
                 Set Password <spinner :state="awaitingResponse"/>
               </button>
             </div>

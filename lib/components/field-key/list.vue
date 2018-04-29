@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
     <float-row>
-      <button type="button" id="field-key-list-new-button"
+      <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
         <span class="icon-plus-circle"></span> Create Field Key
       </button>
@@ -52,14 +52,14 @@ except according to the terms contained in the LICENSE file.
           </td>
           <td class="field-key-list-actions">
             <div class="dropdown">
-              <button type="button" :id="actionsId(index)"
+              <button :id="actionsId(index)" type="button"
                 class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="icon-cog"></span>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right"
-                :aria-labelledby="actionsId(index)">
+              <ul :aria-labelledby="actionsId(index)"
+                class="dropdown-menu dropdown-menu-right">
                 <li :class="{ disabled: fieldKey.isRevoked() }">
                   <a href="#" @click.prevent="showRevoke(fieldKey)">Revoke</a>
                 </li>

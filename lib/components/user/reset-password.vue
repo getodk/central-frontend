@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" :hideable="!awaitingResponse">
+  <modal :state="state" :hideable="!awaitingResponse" @hide="$emit('hide')">
     <template slot="title">Reset Password</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -20,12 +20,11 @@ except according to the terms contained in the LICENSE file.
         to {{ user.email }} with instructions on how to proceed.
       </p>
       <div class="modal-actions">
-        <button type="button" id="user-reset-password-button"
-          class="btn btn-primary" :disabled="awaitingResponse"
-          @click="resetPassword">
+        <button id="user-reset-password-button" :disabled="awaitingResponse"
+          type="button" class="btn btn-primary" @click="resetPassword">
           Reset Password <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
           Close
         </button>

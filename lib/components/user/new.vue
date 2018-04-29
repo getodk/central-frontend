@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" @hide="$emit('hide')" @shown="focusField" backdrop
-    :hideable="!awaitingResponse" id="user-new">
+  <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="$emit('hide')" @shown="focusField">
     <template slot="title">Create Staff User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -22,17 +22,18 @@ except according to the terms contained in the LICENSE file.
       </p>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <input type="email" v-model.trim="email" id="user-new-email"
-            class="form-control" placeholder="Email address *" required
-            :disabled="awaitingResponse">
+          <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
+            type="email" class="form-control" placeholder="Email address *"
+            required>
           <span class="form-label">Email address *</span>
         </label>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+          <button :disabled="awaitingResponse" type="submit"
+            class="btn btn-primary">
             Create <spinner :state="awaitingResponse"/>
           </button>
-          <button type="button" class="btn btn-link"
-            :disabled="awaitingResponse" @click="$emit('hide')">
+          <button :disabled="awaitingResponse" type="button"
+            class="btn btn-link" @click="$emit('hide')">
             Close
           </button>
         </div>
@@ -63,7 +64,7 @@ export default {
   },
   methods: {
     focusField() {
-      $('#user-new-email').focus();
+      this.$refs.email.focus();
     },
     submit() {
       this

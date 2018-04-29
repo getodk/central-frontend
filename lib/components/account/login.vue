@@ -18,17 +18,18 @@ except according to the terms contained in the LICENSE file.
           <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
-              <input type="email" v-model.trim="email" class="form-control"
+              <input v-model.trim="email" type="email" class="form-control"
                 placeholder="Email address *" required autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <label class="form-group">
-              <input type="password" v-model="password" class="form-control"
+              <input v-model="password" type="password" class="form-control"
                 placeholder="Password *" required>
               <span class="form-label">Password *</span>
             </label>
             <div class="panel-footer">
-              <button type="submit" class="btn btn-primary" :disabled="disabled">
+              <button :disabled="disabled" type="submit"
+                class="btn btn-primary">
                 Log in <spinner :state="disabled"/>
               </button>
               <router-link :to="resetPasswordLocation" tag="button"
