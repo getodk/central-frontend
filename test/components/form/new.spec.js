@@ -134,8 +134,7 @@ describe('FormNew', () => {
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            const hasName = (extendedForm) => extendedForm.name != null;
-            form = testData.extendedForms.createNew({ constraints: [hasName] });
+            form = testData.extendedForms.createNew('withName');
           })
           .request(() => openModal(app)
             .then(selectFile)

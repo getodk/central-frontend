@@ -61,9 +61,9 @@ describe('FieldKeyList', () => {
           tr.length.should.equal(2);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
-            td.length.should.equal(4);
+            td.length.should.equal(5);
             td[0].text().trim().should.equal(fieldKeys[i].displayName);
-            // We test the QR code below.
+            // We test the Auto-Configure column below.
           }
         });
     });
@@ -80,7 +80,8 @@ describe('FieldKeyList', () => {
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
-        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'active').sorted())
         .afterResponse(component => {
           app = component;
         }));
@@ -116,5 +117,15 @@ describe('FieldKeyList', () => {
         });
       });
     });
+
+    it('revoked field key is marked accordingly', () =>
+      mockHttp()
+        .mount(FieldKeyList)
+        .respondWithData(() =>
+          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+        .afterResponse(page => {
+          const td = page.find('#field-key-list-table td')[3];
+          td.text().trim().should.equal('Revoked');
+        }));
   });
 });

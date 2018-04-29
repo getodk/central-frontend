@@ -16,12 +16,9 @@ import testData from '../../data';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const openModal = (wrapper) => {
-  const table = wrapper.first('#user-list-table');
-  return trigger.click(table.first('.dropdown-toggle'))
-    .then(() => trigger.click(table.first('.dropdown-menu a')))
+const openModal = (wrapper) =>
+  trigger.click(wrapper.first('#user-list-table .dropdown-menu a'))
     .then(() => wrapper);
-};
 const confirmResetPassword = (wrapper) =>
   trigger.click(wrapper.first('#user-reset-password-button'))
     .then(() => wrapper);
@@ -71,6 +68,8 @@ describe('UserResetPassword', () => {
       page.first(UserResetPassword).getProp('state').should.be.false();
     });
 
-    it('success message is shown', () => page.should.alert('success'));
+    it('success message is shown', () => {
+      page.should.alert('success');
+    });
   });
 });

@@ -31,7 +31,9 @@ class Factory {
     if (this._options.createdAt) this._lastCreatedAt = null;
   }
 
-  newObject({ past, constraints = [] }) {
+  options() { return this._options; }
+
+  newObject({ past, constraints = undefined }) {
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
@@ -68,18 +70,37 @@ class Factory {
   }
 
   _isValid(object, constraints) {
-    const validators = [...this._options.validate, ...constraints];
+    const validators = [
+      ...this._options.validate,
+      ...this._constraintValidators(constraints)
+    ];
     for (const validator of validators)
       if (!validator(object, this._store)) return false;
     return true;
+  }
+
+  _constraintValidators(constraints) {
+    if (constraints == null) return [];
+    if (typeof constraints === 'string')
+      return this._constraintValidators([constraints]);
+    if (constraints.length === 0) return [];
+    if (this._options.constraints == null)
+      throw new Error('no constraints are defined for the factory');
+    const validators = [];
+    for (const name of constraints) {
+      const validator = this._options.constraints[name];
+      if (validator == null) throw new Error('unknown constraint');
+      validators.push(validator);
+    }
+    return validators;
   }
 }
 
 class Collection {
   // eslint-disable-next-line no-unused-vars
-  createPast(count) { throw new Error('not implemented'); }
+  createPast(count, constraints = undefined) { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
-  createNew(options) { throw new Error('not implemented'); }
+  createNew(constraints = undefined) { throw new Error('not implemented'); }
   get size() { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   get(index) { throw new Error('not implemented'); }
@@ -138,18 +159,18 @@ class Store extends Collection {
     };
   }
 
-  createPast(count) {
+  createPast(count, constraints = undefined) {
     if (this._createdNew)
       throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1) {
-      const object = this._factory.newObject({ past: true });
+      const object = this._factory.newObject({ past: true, constraints });
       this._objects.push(object);
     }
     return this;
   }
 
-  createNew(options = {}) {
-    const object = this._factory.newObject({ ...options, past: true });
+  createNew(constraints = undefined) {
+    const object = this._factory.newObject({ past: false, constraints });
     this._objects.push(object);
     this._createdNew = true;
     return object;
@@ -157,6 +178,23 @@ class Store extends Collection {
 
   get size() { return this._objects.length; }
   get(index) { return this._objects[index]; }
+
+  update(object, callback) {
+    const { createdAt } = object;
+    callback(object);
+    if (this._factory.options().updatedAt) {
+      // eslint-disable-next-line no-param-reassign
+      object.updatedAt = new Date().toISOString();
+    }
+    if (object.createdAt !== createdAt) {
+      // this._objects is sorted by createdAt, so we currently do not support
+      // updates to createdAt.
+      throw new Error('createdAt cannot be updated');
+    }
+    for (const validator of this._factory.options().validate)
+      if (!validator(object, this))
+        throw new Error('object is no longer valid');
+  }
 
   clear() {
     this._objects = [];
@@ -182,12 +220,15 @@ class View extends Collection {
     this._cache = new Map();
   }
 
-  createPast(count) {
-    this._store.createPast(count);
+  createPast(count, constraints = undefined) {
+    this._store.createPast(count, constraints);
     return this;
   }
 
-  createNew(options) { return this._transform(this._store.createNew(options)); }
+  createNew(constraints = undefined) {
+    return this._transform(this._store.createNew(constraints));
+  }
+
   get size() { return this._store.size; }
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }

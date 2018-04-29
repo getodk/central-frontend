@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
             <div class="dropdown">
               <button type="button" :id="actionsId(index)"
                 class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="true">
+                aria-haspopup="true" aria-expanded="false">
                 <span class="icon-cog"></span>
                 <span class="caret"></span>
               </button>

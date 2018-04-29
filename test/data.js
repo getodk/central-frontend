@@ -84,6 +84,9 @@ const sortByUpdatedAtOrCreatedAtDesc = (object1, object2) => {
 ////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
 
+// Must be greater than 1 for the code below.
+const DAYS_BEFORE_BACKUPS_WARNING = 3;
+
 const testData = Object.assign(
   {},
 
@@ -114,7 +117,7 @@ const testData = Object.assign(
     name: 'extendedFieldKeys',
     factory: () => ({
       displayName: faker.name.findName(),
-      token: faker.app.token(),
+      token: faker.random.arrayElement([faker.app.token(), null]),
       meta: null,
       lastUsed: faker.random.arrayElement([faker.date.past().toISOString(), null]),
       createdBy: pick(
@@ -126,7 +129,23 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastUsed')
     ],
-    sort: ['createdAt', false],
+    constraints: {
+      active: (fieldKey) => fieldKey.token != null,
+      revoked: (fieldKey) => fieldKey.token == null
+    },
+    sort: (fieldKey1, fieldKey2) => {
+      const isRevoked1 = fieldKey1.token == null;
+      const isRevoked2 = fieldKey2.token == null;
+      if (isRevoked1 !== isRevoked2) {
+        if (isRevoked1) return 1;
+        if (isRevoked2) return -1;
+      }
+      if (fieldKey1.createdAt < fieldKey2.createdAt)
+        return 1;
+      else if (fieldKey1.createdAt > fieldKey2.createdAt)
+        return -1;
+      return 0;
+    },
     views: {
       simpleFieldKeys: (extendedFieldKey) => {
         const fieldKey = omit(extendedFieldKey, ['lastUsed']);
@@ -191,6 +210,9 @@ const testData = Object.assign(
       validateDateOrder('createdBy.createdAt', 'createdAt'),
       validateDateOrder('createdAt', 'lastSubmission')
     ],
+    constraints: {
+      withName: (form) => form.name != null
+    },
     sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {
       simpleForms: (extendedForm) => {
@@ -240,23 +262,24 @@ const testData = Object.assign(
           action: 'backup',
           acteeId: null,
           details,
-          loggedAt
+          loggedAt: loggedAt.toISOString()
         };
       };
       const failure = latest({
         success: false,
-        loggedAt: faker.date.past().toISOString()
+        loggedAt: faker.date.past()
       });
       const longAgoSuccess = latest({
         success: true,
         loggedAt: faker.date.between(
           moment().subtract(1, 'year').toISOString(),
-          moment().subtract(4, 'days').toISOString()
+          moment().subtract(DAYS_BEFORE_BACKUPS_WARNING + 1, 'days').toISOString()
         )
       });
+      const recentDate = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING - 1, 'days');
       const recentSuccess = latest({
         success: true,
-        loggedAt: faker.date.pastSince(moment().subtract(2, 'days').toISOString())
+        loggedAt: faker.date.pastSince(recentDate.toISOString())
       });
       return {
         config: {
@@ -264,6 +287,23 @@ const testData = Object.assign(
         },
         latest: faker.random.arrayElement([null, failure, longAgoSuccess, recentSuccess])
       };
+    },
+    constraints: {
+      neverRun: (backups) => backups.latest == null,
+      failed: (backups) =>
+        backups.latest != null && !backups.latest.details.success,
+      longAgoSuccess: (backups) => {
+        const { latest } = backups;
+        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
+        return latest != null && latest.details.success &&
+          moment(latest.loggedAt) < threshold;
+      },
+      recentSuccess: (backups) => {
+        const { latest } = backups;
+        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
+        return latest != null && latest.details.success &&
+           moment(latest.loggedAt) >= threshold;
+      }
     }
   })
 );

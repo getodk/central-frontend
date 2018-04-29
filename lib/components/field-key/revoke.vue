@@ -11,20 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal :state="state" @hide="$emit('hide')" backdrop
-    :hideable="!awaitingResponse" id="backup-terminate">
-    <template slot="title">Terminate Automatic Backups</template>
+    :hideable="!awaitingResponse" id="field-key-revoke">
+    <template slot="title">Revoke Key</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">
-        <p>Are you sure you want to terminate your automatic backups?</p>
         <p>
-          You will have to reconfigure them again from scratch to start them
-          again, and this action cannot be undone.
+          Are you sure you want to revoke the field key
+          <strong>{{ fieldKey.displayName }}</strong>?
         </p>
+        <p>
+          Existing submissions using this key will remain, but anybody relying
+          on this key will have to obtain a new one to continue downloading
+          forms or uploading submissions.
+        </p>
+        <p>This action cannot be undone.</p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
-          :disabled="awaitingResponse" @click="terminate">
+          :disabled="awaitingResponse" @click="revoke">
           Yes, proceed <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link" :disabled="awaitingResponse"
@@ -41,12 +46,16 @@ import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
-  name: 'BackupTerminate',
+  name: 'FieldKeyRevoke',
   mixins: [alert(), request()],
   props: {
     state: {
       type: Boolean,
       default: false
+    },
+    fieldKey: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -56,9 +65,10 @@ export default {
     };
   },
   methods: {
-    terminate() {
+    revoke() {
+      const encodedToken = encodeURIComponent(this.fieldKey.token);
       this
-        .delete('/config/backups')
+        .delete(`/sessions/${encodedToken}`)
         .then(() => {
           this.$emit('hide');
           this.alert = alert.blank();
