@@ -55,11 +55,11 @@ describe('FormSubmissions', () => {
         .respondWithData(() => submissions)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
-          tr.length.should.equal(2);
+          tr.length.should.equal(submissions.length);
           for (let i = 0; i < tr.length; i += 1) {
-            const submission = submissions[i];
             const td = tr[i].find('td');
             td.length.should.equal(3);
+            const submission = submissions[i];
             td[0].text().trim().should.equal(submission.instanceId);
             td[1].text().trim().should.equal(submission.submitter != null
               ? submission.submitter.displayName
@@ -76,6 +76,11 @@ describe('FormSubmissions', () => {
           const text = page.first('p').text().trim();
           text.should.startWith('There are no submissions yet');
         }));
+
+    it('refreshes after the refresh button is clicked', () =>
+      mockHttp()
+        .mount(FormSubmissions, propsData())
+        .testRefreshButton(testData.extendedSubmissions));
 
     describe('download', () => {
       it('download button shows number of submissions', () =>

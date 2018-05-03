@@ -117,6 +117,10 @@ body {
   }
 }
 
+.btn-secondary {
+  @extend .btn-primary;
+}
+
 .btn-danger {
   background-color: $color-danger;
 

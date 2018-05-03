@@ -25,6 +25,6 @@ export default {
 
 <style lang="sass">
 #page-body {
-  margin-top: 15px;
+  margin-top: 20px;
 }
 </style>

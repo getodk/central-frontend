@@ -59,5 +59,10 @@ describe('UserList', () => {
           }
         });
     });
+
+    it('refreshes after the refresh button is clicked', () =>
+      mockHttp()
+        .mount(UserList)
+        .testRefreshButton(testData.administrators));
   });
 });

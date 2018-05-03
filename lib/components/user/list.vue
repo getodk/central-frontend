@@ -13,13 +13,15 @@ except according to the terms contained in the LICENSE file.
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
     <float-row class="table-actions">
-      <button id="user-list-new-button" type="button" class="btn btn-primary"
-        @click="newUser.state = true">
+      <refresh-button slot="left" :fetching="awaitingResponse"
+        @refresh="fetchData({ clear: false })"/>
+      <button id="user-list-new-button" slot="right" type="button"
+        class="btn btn-primary" @click="newUser.state = true">
         <span class="icon-plus-circle"></span> Create staff user
       </button>
     </float-row>
-    <loading :state="awaitingResponse"/>
-    <table v-if="users" id="user-list-table" class="table table-hover">
+    <loading v-if="users == null" :state="awaitingResponse"/>
+    <table v-else id="user-list-table" class="table table-hover">
       <thead>
         <tr>
           <th>Email</th>
@@ -103,15 +105,16 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    this.fetchData({ clear: false });
   },
   methods: {
-    fetchData() {
-      this.users = null;
+    fetchData({ clear }) {
+      if (clear) this.users = null;
       this
         .get('/users')
         .then(({ data }) => {
           this.users = data;
+          if (!clear) this.highlighted = null;
         })
         .catch(() => {});
     },
@@ -123,7 +126,7 @@ export default {
       this.resetPassword.state = true;
     },
     afterCreate(user) {
-      this.fetchData();
+      this.fetchData({ clear: true });
       this.alert = alert.success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     },
