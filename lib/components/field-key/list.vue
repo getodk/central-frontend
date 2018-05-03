@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <float-row class="table-actions">
       <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
-        <span class="icon-plus-circle"></span> Create Field Key
+        <span class="icon-plus-circle"></span> Create field key
       </button>
     </float-row>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>

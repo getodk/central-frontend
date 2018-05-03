@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
             <div class="panel-footer">
               <button :disabled="awaitingResponse" type="submit"
                 class="btn btn-primary">
-                Set Password <spinner :state="awaitingResponse"/>
+                Set password <spinner :state="awaitingResponse"/>
               </button>
             </div>
           </app-form>

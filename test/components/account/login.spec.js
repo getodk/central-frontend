@@ -19,7 +19,7 @@ describe('AccountLogin', () => {
     it('navbar indicates that the user is logged out', () =>
       mockRoute('/login').then(app => {
         const link = app.first('.navbar-right > li > a');
-        link.text().trim().should.equal('Not Logged in');
+        link.text().trim().should.equal('Not logged in');
       }));
 
     it('first field is focused', () =>

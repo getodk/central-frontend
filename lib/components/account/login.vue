@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
               </button>
               <router-link :to="resetPasswordLocation" tag="button"
                 type="button" class="btn btn-link">
-                Reset Password
+                Reset password
               </router-link>
             </div>
           </app-form>

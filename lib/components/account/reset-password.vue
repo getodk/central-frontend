@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
             <div class="panel-footer">
               <button :disabled="awaitingResponse" type="submit"
                 class="btn btn-primary">
-                Reset Password <spinner :state="awaitingResponse"/>
+                Reset password <spinner :state="awaitingResponse"/>
               </button>
               <button type="button" class="btn btn-link" @click="routeToLogin">
                 Cancel

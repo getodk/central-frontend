@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <float-row class="table-actions">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="newUser.state = true">
-        <span class="icon-plus-circle"></span> Create Staff User
+        <span class="icon-plus-circle"></span> Create staff user
       </button>
     </float-row>
     <loading :state="awaitingResponse"/>
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
                 class="dropdown-menu dropdown-menu-right">
                 <li>
                   <a href="#" @click.prevent="showResetPassword(user)">
-                    Reset Password
+                    Reset password
                   </a>
                 </li>
               </ul>

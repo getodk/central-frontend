@@ -54,7 +54,7 @@ describe('BackupList', () => {
           .afterResponse(assertContent(
             'icon-question-circle',
             'Backups are not configured.',
-            'Set up Now'
+            'Set up now'
           )));
 
       it('has no recent attempt and was recently set up', () =>
