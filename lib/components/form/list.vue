@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <alert v-bind="alert" @close="alert.state = false"/>
-      <float-row>
+      <float-row class="table-actions">
         <button id="form-list-new-button" type="button" class="btn btn-primary"
           @click="newForm.state = true">
           <span class="icon-plus-circle"></span> Create a New Form

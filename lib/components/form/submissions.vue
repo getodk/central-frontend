@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     There are no submissions yet for “{{ form.name || form.xmlFormId }}”.
   </p>
   <div v-else>
-    <float-row>
+    <float-row class="table-actions">
       <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
         class="hidden">
       </a>

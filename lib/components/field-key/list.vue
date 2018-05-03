@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
-    <float-row>
+    <float-row class="table-actions">
       <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
         <span class="icon-plus-circle"></span> Create Field Key

@@ -92,10 +92,6 @@ body {
   }
 }
 
-.table > thead {
-  background-color: #ddd;
-}
-
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 }
@@ -189,6 +185,10 @@ body {
       padding: 8px 9px 6px;
     }
   }
+}
+
+.table-actions {
+  margin-bottom: 20px;
 }
 
 .panel {
