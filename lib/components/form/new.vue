@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" @hide="hide" backdrop
-    :hideable="!awaitingResponse">
+  <modal ref="modal" :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="hide">
     <template slot="title">Create Form</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -22,11 +22,11 @@ except according to the terms contained in the LICENSE file.
           <doc-link>tools available</doc-link> to help you design your form.
         </p>
       </div>
-      <div ref="dropZone" id="drop-zone" :class="dropZoneClass">
+      <div id="drop-zone" ref="dropZone" :class="dropZoneClass">
         <div :style="pointerEvents">
           Drop a file here, or
-          <input type="file" ref="input" class="hidden">
-          <button type="button" class="btn btn-primary" :disabled="!droppable"
+          <input ref="input" type="file" class="hidden">
+          <button :disabled="!droppable" type="button" class="btn btn-primary"
             @click="clickFileButton">
             <span class="icon-folder-open"></span> choose one
           </button>
@@ -35,11 +35,11 @@ except according to the terms contained in the LICENSE file.
         <div id="form-new-filename" :style="pointerEvents">{{ filename }}</div>
       </div>
       <div class="modal-actions">
-        <button type="button" id="form-new-create-button"
-          class="btn btn-primary" :disabled="awaitingResponse" @click="create">
+        <button id="form-new-create-button" :disabled="awaitingResponse"
+          type="button" class="btn btn-primary" @click="create">
           Create <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="hide">
           Close
         </button>

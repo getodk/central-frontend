@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
     <float-row>
-      <button type="button" id="user-list-new-button" class="btn btn-primary"
+      <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="newUser.state = true">
         <span class="icon-plus-circle"></span> Create Staff User
       </button>
@@ -35,14 +35,14 @@ except according to the terms contained in the LICENSE file.
           <td>Yes</td>
           <td>
             <div class="dropdown">
-              <button type="button" :id="actionsId(index)"
+              <button :id="actionsId(index)" type="button"
                 class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="icon-cog"></span>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right"
-                :aria-labelledby="actionsId(index)">
+              <ul :aria-labelledby="actionsId(index)"
+                class="dropdown-menu dropdown-menu-right">
                 <li>
                   <a href="#" @click.prevent="showResetPassword(user)">
                     Reset Password

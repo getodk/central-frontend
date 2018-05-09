@@ -80,14 +80,13 @@ except according to the terms contained in the LICENSE file.
           </td>
           <td id="backup-list-button-container">
             <p>
-              <button type="button" v-if="backups.status == 'notConfigured'"
-                class="btn btn-primary" id="backup-list-new-button"
-                @click="newBackup.state = true">
+              <button v-if="backups.status == 'notConfigured'"
+                id="backup-list-new-button" type="button"
+                class="btn btn-primary" @click="newBackup.state = true">
                 <span class="icon-plus-circle"></span> Set up Now
               </button>
-              <button type="button" v-else class="btn btn-primary"
-                id="backup-list-terminate-button"
-                @click="terminate.state = true">
+              <button v-else id="backup-list-terminate-button" type="button"
+                class="btn btn-primary" @click="terminate.state = true">
                 <span class="icon-times-circle"></span> Terminate
               </button>
             </p>

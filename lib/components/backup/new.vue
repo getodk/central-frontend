@@ -10,8 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" @hide="cancel" @shown="focusPassphraseInput"
-    backdrop :hideable="!awaitingResponse" id="backup-new">
+  <modal id="backup-new" ref="modal" :state="state"
+    :hideable="!awaitingResponse" backdrop @hide="cancel"
+    @shown="focusPassphraseInput">
     <template slot="title">Set up Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -24,17 +25,18 @@ except according to the terms contained in the LICENSE file.
         </p>
         <form @submit.prevent="initiate">
           <label class="form-group">
-            <input v-model.trim="passphrase" ref="passphrase"
-              class="form-control" placeholder="Passphrase (optional)"
-              :disabled="awaitingResponse">
+            <input ref="passphrase" v-model.trim="passphrase"
+              :disabled="awaitingResponse" class="form-control"
+              placeholder="Passphrase (optional)">
             <span class="form-label">Passphrase (optional)</span>
           </label>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+            <button :disabled="awaitingResponse" type="submit"
+              class="btn btn-primary">
               Next <spinner :state="awaitingResponse"/>
             </button>
-            <button type="button" class="btn btn-link"
-              :disabled="awaitingResponse" @click="cancel">
+            <button :disabled="awaitingResponse" type="button"
+              class="btn btn-link" @click="cancel">
               Cancel
             </button>
           </div>
@@ -58,12 +60,12 @@ except according to the terms contained in the LICENSE file.
           </p>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-primary"
-            :disabled="awaitingResponse" @click="moveToStep3">
+          <button :disabled="awaitingResponse" type="button"
+            class="btn btn-primary" @click="moveToStep3">
             Next <spinner :state="awaitingResponse"/>
           </button>
-          <button type="button" class="btn btn-link"
-            :disabled="awaitingResponse" @click="cancel">
+          <button :disabled="awaitingResponse" type="button"
+            class="btn btn-link" @click="cancel">
             Cancel
           </button>
         </div>
@@ -80,16 +82,17 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="verify">
           <label class="form-group">
             <input ref="confirmationText" v-model.trim="confirmationText"
-              class="form-control" required placeholder="Confirmation text *"
-              :disabled="awaitingResponse">
+              :disabled="awaitingResponse" class="form-control" required
+              placeholder="Confirmation text *">
             <span class="form-label">Confirmation text *</span>
           </label>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+            <button :disabled="awaitingResponse" type="submit"
+              class="btn btn-primary">
               Next <spinner :state="awaitingResponse"/>
             </button>
-            <button type="button" class="btn btn-link"
-              :disabled="awaitingResponse" @click="cancel">
+            <button :disabled="awaitingResponse" type="button"
+              class="btn btn-link" @click="cancel">
               Cancel
             </button>
           </div>

@@ -19,7 +19,7 @@ import { mockLogin } from '../../session';
 const clickCreateButton = (wrapper) =>
   trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
 const submitForm = (wrapper) =>
-  fillForm(wrapper, [['#user-new-email', testData.administrators.createNew().email]])
+  fillForm(wrapper, [['[type="email"]', testData.administrators.createNew().email]])
     .then(() => trigger('submit', wrapper.first('#user-new form')))
     .then(() => wrapper);
 
@@ -47,7 +47,7 @@ describe('UserNew', () => {
         mockRoute('/users', { attachToDocument: true })
           .respondWithData(() => testData.administrators.sorted())
           .afterResponse(clickCreateButton)
-          .then(app => app.first('#user-new-email').should.be.focused()));
+          .then(app => app.first('[type="email"]').should.be.focused()));
     });
   });
 
