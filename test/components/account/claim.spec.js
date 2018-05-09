@@ -9,7 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, trigger } from '../../util';
+import { mockRoute } from '../../http';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 const submitForm = (wrapper) =>

@@ -10,10 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import FormList from '../../../lib/components/form/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../util';
 
 describe('FormList', () => {
   describe('routing', () => {

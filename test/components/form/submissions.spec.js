@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute, trigger } from '../../util';
+import { trigger } from '../../util';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 

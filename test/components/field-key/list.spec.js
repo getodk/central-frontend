@@ -13,10 +13,10 @@ import jsQR from 'jsqr';
 import { inflate } from 'pako/lib/inflate';
 
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute, trigger } from '../../util';
+import { trigger } from '../../util';
 
 describe('FieldKeyList', () => {
   describe('routing', () => {

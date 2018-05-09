@@ -13,9 +13,9 @@ import App from '../../../lib/components/app.vue';
 import BackupList from '../../../lib/components/backup/list.vue';
 import BackupNew from '../../../lib/components/backup/new.vue';
 import faker from '../../faker';
-import mockHttp from '../../http';
 import testData from '../../data';
-import { fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, trigger } from '../../util';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>

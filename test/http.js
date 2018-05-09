@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
+import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import routerFactory from '../lib/router';
+import { logOut } from '../lib/session';
 import { mountAndMark } from './destroy';
 
 // Sets Vue.prototype.$http to a mock.
@@ -421,4 +424,22 @@ class MockHttp {
   finally(onFinally) { return this.promise().finally(onFinally); }
 }
 
-export default () => new MockHttp();
+export const mockHttp = () => new MockHttp();
+
+export const mockRoute = (location, mountOptions = {}) => {
+  const session = Vue.prototype.$session;
+  // If the user is logged in, mounting the app with the router will redirect
+  // the user to the forms list, resulting in an HTTP request. To prevent that,
+  // any user who is logged in is temporarily logged out. That way, mounting the
+  // app will first redirect the user to login, resulting in no initial HTTP
+  // request.
+  if (session.loggedIn()) logOut();
+  const fullMountOptions = Object.assign({}, mountOptions);
+  fullMountOptions.router = routerFactory();
+  return mockHttp()
+    .mount(App, fullMountOptions)
+    .request(app => {
+      if (session.loggedIn()) session.updateGlobals();
+      app.vm.$router.push(location);
+    });
+};

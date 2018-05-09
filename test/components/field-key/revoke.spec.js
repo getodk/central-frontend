@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 

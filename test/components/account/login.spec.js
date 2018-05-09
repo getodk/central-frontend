@@ -9,10 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of Super Adventure,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import mockHttp from '../../http';
 import testData from '../../data';
-import { mockRoute, trigger } from '../../util';
+import { mockHttp, mockRoute } from '../../http';
 import { mockRouteThroughLogin, submitLoginForm } from '../../session';
+import { trigger } from '../../util';
 
 describe('AccountLogin', () => {
   describe('user is logged out', () => {
