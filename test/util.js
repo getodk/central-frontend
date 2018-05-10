@@ -16,6 +16,8 @@ import mockHttp from './http';
 import routerFactory from '../lib/router';
 import { logOut } from '../lib/session';
 
+export const MAXIMUM_TEST_DURATION = { seconds: 10 };
+
 export class MockLogger {
   log() {}
   error() {}

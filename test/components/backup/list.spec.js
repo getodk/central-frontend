@@ -57,43 +57,47 @@ describe('BackupList', () => {
             'Set up Now'
           )));
 
-      it('has never run', () =>
+      it('has no recent attempt and was recently set up', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew('neverRun'))
+          .respondWithData(() =>
+            testData.backups.createNew(['noRecentAttempt', 'recentlySetUp']))
           .afterResponse(assertContent(
-            'icon-question-circle',
+            'icon-check-circle',
             'The configured backup has not yet run.',
             'Terminate'
           )));
 
-      it('failed', () =>
+      it('has no recent attempt and was not recently set up', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew('failed'))
+          .respondWithData(() =>
+            testData.backups.createNew(['noRecentAttempt', 'notRecentlySetUp']))
           .afterResponse(assertContent(
             'icon-times-circle',
             'Something is wrong!',
             'Terminate'
           )));
 
-      it('succeeded more than three days ago', () =>
+      it('latest recent attempt was a success', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew('longAgoSuccess'))
-          .afterResponse(assertContent(
-            'icon-times-circle',
-            'Something is wrong!',
-            'Terminate'
-          )));
-
-      it('succeeded in the last three days', () =>
-        mockHttp()
-          .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew('recentSuccess'))
+          .respondWithData(() =>
+            testData.backups.createNew('mostRecentAttemptWasSuccess'))
           .afterResponse(assertContent(
             'icon-check-circle',
             'Backup is working.',
+            'Terminate'
+          )));
+
+      it('latest recent attempt was a failure', () =>
+        mockHttp()
+          .mount(BackupList)
+          .respondWithData(() =>
+            testData.backups.createNew('mostRecentAttemptWasFailure'))
+          .afterResponse(assertContent(
+            'icon-times-circle',
+            'Something is wrong!',
             'Terminate'
           )));
     });

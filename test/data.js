@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 import moment from 'moment';
 
+import BackupList from '../lib/components/backup/list.vue';
 import faker from './faker';
+import { MAXIMUM_TEST_DURATION } from './util';
 import { dataStore, resetDataStores } from './data-store';
 
 
@@ -83,9 +85,6 @@ const sortByUpdatedAtOrCreatedAtDesc = (object1, object2) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
-
-// Must be greater than 1 for the code below.
-const DAYS_BEFORE_BACKUPS_WARNING = 3;
 
 const testData = Object.assign(
   {},
@@ -251,9 +250,33 @@ const testData = Object.assign(
     createdAt: false,
     updatedAt: false,
     factory: () => {
-      const latest = ({ success, loggedAt }) => {
+      const recentDate = BackupList.methods.recentDate();
+      // The earliest time, for testing purposes, for backups to have been
+      // configured.
+      const setAtFloor = moment()
+        .subtract(10 * moment().diff(moment(recentDate)), 'milliseconds')
+        .toDate();
+      // Returns a random time for backups to have been configured.
+      const fakeSetAt = (isRecent) => {
+        if (isRecent) {
+          const sinceString = moment(recentDate)
+            // Adding this duration to ensure that the resulting date is
+            // considered recent throughout the test.
+            .add(MAXIMUM_TEST_DURATION)
+            .toISOString();
+          return faker.date.pastSince(sinceString);
+        }
+        return faker.date.between(
+          setAtFloor.toISOString(),
+          moment(recentDate).subtract(1, 'millisecond').toISOString()
+        );
+      };
+      // Returns a backup attempt (an audit log).
+      const attempt = ({ success, loggedAt, configSetAt }) => {
         const details = { success };
-        if (!success) {
+        if (success)
+          details.configSetAt = configSetAt.toISOString();
+        else {
           const error = new Error('error');
           Object.assign(details, { message: error.message, stack: error.stack });
         }
@@ -265,44 +288,84 @@ const testData = Object.assign(
           loggedAt: loggedAt.toISOString()
         };
       };
-      const failure = latest({
-        success: false,
-        loggedAt: faker.date.past()
-      });
-      const longAgoSuccess = latest({
-        success: true,
-        loggedAt: faker.date.between(
-          moment().subtract(1, 'year').toISOString(),
-          moment().subtract(DAYS_BEFORE_BACKUPS_WARNING + 1, 'days').toISOString()
-        )
-      });
-      const recentDate = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING - 1, 'days');
-      const recentSuccess = latest({
-        success: true,
-        loggedAt: faker.date.pastSince(recentDate.toISOString())
-      });
-      return {
-        config: {
-          type: 'google'
-        },
-        latest: faker.random.arrayElement([null, failure, longAgoSuccess, recentSuccess])
+      // Returns a backups response.
+      const backups = ({ recentlySetUp, mostRecentAttempt }) => {
+        const setAt = fakeSetAt(recentlySetUp);
+        const recent = [];
+        if (mostRecentAttempt != null) {
+          const loggedAtFloor = recentlySetUp ? setAt : recentDate;
+          recent.push(attempt({
+            success: mostRecentAttempt.success,
+            loggedAt: faker.date.pastSince(loggedAtFloor),
+            configSetAt: setAt
+          }));
+          // 50% of the time, we add an earlier backup attempt to `recent`.
+          if (faker.random.boolean()) {
+            recent.push(attempt({
+              success: faker.random.boolean(),
+              loggedAt: faker.date.between(
+                loggedAtFloor.toISOString(),
+                recent[0].loggedAt
+              ),
+              configSetAt: setAt
+            }));
+          }
+        }
+        // Possibly add a backup attempt to `recent` from an earlier config.
+        if (recentlySetUp && faker.random.boolean()) {
+          const previousSetAt = faker.date.between(
+            setAtFloor.toISOString(),
+            setAt.toISOString()
+          );
+          const loggedAtFloor = moment
+            .max(moment(previousSetAt), moment(recentDate))
+            .toDate();
+          recent.push(attempt({
+            success: true,
+            loggedAt: faker.date.between(
+              loggedAtFloor.toISOString(),
+              setAt.toISOString()
+            ),
+            configSetAt: previousSetAt
+          }));
+        }
+        return {
+          type: 'google',
+          setAt: setAt.toISOString(),
+          recent
+        };
       };
+      return faker.random.arrayElement([
+        backups({ recentlySetUp: true, mostRecentAttempt: null }),
+        backups({ recentlySetUp: false, mostRecentAttempt: null }),
+        backups({
+          recentlySetUp: faker.random.boolean(),
+          mostRecentAttempt: {
+            success: true
+          }
+        }),
+        backups({
+          recentlySetUp: faker.random.boolean(),
+          mostRecentAttempt: {
+            success: false
+          }
+        })
+      ]);
     },
     constraints: {
-      neverRun: (backups) => backups.latest == null,
-      failed: (backups) =>
-        backups.latest != null && !backups.latest.details.success,
-      longAgoSuccess: (backups) => {
-        const { latest } = backups;
-        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
-        return latest != null && latest.details.success &&
-          moment(latest.loggedAt) < threshold;
+      recentlySetUp: (backups) =>
+        new Date(backups.setAt) >= BackupList.methods.recentDate(),
+      notRecentlySetUp: (backups) =>
+        new Date(backups.setAt) < BackupList.methods.recentDate(),
+      noRecentAttempt: (backups) =>
+        BackupList.methods.recentForConfig(backups).length === 0,
+      mostRecentAttemptWasSuccess: (backups) => {
+        const recent = BackupList.methods.recentForConfig(backups);
+        return recent.length !== 0 && recent[0].details.success;
       },
-      recentSuccess: (backups) => {
-        const { latest } = backups;
-        const threshold = moment().subtract(DAYS_BEFORE_BACKUPS_WARNING, 'days');
-        return latest != null && latest.details.success &&
-           moment(latest.loggedAt) >= threshold;
+      mostRecentAttemptWasFailure: (backups) => {
+        const recent = BackupList.methods.recentForConfig(backups);
+        return recent.length !== 0 && !recent[0].details.success;
       }
     }
   })
