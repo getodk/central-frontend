@@ -115,8 +115,8 @@ import request from '../../mixins/request';
 // returns no log of a recent backup attempt, that means that there have been no
 // backup attempts for that duration into the past. If the server returns no log
 // of a recent backup attempt, and if backups were configured more than that
-// duration into the past (that is, if the latest configuration is itself not
-// recent), then the user is informed that something has gone wrong.
+// duration into the past (that is, if the latest config is itself not recent),
+// then the user is informed that something has gone wrong.
 const RECENT_DURATION = { days: 3 };
 
 class Backups {
@@ -127,11 +127,11 @@ class Backups {
       : null;
   }
 
-  // recentForConfig() returns the recent backup attempts for the config set at
-  // `setAt`. Note that failed backup attempts do not have a `configSetAt`
-  // property, so it is not always possible to determine their corresponding
-  // config. recentForConfig() takes an inclusive approach, including all backup
-  // attempts that might correspond to the config set at `setAt`.
+  // recentForConfig() returns the recent backup attempts for the latest config
+  // Note that failed backup attempts do not have a `configSetAt` property, so
+  // it is not always possible to determine their corresponding config.
+  // recentForConfig() takes an inclusive approach, including all backup
+  // attempts that might correspond to the latest config.
   static recentForConfig({ setAt, recent }) {
     const result = [];
     for (const attempt of recent) {
