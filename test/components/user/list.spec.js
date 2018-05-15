@@ -10,10 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import UserList from '../../../lib/components/user/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../util';
 
 describe('UserList', () => {
   describe('routing', () => {
@@ -60,5 +59,10 @@ describe('UserList', () => {
           }
         });
     });
+
+    it('refreshes after the refresh button is clicked', () =>
+      mockHttp()
+        .mount(UserList)
+        .testRefreshButton(testData.administrators));
   });
 });

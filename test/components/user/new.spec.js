@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
-import { fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, trigger } from '../../util';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>

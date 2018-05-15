@@ -12,10 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <alert v-bind="alert" @close="alert.state = false"/>
-    <float-row>
-      <button id="field-key-list-new-button" type="button"
+    <float-row class="table-actions">
+      <refresh-button slot="left" :fetching="awaitingResponse"
+        @refresh="fetchData({ clear: false })"/>
+      <button id="field-key-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
-        <span class="icon-plus-circle"></span> Create Field Key
+        <span class="icon-plus-circle"></span> Create field key
       </button>
     </float-row>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
@@ -185,7 +187,7 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    this.fetchData({ clear: false });
   },
   activated() {
     $('body').on('click.app-field-key-list', this.togglePopovers);
@@ -195,14 +197,15 @@ export default {
     $('body').off('click.app-field-key-list', this.togglePopovers);
   },
   methods: {
-    fetchData() {
-      this.fieldKeys = null;
+    fetchData({ clear }) {
+      if (clear) this.fieldKeys = null;
       this.enabledPopoverLinks = new Set();
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get('/field-keys', { headers })
         .then(({ data }) => {
           this.fieldKeys = data.map(fieldKey => new FieldKeyPresenter(fieldKey));
+          if (!clear) this.highlighted = null;
         })
         .catch(() => {});
     },
@@ -266,12 +269,12 @@ export default {
       this.revoke.state = true;
     },
     afterCreate(fieldKey) {
-      this.fetchData();
+      this.fetchData({ clear: true });
       this.alert = alert.success(`The field key “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
-      this.fetchData();
+      this.fetchData({ clear: true });
       this.alert = alert.success(`The field key “${this.revoke.fieldKey.displayName}” was revoked.`);
       this.highlighted = null;
     }

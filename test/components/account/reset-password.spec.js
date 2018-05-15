@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import testData from '../../data';
-import { fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, trigger } from '../../util';
+import { mockRoute } from '../../http';
 
 const submitForm = (wrapper) => {
   const { email } = testData.administrators.createPast(1).last();

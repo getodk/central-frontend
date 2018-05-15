@@ -10,10 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import BackupList from '../../../lib/components/backup/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../util';
 
 describe('BackupList', () => {
   describe('routing', () => {
@@ -54,7 +53,7 @@ describe('BackupList', () => {
           .afterResponse(assertContent(
             'icon-question-circle',
             'Backups are not configured.',
-            'Set up Now'
+            'Set up now'
           )));
 
       it('has no recent attempt and was recently set up', () =>

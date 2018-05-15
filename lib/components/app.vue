@@ -92,10 +92,6 @@ body {
   }
 }
 
-.table > thead {
-  background-color: #ddd;
-}
-
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 }
@@ -119,6 +115,10 @@ body {
       background-color: $color-action-background;
     }
   }
+}
+
+.btn-secondary {
+  @extend .btn-primary;
 }
 
 .btn-danger {
@@ -189,6 +189,10 @@ body {
       padding: 8px 9px 6px;
     }
   }
+}
+
+.table-actions {
+  margin-bottom: 20px;
 }
 
 .panel {

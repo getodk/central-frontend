@@ -11,7 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="float-row-container">
+    <div class="float-row-left">
+      <slot name="left"></slot>
+    </div>
+    <div class="float-row-right">
+      <slot name="right"></slot>
       <slot></slot>
     </div>
     <div class="float-row-clear"></div>
@@ -25,15 +29,15 @@ export default {
 </script>
 
 <style lang="sass">
-.float-row-container > * {
-  float: right;
+.float-row-left {
+  float: left;
+}
 
-  &:last-child {
-    margin-bottom: 20px;
-  }
+.float-row-right {
+  float: right;
 }
 
 .float-row-clear {
-  clear: right;
+  clear: both;
 }
 </style>

@@ -13,10 +13,10 @@ import jsQR from 'jsqr';
 import { inflate } from 'pako/lib/inflate';
 
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute, trigger } from '../../util';
+import { trigger } from '../../util';
 
 describe('FieldKeyList', () => {
   describe('routing', () => {
@@ -58,7 +58,7 @@ describe('FieldKeyList', () => {
         .respondWithData(() => fieldKeys)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
-          tr.length.should.equal(2);
+          tr.length.should.equal(fieldKeys.length);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
             td.length.should.equal(5);
@@ -76,6 +76,11 @@ describe('FieldKeyList', () => {
           const text = page.first('p').text().trim();
           text.should.startWith('There are no field keys yet.');
         }));
+
+    it('refreshes after the refresh button is clicked', () =>
+      mockHttp()
+        .mount(FieldKeyList)
+        .testRefreshButton(testData.extendedFieldKeys));
 
     describe('QR code', () => {
       let app;

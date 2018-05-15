@@ -10,10 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import FormList from '../../../lib/components/form/list.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../util';
 
 describe('FormList', () => {
   describe('routing', () => {
@@ -42,11 +41,11 @@ describe('FormList', () => {
         .respondWithData(() => forms)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
-          tr.length.should.equal(2);
+          tr.length.should.equal(forms.length);
           for (let i = 0; i < tr.length; i += 1) {
-            const form = forms[i];
             const td = tr[i].find('td');
             td.length.should.equal(4);
+            const form = forms[i];
             td[0].first('.form-list-form-name').text().trim().should
               .equal(form.name != null ? form.name : form.xmlFormId);
             if (form.name != null) {
@@ -70,5 +69,8 @@ describe('FormList', () => {
           const text = page.first('#page-body p').text().trim();
           text.should.equal('To get started, add a form.');
         }));
+
+    it('refreshes after the refresh button is clicked', () =>
+      mockRoute('/forms').testRefreshButton(testData.extendedForms));
   });
 });

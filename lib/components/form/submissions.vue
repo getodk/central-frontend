@@ -10,25 +10,30 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="submissions == null">
+  <div>
     <alert v-bind="alert" @close="alert.state = false"/>
-    <loading :state="awaitingResponse"/>
-  </div>
-  <p v-else-if="submissions.length === 0">
-    There are no submissions yet for “{{ form.name || form.xmlFormId }}”.
-  </p>
-  <div v-else>
-    <float-row>
-      <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
-        class="hidden">
-      </a>
-      <button id="form-submissions-download-button" ref="downloadButton"
-        type="button" class="btn btn-primary"
-        @click="download">
-        <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
-      </button>
+    <float-row class="table-actions">
+      <template slot="left">
+        <refresh-button :fetching="awaitingResponse"
+          @refresh="fetchData({ clear: false })"/>
+      </template>
+      <template v-if="submissions != null && submissions.length !== 0"
+        slot="right">
+        <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
+          class="hidden">
+        </a>
+        <button id="form-submissions-download-button" ref="downloadButton"
+          type="button" class="btn btn-primary" @click="download">
+          <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
+        </button>
+      </template>
     </float-row>
-    <table class="table table-hover">
+    <loading v-if="submissions == null" :state="awaitingResponse"/>
+    <p v-else-if="submissions.length === 0">
+      There are no submissions yet for
+      <strong>{{ form.name || form.xmlFormId }}</strong>.
+    </p>
+    <table v-else class="table table-hover">
       <thead>
         <tr>
           <th>Instance ID</th>
@@ -87,11 +92,11 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    this.fetchData({ clear: false });
   },
   methods: {
-    fetchData() {
-      this.submissions = null;
+    fetchData({ clear }) {
+      if (clear) this.submissions = null;
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get(`/forms/${this.form.xmlFormId}/submissions`, { headers })

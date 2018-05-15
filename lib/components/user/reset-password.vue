@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-actions">
         <button id="user-reset-password-button" :disabled="awaitingResponse"
           type="button" class="btn btn-primary" @click="resetPassword">
-          Reset Password <spinner :state="awaitingResponse"/>
+          Reset password <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">

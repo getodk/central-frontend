@@ -74,6 +74,11 @@ $spinner-width: 3px;
                   0 0 6px 3px $color-action-background inset;
     }
 
+    .btn-secondary & {
+      box-shadow: 0 0 20px 10px $color-action-background,
+                  0 0 6px 3px $color-action-background inset;
+    }
+
     .btn-danger & {
       box-shadow: 0 0 20px 10px $color-danger,
                   0 0 6px 3px $color-danger inset;
@@ -93,6 +98,11 @@ $spinner-width: 3px;
     width: $spinner-width;
 
     .btn-primary & {
+      border-right-color: $color-action-background;
+      border-top-color: $color-action-background;
+    }
+
+    .btn-secondary & {
       border-right-color: $color-action-background;
       border-top-color: $color-action-background;
     }

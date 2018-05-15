@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         <ul class="nav navbar-nav navbar-right">
           <li v-if="loggedOut">
             <a href="#" @click.prevent>
-              <span class="icon-user-circle-o"></span> Not Logged in
+              <span class="icon-user-circle-o"></span> Not logged in
             </a>
           </li>
           <li v-else class="dropdown">

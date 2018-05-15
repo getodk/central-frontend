@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
+import { mockHttp } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 

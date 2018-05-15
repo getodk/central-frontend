@@ -11,8 +11,12 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
+import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import routerFactory from '../lib/router';
+import { logOut } from '../lib/session';
 import { mountAndMark } from './destroy';
+import { trigger } from './util';
 
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
@@ -288,27 +292,6 @@ class MockHttp {
   afterResponse(callback) { return this.afterResponses(callback); }
   complete() { return this.afterResponses(component => component); }
 
-  // Tests standard button thinking things.
-  standardButton(buttonSelector = 'button[type="submit"]') {
-    return this
-      .respondWithProblem()
-      .beforeEachResponse(component => {
-        const button = component.first(buttonSelector);
-        button.getAttribute('disabled').should.be.ok();
-        button.first(Spinner).getProp('state').should.be.true();
-        // There may end up being tests for which this assertion does not pass,
-        // but for good reason. We will have to update the assertion if/when
-        // that is the case.
-        component.should.not.alert();
-      })
-      .afterResponse(component => {
-        const button = component.first(buttonSelector);
-        button.element.disabled.should.be.false();
-        button.first(Spinner).getProp('state').should.be.false();
-        component.should.alert('danger');
-      });
-  }
-
   _tryBeforeEachResponse() {
     if (this._beforeEachResponse == null) return;
     if (this._errorFromBeforeEachResponse != null) return;
@@ -403,6 +386,57 @@ class MockHttp {
   }
 
   //////////////////////////////////////////////////////////////////////////////
+  // COMMON TESTS
+
+  // Tests standard button thinking things.
+  standardButton(buttonSelector = 'button[type="submit"]') {
+    return this
+      .respondWithProblem()
+      .beforeEachResponse(component => {
+        const button = component.first(buttonSelector);
+        button.getAttribute('disabled').should.be.ok();
+        button.first(Spinner).getProp('state').should.be.true();
+        // There may end up being tests for which this assertion does not pass,
+        // but for good reason. We will have to update the assertion if/when
+        // that is the case.
+        component.should.not.alert();
+      })
+      .afterResponse(component => {
+        const button = component.first(buttonSelector);
+        button.element.disabled.should.be.false();
+        button.first(Spinner).getProp('state').should.be.false();
+        component.should.alert('danger');
+      });
+  }
+
+  testRefreshButton(collection) {
+    const testRowCount = (component) => {
+      const tr = component.find('table tbody tr');
+      tr.length.should.equal(collection.size);
+    };
+    const clickRefreshButton = (component) =>
+      trigger.click(component.first('.btn-refresh'));
+    return this
+      .respondWithData(() => collection.createPast(1).sorted())
+      .afterResponse(testRowCount)
+      .request(clickRefreshButton)
+      // Test a successful response.
+      .respondWithData(() => collection.createPast(1).sorted())
+      // The table should not disappear during the refresh.
+      .beforeEachResponse(testRowCount)
+      // The table should be updated after the refresh.
+      .afterResponse(testRowCount)
+      .request(clickRefreshButton)
+      // Test a problem response.
+      .respondWithProblem()
+      .afterResponse(component => {
+        // The table should not disappear.
+        testRowCount(component);
+        component.should.alert();
+      });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   // PROMISE METHODS
 
   promise() {
@@ -421,4 +455,22 @@ class MockHttp {
   finally(onFinally) { return this.promise().finally(onFinally); }
 }
 
-export default () => new MockHttp();
+export const mockHttp = () => new MockHttp();
+
+export const mockRoute = (location, mountOptions = {}) => {
+  const session = Vue.prototype.$session;
+  // If the user is logged in, mounting the app with the router will redirect
+  // the user to the forms list, resulting in an HTTP request. To prevent that,
+  // any user who is logged in is temporarily logged out. That way, mounting the
+  // app will first redirect the user to login, resulting in no initial HTTP
+  // request.
+  if (session.loggedIn()) logOut();
+  const fullMountOptions = Object.assign({}, mountOptions);
+  fullMountOptions.router = routerFactory();
+  return mockHttp()
+    .mount(App, fullMountOptions)
+    .request(app => {
+      if (session.loggedIn()) session.updateGlobals();
+      app.vm.$router.push(location);
+    });
+};

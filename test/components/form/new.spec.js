@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import FormNew from '../../../lib/components/form/new.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
-import { mountAndMark } from '../../destroy';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { mockRoute, trigger } from '../../util';
+import { mountAndMark } from '../../destroy';
+import { trigger } from '../../util';
 
 const XML_FILENAME = 'test.xml';
 

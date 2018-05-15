@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
-import mockHttp from './http';
 import routerFactory from '../lib/router';
 import testData from './data';
 import { fillForm, trigger } from './util';
 import { logIn } from '../lib/session';
+import { mockHttp } from './http';
 
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)

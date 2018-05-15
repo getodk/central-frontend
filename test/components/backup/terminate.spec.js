@@ -11,10 +11,10 @@ except according to the terms contained in the LICENSE file.
 */
 import BackupList from '../../../lib/components/backup/list.vue';
 import BackupTerminate from '../../../lib/components/backup/terminate.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
-import { trigger } from '../../util';
+import { mockHttp } from '../../http';
 import { mockLogin } from '../../session';
+import { trigger } from '../../util';
 
 const openModal = (wrapper) =>
   trigger.click(wrapper.first('#backup-list-terminate-button'))

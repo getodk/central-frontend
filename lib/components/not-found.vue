@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     to go back, or click the button below to return to the list of forms:</p>
     <p>
       <router-link to="/forms" class="btn btn-primary btn-lg" role="button">
-        Return to Forms
+        Return to forms
       </router-link>
     </p>
   </div>

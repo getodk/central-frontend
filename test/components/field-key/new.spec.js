@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyNew from '../../../lib/components/field-key/new.vue';
-import mockHttp from '../../http';
 import testData from '../../data';
-import { fillForm, mockRoute, trigger } from '../../util';
+import { fillForm, trigger } from '../../util';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
