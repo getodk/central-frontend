@@ -74,7 +74,7 @@ except according to the terms contained in the LICENSE file.
               <p>Backup is working.</p>
               <p>
                 The last backup completed successfully
-                <strong>{{ $formatDate(backups.latest.loggedAt) }}</strong>.
+                <strong>{{ mostRecentlyLoggedAt }}</strong>.
               </p>
             </template>
           </td>
@@ -111,15 +111,44 @@ import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
-const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+// The duration for which a backup attempt is considered "recent": if the server
+// returns no log of a recent backup attempt, that means that there have been no
+// backup attempts for that duration into the past. If the server returns no log
+// of a recent backup attempt, and if backups were configured more than that
+// duration into the past (that is, if the latest config is itself not recent),
+// then the user is informed that something has gone wrong.
+const RECENT_DURATION = { days: 3 };
 
 class Backups {
-  constructor({ config, latest }) {
-    this._config = config;
-    this._latest = latest;
+  constructor(data = {}) {
+    this._setAt = data.setAt;
+    this._recent = data.recent != null
+      ? this.constructor.recentForConfig(data)
+      : null;
   }
 
-  static notConfigured() { return new Backups({}); }
+  // recentForConfig() returns the recent backup attempts for the latest config
+  // Note that failed backup attempts do not have a `configSetAt` property, so
+  // it is not always possible to determine their corresponding config.
+  // recentForConfig() takes an inclusive approach, including all backup
+  // attempts that might correspond to the latest config.
+  static recentForConfig({ setAt, recent }) {
+    const result = [];
+    for (const attempt of recent) {
+      const { details } = attempt;
+      if (details.configSetAt !== setAt && details.configSetAt != null) {
+        // We have reached backup attempts from a previous config. Assuming that
+        // a backup attempt from a previous config cannot be logged after a new
+        // config is set up, this means that all backup attempts that follow are
+        // from a previous config.
+        break;
+      }
+      result.push(attempt);
+    }
+    return result;
+  }
+
+  static notConfigured() { return new Backups(); }
 
   static fromResponse(response) {
     return response.status !== 404
@@ -127,17 +156,17 @@ class Backups {
       : Backups.notConfigured();
   }
 
-  get config() { return this._config; }
-  get latest() { return this._latest; }
+  get setAt() { return this._setAt; }
+  get recent() { return this._recent; }
 
   get status() {
-    if (this._config == null) return 'notConfigured';
-    if (this._latest == null) return 'neverRun';
-    const loggedAt = moment(this._latest.loggedAt).valueOf();
-    const threeDaysAgo = Date.now() - (3 * MILLISECONDS_IN_A_DAY);
-    if (!this._latest.details.success || loggedAt < threeDaysAgo)
-      return 'somethingWentWrong';
-    return 'success';
+    if (this._setAt == null) return 'notConfigured';
+    if (this._recent.length === 0) {
+      return moment(this._setAt) < moment().subtract(RECENT_DURATION)
+        ? 'somethingWentWrong'
+        : 'neverRun';
+    }
+    return this._recent[0].details.success ? 'success' : 'somethingWentWrong';
   }
 }
 
@@ -165,13 +194,18 @@ export default {
     iconClasses() {
       switch (this.backups.status) {
         case 'notConfigured':
-        case 'neverRun':
           return ['icon-question-circle', 'text-muted'];
-        case 'somethingWentWrong':
-          return ['icon-times-circle', 'text-danger'];
-        default:
+        case 'neverRun':
+        case 'success':
           return ['icon-check-circle', 'text-success'];
+        default: // 'somethingWentWrong'
+          return ['icon-times-circle', 'text-danger'];
       }
+    },
+    mostRecentlyLoggedAt() {
+      return this.backups.recent.length !== 0
+        ? this.$formatDate(this.backups.recent[0].loggedAt)
+        : null;
     }
   },
   watch: {
@@ -199,6 +233,14 @@ export default {
     afterTerminate() {
       this.alert = alert.success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
       this.backups = Backups.notConfigured();
+    },
+    // The following methods are used in tests. (It does not seem otherwise
+    // possible to export them from this single file component.)
+    recentDate() {
+      return moment().subtract(RECENT_DURATION).toDate();
+    },
+    recentForConfig(data) {
+      return Backups.recentForConfig(data);
     }
   }
 };
