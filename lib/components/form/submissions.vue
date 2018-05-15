@@ -30,7 +30,8 @@ except according to the terms contained in the LICENSE file.
     </float-row>
     <loading v-if="submissions == null" :state="awaitingResponse"/>
     <p v-else-if="submissions.length === 0">
-      There are no submissions yet for “{{ form.name || form.xmlFormId }}”.
+      There are no submissions yet for
+      <strong>{{ form.name || form.xmlFormId }}</strong>.
     </p>
     <table v-else class="table table-hover">
       <thead>
