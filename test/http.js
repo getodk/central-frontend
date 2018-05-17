@@ -390,12 +390,18 @@ class MockHttp {
 
   // Tests standard button thinking things.
   standardButton(buttonSelector = 'button[type="submit"]') {
+    const spinner = (button) => {
+      const spinners = button.find(Spinner);
+      if (spinners.length === 0) throw new Error('spinner not found');
+      if (spinners.length > 1) throw new Error('multiple spinners found');
+      return spinners[0];
+    };
     return this
       .respondWithProblem()
       .beforeEachResponse(component => {
         const button = component.first(buttonSelector);
         button.getAttribute('disabled').should.be.ok();
-        button.first(Spinner).getProp('state').should.be.true();
+        spinner(button).getProp('state').should.be.true();
         // There may end up being tests for which this assertion does not pass,
         // but for good reason. We will have to update the assertion if/when
         // that is the case.
@@ -404,7 +410,7 @@ class MockHttp {
       .afterResponse(component => {
         const button = component.first(buttonSelector);
         button.element.disabled.should.be.false();
-        button.first(Spinner).getProp('state').should.be.false();
+        spinner(button).getProp('state').should.be.false();
         component.should.alert('danger');
       });
   }
