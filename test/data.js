@@ -160,7 +160,7 @@ const testData = Object.assign(
       const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
       const name = faker.random.arrayElement([faker.name.findName(), null]);
       const anySubmission = faker.random.boolean();
-      const version = faker.random.arrayElement([faker.random.number(), null]);
+      const version = faker.random.boolean() ? faker.random.number().toString() : '';
       return {
         xmlFormId,
         name,

@@ -225,16 +225,21 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(code = 500, message = 'There was a problem.') {
-    const error = new Error();
-    error.response = {
-      status: Math.floor(code),
-      data: {
-        code,
-        message
-      }
-    };
-    return this._respond(() => error);
+  respondWithProblem(codeOrFunction) {
+    if (codeOrFunction == null)
+      return this.respondWithProblem(500);
+    if (typeof codeOrFunction === 'number') {
+      return this.respondWithProblem(() => ({
+        code: codeOrFunction,
+        message: 'There was a problem.'
+      }));
+    }
+    return this._respond(() => {
+      const error = new Error();
+      const data = codeOrFunction();
+      error.response = { status: Math.floor(data.code), data };
+      return error;
+    });
   }
 
   _respond(callback) {
