@@ -259,6 +259,18 @@ body {
   }
 }
 
+.panel-simple-danger {
+  @extend .panel-simple;
+
+  .panel-heading {
+    border: none;
+  }
+
+  .panel-body {
+    border: 1px solid $color-danger;
+  }
+}
+
 .popover {
   background-color: $color-action-background;
   padding: 0;
