@@ -165,6 +165,7 @@ const testData = Object.assign(
         xmlFormId,
         name,
         version,
+        state: faker.random.arrayElement(['open', 'closing', 'closed']),
         // This does not actually match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,

@@ -10,16 +10,39 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <p>Not yet implemented.</p>
+  <div>
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <div class="row">
+      <div class="col-xs-8">
+        <form-edit :form="form" @alert="setAlert"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import FormEdit from './edit.vue';
+import alert from '../../mixins/alert';
+
 export default {
   name: 'FormSettings',
+  components: { FormEdit },
+  mixins: [alert()],
   props: {
     form: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      alert: alert.blank()
+    };
+  },
+  methods: {
+    setAlert(alertObj) {
+      this.$emit('alert');
+      this.alert = alertObj;
     }
   }
 };

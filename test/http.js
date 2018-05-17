@@ -25,6 +25,8 @@ export const setHttp = (respond) => {
   http.get = (url, config) => http({ ...config, method: 'get', url });
   // eslint-disable-next-line object-curly-newline
   http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
+  // eslint-disable-next-line object-curly-newline
+  http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
   http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
     headers: {

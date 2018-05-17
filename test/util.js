@@ -28,7 +28,7 @@ export const trigger = (eventName, wrapper, bubbles = false) => {
   return Vue.nextTick();
 };
 
-const EVENT_NAMES = ['click', 'submit'];
+const EVENT_NAMES = ['change', 'click', 'submit'];
 for (const name of EVENT_NAMES)
   trigger[name] = (wrapper, bubbles = false) => trigger(name, wrapper, bubbles);
 
