@@ -180,6 +180,10 @@ body {
   }
 }
 
+.radio label {
+  cursor: default;
+}
+
 .table {
   > thead {
     background-color: $color-table-heading-background;
