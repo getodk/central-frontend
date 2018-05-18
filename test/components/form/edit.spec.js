@@ -43,14 +43,15 @@ describe('FormEdit', () => {
   beforeEach(mockLogin);
 
   describe('after selection', () => {
-    it('disables inputs', () =>
+    it('disables fieldset', () =>
       mockHttp()
         .mount(FormEdit, propsData())
         .request(selectDifferentState)
         .respondWithSuccess()
-        .beforeEachResponse(component =>
-          component.find('input').should.matchEach(input =>
-            input.getAttribute('disabled').should.not.be.empty())));
+        .beforeEachResponse(component => {
+          const disabled = component.first('fieldset').getAttribute('disabled');
+          disabled.should.equal('disabled');
+        }));
 
     it('shows a spinner', () =>
       mockHttp()

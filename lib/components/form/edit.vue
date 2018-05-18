@@ -14,54 +14,56 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-heading"><h1 class="panel-title">Form Stage</h1></div>
     <div class="panel-body">
       <form>
-        <div :disabled="awaitingResponse" class="radio">
-          <label>
-            <input :checked="state === 'open'" :disabled="awaitingResponse"
-              type="radio" value="open" @change="changeState('open')">
-            <div>
-              <strong>Open</strong>
-              <span>
-                <spinner :state="awaitingResponse && state === 'open'"/>
-              </span>
-            </div>
-            <div>
-              This form is available to download onto mobile devices and accepts
-              new submissions.
-            </div>
-          </label>
-        </div>
-        <div :disabled="awaitingResponse" class="radio">
-          <label>
-            <input :checked="state === 'closing'" :disabled="awaitingResponse"
-              type="radio" value="closing" @change="changeState('closing')">
-            <div>
-              <strong>Closing</strong>
-              <span>
-                <spinner :state="awaitingResponse && state === 'closing'"/>
-              </span>
-            </div>
-            <div>
-              This form accepts new submissions, but is <em>not available</em>
-              to download onto mobile devices.
-            </div>
-          </label>
-        </div>
-        <div :disabled="awaitingResponse" class="radio">
-          <label>
-            <input :checked="state === 'closed'" :disabled="awaitingResponse"
-              type="radio" value="closed" @change="changeState('closed')">
-            <div>
-              <strong>Closed</strong>
-              <span>
-                <spinner :state="awaitingResponse && state === 'closed'"/>
-              </span>
-            </div>
-            <div>
-              This form is not available to download onto mobile devices, nor
-              does it accept new submissions.
-            </div>
-          </label>
-        </div>
+        <fieldset :disabled="awaitingResponse">
+          <div class="radio">
+            <label>
+              <input :checked="state === 'open'" type="radio" value="open"
+                @change="changeState('open')">
+              <div>
+                <strong>Open</strong>
+                <span>
+                  <spinner :state="awaitingResponse && state === 'open'"/>
+                </span>
+              </div>
+              <div>
+                This form is available to download onto mobile devices and
+                accepts new submissions.
+              </div>
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input :checked="state === 'closing'" type="radio" value="closing"
+                @change="changeState('closing')">
+              <div>
+                <strong>Closing</strong>
+                <span>
+                  <spinner :state="awaitingResponse && state === 'closing'"/>
+                </span>
+              </div>
+              <div>
+                This form accepts new submissions, but is <em>not available</em>
+                to download onto mobile devices.
+              </div>
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input :checked="state === 'closed'" type="radio" value="closed"
+                @change="changeState('closed')">
+              <div>
+                <strong>Closed</strong>
+                <span>
+                  <spinner :state="awaitingResponse && state === 'closed'"/>
+                </span>
+              </div>
+              <div>
+                This form is not available to download onto mobile devices, nor
+                does it accept new submissions.
+              </div>
+            </label>
+          </div>
+        </fieldset>
       </form>
     </div>
   </div>
