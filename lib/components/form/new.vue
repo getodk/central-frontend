@@ -104,6 +104,14 @@ export default {
     $(this.$refs.dropZone).off('.app-form-new');
   },
   methods: {
+    problemToAlert(problem) {
+      if (problem.code === 400.5 && problem.details.table === 'forms' &&
+        problem.details.fields.length === 2 &&
+        problem.details.fields[0] === 'xmlFormId' &&
+        problem.details.fields[1] === 'version')
+        return 'A form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the form again.';
+      return null;
+    },
     hide() {
       this.$emit('hide');
       if (this.alert.type === 'info' && this.alert.message === NO_FILE_MESSAGE)

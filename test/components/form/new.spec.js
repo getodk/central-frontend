@@ -166,6 +166,33 @@ describe('FormNew', () => {
           });
         });
       });
+
+      it('shows a custom error message for a 400.5 problem', () =>
+        mockHttp()
+          .mount(FormNew)
+          .request(modal => Promise.resolve(modal)
+            .then(createForm)
+            .then(selectFile)
+            .then(waitForRead)
+            .then(clickCreateButtonInModal))
+          .respondWithProblem(() => ({
+            code: 400.5,
+            message: 'Error',
+            details: {
+              table: 'forms',
+              fields: [
+                'xmlFormId',
+                'version'
+              ],
+              values: [
+                testData.extendedForms.last().xmlFormId,
+                testData.extendedForms.last().version
+              ]
+            }
+          }))
+          .afterResponse(modal => {
+            modal.should.alert('danger', 'A form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the form again.');
+          }));
     });
   }
 });

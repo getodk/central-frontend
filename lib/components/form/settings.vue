@@ -10,17 +10,79 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <p>Not yet implemented.</p>
+  <div id="form-settings">
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <div class="row">
+      <div class="col-xs-8">
+        <form-edit :form="form" @alert="setAlert"/>
+      </div>
+      <div class="col-xs-4">
+        <div class="panel panel-simple-danger">
+          <div class="panel-heading">
+            <h1 class="panel-title">Danger Zone</h1>
+          </div>
+          <div class="panel-body">
+            <p class="text-center">
+              <button :disabled="awaitingResponse" type="button"
+                class="btn btn-danger" @click="deleteForm.state = true">
+                Delete this form
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form-delete :state="deleteForm.state" :form="form"
+      @hide="deleteForm.state = false" @success="afterDelete"/>
+  </div>
 </template>
 
 <script>
+import FormDelete from './delete.vue';
+import FormEdit from './edit.vue';
+import alert from '../../mixins/alert';
+import modal from '../../mixins/modal';
+
 export default {
   name: 'FormSettings',
+  components: { FormEdit, FormDelete },
+  mixins: [
+    alert(),
+    modal('deleteForm')
+  ],
   props: {
     form: {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      alert: alert.blank(),
+      deleteForm: {
+        state: false
+      }
+    };
+  },
+  methods: {
+    setAlert(alertObj) {
+      this.$emit('alert');
+      this.alert = alertObj;
+    },
+    afterDelete() {
+      const name = this.form.name != null
+        ? this.form.name
+        : this.form.xmlFormId;
+      this.$alert = alert.success(`The form “${name}” was deleted.`);
+      this.$router.push('/forms');
+    }
   }
 };
 </script>
+
+<style lang="sass">
+#form-settings .panel-simple-danger .panel-body p {
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+</style>

@@ -180,13 +180,18 @@ body {
   }
 }
 
+.radio label {
+  cursor: default;
+}
+
 .table {
   > thead {
     background-color: $color-table-heading-background;
+
     > tr > th {
-      border-bottom: 1px solid $color-table-heading-border;
-      font-size: 12px;
-      padding: 8px 9px 6px;
+      border-bottom: $border-bottom-table-heading;
+      font-size: $font-size-table-heading;
+      padding: $padding-table-heading;
     }
   }
 }
@@ -198,22 +203,13 @@ body {
 .panel {
   border: none;
   border-radius: 0;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
 
   .panel-heading {
-    background-color: $color-accent-primary;
     border-radius: 0;
-    color: #fff;
 
     .panel-title {
-      font-size: 18px;
       font-weight: bold;
-      letter-spacing: -0.02em;
     }
-  }
-
-  .panel-body {
-    padding: 25px 15px;
   }
 
   .panel-footer {
@@ -225,8 +221,58 @@ body {
   }
 }
 
+.panel-default {
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+
+  .panel-heading {
+    background-color: $color-accent-primary;
+    color: #fff;
+
+    .panel-title {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .panel-body {
+    padding: 25px 15px;
+  }
+}
+
 .panel-main {
   margin-top: 70px;
+}
+
+// Intended to be styled similarly to .table.
+.panel-simple {
+  background-color: transparent;
+  box-shadow: none;
+
+  .panel-heading {
+    background-color: $color-table-heading-background;
+    border-bottom: $border-bottom-table-heading;
+    padding: $padding-table-heading;
+
+    .panel-title {
+      font-size: $font-size-table-heading;
+    }
+  }
+
+  .panel-body {
+    padding: 8px;
+  }
+}
+
+.panel-simple-danger {
+  @extend .panel-simple;
+
+  .panel-heading {
+    border: none;
+  }
+
+  .panel-body {
+    border: 1px solid $color-danger;
+  }
 }
 
 .popover {

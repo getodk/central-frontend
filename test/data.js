@@ -160,11 +160,12 @@ const testData = Object.assign(
       const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
       const name = faker.random.arrayElement([faker.name.findName(), null]);
       const anySubmission = faker.random.boolean();
-      const version = faker.random.arrayElement([faker.random.number(), null]);
+      const version = faker.random.boolean() ? faker.random.number().toString() : '';
       return {
         xmlFormId,
         name,
         version,
+        state: faker.random.arrayElement(['open', 'closing', 'closed']),
         // This does not actually match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,

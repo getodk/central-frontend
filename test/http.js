@@ -25,6 +25,8 @@ export const setHttp = (respond) => {
   http.get = (url, config) => http({ ...config, method: 'get', url });
   // eslint-disable-next-line object-curly-newline
   http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
+  // eslint-disable-next-line object-curly-newline
+  http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
   http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
     headers: {
@@ -223,16 +225,21 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(code = 500, message = 'There was a problem.') {
-    const error = new Error();
-    error.response = {
-      status: Math.floor(code),
-      data: {
-        code,
-        message
-      }
-    };
-    return this._respond(() => error);
+  respondWithProblem(codeOrFunction) {
+    if (codeOrFunction == null)
+      return this.respondWithProblem(500);
+    if (typeof codeOrFunction === 'number') {
+      return this.respondWithProblem(() => ({
+        code: codeOrFunction,
+        message: 'There was a problem.'
+      }));
+    }
+    return this._respond(() => {
+      const error = new Error();
+      const data = codeOrFunction();
+      error.response = { status: Math.floor(data.code), data };
+      return error;
+    });
   }
 
   _respond(callback) {
@@ -390,12 +397,18 @@ class MockHttp {
 
   // Tests standard button thinking things.
   standardButton(buttonSelector = 'button[type="submit"]') {
+    const spinner = (button) => {
+      const spinners = button.find(Spinner);
+      if (spinners.length === 0) throw new Error('spinner not found');
+      if (spinners.length > 1) throw new Error('multiple spinners found');
+      return spinners[0];
+    };
     return this
       .respondWithProblem()
       .beforeEachResponse(component => {
         const button = component.first(buttonSelector);
         button.getAttribute('disabled').should.be.ok();
-        button.first(Spinner).getProp('state').should.be.true();
+        spinner(button).getProp('state').should.be.true();
         // There may end up being tests for which this assertion does not pass,
         // but for good reason. We will have to update the assertion if/when
         // that is the case.
@@ -404,7 +417,7 @@ class MockHttp {
       .afterResponse(component => {
         const button = component.first(buttonSelector);
         button.element.disabled.should.be.false();
-        button.first(Spinner).getProp('state').should.be.false();
+        spinner(button).getProp('state').should.be.false();
         component.should.alert('danger');
       });
   }
