@@ -70,6 +70,10 @@ body {
   }
 }
 
+.text-monospace {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 .no-text-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
