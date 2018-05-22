@@ -275,6 +275,34 @@ body {
   }
 }
 
+.nav-tabs {
+  border-bottom: none;
+
+  > li {
+    margin-bottom: -1px;
+    margin-right: 10px;
+
+    > a {
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      color: $color-text;
+      padding: 7px 8px 6px;
+
+      &:hover {
+        border-bottom-color: $color-accent-primary;
+      }
+    }
+
+    &.active > a {
+      &, &:hover, &:focus {
+        background-color: $color-subpanel-active;
+        border-bottom-color: $color-accent-primary;
+      }
+    }
+  }
+}
+
 .popover {
   background-color: $color-action-background;
   padding: 0;

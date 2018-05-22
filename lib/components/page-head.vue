@@ -51,33 +51,12 @@ export default {
     }
 
     > .nav-tabs {
-      border-bottom: none;
-
       &:empty {
         margin-top: 15px;
       }
 
       > li {
-        margin-bottom: -1px;
-        margin-right: 10px;
         margin-top: 5px;
-
-        > a {
-          border: none;
-          border-bottom: 2px solid transparent;
-          border-radius: 0;
-          color: $color-text;
-          padding: 7px 8px 6px;
-
-          &:hover {
-            border-bottom-color: $color-accent-primary;
-          }
-        }
-
-        &.active > a {
-          background-color: $color-subpanel-active;
-          border-bottom-color: $color-accent-primary;
-        }
       }
     }
   }
