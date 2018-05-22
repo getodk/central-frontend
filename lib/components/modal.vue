@@ -113,7 +113,7 @@ export default {
 @import '../../assets/scss/variables';
 
 .modal-dialog {
-  margin-top: 160px;
+  margin-top: 91px;
 
   .modal-content {
     border: none;
