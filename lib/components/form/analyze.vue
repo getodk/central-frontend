@@ -136,6 +136,10 @@ export default {
   padding-left: 0;
   padding-right: 0;
 
+  .modal-introduction {
+    margin-bottom: 10px;
+  }
+
   #form-analyze-head {
     border-bottom: 1px solid $color-subpanel-border-strong;
     padding-left: $padding-modal-body;
@@ -147,7 +151,7 @@ export default {
   }
 
   #form-analyze-odata-url {
-    background-color: $color-subpanel-active;
+    background-color: $color-subpanel-background;
     overflow-x: scroll;
     padding: 12px $padding-modal-body;
   }

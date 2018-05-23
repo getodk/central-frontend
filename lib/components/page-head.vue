@@ -57,6 +57,12 @@ export default {
 
       > li {
         margin-top: 5px;
+
+        &.active > a {
+          &, &:hover, &:focus {
+            background-color: $color-subpanel-active;
+          }
+        }
       }
     }
   }

@@ -288,6 +288,7 @@ body {
 
     & > a, &.active > a {
       &, &:hover, &:focus {
+        background-color: transparent;
         border: none;
         border-bottom: 2px solid transparent;
         border-radius: 0;
@@ -302,7 +303,7 @@ body {
 
     &.active > a {
       &, &:hover, &:focus {
-        background-color: $color-subpanel-active;
+        background-color: $color-subpanel-background;
         border-bottom-color: $color-accent-primary;
       }
     }
