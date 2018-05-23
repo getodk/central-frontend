@@ -286,12 +286,14 @@ body {
     margin-bottom: -1px;
     margin-right: 10px;
 
-    > a {
-      border: none;
-      border-bottom: 2px solid transparent;
-      border-radius: 0;
-      color: $color-text;
-      padding: 7px 8px 6px;
+    & > a, &.active > a {
+      &, &:hover, &:focus {
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        color: $color-text;
+        padding: 7px 8px 6px;
+      }
 
       &:hover {
         border-bottom-color: $color-accent-primary;
