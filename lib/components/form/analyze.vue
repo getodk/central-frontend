@@ -19,9 +19,7 @@ except according to the terms contained in the LICENSE file.
           <p>
             OData is a new standard for transferring data between tools and
             services. Free and powerful analysis tools like Excel,
-            <a :href="links.powerBi.home" target="_blank" rel="noopener">
-              Microsoft Power BI
-            </a>
+            <a :href="links.powerBi.home" target="_blank" rel="noopener">Microsoft Power BI</a>,
             and
             <a :href="links.tableau.home" target="_blank" rel="noopener">
               Tableau
