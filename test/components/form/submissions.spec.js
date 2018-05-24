@@ -68,15 +68,6 @@ describe('FormSubmissions', () => {
         });
     });
 
-    it('shows a message if there are no submissions', () =>
-      mockHttp()
-        .mount(FormSubmissions, propsData())
-        .respondWithData(() => [])
-        .afterResponse(page => {
-          const text = page.first('p').text().trim();
-          text.should.startWith('There are no submissions yet');
-        }));
-
     it('refreshes after the refresh button is clicked', () =>
       mockHttp()
         .mount(FormSubmissions, propsData())
@@ -122,6 +113,33 @@ describe('FormSubmissions', () => {
           .then(() => axios.get(href))
           .then(response => response.data.should.equal(zipContents));
       });
+    });
+
+    describe('no submissions', () => {
+      it('shows a message', () =>
+        mockHttp()
+          .mount(FormSubmissions, propsData())
+          .respondWithData(() => [])
+          .afterResponse(component => {
+            const text = component.first('p').text().trim();
+            text.should.startWith('There are no submissions yet');
+          }));
+
+      it('does not show the download button', () =>
+        mockHttp()
+          .mount(FormSubmissions, propsData())
+          .respondWithData(() => [])
+          .afterResponse(component => {
+            component.find('#form-submissions-download-button').should.be.empty();
+          }));
+
+      it('does not show the analyze button', () =>
+        mockHttp()
+          .mount(FormSubmissions, propsData())
+          .respondWithData(() => [])
+          .afterResponse(component => {
+            component.find('#form-submissions-analyze-button').should.be.empty();
+          }));
     });
   });
 });

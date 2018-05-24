@@ -70,6 +70,10 @@ body {
   }
 }
 
+.text-monospace {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 .no-text-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
@@ -272,6 +276,37 @@ body {
 
   .panel-body {
     border: 1px solid $color-danger;
+  }
+}
+
+.nav-tabs {
+  border-bottom: none;
+
+  > li {
+    margin-bottom: -1px;
+    margin-right: 10px;
+
+    & > a, &.active > a {
+      &, &:hover, &:focus {
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        color: $color-text;
+        padding: 7px 8px 6px;
+      }
+
+      &:hover {
+        border-bottom-color: $color-accent-primary;
+      }
+    }
+
+    &.active > a {
+      &, &:hover, &:focus {
+        background-color: $color-subpanel-background;
+        border-bottom-color: $color-accent-primary;
+      }
+    }
   }
 }
 

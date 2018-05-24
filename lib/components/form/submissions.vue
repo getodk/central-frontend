@@ -26,6 +26,10 @@ except according to the terms contained in the LICENSE file.
           type="button" class="btn btn-primary" @click="download">
           <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
         </button>
+        <button id="form-submissions-analyze-button" type="button"
+          class="btn btn-primary" @click="analyze.state = true">
+          <span class="icon-plug"></span> Analyze via OData
+        </button>
       </template>
     </float-row>
     <loading v-if="submissions == null" :state="awaitingResponse"/>
@@ -49,18 +53,27 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </tbody>
     </table>
+    <form-analyze :state="analyze.state" :form="form"
+      @hide="analyze.state = false"/>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
 
+import FormAnalyze from './analyze.vue';
 import alert from '../../mixins/alert';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormSubmissions',
-  mixins: [alert(), request()],
+  components: { FormAnalyze },
+  mixins: [
+    alert(),
+    modal('analyze'),
+    request()
+  ],
   props: {
     form: {
       type: Object,
@@ -72,7 +85,10 @@ export default {
       alert: alert.blank(),
       requestId: null,
       submissions: null,
-      downloadHref: '#'
+      downloadHref: '#',
+      analyze: {
+        state: false
+      }
     };
   },
   computed: {

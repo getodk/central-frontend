@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           to upload.
         </div>
-        <div id="form-new-filename" :style="pointerEvents">{{ filename }}</div>
+        <div :style="pointerEvents" class="text-monospace">{{ filename }}</div>
       </div>
       <div class="modal-actions">
         <button id="form-new-create-button" :disabled="awaitingResponse"
@@ -214,10 +214,6 @@ export default {
   div {
     margin-bottom: 5px;
     margin-top: 5px;
-  }
-
-  #form-new-filename {
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   }
 }
 </style>

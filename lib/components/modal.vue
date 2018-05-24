@@ -113,7 +113,7 @@ export default {
 @import '../../assets/scss/variables';
 
 .modal-dialog {
-  margin-top: 160px;
+  margin-top: 20vh;
 
   .modal-content {
     border: none;
@@ -143,18 +143,22 @@ export default {
       }
     }
 
-    .modal-introduction {
-      font-size: 14px;
-      line-height: 1.2em;
-      margin-bottom: 18px;
-    }
+    .modal-body {
+      padding: $padding-modal-body;
 
-    .modal-actions {
-      background: $color-subpanel-background;
-      border-top: 1px solid $color-subpanel-border;
-      margin: -15px;
-      margin-top: 20px;
-      padding: 10px 15px;
+      .modal-introduction {
+        font-size: 14px;
+        line-height: 1.2em;
+        margin-bottom: 18px;
+      }
+
+      .modal-actions {
+        background: $color-subpanel-background;
+        border-top: 1px solid $color-subpanel-border;
+        margin: -15px;
+        margin-top: 20px;
+        padding: 10px 15px;
+      }
     }
   }
 }
