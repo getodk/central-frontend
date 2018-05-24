@@ -38,13 +38,13 @@ except according to the terms contained in the LICENSE file.
         </div>
         <ul class="nav nav-tabs">
           <li :class="tabClass('microsoft')" role="presentation">
-            <a href="#" @click.prevent="tool = 'microsoft'">Excel/Power BI</a>
+            <a href="#" @click.prevent="setTool('microsoft')">Excel/Power BI</a>
           </li>
           <li :class="tabClass('tableau')" role="presentation">
-            <a href="#" @click.prevent="tool = 'tableau'">Tableau</a>
+            <a href="#" @click.prevent="setTool('tableau')">Tableau</a>
           </li>
           <li :class="tabClass('other')" role="presentation">
-            <a href="#" @click.prevent="tool = 'other'">Other</a>
+            <a href="#" @click.prevent="setTool('other')">Other</a>
           </li>
         </ul>
       </div>
@@ -115,6 +115,9 @@ export default {
   methods: {
     tabClass(tool) {
       return { active: this.tool === tool };
+    },
+    setTool(tool) {
+      this.tool = tool;
     },
     selectUrl() {
       if (window.getSelection == null) return;
