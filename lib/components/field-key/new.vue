@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')" @shown="focusField">
-    <template slot="title">Create Field Key</template>
+    <template slot="title">Create App User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <form @submit.prevent="submit">

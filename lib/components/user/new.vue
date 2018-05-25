@@ -12,13 +12,14 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')" @shown="focusEmailInput">
-    <template slot="title">Create Staff User</template>
+    <template slot="title">Create Web User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <p class="modal-introduction">
-        Currently, all Staff Users are created with full access to all data and administrative
-        actions on this server. When you create this account, the email address you provide will
-        be sent instructions on how to set a password and proceed.
+        Currently, all Web Users are created with full access to all data and
+        administrative actions on this server. When you create this account, the
+        email address you provide will be sent instructions on how to set a
+        password and proceed.
       </p>
       <form @submit.prevent="submit">
         <label class="form-group">

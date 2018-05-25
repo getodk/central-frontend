@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         @refresh="fetchData({ clear: false })"/>
       <button id="user-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="newUser.state = true">
-        <span class="icon-plus-circle"></span> Create staff user
+        <span class="icon-plus-circle"></span> Create web user
       </button>
     </float-row>
     <loading v-if="users == null" :state="awaitingResponse"/>

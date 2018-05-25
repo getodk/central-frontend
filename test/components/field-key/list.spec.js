@@ -42,13 +42,13 @@ describe('FieldKeyList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    it('field keys tab is active', () =>
+    it('app users tab is active', () =>
       mockRoute('/users/field-keys')
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(app => {
           const tab = app.first('.nav-tabs > .active');
           const title = tab.first('a').text().trim();
-          title.should.equal('Field Keys');
+          title.should.equal('App Users');
         }));
 
     it('table contains the correct data', () => {
@@ -68,13 +68,13 @@ describe('FieldKeyList', () => {
         });
     });
 
-    it('shows a message if there are no field keys', () =>
+    it('shows a message if there are no app users', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() => [])
         .afterResponse(page => {
           const text = page.first('p').text().trim();
-          text.should.startWith('There are no field keys yet.');
+          text.should.startWith('There are no app users yet.');
         }));
 
     it('refreshes after the refresh button is clicked', () =>

@@ -14,18 +14,18 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template slot="title">Users</template>
       <template slot="body">
-        Staff Users are granted access to this administration site, while Field
-        Keys give clients (like
+        Web Users are granted access to this administration site, while App
+        Users grant clients (like
         <doc-link to="collect-intro/">Collect</doc-link>)
         individual access to the forms to download, fill out, and submit.
         <doc-link>Learn more</doc-link>
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Staff</router-link>
+          <router-link :to="tabPath('')">Web Users</router-link>
         </li>
         <li :class="tabClass('field-keys')" role="presentation">
-          <router-link :to="tabPath('field-keys')">Field Keys</router-link>
+          <router-link :to="tabPath('field-keys')">App Users</router-link>
         </li>
       </template>
     </page-head>

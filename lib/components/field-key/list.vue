@@ -17,13 +17,13 @@ except according to the terms contained in the LICENSE file.
         @refresh="fetchData({ clear: false })"/>
       <button id="field-key-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
-        <span class="icon-plus-circle"></span> Create field key
+        <span class="icon-plus-circle"></span> Create app user
       </button>
     </float-row>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
     <p v-else-if="fieldKeys.length === 0">
-      There are no field keys yet. You will need to create some to download
-      forms and submit data from your device.
+      There are no app users yet. You will need to create some to download forms
+      and submit data from your device.
     </p>
     <table v-else id="field-key-list-table" class="table table-hover">
       <thead>
@@ -270,12 +270,12 @@ export default {
     },
     afterCreate(fieldKey) {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`The field key “${fieldKey.displayName}” was created successfully.`);
+      this.alert = alert.success(`The app user “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`The field key “${this.revoke.fieldKey.displayName}” was revoked.`);
+      this.alert = alert.success(`The app user “${this.revoke.fieldKey.displayName}” was revoked.`);
       this.highlighted = null;
     }
   }

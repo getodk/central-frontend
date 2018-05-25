@@ -12,18 +12,18 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-revoke" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template slot="title">Revoke Key</template>
+    <template slot="title">Revoke User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">
         <p>
-          Are you sure you want to revoke the field key
+          Are you sure you want to revoke access from the app user
           <strong>{{ fieldKey.displayName }}</strong>?
         </p>
         <p>
-          Existing submissions using this key will remain, but anybody relying
-          on this key will have to obtain a new one to continue downloading
-          forms or uploading submissions.
+          Existing submissions from this user will remain, but anybody relying
+          on this user will have to use a new one to continue downloading forms
+          or uploading submissions.
         </p>
         <p>This action cannot be undone.</p>
       </div>
