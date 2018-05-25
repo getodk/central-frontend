@@ -131,6 +131,8 @@ export default {
     },
     createAnother() {
       this.step = 1;
+      // We do not reset this.created, because it will still be used once the
+      // modal is hidden.
       this.$nextTick(this.focusNicknameInput);
     }
   }
