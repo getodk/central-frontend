@@ -144,8 +144,8 @@ describe('FormNew', () => {
           .respondWithData(() => testData.simpleForms.last()) // FormShow request
           .respondWithData(() => [])); // FormSubmissions request
 
-        it('redirects to submissions list', () => {
-          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}/submissions`);
+        it('redirects to the form overview', () => {
+          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}`);
         });
 
         it('shows form name', () => {

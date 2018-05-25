@@ -186,7 +186,7 @@ export default {
             const form = data;
             const name = form.name || form.xmlFormId;
             this.$alert = alert.success(`The form “${name}” was created successfully.`);
-            this.$router.push(`/forms/${form.xmlFormId}/submissions`);
+            this.$router.push(`/forms/${form.xmlFormId}`);
           });
         })
         .catch(() => {});
