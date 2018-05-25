@@ -46,7 +46,7 @@ describe('FieldKeyNew', () => {
           .afterResponse(clickCreateButton)
           .then(page => page.first(FieldKeyNew).getProp('state').should.be.true()));
 
-      it('first field is focused', () =>
+      it('nickname input is focused', () =>
         mockRoute('/users/field-keys', { attachToDocument: true })
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)

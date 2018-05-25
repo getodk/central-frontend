@@ -11,11 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="focusField">
+    backdrop @hide="$emit('hide')" @shown="focusNicknameInput">
     <template slot="title">Create App User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <form @submit.prevent="submit">
+        <label class="form-group">
+          <select class="form-control">
+            <option>Download and submit to all forms on this server</option>
+            <option disabled>
+              More options available soon (to choose particular forms)
+            </option>
+          </select>
+          <span class="form-label">Access *</span>
+        </label>
         <label class="form-group">
           <input ref="nickname" v-model.trim="nickname"
             :disabled="awaitingResponse" class="form-control"
@@ -58,7 +67,7 @@ export default {
     };
   },
   methods: {
-    focusField() {
+    focusNicknameInput() {
       this.$refs.nickname.focus();
     },
     submit() {
