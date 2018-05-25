@@ -141,9 +141,9 @@ describe('FormNew', () => {
             .then(selectFile)
             .then(waitForRead)
             .then(clickCreateButtonInModal))
-          .respondWithData(() => testData.simpleForms.last()) // FormNew request
-          .respondWithData(() => testData.extendedForms.last()) // FormShow request
-          .respondWithData(() => [])); // FormSubmissions request
+          .respondWithData(() => testData.simpleForms.last()) // FormNew
+          .respondWithData(() => testData.extendedForms.last()) // FormShow
+          .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
         it('redirects to the form overview', () => {
           app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}`);
