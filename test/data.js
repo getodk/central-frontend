@@ -166,8 +166,10 @@ const testData = Object.assign(
         name,
         version,
         state: faker.random.arrayElement(['open', 'closing', 'closed']),
-        // This does not actually match the XML below.
+        // This does not necessarily match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
+        // The following two properties do not necessarily match
+        // testData.extendedSubmissions.
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
         lastSubmission: anySubmission ? faker.date.past().toISOString() : null,
         createdBy: pick(
@@ -211,7 +213,9 @@ const testData = Object.assign(
       validateDateOrder('createdAt', 'lastSubmission')
     ],
     constraints: {
-      withName: (form) => form.name != null
+      withName: (form) => form.name != null,
+      withSubmission: (form) => form.submissions !== 0,
+      withoutSubmission: (form) => form.submissions === 0
     },
     sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {

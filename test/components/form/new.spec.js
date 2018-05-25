@@ -23,7 +23,7 @@ const openModal = (wrapper) => trigger
   .click(wrapper.first('#form-list-new-button'))
   .then(() => findModal(wrapper));
 const createForm = (modal) => {
-  testData.extendedForms.createNew();
+  testData.extendedForms.createNew('withoutSubmission');
   return modal;
 };
 const dataTransfer = () => {
@@ -134,7 +134,8 @@ describe('FormNew', () => {
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            form = testData.extendedForms.createNew('withName');
+            form = testData.extendedForms
+              .createNew(['withoutSubmission', 'withName']);
           })
           .request(() => openModal(app)
             .then(selectFile)
