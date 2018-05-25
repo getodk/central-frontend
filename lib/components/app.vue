@@ -198,6 +198,12 @@ body {
       padding: $padding-table-heading;
     }
   }
+
+  > tbody {
+    > tr > td {
+      border-top: $border-top-table-data;
+    }
+  }
 }
 
 .table-actions {
@@ -263,7 +269,13 @@ body {
   }
 
   .panel-body {
-    padding: 8px;
+    margin: 8px;
+    padding: 0;
+
+    hr {
+      margin: 8px -8px;
+      border-top: $border-top-table-data;
+    }
   }
 }
 

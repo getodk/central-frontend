@@ -10,17 +10,174 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <p>Not yet implemented.</p>
+  <div id="form-overview">
+    <alert v-bind="alert" @close="alert.state = false"/>
+    <loading :state="awaitingResponse"/>
+    <div v-if="fieldKeyCount !== null" class="panel panel-simple">
+      <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
+      <div class="panel-body">
+        <div class="form-overview-step">
+          <p class="text-success">
+            <span class="icon-check-circle"></span>Create and upload
+          </p>
+          <p>
+            <strong>Great work!</strong> Your form design has been loaded
+            successfully. It is ready to accept submissions. You will have to
+            start over with a new form if you wish to make changes to the form
+            questions. <doc-link>Click here to find out more.</doc-link>
+          </p>
+        </div>
+        <hr>
+        <div class="form-overview-step">
+          <p :class="textSuccess(form.submissions !== 0)">
+            <span :class="textMuted(form.submissions === 0)"
+              class="icon-check-circle">
+            </span>Download form on survey clients and submit data
+          </p>
+          <p>
+            <template v-if="form.submissions === 0">
+              Nobody has submitted any data to this form yet.
+            </template>
+            <template v-else>
+              A total of {{ submissionCountString }} have been sent to this
+              server.
+            </template>
+            App Users will be able to see this form on their mobile device to
+            download and fill out.
+            <template v-if="fieldKeyCount === 0">
+              <strong>You do not have any App Users on this server yet, so
+              nobody will be able to use this form.</strong> You can create them
+              on the <router-link to="/users/field-keys">App Users tab of the
+              Users settings</router-link>.
+            </template>
+            <template v-else>
+              Right now, you have
+              <router-link to="/users/field-keys">
+                <strong>{{ fieldKeyCountString }}</strong>
+              </router-link>
+              on this server, but you can always add more.
+            </template>
+            <doc-link>Click here to find out more.</doc-link>
+          </p>
+        </div>
+        <hr>
+        <div class="form-overview-step">
+          <p :class="textMuted(form.submissions === 0)">
+            <span class="icon-check-circle text-muted"></span>Evaluate and
+            analyze submitted data
+          </p>
+          <p>
+            Once there is data for this form, you can export or synchronize it
+            to monitor and analyze the data for quality and results. You can do
+            this with the Download and Analyze buttons on the
+            <router-link :to="formPath('submissions')">Submissions tab</router-link>.
+            <doc-link>Click here to find out more.</doc-link>
+          </p>
+        </div>
+        <hr>
+        <div class="form-overview-step">
+          <p :class="textSuccessElseMuted(form.state !== 'open')">
+            <span class="icon-check-circle"></span>Manage form retirement
+          </p>
+          <p>
+            As you come to the end of your data collection project, you can use
+            the Form Lifecycle controls on
+            <router-link :to="formPath('settings')">
+              this form’s Settings tab
+            </router-link>
+            to control whether, for example, App Users will be able to see or
+            create new submissions to this form. <doc-link>Click here to find
+            out more.</doc-link>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import alert from '../../mixins/alert';
+import request from '../../mixins/request';
+
 export default {
   name: 'FormOverview',
+  mixins: [
+    alert(),
+    request()
+  ],
   props: {
     form: {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      alert: alert.blank(),
+      requestId: null,
+      fieldKeyCount: null
+    };
+  },
+  computed: {
+    submissionCountString() {
+      const count = this.form.submissions.toLocaleString();
+      const s = this.form.submissions !== 1 ? 's' : '';
+      return `${count} submission${s}`;
+    },
+    fieldKeyCountString() {
+      const count = this.fieldKeyCount.toLocaleString();
+      const s = this.fieldKeyCount !== 1 ? 's' : '';
+      return `${count} App User${s}`;
+    }
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.fieldKeyCount = null;
+      this
+        .get('/field-keys')
+        .then(({ data }) => {
+          this.fieldKeyCount = data.length;
+        })
+        .catch(() => {});
+    },
+    textSuccess(state) {
+      return { 'text-success': state };
+    },
+    textMuted(state) {
+      return { 'text-muted': state };
+    },
+    textSuccessElseMuted(isSuccess) {
+      return { 'text-success': isSuccess, 'text-muted': !isSuccess };
+    },
+    formPath(suffix) {
+      return `/forms/${this.form.xmlFormId}/${suffix}`;
+    }
   }
 };
 </script>
+
+<style lang="sass">
+.form-overview-step {
+  p {
+    margin-left: 21px;
+    line-height: 17px;
+    max-width: 565px;
+
+    &:first-child {
+      font-weight: bold;
+      margin-left: 0;
+      margin-bottom: 5px;
+
+      .icon-check-circle {
+        display: inline-block;
+        font-size: 17px;
+        vertical-align: -2px;
+        width: 21px;
+      }
+    }
+  }
+}
+</style>
