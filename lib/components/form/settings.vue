@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <alert v-bind="alert" @close="alert.state = false"/>
     <div class="row">
       <div class="col-xs-8">
-        <form-edit :form="form" @alert="setAlert"/>
+        <form-edit :form="form" @alert="setAlert"
+          @state-change="emitStateChange"/>
       </div>
       <div class="col-xs-4">
         <div class="panel panel-simple-danger">
@@ -68,6 +69,9 @@ export default {
     setAlert(alertObj) {
       this.$emit('alert');
       this.alert = alertObj;
+    },
+    emitStateChange(newState) {
+      this.$emit('state-change', newState);
     },
     afterDelete() {
       const name = this.form.name != null

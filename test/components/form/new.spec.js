@@ -23,7 +23,7 @@ const openModal = (wrapper) => trigger
   .click(wrapper.first('#form-list-new-button'))
   .then(() => findModal(wrapper));
 const createForm = (modal) => {
-  testData.extendedForms.createNew();
+  testData.extendedForms.createNew('withoutSubmission');
   return modal;
 };
 const dataTransfer = () => {
@@ -134,18 +134,19 @@ describe('FormNew', () => {
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            form = testData.extendedForms.createNew('withName');
+            form = testData.extendedForms
+              .createNew(['withoutSubmission', 'withName']);
           })
           .request(() => openModal(app)
             .then(selectFile)
             .then(waitForRead)
             .then(clickCreateButtonInModal))
-          .respondWithData(() => testData.simpleForms.last()) // FormNew request
-          .respondWithData(() => testData.simpleForms.last()) // FormShow request
-          .respondWithData(() => [])); // FormSubmissions request
+          .respondWithData(() => testData.simpleForms.last()) // FormNew
+          .respondWithData(() => testData.extendedForms.last()) // FormShow
+          .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
-        it('redirects to submissions list', () => {
-          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}/submissions`);
+        it('redirects to the form overview', () => {
+          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}`);
         });
 
         it('shows form name', () => {

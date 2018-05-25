@@ -146,7 +146,7 @@ body {
   font-weight: normal;
   padding-bottom: 15px;
 
-  input {
+  input, select {
     background: $color-input-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
@@ -196,6 +196,12 @@ body {
       border-bottom: $border-bottom-table-heading;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
+    }
+  }
+
+  > tbody {
+    > tr > td {
+      border-top: $border-top-table-data;
     }
   }
 }
@@ -263,7 +269,13 @@ body {
   }
 
   .panel-body {
-    padding: 8px;
+    margin: 8px;
+    padding: 0;
+
+    hr {
+      margin: 8px -8px;
+      border-top: $border-top-table-data;
+    }
   }
 }
 

@@ -129,15 +129,15 @@ const testData = Object.assign(
       validateDateOrder('createdAt', 'lastUsed')
     ],
     constraints: {
-      active: (fieldKey) => fieldKey.token != null,
-      revoked: (fieldKey) => fieldKey.token == null
+      withAccess: (fieldKey) => fieldKey.token != null,
+      withAccessRevoked: (fieldKey) => fieldKey.token == null
     },
     sort: (fieldKey1, fieldKey2) => {
-      const isRevoked1 = fieldKey1.token == null;
-      const isRevoked2 = fieldKey2.token == null;
-      if (isRevoked1 !== isRevoked2) {
-        if (isRevoked1) return 1;
-        if (isRevoked2) return -1;
+      const accessRevoked1 = fieldKey1.token == null;
+      const accessRevoked2 = fieldKey2.token == null;
+      if (accessRevoked1 !== accessRevoked2) {
+        if (accessRevoked1) return 1;
+        if (accessRevoked2) return -1;
       }
       if (fieldKey1.createdAt < fieldKey2.createdAt)
         return 1;
@@ -166,8 +166,10 @@ const testData = Object.assign(
         name,
         version,
         state: faker.random.arrayElement(['open', 'closing', 'closed']),
-        // This does not actually match the XML below.
+        // This does not necessarily match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
+        // The following two properties do not necessarily match
+        // testData.extendedSubmissions.
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
         lastSubmission: anySubmission ? faker.date.past().toISOString() : null,
         createdBy: pick(
@@ -211,7 +213,11 @@ const testData = Object.assign(
       validateDateOrder('createdAt', 'lastSubmission')
     ],
     constraints: {
-      withName: (form) => form.name != null
+      withName: (form) => form.name != null,
+      open: (form) => form.state === 'open',
+      notOpen: (form) => form.state !== 'open',
+      withSubmission: (form) => form.submissions !== 0,
+      withoutSubmission: (form) => form.submissions === 0
     },
     sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {

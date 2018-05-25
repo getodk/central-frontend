@@ -32,10 +32,13 @@ $color-input-inactive: #666;
 $color-input-background: #f7f7f7;
 
 // Tables
-$color-table-heading-background: #ddd;
+// Heading
 $border-bottom-table-heading: 1px solid #bbb;
+$color-table-heading-background: #ddd;
 $font-size-table-heading: 12px;
 $padding-table-heading: 8px 9px 6px;
+// Data
+$border-top-table-data: 1px solid #ddd;
 
 // Modals
 $padding-modal-body: 15px;

@@ -101,6 +101,7 @@ export default {
         .patch(`/forms/${this.form.xmlFormId}`, { state: this.state })
         .then(() => {
           this.alert = alert.success('Form settings saved!');
+          this.$emit('state-change', this.state);
         })
         .catch(() => {});
     }

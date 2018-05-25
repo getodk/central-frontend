@@ -34,13 +34,13 @@ describe('UserList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    it('page defaults to the Staff tab', () =>
+    it('page defaults to the web users tab', () =>
       mockRoute('/users')
         .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           const tab = app.first('.nav-tabs > .active');
           const title = tab.first('a').text().trim();
-          title.should.equal('Staff');
+          title.should.equal('Web Users');
         }));
 
     it('table contains the correct data', () => {

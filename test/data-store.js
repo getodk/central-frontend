@@ -41,7 +41,10 @@ class Factory {
       Object.assign(object, this._id(object, id));
       Object.assign(object, this._createdAt(object, past));
       Object.assign(object, this._updatedAt(object, past));
-      if (this._isValid(object, constraints)) return object;
+      if (this._isValid(object, constraints)) {
+        if (this._options.createdAt) this._lastCreatedAt = object.createdAt;
+        return object;
+      }
     }
   }
 
@@ -56,7 +59,6 @@ class Factory {
     const createdAt = this._lastCreatedAt == null
       ? faker.date.past()
       : faker.date.pastSince(this._lastCreatedAt);
-    this._lastCreatedAt = createdAt.toISOString();
     return { createdAt: createdAt.toISOString() };
   }
 

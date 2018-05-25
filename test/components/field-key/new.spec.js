@@ -20,7 +20,7 @@ const clickCreateButton = (wrapper) =>
   trigger.click(wrapper.first('#field-key-list-new-button'))
     .then(() => wrapper);
 const submitForm = (wrapper) => {
-  const nickname = testData.extendedFieldKeys.createNew('active').displayName;
+  const nickname = testData.extendedFieldKeys.createNew('withAccess').displayName;
   return fillForm(wrapper, [['#field-key-new input', nickname]])
     .then(() => trigger.submit(wrapper.first('#field-key-new form')))
     .then(() => wrapper);
@@ -46,7 +46,7 @@ describe('FieldKeyNew', () => {
           .afterResponse(clickCreateButton)
           .then(page => page.first(FieldKeyNew).getProp('state').should.be.true()));
 
-      it('first field is focused', () =>
+      it('focuses the nickname input', () =>
         mockRoute('/users/field-keys', { attachToDocument: true })
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponse(clickCreateButton)
@@ -63,27 +63,48 @@ describe('FieldKeyNew', () => {
       .standardButton());
 
   describe('after successful submit', () => {
-    let page;
-    beforeEach(() => mockHttp()
-      .mount(FieldKeyList)
+    let app;
+    beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
       .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponse(component => {
-        page = component;
+        app = component;
       })
-      .request(() => clickCreateButton(page).then(submitForm))
-      .respondWithData(() => testData.simpleFieldKeys.last())
-      .respondWithData(() => testData.extendedFieldKeys.sorted()));
+      .request(() => clickCreateButton(app).then(submitForm))
+      .respondWithData(() => testData.simpleFieldKeys.last()));
 
-    it('modal is hidden', () => {
-      page.first(FieldKeyNew).getProp('state').should.be.false();
+    describe('after the done button is clicked', () => {
+      beforeEach(() => mockHttp()
+        .request(() => trigger.click(app.first('#field-key-new .btn-primary')))
+        .respondWithData(() => testData.extendedFieldKeys.sorted()));
+
+      it('hides the modal', () => {
+        app.first(FieldKeyNew).getProp('state').should.be.false();
+      });
+
+      it('updates the number of rows in the table', () => {
+        app.find('#field-key-list-table tbody tr').length.should.equal(2);
+      });
+
+      it('shows a success message', () => {
+        app.first(FieldKeyList).should.alert('success');
+      });
     });
 
-    it('table has the correct number of rows', () => {
-      page.find('table tbody tr').length.should.equal(2);
-    });
+    describe('after the "create another" button is clicked', () => {
+      beforeEach(() => mockHttp()
+        .request(() => trigger.click(app.first('#field-key-new .btn-link'))));
 
-    it('success message is shown', () => {
-      page.should.alert('success');
+      it('does not hide the modal', () => {
+        app.first(FieldKeyNew).getProp('state').should.be.true();
+      });
+
+      it('shows a blank nickname input', () => {
+        app.first('#field-key-new input').element.value.should.be.empty();
+      });
+
+      it('focuses the nickname input', () => {
+        app.first('#field-key-new input').should.be.focused();
+      });
     });
   });
 });

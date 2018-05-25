@@ -42,13 +42,13 @@ describe('FieldKeyList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    it('field keys tab is active', () =>
+    it('app users tab is active', () =>
       mockRoute('/users/field-keys')
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponse(app => {
           const tab = app.first('.nav-tabs > .active');
           const title = tab.first('a').text().trim();
-          title.should.equal('Field Keys');
+          title.should.equal('App Users');
         }));
 
     it('table contains the correct data', () => {
@@ -63,18 +63,18 @@ describe('FieldKeyList', () => {
             const td = tr[i].find('td');
             td.length.should.equal(5);
             td[0].text().trim().should.equal(fieldKeys[i].displayName);
-            // We test the Auto-Configure column below.
+            // We test the Configure Client column below.
           }
         });
     });
 
-    it('shows a message if there are no field keys', () =>
+    it('shows a message if there are no app users', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() => [])
         .afterResponse(page => {
           const text = page.first('p').text().trim();
-          text.should.startWith('There are no field keys yet.');
+          text.should.startWith('There are no app users yet.');
         }));
 
     it('refreshes after the refresh button is clicked', () =>
@@ -86,7 +86,7 @@ describe('FieldKeyList', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'active').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
         .afterResponse(component => {
           app = component;
         }));
@@ -97,7 +97,7 @@ describe('FieldKeyList', () => {
 
       describe('after click', () => {
         beforeEach(() =>
-          trigger.click(app.first('.field-key-list-popover-link'), true));
+          trigger.click(app.first('.field-key-row-popover-link')));
 
         it('is shown', () => {
           $('#field-key-list-popover-content').length.should.equal(1);
@@ -123,14 +123,14 @@ describe('FieldKeyList', () => {
       });
     });
 
-    it('revoked field key is marked accordingly', () =>
+    it('field key with access revoked is marked accordingly', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
         .afterResponse(page => {
           const td = page.find('#field-key-list-table td')[3];
-          td.text().trim().should.equal('Revoked');
+          td.text().trim().should.equal('Access revoked');
         }));
   });
 });

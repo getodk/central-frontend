@@ -11,16 +11,22 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="focusField">
-    <template slot="title">Create Staff User</template>
+    @hide="$emit('hide')" @shown="focusEmailInput">
+    <template slot="title">Create Web User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <p class="modal-introduction">
-        Currently, all Staff Users are created with full access to all data and administrative
-        actions on this server. When you create this account, the email address you provide will
-        be sent instructions on how to set a password and proceed.
+        Once you create this account, the email address you provide will be sent
+        instructions on how to set a password and proceed.
       </p>
       <form @submit.prevent="submit">
+        <label class="form-group">
+          <select class="form-control">
+            <option>Administrator</option>
+            <option disabled>More options available soon</option>
+          </select>
+          <span class="form-label">Role *</span>
+        </label>
         <label class="form-group">
           <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
             type="email" class="form-control" placeholder="Email address *"
@@ -63,7 +69,7 @@ export default {
     };
   },
   methods: {
-    focusField() {
+    focusEmailInput() {
       this.$refs.email.focus();
     },
     submit() {
