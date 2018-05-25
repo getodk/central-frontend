@@ -214,6 +214,8 @@ const testData = Object.assign(
     ],
     constraints: {
       withName: (form) => form.name != null,
+      open: (form) => form.state === 'open',
+      notOpen: (form) => form.state !== 'open',
       withSubmission: (form) => form.submissions !== 0,
       withoutSubmission: (form) => form.submissions === 0
     },
