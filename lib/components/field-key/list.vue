@@ -36,39 +36,9 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(fieldKey, index) in fieldKeys" :key="fieldKey.key"
-          :class="highlight(fieldKey, 'id')" :data-index="index">
-          <td>{{ fieldKey.displayName }}</td>
-          <td>{{ fieldKey.created }}</td>
-          <td>{{ fieldKey.lastUsed }}</td>
-          <td>
-            <a v-if="!fieldKey.isRevoked()"
-              class="field-key-list-popover-link no-text-decoration"
-              role="button">
-              <span class="icon-qrcode"></span>
-              <span class="underline-on-hover-or-focus">See code</span>
-            </a>
-            <template v-else>
-              Revoked
-            </template>
-          </td>
-          <td class="field-key-list-actions">
-            <div class="dropdown">
-              <button :id="actionsId(index)" type="button"
-                class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="icon-cog"></span>
-                <span class="caret"></span>
-              </button>
-              <ul :aria-labelledby="actionsId(index)"
-                class="dropdown-menu dropdown-menu-right">
-                <li :class="{ disabled: fieldKey.isRevoked() }">
-                  <a href="#" @click.prevent="showRevoke(fieldKey)">Revoke</a>
-                </li>
-              </ul>
-            </div>
-          </td>
-        </tr>
+        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
+          :field-key="fieldKey" :highlighted="highlighted"
+          @show-code="showPopover" @revoke="showRevoke"/>
       </tbody>
     </table>
 
@@ -86,11 +56,10 @@ import { deflate } from 'pako/lib/deflate';
 
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
+import FieldKeyRow from './row.vue';
 import alert from '../../mixins/alert';
-import highlight from '../../mixins/highlight';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
-import { formatDate } from '../../util';
 
 const QR_CODE_TYPE_NUMBER = 0;
 // This is the level used in Collect.
@@ -106,22 +75,15 @@ class FieldKeyPresenter {
   get id() { return this._fieldKey.id; }
   get displayName() { return this._fieldKey.displayName; }
   get token() { return this._fieldKey.token; }
-
-  isRevoked() { return this._fieldKey.token == null; }
+  get lastUsed() { return this._fieldKey.lastUsed; }
+  get createdBy() { return this._fieldKey.createdBy; }
+  get createdAt() { return this._fieldKey.createdAt; }
 
   get key() {
     if (this._key != null) return this._key;
     this._key = Vue.prototype.$uniqueId();
     return this._key;
   }
-
-  get created() {
-    const createdAt = formatDate(this._fieldKey.createdAt);
-    const createdBy = this._fieldKey.createdBy.displayName;
-    return `${createdAt} by ${createdBy}`;
-  }
-
-  get lastUsed() { return formatDate(this._fieldKey.lastUsed); }
 
   get serverUrl() {
     return `${window.location.origin}/api/v1/key/${this._fieldKey.token}`;
@@ -154,12 +116,11 @@ const POPOVER_CONTENT_TEMPLATE = `
 
 export default {
   name: 'FieldKeyList',
-  components: { FieldKeyNew, FieldKeyRevoke },
+  components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
   mixins: [
     alert(),
     request(),
-    modal(['newFieldKey', 'revoke']),
-    highlight()
+    modal(['newFieldKey', 'revoke'])
   ],
   data() {
     return {
@@ -190,11 +151,11 @@ export default {
     this.fetchData({ clear: false });
   },
   activated() {
-    $('body').on('click.app-field-key-list', this.togglePopovers);
+    $('body').on('click.app-field-key-list', this.hidePopoverAfterClickOutside);
   },
   deactivated() {
     this.hidePopover();
-    $('body').off('click.app-field-key-list', this.togglePopovers);
+    $('body').off('click.app-field-key-list', this.hidePopoverAfterClickOutside);
   },
   methods: {
     fetchData({ clear }) {
@@ -209,62 +170,52 @@ export default {
         })
         .catch(() => {});
     },
-    popoverContent(fieldKey) {
-      const $content = $(POPOVER_CONTENT_TEMPLATE);
-      $content.find('.field-key-list-img-container').append(fieldKey.qrCodeImgHtml);
-      return $content[0].outerHTML;
-    },
-    enablePopover($popoverLink) {
-      const index = $popoverLink.closest('tr').data('index');
-      if (this.enabledPopoverLinks.has(index)) return;
-      $popoverLink.popover({
-        animation: false,
-        container: 'body',
-        trigger: 'manual',
-        placement: 'left',
-        content: this.popoverContent(this.fieldKeys[index]),
-        html: true
-      });
-      this.enabledPopoverLinks.add(index);
-    },
-    showPopover($popoverLink) {
-      this.enablePopover($popoverLink);
-      $popoverLink.popover('show');
-      this.popoverLink = $popoverLink.get(0);
-    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
       this.popoverLink = null;
     },
-    elementIsOutsidePopover(element) {
-      if (this.popoverLink == null) return true;
+    // Hides the popover upon a click outside the popover and outside a popover
+    // link.
+    hidePopoverAfterClickOutside(event) {
+      if (this.popoverLink == null) return;
       const popover = $('#field-key-list-popover-content').closest('.popover')[0];
-      return element !== popover && !$.contains(popover, element);
+      if (event.target === popover || $.contains(popover, event.target))
+        return;
+      // If the target is a different popover link from the one whose popover is
+      // currently shown, showPopover() will hide the popover: we do not need to
+      // do so here.
+      if ($(event.target).closest('.field-key-row-popover-link').length !== 0)
+        return;
+      this.hidePopover();
     },
-    togglePopovers(event) {
-      const $popoverLink = $(event.target).closest('.field-key-list-popover-link');
-      if ($popoverLink.length !== 0) {
-        // true if the user clicked on the link whose popover is currently shown
-        // and false if not.
-        const samePopover = this.popoverLink != null &&
-          $popoverLink[0] === this.popoverLink;
-        if (!samePopover) {
-          this.hidePopover();
-          this.showPopover($popoverLink);
-        }
-      } else if (this.popoverLink != null &&
-        this.elementIsOutsidePopover(event.target)) {
-        this.hidePopover();
-      }
+    popoverContent(fieldKey) {
+      const $content = $(POPOVER_CONTENT_TEMPLATE);
+      $content
+        .find('.field-key-list-img-container')
+        .append(fieldKey.qrCodeImgHtml);
+      return $content[0].outerHTML;
     },
-    actionsId(index) {
-      return `field-key-list-actions${index}`;
+    enablePopover(fieldKey, $popoverLink) {
+      if (this.enabledPopoverLinks.has(fieldKey.id)) return;
+      $popoverLink.popover({
+        animation: false,
+        container: 'body',
+        trigger: 'manual',
+        placement: 'left',
+        content: this.popoverContent(fieldKey),
+        html: true
+      });
+      this.enabledPopoverLinks.add(fieldKey.id);
+    },
+    showPopover(fieldKey, popoverLink) {
+      this.hidePopover();
+      const $popoverLink = $(popoverLink);
+      this.enablePopover(fieldKey, $popoverLink);
+      $popoverLink.popover('show');
+      this.popoverLink = popoverLink;
     },
     showRevoke(fieldKey) {
-      // Bootstrap does not actually disable dropdown menu items marked as
-      // disabled.
-      if (fieldKey.isRevoked()) return;
       this.revoke.fieldKey = fieldKey;
       this.revoke.state = true;
     },

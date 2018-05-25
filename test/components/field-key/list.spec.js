@@ -97,7 +97,7 @@ describe('FieldKeyList', () => {
 
       describe('after click', () => {
         beforeEach(() =>
-          trigger.click(app.first('.field-key-list-popover-link'), true));
+          trigger.click(app.first('.field-key-row-popover-link')));
 
         it('is shown', () => {
           $('#field-key-list-popover-content').length.should.equal(1);
