@@ -63,7 +63,7 @@ describe('FieldKeyList', () => {
             const td = tr[i].find('td');
             td.length.should.equal(5);
             td[0].text().trim().should.equal(fieldKeys[i].displayName);
-            // We test the Auto-Configure column below.
+            // We test the Configure Client column below.
           }
         });
     });

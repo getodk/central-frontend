@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
           <th>Nickname</th>
           <th>Created</th>
           <th>Last Used</th>
-          <th>Auto-Configure</th>
+          <th>Configure Client</th>
           <th class="field-key-list-actions">Actions</th>
         </tr>
       </thead>
