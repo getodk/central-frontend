@@ -28,7 +28,7 @@ describe('FormDelete', () => {
   beforeEach(mockLogin);
 
   it('opens the modal upon button click', () => {
-    const propsData = { form: testData.simpleForms.createPast(1).last() };
+    const propsData = { form: testData.extendedForms.createPast(1).last() };
     const page = mountAndMark(FormSettings, { propsData });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
@@ -36,7 +36,7 @@ describe('FormDelete', () => {
   });
 
   it('standard button thinking things', () => {
-    const propsData = { form: testData.simpleForms.createPast(1).last() };
+    const propsData = { form: testData.extendedForms.createPast(1).last() };
     return mockHttp()
       .mount(FormDelete, { propsData })
       .request(confirmDelete)
@@ -49,7 +49,7 @@ describe('FormDelete', () => {
       testData.extendedForms.createPast(2);
       const { xmlFormId } = testData.extendedForms.first();
       return mockRoute(`/forms/${xmlFormId}/settings`)
-        .respondWithData(() => testData.simpleForms.first())
+        .respondWithData(() => testData.extendedForms.first())
         .afterResponse(component => {
           app = component;
           return clickDeleteButton(app);

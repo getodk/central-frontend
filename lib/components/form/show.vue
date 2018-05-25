@@ -70,8 +70,9 @@ export default {
   methods: {
     fetchData() {
       this.form = null;
+      const headers = { 'X-Extended-Metadata': 'true' };
       this
-        .get(`/forms/${this.xmlFormId}`)
+        .get(`/forms/${this.xmlFormId}`, { headers })
         .then(({ data }) => {
           this.form = data;
         })

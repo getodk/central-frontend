@@ -22,21 +22,21 @@ const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 describe('FormSubmissions', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute(submissionsPath(testData.simpleForms.createPast(1).first()))
+      mockRoute(submissionsPath(testData.extendedForms.createPast(1).first()))
         .then(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () => {
-      const path = submissionsPath(testData.simpleForms.createPast(1).first());
+      const path = submissionsPath(testData.extendedForms.createPast(1).first());
       return mockRouteThroughLogin(path)
-        .respondWithData(() => testData.simpleForms.first())
+        .respondWithData(() => testData.extendedForms.first())
         .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
         .afterResponses(app => app.vm.$route.path.should.equal(path));
     });
   });
 
   it('success message is shown after login', () =>
-    mockRouteThroughLogin(submissionsPath(testData.simpleForms.createPast(1).first()))
-      .respondWithData(() => testData.simpleForms.first())
+    mockRouteThroughLogin(submissionsPath(testData.extendedForms.createPast(1).first()))
+      .respondWithData(() => testData.extendedForms.first())
       .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
       .afterResponses(app => app.should.alert('success')));
 
@@ -44,7 +44,7 @@ describe('FormSubmissions', () => {
     beforeEach(mockLogin);
 
     const propsData = () => {
-      const props = { form: testData.simpleForms.firstOrCreatePast() };
+      const props = { form: testData.extendedForms.firstOrCreatePast() };
       return { propsData: props };
     };
 

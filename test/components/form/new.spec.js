@@ -141,7 +141,7 @@ describe('FormNew', () => {
             .then(waitForRead)
             .then(clickCreateButtonInModal))
           .respondWithData(() => testData.simpleForms.last()) // FormNew request
-          .respondWithData(() => testData.simpleForms.last()) // FormShow request
+          .respondWithData(() => testData.extendedForms.last()) // FormShow request
           .respondWithData(() => [])); // FormSubmissions request
 
         it('redirects to the form overview', () => {

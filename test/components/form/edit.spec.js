@@ -19,7 +19,7 @@ import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
 const propsData = () => {
-  const props = { form: testData.simpleForms.createPast(1).last() };
+  const props = { form: testData.extendedForms.createPast(1).last() };
   return { propsData: props };
 };
 const selectDifferentState = (formEdit) => {
