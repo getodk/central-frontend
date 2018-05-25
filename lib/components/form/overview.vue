@@ -67,9 +67,15 @@ except according to the terms contained in the LICENSE file.
             analyze submitted data
           </p>
           <p>
-            Once there is data for this form, you can export or synchronize it
-            to monitor and analyze the data for quality and results. You can do
-            this with the Download and Analyze buttons on the
+            <template v-if="form.submissions === 0">
+              Once there is data for this form, you can export or synchronize it
+              to monitor and analyze the data for quality and results.
+            </template>
+            <template v-else>
+              You can export or synchronize the {{ submissionCountString }} on
+              this form to monitor and analyze them for quality and results.
+            </template>
+            You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
             <doc-link>Click here to find out more.</doc-link>
           </p>
