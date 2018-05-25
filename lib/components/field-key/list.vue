@@ -50,58 +50,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Vue from 'vue';
-import qrcode from 'qrcode-generator';
-import { deflate } from 'pako/lib/deflate';
-
+import FieldKey from '../../presenters/field-key';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
 import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
-
-const QR_CODE_TYPE_NUMBER = 0;
-// This is the level used in Collect.
-const QR_CODE_ERROR_CORRECTION_LEVEL = 'L';
-const QR_CODE_CELL_SIZE = 3;
-const QR_CODE_MARGIN = 0;
-
-class FieldKeyPresenter {
-  constructor(fieldKey) {
-    this._fieldKey = fieldKey;
-  }
-
-  get id() { return this._fieldKey.id; }
-  get displayName() { return this._fieldKey.displayName; }
-  get token() { return this._fieldKey.token; }
-  get lastUsed() { return this._fieldKey.lastUsed; }
-  get createdBy() { return this._fieldKey.createdBy; }
-  get createdAt() { return this._fieldKey.createdAt; }
-
-  get key() {
-    if (this._key != null) return this._key;
-    this._key = Vue.prototype.$uniqueId();
-    return this._key;
-  }
-
-  get serverUrl() {
-    return `${window.location.origin}/api/v1/key/${this._fieldKey.token}`;
-  }
-
-  get qrCodeImgHtml() {
-    if (this._qrCodeImgHtml != null) return this._qrCodeImgHtml;
-    const code = qrcode(QR_CODE_TYPE_NUMBER, QR_CODE_ERROR_CORRECTION_LEVEL);
-    // Collect requires the JSON to have 'general' and 'admin' keys, even if the
-    // associated values are empty objects.
-    const settings = { general: { server_url: this.serverUrl }, admin: {} };
-    const deflated = deflate(JSON.stringify(settings), { to: 'string' });
-    code.addData(btoa(deflated));
-    code.make();
-    this._qrCodeImgHtml = code.createImgTag(QR_CODE_CELL_SIZE, QR_CODE_MARGIN);
-    return this._qrCodeImgHtml;
-  }
-}
 
 const POPOVER_CONTENT_TEMPLATE = `
   <div id="field-key-list-popover-content">
@@ -164,7 +119,7 @@ export default {
       this
         .get('/field-keys', { headers })
         .then(({ data }) => {
-          this.fieldKeys = data.map(fieldKey => new FieldKeyPresenter(fieldKey));
+          this.fieldKeys = data.map(fieldKey => new FieldKey(fieldKey));
           this.enabledPopoverLinks = new Set();
           if (!clear) this.highlighted = null;
         })
@@ -193,7 +148,7 @@ export default {
       const $content = $(POPOVER_CONTENT_TEMPLATE);
       $content
         .find('.field-key-list-img-container')
-        .append(fieldKey.qrCodeImgHtml);
+        .append(fieldKey.qrCodeHtml());
       return $content[0].outerHTML;
     },
     enablePopover(fieldKey, $popoverLink) {
