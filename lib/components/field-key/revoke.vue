@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-revoke" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template slot="title">Revoke User</template>
+    <template slot="title">Revoke User Access</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">

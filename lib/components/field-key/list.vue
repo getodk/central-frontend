@@ -181,7 +181,7 @@ export default {
     },
     afterRevoke() {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`The app user “${this.revoke.fieldKey.displayName}” was revoked.`);
+      this.alert = alert.success(`Access was revoked for the app user “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }
   }

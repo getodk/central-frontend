@@ -27,11 +27,11 @@ describe('FieldKeyRevoke', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('opens upon click for field key that is not revoked', () =>
+    it('opens upon click for an app user whose access is not revoked', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'active').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
         .afterResponse(page => {
           page.first(FieldKeyRevoke).getProp('state').should.be.false();
           return page;
@@ -41,11 +41,11 @@ describe('FieldKeyRevoke', () => {
           page.first(FieldKeyRevoke).getProp('state').should.be.true();
         }));
 
-    it('does not open upon click for revoked field key', () =>
+    it('does not open upon click for an app user whose access is revoked', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
         .afterResponse(page => {
           page.first(FieldKeyRevoke).getProp('state').should.be.false();
           return page;
@@ -56,17 +56,17 @@ describe('FieldKeyRevoke', () => {
         }));
   });
 
-  it('revoke button is disabled for revoked field key', () =>
+  it('revoke button is disabled for an app user whose access is revoked', () =>
     mockHttp()
       .mount(FieldKeyList)
       .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+        testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
       .afterResponse(page => {
         page.first('.dropdown-menu li').hasClass('disabled').should.be.true();
       }));
 
   it('standard button thinking things', () => {
-    const fieldKey = testData.extendedFieldKeys.createPast(1, 'active').last();
+    const fieldKey = testData.extendedFieldKeys.createPast(1, 'withAccess').last();
     const propsData = { fieldKey };
     return mockHttp()
       .mount(FieldKeyRevoke, { propsData })
@@ -79,7 +79,7 @@ describe('FieldKeyRevoke', () => {
     beforeEach(() => mockHttp()
       .mount(FieldKeyList)
       .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(2, 'active').sorted())
+        testData.extendedFieldKeys.createPast(2, 'withAccess').sorted())
       .afterResponse(component => {
         page = component;
       })
@@ -107,7 +107,7 @@ describe('FieldKeyRevoke', () => {
       tr.length.should.equal(2);
       tr[0].find('td')[3].find('a').length.should.equal(1);
       tr[1].find('td')[3].find('a').length.should.equal(0);
-      tr[1].find('td')[3].text().trim().should.equal('Revoked');
+      tr[1].find('td')[3].text().trim().should.equal('Access revoked');
     });
   });
 });

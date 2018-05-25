@@ -86,7 +86,7 @@ describe('FieldKeyList', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'active').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
         .afterResponse(component => {
           app = component;
         }));
@@ -123,14 +123,14 @@ describe('FieldKeyList', () => {
       });
     });
 
-    it('revoked field key is marked accordingly', () =>
+    it('field key with access revoked is marked accordingly', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'revoked').sorted())
+          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
         .afterResponse(page => {
           const td = page.find('#field-key-list-table td')[3];
-          td.text().trim().should.equal('Revoked');
+          td.text().trim().should.equal('Access revoked');
         }));
   });
 });

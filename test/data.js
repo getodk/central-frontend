@@ -129,15 +129,15 @@ const testData = Object.assign(
       validateDateOrder('createdAt', 'lastUsed')
     ],
     constraints: {
-      active: (fieldKey) => fieldKey.token != null,
-      revoked: (fieldKey) => fieldKey.token == null
+      withAccess: (fieldKey) => fieldKey.token != null,
+      withAccessRevoked: (fieldKey) => fieldKey.token == null
     },
     sort: (fieldKey1, fieldKey2) => {
-      const isRevoked1 = fieldKey1.token == null;
-      const isRevoked2 = fieldKey2.token == null;
-      if (isRevoked1 !== isRevoked2) {
-        if (isRevoked1) return 1;
-        if (isRevoked2) return -1;
+      const accessRevoked1 = fieldKey1.token == null;
+      const accessRevoked2 = fieldKey2.token == null;
+      if (accessRevoked1 !== accessRevoked2) {
+        if (accessRevoked1) return 1;
+        if (accessRevoked2) return -1;
       }
       if (fieldKey1.createdAt < fieldKey2.createdAt)
         return 1;
