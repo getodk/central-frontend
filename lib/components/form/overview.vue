@@ -39,8 +39,8 @@ except according to the terms contained in the LICENSE file.
               Nobody has submitted any data to this form yet.
             </template>
             <template v-else>
-              A total of {{ submissionCountString }} have been sent to this
-              server.
+              A total of {{ submissionCountString }} {{ have }} been sent to
+              this server.
             </template>
             App Users will be able to see this form on their mobile device to
             download and fill out.
@@ -129,6 +129,9 @@ export default {
       const count = this.form.submissions.toLocaleString();
       const s = this.form.submissions !== 1 ? 's' : '';
       return `${count} submission${s}`;
+    },
+    have() {
+      return this.form.submissions === 1 ? 'has' : 'have';
     },
     fieldKeyCountString() {
       const count = this.fieldKeyCount.toLocaleString();
