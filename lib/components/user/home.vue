@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template slot="title">Users</template>
       <template slot="body">
-        Web Users are granted access to this administration site, while App
-        Users grant clients (like
+        Web Users can log into this website to perform administrative tasks,
+        while App Users can use mobile clients (like
         <doc-link to="collect-intro/">Collect</doc-link>)
         individual access to the forms to download, fill out, and submit.
         <doc-link>Learn more</doc-link>

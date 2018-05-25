@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <div class="panel-body">
         <div class="form-overview-step">
           <p class="text-success">
-            <span class="icon-check-circle"></span>Create and upload
+            <span class="icon-check-circle"></span>Create and upload form
           </p>
           <p>
             <strong>Great work!</strong> Your form design has been loaded

@@ -22,8 +22,8 @@ except according to the terms contained in the LICENSE file.
         </p>
         <p>
           Existing submissions from this user will remain, but anybody relying
-          on this user will have to use a new one to continue downloading forms
-          or uploading submissions.
+          on this user will have to create a new one to continue downloading
+          forms or uploading submissions.
         </p>
         <p>This action cannot be undone.</p>
       </div>
