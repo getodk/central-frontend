@@ -199,12 +199,12 @@ export default {
   methods: {
     fetchData({ clear }) {
       if (clear) this.fieldKeys = null;
-      this.enabledPopoverLinks = new Set();
       const headers = { 'X-Extended-Metadata': 'true' };
       this
         .get('/field-keys', { headers })
         .then(({ data }) => {
           this.fieldKeys = data.map(fieldKey => new FieldKeyPresenter(fieldKey));
+          this.enabledPopoverLinks = new Set();
           if (!clear) this.highlighted = null;
         })
         .catch(() => {});
