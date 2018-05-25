@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="focusField">
+    @hide="$emit('hide')" @shown="focusEmailInput">
     <template slot="title">Create Staff User</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -21,6 +21,13 @@ except according to the terms contained in the LICENSE file.
         be sent instructions on how to set a password and proceed.
       </p>
       <form @submit.prevent="submit">
+        <label class="form-group">
+          <select class="form-control">
+            <option>Administrator</option>
+            <option disabled>More options available soon</option>
+          </select>
+          <span class="form-label">Role *</span>
+        </label>
         <label class="form-group">
           <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
             type="email" class="form-control" placeholder="Email address *"
@@ -63,7 +70,7 @@ export default {
     };
   },
   methods: {
-    focusField() {
+    focusEmailInput() {
       this.$refs.email.focus();
     },
     submit() {

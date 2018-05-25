@@ -43,11 +43,11 @@ describe('UserNew', () => {
           .afterResponse(clickCreateButton)
           .then(page => page.first(UserNew).getProp('state').should.be.true()));
 
-      it('first field is focused', () =>
+      it('email input is focused', () =>
         mockRoute('/users', { attachToDocument: true })
           .respondWithData(() => testData.administrators.sorted())
           .afterResponse(clickCreateButton)
-          .then(app => app.first('[type="email"]').should.be.focused()));
+          .then(app => app.first('#user-new [type="email"]').should.be.focused()));
     });
   });
 

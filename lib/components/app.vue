@@ -146,7 +146,7 @@ body {
   font-weight: normal;
   padding-bottom: 15px;
 
-  input {
+  input, select {
     background: $color-input-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
