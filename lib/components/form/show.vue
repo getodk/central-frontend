@@ -32,7 +32,8 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <alert v-bind="alert" @close="alert.state = false"/>
       <keep-alive>
-        <router-view :form="form" @alert="hideAlert"/>
+        <router-view :form="form" @alert="hideAlert"
+          @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
@@ -80,6 +81,9 @@ export default {
     },
     tabPathPrefix() {
       return `/forms/${this.xmlFormId}`;
+    },
+    updateState(newState) {
+      this.form.state = newState;
     }
   }
 };
