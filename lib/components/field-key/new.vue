@@ -10,43 +10,72 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="focusNicknameInput">
+  <modal id="field-key-new" ref="modal" :state="state"
+    :hideable="!awaitingResponse" backdrop @hide="hideOrComplete"
+    @shown="focusNicknameInput">
     <template slot="title">Create App User</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
-      <form @submit.prevent="submit">
-        <label class="form-group">
-          <select class="form-control">
-            <option>Download and submit to all forms on this server</option>
-            <option disabled>
-              More options available soon (to choose particular forms)
-            </option>
-          </select>
-          <span class="form-label">Access *</span>
-        </label>
-        <label class="form-group">
-          <input ref="nickname" v-model.trim="nickname"
-            :disabled="awaitingResponse" class="form-control"
-            placeholder="Nickname *" required>
-          <span class="form-label">Nickname *</span>
-        </label>
+      <template v-if="step === 1">
+        <alert v-bind="alert" @close="alert.state = false"/>
+        <form @submit.prevent="submit">
+          <label class="form-group">
+            <select class="form-control">
+              <option>Download and submit to all forms on this server</option>
+              <option disabled>
+                More options available soon (to choose particular forms)
+              </option>
+            </select>
+            <span class="form-label">Access *</span>
+          </label>
+          <label class="form-group">
+            <input ref="nickname" v-model.trim="nickname"
+              :disabled="awaitingResponse" class="form-control"
+              placeholder="Nickname *" required>
+            <span class="form-label">Nickname *</span>
+          </label>
+          <div class="modal-actions">
+            <button :disabled="awaitingResponse" type="submit"
+              class="btn btn-primary">
+              Create <spinner :state="awaitingResponse"/>
+            </button>
+            <button :disabled="awaitingResponse" type="button"
+              class="btn btn-link" @click="hideOrComplete">
+              Close
+            </button>
+          </div>
+        </form>
+      </template>
+      <template v-else>
+        <div class="modal-introduction text-center">
+          <div>
+            <span class="icon-check-circle text-success"></span>
+            <strong>Success!</strong> The app user “{{ created.displayName }}”
+            has been created.
+          </div>
+          <div v-html="created.qrCodeHtml()"></div>
+          <div>
+            You can configure a mobile device for “{{ created.displayName }}”
+            right now by
+            <doc-link to="collect-import-export/">scanning the code above</doc-link>
+            into their app. Or you can do it later from the App Users table by
+            clicking “See code.”
+          </div>
+        </div>
         <div class="modal-actions">
-          <button :disabled="awaitingResponse" type="submit"
-            class="btn btn-primary">
-            Create <spinner :state="awaitingResponse"/>
+          <button type="button" class="btn btn-primary" @click="complete">
+            Done
           </button>
-          <button :disabled="awaitingResponse" type="button"
-            class="btn btn-link" @click="$emit('hide')">
-            Close
+          <button type="button" class="btn btn-link" @click="createAnother">
+            Create another
           </button>
         </div>
-      </form>
+      </template>
     </template>
   </modal>
 </template>
 
 <script>
+import FieldKey from '../../presenters/field-key';
 import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
@@ -63,7 +92,11 @@ export default {
     return {
       alert: alert.blank(),
       requestId: null,
-      nickname: ''
+      // There are two steps/screens in the app user creation process. `step`
+      // indicates the current step. Note that it is 1-indexed.
+      step: 1,
+      nickname: '',
+      created: null
     };
   },
   methods: {
@@ -74,13 +107,46 @@ export default {
       this
         .post('/field-keys', { displayName: this.nickname })
         .then(({ data }) => {
-          this.$emit('hide');
+          // Reset the form.
           this.alert = alert.blank();
           this.nickname = '';
-          this.$emit('success', data);
+
+          this.step = 2;
+          this.created = new FieldKey(data);
+          this.$refs.modal.$el.focus();
         })
         .catch(() => {});
+    },
+    complete() {
+      this.$emit('hide');
+      this.$emit('success', this.created);
+      this.step = 1;
+      this.created = null;
+    },
+    hideOrComplete() {
+      if (this.created == null)
+        this.$emit('hide');
+      else
+        this.complete();
+    },
+    createAnother() {
+      this.step = 1;
+      this.$nextTick(this.focusNicknameInput);
     }
   }
 };
 </script>
+
+<style lang="sass">
+#field-key-new .modal-introduction {
+  .icon-check-circle {
+    font-size: 32px;
+    vertical-align: middle;
+  }
+
+  img {
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
+}
+</style>
