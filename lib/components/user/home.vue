@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         Web Users can log into this website to perform administrative tasks,
         while App Users can use mobile clients (like
         <doc-link to="collect-intro/">Collect</doc-link>)
-        individual access to the forms to download, fill out, and submit.
+        to download, fill out, and submit forms.
         <doc-link>Learn more</doc-link>
       </template>
       <template slot="tabs">
