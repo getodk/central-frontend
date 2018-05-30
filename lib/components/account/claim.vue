@@ -53,17 +53,11 @@ export default {
       password: ''
     };
   },
-  computed: {
-    token() {
-      const { token } = this.$route.query;
-      // Vue interprets + characters in tokens as spaces, so we have to change
-      // them back.
-      return token != null ? token.replace(/ /g, '+') : '';
-    }
-  },
   methods: {
     submit() {
-      const headers = { Authorization: `Bearer ${this.token}` };
+      const headers = {};
+      const { token } = this.$route.query;
+      if (token != null) headers.Authorization = `Bearer ${token}`;
       this
         .post('/users/reset/verify', { new: this.password }, { headers })
         .then(() => {
