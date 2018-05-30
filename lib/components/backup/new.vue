@@ -139,15 +139,12 @@ export default {
       this.$refs.passphrase.focus();
     },
     initiate() {
-      // TODO. Does this implement "They should see a Next button which takes
-      // them to Step 2 no matter what"?
       this
         .post('/config/backups/initiate', { passphrase: this.passphrase })
         .then(({ data }) => {
           this.step += 1;
           this.googleUrl = data.url;
           this.authToken = data.token;
-          this.$refs.modal.$el.focus();
         })
         .catch(() => {});
     },

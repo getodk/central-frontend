@@ -113,7 +113,6 @@ export default {
 
           this.step = 2;
           this.created = new FieldKey(data);
-          this.$refs.modal.$el.focus();
         })
         .catch(() => {});
     },
