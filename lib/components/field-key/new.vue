@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <alert v-bind="alert" @close="alert.state = false"/>
         <form @submit.prevent="submit">
           <label class="form-group">
-            <select class="form-control">
+            <select :disabled="awaitingResponse" class="form-control">
               <option>Download and submit to all forms on this server</option>
               <option disabled>
                 More options available soon (to choose particular forms)

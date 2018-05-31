@@ -22,8 +22,9 @@ except according to the terms contained in the LICENSE file.
         <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
           class="hidden">
         </a>
-        <button id="form-submissions-download-button" type="button"
-          class="btn btn-primary" @click="download">
+        <button id="form-submissions-download-button"
+          :disabled="awaitingResponse" type="button" class="btn btn-primary"
+          @click="download">
           <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
         </button>
         <button id="form-submissions-analyze-button" type="button"
