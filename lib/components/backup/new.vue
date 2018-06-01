@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="backup-new" ref="modal" :state="state"
-    :hideable="!awaitingResponse" backdrop @hide="cancel"
-    @shown="focusPassphraseInput">
+  <modal id="backup-new" :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="cancel" @shown="focusPassphraseInput">
     <template slot="title">Set up Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>

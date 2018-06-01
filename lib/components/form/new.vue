@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="hide">
+  <modal :state="state" :hideable="!awaitingResponse" backdrop @hide="hide">
     <template slot="title">Create Form</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>

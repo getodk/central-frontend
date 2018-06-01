@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="field-key-new" ref="modal" :state="state"
-    :hideable="!awaitingResponse" backdrop @hide="hideOrComplete"
-    @shown="focusNicknameInput">
+  <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
     <template slot="title">Create App User</template>
     <template slot="body">
       <template v-if="step === 1">
