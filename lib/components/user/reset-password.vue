@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!awaitingResponse" @hide="$emit('hide')">
+  <modal :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="$emit('hide')">
     <template slot="title">Reset Password</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
