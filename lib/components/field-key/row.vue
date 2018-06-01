@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <td>
       <a v-if="fieldKey.token != null" ref="popoverLink"
         class="field-key-row-popover-link no-text-decoration" role="button"
-        @click="showCode">
+        @click.prevent="showCode">
         <span class="icon-qrcode"></span>
         <span class="underline-on-hover-or-focus">See code</span>
       </a>
@@ -56,9 +56,9 @@ export default {
       type: Object,
       required: true
     },
+    // eslint-disable-next-line vue/require-default-prop
     highlighted: {
-      type: Number,
-      default: null
+      type: Number
     }
   },
   computed: {
