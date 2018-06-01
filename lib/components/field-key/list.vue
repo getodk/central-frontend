@@ -164,6 +164,7 @@ export default {
       this.enabledPopoverLinks.add(fieldKey.id);
     },
     showPopover(fieldKey, popoverLink) {
+      if (popoverLink === this.popoverLink) return;
       this.hidePopover();
       const $popoverLink = $(popoverLink);
       this.enablePopover(fieldKey, $popoverLink);
