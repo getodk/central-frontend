@@ -57,7 +57,7 @@ describe('FormAnalyze', () => {
 
   it('selects the OData URL upon click', () =>
     mockRoute(submissionsPath(createFormWithSubmission()), { attachToDocument: true })
-      .respondWithData(() => testData.simpleForms.last())
+      .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedSubmissions.sorted())
       .afterResponse(clickAnalyzeButton)
       .then(app =>

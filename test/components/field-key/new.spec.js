@@ -91,8 +91,7 @@ describe('FieldKeyNew', () => {
     });
 
     describe('after the "create another" button is clicked', () => {
-      beforeEach(() => mockHttp()
-        .request(() => trigger.click(app.first('#field-key-new .btn-link'))));
+      beforeEach(() => trigger.click(app.first('#field-key-new .btn-link')));
 
       it('does not hide the modal', () => {
         app.first(FieldKeyNew).getProp('state').should.be.true();

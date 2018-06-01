@@ -123,7 +123,7 @@ describe('FieldKeyList', () => {
       });
     });
 
-    it('field key with access revoked is marked accordingly', () =>
+    it('app user whose access is revoked is marked accordingly', () =>
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
