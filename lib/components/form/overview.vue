@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
             <strong>Great work!</strong> Your form design has been loaded
             successfully. It is ready to accept submissions. You will have to
             start over with a new form if you wish to make changes to the form
-            questions. <doc-link>Click here to find out more.</doc-link>
+            questions.
           </p>
         </div>
         <hr>
@@ -57,7 +57,6 @@ except according to the terms contained in the LICENSE file.
               </router-link>
               on this server, but you can always add more.
             </template>
-            <doc-link>Click here to find out more.</doc-link>
           </p>
         </div>
         <hr>
@@ -77,7 +76,6 @@ except according to the terms contained in the LICENSE file.
             </template>
             You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
-            <doc-link>Click here to find out more.</doc-link>
           </p>
         </div>
         <hr>
@@ -92,8 +90,7 @@ except according to the terms contained in the LICENSE file.
               this form’s Settings tab
             </router-link>
             to control whether, for example, App Users will be able to see or
-            create new submissions to this form. <doc-link>Click here to find
-            out more.</doc-link>
+            create new submissions to this form.
           </p>
         </div>
       </div>
