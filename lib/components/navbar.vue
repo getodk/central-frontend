@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link to="/" class="navbar-brand">Open Data Kit</router-link>
+        <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
