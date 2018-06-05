@@ -14,9 +14,11 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template slot="title">Forms</template>
       <template slot="body">
-        You collect data by <doc-link>designing a form</doc-link> on your
-        computer, and then <doc-link>loading that form onto a mobile
-        device</doc-link> to administer.
+        You collect data by
+        <doc-link to="form-design-intro/">designing a form</doc-link> on your
+        computer, and then
+        <doc-link to="collect-forms/#loading-blank-forms">loading that form onto
+        a mobile device</doc-link> to administer.
       </template>
     </page-head>
     <page-body>

@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
         <p>To create a form, upload an XForms XML file.</p>
         <p>
           If you don’t already have one, there are
-          <doc-link>tools available</doc-link> to help you design your form.
+          <doc-link to="form-tools/">tools available</doc-link> to help you
+          design your form.
         </p>
       </div>
       <div id="drop-zone" ref="dropZone" :class="dropZoneClass">
