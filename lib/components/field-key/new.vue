@@ -10,16 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="field-key-new" ref="modal" :state="state"
-    :hideable="!awaitingResponse" backdrop @hide="hideOrComplete"
-    @shown="focusNicknameInput">
+  <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
     <template slot="title">Create App User</template>
     <template slot="body">
       <template v-if="step === 1">
         <alert v-bind="alert" @close="alert.state = false"/>
         <form @submit.prevent="submit">
           <label class="form-group">
-            <select class="form-control">
+            <select :disabled="awaitingResponse" class="form-control">
               <option>Download and submit to all forms on this server</option>
               <option disabled>
                 More options available soon (to choose particular forms)
@@ -113,7 +112,6 @@ export default {
 
           this.step = 2;
           this.created = new FieldKey(data);
-          this.$refs.modal.$el.focus();
         })
         .catch(() => {});
     },

@@ -22,9 +22,11 @@ except according to the terms contained in the LICENSE file.
         <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
           class="hidden">
         </a>
-        <button id="form-submissions-download-button" ref="downloadButton"
-          type="button" class="btn btn-primary" @click="download">
+        <button id="form-submissions-download-button"
+          :disabled="awaitingResponse" type="button" class="btn btn-primary"
+          @click="download">
           <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
+          <spinner :state="downloading"/>
         </button>
         <button id="form-submissions-analyze-button" type="button"
           class="btn btn-primary" @click="analyze.state = true">
@@ -85,6 +87,7 @@ export default {
       alert: alert.blank(),
       requestId: null,
       submissions: null,
+      downloading: false,
       downloadHref: '#',
       analyze: {
         state: false
@@ -122,18 +125,19 @@ export default {
         .catch(() => {});
     },
     download() {
+      this.downloading = true;
       const path = `/forms/${this.form.xmlFormId}/submissions.csv.zip`;
       this
         .get(path, { responseType: 'blob' })
+        .finally(() => {
+          this.downloading = false;
+        })
         .then(({ data }) => {
           // Revoke the previous URL.
           if (this.downloadHref !== '#')
             window.URL.revokeObjectURL(this.downloadHref);
           this.downloadHref = window.URL.createObjectURL(data);
-          this.$nextTick(() => {
-            this.$refs.downloadLink.click();
-            this.$refs.downloadButton.blur();
-          });
+          this.$nextTick(() => this.$refs.downloadLink.click());
         })
         .catch(() => {});
     },

@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       </p>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <select class="form-control">
+          <select :disabled="awaitingResponse" class="form-control">
             <option>Administrator</option>
             <option disabled>More options available soon</option>
           </select>

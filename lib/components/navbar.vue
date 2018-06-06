@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span> {{ email }}
+              <span class="icon-user-circle-o"></span> {{ displayName }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -102,7 +102,7 @@ export default {
         new Link(this, 'System', '/system/backups', 'navbar-system-link')
       ],
       loggedIn: false,
-      email: ''
+      displayName: ''
     };
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
   watch: {
     $route() {
       this.loggedIn = this.$session.loggedIn();
-      this.email = this.loggedIn ? this.$session.user.email : '';
+      this.displayName = this.loggedIn ? this.$session.user.displayName : '';
     }
   },
   methods: {

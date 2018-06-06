@@ -64,7 +64,7 @@ describe('AccountLogin', () => {
         .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           const link = app.first('.navbar-right > li > a');
-          link.text().trim().should.equal(testData.administrators.first().email);
+          link.text().trim().should.equal(testData.administrators.first().displayName);
         }));
 
     describe("after clicking the user's display name", () => {

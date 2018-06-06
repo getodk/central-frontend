@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div ref="modal" :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
     class="modal" tabindex="-1" role="dialog"
     data-keyboard="false" @keydown.esc="hideIfCan"
-    @mousedown="modalMousedown($event)" @click="modalClick($event)">
+    @mousedown="modalMousedown" @click="modalClick">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -76,6 +76,11 @@ export default {
       .on('hidden.bs.modal', () => this.$emit('hidden'));
     if (this.state) this.toggle(this.state);
   },
+  updated() {
+    // Wait a tick so that all child components are re-rendered:
+    // https://vuejs.org/v2/api/#updated.
+    this.$nextTick(this.refocus);
+  },
   beforeDestroy() {
     this.toggle(false);
     $(this.$refs.modal).off();
@@ -98,12 +103,23 @@ export default {
     hideIfCan() {
       if (this.hideable) this.$emit('hide');
     },
-    modalMousedown(e) {
-      this.mousedownOutsideDialog = e.target === e.currentTarget;
+    modalMousedown(event) {
+      this.mousedownOutsideDialog = event.target === event.currentTarget;
     },
-    modalClick(e) {
-      const mouseupOutsideDialog = e.target === e.currentTarget;
+    modalClick(event) {
+      const mouseupOutsideDialog = event.target === event.currentTarget;
       if (this.mousedownOutsideDialog && mouseupOutsideDialog) this.hideIfCan();
+    },
+    // Refocuses the modal if it has lost focus. This is needed so that the
+    // escape key still hides the modal.
+    refocus() {
+      // Do not focus the modal if it has lost focus because it is hidden.
+      if (!this.state) return;
+      // Do not focus the modal if it contains the active element.
+      if (document.activeElement != null &&
+        $(document.activeElement).closest('.modal')[0] === this.$refs.modal)
+        return;
+      this.$refs.modal.focus();
     }
   }
 };

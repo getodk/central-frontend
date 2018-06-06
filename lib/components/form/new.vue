@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal ref="modal" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="hide">
+  <modal :state="state" :hideable="!awaitingResponse" backdrop @hide="hide">
     <template slot="title">Create Form</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -28,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
           <button :disabled="!droppable" type="button" class="btn btn-primary"
-            @click="clickFileButton">
+            @click="clickFileInput">
             <span class="icon-folder-open"></span> choose one
           </button>
           to upload.
@@ -142,11 +141,8 @@ export default {
       };
       reader.readAsText(file);
     },
-    clickFileButton() {
+    clickFileInput() {
       this.$refs.input.click();
-      // Focus the modal rather than blurring the button so that the escape key
-      // still hides the modal.
-      this.$refs.modal.$el.focus();
     },
     dragover(event) {
       event.preventDefault();

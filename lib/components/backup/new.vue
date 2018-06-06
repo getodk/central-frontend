@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="backup-new" ref="modal" :state="state"
-    :hideable="!awaitingResponse" backdrop @hide="cancel"
-    @shown="focusPassphraseInput">
+  <modal id="backup-new" :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="cancel" @shown="focusPassphraseInput">
     <template slot="title">Set up Backups</template>
     <template slot="body">
       <alert v-bind="alert" @close="alert.state = false"/>
@@ -139,15 +138,12 @@ export default {
       this.$refs.passphrase.focus();
     },
     initiate() {
-      // TODO. Does this implement "They should see a Next button which takes
-      // them to Step 2 no matter what"?
       this
         .post('/config/backups/initiate', { passphrase: this.passphrase })
         .then(({ data }) => {
           this.step += 1;
           this.googleUrl = data.url;
           this.authToken = data.token;
-          this.$refs.modal.$el.focus();
         })
         .catch(() => {});
     },

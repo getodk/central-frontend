@@ -72,11 +72,7 @@ describe('FieldKeyNew', () => {
       .request(() => clickCreateButton(app).then(submitForm))
       .respondWithData(() => testData.simpleFieldKeys.last()));
 
-    describe('after the done button is clicked', () => {
-      beforeEach(() => mockHttp()
-        .request(() => trigger.click(app.first('#field-key-new .btn-primary')))
-        .respondWithData(() => testData.extendedFieldKeys.sorted()));
-
+    const testCreationCompletion = () => {
       it('hides the modal', () => {
         app.first(FieldKeyNew).getProp('state').should.be.false();
       });
@@ -88,11 +84,17 @@ describe('FieldKeyNew', () => {
       it('shows a success message', () => {
         app.first(FieldKeyList).should.alert('success');
       });
+    };
+    describe('after the done button is clicked', () => {
+      beforeEach(() => mockHttp()
+        .request(() => trigger.click(app.first('#field-key-new .btn-primary')))
+        .respondWithData(() => testData.extendedFieldKeys.sorted()));
+
+      testCreationCompletion();
     });
 
     describe('after the "create another" button is clicked', () => {
-      beforeEach(() => mockHttp()
-        .request(() => trigger.click(app.first('#field-key-new .btn-link'))));
+      beforeEach(() => trigger.click(app.first('#field-key-new .btn-link')));
 
       it('does not hide the modal', () => {
         app.first(FieldKeyNew).getProp('state').should.be.true();
@@ -104,6 +106,14 @@ describe('FieldKeyNew', () => {
 
       it('focuses the nickname input', () => {
         app.first('#field-key-new input').should.be.focused();
+      });
+
+      describe('after the close button is clicked', () => {
+        beforeEach(() => mockHttp()
+          .request(() => trigger.click(app.first('#field-key-new .btn-link')))
+          .respondWithData(() => testData.extendedFieldKeys.sorted()));
+
+        testCreationCompletion();
       });
     });
   });
