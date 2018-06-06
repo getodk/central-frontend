@@ -47,7 +47,7 @@ ODK Central Frontend will be available on port 8989.
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation for vueify](https://github.com/vuejs/vueify).
 
-For more information on deploying to production, see [effective-spork](https://github.com/nafundi/effective-spork).
+For more information on deploying to production, see the [ODK Central repository](https://github.com/opendatakit/central).
 
 ## Testing
 
