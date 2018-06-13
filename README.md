@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 # ODK Central Frontend
 
+![Platform](https://img.shields.io/badge/platform-Vue.js-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build status](https://circleci.com/gh/opendatakit/central-frontend.svg?style=shield)](https://circleci.com/gh/opendatakit/central-frontend)
 
 ODK Central Frontend uses Vue.js to provide the frontend for [ODK Central](https://github.com/opendatakit/central). It is currently under development.
 
