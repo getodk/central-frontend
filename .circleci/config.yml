@@ -5,7 +5,10 @@ machine:
 jobs:
   build:
     docker:
-      - image: circleci/node:8.5.0
+      # Using latest LTS available on CircleCI
+      - image: circleci/node:8.11.2-browsers
+        environment:
+          - CHROME_BIN: /usr/bin/google-chrome
 
     working_directory: ~/repo
 
