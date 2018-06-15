@@ -34,13 +34,6 @@ export default {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
 
-  h1 {
-    font-size: 30px;
-    font-weight: bold;
-    letter-spacing: -0.02em;
-    margin-bottom: 3px;
-  }
-
   > .col-xs-12 {
     > p {
       color: #555;
