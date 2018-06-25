@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
               <root-entity :icons="['user-circle', 'cog']" name="Web User"
                 data-from="/users" route-to="/users"
                 @fetched="incrementCounter">
-                who are allowed to administer projects through this website.
+                who can administer projects through this website.
               </root-entity>
             </div>
             <div class="col-xs-6">

@@ -25,6 +25,8 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div>
       <router-link :to="routeTo">
+        <!-- The text in this slot does not change based on `count`, so it must
+        support both the singular and plural cases. -->
         <slot></slot>
       </router-link>
     </div>
