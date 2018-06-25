@@ -226,6 +226,7 @@ h1 {
 
     .panel-title {
       font-weight: bold;
+      letter-spacing: normal;
     }
   }
 
