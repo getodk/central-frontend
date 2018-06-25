@@ -30,6 +30,11 @@ describe('RootHome', () => {
         .respondWithProblem()
         .afterResponses(app => app.vm.$route.path.should.equal('/')));
 
+    describe('loading message', () => {
+      it('shows the loading message until all three responses');
+      it('immediately hides the loading message after an error');
+    });
+
     it('shows the correct counts', () => {
       const users = faker.random.number();
       const fieldKeys = faker.random.number();

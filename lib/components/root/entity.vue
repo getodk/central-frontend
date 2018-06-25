@@ -74,7 +74,7 @@ export default {
           this.count = data.length;
           this.$emit('fetched');
         })
-        .catch(() => {});
+        .catch(() => this.$emit('error'));
     },
     iconClass(index) {
       if (index >= this.icons.length) throw new Error('invalid index');

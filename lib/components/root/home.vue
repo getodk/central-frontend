@@ -15,8 +15,8 @@ except according to the terms contained in the LICENSE file.
       <h1>Welcome to Central.</h1>
       <p>Let’s get some things done.</p>
     </div>
-    <loading :state="fetchCounter < 3"/>
-    <div v-show="fetchCounter === 3">
+    <loading :state="fetch.counter < 3 && !fetch.error"/>
+    <div v-show="fetch.counter === 3">
       <div class="panel panel-simple">
         <div class="panel-heading"><h1 class="panel-title">You Have:</h1></div>
         <div class="panel-body">
@@ -24,14 +24,14 @@ except according to the terms contained in the LICENSE file.
             <div class="col-xs-6">
               <root-entity :icons="['user-circle', 'cog']" name="Web User"
                 data-from="/users" route-to="/users"
-                @fetched="incrementCounter">
+                @fetched="incrementCounter" @error="fetchError">
                 who can administer projects through this website.
               </root-entity>
             </div>
             <div class="col-xs-6">
               <root-entity :icons="['user-circle', 'mobile']" name="App User"
                 data-from="/field-keys" route-to="/users/field-keys"
-                @fetched="incrementCounter">
+                @fetched="incrementCounter" @error="fetchError">
                 who can use a data collection client to download and submit form
                 data to this server.
               </root-entity>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
           <hr>
           <root-entity :icons="['file-text']" name="Form"
             data-from="/forms" route-to="/forms"
-            @fetched="incrementCounter">
+            @fetched="incrementCounter" @error="fetchError">
             which can be downloaded and administered as surveys on mobile
             clients.
           </root-entity>
@@ -80,12 +80,18 @@ export default {
   components: { RootEntity },
   data() {
     return {
-      fetchCounter: 0
+      fetch: {
+        counter: 0,
+        error: false
+      }
     };
   },
   methods: {
     incrementCounter() {
-      this.fetchCounter += 1;
+      this.fetch.counter += 1;
+    },
+    fetchError() {
+      this.fetch.error = true;
     }
   }
 };
