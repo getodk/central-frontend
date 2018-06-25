@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div id="root-home-heading">
       <h1>Welcome to Central.</h1>
-      <p>Let's get some things done.</p>
+      <p>Let’s get some things done.</p>
     </div>
     <loading :state="fetchCounter < 3"/>
     <div v-show="fetchCounter === 3">
