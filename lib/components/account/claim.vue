@@ -19,7 +19,6 @@ except according to the terms contained in the LICENSE file.
           </h1>
         </div>
         <div class="panel-body">
-          <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
               <input v-model="password" type="password" class="form-control"
@@ -40,15 +39,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'AccountClaim',
-  mixins: [alert(), request()],
+  mixins: [request()],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       password: ''
     };
@@ -60,10 +57,9 @@ export default {
       if (token != null) headers.Authorization = `Bearer ${token}`;
       this
         .post('/users/reset/verify', { new: this.password }, { headers })
-        .then(() => {
-          this.$alert = alert.success('The password was reset successfully.');
-          this.$router.push('/login');
-        })
+        .then(() => this.$router.push('/login', () => {
+          this.$alert().success('The password was reset successfully.');
+        }))
         .catch(() => {});
     }
   }

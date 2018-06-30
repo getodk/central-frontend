@@ -14,7 +14,6 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')" @shown="focusEmailInput">
     <template slot="title">Create Web User</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <p class="modal-introduction">
         Once you create this account, the email address you provide will be sent
         instructions on how to set a password and proceed.
@@ -49,12 +48,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'UserNew',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -63,7 +61,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       email: ''
     };
@@ -77,7 +74,7 @@ export default {
         .post('/users', { email: this.email })
         .then(({ data }) => {
           this.$emit('hide');
-          this.alert = alert.blank();
+          this.$alert().blank();
           this.email = '';
           this.$emit('success', data);
         })

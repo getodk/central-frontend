@@ -34,12 +34,6 @@ describe('FormSubmissions', () => {
     });
   });
 
-  it('success message is shown after login', () =>
-    mockRouteThroughLogin(submissionsPath(testData.extendedForms.createPast(1).first()))
-      .respondWithData(() => testData.extendedForms.first())
-      .respondWithData(() => testData.extendedSubmissions.createPast(1).sorted())
-      .afterResponses(app => app.should.alert('success')));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 
@@ -69,8 +63,8 @@ describe('FormSubmissions', () => {
     });
 
     it('refreshes after the refresh button is clicked', () =>
-      mockHttp()
-        .mount(FormSubmissions, propsData())
+      mockRoute(submissionsPath(testData.extendedForms.createPast(1).last()))
+        .respondWithData(() => testData.extendedForms.last())
         .testRefreshButton(testData.extendedSubmissions));
 
     describe('download', () => {

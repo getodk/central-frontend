@@ -15,7 +15,6 @@ except according to the terms contained in the LICENSE file.
       <div class="panel panel-default panel-main">
         <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
         <div class="panel-body">
-          <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
               <input v-model.trim="email" type="email" class="form-control"
@@ -45,7 +44,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 import { logIn } from '../../session';
 
@@ -53,10 +51,9 @@ const DEFAULT_NEXT_PATH = '/forms';
 
 export default {
   name: 'AccountLogin',
-  mixins: [alert(), request()],
+  mixins: [request()],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       disabled: false,
       email: '',
@@ -93,7 +90,6 @@ export default {
         : DEFAULT_NEXT_PATH;
     },
     routeToNext() {
-      this.$alert = alert.success('You have logged in successfully.');
       const query = Object.assign({}, this.$route.query);
       delete query.next;
       this.$router.push({ path: this.nextPath(), query });

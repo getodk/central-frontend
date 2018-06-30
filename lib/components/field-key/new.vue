@@ -15,7 +15,6 @@ except according to the terms contained in the LICENSE file.
     <template slot="title">Create App User</template>
     <template slot="body">
       <template v-if="step === 1">
-        <alert v-bind="alert" @close="alert.state = false"/>
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
@@ -75,12 +74,11 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'FieldKeyNew',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -89,7 +87,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       // There are two steps/screens in the app user creation process. `step`
       // indicates the current step. Note that it is 1-indexed.
@@ -107,7 +104,7 @@ export default {
         .post('/field-keys', { displayName: this.nickname })
         .then(({ data }) => {
           // Reset the form.
-          this.alert = alert.blank();
+          this.$alert().blank();
           this.nickname = '';
 
           this.step = 2;

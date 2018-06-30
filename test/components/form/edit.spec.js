@@ -10,14 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import FormEdit from '../../../lib/components/form/edit.vue';
-import FormSettings from '../../../lib/components/form/settings.vue';
 import Spinner from '../../../lib/components/spinner.vue';
 import faker from '../../faker';
 import testData from '../../data';
-import { mockHttp } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
+const settingsPath = (form) => `/forms/${form.xmlFormId}/settings`;
 const propsData = () => {
   const props = { form: testData.extendedForms.createPast(1).last() };
   return { propsData: props };
@@ -64,10 +64,11 @@ describe('FormEdit', () => {
           spinnerOfSelectedState(component).getProp('state').should.be.false()));
 
     it('shows a success message', () =>
-      mockHttp()
-        .mount(FormSettings, propsData())
-        .request(component => selectDifferentState(component.first(FormEdit)))
+      mockRoute(settingsPath(testData.extendedForms.createPast(1).last()))
+        .respondWithData(() => testData.extendedForms.last())
+        .complete()
+        .request(app => selectDifferentState(app.first(FormEdit)))
         .respondWithSuccess()
-        .afterResponse(component => component.should.alert('success')));
+        .afterResponse(app => app.should.alert('success')));
   });
 });

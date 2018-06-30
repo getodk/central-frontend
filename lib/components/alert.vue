@@ -67,6 +67,8 @@ export default {
   border: none;
   border-top: 2px solid transparent;
   border-radius: 0;
+  // This only affects alerts in modals, as App's alert has a fixed position.
+  margin-bottom: 15px;
 
   &.alert-success {
     background-color: $color-success-light;

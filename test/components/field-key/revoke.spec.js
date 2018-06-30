@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
 import testData from '../../data';
-import { mockHttp } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
@@ -75,15 +75,14 @@ describe('FieldKeyRevoke', () => {
   });
 
   describe('after successful response', () => {
-    let page;
-    beforeEach(() => mockHttp()
-      .mount(FieldKeyList)
+    let app;
+    beforeEach(() => mockRoute('/users/field-keys')
       .respondWithData(() =>
         testData.extendedFieldKeys.createPast(2, 'withAccess').sorted())
       .afterResponse(component => {
-        page = component;
+        app = component;
       })
-      .request(() => clickRevokeInMenu(page)
+      .request(() => clickRevokeInMenu(app)
         .then(confirmRevoke)
         .then(() => {
           const first = testData.extendedFieldKeys.sorted()[0];
@@ -95,15 +94,15 @@ describe('FieldKeyRevoke', () => {
       .respondWithData(() => testData.extendedFieldKeys.sorted()));
 
     it('modal hides', () => {
-      page.first(FieldKeyRevoke).getProp('state').should.be.false();
+      app.first(FieldKeyRevoke).getProp('state').should.be.false();
     });
 
     it('success message is shown', () => {
-      page.should.alert('success');
+      app.should.alert('success');
     });
 
     it('list is updated', () => {
-      const tr = page.find('#field-key-list-table tbody tr');
+      const tr = app.find('#field-key-list-table tbody tr');
       tr.length.should.equal(2);
       tr[0].find('td')[3].find('a').length.should.equal(1);
       tr[1].find('td')[3].find('a').length.should.equal(0);

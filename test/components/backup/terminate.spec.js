@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import BackupList from '../../../lib/components/backup/list.vue';
 import BackupTerminate from '../../../lib/components/backup/terminate.vue';
 import testData from '../../data';
-import { mockHttp } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
@@ -20,7 +20,8 @@ const openModal = (wrapper) =>
   trigger.click(wrapper.first('#backup-list-terminate-button'))
     .then(() => wrapper);
 const confirmTerminate = (wrapper) =>
-  trigger.click(wrapper.first('.btn-danger')).then(() => wrapper);
+  trigger.click(wrapper.first('#backup-terminate .btn-danger'))
+    .then(() => wrapper);
 
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);
@@ -51,26 +52,25 @@ describe('BackupTerminate', () => {
       .standardButton('.btn-danger'));
 
   describe('after successful response', () => {
-    let page;
-    beforeEach(() => mockHttp()
-      .mount(BackupList)
+    let app;
+    beforeEach(() => mockRoute('/system/backups')
       .respondWithData(() => testData.backups.createPast(1).last())
       .afterResponse(component => {
-        page = component;
+        app = component;
       })
-      .request(() => openModal(page).then(confirmTerminate))
+      .request(() => openModal(app).then(confirmTerminate))
       .respondWithSuccess());
 
     it('modal is hidden', () => {
-      page.first(BackupTerminate).getProp('state').should.be.false();
+      app.first(BackupTerminate).getProp('state').should.be.false();
     });
 
     it('backup status is updated', () => {
-      page.data().backups.status.should.equal('notConfigured');
+      app.first(BackupList).data().backups.status.should.equal('notConfigured');
     });
 
     it('success message is shown', () => {
-      page.should.alert('success');
+      app.should.alert('success');
     });
   });
 });

@@ -14,7 +14,6 @@ except according to the terms contained in the LICENSE file.
     backdrop @hide="$emit('hide')">
     <template slot="title">Revoke User Access</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">
         <p>
           Are you sure you want to revoke access from the app user
@@ -42,12 +41,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'FieldKeyRevoke',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -60,7 +58,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null
     };
   },
@@ -71,7 +68,7 @@ export default {
         .delete(`/sessions/${encodedToken}`)
         .then(() => {
           this.$emit('hide');
-          this.alert = alert.blank();
+          this.$alert().blank();
           this.$emit('success');
         })
         .catch(() => {});

@@ -59,7 +59,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../mixins/alert';
 import { logOut } from '../session';
 import { logRequestError } from '../util';
 
@@ -126,12 +125,13 @@ export default {
     routeToLogin() {
       const query = Object.assign({}, this.$route.query);
       query.next = this.$route.path;
-      this.$router.push({ path: '/login', query });
+      this.$router.push({ path: '/login', query }, () => {
+        this.$alert().success('You have logged out successfully.');
+      });
     },
     logOut() {
       this.deleteSession();
       logOut();
-      this.$alert = alert.success('You have logged out successfully.');
       this.routeToLogin();
     }
   }

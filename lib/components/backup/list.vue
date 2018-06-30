@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <alert v-bind="alert" @close="alert.state = false"/>
     <loading v-if="backups == null" :state="awaitingResponse"/>
     <table v-else class="table">
       <thead>
@@ -107,7 +106,6 @@ import moment from 'moment';
 
 import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
-import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
@@ -176,10 +174,9 @@ const validateBackupsResponseStatus = (status) =>
 export default {
   name: 'BackupList',
   components: { BackupNew, BackupTerminate },
-  mixins: [alert(), modal(['newBackup', 'terminate']), request()],
+  mixins: [modal(['newBackup', 'terminate']), request()],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       backups: null,
       newBackup: {
@@ -208,11 +205,6 @@ export default {
         : null;
     }
   },
-  watch: {
-    alert() {
-      this.$emit('alert');
-    }
-  },
   created() {
     this.fetchData();
   },
@@ -227,11 +219,11 @@ export default {
         .catch(() => {});
     },
     afterCreate() {
-      this.alert = alert.success('Success! Automatic backups are now configured.');
+      this.$alert().success('Success! Automatic backups are now configured.');
       this.fetchData();
     },
     afterTerminate() {
-      this.alert = alert.success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
+      this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
       this.backups = Backups.notConfigured();
     },
     // The following methods are used in tests. (It does not seem otherwise

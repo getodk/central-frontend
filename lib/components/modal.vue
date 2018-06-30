@@ -24,6 +24,7 @@ except according to the terms contained in the LICENSE file.
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div class="modal-body">
+          <alert v-bind="alert" @close="alert.state = false"/>
           <slot name="body"></slot>
         </div>
       </div>
@@ -32,6 +33,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { blankAlert, hideAncestorAlerts } from '../alert';
+
 export default {
   name: 'Modal',
   props: {
@@ -54,6 +57,7 @@ export default {
     const id = this.$uniqueId();
     return {
       titleId: `modal-title${id}`,
+      alert: blankAlert(),
       mousedownOutsideDialog: false
     };
   },
@@ -67,6 +71,7 @@ export default {
   },
   watch: {
     state(newState) {
+      if (newState) hideAncestorAlerts(this);
       this.toggle(newState);
     }
   },

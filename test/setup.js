@@ -12,14 +12,22 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import 'should';
 
-import { MockLogger } from './util';
 import testData from './data';
+import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
+import { MockComponentAlert } from './alert';
+import { MockLogger } from './util';
 import { destroyMarkedComponent } from './destroy';
 import { logOut } from '../lib/session';
 import { setHttp } from './http';
 import '../lib/setup';
 import './assertions';
 
+Vue.prototype.$alert = function $alert() {
+  const component = closestComponentWithAlert(this);
+  return component != null
+    ? new ComponentAlert(component)
+    : new MockComponentAlert();
+};
 Vue.prototype.$logger = new MockLogger();
 
 setHttp(config => {
@@ -41,9 +49,6 @@ afterEach(() => {
 // Reset global application state.
 afterEach(() => {
   if (Vue.prototype.$session.loggedIn()) logOut();
-  // It's hard to imagine a use case where this would not be null already, but
-  // just in case...
-  Vue.prototype.$alert = null;
 });
 
 afterEach(testData.reset);

@@ -28,11 +28,6 @@ describe('BackupList', () => {
         }));
   });
 
-  it('success message is shown after login', () =>
-    mockRouteThroughLogin('/system/backups')
-      .respondWithProblem(404.1)
-      .afterResponse(app => app.should.alert('success')));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 

@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-body v-if="form == null">
-    <alert v-bind="alert" @close="alert.state = false"/>
     <loading :state="awaitingResponse"/>
   </page-body>
   <div v-else>
@@ -30,26 +29,22 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <alert v-bind="alert" @close="alert.state = false"/>
       <keep-alive>
-        <router-view :form="form" @alert="hideAlert"
-          @state-change="updateState"/>
+        <router-view :form="form" @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
 export default {
   name: 'FormShow',
-  mixins: [alert(), request(), tab()],
+  mixins: [request(), tab()],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       form: null
     };
@@ -62,7 +57,6 @@ export default {
   watch: {
     xmlFormId() {
       this.fetchData();
-      this.alert = alert.blank();
     }
   },
   created() {

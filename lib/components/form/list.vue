@@ -22,7 +22,6 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <alert v-bind="alert" @close="alert.state = false"/>
       <float-row class="table-actions">
         <refresh-button slot="left" :fetching="awaitingResponse"
           @refresh="fetchData({ clear: false })"/>
@@ -70,7 +69,8 @@ except according to the terms contained in the LICENSE file.
         </tbody>
       </table>
 
-      <form-new v-bind="newForm" @hide="newForm.state = false"/>
+      <form-new v-bind="newForm" @hide="newForm.state = false"
+        @success="afterCreate"/>
     </page-body>
   </div>
 </template>
@@ -79,17 +79,15 @@ except according to the terms contained in the LICENSE file.
 import moment from 'moment';
 
 import FormNew from './new.vue';
-import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormNew },
-  mixins: [alert(), request(), modal('newForm')],
+  mixins: [request(), modal('newForm')],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       forms: null,
       newForm: {
@@ -123,6 +121,13 @@ export default {
     lastSubmission(form) {
       const { lastSubmission } = form;
       return lastSubmission != null ? moment(lastSubmission).fromNow() : '';
+    },
+    afterCreate(form) {
+      // Wait for the modal to hide.
+      this.$nextTick(() => this.$router.push(`/forms/${form.xmlFormId}`, () => {
+        const name = form.name || form.xmlFormId;
+        this.$alert().success(`The form “${name}” was created successfully.`);
+      }));
     }
   }
 };

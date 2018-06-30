@@ -19,7 +19,6 @@ except according to the terms contained in the LICENSE file.
           </h1>
         </div>
         <div class="panel-body">
-          <alert v-bind="alert" @close="alert.state = false"/>
           <app-form @submit="submit">
             <label class="form-group">
               <input v-model.trim="email" type="email" class="form-control"
@@ -31,9 +30,10 @@ except according to the terms contained in the LICENSE file.
                 class="btn btn-primary">
                 Reset password <spinner :state="awaitingResponse"/>
               </button>
-              <button type="button" class="btn btn-link" @click="routeToLogin">
+              <router-link :to="loginLocation" tag="button" type="button"
+                class="btn btn-link">
                 Cancel
-              </button>
+              </router-link>
             </div>
           </app-form>
         </div>
@@ -43,33 +43,32 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'AccountResetPassword',
-  mixins: [alert(), request()],
+  mixins: [request()],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       email: ''
     };
   },
-  methods: {
-    routeToLogin() {
-      this.$router.push({
+  computed: {
+    loginLocation() {
+      return {
         path: '/login',
         query: Object.assign({}, this.$route.query)
-      });
-    },
+      };
+    }
+  },
+  methods: {
     submit() {
       this
         .post('/users/reset/initiate', { email: this.email })
-        .then(() => {
-          this.$alert = alert.success(`An email has been sent to ${this.email} with further instructions.`);
-          this.routeToLogin();
-        })
+        .then(() => this.$router.push(this.loginLocation, () => {
+          this.$alert().success(`An email has been sent to ${this.email} with further instructions.`);
+        }))
         .catch(() => {});
     }
   }

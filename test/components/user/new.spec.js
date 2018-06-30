@@ -58,27 +58,26 @@ describe('UserNew', () => {
       .standardButton());
 
   describe('after successful submit', () => {
-    let page;
-    beforeEach(() => mockHttp()
-      .mount(UserList)
+    let app;
+    beforeEach(() => mockRoute('/users')
       .respondWithData(() => testData.administrators.sorted())
       .afterResponse(component => {
-        page = component;
+        app = component;
       })
-      .request(() => clickCreateButton(page).then(submitForm))
+      .request(() => clickCreateButton(app).then(submitForm))
       .respondWithData(() => testData.administrators.last())
       .respondWithData(() => testData.administrators.sorted()));
 
     it('modal is hidden', () => {
-      page.first(UserNew).getProp('state').should.be.false();
+      app.first(UserNew).getProp('state').should.be.false();
     });
 
     it('table has the correct number of rows', () => {
-      page.find('table tbody tr').length.should.equal(2);
+      app.find('#user-list-table tbody tr').length.should.equal(2);
     });
 
     it('success message is shown', () => {
-      page.should.alert('success');
+      app.should.alert('success');
     });
   });
 });

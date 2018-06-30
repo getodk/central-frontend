@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <alert v-bind="alert" @close="alert.state = false"/>
     <loading :state="awaitingResponse"/>
     <div v-if="fieldKeyCount !== null" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
@@ -99,15 +98,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormOverview',
-  mixins: [
-    alert(),
-    request()
-  ],
+  mixins: [request()],
   props: {
     form: {
       type: Object,
@@ -116,7 +111,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       fieldKeyCount: null
     };
