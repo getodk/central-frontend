@@ -67,6 +67,17 @@ except according to the terms contained in the LICENSE file.
             </div>
           </div>
         </div>
+        <div class="col-xs-6">
+          <div class="panel panel-simple">
+            <div class="panel-heading">
+              <h1 class="panel-title">Latest News</h1>
+            </div>
+            <div class="panel-body">
+              <iframe id="root-home-news-iframe" src="https://opendatakit.github.io/central/news.html">
+              </iframe>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -105,5 +116,10 @@ export default {
   p {
     font-size: 20px;
   }
+}
+
+#root-home-news-iframe {
+  border-width: 0;
+  width: 100%;
 }
 </style>
