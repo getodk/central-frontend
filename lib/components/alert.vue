@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     htmlClass() {
-      return ['alert', 'alert-dismissable', `alert-${this.type}`];
+      return ['alert', 'alert-dismissible', `alert-${this.type}`];
     },
     atEpoch() { return this.at.getTime(); }
   }
