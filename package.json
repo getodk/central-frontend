@@ -50,7 +50,7 @@
     "karma-spec-reporter": "0.0.32",
     "mocha": "~5.2",
     "node-gyp": "3.6.2",
-    "node-sass": "~4.6",
+    "node-sass": "~4.9",
     "proxyquireify": "~3.2",
     "should": "~13.2",
     "uglify-js": "~2.8",
