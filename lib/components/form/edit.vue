@@ -70,12 +70,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormEdit',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     form: {
       type: Object,
@@ -84,15 +83,9 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       state: this.form.state
     };
-  },
-  watch: {
-    alert() {
-      this.$emit('alert', this.alert);
-    }
   },
   methods: {
     changeState(newState) {
@@ -100,7 +93,7 @@ export default {
       this
         .patch(`/forms/${this.form.xmlFormId}`, { state: this.state })
         .then(() => {
-          this.alert = alert.success('Form settings saved!');
+          this.$alert().success('Form settings saved!');
           this.$emit('state-change', this.state);
         })
         .catch(() => {});

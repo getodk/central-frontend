@@ -14,7 +14,6 @@ except according to the terms contained in the LICENSE file.
     @hide="cancel" @shown="focusPassphraseInput">
     <template slot="title">Set up Backups</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <template v-if="step === 1">
         <p class="modal-introduction">
           If you want, you may set up an encryption passphrase which must be
@@ -102,14 +101,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 const GOOGLE_BREAKPOINT = 601;
 
 export default {
   name: 'BackupNew',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -118,7 +116,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       // The step in the wizard (1-indexed)
       step: 1,
@@ -148,7 +145,7 @@ export default {
         .catch(() => {});
     },
     reset() {
-      this.alert = alert.blank();
+      this.$alert().blank();
       this.step = 1;
       this.passphrase = '';
       this.googleUrl = null;

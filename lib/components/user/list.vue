@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <alert v-bind="alert" @close="alert.state = false"/>
     <float-row class="table-actions">
       <refresh-button slot="left" :fetching="awaitingResponse"
         @refresh="fetchData({ clear: false })"/>
@@ -68,7 +67,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
-import alert from '../../mixins/alert';
 import highlight from '../../mixins/highlight';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -77,14 +75,12 @@ export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword },
   mixins: [
-    alert(),
     request(),
     modal(['newUser', 'resetPassword']),
     highlight()
   ],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       users: null,
       highlighted: null,
@@ -98,11 +94,6 @@ export default {
         }
       }
     };
-  },
-  watch: {
-    alert() {
-      this.$emit('alert');
-    }
   },
   created() {
     this.fetchData({ clear: false });
@@ -127,11 +118,11 @@ export default {
     },
     afterCreate(user) {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`A user was created successfully for ${user.email}.`);
+      this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     },
     afterResetPassword() {
-      this.alert = alert.success(`An email has been sent to ${this.resetPassword.user.email} with instructions on how to proceed.`);
+      this.$alert().success(`An email has been sent to ${this.resetPassword.user.email} with instructions on how to proceed.`);
     }
   }
 };

@@ -32,13 +32,6 @@ describe('FieldKeyList', () => {
         }));
   });
 
-  it('success message is shown after login', () =>
-    mockRouteThroughLogin('/users/field-keys')
-      .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-      .afterResponse(app => {
-        app.should.alert('success');
-      }));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 
@@ -78,8 +71,7 @@ describe('FieldKeyList', () => {
         }));
 
     it('refreshes after the refresh button is clicked', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/users/field-keys')
         .testRefreshButton(testData.extendedFieldKeys));
 
     describe('QR code', () => {

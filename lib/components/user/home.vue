@@ -29,26 +29,19 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <alert v-bind="alert" @close="alert.state = false"/>
       <keep-alive>
-        <router-view @alert="hideAlert"/>
+        <router-view/>
       </keep-alive>
     </page-body>
   </div>
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import tab from '../../mixins/tab';
 
 export default {
   name: 'UserHome',
-  mixins: [alert(), tab()],
-  data() {
-    return {
-      alert: alert.blank()
-    };
-  },
+  mixins: [tab()],
   methods: {
     tabPathPrefix() {
       return '/users';

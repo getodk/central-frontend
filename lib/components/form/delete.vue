@@ -14,7 +14,6 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template slot="title">Delete Form</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">
         <p>
           Are you sure you want to delete the form
@@ -38,12 +37,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormDelete',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -56,7 +54,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null
     };
   },

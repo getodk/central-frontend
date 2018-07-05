@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <alert v-bind="alert" @close="alert.state = false"/>
     <float-row class="table-actions">
       <refresh-button slot="left" :fetching="awaitingResponse"
         @refresh="fetchData({ clear: false })"/>
@@ -54,7 +53,6 @@ import FieldKey from '../../presenters/field-key';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
-import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
@@ -73,13 +71,11 @@ export default {
   name: 'FieldKeyList',
   components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
   mixins: [
-    alert(),
     request(),
     modal(['newFieldKey', 'revoke'])
   ],
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       fieldKeys: null,
       highlighted: null,
@@ -96,11 +92,6 @@ export default {
         }
       }
     };
-  },
-  watch: {
-    alert() {
-      this.$emit('alert');
-    }
   },
   created() {
     this.fetchData({ clear: false });
@@ -177,12 +168,12 @@ export default {
     },
     afterCreate(fieldKey) {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`The app user “${fieldKey.displayName}” was created successfully.`);
+      this.$alert().success(`The app user “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
       this.fetchData({ clear: true });
-      this.alert = alert.success(`Access was revoked for the app user “${this.revoke.fieldKey.displayName}.”`);
+      this.$alert().success(`Access was revoked for the app user “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }
   }

@@ -14,7 +14,6 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template slot="title">Reset Password</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <p class="modal-introduction">
         Once you click <strong>Reset Password</strong> below, the password for
         {{ user.email }} will be immediately invalidated. An email will be sent
@@ -35,12 +34,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 export default {
   name: 'UserResetPassword',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -53,7 +51,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null
     };
   },
@@ -64,7 +61,7 @@ export default {
         .post('/users/reset/initiate?invalidate=true', data)
         .then(() => {
           this.$emit('hide');
-          this.alert = alert.blank();
+          this.$alert().blank();
           this.$emit('success');
         })
         .catch(() => {});

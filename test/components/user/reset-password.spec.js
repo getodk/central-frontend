@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import testData from '../../data';
-import { mockHttp } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
@@ -54,22 +54,21 @@ describe('UserResetPassword', () => {
   });
 
   describe('after successful response', () => {
-    let page;
-    beforeEach(() => mockHttp()
-      .mount(UserList)
+    let app;
+    beforeEach(() => mockRoute('/users')
       .respondWithData(() => testData.administrators.sorted())
       .afterResponse(component => {
-        page = component;
+        app = component;
       })
-      .request(() => openModal(page).then(confirmResetPassword))
+      .request(() => openModal(app).then(confirmResetPassword))
       .respondWithSuccess());
 
     it('modal hides', () => {
-      page.first(UserResetPassword).getProp('state').should.be.false();
+      app.first(UserResetPassword).getProp('state').should.be.false();
     });
 
     it('success message is shown', () => {
-      page.should.alert('success');
+      app.should.alert('success');
     });
   });
 });

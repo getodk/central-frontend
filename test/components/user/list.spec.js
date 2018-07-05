@@ -26,11 +26,6 @@ describe('UserList', () => {
         .afterResponse(app => app.vm.$route.path.should.equal('/users')));
   });
 
-  it('success message is shown after login', () =>
-    mockRouteThroughLogin('/users')
-      .respondWithData(() => testData.administrators.sorted())
-      .afterResponse(app => app.should.alert('success')));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 
@@ -61,8 +56,6 @@ describe('UserList', () => {
     });
 
     it('refreshes after the refresh button is clicked', () =>
-      mockHttp()
-        .mount(UserList)
-        .testRefreshButton(testData.administrators));
+      mockRoute('/users').testRefreshButton(testData.administrators));
   });
 });

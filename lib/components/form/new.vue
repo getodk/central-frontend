@@ -13,7 +13,6 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" :hideable="!awaitingResponse" backdrop @hide="hide">
     <template slot="title">Create Form</template>
     <template slot="body">
-      <alert v-bind="alert" @close="alert.state = false"/>
       <div class="modal-introduction">
         <p>To create a form, upload an XForms XML file.</p>
         <p>
@@ -49,14 +48,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import alert from '../../mixins/alert';
 import request from '../../mixins/request';
 
 const NO_FILE_MESSAGE = 'Please choose a file.';
 
 export default {
   name: 'FormNew',
-  mixins: [alert(), request()],
+  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -65,7 +63,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       // true if a dragged file is over the drop zone and false if not.
       isOverDropZone: false,
@@ -114,8 +111,9 @@ export default {
     },
     hide() {
       this.$emit('hide');
-      if (this.alert.type === 'info' && this.alert.message === NO_FILE_MESSAGE)
-        this.alert = alert.blank();
+      const alert = this.$alert();
+      if (alert.type === 'info' && alert.message === NO_FILE_MESSAGE)
+        alert.blank();
     },
     readFile(files) {
       if (files.length === 0) return;
@@ -125,12 +123,12 @@ export default {
         this.reading = true;
       };
       reader.onload = (event) => {
-        this.alert = alert.blank();
+        this.$alert().blank();
         this.filename = file.name;
         this.xml = event.target.result;
       };
       reader.onerror = () => {
-        this.alert = alert.danger('Something went wrong while reading the file.');
+        this.$alert().danger('Something went wrong while reading the file.');
         this.filename = '';
         this.xml = null;
       };
@@ -163,10 +161,10 @@ export default {
     },
     checkStateBeforeRequest() {
       if (this.xml == null) {
-        this.alert = alert.info(NO_FILE_MESSAGE);
+        this.$alert().info(NO_FILE_MESSAGE);
         return false;
       } else if (this.reading) {
-        this.alert = alert.info('The file is still being processed.');
+        this.$alert().info('The file is still being processed.');
         return false;
       }
       return true;
@@ -178,13 +176,7 @@ export default {
         .post('/forms', this.xml, { headers })
         .then(({ data }) => {
           this.$emit('hide');
-          // Wait for the modal to hide.
-          this.$nextTick(() => {
-            const form = data;
-            const name = form.name || form.xmlFormId;
-            this.$alert = alert.success(`The form “${name}” was created successfully.`);
-            this.$router.push(`/forms/${form.xmlFormId}`);
-          });
+          this.$emit('success', data);
         })
         .catch(() => {});
     }

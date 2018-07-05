@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     htmlClass() {
-      return ['alert', 'alert-dismissable', `alert-${this.type}`];
+      return ['alert', 'alert-dismissible', `alert-${this.type}`];
     },
     atEpoch() { return this.at.getTime(); }
   }
@@ -67,17 +67,25 @@ export default {
   border: none;
   border-top: 2px solid transparent;
   border-radius: 0;
+  // This only affects alerts in modals, as App's alert has a fixed position.
+  margin-bottom: 15px;
+
+  &.alert-success {
+    background-color: $color-success-light;
+    border-top-color: $color-success;
+    color: $color-success;
+  }
+
+  &.alert-info {
+    background-color: $color-info-light;
+    border-top-color: $color-info;
+    color: $color-info;
+  }
 
   &.alert-danger {
     background-color: $color-danger-light;
     border-top-color: $color-danger;
     color: $color-danger;
   }
-  &.alert-success {
-    background-color: $color-success-light;
-    border-top-color: $color-success;
-    color: $color-success;
-  }
 }
 </style>
-

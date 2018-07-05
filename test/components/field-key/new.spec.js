@@ -82,7 +82,7 @@ describe('FieldKeyNew', () => {
       });
 
       it('shows a success message', () => {
-        app.first(FieldKeyList).should.alert('success');
+        app.should.alert('success');
       });
     };
     describe('after the done button is clicked', () => {

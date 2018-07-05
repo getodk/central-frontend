@@ -28,9 +28,4 @@ describe('FormSettings', () => {
         .afterResponse(app => app.vm.$route.path.should.equal(path));
     });
   });
-
-  it('shows a success message after login', () =>
-    mockRouteThroughLogin(settingsPath(testData.extendedForms.createPast(1).last()))
-      .respondWithData(() => testData.extendedForms.last())
-      .afterResponse(app => app.should.alert('success')));
 });

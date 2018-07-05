@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <alert v-bind="alert" @close="alert.state = false"/>
     <float-row class="table-actions">
       <template slot="left">
         <refresh-button :fetching="awaitingResponse"
@@ -64,7 +63,6 @@ except according to the terms contained in the LICENSE file.
 import moment from 'moment';
 
 import FormAnalyze from './analyze.vue';
-import alert from '../../mixins/alert';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
@@ -72,7 +70,6 @@ export default {
   name: 'FormSubmissions',
   components: { FormAnalyze },
   mixins: [
-    alert(),
     modal('analyze'),
     request()
   ],
@@ -84,7 +81,6 @@ export default {
   },
   data() {
     return {
-      alert: alert.blank(),
       requestId: null,
       submissions: null,
       downloading: false,
@@ -103,11 +99,6 @@ export default {
       const count = this.submissions.length.toLocaleString();
       const s = this.submissions.length !== 1 ? 's' : '';
       return `Download all ${count} record${s}`;
-    }
-  },
-  watch: {
-    alert() {
-      this.$emit('alert');
     }
   },
   created() {

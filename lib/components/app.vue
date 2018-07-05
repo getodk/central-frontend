@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <navbar/>
+    <alert id="app-alert" v-bind="alert" @close="alert.state = false"/>
     <div class="container-fluid">
       <router-view/>
     </div>
@@ -20,19 +21,51 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Navbar from './navbar.vue';
+import { blankAlert } from '../alert';
 
 export default {
   name: 'App',
-  components: { Navbar }
+  components: { Navbar },
+  data() {
+    return {
+      alert: blankAlert()
+    };
+  }
 };
 </script>
 
 <style lang="sass">
-// Global styles should go here.
-
 @import '../../assets/scss/bootstrap';
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
+
+#app-alert {
+  border-bottom: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  left: 50%;
+  margin-left: -250px;
+  position: fixed;
+  text-align: center;
+  top: 34px;
+  width: 500px;
+  // 1 greater than the Bootstrap maximum
+  z-index: 1061;
+
+  &.alert-success {
+    border-color: $color-success;
+  }
+
+  &.alert-info {
+    border-color: $color-info;
+  }
+
+  &.alert-danger {
+    border-color: $color-danger;
+  }
+}
+
+// Global styles should go here.
 
 html {
   background-color: $color-accent-secondary;

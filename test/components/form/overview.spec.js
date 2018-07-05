@@ -32,12 +32,6 @@ describe('FormOverview', () => {
     });
   });
 
-  it('shows a success message after login', () =>
-    mockRouteThroughLogin(overviewPath(testData.extendedForms.createPast(1).last()))
-      .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.simpleFieldKeys.sorted())
-      .afterResponse(app => app.should.alert('success')));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 

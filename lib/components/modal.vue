@@ -24,6 +24,7 @@ except according to the terms contained in the LICENSE file.
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div class="modal-body">
+          <alert v-bind="alert" @close="alert.state = false"/>
           <slot name="body"></slot>
         </div>
       </div>
@@ -32,6 +33,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { blankAlert, hideAncestorAlerts } from '../alert';
+
 export default {
   name: 'Modal',
   props: {
@@ -54,19 +57,21 @@ export default {
     const id = this.$uniqueId();
     return {
       titleId: `modal-title${id}`,
+      alert: blankAlert(),
       mousedownOutsideDialog: false
     };
   },
   computed: {
     bsBackdrop() {
-      // We use 'static' rather than 'true', because using 'true' would allow
-      // the modal to be hidden without alerting the parent component. See
-      // toggle() for more details.
+      // We use 'static' rather than 'true', because using 'true' would make it
+      // possible for the modal to hide without communicating that change to its
+      // parent component. See toggle() for more details.
       return this.backdrop ? 'static' : 'false';
     }
   },
   watch: {
     state(newState) {
+      if (newState) hideAncestorAlerts(this);
       this.toggle(newState);
     }
   },
@@ -88,11 +93,11 @@ export default {
   methods: {
     /* toggle() manually toggles the modal. It is the only way the modal is
     shown or hidden: we do not use Bootstrap's listeners to toggle the modal. If
-    we used Bootstrap's listeners to do so, the modal would be hidden without
-    alerting the parent component, which would add complexity to communication
-    between the modal and its parent. Foregoing those listeners also aids
-    modularity, because parent components can use this modal component without
-    knowing that it uses Bootstrap. */
+    we used Bootstrap's listeners to do so, the modal would hide without
+    communicating the change to its parent component -- adding complexity to the
+    communication between the modal and its parent. Foregoing those listeners
+    also aids modularity, because parent components can use this modal component
+    without knowing that it uses Bootstrap. */
     toggle(state) {
       // For tests in which the component is not attached to the document, we
       // return immediately rather than calling modal(), because it has side

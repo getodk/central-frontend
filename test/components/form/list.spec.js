@@ -26,11 +26,6 @@ describe('FormList', () => {
         .afterResponse(app => app.vm.$route.path.should.equal('/forms')));
   });
 
-  it('success message is shown after login', () =>
-    mockRouteThroughLogin('/forms')
-      .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-      .afterResponse(app => app.should.alert('success')));
-
   describe('after login', () => {
     beforeEach(mockLogin);
 
