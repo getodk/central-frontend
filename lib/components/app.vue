@@ -45,9 +45,7 @@ export default {
   border-right: 1px solid transparent;
   left: 50%;
   margin-left: -250px;
-  margin-right: -250px;
   position: fixed;
-  right: 50%;
   text-align: center;
   top: 34px;
   width: 500px;
