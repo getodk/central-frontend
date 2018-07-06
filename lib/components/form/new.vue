@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!awaitingResponse" backdrop @hide="hide">
+  <modal :state="state" :hideable="!disabled" backdrop @hide="hide">
     <template slot="title">Create Form</template>
     <template slot="body">
       <div class="modal-introduction">
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <div :style="pointerEvents">
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
-          <button :disabled="!droppable" type="button" class="btn btn-primary"
+          <button :disabled="disabled" type="button" class="btn btn-primary"
             @click="clickFileInput">
             <span class="icon-folder-open"></span> choose one
           </button>
@@ -34,11 +34,11 @@ except according to the terms contained in the LICENSE file.
         <div :style="pointerEvents" class="text-monospace">{{ filename }}</div>
       </div>
       <div class="modal-actions">
-        <button id="form-new-create-button" :disabled="awaitingResponse"
-          type="button" class="btn btn-primary" @click="create">
+        <button id="form-new-create-button" :disabled="disabled" type="button"
+          class="btn btn-primary" @click="create">
           Create <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button :disabled="disabled" type="button" class="btn btn-link"
           @click="hide">
           Close
         </button>
@@ -72,13 +72,15 @@ export default {
     };
   },
   computed: {
-    droppable() {
-      return !(this.reading || this.awaitingResponse);
+    // Returns true if modal actions (selecting a file, submitting the XML, or
+    // hiding the modal) are disabled and false if not.
+    disabled() {
+      return this.reading || this.awaitingResponse;
     },
     dropZoneClass() {
       return {
         'text-center': true,
-        droppable: this.droppable,
+        disabled: this.disabled,
         dragover: this.isOverDropZone
       };
     },
@@ -117,11 +119,9 @@ export default {
     },
     readFile(files) {
       if (files.length === 0) return;
+      this.reading = true;
       const file = files[0];
       const reader = new FileReader();
-      reader.onloadstart = () => {
-        this.reading = true;
-      };
       reader.onload = (event) => {
         this.$alert().blank();
         this.filename = file.name;
@@ -149,33 +149,28 @@ export default {
       // before the dragenter listener is called?
       this.isOverDropZone = true;
       // eslint-disable-next-line no-param-reassign
-      if (this.droppable) event.originalEvent.dataTransfer.dropEffect = 'copy';
+      if (!this.disabled) event.originalEvent.dataTransfer.dropEffect = 'copy';
     },
     dragleave() {
       this.isOverDropZone = false;
     },
     drop(event) {
       event.preventDefault();
-      if (this.droppable) this.readFile(event.originalEvent.dataTransfer.files);
+      if (!this.disabled) this.readFile(event.originalEvent.dataTransfer.files);
       this.isOverDropZone = false;
     },
-    checkStateBeforeRequest() {
+    create() {
       if (this.xml == null) {
         this.$alert().info(NO_FILE_MESSAGE);
-        return false;
-      } else if (this.reading) {
-        this.$alert().info('The file is still being processed.');
-        return false;
+        return;
       }
-      return true;
-    },
-    create() {
-      if (!this.checkStateBeforeRequest()) return;
       const headers = { 'Content-Type': 'application/xml' };
       this
         .post('/forms', this.xml, { headers })
         .then(({ data }) => {
           this.$emit('hide');
+          this.filename = '';
+          this.xml = null;
           this.$emit('success', data);
         })
         .catch(() => {});
@@ -195,7 +190,7 @@ export default {
     opacity: 0.65;
   }
 
-  &:not(.droppable) {
+  &.disabled {
     cursor: not-allowed;
     opacity: 0.65;
   }
