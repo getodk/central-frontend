@@ -242,6 +242,8 @@ h1 {
   > tbody {
     > tr > td {
       border-top: $border-top-table-data;
+      padding: $padding-top-table-data $padding-right-table-data
+               $padding-bottom-table-data $padding-left-table-data;
     }
   }
 }
@@ -310,11 +312,16 @@ h1 {
   }
 
   .panel-body {
-    margin: 8px;
-    padding: 0;
+    padding: $padding-top-table-data $padding-right-table-data
+             $padding-bottom-table-data $padding-left-table-data;
 
     hr {
-      margin: 8px -8px;
+      // An <hr> styles the break between two sections of a
+      // .panel-simple .panel-body similarly to the space between two rows of a
+      // .table. We want the <hr> to stretch across the entire width of the
+      // .panel-body, hence the negative left and right margins.
+      margin: $padding-bottom-table-data (-$padding-right-table-data)
+              $padding-top-table-data (-$padding-left-table-data);
       border-top: $border-top-table-data;
     }
   }
