@@ -117,6 +117,8 @@ describe('FormNew', () => {
             modal.data().reading.should.be.false();
             modal.data().filename.should.equal(XML_FILENAME);
             modal.data().xml.should.equal(testData.extendedForms.last().xml);
+            const button = modal.first('#form-new-create-button');
+            button.element.disabled.should.be.false();
           }));
 
       it('standard button thinking things', () =>
