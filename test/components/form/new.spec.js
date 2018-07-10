@@ -96,15 +96,17 @@ describe('FormNew', () => {
 
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
-      it('clicking create button during file read shows info message', () =>
+      it('disables the create button during file read', () =>
         Promise.resolve(mountAndMark(FormNew))
           .then(createForm)
           .then(selectFile)
-          .then(clickCreateButtonInModal)
           .then(modal => {
             modal.data().reading.should.be.true();
-            modal.should.alert('info');
-          }));
+            const button = modal.first('#form-new-create-button');
+            button.getAttribute('disabled').should.be.ok();
+            return modal;
+          })
+          .then(waitForRead));
 
       it('modal is updated after file read', () =>
         Promise.resolve(mountAndMark(FormNew))
@@ -115,6 +117,8 @@ describe('FormNew', () => {
             modal.data().reading.should.be.false();
             modal.data().filename.should.equal(XML_FILENAME);
             modal.data().xml.should.equal(testData.extendedForms.last().xml);
+            const button = modal.first('#form-new-create-button');
+            button.element.disabled.should.be.false();
           }));
 
       it('standard button thinking things', () =>
