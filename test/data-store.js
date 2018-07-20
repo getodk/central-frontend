@@ -269,7 +269,6 @@ const splitOptions = (options) => {
 };
 
 export const dataStore = (options) => {
-  // eslint-disable-next-line object-curly-newline
   const { name, factoryOptions, sort, views } = splitOptions(options);
   const store = new Store(factoryOptions, sort);
   stores.push(store);
