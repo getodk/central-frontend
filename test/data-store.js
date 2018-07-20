@@ -37,10 +37,14 @@ class Factory {
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
-      const object = factory();
-      Object.assign(object, this._id(object, id));
-      Object.assign(object, this._createdAt(object, past));
-      Object.assign(object, this._updatedAt(object, past));
+      // An object that contains the base properties of the new object: id,
+      // createdAt, and updatedAt.
+      const base = {};
+      if (this._options.id) base.id = id;
+      if (this._options.createdAt) base.createdAt = this._createdAt(past);
+      if (this._options.updatedAt)
+        base.updatedAt = this._updatedAt(past, base.createdAt);
+      const object = Object.assign(factory(base), base);
       if (this._isValid(object, constraints)) {
         if (this._options.createdAt) this._lastCreatedAt = object.createdAt;
         return object;
@@ -48,27 +52,20 @@ class Factory {
     }
   }
 
-  _id(object, id) {
-    if (!this._options.id || 'id' in object) return null;
-    return { id };
-  }
-
-  _createdAt(object, past) {
-    if (!this._options.createdAt || 'createdAt' in object) return null;
-    if (!past) return { createdAt: new Date().toISOString() };
+  _createdAt(past) {
+    if (!past) return new Date().toISOString();
     const createdAt = this._lastCreatedAt == null
       ? faker.date.past()
       : faker.date.pastSince(this._lastCreatedAt);
-    return { createdAt: createdAt.toISOString() };
+    return createdAt.toISOString();
   }
 
-  _updatedAt(object, past) {
-    if (!this._options.updatedAt || 'updatedAt' in object) return null;
-    if (!past || faker.random.boolean()) return { updatedAt: null };
+  _updatedAt(past, createdAt) {
+    if (!past || faker.random.boolean()) return null;
     const updatedAt = this._options.createdAt
-      ? faker.date.pastSince(object.createdAt)
+      ? faker.date.pastSince(createdAt)
       : faker.date.past();
-    return { updatedAt: updatedAt.toISOString() };
+    return updatedAt.toISOString();
   }
 
   _isValid(object, constraints) {
