@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import BackupList from '../lib/components/backup/list.vue';
 import faker from './faker';
@@ -166,7 +167,6 @@ const testData = Object.assign(
         name,
         version,
         state: faker.random.arrayElement(['open', 'closing', 'closed']),
-        // This does not necessarily match the XML below.
         hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
         // The following two properties do not necessarily match
         // testData.extendedSubmissions.
@@ -176,35 +176,31 @@ const testData = Object.assign(
           testData.administrators.randomOrCreatePast(),
           ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
         ),
-        xml: `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
-  <h:head>
-    <h:title>${name}</h:title>
-    <model>
-      <instance>
-        <data id="${xmlFormId}"${version != null ? ` version="${version}"` : ''}>
-          <meta>
-            <instanceID/>
-          </meta>
-          <name/>
-          <age/>
-        </data>
-      </instance>
-
-      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
-      <bind nodeset="/data/name" type="string"/>
-      <bind nodeset="/data/age" type="int"/>
-    </model>
-
-  </h:head>
-  <h:body>
-    <input ref="/data/name">
-      <label>What is your name?</label>
-    </input>
-    <input ref="/data/age">
-      <label>What is your age?</label>
-    </input>
-  </h:body>
-</h:html>`
+        // We currently do not use the XML anywhere. If/when we do, we should
+        // consider whether to keep it in sync with the hash and _schema
+        // properties.
+        xml: '',
+        _schema: [
+          { path: ['meta', 'instanceID'], type: 'string' },
+          { path: ['testInt'], type: 'int' },
+          { path: ['testDecimal'], type: 'decimal' },
+          { path: ['testDate'], type: 'date' },
+          { path: ['testTime'], type: 'time' },
+          { path: ['testDateTime'], type: 'dateTime' },
+          { path: ['testGeopoint'], type: 'geopoint' },
+          { path: ['testGroup', 'testBinary'], type: 'binary' },
+          { path: ['testString1'], type: 'string' },
+          { path: ['testString2'], type: 'string' },
+          { path: ['testString3'], type: 'string' },
+          { path: ['testString4'], type: 'string' },
+          {
+            path: ['testRepeat'],
+            type: 'repeat',
+            children: [
+              { path: ['testString5'], type: 'string' }
+            ]
+          }
+        ]
       };
     },
     validate: [
@@ -231,17 +227,86 @@ const testData = Object.assign(
 
   dataStore({
     name: 'extendedSubmissions',
-    factory: () => {
+    factory: ({
+      createdAt,
+
+      hasInt = faker.random.boolean(),
+      hasDecimal = faker.random.boolean(),
+      hasStrings = faker.random.boolean(),
+      hasDate = faker.random.boolean(),
+      hasTime = faker.random.boolean(),
+      hasDateTime = faker.random.boolean(),
+      hasGeopoint = faker.random.boolean(),
+      hasBinary = faker.random.boolean(),
+
+      ...partialOData
+    }) => {
       const form = testData.extendedForms.randomOrCreatePast();
       const instanceId = faker.random.uuid();
+      const submitter = testData.administrators.randomOrCreatePast();
+
+      const oData = {
+        ...partialOData,
+        __id: instanceId,
+        __system: {
+          submissionDate: createdAt,
+          submitterId: submitter.id.toString(),
+          submitterName: submitter.displayName
+        },
+        meta: {
+          instanceID: instanceId
+        }
+      };
+      const pastDateTime = (formatString) => {
+        const dateTime = DateTime.fromJSDate(faker.date.past());
+        const formatted = dateTime.toFormat(formatString);
+        if (faker.random.boolean()) return formatted;
+        return `${formatted}+0100`;
+      };
+      if (oData.testInt == null && hasInt)
+        oData.testInt = faker.random.number();
+      if (oData.testDecimal == null && hasDecimal)
+        oData.testDecimal = faker.random.number({ precision: 0.00001 });
+      if (oData.testDate == null && hasDate)
+        oData.testDate = pastDateTime('yyyy-MM-dd');
+      if (oData.testTime == null && hasTime)
+        oData.testTime = pastDateTime('HH:mm:ss');
+      if (oData.testDateTime == null && hasDateTime)
+        oData.testDateTime = pastDateTime('yyyy/MM/dd HH:mm:ss');
+      if (oData.testGeopoint == null && hasGeopoint) {
+        const coordinates = [
+          faker.random.number({ min: -85, max: 85, precision: 0.0000000001 }),
+          faker.random.number({ min: -180, max: 180, precision: 0.0000000001 })
+        ];
+        if (faker.random.boolean()) coordinates.push(faker.random.number());
+        oData.testGeopoint = { type: 'Point', coordinates };
+      }
+      if (oData.testGroup == null) oData.testGroup = {};
+      if (oData.testGroup.testBinary == null && hasBinary)
+        oData.testGroup.testBinary = faker.system.commonFileName('.jpg');
+      if (hasStrings) {
+        for (let i = 1; i <= 4; i += 1) {
+          const name = `testString${i}`;
+          if (oData[name] == null) {
+            const count = faker.random.number({ min: 1, max: 3 });
+            oData[name] = faker.lorem.paragraphs(count);
+          }
+        }
+      }
+      // Once we resolve issue #82 for Backend, we should add a repeat group to
+      // the data.
+
       return {
         formId: form.id,
         instanceId,
-        xml: `<data id="${form.id}"><orx:meta><orx:instanceID>${instanceId}</orx:instanceID></orx:meta><name>Alice</name><age>30</age></data>`,
+        // We currently do not use the XML anywhere. If/when we do, we should
+        // consider whether to keep it in sync with the _oData property.
+        xml: '',
         submitter: pick(
-          testData.administrators.randomOrCreatePast(),
+          submitter,
           ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
-        )
+        ),
+        _oData: oData
       };
     },
     validate: [
