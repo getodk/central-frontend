@@ -432,31 +432,60 @@ class MockHttp {
       });
   }
 
-  testRefreshButton(collection) {
+  testRefreshButton(options) {
+    // Options
+    const standardizedOptions = this._testRefreshButtonOptions(options);
+    const { collection, respondWithData, tableSelector } = standardizedOptions;
+
+    // Data responses
+    const dataCallbacks = [...respondWithData];
+    // Create a new object before returning the first response.
+    dataCallbacks[0] = () => {
+      collection.createNew();
+      const callback = respondWithData[0];
+      return callback();
+    };
+
+    // Helper functions
     const testRowCount = (component) => {
-      const tr = component.find('table tbody tr');
-      tr.length.should.equal(collection.size);
+      const rowCount = component.first(tableSelector).find('tbody tr').length;
+      rowCount.should.equal(collection.size);
     };
     const clickRefreshButton = (component) =>
       trigger.click(component.first('.btn-refresh'));
+
     return this
-      .respondWithData(() => collection.createPast(1).sorted())
-      .afterResponse(testRowCount)
+      // Series 1: Test that the table is initially rendered as expected.
+      .respondWithData(dataCallbacks)
+      .afterResponses(testRowCount)
+      // Series 2: Click the refresh button and return a successful response (or
+      // responses). The table should not disappear during the refresh, and the
+      // table should be updated after the refresh.
       .request(clickRefreshButton)
-      // Test a successful response.
-      .respondWithData(() => collection.createPast(1).sorted())
-      // The table should not disappear during the refresh.
+      .respondWithData(dataCallbacks)
       .beforeEachResponse(testRowCount)
-      // The table should be updated after the refresh.
-      .afterResponse(testRowCount)
+      .afterResponses(testRowCount)
+      // Series 3: Click the refresh button again, this time returning a problem
+      // response (or responses).
       .request(clickRefreshButton)
-      // Test a problem response.
-      .respondWithProblem()
-      .afterResponse(component => {
+      .respondWithProblems(new Array(respondWithData.length).fill(500))
+      .afterResponses(component => {
         // The table should not disappear.
         testRowCount(component);
         component.should.alert();
       });
+  }
+
+  _testRefreshButtonOptions(options) {
+    const { collection } = options;
+    const defaults = {
+      respondWithData: [() => collection.sorted()],
+      tableSelector: 'table'
+    };
+    const standardizedOptions = { ...defaults, ...options };
+    if (!Array.isArray(standardizedOptions.respondWithData))
+      standardizedOptions.respondWithData = [standardizedOptions.respondWithData];
+    return standardizedOptions;
   }
 
   //////////////////////////////////////////////////////////////////////////////

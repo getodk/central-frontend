@@ -56,6 +56,7 @@ describe('UserList', () => {
     });
 
     it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/users').testRefreshButton(testData.administrators));
+      mockRoute('/users')
+        .testRefreshButton({ collection: testData.administrators }));
   });
 });

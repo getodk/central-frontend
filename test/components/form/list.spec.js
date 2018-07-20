@@ -66,6 +66,7 @@ describe('FormList', () => {
         }));
 
     it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/forms').testRefreshButton(testData.extendedForms));
+      mockRoute('/forms')
+        .testRefreshButton({ collection: testData.extendedForms }));
   });
 });

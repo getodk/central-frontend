@@ -65,7 +65,7 @@ describe('FormSubmissions', () => {
     it('refreshes after the refresh button is clicked', () =>
       mockRoute(submissionsPath(testData.extendedForms.createPast(1).last()))
         .respondWithData(() => testData.extendedForms.last())
-        .testRefreshButton(testData.extendedSubmissions));
+        .testRefreshButton({ collection: testData.extendedSubmissions }));
 
     describe('download', () => {
       it('download button shows number of submissions', () =>

@@ -72,7 +72,7 @@ describe('FieldKeyList', () => {
 
     it('refreshes after the refresh button is clicked', () =>
       mockRoute('/users/field-keys')
-        .testRefreshButton(testData.extendedFieldKeys));
+        .testRefreshButton({ collection: testData.extendedFieldKeys }));
 
     describe('QR code', () => {
       let app;
