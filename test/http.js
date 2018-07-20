@@ -207,10 +207,14 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(dataCallback) {
+  respondWithData(callbackOrCallbacks) {
+    if (Array.isArray(callbackOrCallbacks)) {
+      return callbackOrCallbacks
+        .reduce((acc, callback) => acc.respondWithData(callback), this);
+    }
     return this._respond(() => ({
       status: 200,
-      data: dataCallback()
+      data: callbackOrCallbacks()
     }));
   }
 
@@ -223,21 +227,29 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(codeOrFunction) {
-    if (codeOrFunction == null)
+  respondWithProblem(responseOrResponses) {
+    if (Array.isArray(responseOrResponses)) {
+      return responseOrResponses
+        .reduce((acc, response) => acc.respondWithProblem(response), this);
+    }
+    if (responseOrResponses == null)
       return this.respondWithProblem(500);
-    if (typeof codeOrFunction === 'number') {
+    if (typeof responseOrResponses === 'number') {
       return this.respondWithProblem(() => ({
-        code: codeOrFunction,
+        code: responseOrResponses,
         message: 'There was a problem.'
       }));
     }
     return this._respond(() => {
       const error = new Error();
-      const data = codeOrFunction();
+      const data = responseOrResponses();
       error.response = { status: Math.floor(data.code), data };
       return error;
     });
+  }
+
+  respondWithProblems(responseOrResponses) {
+    return this.respondWithProblem(responseOrResponses);
   }
 
   _respond(callback) {
