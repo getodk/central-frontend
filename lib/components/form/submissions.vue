@@ -24,7 +24,9 @@ except according to the terms contained in the LICENSE file.
         <button id="form-submissions-download-button"
           :disabled="awaitingResponse" type="button" class="btn btn-primary"
           @click="download">
-          <span class="icon-arrow-circle-down"></span> {{ downloadButtonText }}
+          <span class="icon-arrow-circle-down"></span> Download all
+          {{ submissions.length.toLocaleString() }}
+          {{ $pluralize('record', submissions.length) }}
           <spinner :state="downloading"/>
         </button>
         <button id="form-submissions-analyze-button" type="button"
@@ -94,11 +96,6 @@ export default {
     downloadFilename() {
       // The browser should sanitize the filename upon download.
       return `${this.form.xmlFormId}.zip`;
-    },
-    downloadButtonText() {
-      const count = this.submissions.length.toLocaleString();
-      const s = this.submissions.length !== 1 ? 's' : '';
-      return `Download all ${count} record${s}`;
     }
   },
   created() {

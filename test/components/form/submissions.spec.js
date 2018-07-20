@@ -74,8 +74,9 @@ describe('FormSubmissions', () => {
           .respondWithData(() => testData.extendedSubmissions.createPast(2).sorted())
           .afterResponse(page => {
             const button = page.first('#form-submissions-download-button');
+            const text = button.text().trim().replace(/\s+/g, ' ');
             const count = testData.extendedSubmissions.size;
-            button.text().trim().should.equal(`Download all ${count} records`);
+            text.should.equal(`Download all ${count} records`);
           }));
 
       it('clicking download button downloads a .zip file', () => {
