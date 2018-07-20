@@ -33,7 +33,46 @@ class Factory {
 
   options() { return this._options; }
 
-  newObject({ past, constraints = undefined }) {
+  /*
+  newObject() returns a new valid object for the store. It can be called in any
+  of the following ways:
+
+    newObject(past)
+    newObject(past, constraintOrConstraints)
+    newObject(past, factoryFunctionOptions)
+
+  with the following parameters:
+
+    - past. If true, the value of the new object's createdAt property will be in
+      the past. If false, the value will be set to the current time. `past` has
+      no effect if the Factory's options specify that new objects be created
+      without a createdAt property.
+    - constraintsOrConstraints. Either a String or an Array of Strings, where
+      each String is the name of a constraint specified with the Factory's
+      options. The specified constraints will be applied to the new object.
+    - factoryFunctionOptions. Options to pass to the factory function. Not all
+      factory functions require options.
+
+  Constraints and factory function options fill similar roles: they both specify
+  information about the new object. However, they do so in different ways.
+  Unlike constraints, factory function options are passed to the factory
+  function, which uses the options while creating each new object candidate.
+  After a candidate is returned, it is validated against the constraints and is
+  rejected if it does not satisfy them.
+
+  Constraints are useful for specifying a particular condition, for example,
+  "the form state is open" or "the app user's access was revoked." Factory
+  function options are useful for specifying a particular property, for example,
+  "the form title is 'Household Survey'." Factory function options can used to
+  pass any information to the factory function, so constraints can usually be
+  implemented using factory function options. Because a constraint failure
+  results in the creation of a new object candidate, factory function options
+  are usually more performant than constraints. We may remove constraints at
+  some point and replace them with factory function options.
+  */
+  newObject(past, constraintsOrOptions = undefined) {
+    const { constraints, factoryFunctionOptions } =
+      this._constraintsAndOptions(constraintsOrOptions);
     const { factory } = this._options;
     const id = this._options.id ? this._uniqueId() : null;
     for (;;) {
@@ -44,12 +83,33 @@ class Factory {
       if (this._options.createdAt) base.createdAt = this._createdAt(past);
       if (this._options.updatedAt)
         base.updatedAt = this._updatedAt(past, base.createdAt);
-      const object = Object.assign(factory(base), base);
+      const object = Object.assign(
+        factory({ ...factoryFunctionOptions, ...base }),
+        base
+      );
       if (this._isValid(object, constraints)) {
         if (this._options.createdAt) this._lastCreatedAt = object.createdAt;
         return object;
       }
     }
+  }
+
+  _constraintsAndOptions(constraintsOrOptions) {
+    if (constraintsOrOptions == null)
+      return { constraints: [], factoryFunctionOptions: {} };
+    if (typeof constraintsOrOptions === 'object' && !Array.isArray(constraintsOrOptions))
+      return { constraints: [], factoryFunctionOptions: constraintsOrOptions };
+    const constraintNames = Array.isArray(constraintsOrOptions)
+      ? constraintsOrOptions
+      : [constraintsOrOptions];
+    if (constraintNames.length > 0 && this._options.constraints == null)
+      throw new Error('no constraints are defined for the factory');
+    const constraints = constraintNames.map(name => {
+      const constraint = this._options.constraints[name];
+      if (constraint == null) throw new Error('unknown constraint');
+      return constraint;
+    });
+    return { constraints, factoryFunctionOptions: {} };
   }
 
   _createdAt(past) {
@@ -69,37 +129,20 @@ class Factory {
   }
 
   _isValid(object, constraints) {
-    const validators = [
-      ...this._options.validate,
-      ...this._constraintValidators(constraints)
-    ];
+    const validators = constraints.length !== 0
+      ? [...this._options.validate, ...constraints]
+      : this._options.validate;
     for (const validator of validators)
       if (!validator(object, this._store)) return false;
     return true;
-  }
-
-  _constraintValidators(constraints) {
-    if (constraints == null) return [];
-    if (typeof constraints === 'string')
-      return this._constraintValidators([constraints]);
-    if (constraints.length === 0) return [];
-    if (this._options.constraints == null)
-      throw new Error('no constraints are defined for the factory');
-    const validators = [];
-    for (const name of constraints) {
-      const validator = this._options.constraints[name];
-      if (validator == null) throw new Error('unknown constraint');
-      validators.push(validator);
-    }
-    return validators;
   }
 }
 
 class Collection {
   // eslint-disable-next-line no-unused-vars
-  createPast(count, constraints = undefined) { throw new Error('not implemented'); }
+  createPast(count, constraintsOrOptions = undefined) { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
-  createNew(constraints = undefined) { throw new Error('not implemented'); }
+  createNew(constraintsOrOptions = undefined) { throw new Error('not implemented'); }
   get size() { throw new Error('not implemented'); }
   // eslint-disable-next-line no-unused-vars
   get(index) { throw new Error('not implemented'); }
@@ -158,18 +201,18 @@ class Store extends Collection {
     };
   }
 
-  createPast(count, constraints = undefined) {
+  createPast(count, constraintsOrOptions = undefined) {
     if (this._createdNew)
       throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1) {
-      const object = this._factory.newObject({ past: true, constraints });
+      const object = this._factory.newObject(true, constraintsOrOptions);
       this._objects.push(object);
     }
     return this;
   }
 
-  createNew(constraints = undefined) {
-    const object = this._factory.newObject({ past: false, constraints });
+  createNew(constraintsOrOptions = undefined) {
+    const object = this._factory.newObject(false, constraintsOrOptions);
     this._objects.push(object);
     this._createdNew = true;
     return object;
@@ -219,13 +262,13 @@ class View extends Collection {
     this._cache = new Map();
   }
 
-  createPast(count, constraints = undefined) {
-    this._store.createPast(count, constraints);
+  createPast(count, constraintsOrOptions = undefined) {
+    this._store.createPast(count, constraintsOrOptions);
     return this;
   }
 
-  createNew(constraints = undefined) {
-    return this._transform(this._store.createNew(constraints));
+  createNew(constraintsOrOptions = undefined) {
+    return this._transform(this._store.createNew(constraintsOrOptions));
   }
 
   get size() { return this._store.size; }
