@@ -47,9 +47,10 @@ class Factory {
       the past. If false, the value will be set to the current time. `past` has
       no effect if the Factory's options specify that new objects be created
       without a createdAt property.
-    - constraintsOrConstraints. Either a String or an Array of Strings, where
-      each String is the name of a constraint specified with the Factory's
-      options. The specified constraints will be applied to the new object.
+    - constraintOrConstraints. Either a String or an Array of Strings, where
+      each String is the name of one of the constraints specified in the
+      Factory's options. The constraints with the specified names will be
+      applied to the new object.
     - factoryFunctionOptions. Options to pass to the factory function. Not all
       factory functions require options.
 
@@ -63,7 +64,7 @@ class Factory {
   Constraints are useful for specifying a particular condition, for example,
   "the form state is open" or "the app user's access was revoked." Factory
   function options are useful for specifying a particular property, for example,
-  "the form title is 'Household Survey'." Factory function options can used to
+  "the form name is 'Household Survey'." Factory function options can be used to
   pass any information to the factory function, so constraints can usually be
   implemented using factory function options. Because a constraint failure
   results in the creation of a new object candidate, factory function options
