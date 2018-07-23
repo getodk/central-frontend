@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
-import { Settings } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
@@ -191,58 +191,78 @@ describe('FormSubmissions', () => {
         });
 
         describe('time values', () => {
-          let originalZoneName;
-          before(() => {
-            originalZoneName = Settings.defaultZoneName;
-            Settings.defaultZoneName = 'UTC+1';
-          });
-          after(() => {
-            Settings.defaultZoneName = originalZoneName;
-          });
-
           const cases = [
-            ['01:02:03.567', '01:02:03'],
-            ['00:00:00Z', '00:00:00'],
-            ['02:00:00+02:00', '02:00:00'],
-            ['12 a.m.', 'Invalid DateTime']
+            ['UTC+1', null, '01:02:03.567', '01:02:03'],
+            ['UTC+1', null, '00:00:00Z', '00:00:00'],
+            ['UTC+1', null, '02:00:00+02:00', '02:00:00'],
+            ['UTC+1', null, '12 a.m.', 'Invalid DateTime'],
+            // DST invalid time
+            ['America/New_York', '2017-03-12', '02:30:00', '02:30:00'],
+            ['America/New_York', '2017-03-12', '02:30:00Z', '02:30:00'],
+            // DST ambiguous time
+            ['America/New_York', '2017-11-05', '01:30:00', '01:30:00'],
+            ['America/New_York', '2017-11-05', '01:30:00Z', '01:30:00']
           ];
-          for (const [testTime, formatted] of cases) {
-            it(`correctly formats ${testTime}`, () =>
-              loadSubmissions(1, { testTime }).afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#form-submissions-table2 tbody tr'),
-                  'testTime'
-                );
-                td.text().trim().should.equal(formatted);
-              }));
+          for (const [defaultZoneName, nowISO, testTime, formatted] of cases) {
+            it(`correctly formats ${testTime}`, () => {
+              const originalDefaultZoneName = Settings.defaultZoneName;
+              Settings.defaultZoneName = defaultZoneName;
+              const originalNow = Settings.now;
+              if (nowISO != null) {
+                const nowMillis = DateTime.fromISO(nowISO).toMillis();
+                Settings.now = () => nowMillis;
+              }
+              return loadSubmissions(1, { testTime })
+                .afterResponses(component => {
+                  const td = tdByRowAndColumn(
+                    component.first('#form-submissions-table2 tbody tr'),
+                    'testTime'
+                  );
+                  td.text().trim().should.equal(formatted);
+                })
+                .finally(() => {
+                  Settings.defaultZoneName = originalDefaultZoneName;
+                  if (nowISO != null) Settings.now = originalNow;
+                });
+            });
           }
         });
 
         describe('dateTime values', () => {
-          let originalZoneName;
-          before(() => {
-            originalZoneName = Settings.defaultZoneName;
-            Settings.defaultZoneName = 'UTC+1';
-          });
-          after(() => {
-            Settings.defaultZoneName = originalZoneName;
-          });
-
           const cases = [
-            ['2018-01-01T01:02:03.567', '2018/01/01 01:02:03'],
-            ['2018-01-01T00:00:00Z', '2018/01/01 01:00:00'],
-            ['2018-01-01T02:00:00+02:00', '2018/01/01 01:00:00'],
-            ['2018/01/01T00:00:00', 'Invalid DateTime']
+            ['UTC+1', null, '2018-01-01T01:02:03.567', '2018/01/01 01:02:03'],
+            ['UTC+1', null, '2018-01-01T00:00:00Z', '2018/01/01 01:00:00'],
+            ['UTC+1', null, '2018-01-01T02:00:00+02:00', '2018/01/01 01:00:00'],
+            ['UTC+1', null, '2018/01/01T00:00:00', 'Invalid DateTime'],
+            // DST invalid time
+            ['America/New_York', '2017-03-12', '2017-03-12T02:30:00', '2017/03/12 03:30:00'],
+            ['America/New_York', '2017-03-12', '2017-03-12T02:30:00Z', '2017/03/11 21:30:00'],
+            // DST ambiguous time
+            ['America/New_York', '2017-11-05', '2017-11-05T01:30:00', '2017/11/05 01:30:00'],
+            ['America/New_York', '2017-11-05', '2017-11-05T01:30:00Z', '2017/11/04 21:30:00']
           ];
-          for (const [testDateTime, formatted] of cases) {
-            it(`correctly formats ${testDateTime}`, () =>
-              loadSubmissions(1, { testDateTime }).afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#form-submissions-table2 tbody tr'),
-                  'testDateTime'
-                );
-                td.text().trim().should.equal(formatted);
-              }));
+          for (const [defaultZoneName, nowISO, testDateTime, formatted] of cases) {
+            it(`correctly formats ${testDateTime}`, () => {
+              const originalDefaultZoneName = Settings.defaultZoneName;
+              Settings.defaultZoneName = defaultZoneName;
+              const originalNow = Settings.now;
+              if (nowISO != null) {
+                const nowMillis = DateTime.fromISO(nowISO).toMillis();
+                Settings.now = () => nowMillis;
+              }
+              return loadSubmissions(1, { testDateTime })
+                .afterResponses(component => {
+                  const td = tdByRowAndColumn(
+                    component.first('#form-submissions-table2 tbody tr'),
+                    'testDateTime'
+                  );
+                  td.text().trim().should.equal(formatted);
+                })
+                .finally(() => {
+                  Settings.defaultZoneName = originalDefaultZoneName;
+                  if (nowISO != null) Settings.now = originalNow;
+                });
+            });
           }
         });
 
