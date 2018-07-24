@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
       There are no app users yet. You will need to create some to download forms
       and submit data from your device.
     </p>
-    <table v-else id="field-key-list-table" class="table table-hover">
+    <table v-else id="field-key-list-table" class="table">
       <thead>
         <tr>
           <th>Nickname</th>
