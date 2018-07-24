@@ -434,8 +434,8 @@ class MockHttp {
 
   testRefreshButton(options) {
     // Options
-    const standardizedOptions = this._testRefreshButtonOptions(options);
-    const { collection, respondWithData, tableSelector } = standardizedOptions;
+    const normalizedOptions = this._testRefreshButtonOptions(options);
+    const { collection, respondWithData, tableSelector } = normalizedOptions;
 
     // Data responses
     const dataCallbacks = [...respondWithData];
@@ -448,7 +448,10 @@ class MockHttp {
 
     // Helper functions
     const testRowCount = (component) => {
-      const rowCount = component.first(tableSelector).find('tbody tr').length;
+      const tables = component.find(tableSelector);
+      if (tables.length === 0) throw new Error('table not found');
+      if (tables.length > 1) throw new Error('multiple tables found');
+      const rowCount = tables[0].find('tbody tr').length;
       rowCount.should.equal(collection.size);
     };
     const clickRefreshButton = (component) =>
@@ -459,8 +462,8 @@ class MockHttp {
       .respondWithData(dataCallbacks)
       .afterResponses(testRowCount)
       // Series 2: Click the refresh button and return a successful response (or
-      // responses). The table should not disappear during the refresh, and the
-      // table should be updated after the refresh.
+      // responses). The table should not disappear during the refresh, and it
+      // should be updated afterwards.
       .request(clickRefreshButton)
       .respondWithData(dataCallbacks)
       .beforeEachResponse(testRowCount)
@@ -482,10 +485,17 @@ class MockHttp {
       respondWithData: [() => collection.sorted()],
       tableSelector: 'table'
     };
-    const standardizedOptions = { ...defaults, ...options };
-    if (!Array.isArray(standardizedOptions.respondWithData))
-      standardizedOptions.respondWithData = [standardizedOptions.respondWithData];
-    return standardizedOptions;
+    const normalizedOptions = { ...defaults, ...options };
+
+    // respondWithData
+    if (Array.isArray(normalizedOptions.respondWithData)) {
+      if (normalizedOptions.respondWithData.length === 0)
+        throw new Error('data response required');
+    } else {
+      normalizedOptions.respondWithData = [normalizedOptions.respondWithData];
+    }
+
+    return normalizedOptions;
   }
 
   //////////////////////////////////////////////////////////////////////////////
