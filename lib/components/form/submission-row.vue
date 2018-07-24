@@ -109,7 +109,7 @@ export default {
           Settings.defaultZoneName = originalZoneName;
           return time.toFormat('HH:mm:ss');
         }
-        // rawValue is a Edm.DateTimeOffset. Again, there may be differences
+        // rawValue is an Edm.DateTimeOffset. Again, there may be differences
         // between ISO 8601 and the Edm.DateTimeOffset specification. However,
         // ISO 8601 is the only likely format for rawValue. As with a date or
         // time value, we attempt to parse a dateTime value as ISO 8601,

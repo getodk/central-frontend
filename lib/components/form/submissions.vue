@@ -55,8 +55,8 @@ except according to the terms contained in the LICENSE file.
             :key="submission.__id" :submission="submission"/>
         </tbody>
       </table>
-      <!-- This table element contains the question data and instance ID of each
-      submission. -->
+      <!-- The next table element contains the question data and instance ID of
+      each submission. -->
       <div id="form-submissions-table2-container">
         <table id="form-submissions-table2" class="table table-condensed">
           <thead>
