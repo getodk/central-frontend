@@ -34,6 +34,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import R from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
 import { formatDate } from '../../util';
@@ -66,7 +67,7 @@ export default {
     // Returns the submission's value for the specified question column,
     // formatting it according to the question's type.
     questionValue(column) {
-      const rawValue = column.path.reduce((acc, name) => acc[name], this.submission);
+      const rawValue = R.path(column.path, this.submission);
       if (rawValue == null) return '';
       switch (column.type) {
         case 'int':
