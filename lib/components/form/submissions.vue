@@ -187,6 +187,12 @@ export default {
 @import '../../../assets/scss/variables';
 
 #form-submissions-table1 {
+  box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
+  position: relative;
+  // Adding z-index so that the background color of the other table's thead does
+  // not overlay the box shadow.
+  z-index: 1;
+
   float: left;
   width: unset;
 
@@ -200,10 +206,15 @@ export default {
 }
 
 #form-submissions-table2-container {
+  // Placing the margin here rather than on the table so that the horizontal
+  // scrollbar appears immediately below the table, above the margin.
+  margin-bottom: $margin-bottom-table;
   overflow-x: scroll;
 }
 
 #form-submissions-table2 {
+  margin-bottom: 0;
+
   thead > tr > th, tbody > tr > td {
     &.form-submissions-question-column {
       max-width: 250px;

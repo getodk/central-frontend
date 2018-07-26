@@ -229,6 +229,8 @@ h1 {
 }
 
 .table {
+  margin-bottom: $margin-bottom-table;
+
   > thead {
     background-color: $color-table-heading-background;
 
