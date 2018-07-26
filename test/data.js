@@ -289,7 +289,7 @@ const testData = Object.assign(
       if (oData.testTime == null && hasTime)
         oData.testTime = pastDateTime('HH:mm:ss');
       if (oData.testDateTime == null && hasDateTime)
-        oData.testDateTime = pastDateTime('yyyy/MM/dd HH:mm:ss');
+        oData.testDateTime = pastDateTime('yyyy-MM-dd HH:mm:ss');
       if (oData.testGeopoint == null && hasGeopoint) {
         const coordinates = [
           faker.random.number({ min: -85, max: 85, precision: 0.0000000001 }),
