@@ -126,10 +126,11 @@ export default {
       const columns = [];
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
         const { type, path } = this.schema[i];
-        // We already display __id as the instance ID, so if there is also a
-        // meta.instanceID, we do not display it.
-        const isInstanceId = type === 'string' && path.length === 2 &&
-          path[0] === 'meta' && path[1] === 'instanceID';
+        // We already display __id as the instance ID, so if there is also an
+        // meta.instanceID or instanceID element, we do not display it.
+        const isInstanceId = type === 'string' &&
+          ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
+          (path.length === 1 && path[0] === 'instanceID'));
         if (!(type === 'repeat' || isInstanceId)) {
           const header = path.join('.');
           const htmlClass = ['form-submissions-question-column'];

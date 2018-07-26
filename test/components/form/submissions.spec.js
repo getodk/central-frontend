@@ -93,11 +93,13 @@ describe('FormSubmissions', () => {
           return tr.find('td')[index];
         };
 
-        it('contains the correct column headers', () =>
-          loadSubmissions(1).afterResponses(component => {
+        it('contains the correct column headers', () => {
+          testData.extendedForms.createPast(1, { hasInstanceId: true });
+          return loadSubmissions(1).afterResponses(component => {
             const th = component.find('#form-submissions-table2 th');
             th.map(wrapper => wrapper.text().trim()).should.eql(headers);
-          }));
+          });
+        });
 
         it('contains the correct instance IDs', () =>
           loadSubmissions(2).afterResponses(component => {

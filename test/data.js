@@ -157,11 +157,18 @@ const testData = Object.assign(
 
   dataStore({
     name: 'extendedForms',
-    factory: () => {
+    factory: ({ hasInstanceId = faker.random.boolean() }) => {
       const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
       const name = faker.random.arrayElement([faker.name.findName(), null]);
       const anySubmission = faker.random.boolean();
       const version = faker.random.boolean() ? faker.random.number().toString() : '';
+      const instanceId = [];
+      if (hasInstanceId) {
+        instanceId.push({
+          path: faker.random.boolean() ? ['meta', 'instanceID'] : ['instanceID'],
+          type: 'string'
+        });
+      }
       return {
         xmlFormId,
         name,
@@ -181,7 +188,7 @@ const testData = Object.assign(
         // properties.
         xml: '',
         _schema: [
-          { path: ['meta', 'instanceID'], type: 'string' },
+          ...instanceId,
           { path: ['testInt'], type: 'int' },
           { path: ['testDecimal'], type: 'decimal' },
           { path: ['testDate'], type: 'date' },
@@ -252,9 +259,6 @@ const testData = Object.assign(
           submissionDate: createdAt,
           submitterId: submitter.id.toString(),
           submitterName: submitter.displayName
-        },
-        meta: {
-          instanceID: instanceId
         }
       };
       const pastDateTime = (formatString) => {
@@ -263,6 +267,19 @@ const testData = Object.assign(
         if (faker.random.boolean()) return formatted;
         return `${formatted}+0100`;
       };
+      const schemaInstanceId = form._schema.find(question => {
+        const { path } = question;
+        return (path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
+          (path.length === 1 && path[0] === 'instanceID');
+      });
+      if (schemaInstanceId != null) {
+        if (schemaInstanceId.length === 1) {
+          if (oData.instanceID == null) oData.instanceID = instanceId;
+        } else {
+          if (oData.meta == null) oData.meta = {};
+          if (oData.meta.instanceID == null) oData.meta.instanceID = instanceId;
+        }
+      }
       if (oData.testInt == null && hasInt)
         oData.testInt = faker.random.number();
       if (oData.testDecimal == null && hasDecimal)
