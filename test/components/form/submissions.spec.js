@@ -134,6 +134,9 @@ describe('FormSubmissions', () => {
                 td.hasClass('form-submissions-decimal-column').should.be.true();
               }));
 
+          // Array of test cases, where each case is an array with the following
+          // structure:
+          // [raw value, expected formatted value]
           const cases = [
             [1234, '1,234'],
             [1234.5678901234, '1,234.5678901234'],
@@ -171,6 +174,8 @@ describe('FormSubmissions', () => {
           }));
 
         describe('date values', () => {
+          // Each test case is an array with the following structure:
+          // [raw value, expected formatted value]
           const cases = [
             ['2018-01-01', '2018/01/01'],
             // If we end up needing to support time zones, we should check that
@@ -193,6 +198,16 @@ describe('FormSubmissions', () => {
         });
 
         describe('time values', () => {
+          /*
+          Each test case is an array with the following structure:
+
+          [
+            default time zone (mocking the system time zone),
+            ISO 8601 string to use as the current timestamp (mocking the system time),
+            raw value,
+            expected formatted value
+          ]
+          */
           const cases = [
             ['UTC+1', null, '01:02:03.567', '01:02:03'],
             ['UTC+1', null, '00:00:00Z', '00:00:00'],
@@ -231,6 +246,16 @@ describe('FormSubmissions', () => {
         });
 
         describe('dateTime values', () => {
+          /*
+          Each test case is an array with the following structure:
+
+          [
+            default time zone (mocking the system time zone),
+            ISO 8601 string to use as the current timestamp (mocking the system time),
+            raw value,
+            expected formatted value
+          ]
+          */
           const cases = [
             ['UTC+1', null, '2018-01-01T01:02:03.567', '2018/01/01 01:02:03'],
             ['UTC+1', null, '2018-01-01T00:00:00Z', '2018/01/01 01:00:00'],
@@ -270,6 +295,8 @@ describe('FormSubmissions', () => {
 
         describe('geopoint values', () => {
           const geopoint = (...coordinates) => ({ type: 'Point', coordinates });
+          // Each test case is an array with the following structure:
+          // [raw value, expected formatted value]
           const cases = [
             [geopoint(0.1234567, 0.1234567), '0.1234567 0.1234567'],
             [geopoint(0.123456, 0.123456), '0.1234560 0.1234560'],
