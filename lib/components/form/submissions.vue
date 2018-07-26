@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
             <tr>
               <!-- Adding a title attribute in case the column header is so long
               that it is truncated. -->
-              <th v-for="column of questionColumns" :key="column.header"
+              <th v-for="column of questionColumns" :key="column.key"
                 :class="column.htmlClass" :title="column.header">
                 {{ column.header }}
               </th>
@@ -136,11 +136,12 @@ export default {
           ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
           (path.length === 1 && path[0] === 'instanceID'));
         if (!(type === 'repeat' || isInstanceId)) {
-          const header = path.join('.');
+          const header = path.join('-');
           const htmlClass = ['form-submissions-question-column'];
           if (type != null && /^\w+$/.test(type))
             htmlClass.push(`form-submissions-${type}-column`);
-          columns.push({ type, path, header, htmlClass });
+          const key = this.$uniqueId();
+          columns.push({ type, path, header, htmlClass, key });
         }
       }
       return columns;

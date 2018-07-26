@@ -81,10 +81,10 @@ describe('FormSubmissions', () => {
           'testTime',
           'testDateTime',
           'testGeopoint',
-          'testGroup.testBinary',
+          'testGroup-testBinary',
+          'testGroup-testBinary',
           'testBranch',
           'testString1',
-          'testString2',
           'Instance ID'
         ];
         const tdByRowAndColumn = (tr, header) => {
@@ -321,7 +321,7 @@ describe('FormSubmissions', () => {
           loadSubmissions(1, { hasBinary: true }).afterResponses(component => {
             const td = tdByRowAndColumn(
               component.first('#form-submissions-table2 tbody tr'),
-              'testGroup.testBinary'
+              'testGroup-testBinary'
             );
             td.find('.icon-check-circle').length.should.equal(1);
             td.hasClass('form-submissions-binary-column').should.be.true();

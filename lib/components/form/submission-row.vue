@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
   </tr>
   <!-- The rest of the table -->
   <tr v-else>
-    <td v-for="column of questionColumns" :key="column.header"
+    <td v-for="column of questionColumns" :key="column.key"
       :class="column.htmlClass"
       :title="hasTitle(column) ? questionValue(column) : null">
       <template v-if="column.type === 'binary'">
