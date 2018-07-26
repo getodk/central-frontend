@@ -1,16 +1,5 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
-import faker from './faker';
-import { uniqueSequence } from '../lib/util';
+import faker from '../faker';
+import { uniqueSequence } from '../../lib/util';
 
 const DEFAULT_FACTORY_OPTIONS = {
   id: true,
@@ -173,8 +162,9 @@ class Collection {
 }
 
 class Store extends Collection {
-  constructor(factoryOptions, sort) {
+  constructor(options) {
     super();
+    const { sort, ...factoryOptions } = options;
     this._factory = new Factory(this, factoryOptions);
     this._setCompareFunction(sort);
     this.clear();
@@ -296,28 +286,13 @@ class View extends Collection {
 
 const stores = [];
 
-const splitOptions = (options) => {
-  const factoryOptions = { ...options };
-  delete factoryOptions.name;
-  delete factoryOptions.sort;
-  delete factoryOptions.views;
-  return {
-    name: options.name,
-    factoryOptions,
-    sort: options.sort,
-    views: options.views != null ? options.views : []
-  };
+export const dataStore = (options) => {
+  const store = new Store(options);
+  stores.push(store);
+  return store;
 };
 
-export const dataStore = (options) => {
-  const { name, factoryOptions, sort, views } = splitOptions(options);
-  const store = new Store(factoryOptions, sort);
-  stores.push(store);
-  const collections = { [name]: store };
-  for (const [viewName, transform] of Object.entries(views))
-    collections[viewName] = new View(store, transform);
-  return collections;
-};
+export const view = (store, transform) => new View(store, transform);
 
 export const resetDataStores = () => {
   for (const store of stores) {
