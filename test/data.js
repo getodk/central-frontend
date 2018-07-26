@@ -9,6 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import R from 'ramda';
 import moment from 'moment';
 import { DateTime } from 'luxon';
 
@@ -20,42 +21,12 @@ import { dataStore, resetDataStores } from './data-store';
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// UTILITIES
-
-const pathValue = (object, path) => {
-  let node = object;
-  for (const name of path.split('.')) {
-    if (node == null) return undefined;
-    node = node[name];
-  }
-  return node;
-};
-
-const pick = (object, propertyNames) => {
-  const result = {};
-  for (const name of propertyNames) {
-    if (!(name in object)) throw new Error('property is not in object');
-    result[name] = object[name];
-  }
-  return result;
-};
-
-const omit = (object, propertyNames) => {
-  const result = Object.assign({}, object);
-  for (const name of propertyNames)
-    delete result[name];
-  return result;
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // VALIDATORS
 
 const validateDateOrder = (path1, path2) => (object) => {
-  const date1 = pathValue(object, path1);
+  const date1 = R.path(path1.split('.'), object);
   if (date1 == null) return true;
-  const date2 = pathValue(object, path2);
+  const date2 = R.path(path2.split('.'), object);
   return date2 == null || date1 <= date2;
 };
 
@@ -120,9 +91,9 @@ const testData = Object.assign(
       token: faker.random.arrayElement([faker.app.token(), null]),
       meta: null,
       lastUsed: faker.random.arrayElement([faker.date.past().toISOString(), null]),
-      createdBy: pick(
-        testData.administrators.randomOrCreatePast(),
-        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
+      createdBy: R.pick(
+        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+        testData.administrators.randomOrCreatePast()
       )
     }),
     validate: [
@@ -148,7 +119,7 @@ const testData = Object.assign(
     },
     views: {
       simpleFieldKeys: (extendedFieldKey) => {
-        const fieldKey = omit(extendedFieldKey, ['lastUsed']);
+        const fieldKey = R.omit(['lastUsed'], extendedFieldKey);
         fieldKey.createdBy = fieldKey.createdBy.id;
         return fieldKey;
       }
@@ -179,9 +150,9 @@ const testData = Object.assign(
         // testData.extendedSubmissions.
         submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
         lastSubmission: anySubmission ? faker.date.past().toISOString() : null,
-        createdBy: pick(
-          testData.administrators.randomOrCreatePast(),
-          ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
+        createdBy: R.pick(
+          ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+          testData.administrators.randomOrCreatePast()
         ),
         // We currently do not use the XML anywhere. If/when we do, we should
         // consider whether to keep it in sync with the hash and _schema
@@ -225,7 +196,7 @@ const testData = Object.assign(
     sort: sortByUpdatedAtOrCreatedAtDesc,
     views: {
       simpleForms: (extendedForm) => {
-        const form = omit(extendedForm, ['lastSubmission', 'submissions']);
+        const form = R.omit(['lastSubmission', 'submissions'], extendedForm);
         form.createdBy = form.createdBy.id;
         return form;
       }
@@ -320,9 +291,9 @@ const testData = Object.assign(
         // We currently do not use the XML anywhere. If/when we do, we should
         // consider whether to keep it in sync with the _oData property.
         xml: '',
-        submitter: pick(
-          submitter,
-          ['id', 'displayName', 'meta', 'createdAt', 'updatedAt']
+        submitter: R.pick(
+          ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+          submitter
         ),
         _oData: oData
       };
