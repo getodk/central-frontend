@@ -196,15 +196,15 @@ const testData = Object.assign(
           { path: ['testDateTime'], type: 'dateTime' },
           { path: ['testGeopoint'], type: 'geopoint' },
           { path: ['testGroup', 'testBinary'], type: 'binary' },
+          { path: ['testBranch'] },
           { path: ['testString1'], type: 'string' },
           { path: ['testString2'], type: 'string' },
           { path: ['testString3'], type: 'string' },
-          { path: ['testString4'], type: 'string' },
           {
             path: ['testRepeat'],
             type: 'repeat',
             children: [
-              { path: ['testString5'], type: 'string' }
+              { path: ['testString4'], type: 'string' }
             ]
           }
         ]
@@ -301,8 +301,9 @@ const testData = Object.assign(
       if (oData.testGroup == null) oData.testGroup = {};
       if (oData.testGroup.testBinary == null && hasBinary)
         oData.testGroup.testBinary = faker.system.commonFileName('.jpg');
+      oData.testBranch = faker.random.boolean() ? 'y' : 'n';
       if (hasStrings) {
-        for (let i = 1; i <= 4; i += 1) {
+        for (let i = 1; i <= 3; i += 1) {
           const name = `testString${i}`;
           if (oData[name] == null) {
             const count = faker.random.number({ min: 1, max: 3 });

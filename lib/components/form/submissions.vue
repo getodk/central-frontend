@@ -125,6 +125,10 @@ export default {
     questionColumns() {
       const columns = [];
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
+        // Note that schema[i] might not have a type property, in which case
+        // `type` will be undefined -- though I have seen a question without a
+        // type only in the Widgets sample form (<branch>):
+        // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
         const { type, path } = this.schema[i];
         // We already display __id as the instance ID, so if there is also an
         // meta.instanceID or instanceID element, we do not display it.

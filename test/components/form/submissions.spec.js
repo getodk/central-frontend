@@ -82,9 +82,9 @@ describe('FormSubmissions', () => {
           'testDateTime',
           'testGeopoint',
           'testGroup.testBinary',
+          'testBranch',
           'testString1',
           'testString2',
-          'testString3',
           'Instance ID'
         ];
         const tdByRowAndColumn = (tr, header) => {
