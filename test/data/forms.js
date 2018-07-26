@@ -7,10 +7,14 @@ import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
 import { validateDateOrder, validateUniqueCombination } from './validate';
 
 export const extendedForms = dataStore({
-  factory: ({ hasInstanceId = faker.random.boolean() }) => {
+  factory: ({
+    hasInstanceId = faker.random.boolean(),
+    hasName = faker.random.boolean(),
+    isOpen = faker.random.boolean(),
+    hasSubmission = faker.random.boolean()
+  }) => {
     const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
-    const name = faker.random.arrayElement([faker.name.findName(), null]);
-    const anySubmission = faker.random.boolean();
+    const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const instanceId = [];
     if (hasInstanceId) {
@@ -23,12 +27,12 @@ export const extendedForms = dataStore({
       xmlFormId,
       name,
       version,
-      state: faker.random.arrayElement(['open', 'closing', 'closed']),
+      state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
       hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
-      submissions: anySubmission ? faker.random.number({ min: 1 }) : 0,
-      lastSubmission: anySubmission ? faker.date.past().toISOString() : null,
+      submissions: hasSubmission ? faker.random.number({ min: 1 }) : 0,
+      lastSubmission: hasSubmission ? faker.date.past().toISOString() : null,
       createdBy: R.pick(
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
         administrators.randomOrCreatePast()
@@ -67,13 +71,6 @@ export const extendedForms = dataStore({
     validateDateOrder('createdBy.createdAt', 'createdAt'),
     validateDateOrder('createdAt', 'lastSubmission')
   ],
-  constraints: {
-    withName: (form) => form.name != null,
-    open: (form) => form.state === 'open',
-    notOpen: (form) => form.state !== 'open',
-    withSubmission: (form) => form.submissions !== 0,
-    withoutSubmission: (form) => form.submissions === 0
-  },
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
 
