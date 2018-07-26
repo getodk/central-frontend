@@ -105,6 +105,7 @@ describe('FormSubmissions', () => {
           loadSubmissions(2).afterResponses(component => {
             const tr = component.find('#form-submissions-table2 tbody tr');
             const submissions = testData.extendedSubmissions.sorted();
+            tr.length.should.equal(submissions.length);
             for (let i = 0; i < submissions.length; i += 1) {
               const td = tdByRowAndColumn(tr[i], 'Instance ID');
               td.text().trim().should.equal(submissions[i].instanceId);
