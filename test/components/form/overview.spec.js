@@ -38,7 +38,7 @@ describe('FormOverview', () => {
     describe('no submissions', () => {
       let app;
       beforeEach(() => {
-        testData.extendedForms.createPast(1, 'withoutSubmission');
+        testData.extendedForms.createPast(1, { hasSubmission: false });
       });
       // Using mockRoute() rather than mockHttp(), because FormOverview uses
       // <router-link>.
@@ -71,7 +71,7 @@ describe('FormOverview', () => {
     describe('form has submissions', () => {
       let app;
       beforeEach(() => {
-        testData.extendedForms.createPast(1, 'withSubmission');
+        testData.extendedForms.createPast(1, { hasSubmission: true });
       });
       beforeEach(() => mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.extendedForms.last())
@@ -133,7 +133,7 @@ describe('FormOverview', () => {
 
     describe('step 4', () => {
       it('is not the current step, if the form is open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, 'open').last()))
+        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponse(app => {
@@ -142,7 +142,7 @@ describe('FormOverview', () => {
           }));
 
       it('is marked as complete, if the form is not open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, 'notOpen').last()))
+        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: false }).last()))
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponse(app => {
@@ -151,7 +151,7 @@ describe('FormOverview', () => {
           }));
 
       it('is marked as complete if the state is changed from open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, 'open').last()))
+        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponse(app => {

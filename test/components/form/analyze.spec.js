@@ -23,11 +23,10 @@ const createFormWithSubmission = () => {
   return testData.extendedForms.last();
 };
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
-const propsData = () => ({
-  propsData: {
-    form: createFormWithSubmission()
-  }
-});
+const submissionsOData = () => {
+  const submissions = testData.extendedSubmissions.sorted();
+  return { value: submissions.map(submission => submission._oData) };
+};
 const clickAnalyzeButton = (wrapper) =>
   trigger.click(wrapper.first('#form-submissions-analyze-button'))
     .then(() => wrapper);
@@ -44,8 +43,11 @@ describe('FormAnalyze', () => {
 
   it('opens the modal upon button click', () =>
     mockHttp()
-      .mount(FormSubmissions, propsData())
-      .respondWithData(() => testData.extendedSubmissions.sorted())
+      .mount(FormSubmissions, {
+        propsData: { form: createFormWithSubmission() }
+      })
+      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(submissionsOData)
       .afterResponse(component => {
         component.first(FormAnalyze).getProp('state').should.be.false();
         return component;
@@ -58,7 +60,8 @@ describe('FormAnalyze', () => {
   it('selects the OData URL upon click', () =>
     mockRoute(submissionsPath(createFormWithSubmission()), { attachToDocument: true })
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedSubmissions.sorted())
+      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(submissionsOData)
       .afterResponse(clickAnalyzeButton)
       .then(app =>
         trigger.click(app.first('#form-analyze-odata-url')).then(() => app))
@@ -72,7 +75,9 @@ describe('FormAnalyze', () => {
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
-      modal = mountAndMark(FormAnalyze, propsData());
+      modal = mountAndMark(FormAnalyze, {
+        propsData: { form: createFormWithSubmission() }
+      });
     });
 
     const assertContent = (tabText, urlSuffix, hasHelp) => {

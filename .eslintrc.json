@@ -33,6 +33,11 @@ except according to the terms contained in the LICENSE file.
     "no-multiple-empty-lines": ["error", { "max": 3 }],
     "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
     "no-underscore-dangle": "off",
+    "object-curly-newline": [ "error", {
+      "multiline": true,
+      "minProperties": 0,
+      "consistent": true
+    }],
     "spaced-comment": "off",
     "vue/html-indent": "off",
     "vue/html-self-closing": ["error", {

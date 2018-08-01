@@ -23,9 +23,7 @@ export const setHttp = (respond) => {
   const http = (config) => respond(config);
   http.request = http;
   http.get = (url, config) => http({ ...config, method: 'get', url });
-  // eslint-disable-next-line object-curly-newline
   http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
-  // eslint-disable-next-line object-curly-newline
   http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
   http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
@@ -209,10 +207,14 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(dataCallback) {
+  respondWithData(callbackOrCallbacks) {
+    if (Array.isArray(callbackOrCallbacks)) {
+      return callbackOrCallbacks
+        .reduce((acc, callback) => acc.respondWithData(callback), this);
+    }
     return this._respond(() => ({
       status: 200,
-      data: dataCallback()
+      data: callbackOrCallbacks()
     }));
   }
 
@@ -225,21 +227,29 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(codeOrFunction) {
-    if (codeOrFunction == null)
+  respondWithProblem(responseOrResponses) {
+    if (Array.isArray(responseOrResponses)) {
+      return responseOrResponses
+        .reduce((acc, response) => acc.respondWithProblem(response), this);
+    }
+    if (responseOrResponses == null)
       return this.respondWithProblem(500);
-    if (typeof codeOrFunction === 'number') {
+    if (typeof responseOrResponses === 'number') {
       return this.respondWithProblem(() => ({
-        code: codeOrFunction,
+        code: responseOrResponses,
         message: 'There was a problem.'
       }));
     }
     return this._respond(() => {
       const error = new Error();
-      const data = codeOrFunction();
+      const data = responseOrResponses();
       error.response = { status: Math.floor(data.code), data };
       return error;
     });
+  }
+
+  respondWithProblems(responseOrResponses) {
+    return this.respondWithProblem(responseOrResponses);
   }
 
   _respond(callback) {
@@ -422,31 +432,70 @@ class MockHttp {
       });
   }
 
-  testRefreshButton(collection) {
+  testRefreshButton(options) {
+    // Options
+    const normalizedOptions = this._testRefreshButtonOptions(options);
+    const { collection, respondWithData, tableSelector } = normalizedOptions;
+
+    // Data responses
+    const dataCallbacks = [...respondWithData];
+    // Create a new object before returning the first response.
+    dataCallbacks[0] = () => {
+      collection.createNew();
+      const callback = respondWithData[0];
+      return callback();
+    };
+
+    // Helper functions
     const testRowCount = (component) => {
-      const tr = component.find('table tbody tr');
-      tr.length.should.equal(collection.size);
+      const tables = component.find(tableSelector);
+      if (tables.length === 0) throw new Error('table not found');
+      if (tables.length > 1) throw new Error('multiple tables found');
+      const rowCount = tables[0].find('tbody tr').length;
+      rowCount.should.equal(collection.size);
     };
     const clickRefreshButton = (component) =>
       trigger.click(component.first('.btn-refresh'));
+
     return this
-      .respondWithData(() => collection.createPast(1).sorted())
-      .afterResponse(testRowCount)
+      // Series 1: Test that the table is initially rendered as expected.
+      .respondWithData(dataCallbacks)
+      .afterResponses(testRowCount)
+      // Series 2: Click the refresh button and return a successful response (or
+      // responses). The table should not disappear during the refresh, and it
+      // should be updated afterwards.
       .request(clickRefreshButton)
-      // Test a successful response.
-      .respondWithData(() => collection.createPast(1).sorted())
-      // The table should not disappear during the refresh.
+      .respondWithData(dataCallbacks)
       .beforeEachResponse(testRowCount)
-      // The table should be updated after the refresh.
-      .afterResponse(testRowCount)
+      .afterResponses(testRowCount)
+      // Series 3: Click the refresh button again, this time returning a problem
+      // response (or responses).
       .request(clickRefreshButton)
-      // Test a problem response.
-      .respondWithProblem()
-      .afterResponse(component => {
+      .respondWithProblems(new Array(respondWithData.length).fill(500))
+      .afterResponses(component => {
         // The table should not disappear.
         testRowCount(component);
         component.should.alert();
       });
+  }
+
+  _testRefreshButtonOptions(options) {
+    const { collection } = options;
+    const defaults = {
+      respondWithData: [() => collection.sorted()],
+      tableSelector: 'table'
+    };
+    const normalizedOptions = { ...defaults, ...options };
+
+    // respondWithData
+    if (Array.isArray(normalizedOptions.respondWithData)) {
+      if (normalizedOptions.respondWithData.length === 0)
+        throw new Error('data response required');
+    } else {
+      normalizedOptions.respondWithData = [normalizedOptions.respondWithData];
+    }
+
+    return normalizedOptions;
   }
 
   //////////////////////////////////////////////////////////////////////////////

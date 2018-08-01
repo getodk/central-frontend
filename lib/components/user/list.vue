@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       </button>
     </float-row>
     <loading v-if="users == null" :state="awaitingResponse"/>
-    <table v-else id="user-list-table" class="table table-hover">
+    <table v-else id="user-list-table" class="table">
       <thead>
         <tr>
           <th>Email</th>
