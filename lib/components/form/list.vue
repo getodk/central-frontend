@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
               {{ form.createdBy != null ? form.createdBy.displayName : '' }}
             </td>
             <td>
-              {{ updatedAt(form) }}
+              {{ lastModified(form) }}
             </td>
             <td>
               {{ lastSubmission(form) }}
@@ -76,11 +76,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import moment from 'moment';
-
 import FormNew from './new.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import { formatDate } from '../../util';
 
 export default {
   name: 'FormList',
@@ -114,13 +113,11 @@ export default {
       const s = form.submissions !== 1 ? 's' : '';
       return `${count} submission${s}`;
     },
-    updatedAt(form) {
-      const updatedAt = form.updatedAt != null ? form.updatedAt : form.createdAt;
-      return moment(updatedAt).fromNow();
+    lastModified(form) {
+      return formatDate(form.updatedAt != null ? form.updatedAt : form.createdAt);
     },
     lastSubmission(form) {
-      const { lastSubmission } = form;
-      return lastSubmission != null ? moment(lastSubmission).fromNow() : '';
+      return formatDate(form.lastSubmission);
     },
     afterCreate(form) {
       // Wait for the modal to hide.
