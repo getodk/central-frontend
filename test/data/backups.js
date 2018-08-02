@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import BackupList from '../../lib/components/backup/list.vue';
 import faker from '../faker';
@@ -13,22 +13,24 @@ const store = dataStore({
     const recentDate = BackupList.methods.recentDate();
     // The earliest time, for testing purposes, for backups to have been
     // configured.
-    const setAtFloor = moment()
-      .subtract(10 * moment().diff(moment(recentDate)), 'milliseconds')
-      .toDate();
+    const setAtFloor = DateTime
+      .local()
+      .minus({ milliseconds: 10 * (Date.now() - recentDate.getTime()) })
+      .toJSDate();
     // Returns a random time for backups to have been configured.
     const fakeSetAt = (isRecent) => {
       if (isRecent) {
-        const sinceString = moment(recentDate)
+        const sinceString = DateTime
+          .fromJSDate(recentDate)
           // Adding this duration to ensure that the resulting date is
           // considered recent throughout the test.
-          .add(MAXIMUM_TEST_DURATION)
-          .toISOString();
+          .plus(MAXIMUM_TEST_DURATION)
+          .toISO();
         return faker.date.pastSince(sinceString);
       }
       return faker.date.between(
         setAtFloor.toISOString(),
-        moment(recentDate).subtract(1, 'millisecond').toISOString()
+        DateTime.fromJSDate(recentDate).minus({ milliseconds: 1 }).toISO()
       );
     };
     // Returns a backup attempt (an audit log).
@@ -77,9 +79,9 @@ const store = dataStore({
           setAtFloor.toISOString(),
           setAt.toISOString()
         );
-        const loggedAtFloor = moment
-          .max(moment(previousSetAt), moment(recentDate))
-          .toDate();
+        const loggedAtFloor = previousSetAt >= recentDate
+          ? previousSetAt
+          : recentDate;
         recent.push(attempt({
           success: true,
           loggedAt: faker.date.between(

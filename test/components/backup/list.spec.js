@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import BackupList from '../../../lib/components/backup/list.vue';
 import testData from '../../data';
+import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 
@@ -39,6 +40,7 @@ describe('BackupList', () => {
         icon.hasClass(iconClass).should.be.true();
         messageSummary.text().trim().should.equal(summaryText);
         button.text().trim().should.equal(buttonText);
+        return page;
       };
 
       it('is not configured', () =>
@@ -82,7 +84,13 @@ describe('BackupList', () => {
             'icon-check-circle',
             'Backup is working.',
             'Terminate'
-          )));
+          ))
+          .then(page => page
+            .first('#backup-list-most-recently-logged-at')
+            .text()
+            .trim()
+            .should
+            .equal(formatDate(testData.backups.last().recent[0].loggedAt))));
 
       it('latest recent attempt was a failure', () =>
         mockHttp()
