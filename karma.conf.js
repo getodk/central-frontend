@@ -5,7 +5,7 @@ module.exports = function (config) {
     frameworks: ['browserify', 'mocha'],
     files: [
       'test/setup.js',
-      'test/components/*/*.spec.js',
+      'test/**/*.spec.js',
       { pattern: 'assets/fonts/icomoon.ttf', included: false, served: true }
     ],
     proxies: {
