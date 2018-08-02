@@ -14,6 +14,7 @@ import { inflate } from 'pako/lib/inflate';
 
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import testData from '../../data';
+import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { trigger } from '../../util';
@@ -55,7 +56,13 @@ describe('FieldKeyList', () => {
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
             td.length.should.equal(5);
-            td[0].text().trim().should.equal(fieldKeys[i].displayName);
+            const fieldKey = fieldKeys[i];
+
+            td[0].text().trim().should.equal(fieldKey.displayName);
+            const createdAt = formatDate(fieldKey.createdAt);
+            const createdBy = fieldKey.createdBy.displayName;
+            td[1].text().trim().should.equal(`${createdAt} by ${createdBy}`);
+            td[2].text().trim().should.equal(formatDate(fieldKey.lastUsed));
             // We test the Configure Client column below.
           }
         });
