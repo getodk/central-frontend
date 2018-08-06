@@ -9,8 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import Form from '../../../lib/presenters/form';
 import FormList from '../../../lib/components/form/list.vue';
 import testData from '../../data';
+import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 
@@ -40,18 +42,23 @@ describe('FormList', () => {
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
             td.length.should.equal(4);
-            const form = forms[i];
-            td[0].first('.form-list-form-name').text().trim().should
-              .equal(form.name != null ? form.name : form.xmlFormId);
+            const form = new Form(forms[i]);
+
+            // First column
+            const nameOrId = td[0].first('.form-list-form-name').text().trim();
+            nameOrId.should.equal(form.nameOrId());
             if (form.name != null) {
-              td[0].first('.form-list-form-id').text().trim().should
-                .equal(form.xmlFormId);
+              const xmlFormId = td[0].first('.form-list-form-id').text().trim();
+              xmlFormId.should.equal(form.xmlFormId);
             }
-            td[0].first('.form-list-submissions').text().trim().should
-              .containEql(form.submissions.toLocaleString());
+            const submissions = td[0].first('.form-list-submissions').text().trim();
+            submissions.should.containEql(form.submissions.toLocaleString());
+
             td[1].text().trim().should.equal(form.createdBy != null
               ? form.createdBy.displayName
               : '');
+            td[2].text().trim().should.equal(formatDate(form.updatedOrCreatedAt()));
+            td[3].text().trim().should.equal(formatDate(form.lastSubmission));
           }
         });
     });

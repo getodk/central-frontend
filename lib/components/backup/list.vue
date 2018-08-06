@@ -73,7 +73,8 @@ except according to the terms contained in the LICENSE file.
               <p>Backup is working.</p>
               <p>
                 The last backup completed successfully
-                <strong>{{ mostRecentlyLoggedAt }}</strong>.
+                <strong id="backup-list-most-recently-logged-at">
+                {{ mostRecentlyLoggedAt }}</strong>.
               </p>
             </template>
           </td>
@@ -102,12 +103,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import { formatDate } from '../../util';
 
 // The duration for which a backup attempt is considered "recent": if the server
 // returns no log of a recent backup attempt, that means that there have been no
@@ -160,7 +162,7 @@ class Backups {
   get status() {
     if (this._setAt == null) return 'notConfigured';
     if (this._recent.length === 0) {
-      return moment(this._setAt) < moment().subtract(RECENT_DURATION)
+      return DateTime.fromISO(this._setAt) < DateTime.local().minus(RECENT_DURATION)
         ? 'somethingWentWrong'
         : 'neverRun';
     }
@@ -201,7 +203,7 @@ export default {
     },
     mostRecentlyLoggedAt() {
       return this.backups.recent.length !== 0
-        ? this.$formatDate(this.backups.recent[0].loggedAt)
+        ? formatDate(this.backups.recent[0].loggedAt)
         : null;
     }
   },
@@ -229,7 +231,7 @@ export default {
     // The following methods are used in tests. (It does not seem otherwise
     // possible to export them from this single file component.)
     recentDate() {
-      return moment().subtract(RECENT_DURATION).toDate();
+      return DateTime.local().minus(RECENT_DURATION).toJSDate();
     },
     recentForConfig(data) {
       return Backups.recentForConfig(data);

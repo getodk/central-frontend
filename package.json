@@ -19,7 +19,6 @@
     "bootstrap": "~3",
     "jquery": "~3",
     "luxon": "~1",
-    "moment": "~2",
     "pako": "~1.0",
     "pluralize": "~7.0",
     "qrcode-generator": "~1.3",
