@@ -79,8 +79,7 @@ export const extendedSubmissions = dataStore({
     }
     if (oData.testGroup == null) oData.testGroup = {};
     if (oData.testGroup.testBinary == null && hasBinary)
-      oData.testGroup.testBinary = faker.system.commonFileName('.jpg');
-    oData['testGroup-testBinary'] = 'a.jpg';
+      oData.testGroup.testBinary = faker.system.commonFileName('jpg');
     oData.testBranch = faker.random.boolean() ? 'y' : 'n';
     if (hasStrings) {
       for (let i = 1; i <= 2; i += 1) {
