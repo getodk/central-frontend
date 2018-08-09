@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           design your form.
         </p>
       </div>
-      <div id="drop-zone" ref="dropZone" :class="dropZoneClass">
+      <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
         <div :style="pointerEvents">
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
@@ -80,12 +80,12 @@ export default {
     dropZoneClass() {
       return {
         'text-center': true,
-        disabled: this.disabled,
-        dragover: this.isOverDropZone
+        'form-new-disabled': this.disabled,
+        'form-new-dragover': this.isOverDropZone
       };
     },
-    // Used to prevent child elements of #drop-zone from triggering dragleave
-    // events upon hover. Does not work for IE9 or 10.
+    // Used to prevent child elements of #form-new-drop-zone from triggering
+    // dragleave events upon hover. Does not work for IE9 or 10.
     pointerEvents() {
       return this.isOverDropZone ? { 'pointer-events': 'none' } : {};
     }
@@ -145,8 +145,8 @@ export default {
     dragover(event) {
       event.preventDefault();
       // Putting this line in a dragenter listener did not work. Is it possible
-      // that a child element of #drop-zone could trigger a dragleave event
-      // before the dragenter listener is called?
+      // that a child element of #form-new-drop-zone could trigger a dragleave
+      // event before the dragenter listener is called?
       this.isOverDropZone = true;
       // eslint-disable-next-line no-param-reassign
       if (!this.disabled) event.originalEvent.dataTransfer.dropEffect = 'copy';
@@ -182,15 +182,15 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#drop-zone {
+#form-new-drop-zone {
   background-color: $color-input-background;
   border: 1px dashed $color-subpanel-border;
 
-  &.dragover {
+  &.form-new-dragover {
     opacity: 0.65;
   }
 
-  &.disabled {
+  &.form-new-disabled {
     cursor: not-allowed;
     opacity: 0.65;
   }
