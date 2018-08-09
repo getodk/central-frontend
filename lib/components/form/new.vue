@@ -31,7 +31,10 @@ except according to the terms contained in the LICENSE file.
           </button>
           to upload.
         </div>
-        <div :style="pointerEvents" class="text-monospace">{{ filename }}</div>
+        <div v-show="filename != null" id="form-new-filename"
+          :style="pointerEvents" class="text-monospace">
+          {{ filename }}
+        </div>
       </div>
       <div class="modal-actions">
         <button id="form-new-create-button" :disabled="disabled" type="button"
@@ -67,7 +70,7 @@ export default {
       // true if a dragged file is over the drop zone and false if not.
       isOverDropZone: false,
       reading: false,
-      filename: '',
+      filename: null,
       xml: null
     };
   },
@@ -79,7 +82,6 @@ export default {
     },
     dropZoneClass() {
       return {
-        'text-center': true,
         'form-new-disabled': this.disabled,
         'form-new-dragover': this.isOverDropZone
       };
@@ -129,7 +131,7 @@ export default {
       };
       reader.onerror = () => {
         this.$alert().danger('Something went wrong while reading the file.');
-        this.filename = '';
+        this.filename = null;
         this.xml = null;
       };
       reader.onabort = request.onerror;
@@ -169,7 +171,7 @@ export default {
         .post('/forms', this.xml, { headers })
         .then(({ data }) => {
           this.$emit('hide');
-          this.filename = '';
+          this.filename = null;
           this.xml = null;
           this.$emit('success', data);
         })
@@ -185,6 +187,9 @@ export default {
 #form-new-drop-zone {
   background-color: $color-input-background;
   border: 1px dashed $color-subpanel-border;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  text-align: center;
 
   &.form-new-dragover {
     opacity: 0.65;
@@ -194,10 +199,9 @@ export default {
     cursor: not-allowed;
     opacity: 0.65;
   }
+}
 
-  div {
-    margin-bottom: 5px;
-    margin-top: 5px;
-  }
+#form-new-filename {
+  margin-top: 5px;
 }
 </style>

@@ -39,7 +39,7 @@ const dragover = triggerDragEvent('dragover');
 const drop = triggerDragEvent('drop');
 const dragAndDrop = (modal) => dragover(modal).then(drop);
 const waitForRead = (modal) => {
-  if (modal.data().filename !== '')
+  if (modal.data().filename != null)
     return modal.vm.$nextTick().then(() => modal);
   return new Promise(resolve =>
     setTimeout(() => resolve(waitForRead(modal)), 0));
