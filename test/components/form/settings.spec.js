@@ -15,6 +15,7 @@ describe('FormSettings', () => {
       const path = settingsPath(testData.extendedForms.createPast(1).last());
       return mockRouteThroughLogin(path)
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponse(app => app.vm.$route.path.should.equal(path));
     });
   });

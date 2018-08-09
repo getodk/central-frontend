@@ -139,6 +139,7 @@ describe('FormNew', () => {
             .then(clickCreateButtonInModal))
           .respondWithData(() => testData.simpleForms.last()) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
+          .respondWithData(() => testData.extendedFormAttachments.sorted()) // FormShow
           .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
         it('redirects to the form overview', () => {

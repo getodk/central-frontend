@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       requestId: null,
-      form: null
+      form: null,
+      attachments: null
     };
   },
   computed: {
@@ -66,11 +67,15 @@ export default {
   methods: {
     fetchData() {
       this.form = null;
+      this.attachments = null;
       const headers = { 'X-Extended-Metadata': 'true' };
-      this
-        .get(`/forms/${this.xmlFormId}`, { headers })
-        .then(({ data }) => {
-          this.form = new Form(data);
+      this.requestAll([
+        this.$http.get(`/forms/${this.xmlFormId}`, { headers }),
+        this.$http.get(`/forms/${this.xmlFormId}/attachments`, { headers })
+      ])
+        .then(([form, attachments]) => {
+          this.form = new Form(form.data);
+          this.attachments = attachments.data;
         })
         .catch(() => {});
     },

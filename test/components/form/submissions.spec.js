@@ -22,6 +22,7 @@ describe('FormSubmissions', () => {
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
         .respondWithData(() => form)
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
         .respondWithData(testData.submissionOData)
         .afterResponses(app => app.vm.$route.path.should.equal(path));
@@ -321,6 +322,7 @@ describe('FormSubmissions', () => {
         it(`refreshes part ${i} of table after refresh button is clicked`, () =>
           mockRoute(submissionsPath(form()))
             .respondWithData(form)
+            .respondWithData(() => testData.extendedFormAttachments.sorted())
             .testRefreshButton({
               collection: testData.extendedSubmissions,
               respondWithData: [

@@ -17,8 +17,9 @@ describe('FormOverview', () => {
       const path = overviewPath(testData.extendedForms.createPast(1).last());
       return mockRouteThroughLogin(path)
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponse(app => app.vm.$route.path.should.equal(path));
+        .afterResponses(app => app.vm.$route.path.should.equal(path));
     });
   });
 
@@ -34,8 +35,9 @@ describe('FormOverview', () => {
       // <router-link>.
       beforeEach(() => mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponse(component => {
+        .afterResponses(component => {
           app = component;
         }));
 
@@ -65,8 +67,9 @@ describe('FormOverview', () => {
       });
       beforeEach(() => mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponse(component => {
+        .afterResponses(component => {
           app = component;
         }));
 
@@ -101,8 +104,9 @@ describe('FormOverview', () => {
       it('no app users', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
           .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponse(app => {
+          .afterResponses(app => {
             const p = app.find('.form-overview-step')[1].find('p')[1];
             p.text().trim().should.containEql('You do not have any App Users on this server yet');
           }));
@@ -110,11 +114,12 @@ describe('FormOverview', () => {
       it('at least one app user', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
           .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => {
             const count = faker.random.number({ min: 1, max: 2000 });
             return testData.simpleFieldKeys.createPast(count).sorted();
           })
-          .afterResponse(app => {
+          .afterResponses(app => {
             const p = app.find('.form-overview-step')[1].find('p')[1];
             const count = testData.simpleFieldKeys.size;
             p.text().trim().should.containEql(` ${count.toLocaleString()} `);
@@ -125,8 +130,9 @@ describe('FormOverview', () => {
       it('is not the current step, if the form is open', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
           .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponse(app => {
+          .afterResponses(app => {
             const title = app.find('.form-overview-step')[3].first('p');
             title.hasClass('text-muted').should.be.true();
           }));
@@ -134,8 +140,9 @@ describe('FormOverview', () => {
       it('is marked as complete, if the form is not open', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: false }).last()))
           .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponse(app => {
+          .afterResponses(app => {
             const title = app.find('.form-overview-step')[3].first('p');
             title.hasClass('text-success').should.be.true();
           }));
@@ -143,8 +150,9 @@ describe('FormOverview', () => {
       it('is marked as complete if the state is changed from open', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
           .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponse(app => {
+          .afterResponses(app => {
             const title = app.find('.form-overview-step')[3].first('p');
             title.hasClass('text-success').should.be.false();
           })

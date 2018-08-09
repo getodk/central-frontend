@@ -45,9 +45,10 @@ describe('FormAnalyze', () => {
   it('selects the OData URL upon click', () =>
     mockRoute(submissionsPath(createFormWithSubmission()), { attachToDocument: true })
       .respondWithData(() => testData.extendedForms.last())
+      .respondWithData(() => testData.extendedFormAttachments.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
-      .afterResponse(clickAnalyzeButton)
+      .afterResponses(clickAnalyzeButton)
       .then(app =>
         trigger.click(app.first('#form-analyze-odata-url')).then(() => app))
       .then(() => {
