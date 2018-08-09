@@ -97,11 +97,11 @@ export default {
     this.fetchData({ clear: false });
   },
   activated() {
-    $('body').on('click.app-field-key-list', this.hidePopoverAfterClickOutside);
+    $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
   deactivated() {
     this.hidePopover();
-    $('body').off('click.app-field-key-list', this.hidePopoverAfterClickOutside);
+    $('body').off('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
   methods: {
     fetchData({ clear }) {
