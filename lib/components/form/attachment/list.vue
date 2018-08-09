@@ -11,6 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-attachment-list" ref="dropZone">
+    <div id="form-attachment-list-heading">
+      <button class="btn btn-primary" type="button"
+        @click="showModal('uploadFilesModal')">
+        <span class="icon-cloud-upload"></span> Upload files
+      </button>
+      <div>
+        Based on the form you uploaded, the following files are expected. You
+        can see which ones have been uploaded or are still missing.
+      </div>
+      <div>To upload files, drag and drop one or more files onto the page.</div>
+    </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
         <tr>
@@ -28,19 +39,28 @@ except according to the terms contained in the LICENSE file.
     </table>
     <form-attachment-popup v-show="fileIsOverDropZone"
       :target-attachment="targetAttachment"/>
+    <form-attachment-upload-files v-bind="uploadFilesModal"
+      @hide="hideModal('uploadFilesModal')"/>
   </div>
 </template>
 
 <script>
 import FormAttachmentPopup from './popup.vue';
 import FormAttachmentRow from './row.vue';
+import FormAttachmentUploadFiles from './upload-files.vue';
 import dropZone from '../../../mixins/drop-zone';
+import modal from '../../../mixins/modal';
 
 export default {
   name: 'FormAttachmentList',
-  components: { FormAttachmentPopup, FormAttachmentRow },
+  components: {
+    FormAttachmentPopup,
+    FormAttachmentRow,
+    FormAttachmentUploadFiles
+  },
   mixins: [
-    dropZone({ keepAlive: true, eventNamespace: 'form-attachment-list' })
+    dropZone({ keepAlive: true, eventNamespace: 'form-attachment-list' }),
+    modal(['uploadFilesModal'])
   ],
   props: {
     form: {
@@ -56,7 +76,11 @@ export default {
     return {
       fileIsOverDropZone: false,
       // The index of the attachment targeted for the drop
-      targetIndex: null
+      targetIndex: null,
+      uploadFilesModal: {
+        state: false
+      }
+    };
   },
   computed: {
     targetAttachment() {
@@ -101,6 +125,15 @@ export default {
   // Extend to the bottom of the page (or slightly beyond it) so that the drop
   // zone includes the entire page below the PageHead.
   min-height: calc(100vh - 146px);
+}
+
+#form-attachment-list-heading {
+  margin-bottom: 20px;
+
+  button {
+    float: right;
+    margin-left: 10px;
+  }
 }
 
 #form-attachment-list-table {
