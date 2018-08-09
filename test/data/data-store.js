@@ -1,23 +1,17 @@
 import faker from '../faker';
 import { uniqueSequence } from '../../lib/util';
 
-const DEFAULT_FACTORY_OPTIONS = {
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  validate: []
-};
-
 class Factory {
   constructor(store, options) {
     this._store = store;
-    this._options = { ...DEFAULT_FACTORY_OPTIONS, ...options };
+    this._options = { ...options };
+    if (this._options.validate === undefined) this._options.validate = [];
     this.reset();
   }
 
   reset() {
-    if (this._options.id) this._uniqueId = uniqueSequence();
-    if (this._options.createdAt) this._lastCreatedAt = null;
+    this._uniqueId = uniqueSequence();
+    this._lastCreatedAt = null;
   }
 
   options() { return this._options; }
@@ -26,15 +20,15 @@ class Factory {
   newObject() returns a new valid object for the store. It can be called in any
   of the following ways:
 
-    newObject(past)
-    newObject(past, constraintOrConstraints)
-    newObject(past, factoryFunctionOptions)
+    newObject(inPast)
+    newObject(inPast, constraintOrConstraints)
+    newObject(inPast, factoryFunctionOptions)
 
   with the following parameters:
 
-    - past. If true, the value of the new object's createdAt property will be in
-      the past. If false, the value will be set to the current time. `past` has
-      no effect if the Factory's options specify that new objects be created
+    - inPast. If true, the value of the new object's createdAt property will be
+      in the past. If false, the value will be set to the current time. `inPast`
+      has no effect if the Factory's options specify that new objects be created
       without a createdAt property.
     - constraintOrConstraints. Either a String or an Array of Strings, where
       each String is the name of one of the constraints specified in the
@@ -60,25 +54,20 @@ class Factory {
   are usually more performant than constraints. We may remove constraints at
   some point and replace them with factory function options.
   */
-  newObject(past, constraintsOrOptions = undefined) {
+  newObject(inPast, constraintsOrOptions = undefined) {
     const { constraints, factoryFunctionOptions } =
       this._constraintsAndOptions(constraintsOrOptions);
     const { factory } = this._options;
-    const id = this._options.id ? this._uniqueId() : null;
+    const id = this._uniqueId();
     for (;;) {
-      // An object that contains the base properties of the new object: id,
-      // createdAt, and updatedAt.
-      const base = {};
-      if (this._options.id) base.id = id;
-      if (this._options.createdAt) base.createdAt = this._createdAt(past);
-      if (this._options.updatedAt)
-        base.updatedAt = this._updatedAt(past, base.createdAt);
-      const object = Object.assign(
-        factory({ ...factoryFunctionOptions, ...base }),
-        base
-      );
+      const object = factory({
+        ...factoryFunctionOptions,
+        inPast,
+        lastCreatedAt: this._lastCreatedAt,
+        id
+      });
       if (this._isValid(object, constraints)) {
-        if (this._options.createdAt) this._lastCreatedAt = object.createdAt;
+        this._lastCreatedAt = object.createdAt;
         return object;
       }
     }
@@ -100,22 +89,6 @@ class Factory {
       return constraint;
     });
     return { constraints, factoryFunctionOptions: {} };
-  }
-
-  _createdAt(past) {
-    if (!past) return new Date().toISOString();
-    const createdAt = this._lastCreatedAt == null
-      ? faker.date.past()
-      : faker.date.pastSince(this._lastCreatedAt);
-    return createdAt.toISOString();
-  }
-
-  _updatedAt(past, createdAt) {
-    if (!past || faker.random.boolean()) return null;
-    const updatedAt = this._options.createdAt
-      ? faker.date.pastSince(createdAt)
-      : faker.date.past();
-    return updatedAt.toISOString();
   }
 
   _isValid(object, constraints) {
@@ -215,10 +188,8 @@ class Store extends Collection {
   update(object, callback) {
     const { createdAt } = object;
     callback(object);
-    if (this._factory.options().updatedAt) {
-      // eslint-disable-next-line no-param-reassign
-      object.updatedAt = new Date().toISOString();
-    }
+    // eslint-disable-next-line no-param-reassign
+    if ('updatedAt' in object) object.updatedAt = new Date().toISOString();
     if (object.createdAt !== createdAt) {
       // this._objects is sorted by createdAt, so we currently do not support
       // updates to createdAt.

@@ -6,9 +6,6 @@ import { MAXIMUM_TEST_DURATION } from '../util';
 import { dataStore } from './data-store';
 
 const store = dataStore({
-  id: false,
-  createdAt: false,
-  updatedAt: false,
   factory: () => {
     const recentDate = BackupList.methods.recentDate();
     // The earliest time, for testing purposes, for backups to have been

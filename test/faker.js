@@ -1,4 +1,5 @@
 import fakerPackage from 'faker';
+import { DateTime } from 'luxon';
 
 
 
@@ -44,6 +45,25 @@ Object.assign(fakerExtensions, {
     pastOrFuture: () => {
       if (faker.random.boolean()) return faker.date.past();
       return faker.date.future();
+    },
+
+    timestamps: (inPast, sinceStrings = null) => {
+      if (!inPast) {
+        return {
+          createdAt: new Date().toISOString(),
+          updatedAt: null
+        };
+      }
+      const sinceDateTimes = sinceStrings
+        .filter(s => s != null)
+        .map(s => DateTime.fromISO(s));
+      const createdAt = sinceDateTimes.length !== 0
+        ? faker.date.pastSince(DateTime.max(...sinceDateTimes).toISO()).toISOString()
+        : faker.date.past().toISOString();
+      const updatedAt = faker.random.boolean()
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null;
+      return { createdAt, updatedAt };
     }
   },
   app: {

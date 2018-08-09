@@ -6,12 +6,14 @@ import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
-import { validateDateOrder, validateUniqueCombination } from './validate';
+import { validateUniqueCombination } from './validate';
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
   factory: ({
-    createdAt,
+    inPast,
+    id,
+    lastCreatedAt,
 
     hasInt = faker.random.boolean(),
     hasDecimal = faker.random.boolean(),
@@ -27,6 +29,10 @@ export const extendedSubmissions = dataStore({
     const form = extendedForms.randomOrCreatePast();
     const instanceId = faker.random.uuid();
     const submitter = administrators.randomOrCreatePast();
+    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
+      lastCreatedAt,
+      submitter.createdAt
+    ]);
 
     const oData = {
       ...partialOData,
@@ -94,6 +100,7 @@ export const extendedSubmissions = dataStore({
     // the data.
 
     return {
+      id,
       formId: form.id,
       instanceId,
       // We currently do not use the XML anywhere. If/when we do, we should
@@ -103,12 +110,13 @@ export const extendedSubmissions = dataStore({
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
         submitter
       ),
-      _oData: oData
+      _oData: oData,
+      createdAt,
+      updatedAt
     };
   },
   validate: [
-    validateUniqueCombination(['formId', 'instanceId']),
-    validateDateOrder('submitter.createdAt', 'createdAt')
+    validateUniqueCombination(['formId', 'instanceId'])
   ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });

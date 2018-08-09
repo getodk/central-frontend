@@ -4,19 +4,26 @@ import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
-import { validateDateOrder, validateUniqueCombination } from './validate';
+import { validateUniqueCombination } from './validate';
 
 export const extendedForms = dataStore({
-  id: false,
   factory: ({
+    inPast,
+    lastCreatedAt,
+
     hasInstanceId = faker.random.boolean(),
     hasName = faker.random.boolean(),
-    isOpen = faker.random.boolean(),
-    hasSubmission = faker.random.boolean()
+    isOpen = inPast ? faker.random.boolean() : 'open',
+    hasSubmission = inPast && faker.random.boolean()
   }) => {
     const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
     const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
+    const createdBy = administrators.randomOrCreatePast();
+    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
+      lastCreatedAt,
+      createdBy.createdAt
+    ]);
     const instanceId = [];
     if (hasInstanceId) {
       instanceId.push({
@@ -33,15 +40,19 @@ export const extendedForms = dataStore({
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
       submissions: hasSubmission ? faker.random.number({ min: 1 }) : 0,
-      lastSubmission: hasSubmission ? faker.date.past().toISOString() : null,
+      lastSubmission: hasSubmission
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null,
       createdBy: R.pick(
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
-        administrators.randomOrCreatePast()
+        createdBy
       ),
       // We currently do not use the XML anywhere. If/when we do, we should
       // consider whether to keep it in sync with the hash and _schema
       // properties.
       xml: '',
+      createdAt,
+      updatedAt,
       _schema: [
         ...instanceId,
         { path: ['testInt'], type: 'int' },
@@ -68,9 +79,7 @@ export const extendedForms = dataStore({
     };
   },
   validate: [
-    validateUniqueCombination(['xmlFormId']),
-    validateDateOrder('createdBy.createdAt', 'createdAt'),
-    validateDateOrder('createdAt', 'lastSubmission')
+    validateUniqueCombination(['xmlFormId'])
   ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
