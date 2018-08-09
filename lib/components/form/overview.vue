@@ -24,7 +24,17 @@ except according to the terms contained in the LICENSE file.
             questions.
           </p>
         </form-overview-step>
-        <form-overview-step :stage="stepStage(1)">
+        <form-overview-step v-if="attachments.length !== 0" :stage="stepStage(1)">
+          <template slot="title">Upload form media files</template>
+          <p>
+            Your form design references files that we need in order to present
+            your form. You can upload these for distribution under the
+            <router-link :to="formPath('media-files')">Media Files</router-link>
+            tab. If you change your mind or make a replace, you can always
+            replace the files. <!-- TODO. Click here to find out more. -->
+          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(2)">
           <template slot="title">Download form on survey clients and submit data</template>
           <p>
             <template v-if="form.submissions === 0">
@@ -53,7 +63,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </p>
         </form-overview-step>
-        <form-overview-step :stage="stepStage(2)">
+        <form-overview-step :stage="stepStage(3)">
           <template slot="title">Evaluate and analyze submitted data"</template>
           <p>
             <template v-if="form.submissions === 0">
@@ -70,7 +80,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
           </p>
         </form-overview-step>
-        <form-overview-step :stage="stepStage(3)" last>
+        <form-overview-step :stage="stepStage(4)" last>
           <template slot="title">Manage form retirement</template>
           <p>
             As you come to the end of your data collection project, you can use
@@ -112,10 +122,16 @@ export default {
     };
   },
   computed: {
+    // Returns true if all form attachments exist and false if not. Returns true
+    // if there are no form attachments.
+    allAttachmentsExist() {
+      return this.attachments.every(attachment => attachment.exists);
+    },
     // Indicates whether each step is complete.
     stepCompletion() {
       return [
         true,
+        this.allAttachmentsExist,
         this.form.submissions !== 0,
         false,
         this.form.state !== 'open'
