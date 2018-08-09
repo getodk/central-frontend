@@ -96,6 +96,8 @@ export default {
     modal('analyze'),
     request()
   ],
+  // Setting this in order to ignore the `attachments` attribute.
+  inheritAttrs: false,
   props: {
     form: {
       type: Object,

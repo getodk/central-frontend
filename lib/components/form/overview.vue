@@ -107,6 +107,10 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    attachments: {
+      type: Array,
+      required: true
     }
   },
   data() {

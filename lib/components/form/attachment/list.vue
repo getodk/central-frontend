@@ -15,6 +15,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormAttachmentList'
+  name: 'FormAttachmentList',
+  props: {
+    form: {
+      type: Object,
+      required: true
+    },
+    attachments: {
+      type: Array,
+      required: true
+    }
+  }
 };
 </script>

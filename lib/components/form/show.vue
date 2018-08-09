@@ -20,6 +20,15 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
+        <li v-if="attachments.length !== 0" :class="tabClass('media-files')"
+          role="presentation">
+          <router-link :to="tabPath('media-files')">
+            Media Files
+            <span v-show="missingAttachments !== 0" class="badge">
+              {{ missingAttachments.toLocaleString() }}
+            </span>
+          </router-link>
+        </li>
         <li :class="tabClass('submissions')" role="presentation">
           <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
@@ -30,7 +39,8 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <keep-alive>
-        <router-view :form="form" @state-change="updateState"/>
+        <router-view :form="form" :attachments="attachments"
+          @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
@@ -54,6 +64,9 @@ export default {
   computed: {
     xmlFormId() {
       return this.$route.params.xmlFormId;
+    },
+    missingAttachments() {
+      return this.attachments.filter(attachment => !attachment.exists).length;
     }
   },
   watch: {
