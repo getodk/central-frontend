@@ -283,6 +283,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+.label-primary {
+  background-color: $color-action-background;
+}
+
 .panel {
   border: none;
   border-radius: 0;
