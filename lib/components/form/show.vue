@@ -48,6 +48,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Form from '../../presenters/form';
+import FormAttachment from '../../presenters/form-attachment';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -88,7 +89,8 @@ export default {
       ])
         .then(([form, attachments]) => {
           this.form = new Form(form.data);
-          this.attachments = attachments.data;
+          this.attachments = attachments.data
+            .map(attachment => new FormAttachment(attachment));
         })
         .catch(() => {});
     },
