@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      isOverDropZone: false,
+      fileIsOverDropZone: false,
       requestId: null,
       reading: false,
       filename: null,
@@ -86,7 +86,7 @@ export default {
     dropZoneClass() {
       return {
         'form-new-disabled': this.disabled,
-        'form-new-dragover': this.isOverDropZone
+        'form-new-dragover': this.fileIsOverDropZone
       };
     }
   },
