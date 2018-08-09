@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-attachment-list" ref="dropZone">
     <div id="form-attachment-list-heading">
       <button class="btn btn-primary" type="button"
-        @click="showModal('uploadFilesModal')">
+        @click="showUploadFilesModal">
         <span class="icon-cloud-upload"></span> Upload files
       </button>
       <div>
@@ -33,34 +33,46 @@ except according to the terms contained in the LICENSE file.
       <tbody>
         <form-attachment-row v-for="(attachment, index) in attachments"
           :key="attachment.key" :attachment="attachment"
-          :file-is-over-drop-zone="fileIsOverDropZone"
-          :target-attachment="targetAttachment" :data-index="index"/>
+          :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
+          :dragover-attachment="dragoverAttachment"
+          :files-to-upload="filesToUpload" :data-index="index"/>
       </tbody>
     </table>
-    <form-attachment-popup v-show="fileIsOverDropZone"
-      :target-attachment="targetAttachment"/>
+    <form-attachment-popups
+      :count-of-files-over-drop-zone="countOfFilesOverDropZone"
+      :dragover-attachment="dragoverAttachment" :files-to-upload="filesToUpload"
+      :unmatched-files="unmatchedFiles" :upload-status="uploadStatus"
+      @confirm="uploadFiles" @cancel="cancelUpload"/>
+
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="hideModal('uploadFilesModal')"/>
+    <form-attachment-name-mismatch :state="nameMismatch.state"
+      :files-to-upload="filesToUpload" @hide="hideModal('nameMismatch')"
+      @confirm="uploadFiles" @cancel="cancelUpload"/>
   </div>
 </template>
 
 <script>
-import FormAttachmentPopup from './popup.vue';
+import FormAttachmentNameMismatch from './name-mismatch.vue';
+import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import dropZone from '../../../mixins/drop-zone';
 import modal from '../../../mixins/modal';
+import request from '../../../mixins/request';
 
 export default {
   name: 'FormAttachmentList',
   components: {
-    FormAttachmentPopup,
+    FormAttachmentNameMismatch,
+    FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles
   },
   mixins: [
     dropZone({ keepAlive: true, eventNamespace: 'form-attachment-list' }),
-    modal(['uploadFilesModal'])
+    modal(['uploadFilesModal', 'nameMismatch']),
+    request()
   ],
   props: {
     form: {
@@ -75,46 +87,139 @@ export default {
   data() {
     return {
       fileIsOverDropZone: false,
-      // The index of the attachment targeted for the drop
-      targetIndex: null,
+      countOfFilesOverDropZone: 0,
+      // Only applicable for countOfFilesOverDropZone === 1.
+      dragoverAttachment: null,
+      // Array of file/attachment pairs
+      // TODO: Rename so that there is no implication that it is an array of
+      // files? `uploadsToEnqueue`?
+      filesToUpload: [],
+      // TODO: Only store the length?
+      unmatchedFiles: [],
+      uploadStatus: {
+        // The total number of files to upload
+        total: null,
+        // The number of files uploaded so far
+        complete: null,
+        // The name of the file currently being uploaded
+        current: null
+      },
       uploadFilesModal: {
+        state: false
+      },
+      nameMismatch: {
         state: false
       }
     };
   },
   computed: {
-    targetAttachment() {
-      return this.attachments[this.targetIndex];
+    disabled() {
+      return this.uploadStatus.current != null;
     }
   },
   methods: {
-    ondragenter(jQueryEvent) {
-      const { items } = jQueryEvent.originalEvent.dataTransfer;
-      // items will be undefined in IE.
-      if (items == null) return;
-      if (this.hasMultipleFiles(items)) return;
-      const $targetRow = $(jQueryEvent.target)
-        .closest('#form-attachment-list-table tbody tr');
-      this.targetIndex = $targetRow.length !== 0
-        ? $targetRow.data('index')
-        : null;
-    },
-    ondragleave() {
-      if (!this.fileIsOverDropZone) this.targetIndex = null;
-    },
-    ondrop() {
-      this.targetIndex = null;
+    showUploadFilesModal() {
+      if (!this.disabled) this.showModal('uploadFilesModal');
     },
     // items is a DataTransferItemList, not an Array.
-    hasMultipleFiles(items) {
+    fileItemCount(maybeItems) {
+      // IE
+      if (maybeItems == null) return -1;
       let count = 0;
-      for (let i = 0; i < items.length; i += 1) {
-        if (items[i].kind === 'file') {
-          count += 1;
-          if (count > 1) return true;
-        }
+      for (let i = 0; i < maybeItems.length; i += 1)
+        if (maybeItems[i].kind === 'file') count += 1;
+      return count;
+    },
+    ondragenter(jQueryEvent) {
+      const { items } = jQueryEvent.originalEvent.dataTransfer;
+      this.countOfFilesOverDropZone = this.fileItemCount(items);
+      if (this.countOfFilesOverDropZone === 1) {
+        const $tr = $(jQueryEvent.target)
+          .closest('#form-attachment-list-table tbody tr');
+        this.dragoverAttachment = $tr.length !== 0
+          ? this.attachments[$tr.data('index')]
+          : null;
       }
-      return false;
+      this.cancelUpload();
+    },
+    ondragleave() {
+      if (!this.fileIsOverDropZone) {
+        if (this.countOfFilesOverDropZone === 1) this.dragoverAttachment = null;
+        this.countOfFilesOverDropZone = 0;
+      }
+    },
+    // files is a FileList, not an Array.
+    matchFilesToAttachments(files) {
+      this.filesToUpload = [];
+      this.unmatchedFiles = [];
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+        const attachment = this.attachments.find(a => a.name === file.name);
+        if (attachment != null)
+          this.filesToUpload.push({ attachment, file });
+        else
+          this.unmatchedFiles.push(file);
+      }
+    },
+    postPath(attachment) {
+      const encodedName = encodeURIComponent(attachment.name);
+      return `/forms/${this.form.xmlFormId}/attachments/${encodedName}`;
+    },
+    uploadFiles() {
+      this.uploadStatus.total = this.filesToUpload.length;
+      this.uploadStatus.complete = 0;
+      const uploaded = [];
+      const promise = this.filesToUpload.reduce(
+        (acc, { attachment, file }) => acc
+          .then(() => {
+            this.uploadStatus.current = file.name;
+            const headers = { 'Content-Type': file.type };
+            const path = this.postPath(attachment);
+            return this.post(path, file, { headers });
+          })
+          .then(() => {
+            uploaded.push([attachment, new Date().toISOString()]);
+            this.uploadStatus.complete += 1;
+          })
+          .catch(() => {}),
+        Promise.resolve()
+      );
+      promise.finally(() => {
+        for (const [attachment, updatedAt] of uploaded) {
+          this.$emit(
+            'attachment-change',
+            this.attachments.indexOf(attachment),
+            attachment.with({ exists: true, updatedAt })
+          );
+        }
+        this.uploadStatus = { total: null, complete: null, current: null };
+      });
+      this.filesToUpload = [];
+      this.unmatchedFiles = [];
+    },
+    ondrop(jQueryEvent) {
+      const { files } = jQueryEvent.originalEvent.dataTransfer;
+      if (this.countOfFilesOverDropZone !== 1)
+        this.matchFilesToAttachments(files);
+      if (this.countOfFilesOverDropZone === 1 &&
+        this.dragoverAttachment != null) {
+        const file = files[0];
+        if (this.countOfFilesOverDropZone !== -1) {
+          this.filesToUpload = [{ file, attachment: this.dragoverAttachment }];
+          this.dragoverAttachment = null;
+        }
+        if (file.name === this.filesToUpload[0].attachment.name)
+          this.uploadFiles();
+        else
+          this.nameMismatch.state = true;
+      }
+      this.countOfFilesOverDropZone = 0;
+    },
+    cancelUpload() {
+      // Checking `length` in order to avoid setting these properties
+      // unnecessarily, which could result in Vue calculations.
+      if (this.filesToUpload.length !== 0) this.filesToUpload = [];
+      if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     }
   }
 };
@@ -137,12 +242,6 @@ export default {
 }
 
 #form-attachment-list-table {
-  border-collapse: separate;
-
-  > tbody > tr:first-child > td {
-    border-top-color: transparent;
-  }
-
   .form-attachment-list-type {
     // Fix the widths of the Type and Name columns so that the width of the
     // Uploaded column is also fixed. We do not want the width of the Uploaded

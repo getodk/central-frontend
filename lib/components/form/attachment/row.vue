@@ -14,13 +14,12 @@ except according to the terms contained in the LICENSE file.
     <td class="form-attachment-list-type">
       {{ attachment.type.replace(/^[a-z]/, (letter) => letter.toUpperCase()) }}
     </td>
+    <!-- TODO. Add a link if the attachment exists. -->
     <td class="form-attachment-list-name">{{ attachment.name }}</td>
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.exists">
         {{ updatedAt }}
-        <span v-show="targetAttachment != null &&
-          attachment.name === targetAttachment.name"
-          class="label label-primary">
+        <span v-show="targeted" class="label label-primary">
           Replace
         </span>
       </template>
@@ -45,19 +44,29 @@ export default {
       type: Boolean,
       default: false
     },
-    targetAttachment: Object // eslint-disable-line vue/require-default-prop
+    dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
+    filesToUpload: {
+      type: Array,
+      required: true
+    }
   },
   computed: {
+    targeted() {
+      const targetedByDragover = this.dragoverAttachment != null &&
+        this.attachment.name === this.dragoverAttachment.name;
+      const targetedByDrop = this.filesToUpload.some(({ file }) =>
+        file.name === this.attachment.name);
+      return targetedByDragover || targetedByDrop;
+    },
     htmlClass() {
-      const targeted = this.targetAttachment != null &&
-        this.attachment.name === this.targetAttachment.name;
-      const highlight = this.targetAttachment != null
-        ? targeted
-        : this.fileIsOverDropZone;
+      const dragoverTargetsADifferentRow = this.dragoverAttachment != null &&
+        this.dragoverAttachment.name !== this.attachment.name;
+      const info = this.targeted ||
+        (this.fileIsOverDropZone && !dragoverTargetsADifferentRow);
       return {
         'form-attachment-row': true,
-        info: highlight,
-        'form-attachment-row-targeted': targeted
+        info,
+        'form-attachment-row-targeted': this.targeted
       };
     },
     updatedAt() {
@@ -70,30 +79,53 @@ export default {
 <style lang="sass">
 @import '../../../../assets/scss/variables';
 
-#form-attachment-list-table > tbody > .form-attachment-row {
-  > td {
-    border-bottom: 1px solid transparent;
+#form-attachment-list-table {
+  thead > tr > th {
+    border-bottom-width: 0;
+  }
 
-    &:first-child {
-      border-left: 1px solid transparent;
+  // TODO. Adjust styles for bottom row.
+  > tbody > .form-attachment-row {
+    &:first-child > td {
+      border-top: $border-bottom-table-heading;
     }
 
-    &:last-child {
-      border-right: 1px solid transparent;
+    > td {
+      &:first-child {
+        border-left: 1px solid transparent;
+      }
+
+      &:last-child {
+        border-right: 1px solid transparent;
+      }
     }
-  }
 
-  &.form-attachment-row-targeted > td {
-    border-color: $color-info;
-  }
+    &.form-attachment-row-targeted {
+      > td {
+        border-top-color: $color-info;
 
-  .label {
-    margin-left: 5px;
-  }
+        &:first-child {
+          border-left-color: $color-info;
+        }
 
-  .icon-exclamation-triangle {
-    color: #cc9e00;
-    margin-right: 2px;
+        &:last-child {
+          border-right-color: $color-info;
+        }
+      }
+    }
+
+    &.form-attachment-row-targeted + tr > td {
+      border-top-color: $color-info;
+    }
+
+    .label {
+      margin-left: 5px;
+    }
+
+    .icon-exclamation-triangle {
+      color: #cc9e00;
+      margin-right: 2px;
+    }
   }
 }
 </style>

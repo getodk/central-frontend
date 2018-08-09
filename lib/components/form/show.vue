@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <keep-alive>
         <router-view :form="form" :attachments="attachments"
-          @state-change="updateState"/>
+          @attachment-change="updateAttachment" @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
@@ -96,6 +96,9 @@ export default {
     },
     tabPathPrefix() {
       return `/forms/${this.xmlFormId}`;
+    },
+    updateAttachment(index, newAttachment) {
+      this.$set(this.attachments, index, newAttachment);
     },
     updateState(newState) {
       this.form = this.form.with({ state: newState });
