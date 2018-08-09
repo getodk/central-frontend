@@ -38,8 +38,10 @@ except according to the terms contained in the LICENSE file.
               Nobody has submitted any data to this form yet.
             </template>
             <template v-else>
-              A total of {{ submissionCountString }} {{ have }} been sent to
-              this server.
+              A total of {{ form.submissions.toLocaleString() }}
+              {{ $pluralize('submission', form.submissions) }}
+              {{ $pluralize('has', form.submissions) }} been sent to this
+              server.
             </template>
             App Users will be able to see this form on their mobile device to
             download and fill out.
@@ -52,7 +54,7 @@ except according to the terms contained in the LICENSE file.
             <template v-else>
               Right now, you have
               <router-link to="/users/field-keys">
-                <strong>{{ fieldKeyCountString }}</strong>
+                <strong>{{ fieldKeyCount.toLocaleString() }} App Users</strong>
               </router-link>
               on this server, but you can always add more.
             </template>
@@ -70,7 +72,9 @@ except according to the terms contained in the LICENSE file.
               to monitor and analyze the data for quality and results.
             </template>
             <template v-else>
-              You can export or synchronize the {{ submissionCountString }} on
+              You can export or synchronize the
+              {{ form.submissions.toLocaleString() }}
+              {{ $pluralize('submission', form.submissions) }} on
               this form to monitor and analyze them for quality and results.
             </template>
             You can do this with the Download and Analyze buttons on the
@@ -118,21 +122,6 @@ export default {
       requestId: null,
       fieldKeyCount: null
     };
-  },
-  computed: {
-    submissionCountString() {
-      const count = this.form.submissions.toLocaleString();
-      const s = this.form.submissions !== 1 ? 's' : '';
-      return `${count} submission${s}`;
-    },
-    have() {
-      return this.form.submissions === 1 ? 'has' : 'have';
-    },
-    fieldKeyCountString() {
-      const count = this.fieldKeyCount.toLocaleString();
-      const s = this.fieldKeyCount !== 1 ? 's' : '';
-      return `${count} App User${s}`;
-    }
   },
   created() {
     this.fetchData();

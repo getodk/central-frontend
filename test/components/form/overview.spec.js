@@ -82,7 +82,7 @@ describe('FormOverview', () => {
         it('shows the number of submissions', () => {
           const p = app.find('.form-overview-step')[1].find('p')[1];
           const count = testData.extendedForms.last().submissions;
-          p.text().trim().should.containEql(` ${count.toLocaleString()} `);
+          p.text().trim().should.containEql(count.toLocaleString());
         });
       });
 
@@ -95,7 +95,7 @@ describe('FormOverview', () => {
         it('shows the number of submissions', () => {
           const p = app.find('.form-overview-step')[2].find('p')[1];
           const count = testData.extendedForms.last().submissions;
-          p.text().trim().should.containEql(` ${count.toLocaleString()} `);
+          p.text().trim().should.containEql(count.toLocaleString());
         });
       });
     });
