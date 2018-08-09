@@ -10,46 +10,46 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th class="form-attachment-list-name">Name</th>
-          <th>Uploaded</th>
-        </tr>
-      </thead>
-      <tbody>
-        <form-attachment-row v-for="attachment of attachments"
-          :key="attachment.key" :attachment="attachment"/>
-      </tbody>
-    </table>
-  </div>
+  <tr>
+    <td>
+      {{ attachment.type.replace(/^[a-z]/, (letter) => letter.toUpperCase()) }}
+    </td>
+    <td class="form-attachment-list-name">{{ attachment.name }}</td>
+    <td>
+      <template v-if="attachment.exists">
+        {{ updatedAt }}
+      </template>
+      <template v-else>
+        <span class="icon-exclamation-triangle"></span> Not yet uploaded
+      </template>
+    </td>
+  </tr>
 </template>
 
 <script>
-import FormAttachmentRow from './row.vue';
+import { formatDate } from '../../../util';
 
 export default {
-  name: 'FormAttachmentList',
-  components: { FormAttachmentRow },
+  name: 'FormAttachmentRow',
+  inheritAttrs: false,
   props: {
-    form: {
+    attachment: {
       type: Object,
       required: true
-    },
-    attachments: {
-      type: Array,
-      required: true
+    }
+  },
+  computed: {
+    updatedAt() {
+      return formatDate(this.attachment.updatedAt);
     }
   }
 };
 </script>
 
 <style lang="sass">
-.form-attachment-list-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.form-attachment-row {
+  .icon-exclamation-triangle {
+    color: #cc9e00;
+  }
 }
 </style>
