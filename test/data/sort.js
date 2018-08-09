@@ -4,7 +4,7 @@ export const sortByUpdatedAtOrCreatedAtDesc = (object1, object2) => {
   const time2 = object2.updatedAt != null ? object2.updatedAt : object2.createdAt;
   if (time1 < time2)
     return 1;
-  else if (time1 === time2)
+  else if (time1 > time2)
     return -1;
   return 0;
 };
