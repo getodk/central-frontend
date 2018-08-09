@@ -1,4 +1,3 @@
-import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
@@ -26,149 +25,183 @@ describe('FormOverview', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    describe('no submissions', () => {
-      let app;
-      beforeEach(() => {
-        testData.extendedForms.createPast(1, { hasSubmission: false });
-      });
+    const loadOverview = ({
+      attachmentCount = 0,
+      allAttachmentsExist,
+      hasSubmission = false,
+      formIsOpen = true,
+      fieldKeyCount = 0
+    }) => {
+      testData.extendedForms.createPast(1, { hasSubmission, isOpen: formIsOpen });
+      if (attachmentCount !== 0) {
+        testData.extendedFormAttachments.createPast(
+          attachmentCount,
+          { exists: allAttachmentsExist }
+        );
+      }
       // Using mockRoute() rather than mockHttp(), because FormOverview uses
       // <router-link>.
-      beforeEach(() => mockRoute(overviewPath(testData.extendedForms.last()))
+      return mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponses(component => {
-          app = component;
+        // Not using testData, because fieldKeyCount may be fairly large, and
+        // the component only uses the array length.
+        .respondWithData(() => new Array(fieldKeyCount));
+    };
+
+    describe('submission count', () => {
+      it('no submissions', () =>
+        loadOverview({ hasSubmission: false }).afterResponses(app => {
+          app.find('.form-overview-step')[2].find('p')[1].text().trim()
+            .should.containEql('Nobody has submitted any data to this form yet.');
+          app.find('.form-overview-step')[3].find('p')[1].text().trim()
+            .should.containEql('Once there is data for this form,');
         }));
 
-      describe('step 3', () => {
-        it('is the current step', () => {
-          const title = app.find('.form-overview-step')[2].first('p');
-          title.hasClass('text-success').should.be.false();
-          title.hasClass('text-muted').should.be.false();
-        });
-
-        it('indicates that there are no submissions', () => {
-          const p = app.find('.form-overview-step')[2].find('p')[1];
-          p.text().trim().should.containEql('Nobody has submitted any data to this form yet.');
-        });
-      });
-
-      it('step 4 indicates that there are no submissions', () => {
-        const p = app.find('.form-overview-step')[3].find('p')[1];
-        p.text().trim().should.containEql('Once there is data for this form,');
-      });
-    });
-
-    describe('form has submissions', () => {
-      let app;
-      beforeEach(() => {
-        testData.extendedForms.createPast(1, { hasSubmission: true });
-      });
-      beforeEach(() => mockRoute(overviewPath(testData.extendedForms.last()))
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponses(component => {
-          app = component;
+      it('at least one submission', () =>
+        loadOverview({ hasSubmission: true }).afterResponses(app => {
+          const count = testData.extendedForms.last().submissions
+            .toLocaleString();
+          app.find('.form-overview-step')[2].find('p')[1].text().trim()
+            .should.containEql(count);
+          app.find('.form-overview-step')[3].find('p')[1].text().trim()
+            .should.containEql(count);
         }));
-
-      describe('step 3', () => {
-        it('is marked as complete', () => {
-          const title = app.find('.form-overview-step')[2].first('p');
-          title.hasClass('text-success').should.be.true();
-        });
-
-        it('shows the number of submissions', () => {
-          const p = app.find('.form-overview-step')[2].find('p')[1];
-          const count = testData.extendedForms.last().submissions;
-          p.text().trim().should.containEql(count.toLocaleString());
-        });
-      });
-
-      describe('step 4', () => {
-        it('is the current step', () => {
-          const title = app.find('.form-overview-step')[3].first('p');
-          title.hasClass('text-success').should.be.false();
-        });
-
-        it('shows the number of submissions', () => {
-          const p = app.find('.form-overview-step')[3].find('p')[1];
-          const count = testData.extendedForms.last().submissions;
-          p.text().trim().should.containEql(count.toLocaleString());
-        });
-      });
     });
 
-    describe('step 3 indicates the number of app users', () => {
+    describe('app user count', () => {
       it('no app users', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
-          .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponses(app => {
-            const p = app.find('.form-overview-step')[2].find('p')[1];
-            p.text().trim().should.containEql('You do not have any App Users on this server yet');
-          }));
+        loadOverview({ fieldKeyCount: 0 }).afterResponses(app => {
+          app.find('.form-overview-step')[2].find('p')[1].text().trim()
+            .should.containEql('You do not have any App Users on this server yet');
+        }));
 
-      it('at least one app user', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
-          .respondWithData(() => {
-            const count = faker.random.number({ min: 1, max: 2000 });
-            return testData.simpleFieldKeys.createPast(count).sorted();
-          })
-          .afterResponses(app => {
-            const p = app.find('.form-overview-step')[2].find('p')[1];
-            const count = testData.simpleFieldKeys.size;
-            p.text().trim().should.containEql(` ${count.toLocaleString()} `);
-          }));
+      it('at least one app user', () => {
+        const fieldKeyCount = 1000;
+        return loadOverview({ fieldKeyCount }).afterResponses(app => {
+          app.find('.form-overview-step')[2].find('p')[1].text().trim()
+            .should.containEql(fieldKeyCount.toLocaleString());
+        });
+      });
     });
 
-    describe('step 5', () => {
-      it('is not the current step, if the form is open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
-          .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponses(app => {
-            const title = app.find('.form-overview-step')[4].first('p');
-            title.hasClass('text-muted').should.be.true();
-          }));
+    it('marks step 5 as complete if form state is changed from open', () =>
+      loadOverview({ formIsOpen: true })
+        .afterResponses(app => {
+          const title = app.find('.form-overview-step')[4].first('p');
+          title.hasClass('text-success').should.be.false();
+        })
+        .route(`/forms/${testData.extendedForms.last().xmlFormId}/settings`)
+        .request(app => {
+          const formEdit = app.first('#form-edit');
+          const closed = formEdit.first('input[type="radio"][value="closed"]');
+          return trigger.change(closed);
+        })
+        .respondWithSuccess()
+        .complete()
+        .route(overviewPath(testData.extendedForms.last()))
+        .then(app => {
+          const title = app.find('.form-overview-step')[4].first('p');
+          title.hasClass('text-success').should.be.true();
+        }));
 
-      it('is marked as complete, if the form is not open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: false }).last()))
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
-          .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponses(app => {
-            const title = app.find('.form-overview-step')[4].first('p');
-            title.hasClass('text-success').should.be.true();
-          }));
+    describe('step stages', () => {
+      // Array of test cases
+      const cases = [
+        {
+          allAttachmentsExist: false,
+          hasSubmission: false,
+          formIsOpen: false,
+          completedSteps: [0, 4],
+          currentStep: 1
+        },
+        {
+          allAttachmentsExist: false,
+          hasSubmission: false,
+          formIsOpen: true,
+          completedSteps: [0],
+          currentStep: 1
+        },
+        {
+          allAttachmentsExist: false,
+          hasSubmission: true,
+          formIsOpen: false,
+          completedSteps: [0, 2, 4],
+          currentStep: 1
+        },
+        {
+          allAttachmentsExist: false,
+          hasSubmission: true,
+          formIsOpen: true,
+          completedSteps: [0, 2],
+          currentStep: 1
+        },
+        {
+          allAttachmentsExist: true,
+          hasSubmission: false,
+          formIsOpen: false,
+          completedSteps: [0, 1, 4],
+          currentStep: 2
+        },
+        {
+          allAttachmentsExist: true,
+          hasSubmission: false,
+          formIsOpen: true,
+          completedSteps: [0, 1],
+          currentStep: 2
+        },
+        {
+          allAttachmentsExist: true,
+          hasSubmission: true,
+          formIsOpen: false,
+          completedSteps: [0, 1, 2, 4],
+          currentStep: 3
+        },
+        {
+          allAttachmentsExist: true,
+          hasSubmission: true,
+          formIsOpen: true,
+          completedSteps: [0, 1, 2],
+          currentStep: 3
+        }
+      ];
 
-      it('is marked as complete if the state is changed from open', () =>
-        mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
-          .respondWithData(() => testData.simpleFieldKeys.sorted())
-          .afterResponses(app => {
-            const title = app.find('.form-overview-step')[4].first('p');
-            title.hasClass('text-success').should.be.false();
-          })
-          .route(`/forms/${testData.extendedForms.last().xmlFormId}/settings`)
-          .request(app => {
-            const formEdit = app.first('#form-edit');
-            const closed = formEdit.first('input[type="radio"][value="closed"]');
-            return trigger.change(closed).then(() => app);
-          })
-          .respondWithSuccess()
-          .complete()
-          .route(overviewPath(testData.extendedForms.last()))
-          .then(app => {
-            const title = app.find('.form-overview-step')[4].first('p');
-            title.hasClass('text-success').should.be.true();
-          }));
+      // Tests the stages of the form overview steps for a single test case.
+      const testStepStages = ({ completedSteps, currentStep, ...loadOverviewArgs }) =>
+        loadOverview(loadOverviewArgs).afterResponses(app => {
+          const steps = app.find('.form-overview-step');
+          steps.length.should.equal(5);
+          for (let i = 0; i < steps.length; i += 1) {
+            const heading = steps[i].first('.form-overview-step-heading');
+            const icon = heading.first('.icon-check-circle');
+            if (completedSteps.includes(i)) {
+              heading.hasClass('text-success').should.be.true();
+              heading.hasClass('text-muted').should.be.false();
+              icon.hasClass('text-muted').should.be.false();
+            } else if (i === currentStep) {
+              heading.hasClass('text-success').should.be.false();
+              heading.hasClass('text-muted').should.be.false();
+              icon.hasClass('text-muted').should.be.true();
+            } else {
+              heading.hasClass('text-success').should.be.false();
+              heading.hasClass('text-muted').should.be.true();
+              icon.hasClass('text-muted').should.be.true();
+            }
+          }
+        });
+
+      for (let i = 0; i < cases.length; i += 1) {
+        const testCase = cases[i];
+        describe(`case ${i}`, () => {
+          it('1 attachment', () =>
+            testStepStages({ ...cases[i], attachmentCount: 1 }));
+
+          if (testCase.allAttachmentsExist) {
+            it('no attachments', () =>
+              testStepStages({ ...cases[i], attachmentCount: 0 }));
+          }
+        });
+      }
     });
   });
 });
