@@ -51,13 +51,17 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 
 const NO_FILE_MESSAGE = 'Please choose a file.';
 
 export default {
   name: 'FormNew',
-  mixins: [request()],
+  mixins: [
+    dropZone({ keepAlive: false, eventNamespace: 'form-new' }),
+    request()
+  ],
   props: {
     state: {
       type: Boolean,
@@ -66,9 +70,8 @@ export default {
   },
   data() {
     return {
-      requestId: null,
-      // true if a dragged file is over the drop zone and false if not.
       isOverDropZone: false,
+      requestId: null,
       reading: false,
       filename: null,
       xml: null
@@ -85,24 +88,14 @@ export default {
         'form-new-disabled': this.disabled,
         'form-new-dragover': this.isOverDropZone
       };
-    },
-    // Used to prevent child elements of #form-new-drop-zone from triggering
-    // dragleave events upon hover. Does not work in IE 10.
-    pointerEvents() {
-      return this.isOverDropZone ? { 'pointer-events': 'none' } : {};
     }
   },
   mounted() {
     $(this.$refs.input)
       .on('change.form-new', (event) => this.readFile(event.target.files));
-    $(this.$refs.dropZone)
-      .on('dragover.form-new', this.dragover)
-      .on('dragleave.form-new', this.dragleave)
-      .on('drop.form-new', this.drop);
   },
   beforeDestroy() {
     $(this.$refs.input).off('.form-new');
-    $(this.$refs.dropZone).off('.form-new');
   },
   methods: {
     problemToAlert(problem) {
@@ -143,23 +136,6 @@ export default {
     },
     clickFileInput() {
       this.$refs.input.click();
-    },
-    dragover(event) {
-      event.preventDefault();
-      // Putting this line in a dragenter listener did not work. Is it possible
-      // that a child element of #form-new-drop-zone could trigger a dragleave
-      // event before the dragenter listener is called?
-      this.isOverDropZone = true;
-      // eslint-disable-next-line no-param-reassign
-      if (!this.disabled) event.originalEvent.dataTransfer.dropEffect = 'copy';
-    },
-    dragleave() {
-      this.isOverDropZone = false;
-    },
-    drop(event) {
-      event.preventDefault();
-      if (!this.disabled) this.readFile(event.originalEvent.dataTransfer.files);
-      this.isOverDropZone = false;
     },
     create() {
       if (this.xml == null) {
