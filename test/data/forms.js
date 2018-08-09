@@ -7,6 +7,7 @@ import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
 import { validateDateOrder, validateUniqueCombination } from './validate';
 
 export const extendedForms = dataStore({
+  id: false,
   factory: ({
     hasInstanceId = faker.random.boolean(),
     hasName = faker.random.boolean(),
