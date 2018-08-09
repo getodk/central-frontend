@@ -37,12 +37,6 @@ export const extendedSubmissions = dataStore({
         submitterName: submitter.displayName
       }
     };
-    const pastDateTime = (formatString) => {
-      const dateTime = DateTime.fromJSDate(faker.date.past());
-      const formatted = dateTime.toFormat(formatString);
-      if (faker.random.boolean()) return formatted;
-      return `${formatted}+0100`;
-    };
     const schemaInstanceId = form._schema.find(question => {
       const { path } = question;
       return (path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
@@ -60,12 +54,20 @@ export const extendedSubmissions = dataStore({
       oData.testInt = faker.random.number();
     if (oData.testDecimal == null && hasDecimal)
       oData.testDecimal = faker.random.number({ precision: 0.00001 });
-    if (oData.testDate == null && hasDate)
-      oData.testDate = pastDateTime('yyyy-MM-dd');
-    if (oData.testTime == null && hasTime)
-      oData.testTime = pastDateTime('HH:mm:ss');
-    if (oData.testDateTime == null && hasDateTime)
-      oData.testDateTime = pastDateTime('yyyy-MM-dd HH:mm:ss');
+    if (oData.testDate == null && hasDate) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testDate = dateTime.toFormat('yyyy-MM-dd');
+    }
+    if (oData.testTime == null && hasTime) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testTime = dateTime.toFormat('HH:mm:ss');
+      if (faker.random.boolean()) oData.testTime += '+01:00';
+    }
+    if (oData.testDateTime == null && hasDateTime) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testDateTime = dateTime.toISO({ includeOffset: false });
+      if (faker.random.boolean()) oData.testDateTime += '+01:00';
+    }
     if (oData.testGeopoint == null && hasGeopoint) {
       const coordinates = [
         faker.random.number({ min: -85, max: 85, precision: 0.0000000001 }),
