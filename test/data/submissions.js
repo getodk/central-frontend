@@ -69,9 +69,10 @@ export const extendedSubmissions = dataStore({
       if (faker.random.boolean()) oData.testDateTime += '+01:00';
     }
     if (oData.testGeopoint == null && hasGeopoint) {
+      // [longitude, latitude], not [latitude, longitude]
       const coordinates = [
-        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 }),
-        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 })
+        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 }),
+        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 })
       ];
       if (faker.random.boolean()) coordinates.push(faker.random.number());
       oData.testGeopoint = { type: 'Point', coordinates };

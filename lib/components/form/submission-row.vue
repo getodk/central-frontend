@@ -118,29 +118,21 @@ export default {
         case 'dateTime':
           return DateTime.fromISO(rawValue).toFormat('yyyy/MM/dd HH:mm:ss');
 
-        case 'geopoint': {
-          const localeCoordinates = new Array(rawValue.coordinates.length);
-          // Latitude and longitude
-          for (let i = 0; i < 2; i += 1) {
-            localeCoordinates[i] = parseFloat(rawValue.coordinates[i])
-              // 7 decimal places provide precision of 0.011m at the equator.
+        case 'geopoint':
+          return rawValue
+            .coordinates
+            .map((coordinate, i) => {
               // Limiting the number of decimal places helps ensure that the
-              // formatted value fits within the column width.
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 7,
-                maximumFractionDigits: 7
+              // formatted value fits within the column width. For longitude and
+              // latitude, 7 decimal places provide precision of 0.011m at the
+              // equator.
+              const digits = i < 2 ? 7 : 1;
+              return coordinate.toLocaleString(undefined, {
+                minimumFractionDigits: digits,
+                maximumFractionDigits: digits
               });
-          }
-          // Altitude
-          if (rawValue.coordinates.length === 3) {
-            localeCoordinates[2] = parseFloat(rawValue.coordinates[2])
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1
-              });
-          }
-          return localeCoordinates.join(' ');
-        }
+            })
+            .join(' ');
 
         default:
           return rawValue;
