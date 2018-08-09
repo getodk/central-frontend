@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
-        <div :style="pointerEvents">
+        <div>
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
           <button :disabled="disabled" type="button" class="btn btn-primary"
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           to upload.
         </div>
         <div v-show="filename != null" id="form-new-filename"
-          :style="pointerEvents" class="text-monospace">
+          class="text-monospace">
           {{ filename }}
         </div>
       </div>
