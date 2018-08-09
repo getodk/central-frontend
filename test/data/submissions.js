@@ -110,3 +110,10 @@ export const extendedSubmissions = dataStore({
   ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
+
+export const submissionOData = () => {
+  if (extendedSubmissions.size === 0) return {};
+  return {
+    value: extendedSubmissions.sorted().map(submission => submission._oData)
+  };
+};

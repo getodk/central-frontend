@@ -23,7 +23,7 @@ describe('FormSubmissions', () => {
       return mockRouteThroughLogin(path)
         .respondWithData(() => form)
         .respondWithData(() => form._schema)
-        .respondWithData(() => [])
+        .respondWithData(testData.submissionOData)
         .afterResponses(app => app.vm.$route.path.should.equal(path));
     });
   });
@@ -32,10 +32,6 @@ describe('FormSubmissions', () => {
     beforeEach(mockLogin);
 
     const form = () => testData.extendedForms.firstOrCreatePast();
-    const submissionOData = () => {
-      const submissions = testData.extendedSubmissions.sorted();
-      return { value: submissions.map(submission => submission._oData) };
-    };
     const loadSubmissions = (...args) => {
       testData.extendedSubmissions.createPast(...args);
       return mockHttp()
@@ -43,7 +39,7 @@ describe('FormSubmissions', () => {
           propsData: { form: form() }
         })
         .respondWithData(() => form()._schema)
-        .respondWithData(submissionOData);
+        .respondWithData(testData.submissionOData);
     };
 
     describe('table data', () => {
@@ -329,7 +325,7 @@ describe('FormSubmissions', () => {
               collection: testData.extendedSubmissions,
               respondWithData: [
                 () => form()._schema,
-                submissionOData
+                testData.submissionOData
               ],
               tableSelector: `#form-submissions-table${i}`
             }));
