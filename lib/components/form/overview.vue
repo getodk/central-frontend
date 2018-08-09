@@ -15,24 +15,17 @@ except according to the terms contained in the LICENSE file.
     <div v-if="fieldKeyCount !== null" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
-        <div class="form-overview-step">
-          <p class="text-success">
-            <span class="icon-check-circle"></span>Create and upload form
-          </p>
+        <form-overview-step :stage="stepStage(0)">
+          <template slot="title">Create and upload form</template>
           <p>
             <strong>Great work!</strong> Your form design has been loaded
             successfully. It is ready to accept submissions. You will have to
             start over with a new form if you wish to make changes to the form
             questions.
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textSuccess(form.submissions !== 0)">
-            <span :class="textMuted(form.submissions === 0)"
-              class="icon-check-circle">
-            </span>Download form on survey clients and submit data
-          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(1)">
+          <template slot="title">Download form on survey clients and submit data</template>
           <p>
             <template v-if="form.submissions === 0">
               Nobody has submitted any data to this form yet.
@@ -59,13 +52,9 @@ except according to the terms contained in the LICENSE file.
               on this server, but you can always add more.
             </template>
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textMuted(form.submissions === 0)">
-            <span class="icon-check-circle text-muted"></span>Evaluate and
-            analyze submitted data
-          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(2)">
+          <template slot="title">Evaluate and analyze submitted data"</template>
           <p>
             <template v-if="form.submissions === 0">
               Once there is data for this form, you can export or synchronize it
@@ -80,12 +69,9 @@ except according to the terms contained in the LICENSE file.
             You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textSuccessElseMuted(form.state !== 'open')">
-            <span class="icon-check-circle"></span>Manage form retirement
-          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(3)" last>
+          <template slot="title">Manage form retirement</template>
           <p>
             As you come to the end of your data collection project, you can use
             the Form Lifecycle controls on
@@ -95,17 +81,19 @@ except according to the terms contained in the LICENSE file.
             to control whether, for example, App Users will be able to see or
             create new submissions to this form.
           </p>
-        </div>
+        </form-overview-step>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import FormOverviewStep from './overview-step.vue';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormOverview',
+  components: { FormOverviewStep },
   mixins: [request()],
   props: {
     form: {
@@ -123,6 +111,20 @@ export default {
       fieldKeyCount: null
     };
   },
+  computed: {
+    // Indicates whether each step is complete.
+    stepCompletion() {
+      return [
+        true,
+        this.form.submissions !== 0,
+        false,
+        this.form.state !== 'open'
+      ];
+    },
+    currentStep() {
+      return this.stepCompletion.findIndex(isComplete => !isComplete);
+    }
+  },
   created() {
     this.fetchData();
   },
@@ -136,14 +138,10 @@ export default {
         })
         .catch(() => {});
     },
-    textSuccess(state) {
-      return { 'text-success': state };
-    },
-    textMuted(state) {
-      return { 'text-muted': state };
-    },
-    textSuccessElseMuted(isSuccess) {
-      return { 'text-success': isSuccess, 'text-muted': !isSuccess };
+    stepStage(step) {
+      if (step === this.currentStep) return 'current';
+      if (this.stepCompletion[step]) return 'complete';
+      return 'later';
     },
     formPath(suffix) {
       return `/forms/${this.form.xmlFormId}/${suffix}`;
@@ -151,26 +149,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-.form-overview-step {
-  p {
-    margin-left: 21px;
-    line-height: 17px;
-    max-width: 565px;
-
-    &:first-child {
-      font-weight: bold;
-      margin-left: 0;
-      margin-bottom: 5px;
-
-      .icon-check-circle {
-        display: inline-block;
-        font-size: 17px;
-        vertical-align: -2px;
-        width: 21px;
-      }
-    }
-  }
-}
-</style>
