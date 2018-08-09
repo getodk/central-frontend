@@ -85,7 +85,7 @@ export default {
       };
     },
     // Used to prevent child elements of #form-new-drop-zone from triggering
-    // dragleave events upon hover. Does not work for IE9 or 10.
+    // dragleave events upon hover. Does not work in IE 10.
     pointerEvents() {
       return this.isOverDropZone ? { 'pointer-events': 'none' } : {};
     }
