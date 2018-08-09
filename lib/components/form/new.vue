@@ -137,6 +137,9 @@ export default {
     clickFileInput() {
       this.$refs.input.click();
     },
+    ondrop(jQueryEvent) {
+      this.readFile(jQueryEvent.originalEvent.dataTransfer.files);
+    },
     create() {
       if (this.xml == null) {
         this.$alert().info(NO_FILE_MESSAGE);
