@@ -37,6 +37,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -69,7 +70,7 @@ export default {
       this
         .get(`/forms/${this.xmlFormId}`, { headers })
         .then(({ data }) => {
-          this.form = data;
+          this.form = new Form(data);
         })
         .catch(() => {});
     },
@@ -77,7 +78,7 @@ export default {
       return `/forms/${this.xmlFormId}`;
     },
     updateState(newState) {
-      this.form.state = newState;
+      this.form = this.form.with({ state: newState });
     }
   }
 };
