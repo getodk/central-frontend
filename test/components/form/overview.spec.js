@@ -41,21 +41,21 @@ describe('FormOverview', () => {
           app = component;
         }));
 
-      describe('step 2', () => {
+      describe('step 3', () => {
         it('is the current step', () => {
-          const title = app.find('.form-overview-step')[1].first('p');
+          const title = app.find('.form-overview-step')[2].first('p');
           title.hasClass('text-success').should.be.false();
           title.hasClass('text-muted').should.be.false();
         });
 
         it('indicates that there are no submissions', () => {
-          const p = app.find('.form-overview-step')[1].find('p')[1];
+          const p = app.find('.form-overview-step')[2].find('p')[1];
           p.text().trim().should.containEql('Nobody has submitted any data to this form yet.');
         });
       });
 
-      it('step 3 indicates that there are no submissions', () => {
-        const p = app.find('.form-overview-step')[2].find('p')[1];
+      it('step 4 indicates that there are no submissions', () => {
+        const p = app.find('.form-overview-step')[3].find('p')[1];
         p.text().trim().should.containEql('Once there is data for this form,');
       });
     });
@@ -73,23 +73,10 @@ describe('FormOverview', () => {
           app = component;
         }));
 
-      describe('step 2', () => {
-        it('is marked as complete', () => {
-          const title = app.find('.form-overview-step')[1].first('p');
-          title.hasClass('text-success').should.be.true();
-        });
-
-        it('shows the number of submissions', () => {
-          const p = app.find('.form-overview-step')[1].find('p')[1];
-          const count = testData.extendedForms.last().submissions;
-          p.text().trim().should.containEql(count.toLocaleString());
-        });
-      });
-
       describe('step 3', () => {
-        it('is the current step', () => {
+        it('is marked as complete', () => {
           const title = app.find('.form-overview-step')[2].first('p');
-          title.hasClass('text-success').should.be.false();
+          title.hasClass('text-success').should.be.true();
         });
 
         it('shows the number of submissions', () => {
@@ -98,16 +85,29 @@ describe('FormOverview', () => {
           p.text().trim().should.containEql(count.toLocaleString());
         });
       });
+
+      describe('step 4', () => {
+        it('is the current step', () => {
+          const title = app.find('.form-overview-step')[3].first('p');
+          title.hasClass('text-success').should.be.false();
+        });
+
+        it('shows the number of submissions', () => {
+          const p = app.find('.form-overview-step')[3].find('p')[1];
+          const count = testData.extendedForms.last().submissions;
+          p.text().trim().should.containEql(count.toLocaleString());
+        });
+      });
     });
 
-    describe('step 2 indicates the number of app users', () => {
+    describe('step 3 indicates the number of app users', () => {
       it('no app users', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponses(app => {
-            const p = app.find('.form-overview-step')[1].find('p')[1];
+            const p = app.find('.form-overview-step')[2].find('p')[1];
             p.text().trim().should.containEql('You do not have any App Users on this server yet');
           }));
 
@@ -120,20 +120,20 @@ describe('FormOverview', () => {
             return testData.simpleFieldKeys.createPast(count).sorted();
           })
           .afterResponses(app => {
-            const p = app.find('.form-overview-step')[1].find('p')[1];
+            const p = app.find('.form-overview-step')[2].find('p')[1];
             const count = testData.simpleFieldKeys.size;
             p.text().trim().should.containEql(` ${count.toLocaleString()} `);
           }));
     });
 
-    describe('step 4', () => {
+    describe('step 5', () => {
       it('is not the current step, if the form is open', () =>
         mockRoute(overviewPath(testData.extendedForms.createPast(1, { isOpen: true }).last()))
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponses(app => {
-            const title = app.find('.form-overview-step')[3].first('p');
+            const title = app.find('.form-overview-step')[4].first('p');
             title.hasClass('text-muted').should.be.true();
           }));
 
@@ -143,7 +143,7 @@ describe('FormOverview', () => {
           .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponses(app => {
-            const title = app.find('.form-overview-step')[3].first('p');
+            const title = app.find('.form-overview-step')[4].first('p');
             title.hasClass('text-success').should.be.true();
           }));
 
@@ -153,7 +153,7 @@ describe('FormOverview', () => {
           .respondWithData(() => testData.extendedFormAttachments.sorted())
           .respondWithData(() => testData.simpleFieldKeys.sorted())
           .afterResponses(app => {
-            const title = app.find('.form-overview-step')[3].first('p');
+            const title = app.find('.form-overview-step')[4].first('p');
             title.hasClass('text-success').should.be.false();
           })
           .route(`/forms/${testData.extendedForms.last().xmlFormId}/settings`)
@@ -166,7 +166,7 @@ describe('FormOverview', () => {
           .complete()
           .route(overviewPath(testData.extendedForms.last()))
           .then(app => {
-            const title = app.find('.form-overview-step')[3].first('p');
+            const title = app.find('.form-overview-step')[4].first('p');
             title.hasClass('text-success').should.be.true();
           }));
     });

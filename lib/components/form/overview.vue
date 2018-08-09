@@ -24,7 +24,9 @@ except according to the terms contained in the LICENSE file.
             questions.
           </p>
         </form-overview-step>
-        <form-overview-step v-if="attachments.length !== 0" :stage="stepStage(1)">
+        <!-- Using v-show rather than v-if so that the number of steps is
+        consistent, which makes testing easier. -->
+        <form-overview-step v-show="attachments.length !== 0" :stage="stepStage(1)">
           <template slot="title">Upload form media files</template>
           <p>
             Your form design references files that we need in order to present
