@@ -7,6 +7,11 @@ import { mountAndMark } from './destroy';
 import { router } from '../lib/router';
 import { trigger } from './util';
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// setHttp()
+
 // Sets Vue.prototype.$http to a mock.
 export const setHttp = (respond) => {
   const http = (config) => respond(config);
@@ -23,7 +28,10 @@ export const setHttp = (respond) => {
   Vue.prototype.$http = http;
 };
 
-const statusIs2xx = (status) => status >= 200 && status < 300;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// mockHttp()
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -135,6 +143,9 @@ cycles: series can be chained. For example:
 Notice how the mounted component is passed to each request() and afterResponse()
 callback, even in the second series.
 */
+
+const statusIs2xx = (status) => status >= 200 && status < 300;
+
 class MockHttp {
   constructor(
     previousPromise = null,
