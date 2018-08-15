@@ -2,9 +2,8 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
-import { logOut } from '../lib/session';
 import { mountAndMark } from './destroy';
-import { router } from '../lib/router';
+import { router, routerState } from '../lib/router';
 import { trigger } from './util';
 
 
@@ -149,6 +148,7 @@ const statusIs2xx = (status) => status >= 200 && status < 300;
 class MockHttp {
   constructor({
     previousPromise = null,
+    route = null,
     mount = null,
     request = null,
     responses = [],
@@ -159,6 +159,7 @@ class MockHttp {
     this._previousPromise = previousPromise;
 
     // State specific to the current series of request-response cycles
+    this._route = route;
     this._mount = mount;
     this._request = request;
     // Array of response callbacks
@@ -169,6 +170,7 @@ class MockHttp {
   _with(options) {
     return new MockHttp({
       previousPromise: this._previousPromise,
+      route: this._route,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -178,9 +180,28 @@ class MockHttp {
   }
 
   //////////////////////////////////////////////////////////////////////////////
-  // REQUESTS
+  // ROUTING
+
+  route(location, mountOptions = {}) {
+    if (this._route != null)
+      throw new Error('cannot call route() more than once in a single chain');
+    if (this._mount != null)
+      throw new Error('cannot call both route() and mount() in a single chain');
+    if (this._request != null)
+      throw new Error('cannot call both route() and request() in a single chain');
+    if (this._previousPromise != null)
+      throw new Error('cannot route after first series in chain');
+    const route = location;
+    const mount = () => mountAndMark(App, { ...mountOptions, router });
+    return this._with({ route, mount });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // OTHER REQUESTS
 
   mount(component, options = {}) {
+    if (this._route != null)
+      throw new Error('cannot call both route() and mount() in a single chain');
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
@@ -190,6 +211,8 @@ class MockHttp {
 
   // The callback may optionally return a Promise.
   request(callback) {
+    if (this._route != null)
+      throw new Error('cannot call both route() and request() in a single chain');
     if (this._request != null)
       throw new Error('cannot call request() more than once in a single series');
     // Wrap the callback in an arrow function so that when we call
@@ -273,13 +296,13 @@ class MockHttp {
   MockHttp. */
   afterResponses(callback) {
     if (this._mount == null && this._request == null)
-      throw new Error('mount() and/or request() required');
+      throw new Error('route(), mount(), and/or request() required');
     this._initAfterResponses();
     const request = this._request != null ? this._request : () => {};
     const promise = this._initialPromise()
       // setHttp() and _restoreHttp() are both run in finally() calls.
       .finally(() => setHttp(this._http()))
-      .then(({ component }) => this._setComponent(component))
+      .then(({ component }) => this._mountAndRoute(component))
       .then(component => Promise.resolve(request(component))
         .then(() => component))
       .then(component => this._waitForResponsesToBeProcessed()
@@ -360,13 +383,36 @@ class MockHttp {
     }
   }
 
-  _setComponent(previousComponent) {
-    if (this._previousPromise != null)
-      this._component = previousComponent;
-    else if (this._mount != null) {
-      router.push('/_setHttpAndMount');
-      this._component = this._mount();
-    }
+  _mountAndRoute(previousComponent) {
+    return new Promise((resolve, reject) => {
+      if (this._route == null) {
+        if (this._previousPromise != null)
+          this._component = previousComponent;
+        else if (this._mount != null)
+          this._component = this._mount();
+        resolve(this._component);
+      } else {
+        router.push(
+          // Navigate to a page that will not send a request.
+          '/_mountAndRoute',
+          () => {
+            this._component = this._mount();
+            // The onAbort callback seems to be called when the initial
+            // navigation is aborted, even if a navigation is ultimately
+            // confirmed. Here, we examine the router state to determine whether
+            // a navigation was ultimately confirmed.
+            const onAbort = () => Vue.prototype.$nextTick(() => {
+              if (routerState.lastNavigationWasConfirmed)
+                resolve(this._component);
+              else
+                reject(new Error('last navigation was not confirmed'));
+            });
+            router.push(this._route, () => resolve(this._component), onAbort);
+          },
+          () => reject(new Error('navigation aborted'))
+        );
+      }
+    });
   }
 
   _waitForResponsesToBeProcessed() {
@@ -505,18 +551,6 @@ class MockHttp {
 
 export const mockHttp = () => new MockHttp();
 
-export const mockRoute = (location, mountOptions = {}) => {
-  const session = Vue.prototype.$session;
-  // If the user is logged in, mounting the app with the router will redirect
-  // the user to the forms list, resulting in an HTTP request. To prevent that,
-  // any user who is logged in is temporarily logged out. That way, mounting the
-  // app will first redirect the user to login, resulting in no initial HTTP
-  // request.
-  if (session.loggedIn()) logOut();
-  return mockHttp()
-    .mount(App, { ...mountOptions, router })
-    .request(app => {
-      if (session.loggedIn()) session.updateGlobals();
-      app.vm.$router.push(location);
-    });
-};
+// Deprecated. Use mockHttp().route().
+export const mockRoute = (location, mountOptions = {}) =>
+  mockHttp().route(location, mountOptions);

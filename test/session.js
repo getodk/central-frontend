@@ -1,11 +1,9 @@
 import Vue from 'vue';
 
-import App from '../lib/components/app.vue';
 import testData from './data';
 import { fillForm, trigger } from './util';
 import { logIn } from '../lib/session';
 import { mockHttp } from './http';
-import { router } from '../lib/router';
 
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
@@ -28,14 +26,13 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
   if (Vue.prototype.$session.loggedIn())
     throw new Error('session cannot be logged in');
   return mockHttp()
-    .mount(App, { ...mountOptions, router })
+    .route(location, mountOptions)
+    .respondWithProblem(404)
+    .complete()
     .request(app => {
-      app.vm.$router.push(location);
-      return Vue.nextTick().then(() => {
-        if (app.vm.$route.path !== '/login')
-          throw new Error('user was not routed to login');
-        return submitLoginForm(app);
-      });
+      if (app.vm.$route.path !== '/login')
+        throw new Error('user was not routed to login');
+      return submitLoginForm(app);
     })
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.administrators.first());
