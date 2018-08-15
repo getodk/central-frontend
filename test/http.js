@@ -147,14 +147,14 @@ callback, even in the second series.
 const statusIs2xx = (status) => status >= 200 && status < 300;
 
 class MockHttp {
-  constructor(
+  constructor({
     previousPromise = null,
     component = null,
     mount = null,
     request = null,
     responses = [],
     beforeEachResponse = null
-  ) {
+  } = {}) {
     // State from the previous series of request-response cycles (if any)
     // Promise from the previous series, used to chain series.
     this._previousPromise = previousPromise;
@@ -169,6 +169,18 @@ class MockHttp {
     this._beforeEachResponse = beforeEachResponse;
   }
 
+  _with(options) {
+    return new MockHttp({
+      previousPromise: this._previousPromise,
+      component: this._component,
+      mount: this._mount,
+      request: this._request,
+      responses: this._responses,
+      beforeEachResponse: this._beforeEachResponse,
+      ...options
+    });
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   // REQUESTS
 
@@ -177,15 +189,7 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot mount component after first series in chain');
-    const mount = () => mountAndMark(component, options);
-    return new MockHttp(
-      this._previousPromise,
-      this._component,
-      mount,
-      this._request,
-      this._responses,
-      this._beforeEachResponse
-    );
+    return this._with({ mount: () => mountAndMark(component, options) });
   }
 
   request(callback) {
@@ -193,15 +197,7 @@ class MockHttp {
       throw new Error('cannot call request() more than once in a single series');
     // Wrap the callback in an arrow function so that when we call
     // this._request(), the callback is not bound to the MockHttp.
-    const request = (component) => callback(component);
-    return new MockHttp(
-      this._previousPromise,
-      this._component,
-      this._mount,
-      request,
-      this._responses,
-      this._beforeEachResponse
-    );
+    return this._with({ request: (component) => callback(component) });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -253,15 +249,7 @@ class MockHttp {
   }
 
   _respond(callback) {
-    const responses = [...this._responses, callback];
-    return new MockHttp(
-      this._previousPromise,
-      this._component,
-      this._mount,
-      this._request,
-      responses,
-      this._beforeEachResponse
-    );
+    return this._with({ responses: [...this._responses, callback] });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -274,14 +262,7 @@ class MockHttp {
     // Wrap the callback in an arrow function so that when we call
     // this._beforeEachResponse(), the callback is not bound to the MockHttp.
     const beforeEachResponse = (component) => callback(component);
-    return new MockHttp(
-      this._previousPromise,
-      this._component,
-      this._mount,
-      this._request,
-      this._responses,
-      beforeEachResponse
-    );
+    return this._with({ beforeEachResponse });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -303,7 +284,7 @@ class MockHttp {
       .finally(() => this._restoreHttp())
       .then(() => this._checkStateAfterWait())
       .then(() => callback(this._component));
-    return new MockHttp(promise, this._component);
+    return new MockHttp({ previousPromise: promise, component: this._component });
   }
 
   afterResponse(callback) { return this.afterResponses(callback); }
