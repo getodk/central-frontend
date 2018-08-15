@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
 import { router, routerState } from '../lib/router';
 import { trigger } from './util';
@@ -149,6 +150,8 @@ class MockHttp {
   constructor({
     previousPromise = null,
     route = null,
+    beforeEachNavGuard = null,
+    afterEachNavGuard = null,
     mount = null,
     request = null,
     responses = [],
@@ -160,6 +163,8 @@ class MockHttp {
 
     // State specific to the current series of request-response cycles
     this._route = route;
+    this._beforeEachNavGuard = beforeEachNavGuard;
+    this._afterEachNavGuard = afterEachNavGuard;
     this._mount = mount;
     this._request = request;
     // Array of response callbacks
@@ -171,6 +176,8 @@ class MockHttp {
     return new MockHttp({
       previousPromise: this._previousPromise,
       route: this._route,
+      beforeEachNavGuard: this._beforeEachNavGuard,
+      afterEachNavGuard: this._afterEachNavGuard,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -194,6 +201,24 @@ class MockHttp {
     const route = location;
     const mount = () => mountAndMark(App, { ...mountOptions, router });
     return this._with({ route, mount });
+  }
+
+  beforeEachNav(callback) {
+    if (this._beforeEachNavGuard != null)
+      throw new Error('cannot call beforeEachNav() more than once in a single chain');
+    // Wrap the callback in an arrow function so that when we call
+    // this._beforeEachNavGuard(), the callback is not bound to the MockHttp.
+    const beforeEachNavGuard = (app, to, from) => callback(app, to, from);
+    return this._with({ beforeEachNavGuard });
+  }
+
+  afterEachNav(callback) {
+    if (this._afterEachNavGuard != null)
+      throw new Error('cannot call afterEachNav() more than once in a single chain');
+    // Wrap the callback in an arrow function so that when we call
+    // this._afterEachNavGuard(), the callback is not bound to the MockHttp.
+    const afterEachNavGuard = (app, to, from) => callback(app, to, from);
+    return this._with({ afterEachNavGuard });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -313,7 +338,10 @@ class MockHttp {
         return component;
       })
       .then(component => Promise.resolve(callback(component))
-        .then(result => ({ component, result })));
+        .then(result => ({ component, result })))
+      .finally(() => {
+        this._inProgress = false;
+      });
     return new MockHttp({ previousPromise: promise });
   }
 
@@ -321,7 +349,10 @@ class MockHttp {
   complete() { return this.afterResponses(component => component); }
 
   _initAfterResponses() {
+    this._inProgress = true;
     this._previousHttp = Vue.prototype.$http;
+    this._component = null;
+    this._errorFromBeforeEachNav = null;
     this._errorFromBeforeEachResponse = null;
     this._requestWithoutResponse = false;
     this._responseWithoutRequest = this._responses.length !== 0;
@@ -397,6 +428,17 @@ class MockHttp {
           '/_mountAndRoute',
           () => {
             this._component = this._mount();
+            if (this._beforeEachNavGuard != null) {
+              beforeEachNav((to, from) => {
+                if (!this._inProgress || this._errorFromBeforeEachNav != null)
+                  return;
+                try {
+                  this._beforeEachNavGuard(this._component, to, from);
+                } catch (e) {
+                  this._errorFromBeforeEachNav = e;
+                }
+              });
+            }
             // The onAbort callback seems to be called when the initial
             // navigation is aborted, even if a navigation is ultimately
             // confirmed. Here, we examine the router state to determine whether
@@ -424,11 +466,18 @@ class MockHttp {
   _restoreHttp() { Vue.prototype.$http = this._previousHttp; }
 
   _checkStateAfterWait() {
-    if (this._errorFromBeforeEachResponse != null)
+    if (this._errorFromBeforeEachNav != null) {
+      console.log('beforeEachNav() error:'); // eslint-disable-line no-console
+      throw this._errorFromBeforeEachNav;
+    }
+    if (this._errorFromBeforeEachResponse != null) {
+      // eslint-disable-next-line no-console
+      console.log('beforeEachResponse() error:');
       throw this._errorFromBeforeEachResponse;
-    else if (this._requestWithoutResponse)
+    }
+    if (this._requestWithoutResponse)
       throw new Error('request without response: no response specified for request');
-    else if (this._responseWithoutRequest)
+    if (this._responseWithoutRequest)
       throw new Error('response without request: not all responses were requested');
   }
 
