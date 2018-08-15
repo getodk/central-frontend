@@ -277,6 +277,7 @@ class MockHttp {
   afterResponses(callback) {
     if (this._mount == null && this._request == null)
       throw new Error('mount() and/or request() required');
+    this._initAfterResponses();
     const request = this._request != null ? () => this._request(this._component) : null;
     const promise = this._setHttpAndMount()
       .then(request)
@@ -289,6 +290,13 @@ class MockHttp {
 
   afterResponse(callback) { return this.afterResponses(callback); }
   complete() { return this.afterResponses(component => component); }
+
+  _initAfterResponses() {
+    this._previousHttp = Vue.prototype.$http;
+    this._errorFromBeforeEachResponse = null;
+    this._requestWithoutResponse = false;
+    this._responseWithoutRequest = this._responses.length !== 0;
+  }
 
   _tryBeforeEachResponse() {
     if (this._beforeEachResponse == null) return;
@@ -341,20 +349,10 @@ class MockHttp {
     };
   }
 
-  _setHttp() {
-    // Properties used by _http() and for validation after the responses
-    this._errorFromBeforeEachResponse = null;
-    this._requestWithoutResponse = false;
-    this._responseWithoutRequest = this._responses.length !== 0;
-
-    this._previousHttp = Vue.prototype.$http;
-    setHttp(this._http());
-  }
-
   _setHttpAndMount() {
     if (this._previousPromise == null) {
       // There is no previous promise, so this block can be synchronous.
-      this._setHttp();
+      setHttp(this._http());
       if (this._mount != null) {
         router.push('/_setHttpAndMount');
         // We need this to be synchronous, because in afterResponses(), we pass
@@ -366,7 +364,7 @@ class MockHttp {
     // _restoreHttp() is run in a finally() call, so _setHttp() must be as well:
     // otherwise, if _previousPromise is rejected, afterResponses() would call
     // _restoreHttp() but not _setHttp().
-    return this._previousPromise.finally(() => this._setHttp());
+    return this._previousPromise.finally(() => setHttp(this._http()));
   }
 
   _waitForResponsesToBeProcessed() {
