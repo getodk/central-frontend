@@ -51,13 +51,13 @@ describe('AccountLogin', () => {
   });
 
   describe('after login', () => {
-    it('navigating to login redirects to forms list', () =>
+    it('navigating to login redirects to the root page', () =>
       mockRouteThroughLogin('/users')
         .respondWithProblem()
         .complete()
         .request(app => app.vm.$router.push('/login'))
-        .respondWithProblem()
-        .afterResponse(app => app.vm.$route.path.should.equal('/forms')));
+        .respondWithProblems([500, 500, 500])
+        .afterResponse(app => app.vm.$route.path.should.equal('/')));
 
     it("navbar shows the user's display name", () =>
       mockRouteThroughLogin('/users')
