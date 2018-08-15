@@ -310,21 +310,6 @@ class MockHttp {
       : Promise.resolve({});
   }
 
-  _tryBeforeEachResponse() {
-    if (this._beforeEachResponse == null) return;
-    if (this._errorFromBeforeEachResponse != null) return;
-    /* Adding a try/catch block here even though _beforeEachResponse() is called
-    within a promise chain, because the promise is not returned to Mocha, but
-    rather to the app itself from $http. We want to eventually return a rejected
-    promise to Mocha, but we want to return the specified response to the app
-    regardless of whether _beforeEachResponse() throws an error. */
-    try {
-      this._beforeEachResponse(this._component);
-    } catch (e) {
-      this._errorFromBeforeEachResponse = e;
-    }
-  }
-
   // Returns a function that responds with each of the specified responses in
   // turn.
   _http() {
@@ -358,6 +343,21 @@ class MockHttp {
           }
         }));
     };
+  }
+
+  _tryBeforeEachResponse() {
+    if (this._beforeEachResponse == null) return;
+    if (this._errorFromBeforeEachResponse != null) return;
+    /* Adding a try/catch block here even though _beforeEachResponse() is called
+    within a promise chain, because the promise is not returned to Mocha, but
+    rather to the app itself from $http. We want to eventually return a rejected
+    promise to Mocha, but we want to return the specified response to the app
+    regardless of whether _beforeEachResponse() throws an error. */
+    try {
+      this._beforeEachResponse(this._component);
+    } catch (e) {
+      this._errorFromBeforeEachResponse = e;
+    }
   }
 
   _setComponent(previousComponent) {
