@@ -149,7 +149,6 @@ const statusIs2xx = (status) => status >= 200 && status < 300;
 class MockHttp {
   constructor({
     previousPromise = null,
-    component = null,
     mount = null,
     request = null,
     responses = [],
@@ -158,8 +157,6 @@ class MockHttp {
     // State from the previous series of request-response cycles (if any)
     // Promise from the previous series, used to chain series.
     this._previousPromise = previousPromise;
-    // The mounted component (if any)
-    this._component = component;
 
     // State specific to the current series of request-response cycles
     this._mount = mount;
@@ -172,7 +169,6 @@ class MockHttp {
   _with(options) {
     return new MockHttp({
       previousPromise: this._previousPromise,
-      component: this._component,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -192,6 +188,7 @@ class MockHttp {
     return this._with({ mount: () => mountAndMark(component, options) });
   }
 
+  // The callback may optionally return a Promise.
   request(callback) {
     if (this._request != null)
       throw new Error('cannot call request() more than once in a single series');
@@ -278,14 +275,23 @@ class MockHttp {
     if (this._mount == null && this._request == null)
       throw new Error('mount() and/or request() required');
     this._initAfterResponses();
-    const request = this._request != null ? () => this._request(this._component) : null;
-    const promise = this._setHttpAndMount()
-      .then(request)
-      .then(this._waitForResponsesToBeProcessed)
+    const request = this._request != null ? this._request : () => {};
+    const promise = this._initialPromise()
+      // setHttp() and _restoreHttp() are both run in finally() calls.
+      .finally(() => setHttp(this._http()))
+      .then(({ component }) => this._setComponent(component))
+      .then(component => Promise.resolve(request(component))
+        .then(() => component))
+      .then(component => this._waitForResponsesToBeProcessed()
+        .then(() => component))
       .finally(() => this._restoreHttp())
-      .then(() => this._checkStateAfterWait())
-      .then(() => callback(this._component));
-    return new MockHttp({ previousPromise: promise, component: this._component });
+      .then(component => {
+        this._checkStateAfterWait();
+        return component;
+      })
+      .then(component => Promise.resolve(callback(component))
+        .then(result => ({ component, result })));
+    return new MockHttp({ previousPromise: promise });
   }
 
   afterResponse(callback) { return this.afterResponses(callback); }
@@ -296,6 +302,12 @@ class MockHttp {
     this._errorFromBeforeEachResponse = null;
     this._requestWithoutResponse = false;
     this._responseWithoutRequest = this._responses.length !== 0;
+  }
+
+  _initialPromise() {
+    return this._previousPromise != null
+      ? this._previousPromise
+      : Promise.resolve({});
   }
 
   _tryBeforeEachResponse() {
@@ -348,22 +360,13 @@ class MockHttp {
     };
   }
 
-  _setHttpAndMount() {
-    if (this._previousPromise == null) {
-      // There is no previous promise, so this block can be synchronous.
-      setHttp(this._http());
-      if (this._mount != null) {
-        router.push('/_setHttpAndMount');
-        // We need this to be synchronous, because in afterResponses(), we pass
-        // this._component synchronously to the next series in the chain.
-        this._component = this._mount();
-      }
-      return Promise.resolve();
+  _setComponent(previousComponent) {
+    if (this._previousPromise != null)
+      this._component = previousComponent;
+    else if (this._mount != null) {
+      router.push('/_setHttpAndMount');
+      this._component = this._mount();
     }
-    // _restoreHttp() is run in a finally() call, so _setHttp() must be as well:
-    // otherwise, if _previousPromise is rejected, afterResponses() would call
-    // _restoreHttp() but not _setHttp().
-    return this._previousPromise.finally(() => setHttp(this._http()));
   }
 
   _waitForResponsesToBeProcessed() {
@@ -485,10 +488,12 @@ class MockHttp {
   promise() {
     const anySpecification = this._mount != null || this._request != null ||
       this._responses.length !== 0 || this._beforeEachResponse != null;
-    if (anySpecification) return this.complete()._previousPromise;
-    return this._previousPromise != null
-      ? this._previousPromise
-      : Promise.resolve();
+    if (!anySpecification && this._previousPromise == null)
+      return Promise.resolve();
+    const promise = anySpecification
+      ? this.complete()._previousPromise
+      : this._previousPromise;
+    return promise.then(({ result }) => result);
   }
 
   // The inclusion of these methods means that we can return a MockHttp to Mocha
