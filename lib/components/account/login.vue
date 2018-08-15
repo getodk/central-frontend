@@ -47,7 +47,6 @@ except according to the terms contained in the LICENSE file.
 import request from '../../mixins/request';
 import { logIn } from '../../session';
 
-const DEFAULT_NEXT_PATH = '/forms';
 
 export default {
   name: 'AccountLogin',
@@ -82,12 +81,10 @@ export default {
     },
     nextPath() {
       const { next } = this.$route.query;
-      if (next == null) return DEFAULT_NEXT_PATH;
+      if (next == null) return '/';
       const link = document.createElement('a');
       link.href = next;
-      return link.host === window.location.host
-        ? link.pathname
-        : DEFAULT_NEXT_PATH;
+      return link.host === window.location.host ? link.pathname : '/';
     },
     routeToNext() {
       const query = Object.assign({}, this.$route.query);
