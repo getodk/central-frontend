@@ -309,8 +309,7 @@ class MockHttp {
     try {
       this._beforeEachResponse(this._component);
     } catch (e) {
-      if (this._errorFromBeforeEachResponse == null)
-        this._errorFromBeforeEachResponse = e;
+      this._errorFromBeforeEachResponse = e;
     }
   }
 
