@@ -14,7 +14,8 @@ describe('FormSubmissions', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute(submissionsPath(testData.extendedForms.createPast(1).first()))
-        .then(app => app.vm.$route.path.should.equal('/login')));
+        .respondWithProblem(404)
+        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () => {
       const form = testData.extendedForms.createPast(1).last();

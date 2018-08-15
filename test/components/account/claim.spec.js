@@ -1,5 +1,7 @@
+import testData from '../../data';
 import { fillForm, trigger } from '../../util';
-import { mockRoute } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
+import { mockRouteThroughLogin } from '../../session';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 const submitForm = (wrapper) =>
@@ -35,5 +37,20 @@ describe('AccountClaim', () => {
     });
 
     it('success message is shown', () => app.should.alert('success'));
+  });
+
+  describe('navigation to /account/claim', () => {
+    it('redirects to the root page after a login through the login page', () =>
+      mockRouteThroughLogin('/users')
+        .respondWithData(() => testData.administrators.sorted())
+        .complete()
+        .request(app => app.vm.$router.push(LOCATION))
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+
+    it('does not attempt to restore the session', () =>
+      mockHttp()
+        .route(LOCATION)
+        .then(app => app.vm.$route.path.should.equal('/account/claim')));
   });
 });

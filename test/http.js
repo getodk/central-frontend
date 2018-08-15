@@ -432,6 +432,7 @@ class MockHttp {
           '/_mountAndRoute',
           () => {
             this._component = this._mount();
+            routerState.anyNavigationTriggered = false;
             if (this._beforeEachNavGuard != null) {
               beforeEachNav((to, from) => {
                 if (!this._inProgress || this._errorFromBeforeEachNav != null)

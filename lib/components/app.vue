@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <navbar/>
+    <!-- Do not show the navbar until the first time a navigation is confirmed.
+    The user's session may change during that time, affecting how the navbar is
+    rendered. -->
+    <navbar v-show="anyNavigationConfirmed"/>
     <alert id="app-alert" v-bind="alert" @close="alert.state = false"/>
     <div class="container-fluid">
       <router-view/>
@@ -28,8 +31,14 @@ export default {
   components: { Navbar },
   data() {
     return {
-      alert: blankAlert()
+      alert: blankAlert(),
+      anyNavigationConfirmed: false
     };
+  },
+  watch: {
+    $route() {
+      this.anyNavigationConfirmed = true;
+    }
   }
 };
 </script>

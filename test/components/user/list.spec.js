@@ -7,7 +7,8 @@ describe('UserList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute('/users')
-        .then(app => app.vm.$route.path.should.equal('/login')));
+        .respondWithProblem(404)
+        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/users')
