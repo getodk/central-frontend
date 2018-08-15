@@ -1,12 +1,14 @@
 import Vue from 'vue';
 import 'should';
 
+import App from '../lib/components/app.vue';
 import testData from './data';
 import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
 import { MockComponentAlert } from './alert';
 import { MockLogger } from './util';
-import { destroyMarkedComponent } from './destroy';
+import { destroyMarkedComponent, mountAndMark } from './destroy';
 import { logOut } from '../lib/session';
+import { router } from '../lib/router';
 import { setHttp } from './http';
 import '../lib/setup';
 import './assertions';
@@ -34,6 +36,15 @@ afterEach(() => {
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
 });
+
+// Set up the router for testing.
+// Set to a page that will not send a request.
+window.location.hash = '#/test/setup';
+// Inject the router into a Vue instance so that tests can assume that
+// router.app != null.
+mountAndMark(App, { router });
+// We no longer need the Vue instance: destroy the component.
+destroyMarkedComponent();
 
 // Reset global application state.
 afterEach(() => {

@@ -2,9 +2,9 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
-import routerFactory from '../lib/router';
 import { logOut } from '../lib/session';
 import { mountAndMark } from './destroy';
+import { router } from '../lib/router';
 import { trigger } from './util';
 
 // Sets Vue.prototype.$http to a mock.
@@ -363,9 +363,12 @@ class MockHttp {
     if (this._previousPromise == null) {
       // There is no previous promise, so this block can be synchronous.
       this._setHttp();
-      // We need this to be synchronous, because in afterResponses(), we pass
-      // this._component synchronously to the next series in the chain.
-      if (this._mount != null) this._component = this._mount();
+      if (this._mount != null) {
+        router.push('/_setHttpAndMount');
+        // We need this to be synchronous, because in afterResponses(), we pass
+        // this._component synchronously to the next series in the chain.
+        this._component = this._mount();
+      }
       return Promise.resolve();
     }
     // _restoreHttp() is run in a finally() call, so _setHttp() must be as well:
@@ -516,10 +519,8 @@ export const mockRoute = (location, mountOptions = {}) => {
   // app will first redirect the user to login, resulting in no initial HTTP
   // request.
   if (session.loggedIn()) logOut();
-  const fullMountOptions = Object.assign({}, mountOptions);
-  fullMountOptions.router = routerFactory();
   return mockHttp()
-    .mount(App, fullMountOptions)
+    .mount(App, { ...mountOptions, router })
     .request(app => {
       if (session.loggedIn()) session.updateGlobals();
       app.vm.$router.push(location);
