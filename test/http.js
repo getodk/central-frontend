@@ -356,6 +356,7 @@ class MockHttp {
     this._errorFromBeforeEachResponse = null;
     this._requestWithoutResponse = false;
     this._responseWithoutRequest = this._responses.length !== 0;
+    this._requestResponseLog = [];
   }
 
   _initialPromise() {
@@ -368,7 +369,9 @@ class MockHttp {
   // turn.
   _http() {
     let responseIndex = 0;
-    return ({ validateStatus = statusIs2xx }) => {
+    return (config) => {
+      const { validateStatus = statusIs2xx } = config;
+      this._requestResponseLog.push(config);
       if (responseIndex === this._responses.length - 1)
         this._responseWithoutRequest = false;
       else if (responseIndex === this._responses.length) {
@@ -385,6 +388,7 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           const result = responseCallback();
           const response = result instanceof Error ? result.response : result;
+          this._requestResponseLog.push(response);
           try {
             if (validateStatus(response.status))
               resolve(response);
@@ -475,10 +479,19 @@ class MockHttp {
       console.log('beforeEachResponse() error:');
       throw this._errorFromBeforeEachResponse;
     }
-    if (this._requestWithoutResponse)
-      throw new Error('request without response: no response specified for request');
-    if (this._responseWithoutRequest)
-      throw new Error('response without request: not all responses were requested');
+    if (this._requestWithoutResponse || this._responseWithoutRequest) {
+      console.log('request/response log:'); // eslint-disable-line no-console
+      if (this._requestResponseLog.length === 0)
+        console.log('(empty)'); // eslint-disable-line no-console
+      else {
+        for (const entry of this._requestResponseLog)
+          console.log(entry); // eslint-disable-line no-console
+      }
+      if (this._requestWithoutResponse)
+        throw new Error('request without response: no response specified for request');
+      else
+        throw new Error('response without request: not all responses were requested');
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
