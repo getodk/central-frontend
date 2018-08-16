@@ -145,6 +145,7 @@ Notice how the mounted component is passed to each request() and afterResponse()
 callback, even in the second series.
 */
 
+let inProgress = false;
 const statusIs2xx = (status) => status >= 200 && status < 300;
 
 class MockHttp {
@@ -335,9 +336,7 @@ class MockHttp {
       })
       .then(component => Promise.resolve(component).then(callback)
         .then(result => ({ component, result })))
-      .finally(() => {
-        this._inProgress = false;
-      });
+      .finally(() => this._cleanUpAfterResponses());
     return new MockHttp({ previousPromise: promise });
   }
 
@@ -348,7 +347,14 @@ class MockHttp {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
+    // Check initial state and set globals and properties of this object that
+    // are used within the afterResponses() promise.
     return promise.then(({ component }) => {
+      // Concurrent series could cause issues in at least two ways. First,
+      // Vue.prototype.$http might not be restored correctly. Second, if both
+      // series use the single global router, that could cause issues.
+      if (inProgress) throw new Error('another series is in progress');
+      inProgress = true;
       this._inProgress = true;
       this._previousHttp = Vue.prototype.$http;
       setHttp(this._http());
@@ -508,6 +514,11 @@ class MockHttp {
       else
         throw new Error('response without request: not all responses were requested');
     }
+  }
+
+  _cleanUpAfterResponses() {
+    this._inProgress = false;
+    inProgress = false;
   }
 
   //////////////////////////////////////////////////////////////////////////////
