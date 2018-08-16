@@ -192,8 +192,6 @@ class MockHttp {
       throw new Error('cannot call route() more than once in a single chain');
     if (this._mount != null)
       throw new Error('cannot call both route() and mount() in a single chain');
-    if (this._request != null)
-      throw new Error('cannot call both route() and request() in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot route after first series in chain');
     const route = location;
@@ -225,8 +223,6 @@ class MockHttp {
 
   // The callback may return a Promise or a non-Promise value.
   request(callback) {
-    if (this._route != null)
-      throw new Error('cannot call both route() and request() in a single chain');
     if (this._request != null)
       throw new Error('cannot call request() more than once in a single series');
     // Wrap the callback in an arrow function so that when we call
@@ -323,6 +319,7 @@ class MockHttp {
       .then(component => this._mountAndRoute(component))
       .then(component => {
         if (this._request == null) return component;
+        this._checkStateBeforeRequest();
         // this._request() may return a Promise or a non-Promise value (either
         // is allowed), which is why we use Promise.resolve().
         return Promise.resolve(component).then(this._request).then(() => component);
@@ -460,6 +457,26 @@ class MockHttp {
     });
   }
 
+  _checkStateBeforeRequest() {
+    // If this._route or this._mount() resulted in a request,
+    // this._requestResponseLog will have an entry for it. (Note, however, that
+    // the response to the request might not yet have been received: we may be
+    // in the period between the request and the response.)
+    if (this._requestResponseLog.length === 0) return;
+    this._listRequestResponseLog();
+    throw new Error('a request was sent before the request() callback was invoked');
+  }
+
+  _listRequestResponseLog() {
+    console.log('request/response log:'); // eslint-disable-line no-console
+    if (this._requestResponseLog.length === 0)
+      console.log('(empty)'); // eslint-disable-line no-console
+    else {
+      for (const entry of this._requestResponseLog)
+        console.log(entry); // eslint-disable-line no-console
+    }
+  }
+
   _waitForResponsesToBeProcessed() {
     // setTimeout(resolve) calls `resolve` after pending promises settle.
     // https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html
@@ -483,13 +500,7 @@ class MockHttp {
       throw this._errorFromBeforeEachResponse;
     }
     if (this._requestWithoutResponse || this._responseWithoutRequest) {
-      console.log('request/response log:'); // eslint-disable-line no-console
-      if (this._requestResponseLog.length === 0)
-        console.log('(empty)'); // eslint-disable-line no-console
-      else {
-        for (const entry of this._requestResponseLog)
-          console.log(entry); // eslint-disable-line no-console
-      }
+      this._listRequestResponseLog();
       if (this._requestWithoutResponse)
         throw new Error('request without response: no response specified for request');
       else

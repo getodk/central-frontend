@@ -10,7 +10,6 @@ describe('NotFound', () => {
   it('navigating away does not restore the session', () =>
     mockHttp()
       .route('/not-found')
-      .complete()
       // Specify request() without a response.
       .request(app => {
         app.vm.$router.push('/login');
