@@ -27,7 +27,7 @@ export const mockRouteThroughLogin = (location, mountOptions = {}) => {
     throw new Error('session cannot be logged in');
   return mockHttp()
     .route(location, mountOptions)
-    .respondWithProblem(404)
+    .restoreSession(false)
     .complete()
     .request(app => {
       if (app.vm.$route.path !== '/login')

@@ -8,7 +8,7 @@ describe('AccountLogin', () => {
   describe('user is logged out and has no cookie', () => {
     it('navbar indicates that the user is logged out', () =>
       mockRoute('/login')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => {
           const link = app.first('.navbar-right > li > a');
           link.text().trim().should.equal('Not logged in');
@@ -18,21 +18,21 @@ describe('AccountLogin', () => {
       // We need mockRoute() and not just mockHttp(), because AccountLogin uses
       // $route at render.
       mockRoute('/login', { attachToDocument: true })
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => {
           app.first('#account-login input[type="email"]').should.be.focused();
         }));
 
     it('standard button thinking things', () =>
       mockRoute('/login')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .complete()
         .request(submitLoginForm)
         .standardButton());
 
     it('incorrect credentials result in error message', () =>
       mockRoute('/login')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .complete()
         .request(submitLoginForm)
         .respondWithProblem(401.2)
@@ -42,7 +42,7 @@ describe('AccountLogin', () => {
 
     it('clicking the reset password button navigates to that page', () =>
       mockRoute('/login')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => trigger('click', app.first('.panel-footer .btn-link'))
           .then(() => app.vm.$route.path.should.equal('/reset-password'))));
   });
@@ -118,8 +118,7 @@ describe('AccountLogin', () => {
     it('redirects to the root page if the session is restored', () =>
       mockHttp()
         .route('/login')
-        .respondWithData(() => testData.sessions.createPast(1).last())
-        .respondWithData(() => testData.administrators.createPast(1).last())
+        .restoreSession(true)
         .respondWithProblems([500, 500, 500])
         .afterResponses(app => app.vm.$route.path.should.equal('/')));
   });
@@ -128,8 +127,7 @@ describe('AccountLogin', () => {
     it('does not redirect other pages to the login page', () =>
       mockHttp()
         .route('/users')
-        .respondWithData(() => testData.sessions.createPast(1).last())
-        .respondWithData(() => testData.administrators.createPast(1).last())
+        .restoreSession(true)
         .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => app.vm.$route.path.should.equal('/users')));
 
@@ -139,8 +137,7 @@ describe('AccountLogin', () => {
         .beforeEachNav(app => {
           app.first(Navbar).vm.$el.style.display.should.equal('none');
         })
-        .respondWithData(() => testData.sessions.createPast(1).last())
-        .respondWithData(() => testData.administrators.createPast(1).last())
+        .restoreSession(true)
         .respondWithProblems([500, 500, 500])
         .afterResponses(app => {
           app.first(Navbar).vm.$el.style.display.should.equal('');

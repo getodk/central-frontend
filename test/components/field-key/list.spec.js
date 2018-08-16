@@ -12,7 +12,7 @@ describe('FieldKeyList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute('/users/field-keys')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () =>

@@ -15,7 +15,7 @@ describe('AccountResetPassword', () => {
     // We need mockRoute() and not just mockHttp(), because AccountResetPassword
     // uses $route at render.
     mockRoute('/reset-password', { attachToDocument: true })
-      .respondWithProblem(404)
+      .restoreSession(false)
       .afterResponse(app => {
         const field = app.first('#account-reset-password input[type="email"]');
         field.should.be.focused();
@@ -23,7 +23,7 @@ describe('AccountResetPassword', () => {
 
   it('standard button thinking things', () =>
     mockRoute('/reset-password')
-      .respondWithProblem(404)
+      .restoreSession(false)
       .complete()
       .request(submitForm)
       .standardButton());
@@ -31,7 +31,7 @@ describe('AccountResetPassword', () => {
   describe('successful response', () => {
     let app;
     beforeEach(() => mockRoute('/reset-password')
-      .respondWithProblem(404)
+      .restoreSession(false)
       .complete()
       .request(component => {
         app = component;
@@ -48,7 +48,7 @@ describe('AccountResetPassword', () => {
 
   it('clicking cancel navigates to login', () =>
     mockRoute('/reset-password')
-      .respondWithProblem(404)
+      .restoreSession(false)
       .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
         .then(() => app.vm.$route.path.should.equal('/login'))));
 
@@ -64,8 +64,7 @@ describe('AccountResetPassword', () => {
     it('redirects to the root page if the session is restored', () =>
       mockHttp()
         .route('/reset-password')
-        .respondWithData(() => testData.sessions.createPast(1).last())
-        .respondWithData(() => testData.administrators.createPast(1).last())
+        .restoreSession(true)
         .respondWithProblems([500, 500, 500])
         .afterResponses(app => app.vm.$route.path.should.equal('/')));
   });

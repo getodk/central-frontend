@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
 import { router, routerState } from '../lib/router';
@@ -279,6 +280,14 @@ class MockHttp {
 
   respondWithProblems(responseOrResponses) {
     return this.respondWithProblem(responseOrResponses);
+  }
+
+  restoreSession(restore) {
+    if (!restore) return this.respondWithProblem(404.1);
+    return this.respondWithData([
+      () => testData.sessions.createNew(),
+      () => testData.administrators.firstOrCreatePast()
+    ]);
   }
 
   _respond(callback) {

@@ -10,7 +10,7 @@ describe('FormOverview', () => {
   describe('anonymous users', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('redirects the user back after login', () => {

@@ -8,7 +8,7 @@ describe('RootHome', () => {
   describe('anonymous users', () => {
     it('routes an anonymous user to login', () =>
       mockRoute('/')
-        .respondWithProblem(404)
+        .restoreSession(false)
         .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('routes the user back after login', () =>
