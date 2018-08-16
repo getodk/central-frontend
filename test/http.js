@@ -310,12 +310,9 @@ class MockHttp {
   afterResponses(callback) {
     if (this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
-    this._initAfterResponses();
     const request = this._request != null ? this._request : () => {};
     const promise = this._initialPromise()
-      // setHttp() and _restoreHttp() are both run in finally() calls.
-      .finally(() => setHttp(this._http()))
-      .then(({ component }) => this._mountAndRoute(component))
+      .then(component => this._mountAndRoute(component))
       .then(component => Promise.resolve(request(component))
         .then(() => component))
       .then(component => this._waitForResponsesToBeProcessed()
@@ -336,21 +333,22 @@ class MockHttp {
   afterResponse(callback) { return this.afterResponses(callback); }
   complete() { return this.afterResponses(component => component); }
 
-  _initAfterResponses() {
-    this._inProgress = true;
-    this._previousHttp = Vue.prototype.$http;
-    this._component = null;
-    this._errorFromBeforeEachNav = null;
-    this._errorFromBeforeEachResponse = null;
-    this._requestWithoutResponse = false;
-    this._responseWithoutRequest = this._responses.length !== 0;
-    this._requestResponseLog = [];
-  }
-
   _initialPromise() {
-    return this._previousPromise != null
+    const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
+    return promise.then(({ component }) => {
+      this._inProgress = true;
+      this._previousHttp = Vue.prototype.$http;
+      setHttp(this._http());
+      this._component = null;
+      this._errorFromBeforeEachNav = null;
+      this._errorFromBeforeEachResponse = null;
+      this._requestWithoutResponse = false;
+      this._responseWithoutRequest = this._responses.length !== 0;
+      this._requestResponseLog = [];
+      return component;
+    });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -456,7 +454,11 @@ class MockHttp {
     return new Promise(resolve => setTimeout(resolve));
   }
 
-  _restoreHttp() { Vue.prototype.$http = this._previousHttp; }
+  _restoreHttp() {
+    // If this._previousPromise was rejected, the current series did not set
+    // $http. In that case, this._inProgress will be falsy.
+    if (this._inProgress) Vue.prototype.$http = this._previousHttp;
+  }
 
   _checkStateAfterWait() {
     if (this._errorFromBeforeEachNav != null) {
