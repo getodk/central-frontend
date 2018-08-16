@@ -162,7 +162,7 @@ class MockHttp {
     // Promise from the previous series, used to chain series.
     this._previousPromise = previousPromise;
 
-    // State specific to the current series of request-response cycles
+    // State specific to the current series
     this._route = route;
     this._beforeEachNavGuard = beforeEachNavGuard;
     this._mount = mount;
@@ -200,6 +200,7 @@ class MockHttp {
     return this._with({ route, mount });
   }
 
+  // Multiple calls to beforeEachNav() are not yet supported.
   beforeEachNav(callback) {
     if (this._beforeEachNavGuard != null)
       throw new Error('cannot call beforeEachNav() more than once in a single chain');
@@ -292,7 +293,7 @@ class MockHttp {
   }
 
   //////////////////////////////////////////////////////////////////////////////
-  // BEFORE EACH
+  // HOOKS FOR BEFORE RESPONSES
 
   // Specifies a callback to run before each response is sent.
   beforeEachResponse(callback) {
@@ -305,7 +306,9 @@ class MockHttp {
   }
 
   //////////////////////////////////////////////////////////////////////////////
-  // COMPLETE SERIES
+  // HOOKS FOR AFTER RESPONSES
+
+  // Calling one of these hooks executes the series of request-response cycles.
 
   /* afterResponses() specifies a callback to run after all responses have been
   processed. It returns a new MockHttp that can be used to follow this series
@@ -384,8 +387,8 @@ class MockHttp {
 
       const responseCallback = this._responses[responseIndex];
       responseIndex += 1;
-      // Wait a tick after _request() or the previous response so that Vue is
-      // updated before _beforeEachResponse() is called.
+      // Wait a tick after this._request() or the previous response so that Vue
+      // is updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
         .then(() => this._tryBeforeEachResponse())
         .then(() => new Promise((resolve, reject) => {
@@ -421,11 +424,11 @@ class MockHttp {
     }
   }
 
-  _mountAndRoute(previousComponent) {
+  _mountAndRoute(componentFromPreviousPromise) {
     return new Promise((resolve, reject) => {
       if (this._route == null) {
         if (this._previousPromise != null)
-          this._component = previousComponent;
+          this._component = componentFromPreviousPromise;
         else if (this._mount != null)
           this._component = this._mount();
         resolve(this._component);
@@ -438,6 +441,10 @@ class MockHttp {
             routerState.anyNavigationTriggered = false;
             if (this._beforeEachNavGuard != null) {
               beforeEachNav((to, from) => {
+                // This guard will be in place until the end of the test, not
+                // just the end of the series. If this series is followed by
+                // another series (in which case this._inProgress === false), we
+                // need this guard to be inactive.
                 if (!this._inProgress || this._errorFromBeforeEachNav != null)
                   return;
                 try {

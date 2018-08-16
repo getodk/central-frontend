@@ -22,6 +22,6 @@ export const beforeEachNav = (guard) => guards.before.push(guard);
 export const afterEachNav = (guard) => guards.after.push(guard);
 
 export const clearNavGuards = () => {
-  guards.before.splice(0);
-  guards.after.splice(0);
+  guards.before = [];
+  guards.after = [];
 };

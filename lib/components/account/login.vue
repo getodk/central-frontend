@@ -47,7 +47,6 @@ except according to the terms contained in the LICENSE file.
 import request from '../../mixins/request';
 import { logIn } from '../../session';
 
-
 export default {
   name: 'AccountLogin',
   mixins: [request()],
