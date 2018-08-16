@@ -223,7 +223,7 @@ class MockHttp {
     return this._with({ mount: () => mountAndMark(component, options) });
   }
 
-  // The callback may optionally return a Promise.
+  // The callback may return a Promise or a non-Promise value.
   request(callback) {
     if (this._route != null)
       throw new Error('cannot call both route() and request() in a single chain');
@@ -319,11 +319,14 @@ class MockHttp {
   afterResponses(callback) {
     if (this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
-    const request = this._request != null ? this._request : () => {};
     const promise = this._initialPromise()
       .then(component => this._mountAndRoute(component))
-      .then(component => Promise.resolve(request(component))
-        .then(() => component))
+      .then(component => {
+        if (this._request == null) return component;
+        // this._request() may return a Promise or a non-Promise value (either
+        // is allowed), which is why we use Promise.resolve().
+        return Promise.resolve(component).then(this._request).then(() => component);
+      })
       .then(component => this._waitForResponsesToBeProcessed()
         .then(() => component))
       .finally(() => this._restoreHttp())
@@ -331,7 +334,7 @@ class MockHttp {
         this._checkStateAfterWait();
         return component;
       })
-      .then(component => Promise.resolve(callback(component))
+      .then(component => Promise.resolve(component).then(callback)
         .then(result => ({ component, result })))
       .finally(() => {
         this._inProgress = false;
