@@ -151,7 +151,6 @@ class MockHttp {
     previousPromise = null,
     route = null,
     beforeEachNavGuard = null,
-    afterEachNavGuard = null,
     mount = null,
     request = null,
     responses = [],
@@ -164,7 +163,6 @@ class MockHttp {
     // State specific to the current series of request-response cycles
     this._route = route;
     this._beforeEachNavGuard = beforeEachNavGuard;
-    this._afterEachNavGuard = afterEachNavGuard;
     this._mount = mount;
     this._request = request;
     // Array of response callbacks
@@ -177,7 +175,6 @@ class MockHttp {
       previousPromise: this._previousPromise,
       route: this._route,
       beforeEachNavGuard: this._beforeEachNavGuard,
-      afterEachNavGuard: this._afterEachNavGuard,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -210,15 +207,6 @@ class MockHttp {
     // this._beforeEachNavGuard(), the callback is not bound to the MockHttp.
     const beforeEachNavGuard = (app, to, from) => callback(app, to, from);
     return this._with({ beforeEachNavGuard });
-  }
-
-  afterEachNav(callback) {
-    if (this._afterEachNavGuard != null)
-      throw new Error('cannot call afterEachNav() more than once in a single chain');
-    // Wrap the callback in an arrow function so that when we call
-    // this._afterEachNavGuard(), the callback is not bound to the MockHttp.
-    const afterEachNavGuard = (app, to, from) => callback(app, to, from);
-    return this._with({ afterEachNavGuard });
   }
 
   //////////////////////////////////////////////////////////////////////////////
