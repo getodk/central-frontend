@@ -324,8 +324,10 @@ class MockHttp {
         // is allowed), which is why we use Promise.resolve().
         return Promise.resolve(component).then(this._request).then(() => component);
       })
-      .then(component => this._waitForResponsesToBeProcessed()
-        .then(() => component))
+      // Using finally() rather than then() so that even if the promise is
+      // rejected, we know that any responses have been processed before the end
+      // of the promise.
+      .finally(() => this._waitForResponsesToBeProcessed())
       .finally(() => this._restoreHttp())
       .then(component => {
         this._checkStateAfterWait();
