@@ -7,7 +7,9 @@ import { trigger } from '../../util';
 describe('RootHome', () => {
   describe('anonymous users', () => {
     it('routes an anonymous user to login', () =>
-      mockRoute('/').then(app => app.vm.$route.path.should.equal('/login')));
+      mockRoute('/')
+        .restoreSession(false)
+        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('routes the user back after login', () =>
       mockRouteThroughLogin('/')

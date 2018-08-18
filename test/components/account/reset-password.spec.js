@@ -1,17 +1,7 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import testData from '../../data';
 import { fillForm, trigger } from '../../util';
-import { mockRoute } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
+import { mockRouteThroughLogin } from '../../session';
 
 const submitForm = (wrapper) => {
   const { email } = testData.administrators.createPast(1).last();
@@ -24,13 +14,16 @@ describe('AccountResetPassword', () => {
   it('field is focused', () =>
     // We need mockRoute() and not just mockHttp(), because AccountResetPassword
     // uses $route at render.
-    mockRoute('/reset-password', { attachToDocument: true }).then(app => {
-      const field = app.first('#account-reset-password input[type="email"]');
-      field.should.be.focused();
-    }));
+    mockRoute('/reset-password', { attachToDocument: true })
+      .restoreSession(false)
+      .afterResponse(app => {
+        const field = app.first('#account-reset-password input[type="email"]');
+        field.should.be.focused();
+      }));
 
   it('standard button thinking things', () =>
     mockRoute('/reset-password')
+      .restoreSession(false)
       .complete()
       .request(submitForm)
       .standardButton());
@@ -38,6 +31,7 @@ describe('AccountResetPassword', () => {
   describe('successful response', () => {
     let app;
     beforeEach(() => mockRoute('/reset-password')
+      .restoreSession(false)
       .complete()
       .request(component => {
         app = component;
@@ -54,6 +48,24 @@ describe('AccountResetPassword', () => {
 
   it('clicking cancel navigates to login', () =>
     mockRoute('/reset-password')
-      .then(app => trigger.click(app.first('.panel-footer .btn-link'))
+      .restoreSession(false)
+      .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
         .then(() => app.vm.$route.path.should.equal('/login'))));
+
+  describe('navigation to /reset-password', () => {
+    it('redirects to the root page after a login through the login page', () =>
+      mockRouteThroughLogin('/users')
+        .respondWithData(() => testData.administrators.sorted())
+        .complete()
+        .request(app => app.vm.$router.push('/reset-password'))
+        .respondWithProblems([500, 500, 500])
+        .afterResponse(app => app.vm.$route.path.should.equal('/')));
+
+    it('redirects to the root page if the session is restored', () =>
+      mockHttp()
+        .route('/reset-password')
+        .restoreSession(true)
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+  });
 });

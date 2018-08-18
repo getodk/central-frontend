@@ -1,16 +1,7 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
+import testData from '../../data';
 import { fillForm, trigger } from '../../util';
-import { mockRoute } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
+import { mockRouteThroughLogin } from '../../session';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 const submitForm = (wrapper) =>
@@ -46,5 +37,20 @@ describe('AccountClaim', () => {
     });
 
     it('success message is shown', () => app.should.alert('success'));
+  });
+
+  describe('navigation to /account/claim', () => {
+    it('redirects to the root page after a login through the login page', () =>
+      mockRouteThroughLogin('/users')
+        .respondWithData(() => testData.administrators.sorted())
+        .complete()
+        .request(app => app.vm.$router.push(LOCATION))
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+
+    it('does not attempt to restore the session', () =>
+      mockHttp()
+        .route(LOCATION)
+        .then(app => app.vm.$route.path.should.equal('/account/claim')));
   });
 });
