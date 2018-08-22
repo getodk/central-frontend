@@ -320,25 +320,20 @@ class MockHttp {
     if (this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
-      .then(component => this._mountAndRoute(component))
-      .then(component => {
-        if (this._request == null) return component;
+      .then(() => this._mountAndRoute())
+      .then(() => {
+        if (this._request == null) return undefined;
         this._checkStateBeforeRequest();
-        // this._request() may return a Promise or a non-Promise value (either
-        // is allowed), which is why we use Promise.resolve().
-        return Promise.resolve(component).then(this._request).then(() => component);
+        return this._request(this._component);
       })
       // Using finally() rather than then() so that even if the promise is
       // rejected, we know that any responses have been processed before the end
       // of the promise.
       .finally(() => this._waitForResponsesToBeProcessed())
       .finally(() => this._restoreHttp())
-      .then(component => {
-        this._checkStateAfterWait();
-        return component;
-      })
-      .then(component => Promise.resolve(component).then(callback)
-        .then(result => ({ component, result })))
+      .then(() => this._checkStateAfterWait())
+      .then(() => callback(this._component))
+      .then(result => ({ component: this._component, result }))
       .finally(() => this._cleanUpAfterResponses());
     return new MockHttp({ previousPromise: promise });
   }
@@ -361,13 +356,12 @@ class MockHttp {
       this._inProgress = true;
       this._previousHttp = Vue.prototype.$http;
       setHttp(this._http());
-      this._component = null;
+      this._component = component;
       this._errorFromBeforeEachNav = null;
       this._errorFromBeforeEachResponse = null;
       this._requestWithoutResponse = false;
       this._responseWithoutRequest = this._responses.length !== 0;
       this._requestResponseLog = [];
-      return component;
     });
   }
 
@@ -424,14 +418,11 @@ class MockHttp {
     }
   }
 
-  _mountAndRoute(componentFromPreviousPromise) {
+  _mountAndRoute() {
     return new Promise((resolve, reject) => {
       if (this._route == null) {
-        if (this._previousPromise != null)
-          this._component = componentFromPreviousPromise;
-        else if (this._mount != null)
-          this._component = this._mount();
-        resolve(this._component);
+        if (this._mount != null) this._component = this._mount();
+        resolve();
       } else {
         router.push(
           // Navigate to a page that will not send a request.
@@ -460,11 +451,11 @@ class MockHttp {
             // a navigation was ultimately confirmed.
             const onAbort = () => Vue.prototype.$nextTick(() => {
               if (routerState.lastNavigationWasConfirmed)
-                resolve(this._component);
+                resolve();
               else
                 reject(new Error('last navigation was not confirmed'));
             });
-            router.push(this._route, () => resolve(this._component), onAbort);
+            router.push(this._route, resolve, onAbort);
           },
           () => reject(new Error('navigation aborted'))
         );
