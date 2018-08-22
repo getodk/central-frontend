@@ -32,7 +32,6 @@ export default {
   components: { Navbar },
   data() {
     return {
-      alert: blankAlert(),
       /* Vue seems to trigger the initial navigation before creating App. If the
       initial navigation is synchronous, Vue seems to confirm the navigation
       before creating App -- in which case firstNavigationConfirmed will be
@@ -42,12 +41,23 @@ export default {
       navigation. In that case, firstNavigationConfirmed will be initialized to
       false and the $route() watcher will be called once the initial navigation
       is confirmed. */
-      firstNavigationConfirmed: routerState.navigations.first.confirmed
+      firstNavigationConfirmed: routerState.navigations.first.confirmed,
+      alert: blankAlert()
     };
   },
+  computed: {
+    routeAndAlert() {
+      return [this.$route, this.alert];
+    }
+  },
   watch: {
-    $route() {
-      this.firstNavigationConfirmed = routerState.navigations.first.confirmed;
+    // Using a strategy similar to the one here:
+    // https://github.com/vuejs/vue/issues/844
+    routeAndAlert([currentRoute, currentAlert], [previousRoute, previousAlert]) {
+      if (currentRoute === previousRoute) return;
+      this.firstNavigationConfirmed = true;
+      if (currentAlert === previousAlert && this.alert.state)
+        this.alert.state = false;
     }
   }
 };
