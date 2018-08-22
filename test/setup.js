@@ -26,8 +26,8 @@ Vue.prototype.$alert = function $alert() {
 Vue.prototype.$logger = new MockLogger();
 
 // Set up the router for testing.
-// Inject the router into a Vue instance so that tests can assume that
-// router.app != null.
+// Inject the router into a Vue instance so that tests can assume that the
+// router has been injected into at least one Vue instance.
 setHttp(() => Promise.reject(new Error()));
 mountAndMark(App, { router });
 destroyMarkedComponent();

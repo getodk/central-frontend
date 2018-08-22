@@ -158,11 +158,10 @@ class MockHttp {
     responses = [],
     beforeEachResponse = null
   } = {}) {
-    // State from the previous series of request-response cycles (if any)
-    // Promise from the previous series, used to chain series.
+    // If the current series follows a previous series of request-response
+    // cycles, this._previousPromise is the promise from the previous series.
+    // this._previousPromise is used to chain series.
     this._previousPromise = previousPromise;
-
-    // State specific to the current series
     this._route = route;
     this._beforeEachNavGuard = beforeEachNavGuard;
     this._mount = mount;
@@ -194,7 +193,6 @@ class MockHttp {
     return this._with({ route: location });
   }
 
-  // Multiple calls to beforeEachNav() are not yet supported.
   beforeEachNav(callback) {
     if (this._beforeEachNavGuard != null)
       throw new Error('cannot call beforeEachNav() more than once in a single chain');
@@ -211,7 +209,7 @@ class MockHttp {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
-      throw new Error('cannot mount component after first series in chain');
+      throw new Error('cannot call mount() after the first series in a chain');
     return this._with({ mount: () => mountAndMark(component, options) });
   }
 
@@ -323,9 +321,9 @@ class MockHttp {
         return this._request(this._component);
       })
       // Using finally() rather than then() so that even if the promise is
-      // rejected, we know that any responses have been processed before the end
-      // of the promise.
-      .finally(() => this._waitForResponsesToBeProcessed())
+      // rejected, we know that any responses will be processed by the end of
+      // the promise.
+      .finally(this._waitForResponsesToBeProcessed)
       .finally(() => this._restoreHttp())
       .then(() => this._checkStateAfterWait())
       .then(() => callback(this._component))
@@ -342,12 +340,14 @@ class MockHttp {
       ? this._previousPromise
       : Promise.resolve({});
     return promise
-      // Check initial state and set globals and properties of this object that
-      // are used within the afterResponses() promise.
+      // Check initial state, set globals, and set properties of this object
+      // that are used within the afterResponses() promise. `component` is the
+      // component that the previous promise mounted (if any).
       .then(({ component }) => {
         // Concurrent series could cause issues in at least two ways. First,
-        // Vue.prototype.$http might not be restored correctly. Second, if both
-        // series use the single global router, that could cause issues.
+        // Vue.prototype.$http might not be restored correctly. Second, if
+        // concurrent series use the single global router, that could cause
+        // issues.
         if (inProgress) throw new Error('another series is in progress');
         inProgress = true;
         this._inProgress = true;
@@ -434,12 +434,13 @@ class MockHttp {
   }
 
   _tryBeforeEachNav(to, from) {
-    // This guard will be in place until the end of the test, not
-    // just the end of the series. If this series is followed by
-    // another series (in which case this._inProgress === false), we
-    // need this guard to be inactive.
-    if (!this._inProgress || this._errorFromBeforeEachNav != null)
-      return;
+    // The current series' beforeEachNav() guard will be in place until the end
+    // of the test, not just the end of the series. If the current series is
+    // followed by another series, we need to deactivate the current series'
+    // guard during the following series. To do so, we check this._inProgress,
+    // which will be false during the following series.
+    if (!this._inProgress) return;
+    if (this._errorFromBeforeEachNav != null) return;
     try {
       this._beforeEachNavGuard(this._component, to, from);
     } catch (e) {
@@ -489,10 +490,12 @@ class MockHttp {
   }
 
   _checkStateBeforeRequest() {
-    // If this._route or this._mount() resulted in a request,
-    // this._requestResponseLog will have an entry for it. (Note, however, that
-    // the response to the request might not yet have been received: we may be
-    // in the period between the request and the response.)
+    /* this._route and this._mount() are allowed to result in requests, but if
+    they do, no request callback should be specified. We check for that case by
+    examining this._requestResponseLog, which will have an entry if there has
+    been a request already. (Note, however, that the response to the request
+    might not yet have been sent: we may be in the period between the request
+    and the response.) */
     if (this._requestResponseLog.length === 0) return;
     this._listRequestResponseLog();
     throw new Error('a request was sent before the request() callback was invoked');
@@ -516,7 +519,9 @@ class MockHttp {
 
   _restoreHttp() {
     // If this._previousPromise was rejected, the current series did not set
-    // $http. In that case, this._inProgress will be falsy.
+    // $http, and we do not need to restore it. We can check for that case by
+    // examining this._inProgress, which will be falsy if this._previousPromise
+    // was rejected.
     if (this._inProgress) Vue.prototype.$http = this._previousHttp;
   }
 
