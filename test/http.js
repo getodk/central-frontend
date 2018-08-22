@@ -320,6 +320,10 @@ class MockHttp {
     if (this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
+      .then(() => {
+        if (this._beforeEachNavGuard == null) return;
+        beforeEachNav((to, from) => this._tryBeforeEachNav(to, from));
+      })
       .then(() => this._mountAndRoute())
       .then(() => {
         if (this._request == null) return undefined;
@@ -397,7 +401,9 @@ class MockHttp {
       // Wait a tick after this._request() or the previous response so that Vue
       // is updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
-        .then(() => this._tryBeforeEachResponse())
+        .then(() => {
+          if (this._beforeEachResponse != null) this._tryBeforeEachResponse();
+        })
         .then(() => new Promise((resolve, reject) => {
           const result = responseCallback();
           const response = result instanceof Error ? result.response : result;
@@ -417,7 +423,6 @@ class MockHttp {
   }
 
   _tryBeforeEachResponse() {
-    if (this._beforeEachResponse == null) return;
     if (this._errorFromBeforeEachResponse != null) return;
     /* Adding a try/catch block here even though _beforeEachResponse() is called
     within a promise chain, because the promise is not returned to Mocha, but
@@ -431,6 +436,20 @@ class MockHttp {
     }
   }
 
+  _tryBeforeEachNav(to, from) {
+    // This guard will be in place until the end of the test, not
+    // just the end of the series. If this series is followed by
+    // another series (in which case this._inProgress === false), we
+    // need this guard to be inactive.
+    if (!this._inProgress || this._errorFromBeforeEachNav != null)
+      return;
+    try {
+      this._beforeEachNavGuard(this._component, to, from);
+    } catch (e) {
+      this._errorFromBeforeEachNav = e;
+    }
+  }
+
   _mountAndRoute() {
     return new Promise((resolve, reject) => {
       if (this._route == null) {
@@ -439,26 +458,11 @@ class MockHttp {
       } else {
         this._component = this._mount();
         routerState.anyNavigationTriggered = false;
-        if (this._beforeEachNavGuard != null) {
-          beforeEachNav((to, from) => {
-            // This guard will be in place until the end of the test, not
-            // just the end of the series. If this series is followed by
-            // another series (in which case this._inProgress === false), we
-            // need this guard to be inactive.
-            if (!this._inProgress || this._errorFromBeforeEachNav != null)
-              return;
-            try {
-              this._beforeEachNavGuard(this._component, to, from);
-            } catch (e) {
-              this._errorFromBeforeEachNav = e;
-            }
-          });
-        }
         // The onAbort callback seems to be called when the initial
         // navigation is aborted, even if a navigation is ultimately
         // confirmed. Here, we examine the router state to determine whether
         // a navigation was ultimately confirmed.
-        const onAbort = () => Vue.prototype.$nextTick(() => {
+        const onAbort = () => Vue.nextTick(() => {
           if (routerState.lastNavigationWasConfirmed)
             resolve();
           else
