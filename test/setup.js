@@ -25,6 +25,15 @@ Vue.prototype.$alert = function $alert() {
 };
 Vue.prototype.$logger = new MockLogger();
 
+// Set up the router for testing.
+// Inject the router into a Vue instance so that tests can assume that
+// router.app != null.
+setHttp(() => Promise.reject(new Error()));
+mountAndMark(App, { router });
+destroyMarkedComponent();
+initNavGuards();
+afterEach(clearNavGuards);
+
 setHttp(config => {
   console.log('unhandled request', config); // eslint-disable-line no-console
   return Promise.reject(new Error());
@@ -40,17 +49,6 @@ afterEach(() => {
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
 });
-
-// Set up the router for testing.
-// Set to a page that will not send a request.
-window.location.hash = '#/test/setup';
-// Inject the router into a Vue instance so that tests can assume that
-// router.app != null.
-mountAndMark(App, { router });
-// We no longer need the Vue instance: destroy the component.
-destroyMarkedComponent();
-initNavGuards();
-afterEach(clearNavGuards);
 
 // Reset global application state.
 afterEach(() => {
