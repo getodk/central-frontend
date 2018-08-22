@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
-    <navbar v-show="anyNavigationConfirmed"/>
+    <navbar v-show="firstNavigationConfirmed"/>
     <alert id="app-alert" v-bind="alert" @close="alert.state = false"/>
     <div class="container-fluid">
       <router-view/>
@@ -25,6 +25,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Navbar from './navbar.vue';
 import { blankAlert } from '../alert';
+import { routerState } from '../router';
 
 export default {
   name: 'App',
@@ -32,12 +33,21 @@ export default {
   data() {
     return {
       alert: blankAlert(),
-      anyNavigationConfirmed: false
+      /* Vue seems to trigger the initial navigation before creating App. If the
+      initial navigation is synchronous, Vue seems to confirm the navigation
+      before creating App -- in which case firstNavigationConfirmed will be
+      initialized to true and the $route() watcher will not be called until the
+      user navigates elsewhere. However, if the initial navigation is
+      asynchronous, Vue seems to create App before waiting to confirm the
+      navigation. In that case, firstNavigationConfirmed will be initialized to
+      false and the $route() watcher will be called once the initial navigation
+      is confirmed. */
+      firstNavigationConfirmed: routerState.navigations.first.confirmed
     };
   },
   watch: {
     $route() {
-      this.anyNavigationConfirmed = true;
+      this.firstNavigationConfirmed = routerState.navigations.first.confirmed;
     }
   }
 };

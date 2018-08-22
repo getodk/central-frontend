@@ -324,7 +324,7 @@ class MockHttp {
         if (this._beforeEachNavGuard == null) return;
         beforeEachNav((to, from) => this._tryBeforeEachNav(to, from));
       })
-      .then(() => this._mountAndRoute())
+      .then(() => this._routeAndMount())
       .then(() => {
         if (this._request == null) return undefined;
         this._checkStateBeforeRequest();
@@ -374,7 +374,9 @@ class MockHttp {
         return new Promise((resolve, reject) => router.push(
           '/_initialPromise',
           () => {
-            routerState.anyNavigationTriggered = false;
+            // Reset router state.
+            routerState.navigations.first = { triggered: false, confirmed: false };
+            routerState.navigations.last = { triggered: false, confirmed: false };
             resolve();
           },
           () => reject(new Error('navigation aborted'))
@@ -450,25 +452,40 @@ class MockHttp {
     }
   }
 
-  _mountAndRoute() {
+  _routeAndMount() {
+    if (this._route == null) {
+      if (this._mount != null) this._component = this._mount();
+      return undefined;
+    }
     return new Promise((resolve, reject) => {
-      if (this._route == null) {
-        if (this._mount != null) this._component = this._mount();
-        resolve();
-      } else {
-        this._component = this._mount();
-        routerState.anyNavigationTriggered = false;
-        // The onAbort callback seems to be called when the initial
-        // navigation is aborted, even if a navigation is ultimately
-        // confirmed. Here, we examine the router state to determine whether
-        // a navigation was ultimately confirmed.
-        const onAbort = () => Vue.nextTick(() => {
-          if (routerState.lastNavigationWasConfirmed)
+      let complete = false;
+      router.push(
+        this._route,
+        () => {
+          complete = true;
+          // If a component has not been mounted, and the router.push()
+          // onComplete callback is synchronous, we resolve immediately after
+          // mounting below. Otherwise, we resolve here after waiting a tick for
+          // the DOM to update.
+          if (!(this._mount != null && this._component == null))
+            Vue.nextTick(resolve);
+        },
+        // The router.push() onAbort callback seems to be called when the
+        // initial navigation is aborted, even if a navigation is ultimately
+        // confirmed. Here we examine the router state to determine whether a
+        // navigation was ultimately confirmed.
+        () => Vue.nextTick(() => {
+          if (routerState.navigations.last.confirmed)
             resolve();
           else
             reject(new Error('last navigation was not confirmed'));
-        });
-        router.push(this._route, resolve, onAbort);
+        })
+      );
+      if (this._mount != null) {
+        // We mount before waiting for the initial navigation to be confirmed,
+        // matching what happens in production.
+        this._component = this._mount();
+        if (complete) resolve();
       }
     });
   }

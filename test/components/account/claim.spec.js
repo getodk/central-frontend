@@ -1,3 +1,4 @@
+import Navbar from '../../../lib/components/navbar.vue';
 import testData from '../../data';
 import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
@@ -21,6 +22,12 @@ describe('AccountClaim', () => {
       .complete()
       .request(submitForm)
       .standardButton());
+
+  it('navbar is visible', () =>
+    mockRoute(LOCATION)
+      .then(app => {
+        app.first(Navbar).vm.$el.style.display.should.equal('');
+      }));
 
   describe('after successful response', () => {
     let app;
