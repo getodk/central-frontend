@@ -370,9 +370,12 @@ class MockHttp {
       })
       .then(() => {
         if (this._route == null || this._mount == null) return undefined;
-        // Before mounting, navigate to a page that will not send a request.
+        // If we are already at the specified route location, we need to
+        // navigate to a different location, or the navigation will be aborted.
+        // Here, we navigate to a location that we also know will not send a
+        // request.
         return new Promise((resolve, reject) => router.push(
-          '/_initialPromise',
+          `/_initialPromise${Vue.prototype.$uniqueId()}`,
           () => {
             // Reset router state.
             routerState.navigations.first = { triggered: false, confirmed: false };
