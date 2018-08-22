@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
 import { logOut } from '../session';
 import { logRequestError } from '../util';
 
-const DEFAULT_ACTIVE_PATH = '/forms';
+const DEFAULT_ACTIVE_PATH = '/';
 
 class Link {
   constructor(component, text, to, id) {
