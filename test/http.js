@@ -345,24 +345,37 @@ class MockHttp {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
-    // Check initial state and set globals and properties of this object that
-    // are used within the afterResponses() promise.
-    return promise.then(({ component }) => {
-      // Concurrent series could cause issues in at least two ways. First,
-      // Vue.prototype.$http might not be restored correctly. Second, if both
-      // series use the single global router, that could cause issues.
-      if (inProgress) throw new Error('another series is in progress');
-      inProgress = true;
-      this._inProgress = true;
-      this._previousHttp = Vue.prototype.$http;
-      setHttp(this._http());
-      this._component = component;
-      this._errorFromBeforeEachNav = null;
-      this._errorFromBeforeEachResponse = null;
-      this._requestWithoutResponse = false;
-      this._responseWithoutRequest = this._responses.length !== 0;
-      this._requestResponseLog = [];
-    });
+    return promise
+      // Check initial state and set globals and properties of this object that
+      // are used within the afterResponses() promise.
+      .then(({ component }) => {
+        // Concurrent series could cause issues in at least two ways. First,
+        // Vue.prototype.$http might not be restored correctly. Second, if both
+        // series use the single global router, that could cause issues.
+        if (inProgress) throw new Error('another series is in progress');
+        inProgress = true;
+        this._inProgress = true;
+        this._previousHttp = Vue.prototype.$http;
+        setHttp(this._http());
+        this._component = component;
+        this._errorFromBeforeEachNav = null;
+        this._errorFromBeforeEachResponse = null;
+        this._requestWithoutResponse = false;
+        this._responseWithoutRequest = this._responses.length !== 0;
+        this._requestResponseLog = [];
+      })
+      .then(() => {
+        if (this._route == null || this._mount == null) return undefined;
+        // Before mounting, navigate to a page that will not send a request.
+        return new Promise((resolve, reject) => router.push(
+          '/_initialPromise',
+          () => {
+            routerState.anyNavigationTriggered = false;
+            resolve();
+          },
+          () => reject(new Error('navigation aborted'))
+        ));
+      });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -424,41 +437,34 @@ class MockHttp {
         if (this._mount != null) this._component = this._mount();
         resolve();
       } else {
-        router.push(
-          // Navigate to a page that will not send a request.
-          '/_mountAndRoute',
-          () => {
-            this._component = this._mount();
-            routerState.anyNavigationTriggered = false;
-            if (this._beforeEachNavGuard != null) {
-              beforeEachNav((to, from) => {
-                // This guard will be in place until the end of the test, not
-                // just the end of the series. If this series is followed by
-                // another series (in which case this._inProgress === false), we
-                // need this guard to be inactive.
-                if (!this._inProgress || this._errorFromBeforeEachNav != null)
-                  return;
-                try {
-                  this._beforeEachNavGuard(this._component, to, from);
-                } catch (e) {
-                  this._errorFromBeforeEachNav = e;
-                }
-              });
+        this._component = this._mount();
+        routerState.anyNavigationTriggered = false;
+        if (this._beforeEachNavGuard != null) {
+          beforeEachNav((to, from) => {
+            // This guard will be in place until the end of the test, not
+            // just the end of the series. If this series is followed by
+            // another series (in which case this._inProgress === false), we
+            // need this guard to be inactive.
+            if (!this._inProgress || this._errorFromBeforeEachNav != null)
+              return;
+            try {
+              this._beforeEachNavGuard(this._component, to, from);
+            } catch (e) {
+              this._errorFromBeforeEachNav = e;
             }
-            // The onAbort callback seems to be called when the initial
-            // navigation is aborted, even if a navigation is ultimately
-            // confirmed. Here, we examine the router state to determine whether
-            // a navigation was ultimately confirmed.
-            const onAbort = () => Vue.prototype.$nextTick(() => {
-              if (routerState.lastNavigationWasConfirmed)
-                resolve();
-              else
-                reject(new Error('last navigation was not confirmed'));
-            });
-            router.push(this._route, resolve, onAbort);
-          },
-          () => reject(new Error('navigation aborted'))
-        );
+          });
+        }
+        // The onAbort callback seems to be called when the initial
+        // navigation is aborted, even if a navigation is ultimately
+        // confirmed. Here, we examine the router state to determine whether
+        // a navigation was ultimately confirmed.
+        const onAbort = () => Vue.prototype.$nextTick(() => {
+          if (routerState.lastNavigationWasConfirmed)
+            resolve();
+          else
+            reject(new Error('last navigation was not confirmed'));
+        });
+        router.push(this._route, resolve, onAbort);
       }
     });
   }
