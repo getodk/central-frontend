@@ -188,16 +188,10 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
 
-  route(location, mountOptions = {}) {
+  route(location) {
     if (this._route != null)
-      throw new Error('cannot call route() more than once in a single chain');
-    if (this._mount != null)
-      throw new Error('cannot call both route() and mount() in a single chain');
-    if (this._previousPromise != null)
-      throw new Error('cannot route after first series in chain');
-    const route = location;
-    const mount = () => mountAndMark(App, { ...mountOptions, router });
-    return this._with({ route, mount });
+      throw new Error('cannot call route() more than once in a single series');
+    return this._with({ route: location });
   }
 
   // Multiple calls to beforeEachNav() are not yet supported.
@@ -214,8 +208,6 @@ class MockHttp {
   // OTHER REQUESTS
 
   mount(component, options = {}) {
-    if (this._route != null)
-      throw new Error('cannot call both route() and mount() in a single chain');
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
@@ -317,7 +309,7 @@ class MockHttp {
   another request after the responses have been processed, use the returned
   MockHttp. */
   afterResponses(callback) {
-    if (this._mount == null && this._request == null)
+    if (this._route == null && this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
       .then(() => {
@@ -473,15 +465,18 @@ class MockHttp {
           if (!(this._mount != null && this._component == null))
             Vue.nextTick(resolve);
         },
-        // The router.push() onAbort callback seems to be called when the
-        // initial navigation is aborted, even if a navigation is ultimately
-        // confirmed. Here we examine the router state to determine whether a
-        // navigation was ultimately confirmed.
+        /* The router.push() onAbort callback seems to be called when the
+        initial navigation is aborted, even if a navigation is ultimately
+        confirmed. Here we examine the router state to determine whether a
+        navigation was ultimately confirmed. (Note that this implementation will
+        not work if an asynchronous navigation guard is called after the initial
+        navigation is aborted: the onAbort callback waits a tick, but that might
+        not be long enough for an asynchronous guard to return.) */
         () => Vue.nextTick(() => {
           if (routerState.navigations.last.confirmed)
             resolve();
           else
-            reject(new Error('last navigation was not confirmed'));
+            reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));
         })
       );
       if (this._mount != null) {
@@ -649,8 +644,9 @@ class MockHttp {
   // PROMISE METHODS
 
   promise() {
-    const anySpecification = this._mount != null || this._request != null ||
-      this._responses.length !== 0 || this._beforeEachResponse != null;
+    const anySpecification = this._route != null || this._mount != null ||
+      this._request != null || this._responses.length !== 0 ||
+      this._beforeEachResponse != null;
     if (!anySpecification && this._previousPromise == null)
       return Promise.resolve();
     const promise = anySpecification
@@ -668,6 +664,6 @@ class MockHttp {
 
 export const mockHttp = () => new MockHttp();
 
-// Deprecated. Use mockHttp().route().
-export const mockRoute = (location, mountOptions = {}) =>
-  mockHttp().route(location, mountOptions);
+export const mockRoute = (location, mountOptions = {}) => mockHttp()
+  .mount(App, { ...mountOptions, router })
+  .route(location);
