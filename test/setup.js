@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import 'should';
 
+// Importing lib/setup.js first, because other import statements below may
+// import some of the same modules as lib/setup.js, and in some cases, the order
+// in which lib/setup.js imports modules matters.
+import '../lib/setup';
 import App from '../lib/components/app.vue';
 import testData from './data';
 import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
@@ -11,7 +15,6 @@ import { destroyMarkedComponent, mountAndMark } from './destroy';
 import { logOut } from '../lib/session';
 import { router } from '../lib/router';
 import { setHttp } from './http';
-import '../lib/setup';
 import './assertions';
 
 Vue.prototype.$alert = function $alert() {
