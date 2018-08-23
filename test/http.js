@@ -660,7 +660,8 @@ class MockHttp {
   // PROMISE METHODS
 
   promise() {
-    const anySpecification = this._route != null || this._mount != null ||
+    const anySpecification = this._route != null ||
+      this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
       this._beforeEachResponse != null;
     if (!anySpecification && this._previousPromise == null)
