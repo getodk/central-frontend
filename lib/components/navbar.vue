@@ -101,11 +101,12 @@ export default {
         new Link(this, 'System', '/system/backups', 'navbar-system-link')
       ],
       /* If the initial navigation is synchronous, Navbar will be created after
-      the navigation is confirmed. If the initial navigation is asynchronous,
-      Navbar will created before the navigation is confirmed. (For more, see the
-      comments in App.) Either way, the user will be logged out when Navbar is
-      created: if the user's session is restored during the initial navigation,
-      it will be done so asynchronously, after Navbar is created. */
+      the navigation is confirmed (I think). If the initial navigation is
+      asynchronous, Navbar will be created before the navigation is confirmed.
+      (For more, see the comments in App.) Either way, the user will be logged
+      out when Navbar is created: if the user's session is restored during the
+      initial navigation, it will be done so asynchronously, after Navbar is
+      created. */
       loggedIn: false,
       displayName: ''
     };

@@ -363,9 +363,9 @@ class MockHttp {
       .then(() => {
         if (this._route == null || this._mount == null) return undefined;
         // If we are already at the specified route location, we need to
-        // navigate to a different location, or the navigation will be aborted.
-        // Here, we navigate to a location that we also know will not send a
-        // request.
+        // navigate to a different location; otherwise the navigation will be
+        // aborted. Here, we navigate to a location that we also know will not
+        // send a request.
         return new Promise((resolve, reject) => router.push(
           `/_initialPromise${Vue.prototype.$uniqueId()}`,
           () => {
@@ -459,20 +459,23 @@ class MockHttp {
         this._route,
         () => {
           complete = true;
-          // If a component has not been mounted, and the router.push()
-          // onComplete callback is synchronous, we resolve immediately after
-          // mounting below. Otherwise, we resolve here after waiting a tick for
-          // the DOM to update.
+          // If a component has not been mounted
+          // (in which case this._mount != null), and if the router.push()
+          // onComplete callback is synchronous
+          // (in which case this._component == null), we wait to resolve until
+          // after mounting below. Otherwise, we resolve here after waiting a
+          // tick for the DOM to update.
           if (!(this._mount != null && this._component == null))
             Vue.nextTick(resolve);
         },
         /* The router.push() onAbort callback seems to be called when the
-        initial navigation is aborted, even if a navigation is ultimately
+        navigation to this._route is aborted, even if a navigation is ultimately
         confirmed. Here we examine the router state to determine whether a
         navigation was ultimately confirmed. (Note that this implementation will
-        not work if an asynchronous navigation guard is called after the initial
-        navigation is aborted: the onAbort callback waits a tick, but that might
-        not be long enough for an asynchronous guard to return.) */
+        not work if an asynchronous navigation guard is called after the
+        navigation to this._route is aborted: the onAbort callback waits a tick,
+        but that might not be long enough for an asynchronous guard to
+        return.) */
         () => Vue.nextTick(() => {
           if (routerState.navigations.last.confirmed)
             resolve();
@@ -481,8 +484,8 @@ class MockHttp {
         })
       );
       if (this._mount != null) {
-        // We mount before waiting for the initial navigation to be confirmed,
-        // matching what happens in production.
+        // If the initial navigation is asynchronous, we mount before waiting
+        // for it to be confirmed, matching what happens in production.
         this._component = this._mount();
         if (complete) resolve();
       }
