@@ -51,7 +51,7 @@ describe('AccountClaim', () => {
       const { xmlFormId } = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(`/forms/${xmlFormId}`)
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.sortedFieldKeys.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .complete()
         .route(LOCATION)
         .respondWithProblems([500, 500, 500])

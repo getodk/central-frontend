@@ -351,11 +351,12 @@ class MockHttp {
         if (inProgress) throw new Error('another series is in progress');
         inProgress = true;
         this._inProgress = true;
+        this._errorFromBeforeEachNav = null;
         this._previousHttp = Vue.prototype.$http;
         setHttp(this._http());
         this._component = component;
-        this._errorFromBeforeEachNav = null;
         this._errorFromBeforeEachResponse = null;
+        this._errorFromResponse = null;
         this._requestWithoutResponse = false;
         this._responseWithoutRequest = this._responses.length !== 0;
         this._requestResponseLog = [];
@@ -402,19 +403,20 @@ class MockHttp {
           if (this._beforeEachResponse != null) this._tryBeforeEachResponse();
         })
         .then(() => new Promise((resolve, reject) => {
-          const result = responseCallback();
+          let result;
+          try {
+            result = responseCallback();
+          } catch (e) {
+            if (this._errorFromResponse == null) this._errorFromResponse = e;
+            reject(e);
+            return;
+          }
           const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
-          try {
-            if (validateStatus(response.status))
-              resolve(response);
-            else
-              reject(result);
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.log(`mockHttp(): a response threw an error:\n${e.stack}`);
-            reject(e);
-          }
+          if (validateStatus(response.status))
+            resolve(response);
+          else
+            reject(result);
         }));
     };
   }
@@ -530,13 +532,19 @@ class MockHttp {
 
   _checkStateAfterWait() {
     if (this._errorFromBeforeEachNav != null) {
-      console.log('beforeEachNav() error:'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.log('the beforeEachNav() callback threw an error');
       throw this._errorFromBeforeEachNav;
     }
     if (this._errorFromBeforeEachResponse != null) {
       // eslint-disable-next-line no-console
-      console.log('beforeEachResponse() error:');
+      console.log('the beforeEachResponse() callback threw an error');
       throw this._errorFromBeforeEachResponse;
+    }
+    if (this._errorFromResponse != null) {
+      // eslint-disable-next-line no-console
+      console.log('a response callback threw an error');
+      throw this._errorFromResponse;
     }
     if (this._requestWithoutResponse || this._responseWithoutRequest) {
       this._listRequestResponseLog();

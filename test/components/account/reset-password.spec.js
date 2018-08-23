@@ -54,7 +54,7 @@ describe('AccountResetPassword', () => {
 
   describe('navigation to /reset-password', () => {
     it('redirects to the root page after a login through the login page', () => {
-      const xmlFormId = testData.extendedForms.createPast(1).last;
+      const { xmlFormId } = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(`/forms/${xmlFormId}`)
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
