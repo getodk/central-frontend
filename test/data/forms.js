@@ -13,7 +13,7 @@ export const extendedForms = dataStore({
 
     hasInstanceId = faker.random.boolean(),
     hasName = faker.random.boolean(),
-    isOpen = inPast ? faker.random.boolean() : 'open',
+    isOpen = !inPast || faker.random.boolean(),
     hasSubmission = inPast && faker.random.boolean()
   }) => {
     const xmlFormId = `a${faker.random.alphaNumeric(8)}`;

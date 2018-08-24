@@ -5,7 +5,7 @@ class Factory {
   constructor(store, options) {
     this._store = store;
     this._options = { ...options };
-    if (this._options.validate === undefined) this._options.validate = [];
+    if (this._options.validate == null) this._options.validate = [];
     this.reset();
   }
 
@@ -63,8 +63,8 @@ class Factory {
       const object = factory({
         ...factoryFunctionOptions,
         inPast,
-        lastCreatedAt: this._lastCreatedAt,
-        id
+        id,
+        lastCreatedAt: this._lastCreatedAt
       });
       if (this._isValid(object, constraints)) {
         this._lastCreatedAt = object.createdAt;
@@ -188,8 +188,10 @@ class Store extends Collection {
   update(object, callback) {
     const { createdAt } = object;
     callback(object);
-    // eslint-disable-next-line no-param-reassign
-    if ('updatedAt' in object) object.updatedAt = new Date().toISOString();
+    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
+      // eslint-disable-next-line no-param-reassign
+      object.updatedAt = new Date().toISOString();
+    }
     if (object.createdAt !== createdAt) {
       // this._objects is sorted by createdAt, so we currently do not support
       // updates to createdAt.

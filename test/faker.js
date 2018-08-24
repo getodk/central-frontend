@@ -47,16 +47,12 @@ Object.assign(fakerExtensions, {
       return faker.date.future();
     },
 
-    timestamps: (inPast, sinceStrings = null) => {
-      if (!inPast) {
-        return {
-          createdAt: new Date().toISOString(),
-          updatedAt: null
-        };
-      }
-      const sinceDateTimes = sinceStrings
-        .filter(s => s != null)
-        .map(s => DateTime.fromISO(s));
+    timestamps: (inPast, sinceStrings = undefined) => {
+      if (!inPast)
+        return { createdAt: new Date().toISOString(), updatedAt: null };
+      const sinceDateTimes = sinceStrings != null
+        ? sinceStrings.filter(s => s != null).map(s => DateTime.fromISO(s))
+        : [];
       const createdAt = sinceDateTimes.length !== 0
         ? faker.date.pastSince(DateTime.max(...sinceDateTimes).toISO()).toISOString()
         : faker.date.past().toISOString();
