@@ -1,6 +1,6 @@
 import testData from '../../data';
 import { fillForm, trigger } from '../../util';
-import { mockHttp, mockRoute } from '../../http';
+import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
 
 const submitForm = (wrapper) => {
@@ -53,17 +53,19 @@ describe('AccountResetPassword', () => {
         .then(() => app.vm.$route.path.should.equal('/login'))));
 
   describe('navigation to /reset-password', () => {
-    it('redirects to the root page after a login through the login page', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
+    it('redirects to the root page after a login through the login page', () => {
+      const { xmlFormId } = testData.extendedForms.createPast(1).last();
+      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .complete()
-        .request(app => app.vm.$router.push('/reset-password'))
+        .route('/reset-password')
         .respondWithProblems([500, 500, 500])
-        .afterResponse(app => app.vm.$route.path.should.equal('/')));
+        .afterResponse(app => app.vm.$route.path.should.equal('/'));
+    });
 
     it('redirects to the root page if the session is restored', () =>
-      mockHttp()
-        .route('/reset-password')
+      mockRoute('/reset-password')
         .restoreSession(true)
         .respondWithProblems([500, 500, 500])
         .afterResponses(app => app.vm.$route.path.should.equal('/')));

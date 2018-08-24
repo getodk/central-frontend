@@ -158,11 +158,10 @@ class MockHttp {
     responses = [],
     beforeEachResponse = null
   } = {}) {
-    // State from the previous series of request-response cycles (if any)
-    // Promise from the previous series, used to chain series.
+    // If the current series follows a previous series of request-response
+    // cycles, this._previousPromise is the promise from the previous series.
+    // this._previousPromise is used to chain series.
     this._previousPromise = previousPromise;
-
-    // State specific to the current series
     this._route = route;
     this._beforeEachNavGuard = beforeEachNavGuard;
     this._mount = mount;
@@ -188,19 +187,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
 
-  route(location, mountOptions = {}) {
+  route(location) {
     if (this._route != null)
-      throw new Error('cannot call route() more than once in a single chain');
-    if (this._mount != null)
-      throw new Error('cannot call both route() and mount() in a single chain');
-    if (this._previousPromise != null)
-      throw new Error('cannot route after first series in chain');
-    const route = location;
-    const mount = () => mountAndMark(App, { ...mountOptions, router });
-    return this._with({ route, mount });
+      throw new Error('cannot call route() more than once in a single series');
+    return this._with({ route: location });
   }
 
-  // Multiple calls to beforeEachNav() are not yet supported.
   beforeEachNav(callback) {
     if (this._beforeEachNavGuard != null)
       throw new Error('cannot call beforeEachNav() more than once in a single chain');
@@ -214,12 +206,10 @@ class MockHttp {
   // OTHER REQUESTS
 
   mount(component, options = {}) {
-    if (this._route != null)
-      throw new Error('cannot call both route() and mount() in a single chain');
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
-      throw new Error('cannot mount component after first series in chain');
+      throw new Error('cannot call mount() after the first series in a chain');
     return this._with({ mount: () => mountAndMark(component, options) });
   }
 
@@ -317,28 +307,27 @@ class MockHttp {
   another request after the responses have been processed, use the returned
   MockHttp. */
   afterResponses(callback) {
-    if (this._mount == null && this._request == null)
+    if (this._route == null && this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
-      .then(component => this._mountAndRoute(component))
-      .then(component => {
-        if (this._request == null) return component;
+      .then(() => {
+        if (this._beforeEachNavGuard == null) return;
+        beforeEachNav((to, from) => this._tryBeforeEachNav(to, from));
+      })
+      .then(() => this._routeAndMount())
+      .then(() => {
+        if (this._request == null) return undefined;
         this._checkStateBeforeRequest();
-        // this._request() may return a Promise or a non-Promise value (either
-        // is allowed), which is why we use Promise.resolve().
-        return Promise.resolve(component).then(this._request).then(() => component);
+        return this._request(this._component);
       })
       // Using finally() rather than then() so that even if the promise is
-      // rejected, we know that any responses have been processed before the end
-      // of the promise.
-      .finally(() => this._waitForResponsesToBeProcessed())
+      // rejected, we know that any responses will be processed by the end of
+      // the promise.
+      .finally(this._waitForResponsesToBeProcessed)
       .finally(() => this._restoreHttp())
-      .then(component => {
-        this._checkStateAfterWait();
-        return component;
-      })
-      .then(component => Promise.resolve(component).then(callback)
-        .then(result => ({ component, result })))
+      .then(() => this._checkStateAfterWait())
+      .then(() => callback(this._component))
+      .then(result => ({ component: this._component, result }))
       .finally(() => this._cleanUpAfterResponses());
     return new MockHttp({ previousPromise: promise });
   }
@@ -350,25 +339,45 @@ class MockHttp {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
-    // Check initial state and set globals and properties of this object that
-    // are used within the afterResponses() promise.
-    return promise.then(({ component }) => {
-      // Concurrent series could cause issues in at least two ways. First,
-      // Vue.prototype.$http might not be restored correctly. Second, if both
-      // series use the single global router, that could cause issues.
-      if (inProgress) throw new Error('another series is in progress');
-      inProgress = true;
-      this._inProgress = true;
-      this._previousHttp = Vue.prototype.$http;
-      setHttp(this._http());
-      this._component = null;
-      this._errorFromBeforeEachNav = null;
-      this._errorFromBeforeEachResponse = null;
-      this._requestWithoutResponse = false;
-      this._responseWithoutRequest = this._responses.length !== 0;
-      this._requestResponseLog = [];
-      return component;
-    });
+    return promise
+      // Check initial state, set globals, and set properties of this object
+      // that are used within the afterResponses() promise. `component` is the
+      // component that the previous promise mounted (if any).
+      .then(({ component }) => {
+        // Concurrent series could cause issues in at least two ways. First,
+        // Vue.prototype.$http might not be restored correctly. Second, if
+        // concurrent series use the single global router, that could cause
+        // issues.
+        if (inProgress) throw new Error('another series is in progress');
+        inProgress = true;
+        this._inProgress = true;
+        this._errorFromBeforeEachNav = null;
+        this._previousHttp = Vue.prototype.$http;
+        setHttp(this._http());
+        this._component = component;
+        this._errorFromBeforeEachResponse = null;
+        this._errorFromResponse = null;
+        this._requestWithoutResponse = false;
+        this._responseWithoutRequest = this._responses.length !== 0;
+        this._requestResponseLog = [];
+      })
+      .then(() => {
+        if (this._route == null || this._mount == null) return undefined;
+        // If we are already at the specified route location, we need to
+        // navigate to a different location; otherwise the navigation will be
+        // aborted. Here, we navigate to a location that we also know will not
+        // send a request.
+        return new Promise((resolve, reject) => router.push(
+          `/_initialPromise${Vue.prototype.$uniqueId()}`,
+          () => {
+            // Reset router state.
+            routerState.navigations.first = { triggered: false, confirmed: false };
+            routerState.navigations.last = { triggered: false, confirmed: false };
+            resolve();
+          },
+          () => reject(new Error('navigation aborted'))
+        ));
+      });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -390,27 +399,29 @@ class MockHttp {
       // Wait a tick after this._request() or the previous response so that Vue
       // is updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
-        .then(() => this._tryBeforeEachResponse())
+        .then(() => {
+          if (this._beforeEachResponse != null) this._tryBeforeEachResponse();
+        })
         .then(() => new Promise((resolve, reject) => {
-          const result = responseCallback();
+          let result;
+          try {
+            result = responseCallback();
+          } catch (e) {
+            if (this._errorFromResponse == null) this._errorFromResponse = e;
+            reject(e);
+            return;
+          }
           const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
-          try {
-            if (validateStatus(response.status))
-              resolve(response);
-            else
-              reject(result);
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.log(`mockHttp(): a response threw an error:\n${e.stack}`);
-            reject(e);
-          }
+          if (validateStatus(response.status))
+            resolve(response);
+          else
+            reject(result);
         }));
     };
   }
 
   _tryBeforeEachResponse() {
-    if (this._beforeEachResponse == null) return;
     if (this._errorFromBeforeEachResponse != null) return;
     /* Adding a try/catch block here even though _beforeEachResponse() is called
     within a promise chain, because the promise is not returned to Mocha, but
@@ -424,59 +435,72 @@ class MockHttp {
     }
   }
 
-  _mountAndRoute(componentFromPreviousPromise) {
+  _tryBeforeEachNav(to, from) {
+    // The current series' beforeEachNav() guard will be in place until the end
+    // of the test, not just the end of the series. If the current series is
+    // followed by another series, we need to deactivate the current series'
+    // guard during the following series. To do so, we check this._inProgress,
+    // which will be false during the following series.
+    if (!this._inProgress) return;
+    if (this._errorFromBeforeEachNav != null) return;
+    try {
+      this._beforeEachNavGuard(this._component, to, from);
+    } catch (e) {
+      this._errorFromBeforeEachNav = e;
+    }
+  }
+
+  _routeAndMount() {
+    if (this._route == null) {
+      if (this._mount != null) this._component = this._mount();
+      return undefined;
+    }
     return new Promise((resolve, reject) => {
-      if (this._route == null) {
-        if (this._previousPromise != null)
-          this._component = componentFromPreviousPromise;
-        else if (this._mount != null)
-          this._component = this._mount();
-        resolve(this._component);
-      } else {
-        router.push(
-          // Navigate to a page that will not send a request.
-          '/_mountAndRoute',
-          () => {
-            this._component = this._mount();
-            routerState.anyNavigationTriggered = false;
-            if (this._beforeEachNavGuard != null) {
-              beforeEachNav((to, from) => {
-                // This guard will be in place until the end of the test, not
-                // just the end of the series. If this series is followed by
-                // another series (in which case this._inProgress === false), we
-                // need this guard to be inactive.
-                if (!this._inProgress || this._errorFromBeforeEachNav != null)
-                  return;
-                try {
-                  this._beforeEachNavGuard(this._component, to, from);
-                } catch (e) {
-                  this._errorFromBeforeEachNav = e;
-                }
-              });
-            }
-            // The onAbort callback seems to be called when the initial
-            // navigation is aborted, even if a navigation is ultimately
-            // confirmed. Here, we examine the router state to determine whether
-            // a navigation was ultimately confirmed.
-            const onAbort = () => Vue.prototype.$nextTick(() => {
-              if (routerState.lastNavigationWasConfirmed)
-                resolve(this._component);
-              else
-                reject(new Error('last navigation was not confirmed'));
-            });
-            router.push(this._route, () => resolve(this._component), onAbort);
-          },
-          () => reject(new Error('navigation aborted'))
-        );
+      let complete = false;
+      router.push(
+        this._route,
+        () => {
+          complete = true;
+          // If a component has not been mounted
+          // (in which case this._mount != null), and if the router.push()
+          // onComplete callback is synchronous
+          // (in which case this._component == null), we wait to resolve until
+          // after mounting below. Otherwise, we resolve here after waiting a
+          // tick for the DOM to update.
+          if (!(this._mount != null && this._component == null))
+            Vue.nextTick(resolve);
+        },
+        /* The router.push() onAbort callback seems to be called when the
+        navigation to this._route is aborted, even if a navigation is ultimately
+        confirmed. Here we examine the router state to determine whether a
+        navigation was ultimately confirmed. (Note that this implementation will
+        not work if an asynchronous navigation guard is called after the
+        navigation to this._route is aborted: the onAbort callback waits a tick,
+        but that might not be long enough for an asynchronous guard to
+        return.) */
+        () => Vue.nextTick(() => {
+          if (routerState.navigations.last.confirmed)
+            resolve();
+          else
+            reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));
+        })
+      );
+      if (this._mount != null) {
+        // If the initial navigation is asynchronous, we mount before waiting
+        // for it to be confirmed, matching what happens in production.
+        this._component = this._mount();
+        if (complete) resolve();
       }
     });
   }
 
   _checkStateBeforeRequest() {
-    // If this._route or this._mount() resulted in a request,
-    // this._requestResponseLog will have an entry for it. (Note, however, that
-    // the response to the request might not yet have been received: we may be
-    // in the period between the request and the response.)
+    /* this._route and this._mount() are allowed to result in requests, but if
+    they do, no request callback should be specified. We check for that case by
+    examining this._requestResponseLog, which will have an entry if there has
+    been a request already. (Note, however, that the response to the request
+    might not yet have been sent: we may be in the period between the request
+    and the response.) */
     if (this._requestResponseLog.length === 0) return;
     this._listRequestResponseLog();
     throw new Error('a request was sent before the request() callback was invoked');
@@ -500,19 +524,27 @@ class MockHttp {
 
   _restoreHttp() {
     // If this._previousPromise was rejected, the current series did not set
-    // $http. In that case, this._inProgress will be falsy.
+    // $http, and we do not need to restore it. We can check for that case by
+    // examining this._inProgress, which will be falsy if this._previousPromise
+    // was rejected.
     if (this._inProgress) Vue.prototype.$http = this._previousHttp;
   }
 
   _checkStateAfterWait() {
     if (this._errorFromBeforeEachNav != null) {
-      console.log('beforeEachNav() error:'); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.log('the beforeEachNav() callback threw an error');
       throw this._errorFromBeforeEachNav;
     }
     if (this._errorFromBeforeEachResponse != null) {
       // eslint-disable-next-line no-console
-      console.log('beforeEachResponse() error:');
+      console.log('the beforeEachResponse() callback threw an error');
       throw this._errorFromBeforeEachResponse;
+    }
+    if (this._errorFromResponse != null) {
+      // eslint-disable-next-line no-console
+      console.log('a response callback threw an error');
+      throw this._errorFromResponse;
     }
     if (this._requestWithoutResponse || this._responseWithoutRequest) {
       this._listRequestResponseLog();
@@ -628,8 +660,10 @@ class MockHttp {
   // PROMISE METHODS
 
   promise() {
-    const anySpecification = this._mount != null || this._request != null ||
-      this._responses.length !== 0 || this._beforeEachResponse != null;
+    const anySpecification = this._route != null ||
+      this._beforeEachNavGuard != null || this._mount != null ||
+      this._request != null || this._responses.length !== 0 ||
+      this._beforeEachResponse != null;
     if (!anySpecification && this._previousPromise == null)
       return Promise.resolve();
     const promise = anySpecification
@@ -647,6 +681,6 @@ class MockHttp {
 
 export const mockHttp = () => new MockHttp();
 
-// Deprecated. Use mockHttp().route().
-export const mockRoute = (location, mountOptions = {}) =>
-  mockHttp().route(location, mountOptions);
+export const mockRoute = (location, mountOptions = {}) => mockHttp()
+  .mount(App, { ...mountOptions, router })
+  .route(location);

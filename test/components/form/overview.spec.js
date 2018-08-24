@@ -147,21 +147,16 @@ describe('FormOverview', () => {
           .afterResponse(app => {
             const title = app.find('.form-overview-step')[3].first('p');
             title.hasClass('text-success').should.be.false();
-
-            const { xmlFormId } = testData.extendedForms.last();
-            app.vm.$router.push(`/forms/${xmlFormId}/settings`);
-            return app.vm.$nextTick().then(() => app);
           })
+          .route(`/forms/${testData.extendedForms.last().xmlFormId}/settings`)
           .request(app => {
             const formEdit = app.first('#form-edit');
             const closed = formEdit.first('input[type="radio"][value="closed"]');
             return trigger.change(closed).then(() => app);
           })
           .respondWithSuccess()
-          .afterResponse(app => {
-            app.vm.$router.push(overviewPath(testData.extendedForms.last()));
-            return app.vm.$nextTick().then(() => app);
-          })
+          .complete()
+          .route(overviewPath(testData.extendedForms.last()))
           .then(app => {
             const title = app.find('.form-overview-step')[3].first('p');
             title.hasClass('text-success').should.be.true();

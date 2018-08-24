@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import 'should';
 
+// Importing lib/setup.js first, because other import statements below may
+// import some of the same modules as lib/setup.js, and in some cases, the order
+// in which lib/setup.js imports modules matters.
+import '../lib/setup';
 import App from '../lib/components/app.vue';
 import testData from './data';
 import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
@@ -11,7 +15,6 @@ import { destroyMarkedComponent, mountAndMark } from './destroy';
 import { logOut } from '../lib/session';
 import { router } from '../lib/router';
 import { setHttp } from './http';
-import '../lib/setup';
 import './assertions';
 
 Vue.prototype.$alert = function $alert() {
@@ -21,6 +24,15 @@ Vue.prototype.$alert = function $alert() {
     : new MockComponentAlert();
 };
 Vue.prototype.$logger = new MockLogger();
+
+// Set up the router for testing.
+// Inject the router into a Vue instance so that tests can assume that the
+// router has been injected into at least one Vue instance.
+setHttp(() => Promise.reject(new Error()));
+mountAndMark(App, { router });
+destroyMarkedComponent();
+initNavGuards();
+afterEach(clearNavGuards);
 
 setHttp(config => {
   console.log('unhandled request', config); // eslint-disable-line no-console
@@ -37,17 +49,6 @@ afterEach(() => {
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
 });
-
-// Set up the router for testing.
-// Set to a page that will not send a request.
-window.location.hash = '#/test/setup';
-// Inject the router into a Vue instance so that tests can assume that
-// router.app != null.
-mountAndMark(App, { router });
-// We no longer need the Vue instance: destroy the component.
-destroyMarkedComponent();
-initNavGuards();
-afterEach(clearNavGuards);
 
 // Reset global application state.
 afterEach(() => {

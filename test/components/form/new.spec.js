@@ -165,7 +165,7 @@ describe('FormNew', () => {
 
         describe('after navigating back to forms list', () => {
           beforeEach(() => mockHttp()
-            .request(() => app.vm.$router.push('/forms'))
+            .route('/forms')
             .respondWithData(() => testData.extendedForms.sorted()));
 
           it('table has the correct number of rows', () => {

@@ -3,7 +3,7 @@ import Vue from 'vue';
 import testData from './data';
 import { fillForm, trigger } from './util';
 import { logIn } from '../lib/session';
-import { mockHttp } from './http';
+import { mockRoute } from './http';
 
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
@@ -25,8 +25,7 @@ export const submitLoginForm = (wrapper) => {
 export const mockRouteThroughLogin = (location, mountOptions = {}) => {
   if (Vue.prototype.$session.loggedIn())
     throw new Error('session cannot be logged in');
-  return mockHttp()
-    .route(location, mountOptions)
+  return mockRoute(location, mountOptions)
     .restoreSession(false)
     .complete()
     .request(app => {

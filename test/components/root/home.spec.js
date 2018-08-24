@@ -24,7 +24,7 @@ describe('RootHome', () => {
 
     it('routes user to site root after user clicks on navbar header', () =>
       mockRoute('/forms')
-        .respondWithData(() => testData.forms.sorted())
+        .respondWithData(() => testData.extendedForms.sorted())
         .complete()
         .request(app => trigger.click(app.first('.navbar-brand')))
         .respondWithProblem()

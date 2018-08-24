@@ -1,6 +1,7 @@
+import Navbar from '../../../lib/components/navbar.vue';
 import testData from '../../data';
 import { fillForm, trigger } from '../../util';
-import { mockHttp, mockRoute } from '../../http';
+import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
@@ -22,6 +23,12 @@ describe('AccountClaim', () => {
       .request(submitForm)
       .standardButton());
 
+  it('navbar is visible', () =>
+    mockRoute(LOCATION)
+      .then(app => {
+        app.first(Navbar).vm.$el.style.display.should.equal('');
+      }));
+
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute(LOCATION)
@@ -40,17 +47,15 @@ describe('AccountClaim', () => {
   });
 
   describe('navigation to /account/claim', () => {
-    it('redirects to the root page after a login through the login page', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
+    it('redirects to the root page after a login through the login page', () => {
+      const { xmlFormId } = testData.extendedForms.createPast(1).last();
+      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .complete()
-        .request(app => app.vm.$router.push(LOCATION))
-        .respondWithProblems([500, 500, 500])
-        .afterResponses(app => app.vm.$route.path.should.equal('/')));
-
-    it('does not attempt to restore the session', () =>
-      mockHttp()
         .route(LOCATION)
-        .then(app => app.vm.$route.path.should.equal('/account/claim')));
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => app.vm.$route.path.should.equal('/'));
+    });
   });
 });
