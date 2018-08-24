@@ -1,14 +1,3 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import FormAnalyze from '../../../lib/components/form/analyze.vue';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
@@ -23,10 +12,6 @@ const createFormWithSubmission = () => {
   return testData.extendedForms.last();
 };
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
-const submissionsOData = () => {
-  const submissions = testData.extendedSubmissions.sorted();
-  return { value: submissions.map(submission => submission._oData) };
-};
 const clickAnalyzeButton = (wrapper) =>
   trigger.click(wrapper.first('#form-submissions-analyze-button'))
     .then(() => wrapper);
@@ -47,7 +32,7 @@ describe('FormAnalyze', () => {
         propsData: { form: createFormWithSubmission() }
       })
       .respondWithData(() => testData.extendedForms.last()._schema)
-      .respondWithData(submissionsOData)
+      .respondWithData(testData.submissionOData)
       .afterResponse(component => {
         component.first(FormAnalyze).getProp('state').should.be.false();
         return component;
@@ -61,7 +46,7 @@ describe('FormAnalyze', () => {
     mockRoute(submissionsPath(createFormWithSubmission()), { attachToDocument: true })
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedForms.last()._schema)
-      .respondWithData(submissionsOData)
+      .respondWithData(testData.submissionOData)
       .afterResponse(clickAnalyzeButton)
       .then(app =>
         trigger.click(app.first('#form-analyze-odata-url')).then(() => app))

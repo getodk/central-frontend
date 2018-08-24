@@ -3,23 +3,30 @@ import R from 'ramda';
 import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
-import { validateDateOrder } from './validate';
 
 export const extendedFieldKeys = dataStore({
-  factory: () => ({
-    displayName: faker.name.findName(),
-    token: faker.random.arrayElement([faker.app.token(), null]),
-    meta: null,
-    lastUsed: faker.random.arrayElement([faker.date.past().toISOString(), null]),
-    createdBy: R.pick(
-      ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
-      administrators.randomOrCreatePast()
-    )
-  }),
-  validate: [
-    validateDateOrder('createdBy.createdAt', 'createdAt'),
-    validateDateOrder('createdAt', 'lastUsed')
-  ],
+  factory: ({ inPast, id, lastCreatedAt }) => {
+    const createdBy = administrators.randomOrCreatePast();
+    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
+      lastCreatedAt,
+      createdBy.createdAt
+    ]);
+    return {
+      id,
+      displayName: faker.name.findName(),
+      token: faker.random.arrayElement([faker.app.token(), null]),
+      meta: null,
+      lastUsed: inPast && faker.random.boolean()
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null,
+      createdBy: R.pick(
+        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+        createdBy
+      ),
+      createdAt,
+      updatedAt
+    };
+  },
   constraints: {
     withAccess: (fieldKey) => fieldKey.token != null,
     withAccessRevoked: (fieldKey) => fieldKey.token == null

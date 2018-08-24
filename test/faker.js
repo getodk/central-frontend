@@ -1,15 +1,5 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import fakerPackage from 'faker';
+import { DateTime } from 'luxon';
 
 
 
@@ -50,6 +40,26 @@ Object.assign(fakerExtensions, {
       to.setTime(to.getTime() - 1000);
       if (from.getTime() > to.getTime()) throw new Error('invalid since date');
       return faker.date.between(from.toISOString(), to.toISOString());
+    },
+
+    pastOrFuture: () => {
+      if (faker.random.boolean()) return faker.date.past();
+      return faker.date.future();
+    },
+
+    timestamps: (inPast, sinceStrings = undefined) => {
+      if (!inPast)
+        return { createdAt: new Date().toISOString(), updatedAt: null };
+      const sinceDateTimes = sinceStrings != null
+        ? sinceStrings.filter(s => s != null).map(s => DateTime.fromISO(s))
+        : [];
+      const createdAt = sinceDateTimes.length !== 0
+        ? faker.date.pastSince(DateTime.max(...sinceDateTimes).toISO()).toISOString()
+        : faker.date.past().toISOString();
+      const updatedAt = faker.random.boolean()
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null;
+      return { createdAt, updatedAt };
     }
   },
   app: {

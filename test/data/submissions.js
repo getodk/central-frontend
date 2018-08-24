@@ -6,12 +6,14 @@ import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
-import { validateDateOrder, validateUniqueCombination } from './validate';
+import { validateUniqueCombination } from './validate';
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
   factory: ({
-    createdAt,
+    inPast,
+    id,
+    lastCreatedAt,
 
     hasInt = faker.random.boolean(),
     hasDecimal = faker.random.boolean(),
@@ -27,6 +29,10 @@ export const extendedSubmissions = dataStore({
     const form = extendedForms.randomOrCreatePast();
     const instanceId = faker.random.uuid();
     const submitter = administrators.randomOrCreatePast();
+    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
+      lastCreatedAt,
+      submitter.createdAt
+    ]);
 
     const oData = {
       ...partialOData,
@@ -36,12 +42,6 @@ export const extendedSubmissions = dataStore({
         submitterId: submitter.id.toString(),
         submitterName: submitter.displayName
       }
-    };
-    const pastDateTime = (formatString) => {
-      const dateTime = DateTime.fromJSDate(faker.date.past());
-      const formatted = dateTime.toFormat(formatString);
-      if (faker.random.boolean()) return formatted;
-      return `${formatted}+0100`;
     };
     const schemaInstanceId = form._schema.find(question => {
       const { path } = question;
@@ -60,24 +60,32 @@ export const extendedSubmissions = dataStore({
       oData.testInt = faker.random.number();
     if (oData.testDecimal == null && hasDecimal)
       oData.testDecimal = faker.random.number({ precision: 0.00001 });
-    if (oData.testDate == null && hasDate)
-      oData.testDate = pastDateTime('yyyy-MM-dd');
-    if (oData.testTime == null && hasTime)
-      oData.testTime = pastDateTime('HH:mm:ss');
-    if (oData.testDateTime == null && hasDateTime)
-      oData.testDateTime = pastDateTime('yyyy-MM-dd HH:mm:ss');
+    if (oData.testDate == null && hasDate) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testDate = dateTime.toFormat('yyyy-MM-dd');
+    }
+    if (oData.testTime == null && hasTime) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testTime = dateTime.toFormat('HH:mm:ss');
+      if (faker.random.boolean()) oData.testTime += '+01:00';
+    }
+    if (oData.testDateTime == null && hasDateTime) {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      oData.testDateTime = dateTime.toISO({ includeOffset: false });
+      if (faker.random.boolean()) oData.testDateTime += '+01:00';
+    }
     if (oData.testGeopoint == null && hasGeopoint) {
+      // [longitude, latitude], not [latitude, longitude]
       const coordinates = [
-        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 }),
-        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 })
+        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 }),
+        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 })
       ];
       if (faker.random.boolean()) coordinates.push(faker.random.number());
       oData.testGeopoint = { type: 'Point', coordinates };
     }
     if (oData.testGroup == null) oData.testGroup = {};
     if (oData.testGroup.testBinary == null && hasBinary)
-      oData.testGroup.testBinary = faker.system.commonFileName('.jpg');
-    oData['testGroup-testBinary'] = 'a.jpg';
+      oData.testGroup.testBinary = faker.system.commonFileName('jpg');
     oData.testBranch = faker.random.boolean() ? 'y' : 'n';
     if (hasStrings) {
       for (let i = 1; i <= 2; i += 1) {
@@ -92,6 +100,7 @@ export const extendedSubmissions = dataStore({
     // the data.
 
     return {
+      id,
       formId: form.id,
       instanceId,
       // We currently do not use the XML anywhere. If/when we do, we should
@@ -101,12 +110,20 @@ export const extendedSubmissions = dataStore({
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
         submitter
       ),
-      _oData: oData
+      _oData: oData,
+      createdAt,
+      updatedAt
     };
   },
   validate: [
-    validateUniqueCombination(['formId', 'instanceId']),
-    validateDateOrder('submitter.createdAt', 'createdAt')
+    validateUniqueCombination(['formId', 'instanceId'])
   ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
+
+export const submissionOData = () => {
+  if (extendedSubmissions.size === 0) return {};
+  return {
+    value: extendedSubmissions.sorted().map(submission => submission._oData)
+  };
+};

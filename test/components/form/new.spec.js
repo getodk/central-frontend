@@ -1,14 +1,3 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import FormNew from '../../../lib/components/form/new.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
@@ -17,6 +6,7 @@ import { mountAndMark } from '../../destroy';
 import { trigger } from '../../util';
 
 const XML_FILENAME = 'test.xml';
+const XML = '<a><b/></a>';
 
 const findModal = (wrapper) => wrapper.first(FormNew);
 const openModal = (wrapper) => trigger
@@ -28,7 +18,7 @@ const createForm = (modal) => {
 };
 const dataTransfer = () => {
   const dt = new DataTransfer();
-  const file = new File([testData.extendedForms.last().xml], XML_FILENAME);
+  const file = new File([XML], XML_FILENAME);
   dt.items.add(file);
   return dt;
 };
@@ -116,7 +106,7 @@ describe('FormNew', () => {
           .then(modal => {
             modal.data().reading.should.be.false();
             modal.data().filename.should.equal(XML_FILENAME);
-            modal.data().xml.should.equal(testData.extendedForms.last().xml);
+            modal.data().xml.should.equal(XML);
             const button = modal.first('#form-new-create-button');
             button.element.disabled.should.be.false();
           }));
