@@ -248,6 +248,7 @@ export default {
     // Fix the widths of the Type and Name columns so that the width of the
     // Uploaded column is also fixed. We do not want the width of the Uploaded
     // column to change when a Replace label is added to a row.
+    max-width: 125px;
     min-width: 125px;
     width: 125px;
   }
