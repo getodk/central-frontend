@@ -61,11 +61,11 @@ export default {
     htmlClass() {
       const dragoverTargetsADifferentRow = this.dragoverAttachment != null &&
         this.dragoverAttachment.name !== this.attachment.name;
-      const info = this.targeted ||
+      const highlighted = this.targeted ||
         (this.fileIsOverDropZone && !dragoverTargetsADifferentRow);
       return {
         'form-attachment-row': true,
-        info,
+        info: highlighted,
         'form-attachment-row-targeted': this.targeted
       };
     },
