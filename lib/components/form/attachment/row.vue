@@ -123,7 +123,7 @@ export default {
     }
 
     .icon-exclamation-triangle {
-      color: #cc9e00;
+      color: #e1bf50;
       margin-right: 2px;
     }
   }

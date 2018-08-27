@@ -174,8 +174,7 @@ $width-current: $width-main - $padding-left-main - $padding-right-main;
 }
 
 #form-attachment-popups-unmatched {
-  // TODO: A little too dark?
-  background-color: #cc9e00;
+  background-color: #e1bf50;
   bottom: $bottom-unmatched;
   height: $height-unmatched;
   padding: 15px;
