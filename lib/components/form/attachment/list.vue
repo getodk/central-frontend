@@ -201,13 +201,10 @@ export default {
       const { files } = jQueryEvent.originalEvent.dataTransfer;
       if (this.countOfFilesOverDropZone !== 1)
         this.matchFilesToAttachments(files);
-      if (this.countOfFilesOverDropZone === 1 &&
-        this.dragoverAttachment != null) {
+      else if (this.dragoverAttachment != null) {
         const file = files[0];
-        if (this.countOfFilesOverDropZone !== -1) {
-          this.filesToUpload = [{ file, attachment: this.dragoverAttachment }];
-          this.dragoverAttachment = null;
-        }
+        this.filesToUpload = [{ file, attachment: this.dragoverAttachment }];
+        this.dragoverAttachment = null;
         if (file.name === this.filesToUpload[0].attachment.name)
           this.uploadFiles();
         else
