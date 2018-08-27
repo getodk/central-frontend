@@ -117,9 +117,15 @@ export default {
       return this.uploadStatus.current != null;
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.uploadStatus.current == null)
+      next();
+    else
+      next(false);
+  },
   methods: {
     showUploadFilesModal() {
-      if (!this.disabled) this.showModal('uploadFilesModal');
+      if (this.uploadStatus.current == null) this.showModal('uploadFilesModal');
     },
     // items is a DataTransferItemList, not an Array.
     fileItemCount(maybeItems) {
