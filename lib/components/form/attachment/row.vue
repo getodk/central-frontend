@@ -80,42 +80,19 @@ export default {
 @import '../../../../assets/scss/variables';
 
 #form-attachment-list-table {
-  thead > tr > th {
-    border-bottom-width: 0;
-  }
-
-  // TODO. Adjust styles for bottom row.
-  > tbody > .form-attachment-row {
-    &:first-child > td {
-      border-top: $border-bottom-table-heading;
-    }
-
-    > td {
-      &:first-child {
-        border-left: 1px solid transparent;
-      }
-
-      &:last-child {
-        border-right: 1px solid transparent;
-      }
-    }
-
+  > tbody > tr {
     &.form-attachment-row-targeted {
       > td {
-        border-top-color: $color-info;
+        box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
 
         &:first-child {
-          border-left-color: $color-info;
+          box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
         }
 
         &:last-child {
-          border-right-color: $color-info;
+          box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
         }
       }
-    }
-
-    &.form-attachment-row-targeted + tr > td {
-      border-top-color: $color-info;
     }
 
     .label {
