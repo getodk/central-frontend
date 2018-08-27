@@ -35,19 +35,20 @@ except according to the terms contained in the LICENSE file.
           :key="attachment.key" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
-          :files-to-upload="filesToUpload" :data-index="index"/>
+          :planned-uploads="plannedUploads" :data-index="index"/>
       </tbody>
     </table>
     <form-attachment-popups
       :count-of-files-over-drop-zone="countOfFilesOverDropZone"
-      :dragover-attachment="dragoverAttachment" :files-to-upload="filesToUpload"
-      :unmatched-files="unmatchedFiles" :upload-status="uploadStatus"
-      @confirm="uploadFiles" @cancel="cancelUpload"/>
+      :dragover-attachment="dragoverAttachment"
+      :planned-uploads="plannedUploads" :unmatched-files="unmatchedFiles"
+      :upload-status="uploadStatus" @confirm="uploadFiles"
+      @cancel="cancelUpload"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="hideModal('uploadFilesModal')"/>
     <form-attachment-name-mismatch :state="nameMismatch.state"
-      :files-to-upload="filesToUpload" @hide="hideModal('nameMismatch')"
+      :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
       @confirm="uploadFiles" @cancel="cancelUpload"/>
   </div>
 </template>
@@ -91,9 +92,7 @@ export default {
       // Only applicable for countOfFilesOverDropZone === 1.
       dragoverAttachment: null,
       // Array of file/attachment pairs
-      // TODO: Rename so that there is no implication that it is an array of
-      // files? `uploadsToEnqueue`?
-      filesToUpload: [],
+      plannedUploads: [],
       // TODO: Only store the length?
       unmatchedFiles: [],
       uploadStatus: {
@@ -156,13 +155,13 @@ export default {
     },
     // files is a FileList, not an Array.
     matchFilesToAttachments(files) {
-      this.filesToUpload = [];
+      this.plannedUploads = [];
       this.unmatchedFiles = [];
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
         const attachment = this.attachments.find(a => a.name === file.name);
         if (attachment != null)
-          this.filesToUpload.push({ attachment, file });
+          this.plannedUploads.push({ attachment, file });
         else
           this.unmatchedFiles.push(file);
       }
@@ -172,10 +171,10 @@ export default {
       return `/forms/${this.form.xmlFormId}/attachments/${encodedName}`;
     },
     uploadFiles() {
-      this.uploadStatus.total = this.filesToUpload.length;
+      this.uploadStatus.total = this.plannedUploads.length;
       this.uploadStatus.complete = 0;
       const uploaded = [];
-      const promise = this.filesToUpload.reduce(
+      const promise = this.plannedUploads.reduce(
         (acc, { attachment, file }) => acc
           .then(() => {
             this.uploadStatus.current = file.name;
@@ -200,7 +199,7 @@ export default {
         }
         this.uploadStatus = { total: null, complete: null, current: null };
       });
-      this.filesToUpload = [];
+      this.plannedUploads = [];
       this.unmatchedFiles = [];
     },
     ondrop(jQueryEvent) {
@@ -209,9 +208,9 @@ export default {
         this.matchFilesToAttachments(files);
       else if (this.dragoverAttachment != null) {
         const file = files[0];
-        this.filesToUpload = [{ file, attachment: this.dragoverAttachment }];
+        this.plannedUploads = [{ file, attachment: this.dragoverAttachment }];
         this.dragoverAttachment = null;
-        if (file.name === this.filesToUpload[0].attachment.name)
+        if (file.name === this.plannedUploads[0].attachment.name)
           this.uploadFiles();
         else
           this.nameMismatch.state = true;
@@ -221,7 +220,7 @@ export default {
     cancelUpload() {
       // Checking `length` in order to avoid setting these properties
       // unnecessarily, which could result in Vue calculations.
-      if (this.filesToUpload.length !== 0) this.filesToUpload = [];
+      if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     }
   }

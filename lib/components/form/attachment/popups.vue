@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-show="state" id="form-attachment-popups">
-    <div v-show="filesToUpload.length !== 0 && unmatchedFiles.length !== 0"
+    <div v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
       id="form-attachment-popups-unmatched">
       <template v-if="unmatchedFiles.length === 1">
         <strong>1 file</strong> has a name we don’t recognize and will be
@@ -42,10 +42,10 @@ except according to the terms contained in the LICENSE file.
             remain.
           </div>
         </template>
-        <template v-else-if="filesToUpload.length !== 0">
+        <template v-else-if="plannedUploads.length !== 0">
           <p id="form-attachment-popups-action-text">
-            <strong>{{ filesToUpload.length.toLocaleString() }}
-            {{ $pluralize('file', filesToUpload.length) }}</strong> ready for
+            <strong>{{ plannedUploads.length.toLocaleString() }}
+            {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
             upload.
           </p>
           <div>
@@ -105,7 +105,7 @@ export default {
       required: true
     },
     dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
-    filesToUpload: {
+    plannedUploads: {
       type: Array,
       required: true
     },
@@ -121,7 +121,7 @@ export default {
   computed: {
     state() {
       return this.countOfFilesOverDropZone !== 0 ||
-        this.filesToUpload.length !== 0 || this.unmatchedFiles.length !== 0 ||
+        this.plannedUploads.length !== 0 || this.unmatchedFiles.length !== 0 ||
         this.uploadStatus.current != null;
     },
     // TODO. Use ProgressEvent.

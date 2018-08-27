@@ -47,22 +47,22 @@ export default {
       type: Boolean,
       default: false
     },
-    filesToUpload: {
+    plannedUploads: {
       type: Array,
       required: true
     }
   },
   computed: {
     // Returning dummy values for `attachment` and `file` when
-    // filesToUpload.length !== 1 in order to simplify the template.
+    // plannedUploads.length !== 1 in order to simplify the template.
     attachment() {
-      return this.filesToUpload.length === 1
-        ? this.filesToUpload[0].attachment
+      return this.plannedUploads.length === 1
+        ? this.plannedUploads[0].attachment
         : { name: '', exists: false };
     },
     file() {
-      return this.filesToUpload.length === 1
-        ? this.filesToUpload[0].file
+      return this.plannedUploads.length === 1
+        ? this.plannedUploads[0].file
         : { name: '' };
     }
   },

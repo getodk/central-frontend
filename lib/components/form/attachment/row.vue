@@ -45,7 +45,7 @@ export default {
       default: false
     },
     dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
-    filesToUpload: {
+    plannedUploads: {
       type: Array,
       required: true
     }
@@ -54,7 +54,7 @@ export default {
     targeted() {
       const targetedByDragover = this.dragoverAttachment != null &&
         this.attachment.name === this.dragoverAttachment.name;
-      const targetedByDrop = this.filesToUpload.some(({ file }) =>
+      const targetedByDrop = this.plannedUploads.some(({ file }) =>
         file.name === this.attachment.name);
       return targetedByDragover || targetedByDrop;
     },
