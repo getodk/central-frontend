@@ -183,14 +183,14 @@ export default {
             return this.post(path, file, { headers });
           })
           .then(() => {
-            uploaded.push([attachment, new Date().toISOString()]);
+            uploaded.push({ attachment, updatedAt: new Date().toISOString() });
             this.uploadStatus.complete += 1;
           })
           .catch(() => {}),
         Promise.resolve()
       );
       promise.finally(() => {
-        for (const [attachment, updatedAt] of uploaded) {
+        for (const { attachment, updatedAt } of uploaded) {
           this.$emit(
             'attachment-change',
             this.attachments.indexOf(attachment),
