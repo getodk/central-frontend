@@ -37,9 +37,12 @@ except according to the terms contained in the LICENSE file.
             </span>
           </div>
           <div v-if="uploadStatus.total !== 1">
-            {{ uploadStatus.total.toLocaleString() }}
-            {{ $pluralize('file', uploadStatus.total - uploadStatus.complete) }}
-            remain.
+            <template v-if="uploadStatus.remaining > 1">
+              {{ uploadStatus.remaining.toLocaleString() }} files remain.
+            </template>
+            <template v-else>
+              This is the last file.
+            </template>
           </div>
         </template>
         <template v-else-if="plannedUploads.length !== 0">
@@ -126,10 +129,11 @@ export default {
     },
     // TODO. Use ProgressEvent.
     percentComplete() {
-      const fraction = this.uploadStatus.complete / this.uploadStatus.total;
+      return '0%';
+      // const fraction = this.uploadStatus.complete / this.uploadStatus.total;
       // Not using the option { style: 'percent' }, because it is not supported
       // in IE 10.
-      return `${Math.round(100 * fraction).toLocaleString()}%`;
+      // return `${Math.round(100 * fraction).toLocaleString()}%`;
     }
   }
 };

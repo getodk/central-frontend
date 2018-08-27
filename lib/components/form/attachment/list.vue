@@ -98,8 +98,7 @@ export default {
       uploadStatus: {
         // The total number of files to upload
         total: null,
-        // The number of files uploaded so far
-        complete: null,
+        remaining: null,
         // The name of the file currently being uploaded
         current: null
       },
@@ -172,7 +171,7 @@ export default {
     },
     uploadFiles() {
       this.uploadStatus.total = this.plannedUploads.length;
-      this.uploadStatus.complete = 0;
+      this.uploadStatus.remaining = this.plannedUploads.length;
       const uploaded = [];
       const promise = this.plannedUploads.reduce(
         (acc, { attachment, file }) => acc
@@ -184,7 +183,7 @@ export default {
           })
           .then(() => {
             uploaded.push({ attachment, updatedAt: new Date().toISOString() });
-            this.uploadStatus.complete += 1;
+            this.uploadStatus.remaining -= 1;
           }),
         Promise.resolve()
       );
@@ -197,7 +196,7 @@ export default {
               attachment.with({ exists: true, updatedAt })
             );
           }
-          this.uploadStatus = { total: null, complete: null, current: null };
+          this.uploadStatus = { total: null, remaining: null, current: null };
         })
         .catch(() => {});
       this.plannedUploads = [];
