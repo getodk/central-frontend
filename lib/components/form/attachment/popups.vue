@@ -14,13 +14,15 @@ except according to the terms contained in the LICENSE file.
     <div v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
       id="form-attachment-popups-unmatched">
       <template v-if="unmatchedFiles.length === 1">
-        <strong>1 file</strong> has a name we don’t recognize and will be
+        <span class="icon-exclamation-triangle">
+        </span><strong>1 file</strong> has a name we don’t recognize and will be
         ignored. To upload it, rename it or drag it onto its target.
       </template>
       <template v-else>
-        <strong>{{ unmatchedFiles.length.toLocaleString() }} files</strong> have
-        a name we don’t recognize and will be ignored. To upload them, rename
-        them or drag them individually onto their targets.
+        <span class="icon-exclamation-triangle">
+        </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
+        files</strong> have a name we don’t recognize and will be ignored. To
+        upload them, rename them or drag them individually onto their targets.
       </template>
     </div>
     <div id="form-attachment-popups-main">
@@ -163,7 +165,13 @@ $height-main-content: $height-main - 2 * $padding-main - 2 * $border-width-main;
 $width-main-content: 275px;
 
 $bottom-unmatched: $bottom-main + $height-main + 10px;
+$margin-right-unmatched-icon: 6px;
 $width-unmatched: 350px;
+$width-unmatched-icon: 17px;
+$margin-left-unmatched-icon: -$width-unmatched-icon -
+  $margin-right-unmatched-icon;
+$padding-left-unmatched: $padding-main + $width-unmatched-icon +
+  $margin-right-unmatched-icon;
 
 #form-attachment-popups {
   // If a popup overlays a row of the table, and a file is dragged over the
@@ -187,7 +195,15 @@ $width-unmatched: 350px;
 #form-attachment-popups-unmatched {
   background-color: #e1bf50;
   bottom: $bottom-unmatched;
+  padding-left: $padding-left-unmatched;
   width: $width-unmatched;
+
+  .icon-exclamation-triangle {
+    font-size: 17px;
+    margin-left: $margin-left-unmatched-icon;
+    margin-right: $margin-right-unmatched-icon;
+    vertical-align: -2px;
+  }
 }
 
 #form-attachment-popups-main {
