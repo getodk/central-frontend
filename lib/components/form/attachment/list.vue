@@ -87,22 +87,48 @@ export default {
   },
   data() {
     return {
+      /*
+      Most properties fall in one of three groups:
+
+        1. Properties set on dragenter and reset on dragleave or drop.
+           - fileIsOverDropZone. Indicates whether there is a file over the drop
+             zone. Its value is managed by the dropZone mixin.
+           - countOfFilesOverDropZone. The number of files over the drop zone.
+             It is -1 if there are files, but we do not know how many (an issue
+             in IE).
+           - dragoverAttachment. Only applicable for
+             countOfFilesOverDropZone === 1. When the user drags a single file
+             over a row, dragoverAttachment is the attachment that corresponds
+             to the row.
+        2. Properties set on drop and reset once the upload has started or been
+           canceled.
+           - plannedUploads. An array of file/attachment pairs, indicating which
+             file to upload for which attachment. plannedUploads is used to
+             confirm or cancel the upload, then to start it, but it is not used
+             during the actual upload.
+           - unmatchedFiles. Only applicable for countOfFilesOverDropZone !== 1.
+             An array of dropped files whose names did not match any
+             attachment's.
+        3. Properties set once the upload has started and reset once it has
+           finished or stopped.
+           - uploadStatus. An object with the following properties:
+             - total. The total number of files to upload.
+             - remaining. The number of files that have not been uploaded yet.
+             - current. The name of the file currently being uploaded.
+             - progress. The latest ProgressEvent for the current upload.
+      */
       fileIsOverDropZone: false,
       countOfFilesOverDropZone: 0,
-      // Only applicable for countOfFilesOverDropZone === 1.
       dragoverAttachment: null,
-      // Array of file/attachment pairs
       plannedUploads: [],
-      // TODO: Only store the length?
       unmatchedFiles: [],
       uploadStatus: {
-        // The total number of files to upload
         total: 0,
         remaining: 0,
-        // The name of the file currently being uploaded
         current: null,
         progress: null
       },
+      // Modals
       uploadFilesModal: {
         state: false
       },
@@ -219,6 +245,8 @@ export default {
       }
       this.countOfFilesOverDropZone = 0;
     },
+    // cancelUpload() cancels an upload before it starts, after files have been
+    // dropped. (It does not cancel an upload in progress.)
     cancelUpload() {
       // Checking `length` in order to avoid setting these properties
       // unnecessarily, which could result in Vue calculations.

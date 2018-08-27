@@ -25,6 +25,14 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'FormOverviewStep',
   props: {
+    /*
+    `stage` is one of three values:
+
+      - 'later'. The step is later than the current step: the user has not yet
+        reached the step.
+      - 'current'. The step is the current step.
+      - 'complete'. The step is complete.
+    */
     stage: {
       type: String,
       default: 'later'
