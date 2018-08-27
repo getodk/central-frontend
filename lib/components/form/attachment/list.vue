@@ -185,20 +185,21 @@ export default {
           .then(() => {
             uploaded.push({ attachment, updatedAt: new Date().toISOString() });
             this.uploadStatus.complete += 1;
-          })
-          .catch(() => {}),
+          }),
         Promise.resolve()
       );
-      promise.finally(() => {
-        for (const { attachment, updatedAt } of uploaded) {
-          this.$emit(
-            'attachment-change',
-            this.attachments.indexOf(attachment),
-            attachment.with({ exists: true, updatedAt })
-          );
-        }
-        this.uploadStatus = { total: null, complete: null, current: null };
-      });
+      promise
+        .finally(() => {
+          for (const { attachment, updatedAt } of uploaded) {
+            this.$emit(
+              'attachment-change',
+              this.attachments.indexOf(attachment),
+              attachment.with({ exists: true, updatedAt })
+            );
+          }
+          this.uploadStatus = { total: null, complete: null, current: null };
+        })
+        .catch(() => {});
       this.plannedUploads = [];
       this.unmatchedFiles = [];
     },
