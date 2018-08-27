@@ -14,8 +14,10 @@ except according to the terms contained in the LICENSE file.
     <td class="form-attachment-list-type">
       {{ attachment.type.replace(/^[a-z]/, (letter) => letter.toUpperCase()) }}
     </td>
-    <!-- TODO. Add a link if the attachment exists. -->
-    <td class="form-attachment-list-name">{{ attachment.name }}</td>
+    <td class="form-attachment-list-name">
+      <a v-if="attachment.exists" :href="href">{{ attachment.name }}</a>
+      <template v-else>{{ attachment.name }}</template>
+    </td>
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.exists">
         {{ updatedAt }}
@@ -36,6 +38,10 @@ import { formatDate } from '../../../util';
 export default {
   name: 'FormAttachmentRow',
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     attachment: {
       type: Object,
       required: true
@@ -68,6 +74,9 @@ export default {
         info: highlighted,
         'form-attachment-row-targeted': this.targeted
       };
+    },
+    href() {
+      return `/api/v1/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
     },
     updatedAt() {
       return formatDate(this.attachment.updatedAt);

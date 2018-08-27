@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody>
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :attachment="attachment"
+          :key="attachment.key" :form="form" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads" :data-index="index"/>
