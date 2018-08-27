@@ -97,10 +97,11 @@ export default {
       unmatchedFiles: [],
       uploadStatus: {
         // The total number of files to upload
-        total: null,
-        remaining: null,
+        total: 0,
+        remaining: 0,
         // The name of the file currently being uploaded
-        current: null
+        current: null,
+        progress: null
       },
       uploadFilesModal: {
         state: false
@@ -152,10 +153,15 @@ export default {
         this.countOfFilesOverDropZone = 0;
       }
     },
-    // files is a FileList, not an Array.
+    // Updates this.plannedUploads and this.unmatchedFiles after a drop. files
+    // is a FileList, not an Array.
     matchFilesToAttachments(files) {
-      this.plannedUploads = [];
-      this.unmatchedFiles = [];
+      if (this.countOfFilesOverDropZone === 1) {
+        this.plannedUploads = [
+          { attachment: this.dragoverAttachment, file: files[0] }
+        ];
+        return;
+      }
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
         const attachment = this.attachments.find(a => a.name === file.name);
@@ -165,38 +171,37 @@ export default {
           this.unmatchedFiles.push(file);
       }
     },
-    postPath(attachment) {
-      const encodedName = encodeURIComponent(attachment.name);
-      return `/forms/${this.form.xmlFormId}/attachments/${encodedName}`;
+    uploadFile(attachment, file) {
+      this.uploadStatus.current = file.name;
+      const path = `/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
+      const post = this.post(path, file, {
+        headers: { 'Content-Type': file.type },
+        onUploadProgress: (progressEvent) => {
+          this.uploadStatus.progress = progressEvent;
+        }
+      });
+      return post.then(() => {
+        this.uploadStatus.remaining -= 1;
+      });
     },
     uploadFiles() {
+      const uploaded = [];
       this.uploadStatus.total = this.plannedUploads.length;
       this.uploadStatus.remaining = this.plannedUploads.length;
-      const uploaded = [];
       const promise = this.plannedUploads.reduce(
         (acc, { attachment, file }) => acc
+          .then(() => this.uploadFile(attachment, file))
           .then(() => {
-            this.uploadStatus.current = file.name;
-            const headers = { 'Content-Type': file.type };
-            const path = this.postPath(attachment);
-            return this.post(path, file, { headers });
-          })
-          .then(() => {
-            uploaded.push({ attachment, updatedAt: new Date().toISOString() });
-            this.uploadStatus.remaining -= 1;
+            const updatedAt = new Date().toISOString();
+            uploaded.push(attachment.with({ exists: true, updatedAt }));
           }),
         Promise.resolve()
       );
       promise
         .finally(() => {
-          for (const { attachment, updatedAt } of uploaded) {
-            this.$emit(
-              'attachment-change',
-              this.attachments.indexOf(attachment),
-              attachment.with({ exists: true, updatedAt })
-            );
-          }
-          this.uploadStatus = { total: null, remaining: null, current: null };
+          for (const attachment of uploaded)
+            this.$emit('update-attachment', attachment);
+          this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
         })
         .catch(() => {});
       this.plannedUploads = [];
@@ -204,16 +209,13 @@ export default {
     },
     ondrop(jQueryEvent) {
       const { files } = jQueryEvent.originalEvent.dataTransfer;
-      if (this.countOfFilesOverDropZone !== 1)
-        this.matchFilesToAttachments(files);
-      else if (this.dragoverAttachment != null) {
-        const file = files[0];
-        this.plannedUploads = [{ file, attachment: this.dragoverAttachment }];
+      this.matchFilesToAttachments(files);
+      if (this.dragoverAttachment != null) {
         this.dragoverAttachment = null;
-        if (file.name === this.plannedUploads[0].attachment.name)
+        if (files[0].name === this.plannedUploads[0].attachment.name)
           this.uploadFiles();
         else
-          this.nameMismatch.state = true;
+          this.showModal('nameMismatch');
       }
       this.countOfFilesOverDropZone = 0;
     },

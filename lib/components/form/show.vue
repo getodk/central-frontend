@@ -97,7 +97,9 @@ export default {
     tabPathPrefix() {
       return `/forms/${this.xmlFormId}`;
     },
-    updateAttachment(index, newAttachment) {
+    updateAttachment(newAttachment) {
+      const index = this.attachments
+        .findIndex(attachment => attachment.name === newAttachment.name);
       this.$set(this.attachments, index, newAttachment);
     },
     updateState(newState) {

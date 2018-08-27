@@ -35,9 +35,7 @@ except according to the terms contained in the LICENSE file.
           </p>
           <p id="form-attachment-popups-current">
             <strong>Sending {{ uploadStatus.current }}</strong>
-            <span v-show="uploadStatus.total !== 1">
-              ({{ percentComplete }})
-            </span>
+            <span v-if="hasProgress">({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
             <template v-if="uploadStatus.remaining > 1">
@@ -129,13 +127,15 @@ export default {
         this.plannedUploads.length + this.unmatchedFiles.length > 1 ||
         this.uploadStatus.current != null;
     },
-    // TODO. Use ProgressEvent.
-    percentComplete() {
-      return '0%';
-      // const fraction = this.uploadStatus.complete / this.uploadStatus.total;
+    hasProgress() {
+      const { progress } = this.uploadStatus;
+      return progress != null && progress.lengthComputable;
+    },
+    percentLoaded() {
+      const { loaded, total } = this.uploadStatus.progress;
       // Not using the option { style: 'percent' }, because it is not supported
       // in IE 10.
-      // return `${Math.round(100 * fraction).toLocaleString()}%`;
+      return `${Math.floor(100 * (loaded / total)).toLocaleString()}%`;
     }
   }
 };
