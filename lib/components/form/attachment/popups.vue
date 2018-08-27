@@ -160,10 +160,14 @@ $right-cloud: $width-main - 75px;
 $width-current: $width-main - $padding-left-main - $padding-right-main;
 
 #form-attachment-popups {
-  // If the popup overlays a row of the table, and a file is dragged over the
+  // If a popup overlays a row of the table, and a file is dragged over the
   // popup, the row should be targeted. pointer-events is not supported in IE
   // 10.
   pointer-events: none;
+
+  button {
+    pointer-events: auto;
+  }
 }
 
 #form-attachment-popups-unmatched, #form-attachment-popups-main {
