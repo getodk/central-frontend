@@ -174,18 +174,17 @@ export default {
     // is a FileList, not an Array.
     matchFilesToAttachments(files) {
       if (this.countOfFilesOverDropZone === 1) {
-        this.plannedUploads = [
-          { attachment: this.dragoverAttachment, file: files[0] }
-        ];
-        return;
-      }
-      for (let i = 0; i < files.length; i += 1) {
-        const file = files[i];
-        const attachment = this.attachments.find(a => a.name === file.name);
-        if (attachment != null)
-          this.plannedUploads.push({ attachment, file });
-        else
-          this.unmatchedFiles.push(file);
+        const upload = { attachment: this.dragoverAttachment, file: files[0] };
+        this.plannedUploads.push(upload);
+      } else {
+        for (let i = 0; i < files.length; i += 1) {
+          const file = files[i];
+          const attachment = this.attachments.find(a => a.name === file.name);
+          if (attachment != null)
+            this.plannedUploads.push({ attachment, file });
+          else
+            this.unmatchedFiles.push(file);
+        }
       }
     },
     uploadFile(attachment, file) {
