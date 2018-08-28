@@ -43,13 +43,13 @@ except according to the terms contained in the LICENSE file.
       :dragover-attachment="dragoverAttachment"
       :planned-uploads="plannedUploads" :unmatched-files="unmatchedFiles"
       :upload-status="uploadStatus" @confirm="uploadFiles"
-      @cancel="cancelUpload"/>
+      @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="hideModal('uploadFilesModal')"/>
     <form-attachment-name-mismatch :state="nameMismatch.state"
       :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
-      @confirm="uploadFiles" @cancel="cancelUpload"/>
+      @confirm="uploadFiles" @cancel="cancelUploads"/>
   </div>
 </template>
 
@@ -100,16 +100,16 @@ export default {
              countOfFilesOverDropZone === 1. When the user drags a single file
              over a row, dragoverAttachment is the attachment that corresponds
              to the row.
-        2. Properties set on drop and reset once the upload has started or been
-           canceled.
+        2. Properties set on drop and reset once the uploads have started or
+           been canceled.
            - plannedUploads. An array of file/attachment pairs, indicating which
              file to upload for which attachment. plannedUploads is used to
-             confirm or cancel the upload, then to start it, but it is not used
-             during the actual upload.
+             confirm or cancel the uploads, then to start them, but it is not
+             used during the uploads themselves.
            - unmatchedFiles. Only applicable for countOfFilesOverDropZone !== 1.
              An array of dropped files whose names did not match any
              attachment's.
-        3. Properties set once the upload has started and reset once it has
+        3. Properties set once the uploads have started and reset once they have
            finished or stopped.
            - uploadStatus. An object with the following properties:
              - total. The total number of files to upload.
@@ -171,7 +171,7 @@ export default {
           ? this.attachments[$tr.data('index')]
           : null;
       }
-      this.cancelUpload();
+      this.cancelUploads();
     },
     ondragleave() {
       if (!this.fileIsOverDropZone) {
@@ -245,9 +245,9 @@ export default {
       }
       this.countOfFilesOverDropZone = 0;
     },
-    // cancelUpload() cancels an upload before it starts, after files have been
-    // dropped. (It does not cancel an upload in progress.)
-    cancelUpload() {
+    // cancelUploads() cancels the uploads before they start, after files have
+    // been dropped. (It does not cancel an upload in progress.)
+    cancelUploads() {
       // Checking `length` in order to avoid setting these properties
       // unnecessarily, which could result in Vue calculations.
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
