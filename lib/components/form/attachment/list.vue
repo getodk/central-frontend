@@ -139,7 +139,7 @@ export default {
   },
   computed: {
     disabled() {
-      return this.uploadStatus.current != null;
+      return this.uploadStatus.total !== 0;
     }
   },
   methods: {
@@ -188,22 +188,21 @@ export default {
       }
     },
     uploadFile(attachment, file) {
+      this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
+      this.uploadStatus.progress = null;
       const path = `/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
-      const post = this.post(path, file, {
+      return this.post(path, file, {
         headers: { 'Content-Type': file.type },
         onUploadProgress: (progressEvent) => {
           this.uploadStatus.progress = progressEvent;
         }
       });
-      return post.then(() => {
-        this.uploadStatus.remaining -= 1;
-      });
     },
     uploadFiles() {
       const uploaded = [];
       this.uploadStatus.total = this.plannedUploads.length;
-      this.uploadStatus.remaining = this.plannedUploads.length;
+      this.uploadStatus.remaining = this.plannedUploads.length + 1;
       const promise = this.plannedUploads.reduce(
         (acc, { attachment, file }) => acc
           .then(() => this.uploadFile(attachment, file))

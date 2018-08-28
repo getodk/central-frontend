@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="state" id="form-attachment-popups">
+  <div id="form-attachment-popups">
     <div v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
       id="form-attachment-popups-unmatched">
       <template v-if="unmatchedFiles.length === 1">
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         upload them, rename them or drag them individually onto their targets.
       </template>
     </div>
-    <div id="form-attachment-popups-main">
+    <div v-show="state" id="form-attachment-popups-main">
       <span class="icon-cloud-upload"></span>
       <div>
         <template v-if="uploadStatus.current != null">
@@ -93,7 +93,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </div>
     </div>
-    <div v-show="uploadStatus.current != null" id="form-attachment-popups-backdrop">
+    <div v-show="uploadStatus.total !== 0" id="form-attachment-popups-backdrop">
     </div>
   </div>
 </template>
