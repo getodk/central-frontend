@@ -217,7 +217,7 @@ export default {
       promise
         .finally(() => {
           for (const attachment of uploaded)
-            this.$emit('update-attachment', attachment);
+            this.$emit('attachment-change', attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
         })
         .catch(() => {});
