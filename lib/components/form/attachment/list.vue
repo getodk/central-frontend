@@ -226,6 +226,7 @@ export default {
     ondrop(jQueryEvent) {
       const { files } = jQueryEvent.originalEvent.dataTransfer;
       this.matchFilesToAttachments(files);
+      this.countOfFilesOverDropZone = 0;
       if (this.dragoverAttachment != null) {
         this.dragoverAttachment = null;
         if (files[0].name === this.plannedUploads[0].attachment.name)
@@ -233,7 +234,6 @@ export default {
         else
           this.showModal('nameMismatch');
       }
-      this.countOfFilesOverDropZone = 0;
     },
     // cancelUploads() cancels the uploads before they start, after files have
     // been dropped. (It does not cancel an upload in progress.)
