@@ -21,9 +21,10 @@ except according to the terms contained in the LICENSE file.
       :class="column.htmlClass"
       :title="hasTitle(column) ? questionValue(column) : null">
       <template v-if="column.type === 'binary'">
-        <span v-if="questionValue(column) !== ''"
-          class="icon-check-circle text-success">
-        </span>
+        <a v-if="questionValue(column) !== ''" :href="questionValue(column)"
+          class="no-text-decoration" target="_blank">
+          <span class="icon-arrow-circle-down text-success"></span>
+        </a>
       </template>
       <template v-else>
         {{ questionValue(column) }}
@@ -51,6 +52,10 @@ const TITLE_QUESTION_TYPES = [
 export default {
   name: 'FormSubmissionRow',
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     submission: {
       type: Object,
       required: true
@@ -133,6 +138,12 @@ export default {
               });
             })
             .join(' ');
+
+        case 'binary': {
+          const encodedInstanceId = encodeURIComponent(this.submission.__id);
+          const encodedAttachmentName = encodeURIComponent(rawValue);
+          return `/api/v1/forms/${this.form.encodedId()}/submissions/${encodedInstanceId}/attachments/${encodedAttachmentName}`;
+        }
 
         default:
           return rawValue;

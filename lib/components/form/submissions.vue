@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <form-submission-row v-for="submission of submissions"
-            :key="submission.__id" :submission="submission"/>
+            :key="submission.__id" :form="form" :submission="submission"/>
         </tbody>
       </table>
       <!-- The next table element contains the question data and instance ID of
@@ -68,7 +68,7 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody>
             <form-submission-row v-for="submission of submissions"
-              :key="submission.__id" :submission="submission"
+              :key="submission.__id" :form="form" :submission="submission"
               :question-columns="questionColumns"/>
           </tbody>
         </table>

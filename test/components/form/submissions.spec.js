@@ -305,14 +305,19 @@ describe('FormSubmissions', () => {
         });
 
         it('correctly formats binary values', () =>
-          loadSubmissions(1, { hasBinary: true }).afterResponses(component => {
-            const td = tdByRowAndColumn(
-              component.first('#form-submissions-table2 tbody tr'),
-              'testGroup-testBinary'
-            );
-            td.find('.icon-check-circle').length.should.equal(1);
-            td.hasClass('form-submissions-binary-column').should.be.true();
-          }));
+          loadSubmissions(1, { instanceId: 'abc 123', testGroup: { testBinary: 'def 456.jpg' } })
+            .afterResponses(component => {
+              const td = tdByRowAndColumn(
+                component.first('#form-submissions-table2 tbody tr'),
+                'testGroup-testBinary'
+              );
+              td.hasClass('form-submissions-binary-column').should.be.true();
+              const $a = $(td.element).find('a');
+              $a.length.should.equal(1);
+              const encodedFormId = encodeURIComponent(form().xmlFormId);
+              $a.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
+              $a.find('.icon-arrow-circle-down').length.should.equal(1);
+            }));
       });
     });
 
@@ -349,8 +354,8 @@ describe('FormSubmissions', () => {
             const button = page.first('#form-submissions-download-button');
             const $button = $(button.element);
             $button.prop('tagName').should.equal('A');
-            const encodedId = encodeURIComponent(form().xmlFormId);
-            $button.attr('href').should.equal(`/api/v1/forms/${encodedId}/submissions.csv.zip`);
+            const encodedFormId = encodeURIComponent(form().xmlFormId);
+            $button.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions.csv.zip`);
           }));
     });
 
