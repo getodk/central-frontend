@@ -173,7 +173,13 @@ $margin-left-unmatched-icon: -$width-unmatched-icon -
 $padding-left-unmatched: $padding-main + $width-unmatched-icon +
   $margin-right-unmatched-icon;
 
-#form-attachment-popups {
+#form-attachment-popups-unmatched, #form-attachment-popups-main {
+  line-height: 1.2em;
+  padding: $padding-main;
+  position: fixed;
+  right: $right-main;
+  z-index: $z-index-main;
+
   // If a popup overlays a row of the table, and a file is dragged over the
   // popup, the row should be targeted. pointer-events is not supported in IE
   // 10.
@@ -182,14 +188,6 @@ $padding-left-unmatched: $padding-main + $width-unmatched-icon +
   button {
     pointer-events: auto;
   }
-}
-
-#form-attachment-popups-unmatched, #form-attachment-popups-main {
-  line-height: 1.2em;
-  padding: $padding-main;
-  position: fixed;
-  right: $right-main;
-  z-index: $z-index-main;
 }
 
 #form-attachment-popups-unmatched {

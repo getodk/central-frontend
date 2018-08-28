@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-attachment-list" ref="dropZone">
     <div id="form-attachment-list-heading">
       <button class="btn btn-primary" type="button"
-        @click="showUploadFilesModal">
+        @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span> Upload files
       </button>
       <div>
@@ -142,16 +142,7 @@ export default {
       return this.uploadStatus.current != null;
     }
   },
-  beforeRouteLeave(to, from, next) {
-    if (this.uploadStatus.current == null)
-      next();
-    else
-      next(false);
-  },
   methods: {
-    showUploadFilesModal() {
-      if (this.uploadStatus.current == null) this.showModal('uploadFilesModal');
-    },
     // items is a DataTransferItemList, not an Array.
     fileItemCount(maybeItems) {
       // IE
