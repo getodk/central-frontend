@@ -1,3 +1,4 @@
+import Form from '../../../lib/presenters/form';
 import FormAnalyze from '../../../lib/components/form/analyze.vue';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
@@ -29,7 +30,7 @@ describe('FormAnalyze', () => {
   it('opens the modal upon button click', () =>
     mockHttp()
       .mount(FormSubmissions, {
-        propsData: { form: createFormWithSubmission() }
+        propsData: { form: new Form(createFormWithSubmission()) }
       })
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
@@ -62,7 +63,7 @@ describe('FormAnalyze', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(FormAnalyze, {
-        propsData: { form: createFormWithSubmission() }
+        propsData: { form: new Form(createFormWithSubmission()) }
       });
     });
 

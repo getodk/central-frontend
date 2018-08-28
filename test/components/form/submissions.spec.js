@@ -1,12 +1,11 @@
-import axios from 'axios';
 import { DateTime, Settings } from 'luxon';
 
+import Form from '../../../lib/presenters/form';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { trigger } from '../../util';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 
@@ -37,7 +36,7 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(...args);
       return mockHttp()
         .mount(FormSubmissions, {
-          propsData: { form: form() }
+          propsData: { form: new Form(form()) }
         })
         .respondWithData(() => form()._schema)
         .respondWithData(testData.submissionOData);
@@ -334,8 +333,8 @@ describe('FormSubmissions', () => {
       }
     });
 
-    describe('download', () => {
-      it('download button shows number of submissions', () =>
+    describe('download button', () => {
+      it('shows the number of submissions', () =>
         loadSubmissions(2)
           .afterResponses(page => {
             const button = page.first('#form-submissions-download-button');
@@ -344,32 +343,15 @@ describe('FormSubmissions', () => {
             text.should.equal(`Download all ${count} records`);
           }));
 
-      it('clicking download button downloads a .zip file', () => {
-        let clicked = false;
-        let href;
-        let download;
-        const zipContents = 'zip contents';
-        return loadSubmissions(1)
-          .complete()
-          .request(page => {
-            $(page.element).find('a[download]').first().click((event) => {
-              clicked = true;
-              const $a = $(event.currentTarget);
-              href = $a.attr('href');
-              download = $a.attr('download');
-            });
-            trigger.click(page.first('#form-submissions-download-button'));
-          })
-          .respondWithData(() => new Blob([zipContents]))
-          .afterResponse(page => {
-            clicked.should.be.true();
-            href.should.startWith('blob:');
-            href.should.equal(page.data().downloadHref);
-            download.should.equal(`${form().xmlFormId}.zip`);
-          })
-          .then(() => axios.get(href))
-          .then(response => response.data.should.equal(zipContents));
-      });
+      it('has the correct href', () =>
+        loadSubmissions(1)
+          .afterResponses(page => {
+            const button = page.first('#form-submissions-download-button');
+            const $button = $(button.element);
+            $button.prop('tagName').should.equal('A');
+            const encodedId = encodeURIComponent(form().xmlFormId);
+            $button.attr('href').should.equal(`/api/v1/forms/${encodedId}/submissions.csv.zip`);
+          }));
     });
 
     describe('no submissions', () => {
