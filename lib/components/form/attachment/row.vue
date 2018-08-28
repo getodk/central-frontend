@@ -15,8 +15,12 @@ except according to the terms contained in the LICENSE file.
       {{ attachment.type.replace(/^[a-z]/, (letter) => letter.toUpperCase()) }}
     </td>
     <td class="form-attachment-list-name">
-      <a v-if="attachment.exists" :href="href">{{ attachment.name }}</a>
-      <template v-else>{{ attachment.name }}</template>
+      <a v-if="attachment.exists" :href="href" target="_blank">
+        {{ attachment.name }}
+      </a>
+      <template v-else>
+        {{ attachment.name }}
+      </template>
     </td>
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.exists">
