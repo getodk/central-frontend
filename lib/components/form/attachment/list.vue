@@ -42,8 +42,8 @@ except according to the terms contained in the LICENSE file.
       :count-of-files-over-drop-zone="countOfFilesOverDropZone"
       :dragover-attachment="dragoverAttachment"
       :planned-uploads="plannedUploads" :unmatched-files="unmatchedFiles"
-      :upload-status="uploadStatus" @confirm="uploadFiles"
-      @cancel="cancelUploads"/>
+      :name-mismatch="nameMismatch" :upload-status="uploadStatus"
+      @confirm="uploadFiles" @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="hideModal('uploadFilesModal')"/>

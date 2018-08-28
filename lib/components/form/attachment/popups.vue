@@ -46,13 +46,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </p>
         </template>
-        <template v-else-if="plannedUploads.length === 0 && unmatchedFiles.length > 1">
-          We don’t recognize any of the files you are trying to upload. Please
-          rename them to match the names listed above, or drag them individually
-          onto their targets.
-        </template>
-        <!-- We do not show this content if a single file was dropped. -->
-        <template v-else-if="plannedUploads.length + unmatchedFiles.length > 1">
+        <template v-else-if="plannedUploads.length !== 0 && !nameMismatch.state">
           <p id="form-attachment-popups-action-text">
             <strong>{{ plannedUploads.length.toLocaleString() }}
             {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
@@ -67,6 +61,11 @@ except according to the terms contained in the LICENSE file.
               Cancel
             </button>
           </p>
+        </template>
+        <template v-else-if="unmatchedFiles.length !== 0 && !nameMismatch.state">
+          We don’t recognize any of the files you are trying to upload. Please
+          rename them to match the names listed above, or drag them individually
+          onto their targets.
         </template>
         <template v-else-if="dragoverAttachment != null">
           <p id="form-attachment-popups-action-text">
@@ -116,6 +115,10 @@ export default {
       type: Array,
       required: true
     },
+    nameMismatch: {
+      type: Object,
+      required: true
+    },
     uploadStatus: {
       type: Object,
       required: true
@@ -123,9 +126,11 @@ export default {
   },
   computed: {
     state() {
-      return this.countOfFilesOverDropZone !== 0 ||
-        this.plannedUploads.length + this.unmatchedFiles.length > 1 ||
-        this.uploadStatus.current != null;
+      const showDuringDragover = this.countOfFilesOverDropZone !== 0;
+      const showAfterDrop = !this.nameMismatch.state &&
+        (this.plannedUploads.length !== 0 || this.unmatchedFiles.length !== 0);
+      const showDuringUpload = this.uploadStatus.current != null;
+      return showDuringDragover || showAfterDrop || showDuringUpload;
     },
     hasProgress() {
       const { progress } = this.uploadStatus;
