@@ -30,7 +30,10 @@ except according to the terms contained in the LICENSE file.
         </span>
       </template>
       <template v-else>
-        <span class="icon-exclamation-triangle"></span> Not yet uploaded
+        <span class="icon-exclamation-triangle"></span>
+        <span title="To upload files, drag and drop one or more files onto this page">
+          Not yet uploaded
+        </span>
       </template>
     </td>
   </tr>
