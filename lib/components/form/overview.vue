@@ -66,7 +66,7 @@ except according to the terms contained in the LICENSE file.
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(3)">
-          <template slot="title">Evaluate and analyze submitted data"</template>
+          <template slot="title">Evaluate and analyze submitted data</template>
           <p>
             <template v-if="form.submissions === 0">
               Once there is data for this form, you can export or synchronize it
