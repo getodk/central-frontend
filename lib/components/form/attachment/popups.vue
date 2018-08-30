@@ -62,7 +62,12 @@ except according to the terms contained in the LICENSE file.
             </button>
           </p>
         </template>
-        <template v-else-if="unmatchedFiles.length !== 0">
+        <template v-else-if="unmatchedFiles.length === 1">
+          We don’t recognize the file you are trying to upload. Please rename it
+          to match the names listed above, or drag it individually onto its
+          target.
+        </template>
+        <template v-else-if="unmatchedFiles.length > 1">
           We don’t recognize any of the files you are trying to upload. Please
           rename them to match the names listed above, or drag them individually
           onto their targets.
