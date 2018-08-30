@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="htmlClass">
     <td class="form-attachment-list-type">{{ type }}</td>
-    <td class="form-attachment-list-name">
+    <td :title="attachment.name" class="form-attachment-list-name">
       <a v-if="attachment.exists" :href="href" target="_blank">
         {{ attachment.name }}
       </a>
