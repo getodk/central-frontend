@@ -277,6 +277,20 @@ h1 {
                $padding-bottom-table-data $padding-left-table-data;
     }
   }
+
+  > thead > tr.success > th,
+  > thead > tr > th.success,
+  > tbody > tr.success > td,
+  > tbody > tr > td.success {
+    background-color: $color-success-light;
+  }
+
+  > thead > tr.info > th,
+  > thead > tr > th.info,
+  > tbody > tr.info > td,
+  > tbody > tr > td.info {
+    background-color: $color-info-light;
+  }
 }
 
 .table-actions {
