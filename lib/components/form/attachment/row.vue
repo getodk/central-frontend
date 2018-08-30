@@ -61,6 +61,10 @@ export default {
     plannedUploads: {
       type: Array,
       required: true
+    },
+    uploaded: {
+      type: Array,
+      required: true
     }
   },
   computed: {
@@ -74,12 +78,15 @@ export default {
     htmlClass() {
       const dragoverTargetsADifferentRow = this.dragoverAttachment != null &&
         this.dragoverAttachment.name !== this.attachment.name;
-      const highlighted = this.targeted ||
+      const highlightedAsInfo = this.targeted ||
         (this.fileIsOverDropZone && !dragoverTargetsADifferentRow);
+      const highlightedAsSuccess = this.uploaded
+        .some(attachment => attachment.name === this.attachment.name);
       return {
         'form-attachment-row': true,
-        info: highlighted,
-        'form-attachment-row-targeted': this.targeted
+        info: highlightedAsInfo,
+        'form-attachment-row-targeted': this.targeted,
+        success: highlightedAsSuccess
       };
     },
     href() {

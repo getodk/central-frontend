@@ -35,7 +35,8 @@ except according to the terms contained in the LICENSE file.
           :key="attachment.key" :form="form" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
-          :planned-uploads="plannedUploads" :data-index="index"/>
+          :planned-uploads="plannedUploads" :uploaded="uploaded"
+          :data-index="index"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -88,9 +89,9 @@ export default {
   data() {
     return {
       /*
-      Most properties fall in one of three groups:
+      Most properties fall in one of four groups:
 
-        1. Properties set on dragenter and reset on dragleave or drop.
+        1. Properties set on dragenter and reset on dragleave or drop
            - fileIsOverDropZone. Indicates whether there is a file over the drop
              zone. Its value is managed by the dropZone mixin.
            - countOfFilesOverDropZone. The number of files over the drop zone.
@@ -101,7 +102,7 @@ export default {
              over a row, dragoverAttachment is the attachment that corresponds
              to the row.
         2. Properties set on drop and reset once the uploads have started or
-           been canceled.
+           been canceled
            - plannedUploads. An array of file/attachment pairs, indicating which
              file to upload for which attachment. plannedUploads is used to
              confirm or cancel the uploads, then to start them, but it is not
@@ -110,12 +111,16 @@ export default {
              An array of dropped files whose names did not match any
              attachment's.
         3. Properties set once the uploads have started and reset once they have
-           finished or stopped.
+           finished or stopped
            - uploadStatus. An object with the following properties:
              - total. The total number of files to upload.
              - remaining. The number of files that have not been uploaded yet.
              - current. The name of the file currently being uploaded.
              - progress. The latest ProgressEvent for the current upload.
+        4. Properties set once the uploads have finished or stopped and reset
+           once a new drag is started
+           - uploaded. An array of the attachments for which files were
+             successfully uploaded.
       */
       fileIsOverDropZone: false,
       countOfFilesOverDropZone: 0,
@@ -128,6 +133,7 @@ export default {
         current: null,
         progress: null
       },
+      uploaded: [],
       // Modals
       uploadFilesModal: {
         state: false
@@ -163,12 +169,21 @@ export default {
           : null;
       }
       this.cancelUploads();
+      if (this.uploaded.length !== 0) this.uploaded = [];
     },
     ondragleave() {
       if (!this.fileIsOverDropZone) {
         if (this.countOfFilesOverDropZone === 1) this.dragoverAttachment = null;
         this.countOfFilesOverDropZone = 0;
       }
+    },
+    problemToAlert(problem) {
+      if (this.uploadStatus.total === 1) return null;
+      const uploaded = this.uploadStatus.total - this.uploadStatus.remaining;
+      const summary = uploaded !== 0
+        ? `Only ${uploaded} of ${this.uploadStatus.total} files ${this.$pluralize('was', uploaded)} successfully uploaded.`
+        : 'No files were successfully uploaded.';
+      return `${problem.message} ${summary}`;
     },
     uploadFile(attachment, file) {
       this.uploadStatus.remaining -= 1;
@@ -184,6 +199,7 @@ export default {
     },
     uploadFiles() {
       const uploaded = [];
+      this.$alert().blank();
       this.uploadStatus.total = this.plannedUploads.length;
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
       const promise = this.plannedUploads.reduce(
@@ -197,9 +213,15 @@ export default {
       );
       promise
         .finally(() => {
+          if (uploaded.length === this.uploadStatus.total) {
+            this.$alert().success(uploaded.length === 1
+              ? '1 file has been successfully uploaded.'
+              : `${uploaded.length} files have been successfully uploaded.`);
+          }
           for (const attachment of uploaded)
             this.$emit('attachment-change', attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
+          if (uploaded.length !== 0) this.uploaded = uploaded;
         })
         .catch(() => {});
       this.plannedUploads = [];
