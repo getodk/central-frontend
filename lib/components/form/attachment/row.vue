@@ -11,9 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr :class="htmlClass">
-    <td class="form-attachment-list-type">
-      {{ attachment.type.replace(/^[a-z]/, (letter) => letter.toUpperCase()) }}
-    </td>
+    <td class="form-attachment-list-type">{{ type }}</td>
     <td class="form-attachment-list-name">
       <a v-if="attachment.exists" :href="href" target="_blank">
         {{ attachment.name }}
@@ -41,6 +39,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { formatDate } from '../../../util';
+
+const TYPES = {
+  image: 'Image',
+  video: 'Video',
+  audio: 'Audio',
+  file: 'Data File'
+};
 
 export default {
   name: 'FormAttachmentRow',
@@ -88,6 +93,11 @@ export default {
         'form-attachment-row-targeted': this.targeted,
         success: highlightedAsSuccess
       };
+    },
+    type() {
+      const { type } = this.attachment;
+      const displayName = TYPES[type];
+      return displayName != null ? displayName : type;
     },
     href() {
       return `/api/v1/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
