@@ -170,23 +170,6 @@ export default {
         this.countOfFilesOverDropZone = 0;
       }
     },
-    // Updates this.plannedUploads and this.unmatchedFiles after a drop. files
-    // is a FileList, not an Array.
-    matchFilesToAttachments(files) {
-      if (this.countOfFilesOverDropZone === 1) {
-        const upload = { attachment: this.dragoverAttachment, file: files[0] };
-        this.plannedUploads.push(upload);
-      } else {
-        for (let i = 0; i < files.length; i += 1) {
-          const file = files[i];
-          const attachment = this.attachments.find(a => a.name === file.name);
-          if (attachment != null)
-            this.plannedUploads.push({ attachment, file });
-          else
-            this.unmatchedFiles.push(file);
-        }
-      }
-    },
     uploadFile(attachment, file) {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
@@ -223,15 +206,32 @@ export default {
       this.unmatchedFiles = [];
     },
     ondrop(jQueryEvent) {
-      const { files } = jQueryEvent.originalEvent.dataTransfer;
-      this.matchFilesToAttachments(files);
       this.countOfFilesOverDropZone = 0;
+      const { files } = jQueryEvent.originalEvent.dataTransfer;
       if (this.dragoverAttachment != null) {
+        const upload = { attachment: this.dragoverAttachment, file: files[0] };
         this.dragoverAttachment = null;
-        if (files[0].name === this.plannedUploads[0].attachment.name)
+        this.plannedUploads.push(upload);
+        if (upload.file.name === upload.attachment.name)
           this.uploadFiles();
         else
           this.showModal('nameMismatch');
+      } else {
+        // The else case can be reached even if this.countOfFilesOverDropZone
+        // was 1, if the drop was not over a row.
+
+        // files is a FileList, not an Array, hence the style of for-loop.
+        for (let i = 0; i < files.length; i += 1) {
+          const file = files[i];
+          const attachment = this.attachments.find(a => a.name === file.name);
+          if (attachment != null)
+            this.plannedUploads.push({ attachment, file });
+          else
+            this.unmatchedFiles.push(file);
+        }
+
+        // With the changes to this.plannedUploads and this.unmatchedFiles, the
+        // popup will show in the next tick.
       }
     },
     // cancelUploads() cancels the uploads before they start, after files have

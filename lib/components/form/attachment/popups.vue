@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
             </button>
           </p>
         </template>
-        <template v-else-if="unmatchedFiles.length !== 0 && !nameMismatch.state">
+        <template v-else-if="unmatchedFiles.length !== 0">
           We don’t recognize any of the files you are trying to upload. Please
           rename them to match the names listed above, or drag them individually
           onto their targets.
@@ -127,8 +127,8 @@ export default {
   computed: {
     state() {
       const showDuringDragover = this.countOfFilesOverDropZone !== 0;
-      const showAfterDrop = !this.nameMismatch.state &&
-        (this.plannedUploads.length !== 0 || this.unmatchedFiles.length !== 0);
+      const showAfterDrop = this.unmatchedFiles.length !== 0 ||
+        (this.plannedUploads.length !== 0 && !this.nameMismatch.state);
       const showDuringUpload = this.uploadStatus.current != null;
       return showDuringDragover || showAfterDrop || showDuringUpload;
     },
