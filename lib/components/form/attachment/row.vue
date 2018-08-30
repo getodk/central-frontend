@@ -71,8 +71,8 @@ export default {
     targeted() {
       const targetedByDragover = this.dragoverAttachment != null &&
         this.attachment.name === this.dragoverAttachment.name;
-      const targetedByDrop = this.plannedUploads.some(({ file }) =>
-        file.name === this.attachment.name);
+      const targetedByDrop = this.plannedUploads
+        .some(({ attachment }) => attachment.name === this.attachment.name);
       return targetedByDragover || targetedByDrop;
     },
     htmlClass() {
