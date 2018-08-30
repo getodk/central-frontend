@@ -35,8 +35,8 @@ except according to the terms contained in the LICENSE file.
           :key="attachment.key" :form="form" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
-          :planned-uploads="plannedUploads" :uploaded="uploaded"
-          :data-index="index"/>
+          :planned-uploads="plannedUploads"
+          :updated-attachments="updatedAttachments" :data-index="index"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -119,8 +119,8 @@ export default {
              - progress. The latest ProgressEvent for the current upload.
         4. Properties set once the uploads have finished or stopped and reset
            once a new drag is started
-           - uploaded. An array of the attachments for which files were
-             successfully uploaded.
+           - updatedAttachments. An array of the attachments for which files
+             were successfully uploaded.
       */
       fileIsOverDropZone: false,
       countOfFilesOverDropZone: 0,
@@ -133,7 +133,7 @@ export default {
         current: null,
         progress: null
       },
-      uploaded: [],
+      updatedAttachments: [],
       // Modals
       uploadFilesModal: {
         state: false
@@ -169,7 +169,7 @@ export default {
           : null;
       }
       this.cancelUploads();
-      if (this.uploaded.length !== 0) this.uploaded = [];
+      if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
     },
     ondragleave() {
       if (!this.fileIsOverDropZone) {
@@ -198,7 +198,7 @@ export default {
       });
     },
     uploadFiles() {
-      const uploaded = [];
+      const updated = [];
       this.$alert().blank();
       this.uploadStatus.total = this.plannedUploads.length;
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
@@ -207,21 +207,21 @@ export default {
           .then(() => this.uploadFile(attachment, file))
           .then(() => {
             const updatedAt = new Date().toISOString();
-            uploaded.push(attachment.with({ exists: true, updatedAt }));
+            updated.push(attachment.with({ exists: true, updatedAt }));
           }),
         Promise.resolve()
       );
       promise
         .finally(() => {
-          if (uploaded.length === this.uploadStatus.total) {
-            this.$alert().success(uploaded.length === 1
+          if (updated.length === this.uploadStatus.total) {
+            this.$alert().success(updated.length === 1
               ? '1 file has been successfully uploaded.'
-              : `${uploaded.length} files have been successfully uploaded.`);
+              : `${updated.length} files have been successfully uploaded.`);
           }
-          for (const attachment of uploaded)
+          for (const attachment of updated)
             this.$emit('attachment-change', attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
-          if (uploaded.length !== 0) this.uploaded = uploaded;
+          if (updated.length !== 0) this.updatedAttachments = updated;
         })
         .catch(() => {});
       this.plannedUploads = [];

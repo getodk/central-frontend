@@ -62,7 +62,7 @@ export default {
       type: Array,
       required: true
     },
-    uploaded: {
+    updatedAttachments: {
       type: Array,
       required: true
     }
@@ -80,7 +80,7 @@ export default {
         this.dragoverAttachment.name !== this.attachment.name;
       const highlightedAsInfo = this.targeted ||
         (this.fileIsOverDropZone && !dragoverTargetsADifferentRow);
-      const highlightedAsSuccess = this.uploaded
+      const highlightedAsSuccess = this.updatedAttachments
         .some(attachment => attachment.name === this.attachment.name);
       return {
         'form-attachment-row': true,
