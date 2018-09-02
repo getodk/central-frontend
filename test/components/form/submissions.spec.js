@@ -6,6 +6,7 @@ import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { trigger } from '../../event';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 
@@ -337,6 +338,21 @@ describe('FormSubmissions', () => {
               tableSelector: `#form-submissions-table${i}`
             }));
       }
+
+      it('disables the download button', () =>
+        loadSubmissions(1)
+          .afterResponses(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.false())
+          .request(component => trigger.click(component, '.btn-refresh'))
+          .beforeEachResponse(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.true())
+          .respondWithData(() => form()._schema)
+          .respondWithData(testData.submissionOData)
+          .afterResponses(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.false()));
     });
 
     describe('download button', () => {
