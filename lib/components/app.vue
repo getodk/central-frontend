@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div ref="app">
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
@@ -59,6 +59,13 @@ export default {
       if (currentAlert === previousAlert && this.alert.state)
         this.alert.state = false;
     }
+  },
+  mounted() {
+    // The `disabled` class on an <a> element does not prevent keyboard
+    // navigation.
+    $(this.$refs.app).on('click', 'a.disabled', (event) => {
+      event.preventDefault();
+    });
   }
 };
 </script>

@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
         slot="right">
         <a id="form-submissions-download-button" :href="downloadHref"
           :class="{ disabled: awaitingResponse }" class="btn btn-primary"
-          target="_blank" @click="clickDownloadButton($event)">
+          target="_blank">
           <span class="icon-arrow-circle-down"></span> Download all
           {{ submissions.length.toLocaleString() }}
           {{ $pluralize('record', submissions.length) }}
@@ -162,11 +162,6 @@ export default {
             : [];
         })
         .catch(() => {});
-    },
-    // The `disabled` class on the <a> element does not prevent keyboard
-    // navigation.
-    clickDownloadButton(event) {
-      if (this.awaitingResponse) event.preventDefault();
     }
   }
 };
