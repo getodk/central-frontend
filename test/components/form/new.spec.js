@@ -1,9 +1,9 @@
 import FormNew from '../../../lib/components/form/new.vue';
 import testData from '../../data';
+import { dataTransfer, trigger } from '../../event';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
-import { trigger } from '../../util';
 
 const XML_FILENAME = 'test.xml';
 const XML = '<a><b/></a>';
@@ -16,28 +16,16 @@ const createForm = (modal) => {
   testData.extendedForms.createNew({ hasSubmission: false });
   return modal;
 };
-const dataTransfer = () => {
-  const dt = new DataTransfer();
-  const file = new File([XML], XML_FILENAME);
-  dt.items.add(file);
-  return dt;
-};
+const file = () => new File([XML], XML_FILENAME);
 const selectFileByInput = (modal) => {
   const input = modal.first('input[type="file"]');
-  const target = { files: dataTransfer().files };
+  const target = { files: dataTransfer([file()]).files };
   const event = $.Event('change', { target });
   $(input.element).trigger(event);
   return modal.vm.$nextTick().then(() => modal);
 };
-const triggerDragEvent = (type) => (modal) => {
-  const originalEvent = $.Event(type, { dataTransfer: dataTransfer() });
-  const event = $.Event(type, { originalEvent });
-  $(modal.vm.$refs.dropZone).trigger(event);
-  return modal.vm.$nextTick().then(() => modal);
-};
-const dragover = triggerDragEvent('dragover');
-const drop = triggerDragEvent('drop');
-const dragAndDrop = (modal) => dragover(modal).then(drop);
+const dragAndDrop = (modal) =>
+  trigger.dragAndDrop(modal, '#form-new-drop-zone', [file()]);
 const waitForRead = (modal) => {
   if (modal.data().filename != null)
     return modal.vm.$nextTick().then(() => modal);
