@@ -69,7 +69,8 @@ describe('AccountLogin', () => {
           dropdown = app.first('.navbar-right .dropdown');
           // Have the event bubble so that it triggers Bootstrap's dropdown
           // listeners on the document.
-          return trigger('click', dropdown.first('.dropdown-toggle'), true);
+          $(dropdown.first('.dropdown-toggle').element).click();
+          return app.vm.$nextTick();
         }));
 
       it('a menu is shown', () => {

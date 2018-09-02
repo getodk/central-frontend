@@ -18,19 +18,15 @@ export class MockLogger {
   error() {}
 }
 
-export const trigger = (eventName, wrapper, bubbles = false) => {
-  if (!bubbles) {
-    // trigger() triggers an event that does not bubble.
-    wrapper.trigger(eventName);
-  } else {
-    $(wrapper.element).trigger(eventName);
-  }
+// Triggers an event that does not bubble.
+export const trigger = (eventName, wrapper) => {
+  wrapper.trigger(eventName);
   return Vue.nextTick();
 };
 
-const EVENT_NAMES = ['change', 'click', 'submit'];
-for (const name of EVENT_NAMES)
-  trigger[name] = (wrapper, bubbles = false) => trigger(name, wrapper, bubbles);
+const eventNames = ['change', 'click', 'submit'];
+for (const name of eventNames)
+  trigger[name] = (wrapper) => trigger(name, wrapper);
 
 export const fillForm = (wrapper, selectorsAndValues) => {
   let promise = Promise.resolve();
