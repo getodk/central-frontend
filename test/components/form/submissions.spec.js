@@ -316,7 +316,8 @@ describe('FormSubmissions', () => {
               $a.length.should.equal(1);
               const encodedFormId = encodeURIComponent(form().xmlFormId);
               $a.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
-              $a.find('.icon-arrow-circle-down').length.should.equal(1);
+              $a.find('.icon-check').length.should.equal(1);
+              $a.find('.icon-download').length.should.equal(1);
             }));
       });
     });

@@ -224,5 +224,21 @@ export default {
       text-align: center;
     }
   }
+
+  .form-submissions-binary-link {
+    background-color: $color-subpanel-background;
+    border-radius: 99px;
+    padding: 4px 7px;
+
+    .icon-download {
+      border-left: 1px dotted #ccc;
+      color: #bbb;
+      padding-left: 5px;
+    }
+
+    &:hover .icon-download {
+      color: $color-action-foreground;
+    }
+  }
 }
 </style>

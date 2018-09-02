@@ -10,24 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-popups">
-    <div v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
-      id="form-attachment-popups-unmatched">
-      <template v-if="unmatchedFiles.length === 1">
-        <span class="icon-exclamation-triangle">
-        </span><strong>1 file</strong> has a name we don’t recognize and will be
-        ignored. To upload it, rename it or drag it onto its target.
-      </template>
-      <template v-else>
-        <span class="icon-exclamation-triangle">
-        </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
-        files</strong> have a name we don’t recognize and will be ignored. To
-        upload them, rename them or drag them individually onto their targets.
-      </template>
-    </div>
-    <div v-show="state" id="form-attachment-popups-main">
-      <span class="icon-cloud-upload"></span>
-      <div>
+  <div id="form-attachment-popups" class="modal-dialog">
+    <div v-show="state" id="form-attachment-popups-main" class="modal-content">
+      <div class="modal-header">
+        <span class="icon-cloud-upload"></span>
+        <h4 class="modal-title">Upload Files</h4>
+      </div>
+      <div class="modal-body">
         <template v-if="uploadStatus.current != null">
           <p>
             Please wait, uploading your
@@ -51,6 +40,20 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ plannedUploads.length.toLocaleString() }}
             {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
             upload.
+          </p>
+          <p v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
+            id="form-attachment-popups-unmatched">
+            <template v-if="unmatchedFiles.length === 1">
+              <span class="icon-exclamation-triangle">
+              </span><strong>1 file</strong> has a name we don’t recognize and will be
+              ignored. To upload it, rename it or drag it onto its target.
+            </template>
+            <template v-else>
+              <span class="icon-exclamation-triangle">
+              </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
+              files</strong> have a name we don’t recognize and will be ignored. To
+              upload them, rename them or drag them individually onto their targets.
+            </template>
           </p>
           <p>
             <button type="button" class="btn btn-primary"
@@ -86,9 +89,8 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template v-else-if="countOfFilesOverDropZone > 1">
           <p id="form-attachment-popups-action-text">
-            Drop now to prepare
-            <strong>{{ countOfFilesOverDropZone.toLocaleString() }}</strong>
-            files for upload to this form.
+            Drop now to prepare <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
+            files</strong> for upload to this form.
           </p>
         </template>
         <template v-else-if="countOfFilesOverDropZone === -1">
@@ -155,108 +157,85 @@ export default {
 @import '../../../../assets/scss/variables';
 
 $z-index-backdrop: 1;
-
-$border-width-main: 1px;
-$bottom-main: 25px;
-// Based on the height of the icon
-$height-main: 98px;
-$padding-main: 15px;
-// Add space between the icon and the rest of the popup's content.
-$padding-left-main: $padding-main + 75px;
-$right-main: 25px;
 $z-index-main: $z-index-backdrop + 1;
 
-$font-size-cloud: 14px * 9;
-// Roughly half the width of the icon
-$left-cloud: -62px;
-$top-cloud: -11px;
+$edge-offset: 25px;
+$popup-width: 300px;
 
-$height-main-content: $height-main - 2 * $padding-main - 2 * $border-width-main;
-$width-main-content: 275px;
-
-$bottom-unmatched: $bottom-main + $height-main + 10px;
-$margin-right-unmatched-icon: 6px;
-$width-unmatched: 350px;
-$width-unmatched-icon: 17px;
-$margin-left-unmatched-icon: -$width-unmatched-icon -
-  $margin-right-unmatched-icon;
-$padding-left-unmatched: $padding-main + $width-unmatched-icon +
-  $margin-right-unmatched-icon;
-
-#form-attachment-popups-unmatched, #form-attachment-popups-main {
-  line-height: 1.2em;
-  padding: $padding-main;
-  position: fixed;
-  right: $right-main;
-  z-index: $z-index-main;
-
-  // If a popup overlays a row of the table, and a file is dragged over the
-  // popup, the row should be targeted. pointer-events is not supported in IE
-  // 10.
-  pointer-events: none;
-
-  button {
-    pointer-events: auto;
-  }
-}
-
-#form-attachment-popups-unmatched {
-  background-color: #e1bf50;
-  bottom: $bottom-unmatched;
-  padding-left: $padding-left-unmatched;
-  width: $width-unmatched;
-
-  .icon-exclamation-triangle {
-    font-size: 17px;
-    margin-left: $margin-left-unmatched-icon;
-    margin-right: $margin-right-unmatched-icon;
-    vertical-align: -2px;
-  }
+#form-attachment-popups {
+  position: absolute;
 }
 
 #form-attachment-popups-main {
-  background-color: $color-subpanel-active;
-  bottom: $bottom-main;
-  border: $border-width-main solid $color-subpanel-border;
-  padding-left: $padding-left-main;
+  bottom: $edge-offset;
+  position: fixed;
+  right: $edge-offset;
+  width: $popup-width;
+  z-index: $z-index-main;
 
-  .icon-cloud-upload {
-    color: $color-action-background;
-    font-size: $font-size-cloud;
-    left: $left-cloud;
-    position: absolute;
-    top: $top-cloud;
+  .modal-header {
+    background-color: $color-action-background;
 
-    &::after {
-      left: 34px;
+    .icon-cloud-upload {
+      animation-direction: alternate;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-name: bob;
+      animation-timing-function: ease-in-out;
+      color: #fff;
+      font-size: 90px;
       position: absolute;
-      top: 34px;
+      right: 10px;
+      top: -25px;
 
-      background-color: #fff;
-      content: '';
-      height: 60px;
-      width: 60px;
-      z-index: -1;
+      $outline-color: #0096c1;
+      $lin-offset: 4px;
+      $diag-offset: 3px;
+      text-shadow:
+        #{-$lin-offset} 0 0 $outline-color,
+        0 #{-$lin-offset} 0 $outline-color,
+        #{$lin-offset}  0 0 $outline-color,
+        0 #{$lin-offset}  0 $outline-color,
+        #{-$diag-offset} #{-$diag-offset} 0 $outline-color,
+        #{$diag-offset}  #{-$diag-offset} 0 $outline-color,
+        #{-$diag-offset} #{$diag-offset}  0 $outline-color,
+        #{$diag-offset}  #{$diag-offset}  0 $outline-color;
+
+      &::after {
+        left: 20px;
+        position: absolute;
+        top: 20px;
+
+        background-color: $outline-color;
+        content: '';
+        height: 45px;
+        width: 45px;
+        z-index: -1;
+      }
     }
   }
 
-  > div {
-    height: $height-main-content;
-    overflow: hidden;
-    width: $width-main-content;
+  .modal-body {
+    padding-bottom: 10px;
+
+    #form-attachment-popups-unmatched {
+      $padding: 10px;
+
+      background-color: #f5c93b;
+      font-size: 12px;
+      line-height: 14px;
+      margin-bottom: 17px;
+      padding: $padding;
+      padding-left: 30px;
+      position: relative;
+
+      .icon-exclamation-triangle {
+        left: $padding;
+        margin-top: 1px;
+        position: absolute;
+      }
+    }
   }
-}
-
-#form-attachment-popups-action-text {
-  font-size: 18px;
-}
-
-#form-attachment-popups-current {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  // We need to set the width for text-overflow to work.
-  width: $width-main-content;
 }
 
 #form-attachment-popups-backdrop {
@@ -269,4 +248,14 @@ $padding-left-unmatched: $padding-main + $width-unmatched-icon +
   top: 0;
   z-index: $z-index-backdrop;
 }
+
+@keyframes bob {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-9px);
+  }
+}
+
 </style>
