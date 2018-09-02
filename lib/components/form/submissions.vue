@@ -225,7 +225,7 @@ export default {
     }
   }
 
-  .binary-link {
+  .form-submissions-binary-link {
     background-color: $color-subpanel-background;
     border-radius: 99px;
     padding: 4px 7px;
