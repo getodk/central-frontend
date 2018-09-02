@@ -17,11 +17,10 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 
 const clickCreateButton = (wrapper) =>
-  trigger('click', wrapper.first('#user-list-new-button')).then(() => wrapper);
+  trigger.click(wrapper, '#user-list-new-button');
 const submitForm = (wrapper) =>
   fillForm(wrapper, [['[type="email"]', testData.administrators.createNew().email]])
-    .then(() => trigger('submit', wrapper.first('#user-new form')))
-    .then(() => wrapper);
+    .then(() => trigger.submit(wrapper, '#user-new form'));
 
 describe('UserNew', () => {
   beforeEach(mockLogin);

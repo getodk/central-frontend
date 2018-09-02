@@ -17,9 +17,7 @@ export const submitLoginForm = (wrapper) => {
     ['#account-login input[type="email"]', email],
     ['#account-login input[type="password"]', 'password']
   ]);
-  return promise
-    .then(() => trigger('submit', wrapper.first('#account-login form')))
-    .then(() => wrapper);
+  return promise.then(() => trigger.submit(wrapper, '#account-login form'));
 };
 
 export const mockRouteThroughLogin = (location, mountOptions = {}) => {

@@ -19,7 +19,8 @@ export const fillForm = (wrapper, selectorsAndValues) => {
       const field = wrapper.first(selector);
       field.element.value = value;
       // If there is a v-model attribute, prompt it to sync.
-      return trigger('input', field);
+      field.trigger('input');
+      return Vue.nextTick();
     });
   }
   return promise;

@@ -43,7 +43,7 @@ describe('AccountLogin', () => {
     it('clicking the reset password button navigates to that page', () =>
       mockRoute('/login')
         .restoreSession(false)
-        .afterResponse(app => trigger('click', app.first('.panel-footer .btn-link'))
+        .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
           .then(() => app.vm.$route.path.should.equal('/reset-password'))));
   });
 
@@ -80,7 +80,7 @@ describe('AccountLogin', () => {
       describe('after clicking logout button', () => {
         beforeEach(() => mockHttp()
           .request(() => {
-            trigger('click', dropdown.first('.dropdown-menu > li > a'));
+            trigger.click(dropdown.first('.dropdown-menu > li > a'));
           })
           .respondWithProblem());
 
