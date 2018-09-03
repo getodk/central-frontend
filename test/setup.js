@@ -17,6 +17,12 @@ import { router } from '../lib/router';
 import { setHttp } from './http';
 import './assertions';
 
+// "iTrim" for "internally trim"
+// eslint-disable-next-line no-extend-native
+String.prototype.iTrim = function iTrim() {
+  return this.replace(/\s+/g, ' ');
+};
+
 Vue.prototype.$alert = function $alert() {
   const component = closestComponentWithAlert(this);
   return component != null
