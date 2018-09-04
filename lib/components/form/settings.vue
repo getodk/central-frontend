@@ -45,6 +45,8 @@ export default {
   name: 'FormSettings',
   components: { FormEdit, FormDelete },
   mixins: [modal('deleteForm')],
+  // Setting this in order to ignore the `attachments` attribute.
+  inheritAttrs: false,
   props: {
     form: {
       type: Object,

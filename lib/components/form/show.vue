@@ -20,6 +20,15 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
+        <li v-if="attachments.length !== 0" :class="tabClass('media-files')"
+          role="presentation">
+          <router-link :to="tabPath('media-files')">
+            Media Files
+            <span v-show="missingAttachments !== 0" class="badge">
+              {{ missingAttachments.toLocaleString() }}
+            </span>
+          </router-link>
+        </li>
         <li :class="tabClass('submissions')" role="presentation">
           <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
@@ -30,13 +39,16 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <keep-alive>
-        <router-view :form="form" @state-change="updateState"/>
+        <router-view :form="form" :attachments="attachments"
+          @attachment-change="updateAttachment" @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
 </template>
 
 <script>
+import Form from '../../presenters/form';
+import FormAttachment from '../../presenters/form-attachment';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -46,12 +58,16 @@ export default {
   data() {
     return {
       requestId: null,
-      form: null
+      form: null,
+      attachments: null
     };
   },
   computed: {
     xmlFormId() {
       return this.$route.params.xmlFormId;
+    },
+    missingAttachments() {
+      return this.attachments.filter(attachment => !attachment.exists).length;
     }
   },
   watch: {
@@ -65,19 +81,29 @@ export default {
   methods: {
     fetchData() {
       this.form = null;
+      this.attachments = null;
       const headers = { 'X-Extended-Metadata': 'true' };
-      this
-        .get(`/forms/${this.xmlFormId}`, { headers })
-        .then(({ data }) => {
-          this.form = data;
+      this.requestAll([
+        this.$http.get(`/forms/${this.xmlFormId}`, { headers }),
+        this.$http.get(`/forms/${this.xmlFormId}/attachments`, { headers })
+      ])
+        .then(([form, attachments]) => {
+          this.form = new Form(form.data);
+          this.attachments = attachments.data
+            .map(attachment => new FormAttachment(attachment));
         })
         .catch(() => {});
     },
     tabPathPrefix() {
       return `/forms/${this.xmlFormId}`;
     },
+    updateAttachment(newAttachment) {
+      const index = this.attachments
+        .findIndex(attachment => attachment.name === newAttachment.name);
+      this.$set(this.attachments, index, newAttachment);
+    },
     updateState(newState) {
-      this.form.state = newState;
+      this.form = this.form.with({ state: newState });
     }
   }
 };

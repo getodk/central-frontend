@@ -1,19 +1,21 @@
-import * as administrators from './data/administrators';
-import * as backups from './data/backups';
-import * as fieldKeys from './data/fieldKeys';
-import * as forms from './data/forms';
-import * as sessions from './data/sessions';
-import * as submissions from './data/submissions';
+import * as Administrators from './data/administrators';
+import * as Backups from './data/backups';
+import * as FieldKeys from './data/fieldKeys';
+import * as FormAttachments from './data/form-attachments';
+import * as Forms from './data/forms';
+import * as Sessions from './data/sessions';
+import * as Submissions from './data/submissions';
 import { resetDataStores } from './data/data-store';
 
 const testData = Object.assign(
   {},
-  administrators,
-  backups,
-  fieldKeys,
-  forms,
-  sessions,
-  submissions
+  Administrators,
+  Backups,
+  FieldKeys,
+  FormAttachments,
+  Forms,
+  Sessions,
+  Submissions
 );
 
 testData.reset = resetDataStores;

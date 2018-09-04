@@ -43,7 +43,7 @@ describe('AccountLogin', () => {
     it('clicking the reset password button navigates to that page', () =>
       mockRoute('/login')
         .restoreSession(false)
-        .afterResponse(app => trigger('click', app.first('.panel-footer .btn-link'))
+        .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
           .then(() => app.vm.$route.path.should.equal('/reset-password'))));
   });
 
@@ -69,7 +69,8 @@ describe('AccountLogin', () => {
           dropdown = app.first('.navbar-right .dropdown');
           // Have the event bubble so that it triggers Bootstrap's dropdown
           // listeners on the document.
-          return trigger('click', dropdown.first('.dropdown-toggle'), true);
+          $(dropdown.first('.dropdown-toggle').element).click();
+          return app.vm.$nextTick();
         }));
 
       it('a menu is shown', () => {
@@ -79,7 +80,7 @@ describe('AccountLogin', () => {
       describe('after clicking logout button', () => {
         beforeEach(() => mockHttp()
           .request(() => {
-            trigger('click', dropdown.first('.dropdown-menu > li > a'));
+            trigger.click(dropdown.first('.dropdown-menu > li > a'));
           })
           .respondWithProblem());
 
@@ -103,6 +104,7 @@ describe('AccountLogin', () => {
       const { xmlFormId } = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(`/forms/${xmlFormId}`)
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
         .complete()
         .route('/login')

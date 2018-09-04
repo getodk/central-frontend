@@ -196,9 +196,9 @@ class MockHttp {
   beforeEachNav(callback) {
     if (this._beforeEachNavGuard != null)
       throw new Error('cannot call beforeEachNav() more than once in a single chain');
-    // Wrap the callback in an arrow function so that when we call
-    // this._beforeEachNavGuard(), the callback is not bound to the MockHttp.
-    const beforeEachNavGuard = (app, to, from) => callback(app, to, from);
+    // When we invoke the callback later, we do not want it to be bound to the
+    // MockHttp.
+    const beforeEachNavGuard = callback.bind(null);
     return this._with({ beforeEachNavGuard });
   }
 
@@ -217,9 +217,9 @@ class MockHttp {
   request(callback) {
     if (this._request != null)
       throw new Error('cannot call request() more than once in a single series');
-    // Wrap the callback in an arrow function so that when we call
-    // this._request(), the callback is not bound to the MockHttp.
-    return this._with({ request: (component) => callback(component) });
+    // When we invoke the callback later, we do not want it to be bound to the
+    // MockHttp.
+    return this._with({ request: callback.bind(null) });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -289,10 +289,9 @@ class MockHttp {
   beforeEachResponse(callback) {
     if (this._beforeEachResponse != null)
       throw new Error('cannot call beforeEachResponse() more than once in a single series');
-    // Wrap the callback in an arrow function so that when we call
-    // this._beforeEachResponse(), the callback is not bound to the MockHttp.
-    const beforeEachResponse = (component) => callback(component);
-    return this._with({ beforeEachResponse });
+    // When we invoke the callback later, we do not want it to be bound to the
+    // MockHttp.
+    return this._with({ beforeEachResponse: callback.bind(null) });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -383,24 +382,27 @@ class MockHttp {
   // Returns a function that responds with each of the specified responses in
   // turn.
   _http() {
-    let responseIndex = 0;
+    // The number of requests sent so far
+    let count = 0;
     return (config) => {
       const { validateStatus = statusIs2xx } = config;
       this._requestResponseLog.push(config);
-      if (responseIndex === this._responses.length - 1)
+      if (count === this._responses.length - 1)
         this._responseWithoutRequest = false;
-      else if (responseIndex === this._responses.length) {
+      else if (count === this._responses.length) {
         this._requestWithoutResponse = true;
         return Promise.reject(new Error());
       }
 
-      const responseCallback = this._responses[responseIndex];
-      responseIndex += 1;
+      const responseCallback = this._responses[count];
+      const index = count;
+      count += 1;
       // Wait a tick after this._request() or the previous response so that Vue
       // is updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
         .then(() => {
-          if (this._beforeEachResponse != null) this._tryBeforeEachResponse();
+          if (this._beforeEachResponse != null)
+            this._tryBeforeEachResponse(config, index);
         })
         .then(() => new Promise((resolve, reject) => {
           let result;
@@ -421,7 +423,7 @@ class MockHttp {
     };
   }
 
-  _tryBeforeEachResponse() {
+  _tryBeforeEachResponse(request, index) {
     if (this._errorFromBeforeEachResponse != null) return;
     /* Adding a try/catch block here even though _beforeEachResponse() is called
     within a promise chain, because the promise is not returned to Mocha, but
@@ -429,7 +431,7 @@ class MockHttp {
     promise to Mocha, but we want to return the specified response to the app
     regardless of whether _beforeEachResponse() throws an error. */
     try {
-      this._beforeEachResponse(this._component);
+      this._beforeEachResponse(this._component, request, index);
     } catch (e) {
       this._errorFromBeforeEachResponse = e;
     }

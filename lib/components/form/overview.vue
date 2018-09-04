@@ -15,31 +15,38 @@ except according to the terms contained in the LICENSE file.
     <div v-if="fieldKeyCount !== null" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
-        <div class="form-overview-step">
-          <p class="text-success">
-            <span class="icon-check-circle"></span>Create and upload form
-          </p>
+        <form-overview-step :stage="stepStage(0)">
+          <template slot="title">Create and upload form</template>
           <p>
             <strong>Great work!</strong> Your form design has been loaded
             successfully. It is ready to accept submissions. You will have to
             start over with a new form if you wish to make changes to the form
             questions.
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textSuccess(form.submissions !== 0)">
-            <span :class="textMuted(form.submissions === 0)"
-              class="icon-check-circle">
-            </span>Download form on survey clients and submit data
+        </form-overview-step>
+        <!-- Using v-show rather than v-if so that the number of steps is
+        consistent, which makes testing easier. -->
+        <form-overview-step v-show="attachments.length !== 0" :stage="stepStage(1)">
+          <template slot="title">Upload form media files</template>
+          <p>
+            Your form design references files that we need in order to present
+            your form. You can upload these for distribution under the
+            <router-link :to="formPath('media-files')">Media Files</router-link>
+            tab. If you change your mind or make a replace, you can always
+            replace the files. <!-- TODO. Click here to find out more. -->
           </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(2)">
+          <template slot="title">Download form on survey clients and submit data</template>
           <p>
             <template v-if="form.submissions === 0">
               Nobody has submitted any data to this form yet.
             </template>
             <template v-else>
-              A total of {{ submissionCountString }} {{ have }} been sent to
-              this server.
+              A total of {{ form.submissions.toLocaleString() }}
+              {{ $pluralize('submission', form.submissions) }}
+              {{ $pluralize('has', form.submissions) }} been sent to this
+              server.
             </template>
             App Users will be able to see this form on their mobile device to
             download and fill out.
@@ -52,36 +59,31 @@ except according to the terms contained in the LICENSE file.
             <template v-else>
               Right now, you have
               <router-link to="/users/field-keys">
-                <strong>{{ fieldKeyCountString }}</strong>
+                <strong>{{ fieldKeyCount.toLocaleString() }} App Users</strong>
               </router-link>
               on this server, but you can always add more.
             </template>
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textMuted(form.submissions === 0)">
-            <span class="icon-check-circle text-muted"></span>Evaluate and
-            analyze submitted data
-          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(3)">
+          <template slot="title">Evaluate and analyze submitted data</template>
           <p>
             <template v-if="form.submissions === 0">
               Once there is data for this form, you can export or synchronize it
               to monitor and analyze the data for quality and results.
             </template>
             <template v-else>
-              You can export or synchronize the {{ submissionCountString }} on
+              You can export or synchronize the
+              {{ form.submissions.toLocaleString() }}
+              {{ $pluralize('submission', form.submissions) }} on
               this form to monitor and analyze them for quality and results.
             </template>
             You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
           </p>
-        </div>
-        <hr>
-        <div class="form-overview-step">
-          <p :class="textSuccessElseMuted(form.state !== 'open')">
-            <span class="icon-check-circle"></span>Manage form retirement
-          </p>
+        </form-overview-step>
+        <form-overview-step :stage="stepStage(4)" last>
+          <template slot="title">Manage form retirement</template>
           <p>
             As you come to the end of your data collection project, you can use
             the Form Lifecycle controls on
@@ -91,21 +93,27 @@ except according to the terms contained in the LICENSE file.
             to control whether, for example, App Users will be able to see or
             create new submissions to this form.
           </p>
-        </div>
+        </form-overview-step>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import FormOverviewStep from './overview-step.vue';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormOverview',
+  components: { FormOverviewStep },
   mixins: [request()],
   props: {
     form: {
       type: Object,
+      required: true
+    },
+    attachments: {
+      type: Array,
       required: true
     }
   },
@@ -116,18 +124,23 @@ export default {
     };
   },
   computed: {
-    submissionCountString() {
-      const count = this.form.submissions.toLocaleString();
-      const s = this.form.submissions !== 1 ? 's' : '';
-      return `${count} submission${s}`;
+    // Returns true if all form attachments exist and false if not. Returns true
+    // if there are no form attachments.
+    allAttachmentsExist() {
+      return this.attachments.every(attachment => attachment.exists);
     },
-    have() {
-      return this.form.submissions === 1 ? 'has' : 'have';
+    // Indicates whether each step is complete.
+    stepCompletion() {
+      return [
+        true,
+        this.allAttachmentsExist,
+        this.form.submissions !== 0,
+        false,
+        this.form.state !== 'open'
+      ];
     },
-    fieldKeyCountString() {
-      const count = this.fieldKeyCount.toLocaleString();
-      const s = this.fieldKeyCount !== 1 ? 's' : '';
-      return `${count} App User${s}`;
+    currentStep() {
+      return this.stepCompletion.findIndex(isComplete => !isComplete);
     }
   },
   created() {
@@ -143,14 +156,10 @@ export default {
         })
         .catch(() => {});
     },
-    textSuccess(state) {
-      return { 'text-success': state };
-    },
-    textMuted(state) {
-      return { 'text-muted': state };
-    },
-    textSuccessElseMuted(isSuccess) {
-      return { 'text-success': isSuccess, 'text-muted': !isSuccess };
+    stepStage(step) {
+      if (step === this.currentStep) return 'current';
+      if (this.stepCompletion[step]) return 'complete';
+      return 'later';
     },
     formPath(suffix) {
       return `/forms/${this.form.xmlFormId}/${suffix}`;
@@ -158,26 +167,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-.form-overview-step {
-  p {
-    margin-left: 21px;
-    line-height: 17px;
-    max-width: 565px;
-
-    &:first-child {
-      font-weight: bold;
-      margin-left: 0;
-      margin-bottom: 5px;
-
-      .icon-check-circle {
-        display: inline-block;
-        font-size: 17px;
-        vertical-align: -2px;
-        width: 21px;
-      }
-    }
-  }
-}
-</style>

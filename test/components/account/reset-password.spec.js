@@ -57,6 +57,7 @@ describe('AccountResetPassword', () => {
       const { xmlFormId } = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(`/forms/${xmlFormId}`)
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
         .complete()
         .route('/reset-password')

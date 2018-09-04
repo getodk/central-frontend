@@ -1,12 +1,12 @@
-import axios from 'axios';
 import { DateTime, Settings } from 'luxon';
 
+import Form from '../../../lib/presenters/form';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 
@@ -22,6 +22,7 @@ describe('FormSubmissions', () => {
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
         .respondWithData(() => form)
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
         .respondWithData(testData.submissionOData)
         .afterResponses(app => app.vm.$route.path.should.equal(path));
@@ -36,7 +37,7 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(...args);
       return mockHttp()
         .mount(FormSubmissions, {
-          propsData: { form: form() }
+          propsData: { form: new Form(form()) }
         })
         .respondWithData(() => form()._schema)
         .respondWithData(testData.submissionOData);
@@ -305,14 +306,20 @@ describe('FormSubmissions', () => {
         });
 
         it('correctly formats binary values', () =>
-          loadSubmissions(1, { hasBinary: true }).afterResponses(component => {
-            const td = tdByRowAndColumn(
-              component.first('#form-submissions-table2 tbody tr'),
-              'testGroup-testBinary'
-            );
-            td.find('.icon-check-circle').length.should.equal(1);
-            td.hasClass('form-submissions-binary-column').should.be.true();
-          }));
+          loadSubmissions(1, { instanceId: 'abc 123', testGroup: { testBinary: 'def 456.jpg' } })
+            .afterResponses(component => {
+              const td = tdByRowAndColumn(
+                component.first('#form-submissions-table2 tbody tr'),
+                'testGroup-testBinary'
+              );
+              td.hasClass('form-submissions-binary-column').should.be.true();
+              const $a = $(td.element).find('a');
+              $a.length.should.equal(1);
+              const encodedFormId = encodeURIComponent(form().xmlFormId);
+              $a.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
+              $a.find('.icon-check').length.should.equal(1);
+              $a.find('.icon-download').length.should.equal(1);
+            }));
       });
     });
 
@@ -321,6 +328,7 @@ describe('FormSubmissions', () => {
         it(`refreshes part ${i} of table after refresh button is clicked`, () =>
           mockRoute(submissionsPath(form()))
             .respondWithData(form)
+            .respondWithData(() => testData.extendedFormAttachments.sorted())
             .testRefreshButton({
               collection: testData.extendedSubmissions,
               respondWithData: [
@@ -330,10 +338,25 @@ describe('FormSubmissions', () => {
               tableSelector: `#form-submissions-table${i}`
             }));
       }
+
+      it('disables the download button', () =>
+        loadSubmissions(1)
+          .afterResponses(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.false())
+          .request(component => trigger.click(component, '.btn-refresh'))
+          .beforeEachResponse(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.true())
+          .respondWithData(() => form()._schema)
+          .respondWithData(testData.submissionOData)
+          .afterResponses(component =>
+            component.first('#form-submissions-download-button')
+              .hasClass('disabled').should.be.false()));
     });
 
-    describe('download', () => {
-      it('download button shows number of submissions', () =>
+    describe('download button', () => {
+      it('shows the number of submissions', () =>
         loadSubmissions(2)
           .afterResponses(page => {
             const button = page.first('#form-submissions-download-button');
@@ -342,32 +365,15 @@ describe('FormSubmissions', () => {
             text.should.equal(`Download all ${count} records`);
           }));
 
-      it('clicking download button downloads a .zip file', () => {
-        let clicked = false;
-        let href;
-        let download;
-        const zipContents = 'zip contents';
-        return loadSubmissions(1)
-          .complete()
-          .request(page => {
-            $(page.element).find('a[download]').first().click((event) => {
-              clicked = true;
-              const $a = $(event.currentTarget);
-              href = $a.attr('href');
-              download = $a.attr('download');
-            });
-            trigger.click(page.first('#form-submissions-download-button'));
-          })
-          .respondWithData(() => new Blob([zipContents]))
-          .afterResponse(page => {
-            clicked.should.be.true();
-            href.should.startWith('blob:');
-            href.should.equal(page.data().downloadHref);
-            download.should.equal(`${form().xmlFormId}.zip`);
-          })
-          .then(() => axios.get(href))
-          .then(response => response.data.should.equal(zipContents));
-      });
+      it('has the correct href', () =>
+        loadSubmissions(1)
+          .afterResponses(page => {
+            const button = page.first('#form-submissions-download-button');
+            const $button = $(button.element);
+            $button.prop('tagName').should.equal('A');
+            const encodedFormId = encodeURIComponent(form().xmlFormId);
+            $button.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions.csv.zip`);
+          }));
     });
 
     describe('no submissions', () => {

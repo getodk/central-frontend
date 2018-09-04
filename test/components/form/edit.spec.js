@@ -1,14 +1,3 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import FormEdit from '../../../lib/components/form/edit.vue';
 import Spinner from '../../../lib/components/spinner.vue';
 import faker from '../../faker';
@@ -66,6 +55,7 @@ describe('FormEdit', () => {
     it('shows a success message', () =>
       mockRoute(settingsPath(testData.extendedForms.createPast(1).last()))
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
         .complete()
         .request(app => selectDifferentState(app.first(FormEdit)))
         .respondWithSuccess()

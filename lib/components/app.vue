@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div ref="app">
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
@@ -59,6 +59,13 @@ export default {
       if (currentAlert === previousAlert && this.alert.state)
         this.alert.state = false;
     }
+  },
+  mounted() {
+    // The `disabled` class on an <a> element does not prevent keyboard
+    // navigation.
+    $(this.$refs.app).on('click', 'a.disabled', (event) => {
+      event.preventDefault();
+    });
   }
 };
 </script>
@@ -100,9 +107,9 @@ html {
   background-color: $color-accent-secondary;
   min-height: 100%;
 }
+
 body {
   background-color: $color-page-background;
-  background-image: linear-gradient(0deg, #e4e4e4, $color-page-background 40%);
   box-shadow: 0 -2px 0 #777 inset;
   color: #333;
   min-height: 100vh;
@@ -277,10 +284,28 @@ h1 {
                $padding-bottom-table-data $padding-left-table-data;
     }
   }
+
+  > thead > tr.success > th,
+  > thead > tr > th.success,
+  > tbody > tr.success > td,
+  > tbody > tr > td.success {
+    background-color: $color-success-light;
+  }
+
+  > thead > tr.info > th,
+  > thead > tr > th.info,
+  > tbody > tr.info > td,
+  > tbody > tr > td.info {
+    background-color: $color-info-light;
+  }
 }
 
 .table-actions {
   margin-bottom: 20px;
+}
+
+.label-primary {
+  background-color: $color-action-background;
 }
 
 .panel {

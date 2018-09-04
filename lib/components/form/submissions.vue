@@ -18,17 +18,13 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
-        <a ref="downloadLink" :href="downloadHref" :download="downloadFilename"
-          class="hidden">
-        </a>
-        <button id="form-submissions-download-button"
-          :disabled="awaitingResponse" type="button" class="btn btn-primary"
-          @click="download">
+        <a id="form-submissions-download-button" :href="downloadHref"
+          :class="{ disabled: awaitingResponse }" class="btn btn-primary"
+          target="_blank">
           <span class="icon-arrow-circle-down"></span> Download all
           {{ submissions.length.toLocaleString() }}
           {{ $pluralize('record', submissions.length) }}
-          <spinner :state="downloading"/>
-        </button>
+        </a>
         <button id="form-submissions-analyze-button" type="button"
           class="btn btn-primary" @click="analyze.state = true">
           <span class="icon-plug"></span> Analyze via OData
@@ -52,7 +48,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <form-submission-row v-for="submission of submissions"
-            :key="submission.__id" :submission="submission"/>
+            :key="submission.__id" :form="form" :submission="submission"/>
         </tbody>
       </table>
       <!-- The next table element contains the question data and instance ID of
@@ -72,7 +68,7 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody>
             <form-submission-row v-for="submission of submissions"
-              :key="submission.__id" :submission="submission"
+              :key="submission.__id" :form="form" :submission="submission"
               :question-columns="questionColumns"/>
           </tbody>
         </table>
@@ -96,6 +92,8 @@ export default {
     modal('analyze'),
     request()
   ],
+  // Setting this in order to ignore the `attachments` attribute.
+  inheritAttrs: false,
   props: {
     form: {
       type: Object,
@@ -107,17 +105,14 @@ export default {
       requestId: null,
       schema: null,
       submissions: null,
-      downloading: false,
-      downloadHref: '#',
       analyze: {
         state: false
       }
     };
   },
   computed: {
-    downloadFilename() {
-      // The browser should sanitize the filename upon download.
-      return `${this.form.xmlFormId}.zip`;
+    downloadHref() {
+      return `/api/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
     // Returns the columns of the table that correspond to an element of the
     // form (to a question). We display a maximum of 10 such columns in the
@@ -165,23 +160,6 @@ export default {
           this.submissions = submissions.data.value != null
             ? submissions.data.value
             : [];
-        })
-        .catch(() => {});
-    },
-    download() {
-      this.downloading = true;
-      const path = `/forms/${this.form.xmlFormId}/submissions.csv.zip`;
-      this
-        .get(path, { responseType: 'blob' })
-        .finally(() => {
-          this.downloading = false;
-        })
-        .then(({ data }) => {
-          // Revoke the previous URL.
-          if (this.downloadHref !== '#')
-            window.URL.revokeObjectURL(this.downloadHref);
-          this.downloadHref = window.URL.createObjectURL(data);
-          this.$nextTick(() => this.$refs.downloadLink.click());
         })
         .catch(() => {});
     }
@@ -239,6 +217,22 @@ export default {
 
     &.form-submissions-binary-column {
       text-align: center;
+    }
+  }
+
+  .form-submissions-binary-link {
+    background-color: $color-subpanel-background;
+    border-radius: 99px;
+    padding: 4px 7px;
+
+    .icon-download {
+      border-left: 1px dotted #ccc;
+      color: #bbb;
+      padding-left: 5px;
+    }
+
+    &:hover .icon-download {
+      color: $color-action-foreground;
     }
   }
 }
