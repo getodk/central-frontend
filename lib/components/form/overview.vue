@@ -22,18 +22,25 @@ except according to the terms contained in the LICENSE file.
             successfully. It is ready to accept submissions. You will have to
             start over with a new form if you wish to make changes to the form
             questions.
+            <doc-link to="central-forms/#uploading-a-form-to-odk-central">
+              Click here to find out more.
+            </doc-link>
           </p>
         </form-overview-step>
         <!-- Using v-show rather than v-if so that the number of steps is
         consistent, which makes testing easier. -->
-        <form-overview-step v-show="attachments.length !== 0" :stage="stepStage(1)">
+        <form-overview-step v-show="attachments.length !== 0"
+          :stage="stepStage(1)">
           <template slot="title">Upload form media files</template>
           <p>
             Your form design references files that we need in order to present
             your form. You can upload these for distribution under the
             <router-link :to="formPath('media-files')">Media Files</router-link>
             tab. If you change your mind or make a replace, you can always
-            replace the files. <!-- TODO. Click here to find out more. -->
+            replace the files.
+            <doc-link to="central-forms/#forms-with-attachments">
+              Click here to find out more.
+            </doc-link>
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(2)">
@@ -62,6 +69,9 @@ except according to the terms contained in the LICENSE file.
                 <strong>{{ fieldKeyCount.toLocaleString() }} App Users</strong>
               </router-link>
               on this server, but you can always add more.
+              <doc-link to="central-submissions/">
+                Click here to find out more.
+              </doc-link>
             </template>
           </p>
         </form-overview-step>
@@ -80,6 +90,9 @@ except according to the terms contained in the LICENSE file.
             </template>
             You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
+            <doc-link to="central-submissions/">
+              Click here to find out more.
+            </doc-link>
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(4)" last>
@@ -92,6 +105,9 @@ except according to the terms contained in the LICENSE file.
             </router-link>
             to control whether, for example, App Users will be able to see or
             create new submissions to this form.
+            <doc-link to="central-forms/#managing-form-lifecycle">
+              Click here to find out more.
+            </doc-link>
           </p>
         </form-overview-step>
       </div>
