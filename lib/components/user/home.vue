@@ -18,6 +18,7 @@ except according to the terms contained in the LICENSE file.
         while App Users can use mobile clients (like
         <doc-link to="collect-intro/">Collect</doc-link>)
         to download, fill out, and submit forms.
+        <doc-link to="central-users/">Learn more</doc-link>
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
