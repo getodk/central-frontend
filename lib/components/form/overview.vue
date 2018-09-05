@@ -69,10 +69,10 @@ except according to the terms contained in the LICENSE file.
                 <strong>{{ fieldKeyCount.toLocaleString() }} App Users</strong>
               </router-link>
               on this server, but you can always add more.
-              <doc-link to="central-submissions/">
-                Click here to find out more.
-              </doc-link>
             </template>
+            <doc-link to="central-submissions/">
+              Click here to find out more.
+            </doc-link>
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(3)">
