@@ -122,7 +122,8 @@ export default {
       this.highlighted = user.id;
     },
     afterResetPassword() {
-      this.$alert().success(`An email has been sent to ${this.resetPassword.user.email} with instructions on how to proceed.`);
+      const { email } = this.resetPassword.user;
+      this.$alert().success(`The password for ${email} has been invalidated. An email has been sent to ${email} with instructions on how to proceed.`);
     }
   }
 };
