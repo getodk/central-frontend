@@ -316,7 +316,7 @@ describe('FormSubmissions', () => {
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
               const encodedFormId = encodeURIComponent(form().xmlFormId);
-              $a.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
+              $a.attr('href').should.equal(`/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
               $a.find('.icon-check').length.should.equal(1);
               $a.find('.icon-download').length.should.equal(1);
             }));
@@ -372,7 +372,7 @@ describe('FormSubmissions', () => {
             const $button = $(button.element);
             $button.prop('tagName').should.equal('A');
             const encodedFormId = encodeURIComponent(form().xmlFormId);
-            $button.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/submissions.csv.zip`);
+            $button.attr('href').should.equal(`/v1/forms/${encodedFormId}/submissions.csv.zip`);
           }));
     });
 

@@ -144,7 +144,7 @@ export default {
         case 'binary': {
           const encodedInstanceId = encodeURIComponent(this.submission.__id);
           const encodedAttachmentName = encodeURIComponent(rawValue);
-          return `/api/v1/forms/${this.form.encodedId()}/submissions/${encodedInstanceId}/attachments/${encodedAttachmentName}`;
+          return `/v1/forms/${this.form.encodedId()}/submissions/${encodedInstanceId}/attachments/${encodedAttachmentName}`;
         }
 
         default:
