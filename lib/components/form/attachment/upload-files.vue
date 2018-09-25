@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       </p>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
-          OK
+          Okay
         </button>
       </div>
     </template>
