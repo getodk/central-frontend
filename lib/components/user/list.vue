@@ -141,11 +141,11 @@ export default {
     width: 90px;
   }
 
-  & > tbody > tr > td {
+  > tbody > tr > td {
     vertical-align: middle;
 
-    .dropdown-menu {
-      margin-right: 23px;
+    .dropdown {
+      width: 35px;
     }
   }
 }

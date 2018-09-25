@@ -183,29 +183,13 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-// 8px is the Bootstrap default.
-$padding-left-actions: 8px;
-$padding-right-actions: 23px;
-$width-dropdown: 44px;
-$width-dropdown-toggle: 42px;
-
 #field-key-list-table {
-  th, td {
-    &.field-key-list-actions {
-      padding-left: $padding-left-actions;
-      padding-right: $padding-right-actions;
-      // Setting the width so that the .dropdown-menu-right is correctly
-      // aligned.
-      width: $width-dropdown + $padding-left-actions + $padding-right-actions;
-
-      .dropdown-menu-right {
-        margin-right: $width-dropdown - $width-dropdown-toggle;
-      }
-    }
-  }
-
-  td {
+  > tbody > tr > td {
     vertical-align: middle;
+
+    .dropdown {
+      width: 35px;
+    }
   }
 }
 
