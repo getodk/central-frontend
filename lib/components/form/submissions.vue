@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     downloadHref() {
-      return `/api/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
+      return `/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
     // Returns the columns of the table that correspond to an element of the
     // form (to a question). We display a maximum of 10 such columns in the

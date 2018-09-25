@@ -184,7 +184,7 @@ describe('FormAttachmentList', () => {
         const encodedFormId = encodeURIComponent(form().xmlFormId);
         const { name } = testData.extendedFormAttachments.last();
         const encodedName = encodeURIComponent(name);
-        $a.attr('href').should.equal(`/api/v1/forms/${encodedFormId}/attachments/${encodedName}`);
+        $a.attr('href').should.equal(`/v1/forms/${encodedFormId}/attachments/${encodedName}`);
       });
     });
 

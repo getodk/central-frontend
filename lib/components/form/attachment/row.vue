@@ -100,7 +100,7 @@ export default {
       return displayName != null ? displayName : type;
     },
     href() {
-      return `/api/v1/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
+      return `/v1/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
     },
     updatedAt() {
       return formatDate(this.attachment.updatedAt);
