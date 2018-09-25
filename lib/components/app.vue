@@ -364,6 +364,7 @@ h1 {
 
     .panel-title {
       font-size: $font-size-table-heading;
+      line-height: inherit;
     }
   }
 
