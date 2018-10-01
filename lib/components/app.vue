@@ -150,14 +150,14 @@ h1 {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.no-text-decoration {
+.text-no-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
   }
 }
 
 @media print {
-  a.no-text-decoration:visited {
+  a.text-no-decoration:visited {
     text-decoration: none;
   }
 }

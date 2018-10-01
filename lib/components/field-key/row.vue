@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <td>{{ lastUsed }}</td>
     <td>
       <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
-        class="field-key-row-popover-link no-text-decoration" role="button"
+        class="field-key-row-popover-link text-no-decoration" role="button"
         @click.prevent="showCode">
         <span class="icon-qrcode"></span>
         <span class="underline-on-hover-or-focus">See code</span>

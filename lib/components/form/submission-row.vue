@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
       :title="hasTitle(column) ? questionValue(column) : null">
       <template v-if="column.type === 'binary'">
         <a v-if="questionValue(column) !== ''" :href="questionValue(column)"
-          class="form-submissions-binary-link no-text-decoration" target="_blank"
+          class="form-submissions-binary-link text-no-decoration" target="_blank"
           title="File was submitted. Click to download.">
           <span class="icon-check text-success"></span>
           <span class="icon-download"></span>
