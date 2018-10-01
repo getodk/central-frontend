@@ -156,18 +156,18 @@ h1 {
   }
 }
 
+a:hover, a:focus {
+  .underline-within-link {
+    text-decoration: underline;
+  }
+}
+
 @media print {
   a.text-no-decoration:visited {
     text-decoration: none;
   }
-}
 
-.underline-on-hover-or-focus {
-  &:hover, &:focus {
-    text-decoration: underline;
-  }
-
-  @media print {
+  .underline-within-link {
     text-decoration: underline;
   }
 }

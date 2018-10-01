@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         class="field-key-row-popover-link text-no-decoration" role="button"
         @click.prevent="showCode">
         <span class="icon-qrcode"></span>
-        <span class="underline-on-hover-or-focus">See code</span>
+        <span class="underline-within-link">See code</span>
       </a>
       <template v-else>
         Access revoked
