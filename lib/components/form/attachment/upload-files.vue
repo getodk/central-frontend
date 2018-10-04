@@ -10,11 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" backdrop hideable @hide="$emit('hide')">
+  <modal id="form-attachment-upload-files" :state="state" backdrop hideable
+    @hide="$emit('hide')" @shown="focusLink">
     <template slot="title">Upload Files</template>
     <template slot="body">
       <p class="modal-introduction">
-        To upload files, please drag and drop files onto the table on this page.
+        To upload files, you can <strong>drag and drop</strong> one or more
+        files onto the table on this page.
+      </p>
+      <p>
+        If you would rather select files from a prompt, ensure that their names
+        match the ones in the table and then
+        <input ref="input" type="file" class="hidden" multiple>
+        <a ref="link" href="#" class="text-no-decoration" role="button"
+          @click.prevent="clickInput">
+          <span class="icon-folder-open"></span>
+          <span class="underline-within-link">click here to choose</span></a>.
       </p>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
@@ -33,6 +44,29 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  mounted() {
+    // Using a jQuery event handler rather than a Vue one in order to facilitate
+    // testing: it is possible to mock a jQuery event but not a Vue event.
+    $(this.$refs.input).on('change.form-attachment-upload-files', (event) =>
+      this.$emit('choose', event.target.files));
+  },
+  beforeDestroy() {
+    $(this.$refs.input).off('.form-attachment-upload-files');
+  },
+  methods: {
+    focusLink() {
+      $(this.$refs.link).focus();
+    },
+    clickInput() {
+      $(this.$refs.input).click();
+    }
   }
 };
 </script>
+
+<style lang="sass">
+#form-attachment-upload-files a[role="button"] {
+  margin-left: 5px;
+}
+</style>
