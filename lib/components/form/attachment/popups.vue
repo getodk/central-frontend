@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </p>
           <p>
-            <button type="button" class="btn btn-primary"
+            <button ref="confirmButton" type="button" class="btn btn-primary"
               @click="$emit('confirm')">
               Looks good, proceed
             </button>
@@ -149,6 +149,10 @@ export default {
       // in IE 10.
       return `${Math.floor(100 * (loaded / total)).toLocaleString()}%`;
     }
+  },
+  updated() {
+    if (this.plannedUploads.length !== 0 && !this.nameMismatch.state)
+      this.$refs.confirmButton.focus();
   }
 };
 </script>

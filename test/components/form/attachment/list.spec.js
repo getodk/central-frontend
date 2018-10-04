@@ -301,6 +301,7 @@ describe('FormAttachmentList', () => {
             const text = popup.first('p').text().trim().iTrim();
             text.should.equal('2 files ready for upload.');
             popup.first('#form-attachment-popups-unmatched').should.be.hidden();
+            popup.first('.btn-primary').should.be.focused();
           }));
 
       it('one unmatched file', () =>
@@ -316,6 +317,7 @@ describe('FormAttachmentList', () => {
             unmatched.first('.icon-exclamation-triangle');
             const unmatchedText = unmatched.text().trim().iTrim();
             unmatchedText.should.containEql('1 file has a name we don’t recognize and will be ignored.');
+            popup.first('.btn-primary').should.be.focused();
           }));
 
       it('multiple unmatched files', () =>
@@ -331,6 +333,7 @@ describe('FormAttachmentList', () => {
             unmatched.first('.icon-exclamation-triangle');
             const unmatchedText = unmatched.text().trim().iTrim();
             unmatchedText.should.containEql('2 files have a name we don’t recognize and will be ignored.');
+            popup.first('.btn-primary').should.be.focused();
           }));
 
       it('all files are unmatched', () =>
@@ -342,6 +345,7 @@ describe('FormAttachmentList', () => {
             const text = popup.first('.modal-body').text().trim().iTrim();
             text.should.containEql('We don’t recognize any of the files you are trying to upload.');
             popup.find('#form-attachment-popups-unmatched').should.be.empty();
+            popup.find('.btn-primary').should.be.empty();
           }));
     });
   };
@@ -678,6 +682,7 @@ describe('FormAttachmentList', () => {
           const text = popup.first('p').text().trim().iTrim();
           text.should.equal('1 file ready for upload.');
           popup.first('#form-attachment-popups-unmatched').should.be.hidden();
+          popup.first('.btn-primary').should.be.focused();
         }));
 
       it('correctly renders when the file does not match', () =>
@@ -687,6 +692,7 @@ describe('FormAttachmentList', () => {
           const text = popup.first('.modal-body').text().trim().iTrim();
           text.should.containEql('We don’t recognize the file you are trying to upload.');
           popup.find('#form-attachment-popups-unmatched').should.be.empty();
+          popup.find('.btn-primary').should.be.empty();
         }));
     });
   };
