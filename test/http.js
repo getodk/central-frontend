@@ -19,6 +19,7 @@ export const setHttp = (respond) => {
   http.request = http;
   http.get = (url, config) => http({ ...config, method: 'get', url });
   http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
+  http.put = (url, data, config) => http({ ...config, method: 'put', url, data });
   http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
   http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
