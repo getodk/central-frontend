@@ -98,7 +98,7 @@ export const fillForm = (wrapper, selectorsAndValues) => {
     }),
     Promise.resolve()
   );
-  return promise;
+  return promise.then(() => wrapper);
 };
 
 export const submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
