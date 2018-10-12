@@ -33,7 +33,7 @@ const moveToStep3 = (component) => moveToStep1(component)
   .request(next1)
   .respondWithData(() => ({
     url: 'http://localhost',
-    token: faker.app.token()
+    token: faker.central.token()
   }))
   .afterResponse(next2);
 // For step 3, fills the form and clicks the Next button.

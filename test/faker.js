@@ -62,7 +62,7 @@ Object.assign(fakerExtensions, {
       return { createdAt, updatedAt };
     }
   },
-  app: {
+  central: {
     token: () => faker.random.alphaNumeric(64)
   }
 });
