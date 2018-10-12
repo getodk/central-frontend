@@ -11,6 +11,7 @@ import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
 import { MockComponentAlert } from './alert';
 import { MockLogger } from './util';
 import { clearNavGuards, initNavGuards } from './router';
+import { clearUniqueFakerResults } from './faker';
 import { destroyMarkedComponent, mountAndMark } from './destroy';
 import { logOut } from '../lib/session';
 import { router } from '../lib/router';
@@ -62,3 +63,4 @@ afterEach(() => {
 });
 
 afterEach(testData.reset);
+afterEach(clearUniqueFakerResults);

@@ -4,7 +4,6 @@ import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
-import { validateUniqueCombination } from './validate';
 
 export const extendedForms = dataStore({
   factory: ({
@@ -16,7 +15,6 @@ export const extendedForms = dataStore({
     isOpen = !inPast || faker.random.boolean(),
     hasSubmission = inPast && faker.random.boolean()
   }) => {
-    const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
     const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const createdBy = administrators.randomOrCreatePast();
@@ -32,7 +30,7 @@ export const extendedForms = dataStore({
       });
     }
     return {
-      xmlFormId,
+      xmlFormId: faker.central.xmlFormId(),
       name,
       version,
       state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
@@ -78,9 +76,6 @@ export const extendedForms = dataStore({
       ]
     };
   },
-  validate: [
-    validateUniqueCombination(['xmlFormId'])
-  ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
 

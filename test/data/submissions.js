@@ -6,7 +6,6 @@ import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
-import { validateUniqueCombination } from './validate';
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
@@ -116,9 +115,6 @@ export const extendedSubmissions = dataStore({
       updatedAt
     };
   },
-  validate: [
-    validateUniqueCombination(['formId', 'instanceId'])
-  ],
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
 
