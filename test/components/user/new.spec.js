@@ -1,15 +1,12 @@
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { submitForm, trigger } from '../../event';
 
 const clickCreateButton = (wrapper) =>
   trigger.click(wrapper, '#user-list-new-button');
-const submitForm = (wrapper) =>
-  fillForm(wrapper, [['[type="email"]', testData.administrators.createNew().email]])
-    .then(() => trigger.submit(wrapper, '#user-new form'));
 
 describe('UserNew', () => {
   beforeEach(mockLogin);
@@ -42,7 +39,9 @@ describe('UserNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(UserNew)
-      .request(submitForm)
+      .request(modal => submitForm(modal, 'form', [
+        ['input[type="email"]', testData.administrators.createNew().email]
+      ]))
       .standardButton());
 
   describe('after successful submit', () => {
@@ -52,7 +51,10 @@ describe('UserNew', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => clickCreateButton(app).then(submitForm))
+      .request(() => clickCreateButton(app)
+        .then(() => submitForm(app, '#user-new form', [
+          ['input[type="email"]', testData.administrators.createNew().email]
+        ])))
       .respondWithData(() => testData.administrators.last())
       .respondWithData(() => testData.administrators.sorted()));
 

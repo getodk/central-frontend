@@ -3,9 +3,9 @@ import BackupList from '../../../lib/components/backup/list.vue';
 import BackupNew from '../../../lib/components/backup/new.vue';
 import faker from '../../faker';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { submitForm, trigger } from '../../event';
 
 const clickCreateButton = (wrapper) =>
   trigger.click(wrapper.first('#backup-list-new-button')).then(() => wrapper);
@@ -22,9 +22,7 @@ const moveToStep1 = (component) => {
 };
 // For step 1, fills the form and clicks the Next button.
 const next1 = (wrapper) =>
-  fillForm(wrapper, [['#backup-new input', '']])
-    .then(() => trigger.submit(wrapper.first('#backup-new form')))
-    .then(() => wrapper);
+  submitForm(wrapper, '#backup-new form', [['input', '']]);
 // For step 2, clicks the Next button.
 const next2 = (wrapper) =>
   trigger.click(wrapper.first('#backup-new .btn-primary'))
@@ -37,10 +35,9 @@ const moveToStep3 = (component) => moveToStep1(component)
   }))
   .afterResponse(next2);
 // For step 3, fills the form and clicks the Next button.
-const next3 = (wrapper) =>
-  fillForm(wrapper, [['#backup-new input', faker.random.alphaNumeric(57)]])
-    .then(() => trigger.submit(wrapper.first('#backup-new form')))
-    .then(() => wrapper);
+const next3 = (wrapper) => submitForm(wrapper, '#backup-new form', [
+  ['input', faker.random.alphaNumeric(57)]
+]);
 const completeSetup = (component) => {
   if (component !== App && component !== BackupList)
     throw new Error('invalid component');

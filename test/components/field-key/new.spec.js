@@ -1,19 +1,12 @@
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyNew from '../../../lib/components/field-key/new.vue';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { submitForm, trigger } from '../../event';
 
 const clickCreateButton = (wrapper) =>
-  trigger.click(wrapper.first('#field-key-list-new-button'))
-    .then(() => wrapper);
-const submitForm = (wrapper) => {
-  const nickname = testData.extendedFieldKeys.createNew('withAccess').displayName;
-  return fillForm(wrapper, [['#field-key-new input', nickname]])
-    .then(() => trigger.submit(wrapper.first('#field-key-new form')))
-    .then(() => wrapper);
-};
+  trigger.click(wrapper, '#field-key-list-new-button');
 
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
@@ -48,7 +41,9 @@ describe('FieldKeyNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(FieldKeyNew)
-      .request(submitForm)
+      .request(modal => submitForm(modal, 'form', [
+        ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+      ]))
       .standardButton());
 
   describe('after successful submit', () => {
@@ -58,7 +53,10 @@ describe('FieldKeyNew', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => clickCreateButton(app).then(submitForm))
+      .request(() => clickCreateButton(app)
+        .then(() => submitForm(app, '#field-key-new form', [
+          ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+        ])))
       .respondWithData(() => testData.simpleFieldKeys.last()));
 
     const testCreationCompletion = () => {

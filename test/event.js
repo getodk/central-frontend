@@ -88,15 +88,22 @@ trigger.dragAndDrop = (...args) => trigger.dragenter(...args)
 // TRIGGERING A SERIES OF EVENTS
 
 export const fillForm = (wrapper, selectorsAndValues) => {
-  let promise = Promise.resolve();
-  for (const [selector, value] of selectorsAndValues) {
-    promise = promise.then(() => {
+  const promise = selectorsAndValues.reduce(
+    (acc, [selector, value]) => acc.then(() => {
       const field = wrapper.first(selector);
       field.element.value = value;
       // If there is a v-model attribute, prompt it to sync.
       field.trigger('input');
       return Vue.nextTick();
-    });
-  }
+    }),
+    Promise.resolve()
+  );
   return promise;
+};
+
+export const submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
+  const form = wrapper.first(formSelector);
+  return fillForm(form, fieldSelectorsAndValues)
+    .then(() => trigger.submit(form))
+    .then(() => wrapper);
 };
