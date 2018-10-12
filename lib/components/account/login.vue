@@ -95,8 +95,10 @@ export default {
       this
         .post('/sessions', { email: this.email, password: this.password })
         .then(({ data }) => this.fetchUser(data))
-        .then(({ session, user }) => logIn(session, user))
-        .then(() => this.routeToNext())
+        .then(({ session, user }) => {
+          logIn(session, user);
+          this.routeToNext();
+        })
         .catch(() => {
           this.disabled = false;
         });
