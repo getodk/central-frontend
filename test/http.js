@@ -568,7 +568,11 @@ class MockHttp {
   // Tests standard button thinking things.
   standardButton(buttonSelector = 'button[type="submit"]') {
     const spinner = (button) => {
-      const spinners = button.find(Spinner);
+      const spinners = button
+        .find(Spinner)
+        // I think find() in the previous line starts the search from the
+        // button's parent Vue component.
+        .filter(wrapper => $.contains(button.element, wrapper.vm.$el));
       if (spinners.length === 0) throw new Error('spinner not found');
       if (spinners.length > 1) throw new Error('multiple spinners found');
       return spinners[0];
