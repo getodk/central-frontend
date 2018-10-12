@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li v-if="loggedOut">
+          <li v-if="session.loggedOut()">
             <a href="#" @click.prevent>
               <span class="icon-user-circle-o"></span> Not logged in
             </a>
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span> {{ displayName }}
+              <span class="icon-user-circle-o"></span> {{ session.user.displayName }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -93,33 +93,24 @@ class Link {
 
 export default {
   name: 'Navbar',
+  props: {
+    session: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       links: [
         new Link(this, 'Forms', '/forms', 'navbar-forms-link'),
         new Link(this, 'Users', '/users', 'navbar-users-link'),
         new Link(this, 'System', '/system/backups', 'navbar-system-link')
-      ],
-      /* If the initial navigation is synchronous, Navbar will be created after
-      the navigation is confirmed (I think). If the initial navigation is
-      asynchronous, Navbar will be created before the navigation is confirmed.
-      (For more, see the comments in App.) Either way, the user will be logged
-      out when Navbar is created: if the user's session is restored during the
-      initial navigation, it will be done so asynchronously, after Navbar is
-      created. */
-      loggedIn: false,
-      displayName: ''
+      ]
     };
-  },
-  computed: {
-    loggedOut() {
-      return !this.loggedIn;
-    }
   },
   watch: {
     $route() {
       this.loggedIn = this.$session.loggedIn();
-      this.displayName = this.loggedIn ? this.$session.user.displayName : '';
     }
   },
   methods: {
