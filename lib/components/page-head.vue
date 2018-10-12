@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="page-head" class="row">
     <div class="col-xs-12">
-      <h1><slot name="title"></slot></h1>
+      <h1 id="page-head-title"><slot name="title"></slot></h1>
       <p><slot name="body"></slot></p>
       <ul class="nav nav-tabs">
         <slot name="tabs"></slot>

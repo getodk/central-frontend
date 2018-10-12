@@ -79,9 +79,7 @@ describe('AccountLogin', () => {
 
       describe('after clicking logout button', () => {
         beforeEach(() => mockHttp()
-          .request(() => {
-            trigger.click(dropdown.first('.dropdown-menu > li > a'));
-          })
+          .request(() => trigger.click(app, '#navbar-log-out-action'))
           .respondWithProblem());
 
         it('user is logged out', () => {

@@ -271,7 +271,7 @@ h1 {
     }
 
     &:placeholder-shown + .form-label {
-      transform: translateY(-13px);
+      transform: translateY(-15px);
     }
   }
 
@@ -283,6 +283,29 @@ h1 {
     padding-left: 12px;
     transform: translateY(2px);
     transition: 0.15s transform, 0.15s color;
+  }
+
+  &.has-error {
+    .form-label,
+    .radio,
+    .checkbox,
+    &.radio label,
+    &.checkbox label {
+      color: $color-danger;
+    }
+
+    input, select {
+      border-color: $color-danger;
+
+      &:focus {
+        border-color: $color-danger-dark;
+        box-shadow: none;
+
+        + .form-label {
+          color: $color-danger-dark;
+        }
+      }
+    }
   }
 }
 
