@@ -49,11 +49,7 @@ export default {
   },
   methods: {
     submit() {
-      const data = {};
-      if (this.email !== this.$session.user.email)
-        data.email = this.email;
-      if (this.displayName !== this.$session.user.displayName)
-        data.displayName = this.displayName;
+      const data = { email: this.email, displayName: this.displayName };
       this.patch(`/users/${this.$session.user.id}`, data)
         .then(response => {
           const { token, expiresAt } = this.$session;
