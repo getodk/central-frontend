@@ -568,6 +568,8 @@ class MockHttp {
 
   // Tests standard button thinking things.
   standardButton(buttonSelector = 'button[type="submit"]') {
+    if (typeof buttonSelector !== 'string')
+      throw new Error('invalid button selector');
     const spinner = (button) => {
       const spinners = button
         .find(Spinner)
