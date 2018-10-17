@@ -118,11 +118,6 @@ export default {
       ]
     };
   },
-  watch: {
-    $route() {
-      this.loggedIn = this.$session.loggedIn();
-    }
-  },
   methods: {
     editProfile() {
       this.$router.push('/account/edit');
