@@ -173,6 +173,12 @@ export default {
         margin-bottom: 18px;
       }
 
+      .form-group {
+        input, select {
+          background-color: $color-panel-input-background;
+        }
+      }
+
       .modal-actions {
         background: $color-subpanel-background;
         border-top: 1px solid $color-subpanel-border;

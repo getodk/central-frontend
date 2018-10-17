@@ -394,6 +394,12 @@ h1 {
 
   .panel-body {
     padding: 25px 15px;
+
+    .form-group {
+      input, select {
+        background-color: $color-panel-input-background;
+      }
+    }
   }
 }
 
