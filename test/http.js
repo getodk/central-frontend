@@ -572,7 +572,8 @@ class MockHttp {
       const spinners = button
         .find(Spinner)
         // I think find() in the previous line starts the search from the
-        // button's parent Vue component.
+        // button's parent Vue component: it returns all Spinner components that
+        // are descendants of the parent component.
         .filter(wrapper => $.contains(button.element, wrapper.vm.$el));
       if (spinners.length === 0) throw new Error('spinner not found');
       if (spinners.length > 1) throw new Error('multiple spinners found');
