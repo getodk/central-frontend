@@ -128,17 +128,12 @@ export default {
       // pending DELETE requests are possible and unproblematic.
       this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
     },
-    routeToLogin() {
-      const query = Object.assign({}, this.$route.query);
-      query.next = this.$route.path;
-      this.$router.push({ path: '/login', query }, () => {
-        this.$alert().success('You have logged out successfully.');
-      });
-    },
     logOut() {
       this.deleteSession();
       logOut();
-      this.routeToLogin();
+      this.$router.push('/login', () => {
+        this.$alert().success('You have logged out successfully.');
+      });
     }
   }
 };
