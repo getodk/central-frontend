@@ -284,33 +284,33 @@ h1 {
     transform: translateY(2px);
     transition: 0.15s transform, 0.15s color;
   }
-
-  &.has-error {
-    .form-label,
-    .radio,
-    .checkbox,
-    &.radio label,
-    &.checkbox label {
-      color: $color-danger;
-    }
-
-    .form-control {
-      border-color: $color-danger;
-
-      &:focus {
-        border-color: $color-danger-dark;
-        box-shadow: none;
-
-        + .form-label {
-          color: $color-danger-dark;
-        }
-      }
-    }
-  }
 }
 
 .radio label {
   cursor: default;
+}
+
+.has-error {
+  .form-label,
+  .radio,
+  .checkbox,
+  &.radio label,
+  &.checkbox label {
+    color: $color-danger;
+  }
+
+  .form-control {
+    border-color: $color-danger;
+
+    &:focus {
+      border-color: $color-danger-dark;
+      box-shadow: none;
+
+      + .form-label {
+        color: $color-danger-dark;
+      }
+    }
+  }
 }
 
 .table {
