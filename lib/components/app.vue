@@ -248,7 +248,7 @@ h1 {
   font-weight: normal;
   padding-bottom: 15px;
 
-  input, select {
+  .form-control {
     background: $color-input-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
@@ -294,7 +294,7 @@ h1 {
       color: $color-danger;
     }
 
-    input, select {
+    .form-control {
       border-color: $color-danger;
 
       &:focus {
@@ -395,10 +395,8 @@ h1 {
   .panel-body {
     padding: 25px 15px;
 
-    .form-group {
-      input, select {
-        background-color: $color-panel-input-background;
-      }
+    .form-group .form-control {
+      background-color: $color-panel-input-background;
     }
   }
 }
