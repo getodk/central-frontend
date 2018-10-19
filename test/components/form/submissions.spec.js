@@ -3,7 +3,7 @@ import { DateTime, Settings } from 'luxon';
 import Form from '../../../lib/presenters/form';
 import FormSubmissions from '../../../lib/components/form/submissions.vue';
 import testData from '../../data';
-import { formatDate } from '../../../lib/util';
+import { formatDate, uniqueSequence } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { trigger } from '../../event';
@@ -321,6 +321,59 @@ describe('FormSubmissions', () => {
               $a.find('.icon-download').length.should.equal(1);
             }));
       });
+    });
+
+    describe('field subset indicator', () => {
+      const id = uniqueSequence();
+      const fields = (type, count) => new Array(count).fill(null)
+        .map(() => ({ path: [`field${id()}`], type }));
+
+      // Array of test cases
+      const cases = [
+        // Schemas for which an indicator is not expected
+        [false, [
+          ['1 field', fields('int', 1)],
+          ['10 fields', fields('int', 10)],
+          ['10 fields and meta.instanceID', [
+            ...fields('int', 10),
+            { path: ['meta', 'instanceID'], type: 'string' }
+          ]],
+          ['10 fields and instanceID', [
+            ...fields('int', 10),
+            { path: ['instanceID'], type: 'string' }
+          ]],
+          ['10 fields, meta.instanceID, and instanceID', [
+            ...fields('int', 10),
+            { path: ['meta', 'instanceID'], type: 'string' },
+            { path: ['instanceID'], type: 'string' }
+          ]]
+        ]],
+        // Schemas for which an indicator is expected
+        [true, [
+          ['11 fields', fields('int', 11)],
+          ['1 field and 1 repeat', [
+            ...fields('int', 1),
+            ...fields('repeat', 1)
+          ]],
+          ['1 repeat and no other root fields', fields('repeat', 1)]
+        ]]
+      ];
+      for (const [hasClass, subcases] of cases) {
+        describe(hasClass ? 'is shown' : 'is not shown', () => {
+          for (const [description, schema] of subcases) {
+            it(description, () => {
+              testData.extendedForms.createPast(1, { schema });
+              return loadSubmissions(1).afterResponses(component => {
+                component
+                  .first('#form-submissions-table2')
+                  .hasClass('form-submissions-field-subset')
+                  .should
+                  .equal(hasClass);
+              });
+            });
+          }
+        });
+      }
     });
 
     describe('refresh button', () => {

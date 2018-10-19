@@ -54,7 +54,7 @@ except according to the terms contained in the LICENSE file.
       <!-- The next table element contains the form-field data and instance ID
       of each submission. -->
       <div id="form-submissions-table2-container">
-        <table id="form-submissions-table2" class="table table-condensed">
+        <table id="form-submissions-table2" :class="table2Class">
           <thead>
             <tr>
               <!-- Adding a title attribute in case the column header is so long
@@ -129,7 +129,7 @@ export default {
         // We already display __id as the instance ID, so if there is also an
         // meta.instanceID or instanceID field, we do not display it. Further,
         // if the only fields that we do not display are instanceID fields, we
-        // do not show the column subset indicator.
+        // do not show the field subset indicator.
         if (type === 'string' &&
           ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
           (path.length === 1 && path[0] === 'instanceID')))
@@ -146,6 +146,13 @@ export default {
       return {
         columns,
         showSubset: columns.length !== this.schema.length - idFieldCount
+      };
+    },
+    table2Class() {
+      return {
+        table: true,
+        'table-condensed': true,
+        'form-submissions-field-subset': this.schemaAnalysis.showSubset
       };
     },
     fieldColumns() {
@@ -245,5 +252,9 @@ export default {
       color: $color-action-foreground;
     }
   }
+}
+
+.form-submissions-field-subset {
+  // TODO. Add styles.
 }
 </style>
