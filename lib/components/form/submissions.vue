@@ -119,6 +119,7 @@ export default {
       // `columns` holds the columns of the table that correspond to a form
       // field. We display a maximum of 10 such columns in the table.
       const columns = [];
+      let idFieldCount = 0;
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
         // Note that schema[i] might not have a type property, in which case
         // `type` will be undefined -- though I have seen a field without a type
@@ -126,11 +127,14 @@ export default {
         // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
         const { type, path } = this.schema[i];
         // We already display __id as the instance ID, so if there is also an
-        // meta.instanceID or instanceID field, we do not display it.
-        const isInstanceId = type === 'string' &&
+        // meta.instanceID or instanceID field, we do not display it. Further,
+        // if the only fields that we do not display are instanceID fields, we
+        // do not show the column subset indicator.
+        if (type === 'string' &&
           ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
-          (path.length === 1 && path[0] === 'instanceID'));
-        if (!(type === 'repeat' || isInstanceId)) {
+          (path.length === 1 && path[0] === 'instanceID')))
+          idFieldCount += 1;
+        else if (type !== 'repeat') {
           const header = path.join('-');
           const htmlClass = ['form-submissions-field'];
           if (type != null && /^\w+$/.test(type))
@@ -139,7 +143,10 @@ export default {
           columns.push({ type, path, header, htmlClass, key });
         }
       }
-      return { columns };
+      return {
+        columns,
+        showSubset: columns.length !== this.schema.length - idFieldCount
+      };
     },
     fieldColumns() {
       return this.schemaAnalysis.columns;
