@@ -114,9 +114,8 @@ export default {
     downloadHref() {
       return `/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
-    // Returns the columns of the table that correspond to a form field (not a
-    // group or repeat group). We display a maximum of 10 such columns in the
-    // table.
+    // Returns the columns of the table that correspond to a form field. We
+    // display a maximum of 10 such columns in the table.
     fieldColumns() {
       const columns = [];
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
