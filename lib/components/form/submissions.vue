@@ -114,9 +114,10 @@ export default {
     downloadHref() {
       return `/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
-    // Returns the columns of the table that correspond to a form field. We
-    // display a maximum of 10 such columns in the table.
-    fieldColumns() {
+    // Returns information about the schema after processing it.
+    schemaAnalysis() {
+      // `columns` holds the columns of the table that correspond to a form
+      // field. We display a maximum of 10 such columns in the table.
       const columns = [];
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
         // Note that schema[i] might not have a type property, in which case
@@ -138,7 +139,10 @@ export default {
           columns.push({ type, path, header, htmlClass, key });
         }
       }
-      return columns;
+      return { columns };
+    },
+    fieldColumns() {
+      return this.schemaAnalysis.columns;
     }
   },
   created() {
