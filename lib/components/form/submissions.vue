@@ -51,15 +51,15 @@ except according to the terms contained in the LICENSE file.
             :key="submission.__id" :form="form" :submission="submission"/>
         </tbody>
       </table>
-      <!-- The next table element contains the question data and instance ID of
-      each submission. -->
+      <!-- The next table element contains the form-field data and instance ID
+      of each submission. -->
       <div id="form-submissions-table2-container">
         <table id="form-submissions-table2" class="table table-condensed">
           <thead>
             <tr>
               <!-- Adding a title attribute in case the column header is so long
               that it is truncated. -->
-              <th v-for="column of questionColumns" :key="column.key"
+              <th v-for="column of fieldColumns" :key="column.key"
                 :class="column.htmlClass" :title="column.header">
                 {{ column.header }}
               </th>
@@ -69,7 +69,7 @@ except according to the terms contained in the LICENSE file.
           <tbody>
             <form-submission-row v-for="submission of submissions"
               :key="submission.__id" :form="form" :submission="submission"
-              :question-columns="questionColumns"/>
+              :question-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>
@@ -114,15 +114,15 @@ export default {
     downloadHref() {
       return `/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
-    // Returns the columns of the table that correspond to an element of the
-    // form (to a question). We display a maximum of 10 such columns in the
+    // Returns the columns of the table that correspond to a form field (not a
+    // group or repeat group). We display a maximum of 10 such columns in the
     // table.
-    questionColumns() {
+    fieldColumns() {
       const columns = [];
       for (let i = 0; columns.length < 10 && i < this.schema.length; i += 1) {
         // Note that schema[i] might not have a type property, in which case
-        // `type` will be undefined -- though I have seen a question without a
-        // type only in the Widgets sample form (<branch>):
+        // `type` will be undefined -- though I have seen a field without a type
+        // only in the Widgets sample form (<branch>):
         // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
         const { type, path } = this.schema[i];
         // We already display __id as the instance ID, so if there is also an
@@ -132,7 +132,7 @@ export default {
           (path.length === 1 && path[0] === 'instanceID'));
         if (!(type === 'repeat' || isInstanceId)) {
           const header = path.join('-');
-          const htmlClass = ['form-submissions-question-column'];
+          const htmlClass = ['form-submissions-field'];
           if (type != null && /^\w+$/.test(type))
             htmlClass.push(`form-submissions-${type}-column`);
           const key = this.$uniqueId();
@@ -200,7 +200,7 @@ export default {
   margin-bottom: 0;
 
   thead > tr > th, tbody > tr > td {
-    &.form-submissions-question-column {
+    &.form-submissions-field {
       max-width: 250px;
     }
 
