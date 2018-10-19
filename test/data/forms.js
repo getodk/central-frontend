@@ -6,15 +6,50 @@ import { dataStore, view } from './data-store';
 import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
 import { validateUniqueCombination } from './validate';
 
+const defaultSchema = (hasInstanceId) => {
+  const instanceId = [];
+  if (hasInstanceId) {
+    instanceId.push({
+      path: faker.random.boolean() ? ['meta', 'instanceID'] : ['instanceID'],
+      type: 'string'
+    });
+  }
+  return [
+    ...instanceId,
+    { path: ['testInt'], type: 'int' },
+    { path: ['testDecimal'], type: 'decimal' },
+    { path: ['testDate'], type: 'date' },
+    { path: ['testTime'], type: 'time' },
+    { path: ['testDateTime'], type: 'dateTime' },
+    { path: ['testGeopoint'], type: 'geopoint' },
+    { path: ['testGroup', 'testBinary'], type: 'binary' },
+    // The column header for this question will be the same as the
+    // previous question's.
+    { path: ['testGroup-testBinary'], type: 'binary' },
+    { path: ['testBranch'] },
+    { path: ['testString1'], type: 'string' },
+    { path: ['testString2'], type: 'string' },
+    {
+      path: ['testRepeat'],
+      type: 'repeat',
+      children: [
+        { path: ['testString3'], type: 'string' }
+      ]
+    }
+  ];
+};
+
 export const extendedForms = dataStore({
   factory: ({
     inPast,
     lastCreatedAt,
 
-    hasInstanceId = faker.random.boolean(),
     hasName = faker.random.boolean(),
     isOpen = !inPast || faker.random.boolean(),
-    hasSubmission = inPast && faker.random.boolean()
+    hasSubmission = inPast && faker.random.boolean(),
+
+    hasInstanceId = faker.random.boolean(),
+    schema = defaultSchema(hasInstanceId)
   }) => {
     const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
     const name = hasName ? faker.name.findName() : null;
@@ -24,13 +59,6 @@ export const extendedForms = dataStore({
       lastCreatedAt,
       createdBy.createdAt
     ]);
-    const instanceId = [];
-    if (hasInstanceId) {
-      instanceId.push({
-        path: faker.random.boolean() ? ['meta', 'instanceID'] : ['instanceID'],
-        type: 'string'
-      });
-    }
     return {
       xmlFormId,
       name,
@@ -53,29 +81,7 @@ export const extendedForms = dataStore({
       xml: '',
       createdAt,
       updatedAt,
-      _schema: [
-        ...instanceId,
-        { path: ['testInt'], type: 'int' },
-        { path: ['testDecimal'], type: 'decimal' },
-        { path: ['testDate'], type: 'date' },
-        { path: ['testTime'], type: 'time' },
-        { path: ['testDateTime'], type: 'dateTime' },
-        { path: ['testGeopoint'], type: 'geopoint' },
-        { path: ['testGroup', 'testBinary'], type: 'binary' },
-        // The column header for this question will be the same as the
-        // previous question's.
-        { path: ['testGroup-testBinary'], type: 'binary' },
-        { path: ['testBranch'] },
-        { path: ['testString1'], type: 'string' },
-        { path: ['testString2'], type: 'string' },
-        {
-          path: ['testRepeat'],
-          type: 'repeat',
-          children: [
-            { path: ['testString3'], type: 'string' }
-          ]
-        }
-      ]
+      _schema: schema
     };
   },
   validate: [
