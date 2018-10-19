@@ -125,7 +125,7 @@ export default {
         // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
         const { type, path } = this.schema[i];
         // We already display __id as the instance ID, so if there is also an
-        // meta.instanceID or instanceID element, we do not display it.
+        // meta.instanceID or instanceID field, we do not display it.
         const isInstanceId = type === 'string' &&
           ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
           (path.length === 1 && path[0] === 'instanceID'));
