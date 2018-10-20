@@ -69,7 +69,7 @@ except according to the terms contained in the LICENSE file.
           <tbody>
             <form-submission-row v-for="submission of submissions"
               :key="submission.__id" :form="form" :submission="submission"
-              :question-columns="fieldColumns"/>
+              :field-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>

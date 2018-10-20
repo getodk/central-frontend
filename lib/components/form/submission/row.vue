@@ -11,17 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <!-- The frozen columns of the table -->
-  <tr v-if="questionColumns == null">
+  <tr v-if="fieldColumns == null">
     <td>{{ submission.__system.submitterName }}</td>
     <td>{{ submissionDate }}</td>
   </tr>
   <!-- The rest of the table -->
   <tr v-else>
-    <td v-for="column of questionColumns" :key="column.key"
+    <td v-for="column of fieldColumns" :key="column.key"
       :class="column.htmlClass"
-      :title="hasTitle(column) ? questionValue(column) : null">
+      :title="hasTitle(column) ? fieldValue(column) : null">
       <template v-if="column.type === 'binary'">
-        <a v-if="questionValue(column) !== ''" :href="questionValue(column)"
+        <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
           class="form-submission-list-binary-link no-text-decoration" target="_blank"
           title="File was submitted. Click to download.">
           <span class="icon-check text-success"></span>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </template>
       <template v-else>
-        {{ questionValue(column) }}
+        {{ fieldValue(column) }}
       </template>
     </td>
     <td>{{ submission.__id.replace(/^uuid:/, '') }}</td>
@@ -42,7 +42,7 @@ import { DateTime, Settings } from 'luxon';
 
 import { formatDate } from '../../../util';
 
-const TITLE_QUESTION_TYPES = [
+const TITLE_FIELD_TYPES = [
   'string',
   'select',
   'select1',
@@ -62,8 +62,8 @@ export default {
       type: Object,
       required: true
     },
-    // The question columns to display
-    questionColumns: Array // eslint-disable-line vue/require-default-prop
+    // The form-field columns to display
+    fieldColumns: Array // eslint-disable-line vue/require-default-prop
   },
   computed: {
     submissionDate() {
@@ -71,9 +71,9 @@ export default {
     }
   },
   methods: {
-    // Returns the submission's value for the specified question column,
-    // formatting it according to the question's type.
-    questionValue(column) {
+    // Returns the submission's value for the specified field, formatting it
+    // according to the field's type.
+    fieldValue(column) {
       const rawValue = R.path(column.path, this.submission);
       if (rawValue == null) return '';
       switch (column.type) {
@@ -151,10 +151,10 @@ export default {
           return rawValue;
       }
     },
-    // Returns true if a value of the specified question column should be
-    // displayed with a title attribute and false if not.
+    // Returns true if a value of the specified field should be displayed with a
+    // title attribute and false if not.
     hasTitle(column) {
-      return TITLE_QUESTION_TYPES.includes(column.type);
+      return TITLE_FIELD_TYPES.includes(column.type);
     }
   }
 };
