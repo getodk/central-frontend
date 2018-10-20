@@ -1,7 +1,7 @@
 import { DateTime, Settings } from 'luxon';
 
 import Form from '../../../../lib/presenters/form';
-import FormSubmissions from '../../../../lib/components/form/submission/list.vue';
+import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import testData from '../../../data';
 import { formatDate, uniqueSequence } from '../../../../lib/util';
 import { mockHttp, mockRoute } from '../../../http';
@@ -10,7 +10,7 @@ import { trigger } from '../../../event';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 
-describe('FormSubmissions', () => {
+describe('FormSubmissionList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute(submissionsPath(testData.extendedForms.createPast(1).first()))
@@ -36,7 +36,7 @@ describe('FormSubmissions', () => {
     const loadSubmissions = (...args) => {
       testData.extendedSubmissions.createPast(...args);
       return mockHttp()
-        .mount(FormSubmissions, {
+        .mount(FormSubmissionList, {
           propsData: { form: new Form(form()) }
         })
         .respondWithData(() => form()._schema)

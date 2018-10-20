@@ -1,6 +1,6 @@
 import Form from '../../../../lib/presenters/form';
-import FormAnalyze from '../../../../lib/components/form/submission/analyze.vue';
-import FormSubmissions from '../../../../lib/components/form/submission/list.vue';
+import FormSubmissionAnalyze from '../../../../lib/components/form/submission/analyze.vue';
+import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import testData from '../../../data';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin } from '../../../session';
@@ -24,23 +24,23 @@ const clickTab = (wrapper, tabText) => {
   throw new Error('tab not found');
 };
 
-describe('FormAnalyze', () => {
+describe('FormSubmissionAnalyze', () => {
   beforeEach(mockLogin);
 
   it('opens the modal upon button click', () =>
     mockHttp()
-      .mount(FormSubmissions, {
+      .mount(FormSubmissionList, {
         propsData: { form: new Form(createFormWithSubmission()) }
       })
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponse(component => {
-        component.first(FormAnalyze).getProp('state').should.be.false();
+        component.first(FormSubmissionAnalyze).getProp('state').should.be.false();
         return component;
       })
       .then(clickAnalyzeButton)
       .then(component => {
-        component.first(FormAnalyze).getProp('state').should.be.true();
+        component.first(FormSubmissionAnalyze).getProp('state').should.be.true();
       }));
 
   it('selects the OData URL upon click', () =>
@@ -62,7 +62,7 @@ describe('FormAnalyze', () => {
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
-      modal = mountAndMark(FormAnalyze, {
+      modal = mountAndMark(FormSubmissionAnalyze, {
         propsData: { form: new Form(createFormWithSubmission()) }
       });
     });

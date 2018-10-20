@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormAnalyze',
+  name: 'FormSubmissionAnalyze',
   props: {
     state: {
       type: Boolean,

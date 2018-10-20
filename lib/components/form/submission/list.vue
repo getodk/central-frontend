@@ -74,20 +74,20 @@ except according to the terms contained in the LICENSE file.
         </table>
       </div>
     </template>
-    <form-analyze :state="analyze.state" :form="form"
+    <form-submission-analyze :state="analyze.state" :form="form"
       @hide="analyze.state = false"/>
   </div>
 </template>
 
 <script>
-import FormAnalyze from './analyze.vue';
+import FormSubmissionAnalyze from './analyze.vue';
 import FormSubmissionRow from './row.vue';
 import modal from '../../../mixins/modal';
 import request from '../../../mixins/request';
 
 export default {
-  name: 'FormSubmissions',
-  components: { FormAnalyze, FormSubmissionRow },
+  name: 'FormSubmissionList',
+  components: { FormSubmissionAnalyze, FormSubmissionRow },
   mixins: [
     modal('analyze'),
     request()
