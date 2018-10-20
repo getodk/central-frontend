@@ -252,9 +252,64 @@ export default {
       color: $color-action-foreground;
     }
   }
-}
 
-.form-submissions-field-subset {
-  // TODO. Add styles.
+  
+  &.form-submissions-field-subset {
+    $subset-padding-left: 30px;
+
+    thead th:last-child {
+      $color-fill: $color-table-heading-background;
+      $color-break: $color-page-background;
+      $zig-size: 10px;
+      background: linear-gradient(-135deg, $color-fill 5px, transparent 0) 0 5px,
+        linear-gradient(135deg, $color-break 9px, $color-fill 0) 0 5px;
+      background-position: 10px 5px;
+      background-repeat: repeat-y;
+      background-size: $zig-size $zig-size;
+      overflow: visible; // this is okay for "Instance ID", which is never truncated.
+      padding-left: $subset-padding-left;
+      position: relative;
+
+      &::before {
+        background: linear-gradient(-135deg, transparent 9px, $color-fill 0) 0 5px,
+          linear-gradient(135deg, $color-fill 5px, $color-break 0) 0 5px;
+        background-position: left top;
+        background-repeat: repeat-y;
+        background-size: $zig-size $zig-size;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: $zig-size;
+      }
+
+      &::after { // TODO: is there a cleverer way to do this?
+        border-bottom: 1px solid $color-page-background;
+        content: '';
+        display: block;
+        left: 7px;
+        position: absolute;
+        top: 100%;
+        width: 11px;
+      }
+    }
+    
+    tbody td:last-child {
+      padding-left: $subset-padding-left;
+      position: relative;
+
+      &::before {
+        color: #999;
+        content: '…';
+        display: block;
+        left: 4px;
+        top: 4px;
+        pointer-events: none;
+        position: absolute
+      }
+    }
+  }
 }
 </style>
