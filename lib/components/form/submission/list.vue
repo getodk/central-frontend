@@ -18,14 +18,14 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
-        <a id="form-submissions-download-button" :href="downloadHref"
+        <a id="form-submission-list-download-button" :href="downloadHref"
           :class="{ disabled: awaitingResponse }" class="btn btn-primary"
           target="_blank">
           <span class="icon-arrow-circle-down"></span> Download all
           {{ submissions.length.toLocaleString() }}
           {{ $pluralize('record', submissions.length) }}
         </a>
-        <button id="form-submissions-analyze-button" type="button"
+        <button id="form-submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="analyze.state = true">
           <span class="icon-plug"></span> Analyze via OData
         </button>
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
     <template v-else>
       <!-- This table element contains the frozen columns of the submissions
       table, which contain metadata about each submission. -->
-      <table id="form-submissions-table1" class="table table-condensed">
+      <table id="form-submission-list-table1" class="table table-condensed">
         <thead>
           <tr>
             <th>Submitted by</th>
@@ -53,8 +53,8 @@ except according to the terms contained in the LICENSE file.
       </table>
       <!-- The next table element contains the form-field data and instance ID
       of each submission. -->
-      <div id="form-submissions-table2-container">
-        <table id="form-submissions-table2" :class="table2Class">
+      <div id="form-submission-list-table2-container">
+        <table id="form-submission-list-table2" :class="table2Class">
           <thead>
             <tr>
               <!-- Adding a title attribute in case the column header is so long
@@ -136,9 +136,9 @@ export default {
           idFieldCount += 1;
         else if (type !== 'repeat' && columns.length < 10) {
           const header = path.join('-');
-          const htmlClass = ['form-submissions-field'];
+          const htmlClass = ['form-submission-list-field'];
           if (type != null && /^\w+$/.test(type))
-            htmlClass.push(`form-submissions-${type}-column`);
+            htmlClass.push(`form-submission-list-${type}-column`);
           const key = this.$uniqueId();
           columns.push({ type, path, header, htmlClass, key });
         }
@@ -152,7 +152,7 @@ export default {
       return {
         table: true,
         'table-condensed': true,
-        'form-submissions-field-subset': this.schemaAnalysis.subsetShown
+        'form-submission-list-field-subset': this.schemaAnalysis.subsetShown
       };
     },
     fieldColumns() {
@@ -187,7 +187,7 @@ export default {
 <style lang="sass">
 @import '../../../../assets/scss/variables';
 
-#form-submissions-table1 {
+#form-submission-list-table1 {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
   position: relative;
   // Adding z-index so that the background color of the other table's thead does
@@ -206,18 +206,18 @@ export default {
   }
 }
 
-#form-submissions-table2-container {
+#form-submission-list-table2-container {
   // Placing the margin here rather than on the table so that the horizontal
   // scrollbar appears immediately below the table, above the margin.
   margin-bottom: $margin-bottom-table;
   overflow-x: scroll;
 }
 
-#form-submissions-table2 {
+#form-submission-list-table2 {
   margin-bottom: 0;
 
   thead > tr > th, tbody > tr > td {
-    &.form-submissions-field {
+    &.form-submission-list-field {
       max-width: 250px;
     }
 
@@ -227,17 +227,17 @@ export default {
   }
 
   tbody > tr > td {
-    &.form-submissions-int-column,
-    &.form-submissions-decimal-column {
+    &.form-submission-list-int-column,
+    &.form-submission-list-decimal-column {
       text-align: right;
     }
 
-    &.form-submissions-binary-column {
+    &.form-submission-list-binary-column {
       text-align: center;
     }
   }
 
-  .form-submissions-binary-link {
+  .form-submission-list-binary-link {
     background-color: $color-subpanel-background;
     border-radius: 99px;
     padding: 4px 7px;
@@ -254,7 +254,7 @@ export default {
   }
 
 
-  &.form-submissions-field-subset {
+  &.form-submission-list-field-subset {
     $subset-padding-left: 30px;
 
     thead th:last-child {

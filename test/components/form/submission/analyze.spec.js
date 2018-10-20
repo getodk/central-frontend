@@ -14,10 +14,10 @@ const createFormWithSubmission = () => {
 };
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 const clickAnalyzeButton = (wrapper) =>
-  trigger.click(wrapper.first('#form-submissions-analyze-button'))
+  trigger.click(wrapper.first('#form-submission-list-analyze-button'))
     .then(() => wrapper);
 const clickTab = (wrapper, tabText) => {
-  for (const a of wrapper.find('#form-analyze .nav-tabs a')) {
+  for (const a of wrapper.find('#form-submission-analyze .nav-tabs a')) {
     if (a.text().trim() === tabText)
       return trigger.click(a).then(() => wrapper);
   }
@@ -50,11 +50,10 @@ describe('FormSubmissionAnalyze', () => {
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponses(clickAnalyzeButton)
-      .then(app =>
-        trigger.click(app.first('#form-analyze-odata-url')).then(() => app))
+      .then(app => trigger.click(app, '#form-submission-analyze-odata-url'))
       .then(() => {
         const selection = window.getSelection();
-        const url = $('#form-analyze-odata-url')[0];
+        const url = $('#form-submission-analyze-odata-url')[0];
         selection.anchorNode.should.equal(url);
         selection.focusNode.should.equal(url);
       }));
@@ -75,9 +74,9 @@ describe('FormSubmissionAnalyze', () => {
       const { xmlFormId } = testData.extendedForms.last();
       const baseUrl = `${window.location.origin}/v1/forms/${xmlFormId}.svc`;
       const url = `${baseUrl}${urlSuffix}`;
-      modal.first('#form-analyze-odata-url').text().trim().should.equal(url);
+      modal.first('#form-submission-analyze-odata-url').text().trim().should.equal(url);
       // Test the presence of help text.
-      const help = modal.first('#form-analyze-tool-help');
+      const help = modal.first('#form-submission-analyze-tool-help');
       ($(help.element).children().length !== 0).should.equal(hasHelp);
     };
 
