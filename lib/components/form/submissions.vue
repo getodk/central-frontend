@@ -145,14 +145,14 @@ export default {
       }
       return {
         columns,
-        showSubset: columns.length !== this.schema.length - idFieldCount
+        subsetShown: columns.length !== this.schema.length - idFieldCount
       };
     },
     table2Class() {
       return {
         table: true,
         'table-condensed': true,
-        'form-submissions-field-subset': this.schemaAnalysis.showSubset
+        'form-submissions-field-subset': this.schemaAnalysis.subsetShown
       };
     },
     fieldColumns() {
