@@ -131,7 +131,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../../assets/scss/variables';
+@import '../../../../assets/scss/variables';
 
 #form-analyze .modal-body {
   padding-left: 0;

@@ -1,12 +1,12 @@
 import { DateTime, Settings } from 'luxon';
 
-import Form from '../../../lib/presenters/form';
-import FormSubmissions from '../../../lib/components/form/submissions.vue';
-import testData from '../../data';
-import { formatDate, uniqueSequence } from '../../../lib/util';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { trigger } from '../../event';
+import Form from '../../../../lib/presenters/form';
+import FormSubmissions from '../../../../lib/components/form/submission/list.vue';
+import testData from '../../../data';
+import { formatDate, uniqueSequence } from '../../../../lib/util';
+import { mockHttp, mockRoute } from '../../../http';
+import { mockLogin, mockRouteThroughLogin } from '../../../session';
+import { trigger } from '../../../event';
 
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 

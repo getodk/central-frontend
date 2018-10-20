@@ -81,9 +81,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormAnalyze from './analyze.vue';
-import FormSubmissionRow from './submission-row.vue';
-import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import FormSubmissionRow from './row.vue';
+import modal from '../../../mixins/modal';
+import request from '../../../mixins/request';
 
 export default {
   name: 'FormSubmissions',
@@ -185,7 +185,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../../assets/scss/variables';
+@import '../../../../assets/scss/variables';
 
 #form-submissions-table1 {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);

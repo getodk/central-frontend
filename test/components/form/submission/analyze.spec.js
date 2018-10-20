@@ -1,11 +1,11 @@
-import Form from '../../../lib/presenters/form';
-import FormAnalyze from '../../../lib/components/form/analyze.vue';
-import FormSubmissions from '../../../lib/components/form/submissions.vue';
-import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
-import { trigger } from '../../util';
+import Form from '../../../../lib/presenters/form';
+import FormAnalyze from '../../../../lib/components/form/submission/analyze.vue';
+import FormSubmissions from '../../../../lib/components/form/submission/list.vue';
+import testData from '../../../data';
+import { mockHttp, mockRoute } from '../../../http';
+import { mockLogin } from '../../../session';
+import { mountAndMark } from '../../../destroy';
+import { trigger } from '../../../event';
 
 const createFormWithSubmission = () => {
   testData.extendedForms.createPast(1);
