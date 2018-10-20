@@ -253,7 +253,7 @@ export default {
     }
   }
 
-  
+
   &.form-submissions-field-subset {
     $subset-padding-left: 30px;
 
@@ -295,7 +295,7 @@ export default {
         width: 11px;
       }
     }
-    
+
     tbody td:last-child {
       padding-left: $subset-padding-left;
       position: relative;
