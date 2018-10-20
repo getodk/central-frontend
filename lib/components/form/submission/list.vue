@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
           {{ $pluralize('record', submissions.length) }}
         </a>
         <button id="form-submission-list-analyze-button" type="button"
-          class="btn btn-primary" @click="analyze.state = true">
+          class="btn btn-primary" @click="showModal('analyze')">
           <span class="icon-plug"></span> Analyze via OData
         </button>
       </template>
@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </template>
     <form-submission-analyze :state="analyze.state" :form="form"
-      @hide="analyze.state = false"/>
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
