@@ -164,6 +164,17 @@ export default {
   created() {
     this.fetchData({ clear: false });
   },
+  activated() {
+    $(window).on('scroll.form-submission-list', () => {
+      // Using pageYOffset rather than scrollY in order to support IE.
+      if (window.pageYOffset + window.innerHeight >=
+        document.body.offsetHeight - 5)
+        alert('scroll'); // eslint-disable-line no-alert
+    });
+  },
+  deactivated() {
+    $(window).off('.form-submission-list');
+  },
   methods: {
     fetchData({ clear }) {
       if (clear) {
