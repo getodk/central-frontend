@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
+    <td class="form-submission-list-row-number">{{ index + 1 }}</td>
     <td>{{ submission.__system.submitterName }}</td>
     <td>{{ submissionDate }}</td>
   </tr>
@@ -60,6 +61,10 @@ export default {
     },
     submission: {
       type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
       required: true
     },
     // The form-field columns to display

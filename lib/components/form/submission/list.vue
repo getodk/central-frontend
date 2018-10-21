@@ -42,13 +42,15 @@ except according to the terms contained in the LICENSE file.
       <table id="form-submission-list-table1" class="table table-condensed">
         <thead>
           <tr>
+            <th><!-- Row number --></th>
             <th>Submitted by</th>
             <th>Submitted at</th>
           </tr>
         </thead>
         <tbody>
-          <form-submission-row v-for="submission of submissions"
-            :key="submission.__id" :form="form" :submission="submission"/>
+          <form-submission-row v-for="(submission, index) in submissions"
+            :key="submission.__id" :form="form" :submission="submission"
+            :index="index"/>
         </tbody>
       </table>
       <!-- The next table element contains the form-field data and instance ID
@@ -67,9 +69,9 @@ except according to the terms contained in the LICENSE file.
             </tr>
           </thead>
           <tbody>
-            <form-submission-row v-for="submission of submissions"
+            <form-submission-row v-for="(submission, index) in submissions"
               :key="submission.__id" :form="form" :submission="submission"
-              :field-columns="fieldColumns"/>
+              :index="index" :field-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>
@@ -197,12 +199,26 @@ export default {
   float: left;
   width: unset;
 
-  > thead > tr > th:last-child {
-    border-right: $border-bottom-table-heading;
+  > thead > tr > th {
+    &:last-child {
+      border-right: $border-bottom-table-heading;
+    }
   }
 
-  > tbody > tr > td:last-child {
-    border-right: $border-top-table-data;
+  > tbody > tr > td {
+    &:last-child {
+      border-right: $border-top-table-data;
+    }
+
+    &.form-submission-list-row-number {
+      color: $color-text-muted;
+      font-size: 11px;
+      // Adding min-width so that the table's width does not increase as the row
+      // numbers increase.
+      min-width: 42px;
+      text-align: right;
+      vertical-align: middle;
+    }
   }
 }
 

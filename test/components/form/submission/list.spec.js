@@ -51,12 +51,13 @@ describe('FormSubmissionList', () => {
           tr.length.should.equal(submissions.length);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
-            td.length.should.equal(2);
+            td.length.should.equal(3);
             const submission = submissions[i];
-            td[0].text().trim().should.equal(submission.submitter != null
+            td[0].text().trim().should.equal((i + 1).toString());
+            td[1].text().trim().should.equal(submission.submitter != null
               ? submission.submitter.displayName
               : '');
-            td[1].text().trim().should.equal(formatDate(submission.createdAt));
+            td[2].text().trim().should.equal(formatDate(submission.createdAt));
           }
         }));
 
