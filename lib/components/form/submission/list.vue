@@ -183,8 +183,8 @@ export default {
         this.submissions = null;
       }
       this.requestAll([
-        this.$http.get(`/forms/${this.form.xmlFormId}.schema.json?flatten=true`),
-        this.$http.get(`/forms/${this.form.xmlFormId}.svc/Submissions`)
+        this.$http.get(`/forms/${this.form.encodedId()}.schema.json?flatten=true`),
+        this.$http.get(`/forms/${this.form.encodedId()}.svc/Submissions`)
       ])
         .then(([schema, submissions]) => {
           this.schema = schema.data;
