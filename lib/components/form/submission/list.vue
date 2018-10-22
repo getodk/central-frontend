@@ -82,6 +82,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../../presenters/form';
 import FormSubmissionAnalyze from './analyze.vue';
 import FormSubmissionRow from './row.vue';
 import modal from '../../../mixins/modal';
@@ -98,7 +99,7 @@ export default {
   inheritAttrs: false,
   props: {
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
