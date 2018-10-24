@@ -13,8 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <float-row class="table-actions">
       <template slot="left">
-        <refresh-button :fetching="awaitingResponse"
-          @refresh="fetchSubmissions"/>
+        <refresh-button :fetching="awaitingResponse" @refresh="fetchChunk(0)"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
@@ -102,6 +101,10 @@ export default {
       type: Form,
       required: true
     },
+    chunkSizes: {
+      type: Object,
+      default: () => ({ small: 250, large: 1000 })
+    },
     // Function that returns true if the user has scrolled to the bottom of the
     // page (or close to it) and false if not. Implementing this as a prop in
     // order to facilitate testing.
@@ -172,7 +175,7 @@ export default {
     }
   },
   created() {
-    this.fetchSchemaAndSubmissions();
+    this.fetchSchemaAndFirstChunk();
   },
   activated() {
     $(window).on('scroll.form-submission-list', this.onScroll);
@@ -181,26 +184,35 @@ export default {
     $(window).off('.form-submission-list');
   },
   methods: {
-    submissionsURL() {
-      return `/forms/${this.form.encodedId()}.svc/Submissions`;
+    chunkURL({ top, skip = 0 }) {
+      const queryString = `%24top=${top}&%24skip=${skip}`;
+      return `/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
     },
-    processSubmissions({ data }) {
-      this.submissions = data.value != null ? data.value : [];
+    processChunk(chunkIndex, { data }) {
+      if (chunkIndex === 0)
+        this.submissions = data.value != null ? data.value : [];
+      else if (data.value != null) {
+        for (const submission of data.value)
+          this.submissions.push(submission);
+      }
     },
-    fetchSchemaAndSubmissions() {
+    fetchSchemaAndFirstChunk() {
       const schemaRequest = this.$http
         .get(`/forms/${this.form.encodedId()}.schema.json?flatten=true`);
-      const submissionsRequest = this.$http.get(this.submissionsURL());
+      const submissionsRequest = this.$http
+        .get(this.chunkURL({ top: this.chunkSizes.small }));
       this.requestAll([schemaRequest, submissionsRequest])
         .then(([schema, submissions]) => {
           this.schema = schema.data;
-          this.processSubmissions(submissions);
+          this.processChunk(0, submissions);
         })
         .catch(() => {});
     },
-    fetchSubmissions() {
-      this.get(this.submissionsURL())
-        .then(this.processSubmissions)
+    fetchChunk(index) {
+      const top = this.chunkSizes[index < 4 ? 'small' : 'large'];
+      const skip = index !== 0 ? this.submissions.length : 0;
+      this.get(this.chunkURL({ top, skip }))
+        .then(submissions => this.processChunk(index, submissions))
         .catch(() => {});
     },
     onScroll() {

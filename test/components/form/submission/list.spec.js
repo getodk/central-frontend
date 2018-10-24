@@ -33,14 +33,18 @@ describe('FormSubmissionList', () => {
     beforeEach(mockLogin);
 
     const form = () => testData.extendedForms.firstOrCreatePast();
-    const loadSubmissions = (...args) => {
-      testData.extendedSubmissions.createPast(...args);
+    const loadSubmissions = (count, factoryOptions = {}, chunkSizes = []) => {
+      testData.extendedSubmissions.createPast(count, factoryOptions);
+      const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
         .mount(FormSubmissionList, {
-          propsData: { form: new Form(form()) }
+          propsData: {
+            form: new Form(form()),
+            chunkSizes: { small, large }
+          }
         })
         .respondWithData(() => form()._schema)
-        .respondWithData(testData.submissionOData);
+        .respondWithData(() => testData.submissionOData(0, small));
     };
 
     describe('table data', () => {
@@ -94,7 +98,7 @@ describe('FormSubmissionList', () => {
             const tr = component.find('#form-submission-list-table2 tbody tr');
             const submissions = testData.extendedSubmissions.sorted();
             tr.length.should.equal(submissions.length);
-            for (let i = 0; i < submissions.length; i += 1) {
+            for (let i = 0; i < tr.length; i += 1) {
               const td = tdByRowAndColumn(tr[i], 'Instance ID');
               td.text().trim().should.equal(submissions[i].instanceId);
             }
@@ -404,6 +408,38 @@ describe('FormSubmissionList', () => {
           .afterResponse(component =>
             component.first('#form-submission-list-download-button')
               .hasClass('disabled').should.be.false()));
+    });
+
+    describe('load by chunk', () => {
+      const checkIds = (component, count) => {
+        const rows = component.find('#form-submission-list-table2 tbody tr');
+        rows.length.should.equal(count);
+        const submissions = testData.extendedSubmissions.sorted();
+        submissions.length.should.be.aboveOrEqual(count);
+        for (let i = 0; i < rows.length; i += 1) {
+          const cells = rows[i].find('td');
+          const lastCell = cells[cells.length - 1];
+          lastCell.text().trim().should.equal(submissions[i].instanceId);
+        }
+      };
+
+      it('initially loads only the first chunk of submissions', () =>
+        loadSubmissions(3, {}, [2]).afterResponses(component => {
+          checkIds(component, 2);
+        }));
+
+      it('clicking the refresh button loads only the first chunk of submissions', () =>
+        loadSubmissions(3, {}, [2])
+          .complete()
+          .request(component => trigger.click(component, '.btn-refresh'))
+          .beforeEachResponse((component, request) => {
+            request.url.should.match(/%24top=2(&|$)/);
+            request.url.should.containEql('%24skip=0');
+          })
+          .respondWithData(() => testData.submissionOData(0, 2))
+          .afterResponse(component => {
+            checkIds(component, 2);
+          }));
     });
 
     describe('download button', () => {
