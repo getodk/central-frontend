@@ -101,6 +101,15 @@ export default {
     form: {
       type: Form,
       required: true
+    },
+    // Function that returns true if the user has scrolled to the bottom of the
+    // page (or close to it) and false if not. Implementing this as a prop in
+    // order to facilitate testing.
+    scrolledToBottom: {
+      type: Function,
+      default: () =>
+        // Using pageYOffset rather than scrollY in order to support IE.
+        window.pageYOffset + window.innerHeight >= document.body.offsetHeight - 5
     }
   },
   data() {
@@ -166,12 +175,7 @@ export default {
     this.fetchData({ clear: false });
   },
   activated() {
-    $(window).on('scroll.form-submission-list', () => {
-      // Using pageYOffset rather than scrollY in order to support IE.
-      if (window.pageYOffset + window.innerHeight >=
-        document.body.offsetHeight - 5)
-        alert('scroll'); // eslint-disable-line no-alert
-    });
+    $(window).on('scroll.form-submission-list', this.onScroll);
   },
   deactivated() {
     $(window).off('.form-submission-list');
@@ -193,6 +197,10 @@ export default {
             : [];
         })
         .catch(() => {});
+    },
+    onScroll() {
+      if (this.scrolledToBottom())
+        alert('scroll'); // eslint-disable-line no-alert
     }
   }
 };
