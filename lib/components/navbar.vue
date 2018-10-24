@@ -50,10 +50,9 @@ except according to the terms contained in the LICENSE file.
             </a>
             <ul class="dropdown-menu">
               <li>
-                <a id="navbar-edit-profile-action" href="#"
-                  @click.prevent="editProfile">
+                <router-link id="navbar-edit-profile-action" to="/account/edit">
                   Edit Profile
-                </a>
+                </router-link>
               </li>
               <li>
                 <a id="navbar-log-out-action" href="#" @click.prevent="logOut">
@@ -119,9 +118,6 @@ export default {
     };
   },
   methods: {
-    editProfile() {
-      this.$router.push('/account/edit');
-    },
     deleteSession() {
       const encodedToken = encodeURIComponent(this.$session.token);
       // Using $http directly rather than the request mixin, because multiple
