@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <float-row class="table-actions">
       <template slot="left">
         <refresh-button :fetching="awaitingResponse"
-          @refresh="fetchData({ clear: false })"/>
+          @refresh="fetchSubmissions"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
@@ -172,7 +172,7 @@ export default {
     }
   },
   created() {
-    this.fetchData({ clear: false });
+    this.fetchSchemaAndSubmissions();
   },
   activated() {
     $(window).on('scroll.form-submission-list', this.onScroll);
@@ -181,21 +181,26 @@ export default {
     $(window).off('.form-submission-list');
   },
   methods: {
-    fetchData({ clear }) {
-      if (clear) {
-        this.schema = null;
-        this.submissions = null;
-      }
-      this.requestAll([
-        this.$http.get(`/forms/${this.form.encodedId()}.schema.json?flatten=true`),
-        this.$http.get(`/forms/${this.form.encodedId()}.svc/Submissions`)
-      ])
+    submissionsURL() {
+      return `/forms/${this.form.encodedId()}.svc/Submissions`;
+    },
+    processSubmissions({ data }) {
+      this.submissions = data.value != null ? data.value : [];
+    },
+    fetchSchemaAndSubmissions() {
+      const schemaRequest = this.$http
+        .get(`/forms/${this.form.encodedId()}.schema.json?flatten=true`);
+      const submissionsRequest = this.$http.get(this.submissionsURL());
+      this.requestAll([schemaRequest, submissionsRequest])
         .then(([schema, submissions]) => {
           this.schema = schema.data;
-          this.submissions = submissions.data.value != null
-            ? submissions.data.value
-            : [];
+          this.processSubmissions(submissions);
         })
+        .catch(() => {});
+    },
+    fetchSubmissions() {
+      this.get(this.submissionsURL())
+        .then(this.processSubmissions)
         .catch(() => {});
     },
     onScroll() {

@@ -383,12 +383,10 @@ describe('FormSubmissionList', () => {
           mockRoute(submissionsPath(form()))
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
+            .respondWithData(() => form()._schema)
             .testRefreshButton({
               collection: testData.extendedSubmissions,
-              respondWithData: [
-                () => form()._schema,
-                testData.submissionOData
-              ],
+              respondWithData: testData.submissionOData,
               tableSelector: `#form-submission-list-table${i}`
             }));
       }
@@ -402,9 +400,8 @@ describe('FormSubmissionList', () => {
           .beforeEachResponse(component =>
             component.first('#form-submission-list-download-button')
               .hasClass('disabled').should.be.true())
-          .respondWithData(() => form()._schema)
           .respondWithData(testData.submissionOData)
-          .afterResponses(component =>
+          .afterResponse(component =>
             component.first('#form-submission-list-download-button')
               .hasClass('disabled').should.be.false()));
     });
