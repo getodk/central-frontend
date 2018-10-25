@@ -449,6 +449,12 @@ describe('FormSubmissionList', () => {
             checkIds(component, 2);
           }));
 
+      it('shows the total in the download button even if there are multiple chunks', () =>
+        loadSubmissions(10, {}, [2]).afterResponses(component => {
+          const button = component.first('#form-submission-list-download-button');
+          button.text().trim().iTrim().should.equal('Download all 10 records');
+        }));
+
       it('clicking the refresh button loads only the first chunk of submissions', () =>
         loadSubmissions(3, {}, [2])
           .complete()

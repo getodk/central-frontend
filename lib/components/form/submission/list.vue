@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
           :class="{ disabled: awaitingResponse }" class="btn btn-primary"
           target="_blank">
           <span class="icon-arrow-circle-down"></span> Download all
-          {{ submissions.length.toLocaleString() }}
-          {{ $pluralize('record', submissions.length) }}
+          {{ form.submissions.toLocaleString() }}
+          {{ $pluralize('record', form.submissions) }}
         </a>
         <button id="form-submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="showModal('analyze')">
