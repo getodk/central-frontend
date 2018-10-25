@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <float-row class="table-actions">
       <template slot="left">
-        <refresh-button :fetching="awaitingResponse" @refresh="fetchChunk(0)"/>
+        <refresh-button :fetching="awaitingResponse" @refresh="refresh"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
@@ -86,6 +86,8 @@ import FormSubmissionAnalyze from './analyze.vue';
 import FormSubmissionRow from './row.vue';
 import modal from '../../../mixins/modal';
 import request from '../../../mixins/request';
+
+const MAX_SMALL_CHUNKS = 4;
 
 export default {
   name: 'FormSubmissionList',
@@ -174,6 +176,12 @@ export default {
     },
     fieldColumns() {
       return this.schemaAnalysis.columns;
+    },
+    skip() {
+      if (this.chunks <= MAX_SMALL_CHUNKS)
+        return this.chunks * this.chunkSizes.small;
+      return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
+        ((this.chunks - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
     }
   },
   created() {
@@ -190,14 +198,46 @@ export default {
       const queryString = `%24top=${top}&%24skip=${skip}`;
       return `/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
     },
-    processChunk(chunkIndex, { data }) {
-      if (chunkIndex === 0)
-        this.submissions = data.value != null ? data.value : [];
-      else if (data.value != null) {
-        for (const submission of data.value)
-          this.submissions.push(submission);
+    submissionDate(submission) {
+      return submission.__system.submissionDate;
+    },
+    indexOfFirstNewSubmission(submissions) {
+      if (submissions == null || submissions.length === 0) return -1;
+      if (this.submissions.length === 0) return 0;
+      const date = this.submissionDate;
+      const lastSubmission = this.submissions[this.submissions.length - 1];
+      for (let i = 0; i < submissions.length; i += 1) {
+        if (date(submissions[i]) < date(lastSubmission))
+          return i;
+        if (date(submissions[i]) === date(lastSubmission)) {
+          let j = this.submissions.length - 1;
+          do {
+            // This is possible if a new submission has been created since the
+            // last chunk was fetched. We assume stable sorting, but
+            if (this.submissions[j].__id === submissions[i].__id) {
+              const offset = this.submissions.length - j;
+              return i + offset < submissions.length ? i + offset : -1;
+            }
+            j -= 1;
+          } while (date(this.submissions[j]) === date(submissions[i]) && j >= 0);
+          return i;
+        }
       }
-      this.chunks = chunkIndex + 1;
+      return -1;
+    },
+    // This method may need to change once we support submission deletion.
+    processChunk({ data }, replace) {
+      if (replace) {
+        this.submissions = data.value != null ? data.value : [];
+        this.chunks = 1;
+      } else {
+        const firstIndex = this.indexOfFirstNewSubmission(data.value);
+        if (firstIndex !== -1) {
+          for (let i = firstIndex; i < data.value.length; i += 1)
+            this.submissions.push(data.value[i]);
+        }
+        this.chunks += 1;
+      }
     },
     fetchSchemaAndFirstChunk() {
       const schemaRequest = this.$http
@@ -207,21 +247,25 @@ export default {
       this.requestAll([schemaRequest, submissionsRequest])
         .then(([schema, submissions]) => {
           this.schema = schema.data;
-          this.processChunk(0, submissions);
+          this.processChunk(submissions, true);
         })
         .catch(() => {});
     },
-    fetchChunk(index) {
-      const top = this.chunkSizes[index < 4 ? 'small' : 'large'];
-      const skip = index !== 0 ? this.submissions.length : 0;
-      this.get(this.chunkURL({ top, skip }))
-        .then(submissions => this.processChunk(index, submissions))
+    refresh() {
+      this.get(this.chunkURL({ top: this.chunkSizes.small }))
+        .then(submissions => this.processChunk(submissions, true))
         .catch(() => {});
     },
     onScroll() {
-      if (this.submissions.length !== this.form.submissions &&
-        !this.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(this.chunks);
+      if (this.skip >= this.form.submissions || this.awaitingResponse ||
+        !this.scrolledToBottom())
+        return;
+      const top = this.chunks < MAX_SMALL_CHUNKS
+        ? this.chunkSizes.small
+        : this.chunkSizes.large;
+      this.get(this.chunkURL({ top, skip: this.skip }))
+        .then(submissions => this.processChunk(submissions, false))
+        .catch(() => {});
     }
   }
 };
