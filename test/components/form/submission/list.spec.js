@@ -35,7 +35,12 @@ describe('FormSubmissionList', () => {
     beforeEach(mockLogin);
 
     const form = () => testData.extendedForms.firstOrCreatePast();
-    const loadSubmissions = (count, factoryOptions = {}, chunkSizes = []) => {
+    const loadSubmissions = (
+      count,
+      factoryOptions = {},
+      chunkSizes = [],
+      scrolledToBottom = true
+    ) => {
       if (testData.extendedForms.size === 0)
         testData.extendedForms.createPast(1, { submissions: count });
       else if (form().submissions !== count)
@@ -46,7 +51,8 @@ describe('FormSubmissionList', () => {
         .mount(FormSubmissionList, {
           propsData: {
             form: new Form(form()),
-            chunkSizes: { small, large }
+            chunkSizes: { small, large },
+            scrolledToBottom: () => scrolledToBottom
           }
         })
         .respondWithData(() => form()._schema)
@@ -454,6 +460,115 @@ describe('FormSubmissionList', () => {
           .afterResponse(component => {
             checkIds(component, 2);
           }));
+
+      describe('scrolling', () => {
+        it('scrolling to the bottom loads the next chunk of submissions', () =>
+          // Chunk 1
+          loadSubmissions(12, {}, [2, 3])
+            .complete()
+            // Chunk 2
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 2, 2);
+            })
+            .respondWithData(() => testData.submissionOData(2, 2))
+            .afterResponse(component => {
+              checkIds(component, 4);
+            })
+            // Chunk 3
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 2, 4);
+            })
+            .respondWithData(() => testData.submissionOData(2, 4))
+            .afterResponse(component => {
+              checkIds(component, 6);
+            })
+            // Chunk 4 (last small chunk)
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 2, 6);
+            })
+            .respondWithData(() => testData.submissionOData(2, 6))
+            .afterResponse(component => {
+              checkIds(component, 8);
+            })
+            // Chunk 5
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 3, 8);
+            })
+            .respondWithData(() => testData.submissionOData(3, 8))
+            .afterResponse(component => {
+              checkIds(component, 11);
+            }));
+
+        it('scrolling elsewhere does nothing', () =>
+          loadSubmissions(5, {}, [2], false)
+            .complete()
+            .request(component => {
+              component.vm.onScroll();
+            }));
+
+        it('clicking refresh button loads first chunk, even after scrolling', () =>
+          loadSubmissions(5, {}, [2])
+            .complete()
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .respondWithData(() => testData.submissionOData(2, 2))
+            .complete()
+            .request(component => trigger.click(component, '.btn-refresh'))
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 2, 0);
+            })
+            .respondWithData(() => testData.submissionOData(2, 0))
+            .afterResponse(component => {
+              checkIds(component, 2);
+            })
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .beforeEachResponse((component, request) => {
+              checkTopSkip(request, 2, 2);
+            })
+            .respondWithData(() => testData.submissionOData(2, 2)));
+
+        it('scrolling to the bottom has no effect if awaiting response', () =>
+          loadSubmissions(5, {}, [2])
+            .complete()
+            .request(component => {
+              // Sends a request.
+              component.vm.onScroll();
+            })
+            .beforeEachResponse(component => {
+              // Should not send a request.
+              component.vm.onScroll();
+            })
+            .respondWithData(() => testData.submissionOData(2, 2))
+            .complete()
+            .request(component => trigger.click(component, '.btn-refresh'))
+            .beforeEachResponse(component => {
+              // Should not send a request.
+              component.vm.onScroll();
+            })
+            .respondWithData(() => testData.submissionOData(2, 0)));
+
+        it('scrolling has no effect after all submissions have been loaded', () =>
+          loadSubmissions(2, {}, [2])
+            .complete()
+            .request(component => {
+              component.vm.onScroll();
+            }));
+      });
     });
 
     describe('download button', () => {

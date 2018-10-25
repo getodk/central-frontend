@@ -120,6 +120,8 @@ export default {
       requestId: null,
       schema: null,
       submissions: null,
+      // The number of chunks that have been fetched
+      chunks: 0,
       analyze: {
         state: false
       }
@@ -195,6 +197,7 @@ export default {
         for (const submission of data.value)
           this.submissions.push(submission);
       }
+      this.chunks = chunkIndex + 1;
     },
     fetchSchemaAndFirstChunk() {
       const schemaRequest = this.$http
@@ -216,8 +219,9 @@ export default {
         .catch(() => {});
     },
     onScroll() {
-      if (this.scrolledToBottom())
-        alert('scroll'); // eslint-disable-line no-alert
+      if (this.submissions.length !== this.form.submissions &&
+        !this.awaitingResponse && this.scrolledToBottom())
+        this.fetchChunk(this.chunks);
     }
   }
 };
