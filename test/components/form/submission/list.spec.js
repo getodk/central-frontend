@@ -411,6 +411,10 @@ describe('FormSubmissionList', () => {
     });
 
     describe('load by chunk', () => {
+      const checkTopSkip = (request, top, skip) => {
+        request.url.should.match(new RegExp(`%24top=${top}(&|$)`));
+        request.url.should.match(new RegExp(`%24skip=${skip}(&|$)`));
+      };
       const checkIds = (component, count) => {
         const rows = component.find('#form-submission-list-table2 tbody tr');
         rows.length.should.equal(count);
@@ -424,17 +428,20 @@ describe('FormSubmissionList', () => {
       };
 
       it('initially loads only the first chunk of submissions', () =>
-        loadSubmissions(3, {}, [2]).afterResponses(component => {
-          checkIds(component, 2);
-        }));
+        loadSubmissions(3, {}, [2])
+          .beforeEachResponse((component, request, index) => {
+            if (index === 1) checkTopSkip(request, 2, 0);
+          })
+          .afterResponses(component => {
+            checkIds(component, 2);
+          }));
 
       it('clicking the refresh button loads only the first chunk of submissions', () =>
         loadSubmissions(3, {}, [2])
           .complete()
           .request(component => trigger.click(component, '.btn-refresh'))
           .beforeEachResponse((component, request) => {
-            request.url.should.match(/%24top=2(&|$)/);
-            request.url.should.containEql('%24skip=0');
+            checkTopSkip(request, 2, 0);
           })
           .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
