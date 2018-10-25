@@ -158,9 +158,10 @@ export const extendedSubmissions = dataStore({
 });
 
 export const submissionOData = (top = 250, skip = 0) => {
-  if (extendedSubmissions.size === 0) return {};
-  return {
-    value: extendedSubmissions.sorted().slice(skip, skip + top)
-      .map(submission => submission._oData)
-  };
+  const result = { '@odata.count': extendedSubmissions.size };
+  if (extendedSubmissions.size !== 0) {
+    result.value = extendedSubmissions.sorted().slice(skip, skip + top)
+      .map(submission => submission._oData);
+  }
+  return result;
 };

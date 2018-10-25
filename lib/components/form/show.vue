@@ -40,7 +40,8 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <keep-alive>
         <router-view :form="form" :attachments="attachments"
-          @attachment-change="updateAttachment" @state-change="updateState"/>
+          @attachment-change="updateAttachment"
+          @update:submissions="updateSubmissions" @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
@@ -101,6 +102,9 @@ export default {
       const index = this.attachments
         .findIndex(attachment => attachment.name === newAttachment.name);
       this.$set(this.attachments, index, newAttachment);
+    },
+    updateSubmissions(submissions) {
+      this.form = this.form.with({ submissions });
     },
     updateState(newState) {
       this.form = this.form.with({ state: newState });

@@ -575,6 +575,12 @@ describe('FormSubmissionList', () => {
               component.vm.onScroll();
             }));
       });
+
+      describe('count update', () => {
+        it('updates the form overview');
+        it('updates the count in the download button');
+        it('scrolling to the bottom fetches another chunk');
+      });
     });
 
     describe('download button', () => {

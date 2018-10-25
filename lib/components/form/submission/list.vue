@@ -195,7 +195,7 @@ export default {
   },
   methods: {
     chunkURL({ top, skip = 0 }) {
-      const queryString = `%24top=${top}&%24skip=${skip}`;
+      const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
       return `/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
     },
     submissionDate(submission) {
@@ -227,6 +227,8 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     processChunk({ data }, replace) {
+      if (data['@odata.count'] !== this.form.submissions)
+        this.$emit('update:submissions', data['@odata.count']);
       if (replace) {
         this.submissions = data.value != null ? data.value : [];
         this.chunks = 1;
