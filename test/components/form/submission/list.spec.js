@@ -18,7 +18,9 @@ describe('FormSubmissionList', () => {
         .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () => {
-      const form = testData.extendedForms.createPast(1).last();
+      const form = testData.extendedForms
+        .createPast(1, { submissions: 0 })
+        .last();
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
         .respondWithData(() => form)
@@ -34,6 +36,10 @@ describe('FormSubmissionList', () => {
 
     const form = () => testData.extendedForms.firstOrCreatePast();
     const loadSubmissions = (count, factoryOptions = {}, chunkSizes = []) => {
+      if (testData.extendedForms.size === 0)
+        testData.extendedForms.createPast(1, { submissions: count });
+      else if (form().submissions !== count)
+        throw new Error('form().submissions and count are inconsistent');
       testData.extendedSubmissions.createPast(count, factoryOptions);
       const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
@@ -86,7 +92,8 @@ describe('FormSubmissionList', () => {
         };
 
         it('contains the correct column headers', () => {
-          testData.extendedForms.createPast(1, { hasInstanceId: true });
+          testData.extendedForms
+            .createPast(1, { hasInstanceId: true, submissions: 1 });
           return loadSubmissions(1).afterResponses(component => {
             const th = component.find('#form-submission-list-table2 th');
             th.map(wrapper => wrapper.text().trim()).should.eql(headers);
@@ -367,7 +374,7 @@ describe('FormSubmissionList', () => {
         describe(hasClass ? 'is shown' : 'is not shown', () => {
           for (const [description, schema] of subcases) {
             it(description, () => {
-              testData.extendedForms.createPast(1, { schema });
+              testData.extendedForms.createPast(1, { schema, submissions: 1 });
               return loadSubmissions(1).afterResponses(component => {
                 component
                   .first('#form-submission-list-table2')

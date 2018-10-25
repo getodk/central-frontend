@@ -46,11 +46,28 @@ export const extendedForms = dataStore({
 
     hasName = faker.random.boolean(),
     isOpen = !inPast || faker.random.boolean(),
-    hasSubmission = inPast && faker.random.boolean(),
 
     hasInstanceId = faker.random.boolean(),
-    schema = defaultSchema(hasInstanceId)
+    schema = defaultSchema(hasInstanceId),
+
+    ...options
   }) => {
+    if (options.submissions != null) {
+      if (!inPast && options.submissions !== 0)
+        throw new Error('inPast and submissions are inconsistent');
+      if (options.hasSubmission != null &&
+        (options.submissions !== 0) !== options.hasSubmission)
+        throw new Error('submissions and hasSubmission are inconsistent');
+    } else {
+      if (!inPast && options.hasSubmission === true)
+        throw new Error('inPast and hasSubmission are inconsistent');
+      const hasSubmission = options.hasSubmission != null
+        ? options.hasSubmission
+        : inPast && faker.random.boolean();
+      // eslint-disable-next-line no-param-reassign
+      options.submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
+    }
+    const { submissions } = options;
     const xmlFormId = `a${faker.random.alphaNumeric(8)}`;
     const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
@@ -67,8 +84,8 @@ export const extendedForms = dataStore({
       hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
-      submissions: hasSubmission ? faker.random.number({ min: 1 }) : 0,
-      lastSubmission: hasSubmission
+      submissions,
+      lastSubmission: submissions !== 0
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
       createdBy: R.pick(
