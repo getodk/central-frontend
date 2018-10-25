@@ -44,7 +44,7 @@ describe('FormSubmissionList', () => {
           }
         })
         .respondWithData(() => form()._schema)
-        .respondWithData(() => testData.submissionOData(0, small));
+        .respondWithData(() => testData.submissionOData(small, 0));
     };
 
     describe('table data', () => {
@@ -436,7 +436,7 @@ describe('FormSubmissionList', () => {
             request.url.should.match(/%24top=2(&|$)/);
             request.url.should.containEql('%24skip=0');
           })
-          .respondWithData(() => testData.submissionOData(0, 2))
+          .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
             checkIds(component, 2);
           }));

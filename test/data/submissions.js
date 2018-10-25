@@ -157,13 +157,10 @@ export const extendedSubmissions = dataStore({
   sort: sortByUpdatedAtOrCreatedAtDesc
 });
 
-export const submissionOData = (
-  begin = 0,
-  end = begin < 1000 ? begin + 250 : begin + 1000
-) => {
+export const submissionOData = (top = 250, skip = 0) => {
   if (extendedSubmissions.size === 0) return {};
   return {
-    value: extendedSubmissions.sorted().slice(begin, end)
+    value: extendedSubmissions.sorted().slice(skip, skip + top)
       .map(submission => submission._oData)
   };
 };
