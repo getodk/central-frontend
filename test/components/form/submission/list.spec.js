@@ -506,6 +506,11 @@ describe('FormSubmissionList', () => {
         it('scrolling elsewhere does nothing', () =>
           loadSubmissions(5, {}, [2], false)
             .complete()
+            // This test works by specifying a request callback without a
+            // response callback. If the request callback actually sends a
+            // request, then the mockHttp() object will throw an error, noting
+            // that the number of requests exceeds the number of responses. See
+            // mockHttp() for more details.
             .request(component => {
               component.vm.onScroll();
             }));
@@ -542,7 +547,9 @@ describe('FormSubmissionList', () => {
               component.vm.onScroll();
             })
             .beforeEachResponse(component => {
-              // Should not send a request.
+              // This should not send a request. If it does, then the number of
+              // requests will exceed the number of responses, and the
+              // mockHttp() object will throw an error.
               component.vm.onScroll();
             })
             .respondWithData(() => testData.submissionOData(2, 2))
