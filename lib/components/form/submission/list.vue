@@ -176,12 +176,6 @@ export default {
     },
     fieldColumns() {
       return this.schemaAnalysis.columns;
-    },
-    skip() {
-      if (this.chunks <= MAX_SMALL_CHUNKS)
-        return this.chunks * this.chunkSizes.small;
-      return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
-        ((this.chunks - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
     }
   },
   created() {
@@ -237,14 +231,22 @@ export default {
         .then(submissions => this.processChunk(submissions, true))
         .catch(() => {});
     },
+    // Returns the value of the $skip query parameter for skipping the specified
+    // number of chunks.
+    skip(chunks) {
+      if (chunks <= MAX_SMALL_CHUNKS) return chunks * this.chunkSizes.small;
+      return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
+        ((chunks - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
+    },
     onScroll() {
-      if (this.skip >= this.form.submissions || this.awaitingResponse ||
+      const skip = this.skip(this.chunks);
+      if (skip >= this.form.submissions || this.awaitingResponse ||
         !this.scrolledToBottom())
         return;
       const top = this.chunks < MAX_SMALL_CHUNKS
         ? this.chunkSizes.small
         : this.chunkSizes.large;
-      this.get(this.chunkURL({ top, skip: this.skip }))
+      this.get(this.chunkURL({ top, skip }))
         .then(submissions => this.processChunk(submissions, false))
         .catch(() => {});
     }
