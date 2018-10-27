@@ -407,20 +407,6 @@ describe('FormSubmissionList', () => {
               tableSelector: `#form-submission-list-table${i}`
             }));
       }
-
-      it('disables the download button', () =>
-        loadSubmissions(1)
-          .afterResponses(component =>
-            component.first('#form-submission-list-download-button')
-              .hasClass('disabled').should.be.false())
-          .request(component => trigger.click(component, '.btn-refresh'))
-          .beforeEachResponse(component =>
-            component.first('#form-submission-list-download-button')
-              .hasClass('disabled').should.be.true())
-          .respondWithData(testData.submissionOData)
-          .afterResponse(component =>
-            component.first('#form-submission-list-download-button')
-              .hasClass('disabled').should.be.false()));
     });
 
     describe('load by chunk', () => {

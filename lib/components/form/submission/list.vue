@@ -18,8 +18,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
         <a id="form-submission-list-download-button" :href="downloadHref"
-          :class="{ disabled: awaitingResponse }" class="btn btn-primary"
-          target="_blank">
+          class="btn btn-primary" target="_blank">
           <span class="icon-arrow-circle-down"></span> Download all
           {{ form.submissions.toLocaleString() }}
           {{ $pluralize('record', form.submissions) }}
