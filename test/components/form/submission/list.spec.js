@@ -69,7 +69,8 @@ describe('FormSubmissionList', () => {
             const td = tr[i].find('td');
             td.length.should.equal(3);
             const submission = submissions[i];
-            td[0].text().trim().should.equal((i + 1).toString());
+            const rowNumber = testData.extendedSubmissions.size - i;
+            td[0].text().trim().should.equal(rowNumber.toString());
             td[1].text().trim().should.equal(submission.submitter != null
               ? submission.submitter.displayName
               : '');

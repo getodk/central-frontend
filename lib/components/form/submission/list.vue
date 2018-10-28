@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
         <tbody>
           <form-submission-row v-for="(submission, index) in submissions"
             :key="submission.__id" :form="form" :submission="submission"
-            :index="index"/>
+            :row-number="originalCount - index"/>
         </tbody>
       </table>
       <!-- The next table element contains the form-field data and instance ID
@@ -67,9 +67,9 @@ except according to the terms contained in the LICENSE file.
             </tr>
           </thead>
           <tbody>
-            <form-submission-row v-for="(submission, index) in submissions"
+            <form-submission-row v-for="submission of submissions"
               :key="submission.__id" :form="form" :submission="submission"
-              :index="index" :field-columns="fieldColumns"/>
+              :field-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>
@@ -121,9 +121,13 @@ export default {
       requestId: null,
       schema: null,
       submissions: null,
-      // The number of chunks that have been fetched
-      chunks: 0,
       instanceIds: new Set(),
+      // The count of submissions at the time of the initial fetch or last
+      // refresh
+      originalCount: null,
+      // The number of chunks that have been fetched since the initial fetch or
+      // last refresh
+      chunks: 0,
       analyze: {
         state: false
       }
@@ -201,6 +205,7 @@ export default {
         this.instanceIds.clear();
         for (const submission of this.submissions)
           this.instanceIds.add(submission.__id);
+        this.originalCount = data['@odata.count'];
         this.chunks = 1;
       } else {
         if (data.value != null) {
