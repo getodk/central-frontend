@@ -211,10 +211,10 @@ export default {
           const lastSubmission = this.submissions[this.submissions.length - 1];
           const lastSubmissionDate = lastSubmission.__system.submissionDate;
           for (const submission of data.value) {
-            // If a submission has been created since the initial fetch or last
-            // refresh, the latest chunk of submissions may include a newly
-            // created submission or a submission that is already shown in the
-            // table.
+            // If one or more submissions have been created since the initial
+            // fetch or last refresh, then the latest chunk of submissions may
+            // include a newly created submission or a submission that is
+            // already shown in the table.
             if (submission.__system.submissionDate <= lastSubmissionDate &&
               !this.instanceIds.has(submission.__id)) {
               this.submissions.push(submission);
