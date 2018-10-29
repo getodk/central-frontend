@@ -95,7 +95,8 @@ export default {
     modal('analyze'),
     request()
   ],
-  // Setting this in order to ignore the `attachments` attribute from FormShow.
+  // Setting this in order to ignore attributes from FormShow that are intended
+  // for other form-related components.
   inheritAttrs: false,
   props: {
     form: {
