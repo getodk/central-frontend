@@ -196,7 +196,6 @@ export default {
       const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
       return `/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
     },
-    // This method may need to change once we support submission deletion.
     processChunk({ data }, replace) {
       if (data['@odata.count'] !== this.form.submissions)
         this.$emit('update:submissions', data['@odata.count']);
@@ -209,8 +208,15 @@ export default {
         this.chunks = 1;
       } else {
         if (data.value != null) {
+          const lastSubmission = this.submissions[this.submissions.length - 1];
+          const lastSubmissionDate = lastSubmission.__system.submissionDate;
           for (const submission of data.value) {
-            if (!this.instanceIds.has(submission.__id)) {
+            // If a submission has been created since the initial fetch or last
+            // refresh, the latest chunk of submissions may include a newly
+            // created submission or a submission that is already shown in the
+            // table.
+            if (submission.__system.submissionDate <= lastSubmissionDate &&
+              !this.instanceIds.has(submission.__id)) {
               this.submissions.push(submission);
               this.instanceIds.add(submission.__id);
             }
@@ -243,6 +249,7 @@ export default {
       return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
         ((chunks - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
     },
+    // This method may need to change once we support submission deletion.
     onScroll() {
       const skip = this.skip(this.chunks);
       if (skip >= this.form.submissions || this.awaitingResponse ||
