@@ -29,12 +29,11 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
     </float-row>
-    <loading v-if="submissions == null" :state="awaitingResponse"/>
-    <p v-else-if="submissions.length === 0">
+    <p v-if="submissions != null && submissions.length === 0">
       There are no submissions yet for
       <strong>{{ form.name || form.xmlFormId }}</strong>.
     </p>
-    <template v-else>
+    <template v-else-if="submissions != null">
       <!-- This table element contains the frozen columns of the submissions
       table, which contain metadata about each submission. -->
       <table id="form-submission-list-table1" class="table table-condensed">
@@ -74,6 +73,12 @@ except according to the terms contained in the LICENSE file.
         </table>
       </div>
     </template>
+    <div v-if="message != null" id="form-submission-list-message">
+      <div id="form-submission-list-spinner-container">
+        <spinner :state="message.spinner"/>
+      </div>
+      <div id="form-submission-list-message-text">{{ message.text }}</div>
+    </div>
     <form-submission-analyze :state="analyze.state" :form="form"
       @hide="hideModal('analyze')"/>
   </div>
@@ -129,6 +134,7 @@ export default {
       // The number of chunks that have been fetched since the initial fetch or
       // last refresh
       chunks: 0,
+      message: null,
       analyze: {
         state: false
       }
@@ -225,6 +231,37 @@ export default {
         }
         this.chunks += 1;
       }
+      const remaining = this.originalCount - this.submissions.length;
+      // A negative value should be rare or impossible.
+      if (remaining <= 0)
+        this.message = null;
+      else {
+        this.message = {
+          text: remaining === 1
+            ? '1 row remains.'
+            : `${remaining.toLocaleString()} rows remain.`,
+          spinner: false
+        };
+      }
+    },
+    loadingMessageText({ top, skip = 0 }) {
+      if (skip === 0) {
+        if (this.form.submissions > top) {
+          const count = this.form.submissions.toLocaleString();
+          return `Loading the first ${top.toLocaleString()} of ${count} submissions…`;
+        }
+        return this.form.submissions === 1
+          ? 'Loading 1 submission…'
+          : `Loading ${this.form.submissions.toLocaleString()} submissions…`;
+      }
+      const remaining = this.originalCount - this.submissions.length;
+      // This case should be rare or impossible.
+      if (remaining <= 0) return 'Loading submissions…';
+      if (remaining > top)
+        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining submissions…`;
+      return remaining === 1
+        ? 'Loading the last submission…'
+        : `Loading the last ${remaining.toLocaleString()} submissions…`;
     },
     fetchSchemaAndFirstChunk() {
       const schemaRequest = this.$http
@@ -237,6 +274,10 @@ export default {
           this.processChunk(submissions, true);
         })
         .catch(() => {});
+      this.message = {
+        text: this.loadingMessageText({ top: this.chunkSizes.small }),
+        spinner: true
+      };
     },
     refresh() {
       this.get(this.chunkURL({ top: this.chunkSizes.small }))
@@ -262,6 +303,10 @@ export default {
       this.get(this.chunkURL({ top, skip }))
         .then(submissions => this.processChunk(submissions, false))
         .catch(() => {});
+      this.message = {
+        text: this.loadingMessageText({ top, skip }),
+        spinner: true
+      };
     }
   }
 };
@@ -407,6 +452,22 @@ export default {
         position: absolute
       }
     }
+  }
+}
+
+#form-submission-list-message {
+  margin: 0 auto 20px;
+  position: relative;
+  width: 375px;
+
+  #form-submission-list-spinner-container {
+    position: absolute;
+    top: 9px;
+  }
+
+  #form-submission-list-message-text {
+    color: $color-text-muted;
+    margin-left: 20px;
   }
 }
 </style>
