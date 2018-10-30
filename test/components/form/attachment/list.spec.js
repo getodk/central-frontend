@@ -770,8 +770,8 @@ describe('FormAttachmentList', () => {
         testData.extendedFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
-          .createPast(1, { exists: true })
-          .createPast(1, { exists: false });
+          .createPast(1, { name: 'c', exists: true })
+          .createPast(1, { name: 'd', exists: false });
       });
 
       const drop = (filename) => loadAttachments({ route: true })
@@ -944,7 +944,7 @@ describe('FormAttachmentList', () => {
     it('shows the popup with the correct text', () => {
       testData.extendedFormAttachments
         .createPast(1, { name: 'first_attachment' })
-        .createPast(1);
+        .createPast(1, { name: 'second_attachment' });
       return loadAttachments({ route: true })
         .then(app => trigger.dragenter(
           app,
@@ -983,9 +983,10 @@ describe('FormAttachmentList', () => {
     const dropMismatchingFile = (attachmentName) =>
       loadAttachments({ route: true }).afterResponses(app => {
         const tr = app.find('#form-attachment-list-table tbody tr');
-        tr.length.should.equal(testData.extendedFormAttachments.size);
-        for (let i = 0; i < testData.extendedFormAttachments.size; i += 1) {
-          if (testData.extendedFormAttachments.get(i).name === attachmentName)
+        const attachments = testData.extendedFormAttachments.sorted();
+        tr.length.should.equal(attachments.length);
+        for (let i = 0; i < tr.length; i += 1) {
+          if (attachments[i].name === attachmentName)
             return trigger.dragAndDrop(tr[i], blankFiles(['mismatching_file']))
               .then(() => app);
         }
