@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="form-analyze" :state="state" backdrop hideable
+  <modal id="form-submission-analyze" :state="state" backdrop hideable
     @hide="$emit('hide')">
     <template slot="title">Using OData</template>
     <template slot="body">
-      <div id="form-analyze-head">
+      <div id="form-submission-analyze-head">
         <div class="modal-introduction">
           <p>
             OData is a new standard for transferring data between tools and
@@ -49,8 +49,8 @@ except according to the terms contained in the LICENSE file.
         </ul>
       </div>
       <!-- eslint-disable-next-line max-len -->
-      <p id="form-analyze-odata-url" ref="oDataUrl" class="modal-introduction text-monospace" @click="selectUrl">{{ oDataUrl }}</p>
-      <div id="form-analyze-tool-help" class="modal-introduction">
+      <p id="form-submission-analyze-odata-url" ref="oDataUrl" class="modal-introduction text-monospace" @click="selectUrl">{{ oDataUrl }}</p>
+      <div id="form-submission-analyze-tool-help" class="modal-introduction">
         <p v-if="tool === 'microsoft'">
           For help using OData with Excel, see
           <a :href="links.excel.help" target="_blank" rel="noopener">this page</a>.
@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
           <a :href="links.tableau.help" target="_blank" rel="noopener">this page</a>.
         </p>
       </div>
-      <div id="form-analyze-actions-container">
+      <div id="form-submission-analyze-actions-container">
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="$emit('hide')">
             Done
@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormAnalyze',
+  name: 'FormSubmissionAnalyze',
   props: {
     state: {
       type: Boolean,
@@ -131,9 +131,9 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../../assets/scss/variables';
+@import '../../../../assets/scss/variables';
 
-#form-analyze .modal-body {
+#form-submission-analyze .modal-body {
   padding-left: 0;
   padding-right: 0;
 
@@ -141,7 +141,7 @@ export default {
     margin-bottom: 10px;
   }
 
-  #form-analyze-head {
+  #form-submission-analyze-head {
     border-bottom: 1px solid $color-subpanel-border-strong;
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
@@ -151,13 +151,13 @@ export default {
     }
   }
 
-  #form-analyze-odata-url {
+  #form-submission-analyze-odata-url {
     background-color: $color-subpanel-background;
     overflow-x: scroll;
     padding: 12px $padding-modal-body;
   }
 
-  #form-analyze-tool-help {
+  #form-submission-analyze-tool-help {
     margin-top: 15px;
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
@@ -167,7 +167,7 @@ export default {
     }
   }
 
-  #form-analyze-actions-container {
+  #form-submission-analyze-actions-container {
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
   }

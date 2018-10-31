@@ -5,7 +5,6 @@ import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
-import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
 import { validateUniqueCombination } from './validate';
 
 // Returns a random OData value for a particular field of a submission.
@@ -154,12 +153,14 @@ export const extendedSubmissions = dataStore({
   validate: [
     validateUniqueCombination(['formId', 'instanceId'])
   ],
-  sort: sortByUpdatedAtOrCreatedAtDesc
+  sort: ['createdAt', false]
 });
 
-export const submissionOData = () => {
-  if (extendedSubmissions.size === 0) return {};
-  return {
-    value: extendedSubmissions.sorted().map(submission => submission._oData)
-  };
+export const submissionOData = (top = 250, skip = 0) => {
+  const result = { '@odata.count': extendedSubmissions.size };
+  if (extendedSubmissions.size !== 0) {
+    result.value = extendedSubmissions.sorted().slice(skip, skip + top)
+      .map(submission => submission._oData);
+  }
+  return result;
 };

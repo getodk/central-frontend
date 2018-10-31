@@ -123,7 +123,7 @@ h1 {
 }
 
 .text-muted {
-  color: #999;
+  color: $color-text-muted;
 }
 
 .text-success {

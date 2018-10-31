@@ -45,7 +45,8 @@ export default {
   name: 'FormSettings',
   components: { FormEdit, FormDelete },
   mixins: [modal('deleteForm')],
-  // Setting this in order to ignore the `attachments` attribute.
+  // Setting this in order to ignore attributes from FormShow that are intended
+  // for other form-related components.
   inheritAttrs: false,
   props: {
     form: {

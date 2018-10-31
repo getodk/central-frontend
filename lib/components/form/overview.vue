@@ -123,6 +123,9 @@ export default {
   name: 'FormOverview',
   components: { FormOverviewStep },
   mixins: [request()],
+  // Setting this in order to ignore attributes from FormShow that are intended
+  // for other form-related components.
+  inheritAttrs: false,
   props: {
     form: {
       type: Object,
