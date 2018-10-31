@@ -155,7 +155,7 @@ class Store extends Collection {
       const value2 = object2[propertyName];
       if (value1 < value2)
         return asc ? -1 : 1;
-      else if (value2 > value1)
+      else if (value1 > value2)
         return asc ? 1 : -1;
       return 0;
     };

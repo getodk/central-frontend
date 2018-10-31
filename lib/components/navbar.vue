@@ -185,10 +185,11 @@ $shadow-color: #dedede;
         border-top: transparent solid $border-height;
         margin-right: 10px;
         padding: 5px 10px;
-        transition: 0.15s border-top-color;
+        transition: 0.25s border-top-color;
 
         &:hover {
           border-top-color: transparentize(#fff, 0.3);
+          transition-duration: 0s;
         }
       }
 

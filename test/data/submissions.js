@@ -5,7 +5,80 @@ import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
-import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
+
+// Returns a random OData value for a particular field of a submission.
+const oDataValue = (field, instanceId) => {
+  switch (field.type) {
+    case 'int':
+      return faker.random.number();
+    case 'decimal':
+      return faker.random.number({ precision: 0.00001 });
+    case 'string': {
+      const { path } = field;
+      if ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
+        (path.length === 1 && path[0] === 'instanceID'))
+        return instanceId;
+      const paragraphs = faker.random.number({ min: 1, max: 3 });
+      return faker.lorem.paragraphs(paragraphs);
+    }
+    case 'date': {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      return dateTime.toFormat('yyyy-MM-dd');
+    }
+    case 'time': {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      const formatted = dateTime.toFormat('HH:mm:ss');
+      return faker.random.boolean() ? formatted : `${formatted}+01:00`;
+    }
+    case 'dateTime': {
+      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
+      const formatted = dateTime.toISO({ includeOffset: false });
+      return faker.random.boolean() ? formatted : `${formatted}+01:00`;
+    }
+    case 'geopoint': {
+      // [longitude, latitude], not [latitude, longitude]
+      const coordinates = [
+        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 }),
+        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 })
+      ];
+      if (faker.random.boolean()) coordinates.push(faker.random.number());
+      return { type: 'Point', coordinates };
+    }
+    case 'binary':
+      return faker.system.commonFileName('jpg');
+    default:
+      throw new Error('invalid field type');
+  }
+};
+
+// Returns random OData for a form submission. `partial` seeds the OData.
+// `exists` indicates for each field type whether a field of that type should
+// have a value or should be empty. `partial` takes precedence over `exists`:
+// see partialOData in extendedSubmissions.
+const oData = ({ form, instanceId, partial, exists }) => form._schema.reduce(
+  (data, field) => {
+    // Once we resolve issue #82 for Backend, we should implement repeat groups.
+    if (field.type === 'repeat') return data;
+    const fieldLens = R.lensPath(field.path);
+    if (R.view(fieldLens, data) != null) {
+      // `partial` has already specified a value for the field. Return without
+      // overwriting the existing value.
+      return data;
+    }
+    if (field.type == null)
+      return R.set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
+    if (exists[field.type])
+      return R.set(fieldLens, oDataValue(field, instanceId), data);
+    // exists[field.type] is not truthy, so we do not set a value for the field.
+    // However, if the field is an element of a group, we ensure that the data
+    // includes an object for the group -- even though that object may end up
+    // being empty.
+    if (field.path.length === 1) return data;
+    const groupLens = R.lensPath(field.path.slice(0, field.path.length - 1));
+    return R.view(groupLens, data) != null ? data : R.set(groupLens, {}, data);
+  },
+  partial
+);
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
@@ -18,6 +91,8 @@ export const extendedSubmissions = dataStore({
 
     hasInt = faker.random.boolean(),
     hasDecimal = faker.random.boolean(),
+    // We should probably rename this to hasString at some point for
+    // consistency.
     hasStrings = faker.random.boolean(),
     hasDate = faker.random.boolean(),
     hasTime = faker.random.boolean(),
@@ -25,6 +100,9 @@ export const extendedSubmissions = dataStore({
     hasGeopoint = faker.random.boolean(),
     hasBinary = faker.random.boolean(),
 
+    // partialOData takes precedence over the has* parameters. For example, if
+    // partialOData specifies a value for an int field, then even if hasInt is
+    // false, the int field will have the specified value.
     ...partialOData
   }) => {
     const form = extendedForms.randomOrCreatePast();
@@ -33,72 +111,6 @@ export const extendedSubmissions = dataStore({
       lastCreatedAt,
       submitter.createdAt
     ]);
-
-    const oData = {
-      ...partialOData,
-      __id: instanceId,
-      __system: {
-        submissionDate: createdAt,
-        submitterId: submitter.id.toString(),
-        submitterName: submitter.displayName
-      }
-    };
-    const schemaInstanceId = form._schema.find(question => {
-      const { path } = question;
-      return (path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
-        (path.length === 1 && path[0] === 'instanceID');
-    });
-    if (schemaInstanceId != null) {
-      if (schemaInstanceId.length === 1) {
-        if (oData.instanceID == null) oData.instanceID = instanceId;
-      } else {
-        if (oData.meta == null) oData.meta = {};
-        if (oData.meta.instanceID == null) oData.meta.instanceID = instanceId;
-      }
-    }
-    if (oData.testInt == null && hasInt)
-      oData.testInt = faker.random.number();
-    if (oData.testDecimal == null && hasDecimal)
-      oData.testDecimal = faker.random.number({ precision: 0.00001 });
-    if (oData.testDate == null && hasDate) {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      oData.testDate = dateTime.toFormat('yyyy-MM-dd');
-    }
-    if (oData.testTime == null && hasTime) {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      oData.testTime = dateTime.toFormat('HH:mm:ss');
-      if (faker.random.boolean()) oData.testTime += '+01:00';
-    }
-    if (oData.testDateTime == null && hasDateTime) {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      oData.testDateTime = dateTime.toISO({ includeOffset: false });
-      if (faker.random.boolean()) oData.testDateTime += '+01:00';
-    }
-    if (oData.testGeopoint == null && hasGeopoint) {
-      // [longitude, latitude], not [latitude, longitude]
-      const coordinates = [
-        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 }),
-        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 })
-      ];
-      if (faker.random.boolean()) coordinates.push(faker.random.number());
-      oData.testGeopoint = { type: 'Point', coordinates };
-    }
-    if (oData.testGroup == null) oData.testGroup = {};
-    if (oData.testGroup.testBinary == null && hasBinary)
-      oData.testGroup.testBinary = faker.system.commonFileName('jpg');
-    oData.testBranch = faker.random.boolean() ? 'y' : 'n';
-    if (hasStrings) {
-      for (let i = 1; i <= 2; i += 1) {
-        const name = `testString${i}`;
-        if (oData[name] == null) {
-          const count = faker.random.number({ min: 1, max: 3 });
-          oData[name] = faker.lorem.paragraphs(count);
-        }
-      }
-    }
-    // Once we resolve issue #82 for Backend, we should add a repeat group to
-    // the data.
-
     return {
       id,
       formId: form.id,
@@ -110,17 +122,41 @@ export const extendedSubmissions = dataStore({
         ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
         submitter
       ),
-      _oData: oData,
       createdAt,
-      updatedAt
+      updatedAt,
+      _oData: oData({
+        form,
+        instanceId,
+        partial: {
+          ...partialOData,
+          __id: instanceId,
+          __system: {
+            submissionDate: createdAt,
+            submitterId: submitter.id.toString(),
+            submitterName: submitter.displayName
+          }
+        },
+        exists: {
+          int: hasInt,
+          decimal: hasDecimal,
+          string: hasStrings,
+          date: hasDate,
+          time: hasTime,
+          dateTime: hasDateTime,
+          geopoint: hasGeopoint,
+          binary: hasBinary
+        }
+      })
     };
   },
-  sort: sortByUpdatedAtOrCreatedAtDesc
+  sort: ['createdAt', false]
 });
 
-export const submissionOData = () => {
-  if (extendedSubmissions.size === 0) return {};
-  return {
-    value: extendedSubmissions.sorted().map(submission => submission._oData)
-  };
+export const submissionOData = (top = 250, skip = 0) => {
+  const result = { '@odata.count': extendedSubmissions.size };
+  if (extendedSubmissions.size !== 0) {
+    result.value = extendedSubmissions.sorted().slice(skip, skip + top)
+      .map(submission => submission._oData);
+  }
+  return result;
 };
