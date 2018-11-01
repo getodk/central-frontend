@@ -19,6 +19,7 @@ export const setHttp = (respond) => {
   http.request = http;
   http.get = (url, config) => http({ ...config, method: 'get', url });
   http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
+  http.put = (url, data, config) => http({ ...config, method: 'put', url, data });
   http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
   http.delete = (url, config) => http({ ...config, method: 'delete', url });
   http.defaults = {
@@ -567,8 +568,15 @@ class MockHttp {
 
   // Tests standard button thinking things.
   standardButton(buttonSelector = 'button[type="submit"]') {
+    if (typeof buttonSelector !== 'string')
+      throw new Error('invalid button selector');
     const spinner = (button) => {
-      const spinners = button.find(Spinner);
+      const spinners = button
+        .find(Spinner)
+        // I think find() in the previous line starts the search from the
+        // button's parent Vue component: it returns all Spinner components that
+        // are descendants of the parent component.
+        .filter(wrapper => $.contains(button.element, wrapper.vm.$el));
       if (spinners.length === 0) throw new Error('spinner not found');
       if (spinners.length > 1) throw new Error('multiple spinners found');
       return spinners[0];

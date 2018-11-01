@@ -1,14 +1,10 @@
 import Navbar from '../../../lib/components/navbar.vue';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
+import { submitForm } from '../../event';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
-const submitForm = (wrapper) =>
-  fillForm(wrapper, [['#account-claim input[type="password"]', 'password']])
-    .then(() => trigger.submit(wrapper.first('#account-claim form')))
-    .then(() => wrapper);
 
 describe('AccountClaim', () => {
   it('field is focused', () =>
@@ -20,7 +16,9 @@ describe('AccountClaim', () => {
     // from the URL.
     mockRoute(LOCATION)
       .complete()
-      .request(submitForm)
+      .request(app => submitForm(app, '#account-claim form', [
+        ['input[type="password"]', 'password']
+      ]))
       .standardButton());
 
   it('navbar is visible', () =>
@@ -33,17 +31,21 @@ describe('AccountClaim', () => {
     let app;
     beforeEach(() => mockRoute(LOCATION)
       .complete()
-      .request(submitForm)
-      .respondWithSuccess()
-      .afterResponse(component => {
+      .request(component => {
         app = component;
-      }));
+        return submitForm(app, '#account-claim form', [
+          ['input[type="password"]', 'password']
+        ]);
+      })
+      .respondWithSuccess());
 
     it('user is redirected to login', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('success message is shown', () => app.should.alert('success'));
+    it('success message is shown', () => {
+      app.should.alert('success');
+    });
   });
 
   describe('navigation to /account/claim', () => {

@@ -1,30 +1,12 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyNew from '../../../lib/components/field-key/new.vue';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { submitForm, trigger } from '../../event';
 
 const clickCreateButton = (wrapper) =>
-  trigger.click(wrapper.first('#field-key-list-new-button'))
-    .then(() => wrapper);
-const submitForm = (wrapper) => {
-  const nickname = testData.extendedFieldKeys.createNew('withAccess').displayName;
-  return fillForm(wrapper, [['#field-key-new input', nickname]])
-    .then(() => trigger.submit(wrapper.first('#field-key-new form')))
-    .then(() => wrapper);
-};
+  trigger.click(wrapper, '#field-key-list-new-button');
 
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
@@ -59,7 +41,9 @@ describe('FieldKeyNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(FieldKeyNew)
-      .request(submitForm)
+      .request(modal => submitForm(modal, 'form', [
+        ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+      ]))
       .standardButton());
 
   describe('after successful submit', () => {
@@ -69,7 +53,10 @@ describe('FieldKeyNew', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => clickCreateButton(app).then(submitForm))
+      .request(() => clickCreateButton(app)
+        .then(() => submitForm(app, '#field-key-new form', [
+          ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+        ])))
       .respondWithData(() => testData.simpleFieldKeys.last()));
 
     const testCreationCompletion = () => {

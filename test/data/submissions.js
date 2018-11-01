@@ -5,7 +5,6 @@ import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
-import { validateUniqueCombination } from './validate';
 
 // Returns a random OData value for a particular field of a submission.
 const oDataValue = (field, instanceId) => {
@@ -150,9 +149,6 @@ export const extendedSubmissions = dataStore({
       })
     };
   },
-  validate: [
-    validateUniqueCombination(['formId', 'instanceId'])
-  ],
   sort: ['createdAt', false]
 });
 

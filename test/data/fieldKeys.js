@@ -14,7 +14,7 @@ export const extendedFieldKeys = dataStore({
     return {
       id,
       displayName: faker.name.findName(),
-      token: faker.random.arrayElement([faker.app.token(), null]),
+      token: faker.random.arrayElement([faker.central.token(), null]),
       meta: null,
       lastUsed: inPast && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
