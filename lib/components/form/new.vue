@@ -94,6 +94,8 @@ export default {
     }
   },
   mounted() {
+    // Using a jQuery event handler rather than a Vue one in order to facilitate
+    // testing: it is possible to mock a jQuery event but not a Vue event.
     $(this.$refs.input)
       .on('change.form-new', (event) => this.readFile(event.target.files));
   },

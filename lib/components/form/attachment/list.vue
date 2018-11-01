@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
-      @hide="hideModal('uploadFilesModal')"/>
+      @hide="hideModal('uploadFilesModal')" @choose="afterChoose"/>
     <form-attachment-name-mismatch :state="nameMismatch.state"
       :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
@@ -152,6 +152,17 @@ export default {
     }
   },
   methods: {
+    ////////////////////////////////////////////////////////////////////////////
+    // File picker
+
+    afterChoose(files) {
+      this.uploadFilesModal.state = false;
+      this.matchFilesToAttachments(files);
+    },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Drag and drop
+
     // items is a DataTransferItemList, not an Array.
     fileItemCount(maybeItems) {
       // IE
@@ -179,6 +190,50 @@ export default {
         if (this.countOfFilesOverDropZone === 1) this.dragoverAttachment = null;
         this.countOfFilesOverDropZone = 0;
       }
+    },
+    ondrop(jQueryEvent) {
+      this.countOfFilesOverDropZone = 0;
+      const { files } = jQueryEvent.originalEvent.dataTransfer;
+      if (this.dragoverAttachment != null) {
+        const upload = { attachment: this.dragoverAttachment, file: files[0] };
+        this.dragoverAttachment = null;
+        this.plannedUploads.push(upload);
+        if (upload.file.name === upload.attachment.name)
+          this.uploadFiles();
+        else
+          this.showModal('nameMismatch');
+      } else {
+        // The else case can be reached even if this.countOfFilesOverDropZone
+        // was 1, if the drop was not over a row.
+        this.matchFilesToAttachments(files);
+      }
+    },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Core logic
+
+    matchFilesToAttachments(files) {
+      this.plannedUploads = [];
+      this.unmatchedFiles = [];
+      // files is a FileList, not an Array, hence the style of for-loop.
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+        const attachment = this.attachments.find(a => a.name === file.name);
+        if (attachment != null)
+          this.plannedUploads.push({ attachment, file });
+        else
+          this.unmatchedFiles.push(file);
+      }
+      // With the changes to this.plannedUploads and this.unmatchedFiles, the
+      // popup will show in the next tick.
+    },
+    // cancelUploads() cancels the uploads before they start, after files have
+    // been dropped. (It does not cancel an upload in progress.)
+    cancelUploads() {
+      // Checking `length` in order to avoid setting these properties
+      // unnecessarily, which could result in Vue calculations.
+      if (this.plannedUploads.length !== 0) this.plannedUploads = [];
+      if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
     problemToAlert(problem) {
       if (this.uploadStatus.total === 1) return null;
@@ -229,43 +284,6 @@ export default {
         .catch(() => {});
       this.plannedUploads = [];
       this.unmatchedFiles = [];
-    },
-    ondrop(jQueryEvent) {
-      this.countOfFilesOverDropZone = 0;
-      const { files } = jQueryEvent.originalEvent.dataTransfer;
-      if (this.dragoverAttachment != null) {
-        const upload = { attachment: this.dragoverAttachment, file: files[0] };
-        this.dragoverAttachment = null;
-        this.plannedUploads.push(upload);
-        if (upload.file.name === upload.attachment.name)
-          this.uploadFiles();
-        else
-          this.showModal('nameMismatch');
-      } else {
-        // The else case can be reached even if this.countOfFilesOverDropZone
-        // was 1, if the drop was not over a row.
-
-        // files is a FileList, not an Array, hence the style of for-loop.
-        for (let i = 0; i < files.length; i += 1) {
-          const file = files[i];
-          const attachment = this.attachments.find(a => a.name === file.name);
-          if (attachment != null)
-            this.plannedUploads.push({ attachment, file });
-          else
-            this.unmatchedFiles.push(file);
-        }
-
-        // With the changes to this.plannedUploads and this.unmatchedFiles, the
-        // popup will show in the next tick.
-      }
-    },
-    // cancelUploads() cancels the uploads before they start, after files have
-    // been dropped. (It does not cancel an upload in progress.)
-    cancelUploads() {
-      // Checking `length` in order to avoid setting these properties
-      // unnecessarily, which could result in Vue calculations.
-      if (this.plannedUploads.length !== 0) this.plannedUploads = [];
-      if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     }
   }
 };

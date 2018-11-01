@@ -176,24 +176,24 @@ h1 {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.no-text-decoration {
+.text-no-decoration {
   &, &:hover, &:focus, &.focus {
     text-decoration: none;
   }
 }
 
-@media print {
-  a.no-text-decoration:visited {
-    text-decoration: none;
+a:hover, a:focus {
+  .underline-within-link {
+    text-decoration: underline;
   }
 }
 
-.underline-on-hover-or-focus {
-  &:hover, &:focus {
-    text-decoration: underline;
+@media print {
+  a.text-no-decoration:visited {
+    text-decoration: none;
   }
 
-  @media print {
+  .underline-within-link {
     text-decoration: underline;
   }
 }
