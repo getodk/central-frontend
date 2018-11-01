@@ -205,6 +205,10 @@ a:hover, a:focus {
 
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
+
+  .btn & {
+    margin-right: 3px;
+  }
 }
 
 .btn {
@@ -432,7 +436,7 @@ a:hover, a:focus {
   }
 
   .panel-body {
-    padding: $padding-top-table-data $padding-right-table-data
+    padding: 14px $padding-right-table-data
              $padding-bottom-table-data $padding-left-table-data;
 
     hr {
