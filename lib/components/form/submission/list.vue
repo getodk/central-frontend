@@ -342,6 +342,7 @@ export default {
       // Adding min-width so that the table's width does not increase as the row
       // numbers increase.
       min-width: 42px;
+      padding-top: 11px;
       text-align: right;
       vertical-align: middle;
     }
@@ -456,18 +457,22 @@ export default {
 }
 
 #form-submission-list-message {
-  margin: 0 auto 20px;
+  margin-left: 28px;
+  padding-bottom: 38px;
   position: relative;
-  width: 375px;
 
   #form-submission-list-spinner-container {
+    float: left;
+    margin-right: 8px;
     position: absolute;
-    top: 9px;
+    top: 8px;
+    width: 16px; // TODO: eventually probably better not to default spinner to center.
   }
 
   #form-submission-list-message-text {
-    color: $color-text-muted;
-    margin-left: 20px;
+    color: #555;
+    font-size: 12px;
+    padding-left: 24px;
   }
 }
 </style>
