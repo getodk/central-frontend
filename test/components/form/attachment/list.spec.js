@@ -577,7 +577,7 @@ describe('FormAttachmentList', () => {
   });
 
   /*
-  testMultipleFileSelection() tests the effects of selecting a single file to
+  testSingleFileSelection() tests the effects of selecting a single file to
   upload. It does not test the effects of actually uploading the file: that
   comes later. However, it tests everything between selecting the file and
   uploading it.
