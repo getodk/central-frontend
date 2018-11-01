@@ -5,7 +5,6 @@ class Factory {
   constructor(store, options) {
     this._store = store;
     this._options = { ...options };
-    if (this._options.validate == null) this._options.validate = [];
     this.reset();
   }
 
@@ -92,10 +91,7 @@ class Factory {
   }
 
   _isValid(object, constraints) {
-    const validators = constraints.length !== 0
-      ? [...this._options.validate, ...constraints]
-      : this._options.validate;
-    for (const validator of validators)
+    for (const validator of constraints)
       if (!validator(object, this._store)) return false;
     return true;
   }
@@ -159,7 +155,7 @@ class Store extends Collection {
       const value2 = object2[propertyName];
       if (value1 < value2)
         return asc ? -1 : 1;
-      else if (value2 > value1)
+      else if (value1 > value2)
         return asc ? 1 : -1;
       return 0;
     };
@@ -197,9 +193,6 @@ class Store extends Collection {
       // updates to createdAt.
       throw new Error('createdAt cannot be updated');
     }
-    for (const validator of this._factory.options().validate)
-      if (!validator(object, this))
-        throw new Error('object is no longer valid');
   }
 
   clear() {

@@ -1,14 +1,7 @@
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
-
-const submitForm = (wrapper) => {
-  const { email } = testData.administrators.createPast(1).last();
-  return fillForm(wrapper, [['#account-reset-password input[type="email"]', email]])
-    .then(() => trigger.submit(wrapper.first('#account-reset-password form')))
-    .then(() => wrapper);
-};
+import { submitForm, trigger } from '../../event';
 
 describe('AccountResetPassword', () => {
   it('field is focused', () =>
@@ -25,7 +18,9 @@ describe('AccountResetPassword', () => {
     mockRoute('/reset-password')
       .restoreSession(false)
       .complete()
-      .request(submitForm)
+      .request(app => submitForm(app, '#account-reset-password form', [
+        ['input[type="email"]', testData.administrators.createPast(1).last().email]
+      ]))
       .standardButton());
 
   describe('successful response', () => {
@@ -35,7 +30,9 @@ describe('AccountResetPassword', () => {
       .complete()
       .request(component => {
         app = component;
-        submitForm(app);
+        return submitForm(app, '#account-reset-password form', [
+          ['input[type="email"]', testData.administrators.createPast(1).last().email]
+        ]);
       })
       .respondWithSuccess());
 
@@ -43,7 +40,9 @@ describe('AccountResetPassword', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('shows a success message', () => app.should.alert('success'));
+    it('shows a success message', () => {
+      app.should.alert('success');
+    });
   });
 
   it('clicking cancel navigates to login', () =>

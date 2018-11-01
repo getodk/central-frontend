@@ -1,26 +1,12 @@
-/*
-Copyright 2017 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import testData from '../../data';
-import { fillForm, trigger } from '../../util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { submitForm, trigger } from '../../event';
 
 const clickCreateButton = (wrapper) =>
   trigger.click(wrapper, '#user-list-new-button');
-const submitForm = (wrapper) =>
-  fillForm(wrapper, [['[type="email"]', testData.administrators.createNew().email]])
-    .then(() => trigger.submit(wrapper, '#user-new form'));
 
 describe('UserNew', () => {
   beforeEach(mockLogin);
@@ -53,7 +39,9 @@ describe('UserNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(UserNew)
-      .request(submitForm)
+      .request(modal => submitForm(modal, 'form', [
+        ['input[type="email"]', testData.administrators.createNew().email]
+      ]))
       .standardButton());
 
   describe('after successful submit', () => {
@@ -63,7 +51,10 @@ describe('UserNew', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => clickCreateButton(app).then(submitForm))
+      .request(() => clickCreateButton(app)
+        .then(() => submitForm(app, '#user-new form', [
+          ['input[type="email"]', testData.administrators.createNew().email]
+        ])))
       .respondWithData(() => testData.administrators.last())
       .respondWithData(() => testData.administrators.sorted()));
 

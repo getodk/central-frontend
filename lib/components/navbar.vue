@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li v-if="loggedOut">
+          <li v-if="session.loggedOut()">
             <a href="#" @click.prevent>
               <span class="icon-user-circle-o"></span> Not logged in
             </a>
@@ -45,11 +45,20 @@ except according to the terms contained in the LICENSE file.
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span> {{ displayName }}
+              <span class="icon-user-circle-o"></span> {{ session.user.displayName }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#" @click.prevent="logOut">Log out</a></li>
+              <li>
+                <router-link id="navbar-edit-profile-action" to="/account/edit">
+                  Edit Profile
+                </router-link>
+              </li>
+              <li>
+                <a id="navbar-log-out-action" href="#" @click.prevent="logOut">
+                  Log out
+                </a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -93,34 +102,20 @@ class Link {
 
 export default {
   name: 'Navbar',
+  props: {
+    session: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       links: [
         new Link(this, 'Forms', '/forms', 'navbar-forms-link'),
         new Link(this, 'Users', '/users', 'navbar-users-link'),
         new Link(this, 'System', '/system/backups', 'navbar-system-link')
-      ],
-      /* If the initial navigation is synchronous, Navbar will be created after
-      the navigation is confirmed (I think). If the initial navigation is
-      asynchronous, Navbar will be created before the navigation is confirmed.
-      (For more, see the comments in App.) Either way, the user will be logged
-      out when Navbar is created: if the user's session is restored during the
-      initial navigation, it will be done so asynchronously, after Navbar is
-      created. */
-      loggedIn: false,
-      displayName: ''
+      ]
     };
-  },
-  computed: {
-    loggedOut() {
-      return !this.loggedIn;
-    }
-  },
-  watch: {
-    $route() {
-      this.loggedIn = this.$session.loggedIn();
-      this.displayName = this.loggedIn ? this.$session.user.displayName : '';
-    }
   },
   methods: {
     deleteSession() {
@@ -129,17 +124,12 @@ export default {
       // pending DELETE requests are possible and unproblematic.
       this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
     },
-    routeToLogin() {
-      const query = Object.assign({}, this.$route.query);
-      query.next = this.$route.path;
-      this.$router.push({ path: '/login', query }, () => {
-        this.$alert().success('You have logged out successfully.');
-      });
-    },
     logOut() {
       this.deleteSession();
       logOut();
-      this.routeToLogin();
+      this.$router.push('/login', () => {
+        this.$alert().success('You have logged out successfully.');
+      });
     }
   }
 };
@@ -195,10 +185,11 @@ $shadow-color: #dedede;
         border-top: transparent solid $border-height;
         margin-right: 10px;
         padding: 5px 10px;
-        transition: 0.15s border-top-color;
+        transition: 0.25s border-top-color;
 
         &:hover {
           border-top-color: transparentize(#fff, 0.3);
+          transition-duration: 0s;
         }
       }
 

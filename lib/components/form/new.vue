@@ -169,7 +169,7 @@ export default {
 @import '../../../assets/scss/variables';
 
 #form-new-drop-zone {
-  background-color: $color-input-background;
+  background-color: $color-panel-input-background;
   border: 1px dashed $color-subpanel-border;
   padding-bottom: 15px;
   padding-top: 15px;

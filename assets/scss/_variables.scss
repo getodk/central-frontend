@@ -11,10 +11,13 @@ except according to the terms contained in the LICENSE file.
 */
 
 // Core
-$color-text: #333;
 $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
 $color-page-background: #f7f7f7;
+
+// Text
+$color-text: #333;
+$color-text-muted: #999;
 
 // Contextual colors
 $color-success: #0d840f;
@@ -32,7 +35,8 @@ $color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
 $color-input-inactive: #666;
-$color-input-background: #f7f7f7;
+$color-input-background: #eee;
+$color-panel-input-background: #f7f7f7;
 
 // Tables
 $margin-bottom-table: 20px;

@@ -40,7 +40,10 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <keep-alive>
         <router-view :form="form" :attachments="attachments"
-          @attachment-change="updateAttachment" @state-change="updateState"/>
+          :chunk-sizes="submissionChunkSizes"
+          :scrolled-to-bottom="scrolledToBottom"
+          @attachment-change="updateAttachment"
+          @update:submissions="updateSubmissions" @state-change="updateState"/>
       </keep-alive>
     </page-body>
   </div>
@@ -49,6 +52,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
+import FormSubmissionList from './submission/list.vue';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -59,7 +63,11 @@ export default {
     return {
       requestId: null,
       form: null,
-      attachments: null
+      attachments: null,
+      // Passing these to FormSubmissionList in order to facilitate
+      // FormSubmissionList testing.
+      submissionChunkSizes: FormSubmissionList.props.chunkSizes.default(),
+      scrolledToBottom: FormSubmissionList.props.scrolledToBottom.default
     };
   },
   computed: {
@@ -101,6 +109,9 @@ export default {
       const index = this.attachments
         .findIndex(attachment => attachment.name === newAttachment.name);
       this.$set(this.attachments, index, newAttachment);
+    },
+    updateSubmissions(submissions) {
+      this.form = this.form.with({ submissions });
     },
     updateState(newState) {
       this.form = this.form.with({ state: newState });

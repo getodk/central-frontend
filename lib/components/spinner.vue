@@ -62,19 +62,18 @@ $spinner-width: 3px;
   width: $spinner-size;
 
   &:before {
-    border: $spinner-width solid #fff;
+    border: $spinner-width solid #666;
     border-radius: 999px;
     content: '';
     display: block;
     height: $spinner-size;
     width: $spinner-size;
 
-    .btn-primary & {
-      box-shadow: 0 0 20px 10px $color-action-background,
-                  0 0 6px 3px $color-action-background inset;
+    .btn-primary &, .btn-secondary &, .btn-danger & {
+      border-color: #fff;
     }
 
-    .btn-secondary & {
+    .btn-primary &, .btn-secondary & {
       box-shadow: 0 0 20px 10px $color-action-background,
                   0 0 6px 3px $color-action-background inset;
     }
@@ -88,6 +87,8 @@ $spinner-width: 3px;
   &:after {
     border: 2px solid transparent;
     border-radius: 50%;
+    border-right-color: $color-page-background;
+    border-top-color: $color-page-background;
     content: '';
     display: block;
     left: ($spinner-size / 2) - ($spinner-width / 2);
