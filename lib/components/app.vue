@@ -148,6 +148,11 @@ h1 {
   margin-bottom: 3px;
 }
 
+a:focus {
+  background-color: transparentize(#000, 0.94);
+  outline: none;
+}
+
 .text-muted {
   color: $color-text-muted;
 }
@@ -209,6 +214,11 @@ a:hover, a:focus {
   overflow: hidden;
   padding: 6px 10px 5px;
   position: relative;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
+    outline: none;
+  }
 }
 
 .btn-primary {
@@ -468,6 +478,11 @@ a:hover, a:focus {
 
       &:hover {
         border-bottom-color: $color-accent-primary;
+      }
+
+      &:focus {
+        border-bottom-color: $color-action-foreground;
+        outline: none;
       }
     }
 

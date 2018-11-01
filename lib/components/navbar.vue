@@ -191,6 +191,13 @@ $shadow-color: #dedede;
           border-top-color: transparentize(#fff, 0.3);
           transition-duration: 0s;
         }
+
+        &:focus {
+          border-top-color: transparentize(#fff, 0.15);
+          box-shadow: 0 3px 0 transparentize(#000, 0.9);
+          outline: none;
+          transition-duration: 0s;
+        }
       }
 
       .active > a, .open > a {
