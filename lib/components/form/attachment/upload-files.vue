@@ -64,9 +64,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-#form-attachment-upload-files a[role="button"] {
-  margin-left: 5px;
-}
-</style>

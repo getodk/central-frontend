@@ -168,11 +168,13 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
+$drop-zone-vpadding: 15px;
+
 #form-new-drop-zone {
   background-color: $color-panel-input-background;
   border: 1px dashed $color-subpanel-border;
-  padding-bottom: 15px;
-  padding-top: 15px;
+  padding-bottom: $drop-zone-vpadding;
+  padding-top: $drop-zone-vpadding;
   text-align: center;
 
   &.form-new-dragover {
@@ -186,6 +188,10 @@ export default {
 }
 
 #form-new-filename {
-  margin-top: 5px;
+  background-color: $color-input-background;
+  border-top: 1px solid #ddd;
+  margin-bottom: -$drop-zone-vpadding;
+  margin-top: 10px;
+  padding: 6px 0;
 }
 </style>
