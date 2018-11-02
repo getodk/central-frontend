@@ -206,7 +206,7 @@ a:hover, a:focus {
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
-  .btn & {
+  .btn &, a & {
     margin-right: 3px;
   }
 }
