@@ -17,15 +17,16 @@ describe('AccountClaim', () => {
         .complete()
         .route(LOCATION)
         .respondWithProblems([500, 500, 500])
-        .afterResponses(app => app.vm.$route.path.should.equal('/'));
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
     });
   });
 
   it('navbar is visible', () =>
-    mockRoute(LOCATION)
-      .then(app => {
-        app.first(Navbar).vm.$el.style.display.should.equal('');
-      }));
+    mockRoute(LOCATION).then(app => {
+      app.first(Navbar).vm.$el.style.display.should.equal('');
+    }));
 
   it('field is focused', () =>
     mockRoute(LOCATION, { attachToDocument: true })
