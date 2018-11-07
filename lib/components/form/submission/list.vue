@@ -385,6 +385,10 @@ export default {
     border-radius: 99px;
     padding: 4px 7px;
 
+    span {
+      margin-right: 0;
+    }
+
     .icon-download {
       border-left: 1px dotted #ccc;
       color: #bbb;

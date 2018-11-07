@@ -99,6 +99,10 @@ export default {
   .root-entity-icons-container {
     float: left;
 
+    span {
+      margin-right: 0;
+    }
+
     span:first-child {
       font-size: 56px;
     }
@@ -121,6 +125,7 @@ export default {
       .icon-angle-right {
         color: $color-accent-primary;
         font-size: 20px;
+        margin-right: 0;
         vertical-align: 2px;
       }
     }

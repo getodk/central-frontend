@@ -146,6 +146,7 @@ export default {
         color: $color-accent-primary;
         font-size: 20px;
         margin-left: 3px;
+        margin-right: 0;
         vertical-align: 2px;
       }
     }
