@@ -42,6 +42,19 @@ describe('AccountClaim', () => {
       ]))
       .standardButton());
 
+  it('shows a custom alert for a 401.2 problem', () =>
+    mockRoute(LOCATION)
+      .request(app => submitForm(app, '#account-claim form', [
+        ['input[type="password"]', 'password']
+      ]))
+      .respondWithProblem(() => ({
+        code: 401.2,
+        message: 'AccountClaim problem.'
+      }))
+      .afterResponse(app => {
+        app.should.alert('danger', 'AccountClaim problem. The password reset link may have expired, and the password may need to be reset again.');
+      }));
+
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute(LOCATION)
