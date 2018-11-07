@@ -211,6 +211,16 @@ a:hover, a:focus {
   }
 }
 
+/* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
+IcoMoon styles end up applying to it, because our IcoMoon selectors select on
+the "icon-" class name prefix. To resolve that, we copy the .icon-bar styles for
+.navbar-icon-bar and use .navbar-icon-bar wherever we would use .icon-bar. This
+should not be an issue for Bootstrap 4, which does not seem to have an .icon-bar
+class. */
+.navbar-icon-bar {
+  @extend .icon-bar;
+}
+
 .btn {
   border: none;
   border-radius: 2px;

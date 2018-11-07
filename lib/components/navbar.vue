@@ -18,9 +18,9 @@ except according to the terms contained in the LICENSE file.
           data-toggle="collapse" data-target="#navbar-collapse"
           aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+          <span class="navbar-icon-bar"></span>
+          <span class="navbar-icon-bar"></span>
+          <span class="navbar-icon-bar"></span>
         </button>
         <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
@@ -229,7 +229,8 @@ $shadow-color: #dedede;
       &:hover, &:focus {
         background-color: inherit;
       }
-      .icon-bar {
+
+      .navbar-icon-bar {
         background-color: #fff;
       }
     }
