@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           <span :class="iconClasses"></span>
         </div>
         <div id="backup-list-button-container">
-          <button v-if="backups.status == 'notConfigured'"
+          <button v-if="backups.status === 'notConfigured'"
             id="backup-list-new-button" type="button" class="btn btn-primary"
             @click="showModal('newBackup')">
             <span class="icon-plus-circle"></span>Set up now
