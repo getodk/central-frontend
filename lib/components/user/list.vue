@@ -142,10 +142,6 @@ export default {
 
   > tbody > tr > td {
     vertical-align: middle;
-
-    .dropdown {
-      width: 35px;
-    }
   }
 }
 </style>

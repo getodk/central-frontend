@@ -186,10 +186,6 @@ export default {
 #field-key-list-table {
   > tbody > tr > td {
     vertical-align: middle;
-
-    .dropdown {
-      width: 35px;
-    }
   }
 }
 
