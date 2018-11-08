@@ -386,7 +386,7 @@ export default {
     padding: 4px 7px;
     text-decoration: none;
 
-    span {
+    .icon-check {
       margin-right: 0;
     }
 

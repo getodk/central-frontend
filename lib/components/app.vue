@@ -184,7 +184,7 @@ a:focus {
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
-  .btn &, a & {
+  .btn > &:first-child, a > &:first-child {
     margin-right: 6px;
   }
 

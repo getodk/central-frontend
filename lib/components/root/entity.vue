@@ -99,12 +99,9 @@ export default {
   .root-entity-icons-container {
     float: left;
 
-    span {
-      margin-right: 0;
-    }
-
     span:first-child {
       font-size: 56px;
+      margin-right: 0;
     }
 
     span:nth-child(2) {
