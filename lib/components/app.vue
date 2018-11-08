@@ -181,33 +181,17 @@ a:focus {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.text-no-decoration {
-  &, &:hover, &:focus, &.focus {
-    text-decoration: none;
-  }
-}
-
-a:hover, a:focus {
-  .underline-within-link {
-    text-decoration: underline;
-  }
-}
-
-@media print {
-  a.text-no-decoration:visited {
-    text-decoration: none;
-  }
-
-  .underline-within-link {
-    text-decoration: underline;
-  }
-}
-
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
   .btn &, a & {
     margin-right: 6px;
+  }
+
+  a > &:first-child {
+    // Using inline-block so that the icon is not underlined even when the link
+    // has `text-decoration: underline`.
+    display: inline-block;
   }
 }
 

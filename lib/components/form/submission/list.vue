@@ -384,6 +384,7 @@ export default {
     background-color: $color-subpanel-background;
     border-radius: 99px;
     padding: 4px 7px;
+    text-decoration: none;
 
     span {
       margin-right: 0;
