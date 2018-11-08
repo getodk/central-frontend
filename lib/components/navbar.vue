@@ -39,13 +39,13 @@ except according to the terms contained in the LICENSE file.
         <ul class="nav navbar-nav navbar-right">
           <li v-if="session.loggedOut()">
             <a href="#" @click.prevent>
-              <span class="icon-user-circle-o"></span> Not logged in
+              <span class="icon-user-circle-o"></span>Not logged in
             </a>
           </li>
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span> {{ session.user.displayName }}
+              <span class="icon-user-circle-o"></span>{{ session.user.displayName }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">

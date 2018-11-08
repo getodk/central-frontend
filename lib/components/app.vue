@@ -207,7 +207,7 @@ a:hover, a:focus {
   vertical-align: -1px;
 
   .btn &, a & {
-    margin-right: 3px;
+    margin-right: 6px;
   }
 }
 

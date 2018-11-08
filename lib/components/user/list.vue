@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         @refresh="fetchData({ clear: false })"/>
       <button id="user-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="newUser.state = true">
-        <span class="icon-plus-circle"></span> Create web user
+        <span class="icon-plus-circle"></span>Create web user
       </button>
     </float-row>
     <loading v-if="users == null" :state="awaitingResponse"/>
@@ -39,8 +39,7 @@ except according to the terms contained in the LICENSE file.
               <button :id="actionsId(index)" type="button"
                 class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span class="icon-cog"></span>
-                <span class="caret"></span>
+                <span class="icon-cog"></span><span class="caret"></span>
               </button>
               <ul :aria-labelledby="actionsId(index)"
                 class="dropdown-menu dropdown-menu-right">

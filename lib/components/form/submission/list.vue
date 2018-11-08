@@ -19,13 +19,13 @@ except according to the terms contained in the LICENSE file.
         slot="right">
         <a id="form-submission-list-download-button" :href="downloadHref"
           class="btn btn-primary" target="_blank">
-          <span class="icon-arrow-circle-down"></span> Download all
+          <span class="icon-arrow-circle-down"></span>Download all
           {{ form.submissions.toLocaleString() }}
           {{ $pluralize('record', form.submissions) }}
         </a>
         <button id="form-submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="showModal('analyze')">
-          <span class="icon-plug"></span> Analyze via OData
+          <span class="icon-plug"></span>Analyze via OData
         </button>
       </template>
     </float-row>

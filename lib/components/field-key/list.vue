@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         @refresh="fetchData({ clear: false })"/>
       <button id="field-key-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
-        <span class="icon-plus-circle"></span> Create app user
+        <span class="icon-plus-circle"></span>Create app user
       </button>
     </float-row>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>

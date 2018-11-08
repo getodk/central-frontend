@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <button :disabled="disabled" type="button"
     class="btn btn-secondary btn-refresh" @click="refresh">
-    <span class="icon-refresh"></span> Refresh list
+    <span class="icon-refresh"></span>Refresh list
     <spinner :state="refreshStatus === 'inProgress'"/>
   </button>
 </template>

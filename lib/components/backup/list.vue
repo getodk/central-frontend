@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
           <button v-if="backups.status == 'notConfigured'"
             id="backup-list-new-button" type="button" class="btn btn-primary"
             @click="showModal('newBackup')">
-            <span class="icon-plus-circle"></span> Set up now
+            <span class="icon-plus-circle"></span>Set up now
           </button>
           <button v-else id="backup-list-terminate-button" type="button"
             class="btn btn-primary" @click="showModal('terminate')">
-            <span class="icon-times-circle"></span> Terminate
+            <span class="icon-times-circle"></span>Terminate
           </button>
         </div>
         <div id="backup-list-status-message">

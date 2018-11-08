@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           @refresh="fetchData({ clear: false })"/>
         <button id="form-list-new-button" slot="right" type="button"
           class="btn btn-primary" @click="newForm.state = true">
-          <span class="icon-plus-circle"></span> Create a new form
+          <span class="icon-plus-circle"></span>Create a new form
         </button>
       </float-row>
       <loading v-if="forms == null" :state="awaitingResponse"/>
