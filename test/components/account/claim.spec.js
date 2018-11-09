@@ -52,7 +52,7 @@ describe('AccountClaim', () => {
         message: 'AccountClaim problem.'
       }))
       .afterResponse(app => {
-        app.should.alert('danger', 'AccountClaim problem. The password reset link may have expired, and the password may need to be reset again.');
+        app.should.alert('danger', 'AccountClaim problem. The link in your email may have expired, and a new email may have to be sent.');
       }));
 
   describe('after successful response', () => {

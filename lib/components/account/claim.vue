@@ -53,7 +53,7 @@ export default {
   methods: {
     problemToAlert(problem) {
       return problem.code === 401.2
-        ? `${problem.message} The password reset link may have expired, and the password may need to be reset again.`
+        ? `${problem.message} The link in your email may have expired, and a new email may have to be sent.`
         : null;
     },
     submit() {
