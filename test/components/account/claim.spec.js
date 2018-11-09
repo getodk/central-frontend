@@ -7,6 +7,27 @@ import { submitForm } from '../../event';
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 
 describe('AccountClaim', () => {
+  describe('navigation to /account/claim', () => {
+    it('redirects to the root page after a login through the login page', () => {
+      const { xmlFormId } = testData.extendedForms.createPast(1).last();
+      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
+        .complete()
+        .route(LOCATION)
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+  });
+
+  it('navbar is visible', () =>
+    mockRoute(LOCATION).then(app => {
+      app.first(Navbar).vm.$el.style.display.should.equal('');
+    }));
+
   it('field is focused', () =>
     mockRoute(LOCATION, { attachToDocument: true })
       .then(app => app.first('input[type="password"]').should.be.focused()));
@@ -21,10 +42,17 @@ describe('AccountClaim', () => {
       ]))
       .standardButton());
 
-  it('navbar is visible', () =>
+  it('shows a custom alert for a 401.2 problem', () =>
     mockRoute(LOCATION)
-      .then(app => {
-        app.first(Navbar).vm.$el.style.display.should.equal('');
+      .request(app => submitForm(app, '#account-claim form', [
+        ['input[type="password"]', 'password']
+      ]))
+      .respondWithProblem(() => ({
+        code: 401.2,
+        message: 'AccountClaim problem.'
+      }))
+      .afterResponse(app => {
+        app.should.alert('danger', 'AccountClaim problem. The link in your email may have expired, and a new email may have to be sent.');
       }));
 
   describe('after successful response', () => {
@@ -45,20 +73,6 @@ describe('AccountClaim', () => {
 
     it('success message is shown', () => {
       app.should.alert('success');
-    });
-  });
-
-  describe('navigation to /account/claim', () => {
-    it('redirects to the root page after a login through the login page', () => {
-      const { xmlFormId } = testData.extendedForms.createPast(1).last();
-      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .complete()
-        .route(LOCATION)
-        .respondWithProblems([500, 500, 500])
-        .afterResponses(app => app.vm.$route.path.should.equal('/'));
     });
   });
 });

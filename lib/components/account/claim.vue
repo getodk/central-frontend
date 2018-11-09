@@ -51,6 +51,11 @@ export default {
     };
   },
   methods: {
+    problemToAlert(problem) {
+      return problem.code === 401.2
+        ? `${problem.message} The link in your email may have expired, and a new email may have to be sent.`
+        : null;
+    },
     submit() {
       const headers = {};
       const { token } = this.$route.query;
