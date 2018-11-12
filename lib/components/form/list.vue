@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           @refresh="fetchData({ clear: false })"/>
         <button id="form-list-new-button" slot="right" type="button"
           class="btn btn-primary" @click="newForm.state = true">
-          <span class="icon-plus-circle"></span> Create a new form
+          <span class="icon-plus-circle"></span>Create a new form
         </button>
       </float-row>
       <loading v-if="forms == null" :state="awaitingResponse"/>
@@ -146,6 +146,7 @@ export default {
         color: $color-accent-primary;
         font-size: 20px;
         margin-left: 3px;
+        margin-right: 0;
         vertical-align: 2px;
       }
     }

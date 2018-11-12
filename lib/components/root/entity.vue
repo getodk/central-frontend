@@ -101,6 +101,7 @@ export default {
 
     span:first-child {
       font-size: 56px;
+      margin-right: 0;
     }
 
     span:nth-child(2) {
@@ -121,6 +122,7 @@ export default {
       .icon-angle-right {
         color: $color-accent-primary;
         font-size: 20px;
+        margin-right: 0;
         vertical-align: 2px;
       }
     }

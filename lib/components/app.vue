@@ -181,34 +181,28 @@ a:focus {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.text-no-decoration {
-  &, &:hover, &:focus, &.focus {
-    text-decoration: none;
-  }
-}
-
-a:hover, a:focus {
-  .underline-within-link {
-    text-decoration: underline;
-  }
-}
-
-@media print {
-  a.text-no-decoration:visited {
-    text-decoration: none;
-  }
-
-  .underline-within-link {
-    text-decoration: underline;
-  }
-}
-
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
-  .btn &, a & {
-    margin-right: 3px;
+  .btn > &:first-child, a > &:first-child {
+    margin-right: 6px;
   }
+
+  a > &:first-child {
+    // Using inline-block so that the icon is not underlined even when the link
+    // has `text-decoration: underline`.
+    display: inline-block;
+  }
+}
+
+/* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
+IcoMoon styles end up applying to it, because our IcoMoon selectors select on
+the "icon-" class name prefix. To resolve that, we copy the .icon-bar styles for
+.navbar-icon-bar and use .navbar-icon-bar wherever we would use .icon-bar. This
+should not be an issue for Bootstrap 4, which does not seem to have an .icon-bar
+class. */
+.navbar-icon-bar {
+  @extend .icon-bar;
 }
 
 .btn {

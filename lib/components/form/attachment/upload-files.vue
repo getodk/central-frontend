@@ -22,10 +22,8 @@ except according to the terms contained in the LICENSE file.
         If you would rather select files from a prompt, ensure that their names
         match the ones in the table and then
         <input ref="input" type="file" class="hidden" multiple>
-        <a ref="link" href="#" class="text-no-decoration" role="button"
-          @click.prevent="clickInput">
-          <span class="icon-folder-open"></span>
-          <span class="underline-within-link">click here to choose</span></a>.
+        <a ref="link" href="#" role="button" @click.prevent="clickInput">
+          <span class="icon-folder-open"></span>click here to choose</a>.
       </p>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">

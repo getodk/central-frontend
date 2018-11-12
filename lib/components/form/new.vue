@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
           <input ref="input" type="file" class="hidden">
           <button :disabled="disabled" type="button" class="btn btn-primary"
             @click="clickFileInput">
-            <span class="icon-folder-open"></span> choose one
+            <span class="icon-folder-open"></span>choose one
           </button>
           to upload.
         </div>
