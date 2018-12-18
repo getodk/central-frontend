@@ -39,40 +39,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
 export default {
   name: 'ProjectShow',
-  mixins: [request(), tab()],
-  data() {
-    return {
-      requestId: null,
-      project: null
-    };
-  },
-  computed: {
-    projectId() {
-      return parseInt(this.$route.params.projectId, 10);
-    }
-  },
-  watch: {
-    projectId() {
-      this.fetchData();
-    }
-  },
-  created() {
-    this.fetchData();
+  mixins: [tab()],
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
+    project: Object // eslint-disable-line vue/require-default-prop
   },
   methods: {
-    fetchData() {
-      this.project = null;
-      this.get(`/projects/${this.projectId}`)
-        .then(({ data }) => {
-          this.project = data;
-        })
-        .catch(() => {});
-    },
     tabPathPrefix() {
       return `/projects/${this.projectId}`;
     }
