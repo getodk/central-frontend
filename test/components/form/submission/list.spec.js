@@ -18,7 +18,9 @@ describe('FormSubmissionList', () => {
     it('anonymous user is redirected to login', () =>
       mockRoute(submissionsPath(testData.extendedForms.createPast(1).first()))
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
     it('after login, user is redirected back', () => {
       const form = testData.extendedForms
@@ -30,7 +32,41 @@ describe('FormSubmissionList', () => {
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
         .respondWithData(testData.submissionOData)
-        .afterResponses(app => app.vm.$route.path.should.equal(path));
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal(path);
+        });
+    });
+
+    it('updates the component after the route updates', () => {
+      mockLogin();
+      const forms = testData.extendedForms
+        .createPast(1, { xmlFormId: 'a', submissions: 1 })
+        .createPast(1, { xmlFormId: 'b', submissions: 1 })
+        .sorted()
+        .reverse();
+      forms[0].xmlFormId.should.equal('a');
+      testData.extendedSubmissions
+        .createPast(1, { form: forms[0] })
+        .createPast(1, { form: forms[1] });
+      return mockRoute(submissionsPath(forms[0]))
+        .beforeEachResponse((app, request, index) => {
+          if (index === 2)
+            request.url.should.equal('/forms/a.schema.json?flatten=true');
+        })
+        .respondWithData(() => forms[0])
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => forms[0]._schema)
+        .respondWithData(() => testData.submissionOData(1, 0))
+        .complete()
+        .route(submissionsPath(forms[1]))
+        .beforeEachResponse((app, request, index) => {
+          if (index === 2)
+            request.url.should.equal('/forms/b.schema.json?flatten=true');
+        })
+        .respondWithData(() => forms[1])
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => forms[1]._schema)
+        .respondWithData(() => testData.submissionOData(1, 1));
     });
   });
 

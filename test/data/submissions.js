@@ -87,6 +87,7 @@ export const extendedSubmissions = dataStore({
     id,
     lastCreatedAt,
 
+    form = extendedForms.randomOrCreatePast(),
     instanceId = faker.random.uuid(),
 
     hasInt = faker.random.boolean(),
@@ -105,7 +106,6 @@ export const extendedSubmissions = dataStore({
     // false, the int field will have the specified value.
     ...partialOData
   }) => {
-    const form = extendedForms.randomOrCreatePast();
     const submitter = administrators.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
