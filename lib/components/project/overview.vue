@@ -11,6 +11,33 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <div class="row">
+      <div class="col-xs-6">
+        <page-section id="project-overview-text">
+          <template slot="heading"><span>Projects</span></template>
+          <template slot="body">
+            <p>
+              Any Forms you create in this Project will only be visible on data
+              collection devices to the App Users who are a part of this
+              Project.
+            </p>
+            <p>
+              Future releases of ODK Central will add more project-centric
+              features, including improvements to form states and workflow,
+              device state updates, Collect settings management, and more
+              granular permissioning.
+            </p>
+            <p>
+              For more information, please see
+              <!-- TODO. Add links. -->
+              <doc-link>this help article</doc-link>, and if you have any
+              feedback please visit
+              <a href="#" target="_blank">this forum thread</a>.
+            </p>
+          </template>
+        </page-section>
+      </div>
+    </div>
     <page-section>
       <template slot="heading">
         <span>Forms</span>
@@ -62,3 +89,9 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+#project-overview-text {
+  margin-top: 10px;
+}
+</style>
