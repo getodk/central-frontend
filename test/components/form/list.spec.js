@@ -61,9 +61,5 @@ describe('FormList', () => {
           const text = page.first('#page-body p').text().trim();
           text.should.equal('To get started, add a form.');
         }));
-
-    it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/forms')
-        .testRefreshButton({ collection: testData.extendedForms }));
   });
 });

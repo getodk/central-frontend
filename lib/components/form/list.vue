@@ -23,8 +23,6 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <float-row class="table-actions">
-        <refresh-button slot="left" :fetching="awaitingResponse"
-          @refresh="fetchData({ clear: false })"/>
         <button id="form-list-new-button" slot="right" type="button"
           class="btn btn-primary" @click="newForm.state = true">
           <span class="icon-plus-circle"></span>Create a new form
