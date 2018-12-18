@@ -11,15 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-body>
-      <float-row class="table-actions">
-        <button id="form-list-new-button" slot="right" type="button"
-          class="btn btn-primary" @click="newForm.state = true">
-          <span class="icon-plus-circle"></span>Create a new form
-        </button>
-      </float-row>
-      <loading v-if="forms == null" :state="awaitingResponse"/>
-      <p v-else-if="forms.length === 0" id="form-list-message">
+    <loading :state="awaitingResponse"/>
+    <template v-if="forms != null">
+      <p v-if="forms.length === 0" id="form-list-message">
         To get started, add a form.
       </p>
       <table v-else id="form-list-table" class="table">
@@ -58,30 +52,21 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </tbody>
       </table>
-
-      <form-new v-bind="newForm" @hide="newForm.state = false"
-        @success="afterCreate"/>
-    </page-body>
+    </template>
   </div>
 </template>
 
 <script>
-import FormNew from './new.vue';
-import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { formatDate } from '../../util';
 
 export default {
   name: 'FormList',
-  components: { FormNew },
-  mixins: [request(), modal('newForm')],
+  mixins: [request()],
   data() {
     return {
       requestId: null,
-      forms: null,
-      newForm: {
-        state: false
-      }
+      forms: null
     };
   },
   created() {
@@ -108,13 +93,6 @@ export default {
     },
     lastSubmission(form) {
       return formatDate(form.lastSubmission);
-    },
-    afterCreate(form) {
-      // Wait for the modal to hide.
-      this.$nextTick(() => this.$router.push(`/forms/${form.xmlFormId}`, () => {
-        const name = form.name || form.xmlFormId;
-        this.$alert().success(`The form “${name}” was created successfully.`);
-      }));
     }
   }
 };
