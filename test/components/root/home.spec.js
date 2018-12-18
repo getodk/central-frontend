@@ -40,7 +40,6 @@ describe('RootHome', () => {
     it('shows the correct counts', () => {
       const users = faker.random.number();
       const fieldKeys = faker.random.number();
-      const forms = faker.random.number();
       // Using mockRoute() rather than mockHttp() because the page contains
       // <router-link> tags.
       return mockRoute('/')
@@ -48,7 +47,7 @@ describe('RootHome', () => {
         // the data.
         .respondWithData(() => new Array(users))
         .respondWithData(() => new Array(fieldKeys))
-        .respondWithData(() => new Array(forms))
+        .respondWithData(() => new Array(fieldKeys))
         .afterResponses(app => {
           const counts = app
             .find('.root-entity-count a')
@@ -56,12 +55,12 @@ describe('RootHome', () => {
           counts.length.should.equal(3);
           counts[0].should.equal(users.toLocaleString());
           counts[1].should.equal(fieldKeys.toLocaleString());
-          counts[2].should.equal(forms.toLocaleString());
+          counts[2].should.equal(fieldKeys.toLocaleString());
         });
     });
 
     describe('clicking anywhere on the block routes to correct page', () => {
-      const routes = ['/users', '/users/field-keys', '/forms'];
+      const routes = ['/users', '/users/field-keys', '/users/field-keys'];
       for (let i = 0; i < routes.length; i += 1) {
         it(`renders 4 links in entity ${i}`, () =>
           mockRoute('/')
