@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <page-section>
       <template slot="heading">
         <span>Forms</span>
-        <button id="form-list-new-button" type="button" class="btn btn-primary"
-          @click="showModal('newForm')">
+        <button id="project-overview-new-form-button" type="button"
+          class="btn btn-primary" @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>New
         </button>
       </template>

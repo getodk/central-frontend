@@ -10,7 +10,7 @@ const XML = '<a><b/></a>';
 
 const findModal = (wrapper) => wrapper.first(FormNew);
 const openModal = (wrapper) => trigger
-  .click(wrapper.first('#form-list-new-button'))
+  .click(wrapper, '#project-overview-new-form-button')
   .then(() => findModal(wrapper));
 const createForm = (modal) => {
   testData.extendedForms.createNew({ hasSubmission: false });
