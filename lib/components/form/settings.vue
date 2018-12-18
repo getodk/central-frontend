@@ -67,8 +67,11 @@ export default {
       this.$emit('state-change', newState);
     },
     afterDelete() {
-      this.$router.push('/forms', () => {
-        this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
+      // Wait for the modal to hide.
+      this.$nextTick(() => {
+        this.$router.push('/forms', () => {
+          this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
+        });
       });
     }
   }

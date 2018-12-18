@@ -62,8 +62,7 @@ export default {
       this.delete(`/forms/${this.form.encodedId()}`)
         .then(() => {
           this.$emit('hide');
-          // Wait for the modal to hide.
-          this.$nextTick(() => this.$emit('success'));
+          this.$emit('success');
         })
         .catch(() => {});
     }
