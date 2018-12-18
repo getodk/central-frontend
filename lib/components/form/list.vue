@@ -70,14 +70,13 @@ export default {
     };
   },
   created() {
-    this.fetchData({ clear: false });
+    this.fetchData();
   },
   methods: {
-    fetchData({ clear }) {
-      if (clear) this.forms = null;
+    fetchData() {
+      this.forms = null;
       const headers = { 'X-Extended-Metadata': 'true' };
-      this
-        .get('/forms', { headers })
+      this.get('/forms', { headers })
         .then(({ data }) => {
           this.forms = data;
         })
