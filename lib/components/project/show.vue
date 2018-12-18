@@ -67,8 +67,7 @@ export default {
   methods: {
     fetchData() {
       this.project = null;
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.get(`/projects/${this.id}`, { headers })
+      this.get(`/projects/${this.id}`)
         .then(({ data }) => {
           this.project = data;
         })
