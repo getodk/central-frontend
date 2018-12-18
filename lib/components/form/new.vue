@@ -54,6 +54,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 
@@ -151,13 +152,12 @@ export default {
         return;
       }
       const headers = { 'Content-Type': 'application/xml' };
-      this
-        .post('/forms', this.xml, { headers })
+      this.post('/forms', this.xml, { headers })
         .then(({ data }) => {
           this.$emit('hide');
           this.filename = null;
           this.xml = null;
-          this.$emit('success', data);
+          this.$emit('success', new Form(data));
         })
         .catch(() => {});
     }

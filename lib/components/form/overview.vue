@@ -116,6 +116,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import FormOverviewStep from './overview-step.vue';
 import request from '../../mixins/request';
 
@@ -128,7 +129,7 @@ export default {
   inheritAttrs: false,
   props: {
     form: {
-      type: Object,
+      type: Form,
       required: true
     },
     attachments: {
@@ -181,7 +182,7 @@ export default {
       return 'later';
     },
     formPath(suffix) {
-      return `/forms/${this.form.xmlFormId}/${suffix}`;
+      return `/forms/${this.form.encodedId()}/${suffix}`;
     }
   }
 };

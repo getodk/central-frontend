@@ -4,6 +4,7 @@ import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { trigger } from '../../event';
 
 describe('FormList', () => {
   describe('routing', () => {
@@ -60,6 +61,25 @@ describe('FormList', () => {
         .afterResponse(component => {
           const text = component.first('#form-list-message').text().trim();
           text.should.equal('To get started, add a form.');
+        }));
+
+    it('encodes the URL to the form overview page', () =>
+      mockRoute('/forms')
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
+        .afterResponse(app => {
+          const href = app.first('.form-list-form-name').getAttribute('href');
+          href.should.equal('#/forms/a%20b');
+        })
+        .request(app => trigger.click(app, '.form-list-form-name'))
+        .beforeEachResponse((app, request, index) => {
+          if (index === 0) request.url.should.equal('/forms/a%20b');
+        })
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
+        .afterResponses(app => {
+          app.vm.$route.params.xmlFormId.should.equal('a b');
         }));
   });
 });

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr>
     <td>
       <div>
-        <router-link :to="`/forms/${form.xmlFormId}`"
+        <router-link :to="`/forms/${form.encodedId()}`"
           class="form-list-form-name">
           {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>

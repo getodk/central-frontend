@@ -90,10 +90,11 @@ export default {
     fetchData() {
       this.form = null;
       this.attachments = null;
+      const encodedId = encodeURIComponent(this.xmlFormId);
       const headers = { 'X-Extended-Metadata': 'true' };
       this.requestAll([
-        this.$http.get(`/forms/${this.xmlFormId}`, { headers }),
-        this.$http.get(`/forms/${this.xmlFormId}/attachments`, { headers })
+        this.$http.get(`/forms/${encodedId}`, { headers }),
+        this.$http.get(`/forms/${encodedId}/attachments`, { headers })
       ])
         .then(([form, attachments]) => {
           this.form = new Form(form.data);
@@ -103,7 +104,7 @@ export default {
         .catch(() => {});
     },
     tabPathPrefix() {
-      return `/forms/${this.xmlFormId}`;
+      return `/forms/${encodeURIComponent(this.xmlFormId)}`;
     },
     updateAttachment(newAttachment) {
       const index = this.attachments

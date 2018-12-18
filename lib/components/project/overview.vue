@@ -47,10 +47,11 @@ export default {
   methods: {
     afterCreate(form) {
       // Wait for the modal to hide.
-      this.$nextTick(() => this.$router.push(`/forms/${form.xmlFormId}`, () => {
-        const name = form.name || form.xmlFormId;
-        this.$alert().success(`The form “${name}” was created successfully.`);
-      }));
+      this.$nextTick(() => {
+        this.$router.push(`/forms/${form.encodedId()}`, () => {
+          this.$alert().success(`The form “${form.nameOrId()}” was created successfully.`);
+        });
+      });
     }
   }
 };

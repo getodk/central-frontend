@@ -1,3 +1,4 @@
+import Form from '../../../lib/presenters/form';
 import FormEdit from '../../../lib/components/form/edit.vue';
 import Spinner from '../../../lib/components/spinner.vue';
 import faker from '../../faker';
@@ -7,10 +8,11 @@ import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
 const settingsPath = (form) => `/forms/${form.xmlFormId}/settings`;
-const propsData = () => {
-  const props = { form: testData.extendedForms.createPast(1).last() };
-  return { propsData: props };
-};
+const propsData = () => ({
+  propsData: {
+    form: new Form(testData.extendedForms.createPast(1).last())
+  }
+});
 const selectDifferentState = (formEdit) => {
   const inputs = formEdit.find('input')
     .filter(input => input.getAttribute('value') !== formEdit.data().state);

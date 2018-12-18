@@ -43,6 +43,7 @@ export const extendedForms = dataStore({
     inPast,
     lastCreatedAt,
 
+    xmlFormId = faker.central.xmlFormId(),
     hasName = faker.random.boolean(),
     isOpen = !inPast || faker.random.boolean(),
 
@@ -75,7 +76,7 @@ export const extendedForms = dataStore({
       createdBy.createdAt
     ]);
     return {
-      xmlFormId: faker.central.xmlFormId(),
+      xmlFormId,
       name,
       version,
       state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),

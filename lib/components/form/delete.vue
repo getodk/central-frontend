@@ -37,6 +37,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import request from '../../mixins/request';
 
 export default {
@@ -48,7 +49,7 @@ export default {
       default: false
     },
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
@@ -59,8 +60,7 @@ export default {
   },
   methods: {
     del() {
-      this
-        .delete(`/forms/${this.form.xmlFormId}`)
+      this.delete(`/forms/${this.form.encodedId()}`)
         .then(() => {
           this.$emit('hide');
           // Wait for the modal to hide.

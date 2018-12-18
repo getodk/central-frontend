@@ -74,6 +74,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../../presenters/form';
+
 export default {
   name: 'FormSubmissionAnalyze',
   props: {
@@ -82,7 +84,7 @@ export default {
       default: false
     },
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
@@ -108,7 +110,7 @@ export default {
       };
     },
     oDataUrl() {
-      const base = `${window.location.origin}/v1/forms/${this.form.xmlFormId}.svc`;
+      const base = `${window.location.origin}/v1/forms/${this.form.encodedId()}.svc`;
       return this.tool !== 'tableau' ? base : `${base}/Submissions?$wkt=true`;
     }
   },
