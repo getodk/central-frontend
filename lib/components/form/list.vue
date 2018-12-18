@@ -19,7 +19,9 @@ except according to the terms contained in the LICENSE file.
         </button>
       </float-row>
       <loading v-if="forms == null" :state="awaitingResponse"/>
-      <p v-else-if="forms.length === 0">To get started, add a form.</p>
+      <p v-else-if="forms.length === 0" id="form-list-message">
+        To get started, add a form.
+      </p>
       <table v-else id="form-list-table" class="table">
         <thead>
           <tr>

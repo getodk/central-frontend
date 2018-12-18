@@ -57,8 +57,8 @@ describe('FormList', () => {
       mockHttp()
         .mount(FormList)
         .respondWithData(() => [])
-        .afterResponse(page => {
-          const text = page.first('#page-body p').text().trim();
+        .afterResponse(component => {
+          const text = component.first('#form-list-message').text().trim();
           text.should.equal('To get started, add a form.');
         }));
   });
