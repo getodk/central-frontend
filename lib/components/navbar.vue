@@ -111,7 +111,7 @@ export default {
   data() {
     return {
       links: [
-        new Link(this, 'Forms', '/forms', 'navbar-forms-link'),
+        // TODO. Add a link to the project list.
         new Link(this, 'Users', '/users', 'navbar-users-link'),
         new Link(this, 'System', '/system/backups', 'navbar-system-link')
       ]
