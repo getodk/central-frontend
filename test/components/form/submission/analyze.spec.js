@@ -8,9 +8,9 @@ import { mountAndMark } from '../../../destroy';
 import { trigger } from '../../../event';
 
 const createFormWithSubmission = () => {
-  testData.extendedForms.createPast(1);
-  testData.extendedSubmissions.createPast(1);
-  return testData.extendedForms.last();
+  const form = testData.extendedForms.createPast(1, { submissions: 1 }).last();
+  testData.extendedSubmissions.createPast(1, { form });
+  return form;
 };
 const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 const clickAnalyzeButton = (wrapper) =>
