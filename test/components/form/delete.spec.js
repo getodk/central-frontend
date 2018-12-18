@@ -38,6 +38,7 @@ describe('FormDelete', () => {
   describe('after successful response', () => {
     let app;
     beforeEach(() => {
+      testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(2);
       const { xmlFormId } = testData.extendedForms.first();
       return mockRoute(`/forms/${xmlFormId}/settings`)
@@ -52,11 +53,12 @@ describe('FormDelete', () => {
           return confirmDelete(app);
         })
         .respondWithSuccess()
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => testData.extendedForms.sorted());
     });
 
-    it('redirects user to form list', () => {
-      app.vm.$route.path.should.equal('/forms');
+    it('navigates to the project overview', () => {
+      app.vm.$route.path.should.equal('/projects/1');
     });
 
     it('shows a success message', () => {

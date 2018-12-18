@@ -8,24 +8,31 @@ import { trigger } from '../../event';
 
 describe('FormList', () => {
   describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
-      mockRoute('/forms')
+    it('redirects an anonymous user to login', () =>
+      mockRoute('/projects/1')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
-    it('after login, user is redirected back', () =>
-      mockRouteThroughLogin('/forms')
+    it('redirects the user back after login', () =>
+      mockRouteThroughLogin('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .afterResponse(app => app.vm.$route.path.should.equal('/forms')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/projects/1');
+        }));
   });
 
   describe('after login', () => {
     beforeEach(mockLogin);
 
     it('table contains the correct data', () => {
+      testData.extendedProjects.createPast(1);
       const forms = testData.extendedForms.createPast(2).sorted();
-      // Mocking the route, because the table uses <router-link>.
-      return mockRoute('/forms')
+      // Mocking the route, because FormList uses <router-link>.
+      return mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => forms)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
@@ -64,7 +71,8 @@ describe('FormList', () => {
         }));
 
     it('encodes the URL to the form overview page', () =>
-      mockRoute('/forms')
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
         .afterResponse(app => {

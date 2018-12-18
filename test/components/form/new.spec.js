@@ -45,17 +45,23 @@ describe('FormNew', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      // Mocking the route, because the table uses <router-link>.
-      mockRoute('/forms')
+      // Mocking the route, because FormList uses <router-link>.
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
-        .then(modal => modal.getProp('state').should.be.false()));
+        .then(modal => {
+          modal.getProp('state').should.be.false();
+        }));
 
     it('is shown after button click', () =>
-      mockRoute('/forms')
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
-        .then(modal => modal.getProp('state').should.be.true()));
+        .then(modal => {
+          modal.getProp('state').should.be.true();
+        }));
   });
 
   describe('no file selection', () => {
@@ -112,7 +118,8 @@ describe('FormNew', () => {
       describe('after successful submit', () => {
         let app;
         let form;
-        beforeEach(() => mockRoute('/forms')
+        beforeEach(() => mockRoute('/projects/1')
+          .respondWithData(() => testData.simpleProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
@@ -142,9 +149,10 @@ describe('FormNew', () => {
           app.should.alert('success');
         });
 
-        describe('after navigating back to forms list', () => {
+        describe('after navigating back to the project overview', () => {
           beforeEach(() => mockHttp()
-            .route('/forms')
+            .route('/projects/1')
+            .respondWithData(() => testData.simpleProjects.last())
             .respondWithData(() => testData.extendedForms.sorted()));
 
           it('table has the correct number of rows', () => {

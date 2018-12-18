@@ -37,6 +37,12 @@ export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
   mixins: [modal('newForm')],
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       newForm: {

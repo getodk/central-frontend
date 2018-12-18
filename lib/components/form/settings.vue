@@ -69,7 +69,8 @@ export default {
     afterDelete() {
       // Wait for the modal to hide.
       this.$nextTick(() => {
-        this.$router.push('/forms', () => {
+        // TODO. Use the form's project id.
+        this.$router.push('/projects/1', () => {
           this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
         });
       });
