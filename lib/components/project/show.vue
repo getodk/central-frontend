@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to ProjectShow's request
           for the project. -->
-          <router-view :project-id="id"/>
+          <router-view :project-id="projectId"/>
         </keep-alive>
       </div>
     </page-body>
@@ -52,12 +52,12 @@ export default {
     };
   },
   computed: {
-    id() {
-      return parseInt(this.$route.params.id, 10);
+    projectId() {
+      return parseInt(this.$route.params.projectId, 10);
     }
   },
   watch: {
-    id() {
+    projectId() {
       this.fetchData();
     }
   },
@@ -67,14 +67,14 @@ export default {
   methods: {
     fetchData() {
       this.project = null;
-      this.get(`/projects/${this.id}`)
+      this.get(`/projects/${this.projectId}`)
         .then(({ data }) => {
           this.project = data;
         })
         .catch(() => {});
     },
     tabPathPrefix() {
-      return `/projects/${this.id}`;
+      return `/projects/${this.projectId}`;
     }
   }
 };
