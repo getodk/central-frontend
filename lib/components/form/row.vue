@@ -13,8 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr>
     <td>
       <div>
-        <router-link :to="`/forms/${form.encodedId()}`"
-          class="form-list-form-name">
+        <router-link :to="overviewPath" class="form-list-form-name">
           {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>
       </div>
@@ -39,12 +38,19 @@ import { formatDate } from '../../util';
 export default {
   name: 'FormRow',
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
       type: Form,
       required: true
     }
   },
   computed: {
+    overviewPath() {
+      return `/projects/${this.projectId}/forms/${this.form.encodedId()}`;
+    },
     updatedOrCreatedAt() {
       return formatDate(this.form.updatedOrCreatedAt());
     },

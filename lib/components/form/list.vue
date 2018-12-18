@@ -26,7 +26,8 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody>
-          <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
+          <form-row v-for="form of forms" :key="form.xmlFormId"
+            :project-id="projectId" :form="form"/>
         </tbody>
       </table>
     </template>

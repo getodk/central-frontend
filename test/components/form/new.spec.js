@@ -143,7 +143,7 @@ describe('FormNew', () => {
           .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
         it('redirects to the form overview', () => {
-          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}`);
+          app.vm.$route.path.should.equal(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`);
         });
 
         it('shows form name', () => {
@@ -157,7 +157,6 @@ describe('FormNew', () => {
         describe('after navigating back to the project overview', () => {
           beforeEach(() => mockHttp()
             .route('/projects/1')
-            .respondWithData(() => testData.simpleProjects.last())
             .respondWithData(() => testData.extendedForms.sorted()));
 
           it('table has the correct number of rows', () => {

@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div id="form-settings">
     <div class="row">
       <div class="col-xs-8">
-        <form-edit :form="form" @state-change="emitStateChange"/>
+        <form-edit :project-id="projectId" :form="form"
+          @state-change="emitStateChange"/>
       </div>
       <div class="col-xs-4">
         <div class="panel panel-simple-danger">
@@ -31,7 +32,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete :state="deleteForm.state" :form="form"
+    <form-delete :project-id="projectId" :form="form" :state="deleteForm.state"
       @hide="hideModal('deleteForm')" @success="afterDelete"/>
   </div>
 </template>
@@ -50,6 +51,10 @@ export default {
   // for other form-related components.
   inheritAttrs: false,
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
       type: Form,
       required: true
@@ -69,8 +74,7 @@ export default {
     afterDelete() {
       // Wait for the modal to hide.
       this.$nextTick(() => {
-        // TODO. Use the form's project id.
-        this.$router.push('/projects/1', () => {
+        this.$router.push(`/projects/${this.projectId}`, () => {
           this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
         });
       });

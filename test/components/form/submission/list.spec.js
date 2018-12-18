@@ -11,23 +11,25 @@ import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';
 
 const submissionsPath = (form) =>
-  `/forms/${encodeURIComponent(form.xmlFormId)}/submissions`;
+  `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}/submissions`;
 
 describe('FormSubmissionList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute(submissionsPath(testData.extendedForms.createPast(1).first()))
+      mockRoute('/projects/1/forms/x')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
     it('after login, user is redirected back', () => {
+      const project = testData.simpleProjects.createPast(1).last();
       const form = testData.extendedForms
         .createPast(1, { submissions: 0 })
         .last();
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
+        .respondWithData(() => project)
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
@@ -39,6 +41,7 @@ describe('FormSubmissionList', () => {
 
     it('updates the component after the route updates', () => {
       mockLogin();
+      const project = testData.simpleProjects.createPast(1).last();
       const forms = testData.extendedForms
         .createPast(1, { xmlFormId: 'a', submissions: 1 })
         .createPast(1, { xmlFormId: 'b', submissions: 1 })
@@ -49,9 +52,10 @@ describe('FormSubmissionList', () => {
         .createPast(1, { form: forms[1] });
       return mockRoute(submissionsPath(forms[0]))
         .beforeEachResponse((app, request, index) => {
-          if (index === 2)
-            request.url.should.equal('/forms/a.schema.json?flatten=true');
+          if (index === 3)
+            request.url.should.equal('/projects/1/forms/a.schema.json?flatten=true');
         })
+        .respondWithData(() => project)
         .respondWithData(() => forms[0])
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => forms[0]._schema)
@@ -60,7 +64,7 @@ describe('FormSubmissionList', () => {
         .route(submissionsPath(forms[1]))
         .beforeEachResponse((app, request, index) => {
           if (index === 2)
-            request.url.should.equal('/forms/b.schema.json?flatten=true');
+            request.url.should.equal('/projects/1/forms/b.schema.json?flatten=true');
         })
         .respondWithData(() => forms[1])
         .respondWithData(() => testData.extendedFormAttachments.sorted())
@@ -73,21 +77,28 @@ describe('FormSubmissionList', () => {
     beforeEach(mockLogin);
 
     const form = () => testData.extendedForms.firstOrCreatePast();
+    const encodedFormId = () => encodeURIComponent(form().xmlFormId);
     const loadSubmissions = (
       count,
       factoryOptions = {},
       chunkSizes = [],
       scrolledToBottom = true
     ) => {
-      if (testData.extendedForms.size === 0)
+      if (testData.extendedForms.size === 0) {
+        if (testData.extendedProjects.size === 0)
+          testData.extendedProjects.createPast(1);
         testData.extendedForms.createPast(1, { submissions: count });
-      else if (form().submissions !== count)
+      } else if (form().submissions !== count) {
         throw new Error('form().submissions and count are inconsistent');
+      }
+      testData.extendedProjects.size.should.equal(1);
+      testData.extendedSubmissions.size.should.equal(0);
       testData.extendedSubmissions.createPast(count, factoryOptions);
       const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
         .mount(FormSubmissionList, {
           propsData: {
+            projectId: 1,
             form: new Form(form()),
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom
@@ -137,6 +148,7 @@ describe('FormSubmissionList', () => {
         };
 
         it('contains the correct column headers', () => {
+          testData.extendedProjects.createPast(1);
           testData.extendedForms
             .createPast(1, { hasInstanceId: true, submissions: 1 });
           return loadSubmissions(1).afterResponses(component => {
@@ -372,8 +384,7 @@ describe('FormSubmissionList', () => {
               td.hasClass('form-submission-list-binary-column').should.be.true();
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
-              const encodedFormId = encodeURIComponent(form().xmlFormId);
-              $a.attr('href').should.equal(`/v1/forms/${encodedFormId}/submissions/abc%20123/attachments/def%20456.jpg`);
+              $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions/abc%20123/attachments/def%20456.jpg`);
               $a.find('.icon-check').length.should.equal(1);
               $a.find('.icon-download').length.should.equal(1);
             }));
@@ -419,6 +430,7 @@ describe('FormSubmissionList', () => {
         describe(hasClass ? 'is shown' : 'is not shown', () => {
           for (const [description, schema] of subcases) {
             it(description, () => {
+              testData.extendedProjects.createPast(1);
               testData.extendedForms.createPast(1, { schema, submissions: 1 });
               return loadSubmissions(1).afterResponses(component => {
                 component
@@ -435,8 +447,10 @@ describe('FormSubmissionList', () => {
 
     describe('refresh button', () => {
       for (let i = 1; i <= 2; i += 1) {
-        it(`refreshes part ${i} of table after refresh button is clicked`, () =>
-          mockRoute(submissionsPath(form()))
+        it(`refreshes part ${i} of table after refresh button is clicked`, () => {
+          testData.extendedProjects.createPast(1);
+          return mockRoute(submissionsPath(form()))
+            .respondWithData(() => testData.simpleProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .respondWithData(() => form()._schema)
@@ -444,7 +458,8 @@ describe('FormSubmissionList', () => {
               collection: testData.extendedSubmissions,
               respondWithData: testData.submissionOData,
               tableSelector: `#form-submission-list-table${i}`
-            }));
+            });
+        });
       }
     });
 
@@ -660,12 +675,15 @@ describe('FormSubmissionList', () => {
 
       describe('count update', () => {
         const loadFormOverview = (submissionCount, chunkSizes = []) => {
+          testData.extendedProjects.size.should.equal(0);
+          testData.extendedProjects.createPast(1);
           testData.extendedForms.size.should.equal(0);
           testData.extendedForms
             .createPast(1, { submissions: submissionCount });
           testData.extendedSubmissions.createPast(submissionCount);
           const [small = 250, large = 1000] = chunkSizes;
-          return mockRoute(`/forms/${form().xmlFormId}`)
+          return mockRoute(`/projects/1/forms/${encodedFormId()}`)
+            .respondWithData(() => testData.simpleProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .respondWithData(() => testData.simpleFieldKeys.sorted())
@@ -692,14 +710,14 @@ describe('FormSubmissionList', () => {
               p.text().should.containEql('10');
               p.text().should.not.containEql('11');
             })
-            .route(`/forms/${form().xmlFormId}/submissions`)
+            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => form()._schema)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData();
             })
             .complete()
-            .route(`/forms/${form().xmlFormId}`)
+            .route(`/projects/1/forms/${encodedFormId()}`)
             .then(app => {
               const p = app.find('.form-overview-step')[2].find('p')[1];
               p.text().should.containEql('11');
@@ -709,7 +727,7 @@ describe('FormSubmissionList', () => {
         it('updates the count in the download button', () =>
           loadFormOverview(10)
             .complete()
-            .route(`/forms/${form().xmlFormId}/submissions`)
+            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => form()._schema)
             .respondWithData(testData.submissionOData)
             .afterResponses(app => {
@@ -732,7 +750,7 @@ describe('FormSubmissionList', () => {
           loadFormOverview(4, [2])
             .complete()
             // 4 submissions exist. About to request $top=2, $skip=0.
-            .route(`/forms/${form().xmlFormId}/submissions`)
+            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => form()._schema)
             .respondWithData(() => testData.submissionOData(2, 0))
             .complete()
@@ -805,8 +823,7 @@ describe('FormSubmissionList', () => {
             const button = page.first('#form-submission-list-download-button');
             const $button = $(button.element);
             $button.prop('tagName').should.equal('A');
-            const encodedFormId = encodeURIComponent(form().xmlFormId);
-            $button.attr('href').should.equal(`/v1/forms/${encodedFormId}/submissions.csv.zip`);
+            $button.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions.csv.zip`);
           }));
     });
 

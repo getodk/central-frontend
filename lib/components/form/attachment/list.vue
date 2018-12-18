@@ -32,7 +32,8 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody>
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :form="form" :attachment="attachment"
+          :key="attachment.key" :project-id="projectId" :form="form"
+          :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -80,6 +81,10 @@ export default {
   // for other form-related components.
   inheritAttrs: false,
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
       type: Object,
       required: true
@@ -247,7 +252,7 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
-      const path = `/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
+      const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
       return this.post(path, file, {
         headers: { 'Content-Type': file.type },
         onUploadProgress: (progressEvent) => {

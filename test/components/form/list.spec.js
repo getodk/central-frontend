@@ -81,11 +81,11 @@ describe('FormList', () => {
           testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
         .afterResponse(app => {
           const href = app.first('.form-list-form-name').getAttribute('href');
-          href.should.equal('#/forms/a%20b');
+          href.should.equal('#/projects/1/forms/a%20b');
         })
         .request(app => trigger.click(app, '.form-list-form-name'))
         .beforeEachResponse((app, request, index) => {
-          if (index === 0) request.url.should.equal('/forms/a%20b');
+          if (index === 0) request.url.should.equal('/projects/1/forms/a%20b');
         })
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())

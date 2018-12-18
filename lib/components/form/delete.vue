@@ -43,13 +43,17 @@ export default {
   name: 'FormDelete',
   mixins: [request()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
+    projectId: {
+      type: Number,
+      required: true
     },
     form: {
       type: Form,
       required: true
+    },
+    state: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -59,7 +63,7 @@ export default {
   },
   methods: {
     del() {
-      this.delete(`/forms/${this.form.encodedId()}`)
+      this.delete(`/projects/${this.projectId}/forms/${this.form.encodedId()}`)
         .then(() => {
           this.$emit('hide');
           this.$emit('success');

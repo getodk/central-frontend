@@ -19,7 +19,7 @@ describe('FormDelete', () => {
 
   it('opens the modal upon button click', () => {
     const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { form };
+    const propsData = { projectId: 1, form };
     const page = mountAndMark(FormSettings, { propsData });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
@@ -28,7 +28,7 @@ describe('FormDelete', () => {
 
   it('standard button thinking things', () => {
     const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { form };
+    const propsData = { projectId: 1, form };
     return mockHttp()
       .mount(FormDelete, { propsData })
       .request(confirmDelete)
@@ -41,7 +41,8 @@ describe('FormDelete', () => {
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(2);
       const { xmlFormId } = testData.extendedForms.first();
-      return mockRoute(`/forms/${xmlFormId}/settings`)
+      return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => testData.extendedForms.first())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(component => {
@@ -53,7 +54,6 @@ describe('FormDelete', () => {
           return confirmDelete(app);
         })
         .respondWithSuccess()
-        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => testData.extendedForms.sorted());
     });
 

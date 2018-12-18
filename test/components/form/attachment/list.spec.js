@@ -10,14 +10,16 @@ import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 
 const form = () => testData.extendedForms.firstOrCreatePast();
-const overviewPath = () => `/forms/${encodeURIComponent(form().xmlFormId)}`;
+const overviewPath = () =>
+  `/projects/1/forms/${encodeURIComponent(form().xmlFormId)}`;
 const mediaFilesPath = () => {
   const encodedId = encodeURIComponent(form().xmlFormId);
-  return `/forms/${encodedId}/media-files`;
+  return `/projects/1/forms/${encodedId}/media-files`;
 };
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   if (route) {
     return mockRoute(mediaFilesPath(), { attachToDocument })
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
       .respondWithData(form)
       .respondWithData(() => testData.extendedFormAttachments.sorted());
   }
@@ -25,6 +27,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   return mockHttp()
     .mount(FormAttachmentList, {
       propsData: {
+        projectId: 1,
         form: new Form(form()),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))
@@ -42,6 +45,7 @@ describe('FormAttachmentList', () => {
 
     it('redirects the user back after login', () =>
       mockRouteThroughLogin(mediaFilesPath())
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(form)
         .respondWithData(() =>
           testData.extendedFormAttachments.createPast(1).sorted())
@@ -55,6 +59,7 @@ describe('FormAttachmentList', () => {
 
     it('is not shown if there are no form attachments', () =>
       mockRoute(overviewPath())
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.extendedFieldKeys.sorted())
@@ -66,6 +71,7 @@ describe('FormAttachmentList', () => {
 
     it('is shown if there are form attachments', () =>
       mockRoute(overviewPath())
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(form)
         .respondWithData(() => testData.extendedFormAttachments
           .createPast(1, { exists: false })
@@ -163,7 +169,7 @@ describe('FormAttachmentList', () => {
         const encodedFormId = encodeURIComponent(form().xmlFormId);
         const { name } = testData.extendedFormAttachments.last();
         const encodedName = encodeURIComponent(name);
-        $a.attr('href').should.equal(`/v1/forms/${encodedFormId}/attachments/${encodedName}`);
+        $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId}/attachments/${encodedName}`);
       });
     });
 

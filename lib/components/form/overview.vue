@@ -128,6 +128,10 @@ export default {
   // for other form-related components.
   inheritAttrs: false,
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
       type: Form,
       required: true
@@ -182,7 +186,7 @@ export default {
       return 'later';
     },
     formPath(suffix) {
-      return `/forms/${this.form.encodedId()}/${suffix}`;
+      return `/projects/${this.projectId}/forms/${this.form.encodedId()}/${suffix}`;
     }
   }
 };

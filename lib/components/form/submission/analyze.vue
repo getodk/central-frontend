@@ -79,13 +79,17 @@ import Form from '../../../presenters/form';
 export default {
   name: 'FormSubmissionAnalyze',
   props: {
-    state: {
-      type: Boolean,
-      default: false
+    projectId: {
+      type: Number,
+      required: true
     },
     form: {
       type: Form,
       required: true
+    },
+    state: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -110,7 +114,7 @@ export default {
       };
     },
     oDataUrl() {
-      const base = `${window.location.origin}/v1/forms/${this.form.encodedId()}.svc`;
+      const base = `${window.location.origin}/v1/projects/${this.projectId}/forms/${this.form.encodedId()}.svc`;
       return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
     }
   },

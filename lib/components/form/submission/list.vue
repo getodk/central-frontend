@@ -45,8 +45,8 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <form-submission-row v-for="(submission, index) in submissions"
-            :key="submission.__id" :form="form" :submission="submission"
-            :row-number="originalCount - index"/>
+            :key="submission.__id" :project-id="projectId" :form="form"
+            :submission="submission" :row-number="originalCount - index"/>
         </tbody>
       </table>
       <!-- The next table element contains the form-field data and instance ID
@@ -66,8 +66,8 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody>
             <form-submission-row v-for="submission of submissions"
-              :key="submission.__id" :form="form" :submission="submission"
-              :field-columns="fieldColumns"/>
+              :key="submission.__id" :project-id="projectId" :form="form"
+              :submission="submission" :field-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>
@@ -78,8 +78,8 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div id="form-submission-list-message-text">{{ message.text }}</div>
     </div>
-    <form-submission-analyze :state="analyze.state" :form="form"
-      @hide="hideModal('analyze')"/>
+    <form-submission-analyze :project-id="projectId" :form="form"
+      :state="analyze.state" @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -103,6 +103,10 @@ export default {
   // for other form-related components.
   inheritAttrs: false,
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
       type: Form,
       required: true
@@ -141,7 +145,7 @@ export default {
   },
   computed: {
     downloadHref() {
-      return `/v1/forms/${this.form.encodedId()}/submissions.csv.zip`;
+      return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
     // Returns information about the schema after processing it.
     schemaAnalysis() {
@@ -200,7 +204,7 @@ export default {
   methods: {
     chunkURL({ top, skip = 0 }) {
       const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
-      return `/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
+      return `/projects/${this.projectId}/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
     },
     processChunk({ data }, replace) {
       if (data['@odata.count'] !== this.form.submissions)
@@ -264,7 +268,7 @@ export default {
     },
     fetchSchemaAndFirstChunk() {
       const schemaRequest = this.$http
-        .get(`/forms/${this.form.encodedId()}.schema.json?flatten=true`);
+        .get(`/projects/${this.projectId}/forms/${this.form.encodedId()}.schema.json?flatten=true`);
       const submissionsRequest = this.$http
         .get(this.chunkURL({ top: this.chunkSizes.small }));
       this.requestAll([schemaRequest, submissionsRequest])
