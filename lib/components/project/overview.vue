@@ -23,8 +23,8 @@ except according to the terms contained in the LICENSE file.
         <form-list :project-id="projectId"/>
       </template>
     </page-section>
-    <form-new v-bind="newForm" @hide="hideModal('newForm')"
-      @success="afterCreate"/>
+    <form-new :project-id="projectId" :state="newForm.state"
+      @hide="hideModal('newForm')" @success="afterCreate"/>
   </div>
 </template>
 

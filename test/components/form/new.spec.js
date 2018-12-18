@@ -12,6 +12,11 @@ const findModal = (wrapper) => wrapper.first(FormNew);
 const openModal = (wrapper) => trigger
   .click(wrapper, '#project-overview-new-form-button')
   .then(() => findModal(wrapper));
+const propsData = () => ({
+  propsData: {
+    projectId: 1
+  }
+});
 const createForm = (modal) => {
   testData.extendedForms.createNew({ hasSubmission: false });
   return modal;
@@ -67,7 +72,7 @@ describe('FormNew', () => {
   describe('no file selection', () => {
     let modal;
     beforeEach(() => {
-      modal = mountAndMark(FormNew);
+      modal = mountAndMark(FormNew, propsData());
     });
 
     it('initially shows no alert', () => {
@@ -81,7 +86,7 @@ describe('FormNew', () => {
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
       it('disables the create button during file read', () =>
-        Promise.resolve(mountAndMark(FormNew))
+        Promise.resolve(mountAndMark(FormNew, propsData()))
           .then(createForm)
           .then(selectFile)
           .then(modal => {
@@ -93,7 +98,7 @@ describe('FormNew', () => {
           .then(waitForRead));
 
       it('modal is updated after file read', () =>
-        Promise.resolve(mountAndMark(FormNew))
+        Promise.resolve(mountAndMark(FormNew, propsData()))
           .then(createForm)
           .then(selectFile)
           .then(waitForRead)
@@ -107,7 +112,7 @@ describe('FormNew', () => {
 
       it('standard button thinking things', () =>
         mockHttp()
-          .mount(FormNew)
+          .mount(FormNew, propsData())
           .request(modal => Promise.resolve(modal)
             .then(createForm)
             .then(selectFile)
@@ -163,7 +168,7 @@ describe('FormNew', () => {
 
       it('shows a custom error message for a 400.5 problem', () =>
         mockHttp()
-          .mount(FormNew)
+          .mount(FormNew, propsData())
           .request(modal => Promise.resolve(modal)
             .then(createForm)
             .then(selectFile)

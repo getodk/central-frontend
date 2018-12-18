@@ -67,6 +67,10 @@ export default {
     request()
   ],
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     state: {
       type: Boolean,
       default: false
@@ -152,7 +156,7 @@ export default {
         return;
       }
       const headers = { 'Content-Type': 'application/xml' };
-      this.post('/forms', this.xml, { headers })
+      this.post(`/projects/${this.projectId}/forms`, this.xml, { headers })
         .then(({ data }) => {
           this.$emit('hide');
           this.filename = null;
