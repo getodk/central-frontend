@@ -10,18 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-body v-if="form == null">
-    <loading :state="awaitingResponse"/>
-  </page-body>
-  <div v-else>
-    <page-head>
-      <template slot="title">{{ form.nameOrId() }}</template>
+  <div>
+    <page-head v-show="form != null">
+      <template slot="title">
+        {{ form != null ? form.nameOrId() : '' }}
+      </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="attachments.length !== 0" :class="tabClass('media-files')"
-          role="presentation">
+        <li v-if="attachments != null && attachments.length !== 0"
+          :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
             <span v-show="missingAttachments !== 0" class="badge">
@@ -38,13 +37,20 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <keep-alive>
-        <router-view :form="form" :attachments="attachments"
-          :chunk-sizes="submissionChunkSizes"
-          :scrolled-to-bottom="scrolledToBottom"
-          @attachment-change="updateAttachment"
-          @update:submissions="updateSubmissions" @state-change="updateState"/>
-      </keep-alive>
+      <loading :state="awaitingResponse"/>
+      <!-- It might be possible to remove this <div> element and move the v-if
+      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
+      supports that use case. -->
+      <div v-if="form != null">
+        <keep-alive>
+          <router-view :form="form" :attachments="attachments"
+            :chunk-sizes="submissionChunkSizes"
+            :scrolled-to-bottom="scrolledToBottom"
+            @attachment-change="updateAttachment"
+            @update:submissions="updateSubmissions"
+            @state-change="updateState"/>
+        </keep-alive>
+      </div>
     </page-body>
   </div>
 </template>
