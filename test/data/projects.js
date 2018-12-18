@@ -1,7 +1,38 @@
-import faker from '../faker';
-import { dataStore } from './data-store';
+import R from 'ramda';
 
-// eslint-disable-next-line import/prefer-default-export
+import faker from '../faker';
+import { dataStore, view } from './data-store';
+
 export const extendedProjects = dataStore({
-  factory: ({ id, name = faker.name.findName() }) => ({ id, name })
+  factory: ({
+    inPast,
+    id,
+    lastCreatedAt,
+
+    name = faker.name.findName(),
+    // The default value of this property does not necessarily match
+    // testData.extendedForms.
+    forms = faker.random.number()
+  }) => {
+    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
+      lastCreatedAt
+    ]);
+    return {
+      id,
+      name,
+      forms,
+      // This property does not necessarily match testData.extendedSubmissions.
+      lastSubmission: forms !== 0 && faker.random.boolean()
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null,
+      createdAt,
+      updatedAt
+    };
+  },
+  sort: 'name'
 });
+
+export const simpleProjects = view(
+  extendedProjects,
+  R.omit(['forms', 'lastSubmission'])
+);
