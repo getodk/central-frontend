@@ -23,14 +23,14 @@ describe('RootHome', () => {
     beforeEach(mockLogin);
 
     it('routes user to site root after user clicks on navbar header', () =>
-      mockRoute('/forms')
-        .respondWithData(() => testData.extendedForms.sorted())
+      mockRoute('/users')
+        .respondWithData(() => testData.administrators.sorted())
         .complete()
-        .request(app => trigger.click(app.first('.navbar-brand')))
-        .respondWithProblem()
-        .respondWithProblem()
-        .respondWithProblem()
-        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+        .request(app => trigger.click(app, '.navbar-brand'))
+        .respondWithProblems([500, 500, 500])
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
 
     describe('loading message', () => {
       it('shows the loading message until all three responses');
