@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
           <div class="panel-body">
             <p class="text-center">
               <button :disabled="awaitingResponse" type="button"
-                class="btn btn-danger" @click="deleteForm.state = true">
+                class="btn btn-danger" @click="showModal('deleteForm')">
                 Delete this form
               </button>
             </p>
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <form-delete :state="deleteForm.state" :form="form"
-      @hide="deleteForm.state = false" @success="afterDelete"/>
+      @hide="hideModal('deleteForm')" @success="afterDelete"/>
   </div>
 </template>
 
