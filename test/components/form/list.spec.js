@@ -63,7 +63,11 @@ describe('FormList', () => {
 
     it('shows a message if there are no forms', () =>
       mockHttp()
-        .mount(FormList)
+        .mount(FormList, {
+          propsData: {
+            projectId: 1
+          }
+        })
         .respondWithData(() => [])
         .afterResponse(component => {
           const text = component.first('#form-list-message').text().trim();

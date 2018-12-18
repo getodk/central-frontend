@@ -42,6 +42,12 @@ export default {
   name: 'FormList',
   components: { FormRow },
   mixins: [request()],
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       requestId: null,
@@ -55,7 +61,7 @@ export default {
     fetchData() {
       this.forms = null;
       const headers = { 'X-Extended-Metadata': 'true' };
-      this.get('/forms', { headers })
+      this.get(`/projects/${this.projectId}/forms`, { headers })
         .then(({ data }) => {
           this.forms = data.map(form => new Form(form));
         })

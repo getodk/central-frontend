@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
-        <form-list/>
+        <form-list :project-id="projectId"/>
       </template>
     </page-section>
     <form-new v-bind="newForm" @hide="hideModal('newForm')"
