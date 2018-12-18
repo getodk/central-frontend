@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
   </page-body>
   <div v-else>
     <page-head>
-      <template slot="title">{{ form.name || form.xmlFormId }}</template>
+      <template slot="title">{{ form.nameOrId() }}</template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>

@@ -30,8 +30,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </float-row>
     <p v-if="submissions != null && submissions.length === 0">
-      There are no submissions yet for
-      <strong>{{ form.name || form.xmlFormId }}</strong>.
+      There are no submissions yet for <strong>{{ form.nameOrId() }}</strong>.
     </p>
     <template v-else-if="submissions != null">
       <!-- This table element contains the frozen columns of the submissions

@@ -37,6 +37,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import FormDelete from './delete.vue';
 import FormEdit from './edit.vue';
 import modal from '../../mixins/modal';
@@ -50,7 +51,7 @@ export default {
   inheritAttrs: false,
   props: {
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
@@ -67,10 +68,7 @@ export default {
     },
     afterDelete() {
       this.$router.push('/forms', () => {
-        const name = this.form.name != null
-          ? this.form.name
-          : this.form.xmlFormId;
-        this.$alert().success(`The form “${name}” was deleted.`);
+        this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
       });
     }
   }

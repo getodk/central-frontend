@@ -17,8 +17,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-introduction">
         <p>
           Are you sure you want to delete the form
-          <strong>{{ form.name || form.xmlFormId }}</strong> and all of its
-          submissions?
+          <strong>{{ form.nameOrId() }}</strong> and all of its submissions?
         </p>
         <p>This action cannot be undone.</p>
       </div>
