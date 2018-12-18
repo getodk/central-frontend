@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to ProjectShow's request
           for the project. -->
-          <router-view :project="project"/>
+          <router-view :project-id="id"/>
         </keep-alive>
       </div>
     </page-body>
@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     id() {
-      return this.$route.params.id;
+      return parseInt(this.$route.params.id, 10);
     }
   },
   watch: {
