@@ -3,7 +3,6 @@ import R from 'ramda';
 import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
-import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -100,7 +99,7 @@ export const extendedForms = dataStore({
       _schema: schema
     };
   },
-  sort: sortByUpdatedAtOrCreatedAtDesc
+  sort: 'name'
 });
 
 export const simpleForms = view(extendedForms, (extendedForm) => {

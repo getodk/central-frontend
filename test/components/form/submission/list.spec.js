@@ -42,8 +42,7 @@ describe('FormSubmissionList', () => {
       const forms = testData.extendedForms
         .createPast(1, { xmlFormId: 'a', submissions: 1 })
         .createPast(1, { xmlFormId: 'b', submissions: 1 })
-        .sorted()
-        .reverse();
+        .sorted();
       forms[0].xmlFormId.should.equal('a');
       testData.extendedSubmissions
         .createPast(1, { form: forms[0] })
