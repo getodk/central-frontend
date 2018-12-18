@@ -26,30 +26,7 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody>
-          <tr v-for="form of forms" :key="form.xmlFormId">
-            <td>
-              <div>
-                <router-link :to="`/forms/${form.xmlFormId}`"
-                  class="form-list-form-name">
-                  {{ form.name || form.xmlFormId }}
-                  <span class="icon-angle-right"></span>
-                </router-link>
-              </div>
-              <div v-if="form.name != null" class="form-list-form-id">
-                {{ form.xmlFormId }}
-              </div>
-              <div class="form-list-submissions">{{ submissions(form) }}</div>
-            </td>
-            <td>
-              {{ form.createdBy != null ? form.createdBy.displayName : '' }}
-            </td>
-            <td>
-              {{ lastModified(form) }}
-            </td>
-            <td>
-              {{ lastSubmission(form) }}
-            </td>
-          </tr>
+          <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
         </tbody>
       </table>
     </template>
@@ -57,11 +34,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormRow from './row.vue';
 import request from '../../mixins/request';
-import { formatDate } from '../../util';
 
 export default {
   name: 'FormList',
+  components: { FormRow },
   mixins: [request()],
   data() {
     return {
@@ -81,17 +59,6 @@ export default {
           this.forms = data;
         })
         .catch(() => {});
-    },
-    submissions(form) {
-      const count = form.submissions.toLocaleString();
-      const s = form.submissions !== 1 ? 's' : '';
-      return `${count} submission${s}`;
-    },
-    lastModified(form) {
-      return formatDate(form.updatedAt != null ? form.updatedAt : form.createdAt);
-    },
-    lastSubmission(form) {
-      return formatDate(form.lastSubmission);
     }
   }
 };
