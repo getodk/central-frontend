@@ -111,7 +111,7 @@ export default {
     },
     oDataUrl() {
       const base = `${window.location.origin}/v1/forms/${this.form.encodedId()}.svc`;
-      return this.tool !== 'tableau' ? base : `${base}/Submissions?$wkt=true`;
+      return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
     }
   },
   methods: {

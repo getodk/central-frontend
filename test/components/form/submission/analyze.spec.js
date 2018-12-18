@@ -88,8 +88,12 @@ describe('FormSubmissionAnalyze', () => {
       .then(() => clickTab(modal, 'Excel/Power BI'))
       .then(() => assertContent('Excel/Power BI', '', true)));
 
-    it('Tableau', () => clickTab(modal, 'Tableau')
-      .then(() => assertContent('Tableau', '/Submissions?$wkt=true', true)));
+    it('Tableau', () =>
+      clickTab(modal, 'Tableau').then(() => assertContent(
+        'Tableau',
+        `/Submissions?${encodeURIComponent('$')}wkt=true`,
+        true
+      )));
 
     it('Other', () => clickTab(modal, 'Other')
       .then(() => assertContent('Other', '', false)));
