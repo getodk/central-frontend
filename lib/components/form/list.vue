@@ -34,6 +34,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import FormRow from './row.vue';
 import request from '../../mixins/request';
 
@@ -56,7 +57,7 @@ export default {
       const headers = { 'X-Extended-Metadata': 'true' };
       this.get('/forms', { headers })
         .then(({ data }) => {
-          this.forms = data;
+          this.forms = data.map(form => new Form(form));
         })
         .catch(() => {});
     }

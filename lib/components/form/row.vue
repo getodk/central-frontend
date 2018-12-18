@@ -15,8 +15,7 @@ except according to the terms contained in the LICENSE file.
       <div>
         <router-link :to="`/forms/${form.xmlFormId}`"
           class="form-list-form-name">
-          {{ form.name || form.xmlFormId }}
-          <span class="icon-angle-right"></span>
+          {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>
       </div>
       <div v-if="form.name != null" class="form-list-form-id">
@@ -34,21 +33,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import { formatDate } from '../../util';
 
 export default {
   name: 'FormRow',
   props: {
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
   computed: {
     updatedOrCreatedAt() {
-      return formatDate(this.form.updatedAt != null
-        ? this.form.updatedAt
-        : this.form.createdAt);
+      return formatDate(this.form.updatedOrCreatedAt());
     },
     lastSubmission() {
       return formatDate(this.form.lastSubmission);
