@@ -141,7 +141,7 @@ body {
   min-height: 100vh;
 }
 
-h1 {
+h1, .h1 {
   font-size: 30px;
   font-weight: bold;
   letter-spacing: -0.02em;

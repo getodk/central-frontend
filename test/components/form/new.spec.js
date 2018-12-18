@@ -147,7 +147,7 @@ describe('FormNew', () => {
         });
 
         it('shows form name', () => {
-          app.first('#page-head h1').text().trim().should.equal(form.name);
+          app.first('#page-head-title').text().trim().should.equal(form.name);
         });
 
         it('shows success message', () => {

@@ -32,14 +32,14 @@ export default {
 }
 
 .page-section-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+
   > span:first-child {
     color: #555;
     font-weight: bold;
     margin-right: 6px;
   }
-
-  font-size: 24px;
-  margin-bottom: 20px;
-  margin-top: 10px;
 }
 </style>
