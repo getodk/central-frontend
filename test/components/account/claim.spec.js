@@ -8,19 +8,15 @@ const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 
 describe('AccountClaim', () => {
   describe('navigation to /account/claim', () => {
-    it('redirects to the root page after a login through the login page', () => {
-      const { xmlFormId } = testData.extendedForms.createPast(1).last();
-      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
+    it('redirects to the root page after a login through the login page', () =>
+      mockRouteThroughLogin('/users')
+        .respondWithData(() => testData.administrators.sorted())
         .complete()
         .route(LOCATION)
         .respondWithProblems([500, 500, 500])
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
-        });
-    });
+        }));
   });
 
   it('navbar is visible', () =>
