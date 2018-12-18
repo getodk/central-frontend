@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>Forms</span>
         <button id="form-list-new-button" type="button" class="btn btn-primary"
           @click="showModal('newForm')">
-          <span class="icon-plus-circle"></span>Create a new form
+          <span class="icon-plus-circle"></span>New
         </button>
       </template>
       <template slot="body">
