@@ -10,15 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="jumbotron">
-    <h1>Page Not Found</h1>
-    <p>The page you requested can’t be found. Press your browser’s Back button
-    to go back, or click the button below to return to the list of forms:</p>
-    <p>
-      <router-link to="/forms" class="btn btn-primary btn-lg" role="button">
-        Return to forms
-      </router-link>
-    </p>
+  <div class="row">
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+      <div class="panel panel-default panel-main">
+        <div class="panel-heading">
+          <h1 class="panel-title">Page Not Found</h1>
+        </div>
+        <div class="panel-body">
+          <p>The page you requested could not be found.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
