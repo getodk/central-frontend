@@ -92,6 +92,15 @@ Object.assign(fakerExtensions, {
   internet: {
     uniqueEmail: uniqueResult(() => faker.internet.email())
   },
+  random: {
+    hash: (length) => {
+      if (length < 1) throw new RangeError('invalid length');
+      let result = '';
+      for (let i = 0; i < length; i += 1)
+        result += faker.random.number({ max: 15 }).toString(16);
+      return result;
+    }
+  },
   central: {
     token: uniqueResult(() => faker.random.alphaNumeric(64)),
     xmlFormId: uniqueResult(() => `a${faker.random.alphaNumeric(8)}`)

@@ -80,7 +80,7 @@ export const extendedForms = dataStore({
       name,
       version,
       state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
-      hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
+      hash: faker.random.hash(32),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
       submissions,
