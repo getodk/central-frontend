@@ -10,7 +10,8 @@ import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';
 
-const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
+const submissionsPath = (form) =>
+  `/forms/${encodeURIComponent(form.xmlFormId)}/submissions`;
 
 describe('FormSubmissionList', () => {
   describe('routing', () => {
