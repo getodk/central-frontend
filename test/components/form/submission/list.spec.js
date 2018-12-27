@@ -16,7 +16,7 @@ const submissionsPath = (form) =>
 describe('FormSubmissionList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute('/projects/1/forms/x')
+      mockRoute('/projects/1/forms/x/submissions')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
@@ -76,7 +76,10 @@ describe('FormSubmissionList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    const form = () => testData.extendedForms.firstOrCreatePast();
+    const form = () => {
+      testData.extendedForms.size.should.equal(1);
+      return testData.extendedForms.last();
+    };
     const encodedFormId = () => encodeURIComponent(form().xmlFormId);
     const loadSubmissions = (
       count,
@@ -88,11 +91,12 @@ describe('FormSubmissionList', () => {
         if (testData.extendedProjects.size === 0)
           testData.extendedProjects.createPast(1);
         testData.extendedForms.createPast(1, { submissions: count });
-      } else if (form().submissions !== count) {
-        throw new Error('form().submissions and count are inconsistent');
       }
       testData.extendedProjects.size.should.equal(1);
+      testData.extendedForms.size.should.equal(1);
       testData.extendedSubmissions.size.should.equal(0);
+      if (form().submissions !== count)
+        throw new Error('form().submissions and count are inconsistent');
       testData.extendedSubmissions.createPast(count, factoryOptions);
       const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
@@ -449,6 +453,7 @@ describe('FormSubmissionList', () => {
       for (let i = 1; i <= 2; i += 1) {
         it(`refreshes part ${i} of table after refresh button is clicked`, () => {
           testData.extendedProjects.createPast(1);
+          testData.extendedForms.createPast(1);
           return mockRoute(submissionsPath(form()))
             .respondWithData(() => testData.simpleProjects.last())
             .respondWithData(form)

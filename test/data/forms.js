@@ -3,6 +3,7 @@ import R from 'ramda';
 import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
+import { extendedProjects } from './projects';
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -42,6 +43,8 @@ export const extendedForms = dataStore({
     inPast,
     lastCreatedAt,
 
+    // eslint-disable-next-line no-unused-vars
+    project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
     hasName = faker.random.boolean(),
     isOpen = !inPast || faker.random.boolean(),
