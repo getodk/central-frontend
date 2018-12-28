@@ -1,3 +1,4 @@
+import Form from '../../../lib/presenters/form';
 import FormDelete from '../../../lib/components/form/delete.vue';
 import FormSettings from '../../../lib/components/form/settings.vue';
 import testData from '../../data';
@@ -17,7 +18,8 @@ describe('FormDelete', () => {
   beforeEach(mockLogin);
 
   it('opens the modal upon button click', () => {
-    const propsData = { form: testData.extendedForms.createPast(1).last() };
+    const form = new Form(testData.extendedForms.createPast(1).last());
+    const propsData = { projectId: 1, form };
     const page = mountAndMark(FormSettings, { propsData });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
@@ -25,7 +27,8 @@ describe('FormDelete', () => {
   });
 
   it('standard button thinking things', () => {
-    const propsData = { form: testData.extendedForms.createPast(1).last() };
+    const form = new Form(testData.extendedForms.createPast(1).last());
+    const propsData = { projectId: 1, form };
     return mockHttp()
       .mount(FormDelete, { propsData })
       .request(confirmDelete)
@@ -35,9 +38,11 @@ describe('FormDelete', () => {
   describe('after successful response', () => {
     let app;
     beforeEach(() => {
+      testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(2);
       const { xmlFormId } = testData.extendedForms.first();
-      return mockRoute(`/forms/${xmlFormId}/settings`)
+      return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => testData.extendedForms.first())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(component => {
@@ -52,8 +57,8 @@ describe('FormDelete', () => {
         .respondWithData(() => testData.extendedForms.sorted());
     });
 
-    it('redirects user to form list', () => {
-      app.vm.$route.path.should.equal('/forms');
+    it('navigates to the project overview', () => {
+      app.vm.$route.path.should.equal('/projects/1');
     });
 
     it('shows a success message', () => {

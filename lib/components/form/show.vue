@@ -10,18 +10,23 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-body v-if="form == null">
-    <loading :state="awaitingResponse"/>
-  </page-body>
-  <div v-else>
-    <page-head>
-      <template slot="title">{{ form.name || form.xmlFormId }}</template>
+  <div>
+    <page-head v-show="project != null && form != null">
+      <template slot="context">
+        <span>{{ project != null ? project.name : '' }}</span>
+        <router-link :to="`/projects/${projectId}`">
+          Back to Project Overview
+        </router-link>
+      </template>
+      <template slot="title">
+        {{ form != null ? form.nameOrId() : '' }}
+      </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="attachments.length !== 0" :class="tabClass('media-files')"
-          role="presentation">
+        <li v-if="attachments != null && attachments.length !== 0"
+          :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
             <span v-show="missingAttachments !== 0" class="badge">
@@ -38,13 +43,20 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <keep-alive>
-        <router-view :form="form" :attachments="attachments"
-          :chunk-sizes="submissionChunkSizes"
-          :scrolled-to-bottom="scrolledToBottom"
-          @attachment-change="updateAttachment"
-          @update:submissions="updateSubmissions" @state-change="updateState"/>
-      </keep-alive>
+      <loading :state="project == null || awaitingResponse"/>
+      <!-- It might be possible to remove this <div> element and move the v-if
+      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
+      supports that use case. -->
+      <div v-if="project != null && form != null">
+        <keep-alive>
+          <router-view :project-id="projectId" :form="form"
+            :attachments="attachments" :chunk-sizes="submissionChunkSizes"
+            :scrolled-to-bottom="scrolledToBottom"
+            @attachment-change="updateAttachment"
+            @update:submissions="updateSubmissions"
+            @state-change="updateState"/>
+        </keep-alive>
+      </div>
     </page-body>
   </div>
 </template>
@@ -59,6 +71,13 @@ import tab from '../../mixins/tab';
 export default {
   name: 'FormShow',
   mixins: [request(), tab()],
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
+    project: Object // eslint-disable-line vue/require-default-prop
+  },
   data() {
     return {
       requestId: null,
@@ -73,6 +92,9 @@ export default {
   computed: {
     xmlFormId() {
       return this.$route.params.xmlFormId;
+    },
+    encodedFormId() {
+      return encodeURIComponent(this.xmlFormId);
     },
     missingAttachments() {
       return this.attachments.filter(attachment => !attachment.exists).length;
@@ -90,10 +112,11 @@ export default {
     fetchData() {
       this.form = null;
       this.attachments = null;
+      const formPath = `/projects/${this.projectId}/forms/${this.encodedFormId}`;
       const headers = { 'X-Extended-Metadata': 'true' };
       this.requestAll([
-        this.$http.get(`/forms/${this.xmlFormId}`, { headers }),
-        this.$http.get(`/forms/${this.xmlFormId}/attachments`, { headers })
+        this.$http.get(formPath, { headers }),
+        this.$http.get(`${formPath}/attachments`, { headers })
       ])
         .then(([form, attachments]) => {
           this.form = new Form(form.data);
@@ -103,7 +126,7 @@ export default {
         .catch(() => {});
     },
     tabPathPrefix() {
-      return `/forms/${this.xmlFormId}`;
+      return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
     },
     updateAttachment(newAttachment) {
       const index = this.attachments

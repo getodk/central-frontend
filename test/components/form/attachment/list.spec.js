@@ -9,23 +9,28 @@ import { formatDate } from '../../../../lib/util';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 
-const form = () => testData.extendedForms.firstOrCreatePast();
-const overviewPath = () => `/forms/${encodeURIComponent(form().xmlFormId)}`;
-const mediaFilesPath = () => {
-  const encodedId = encodeURIComponent(form().xmlFormId);
-  return `/forms/${encodedId}/media-files`;
-};
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
+  // It is expected that test data is created before loadAttachments() is
+  // called.
+  testData.extendedProjects.size.should.equal(1);
+  testData.extendedForms.size.should.equal(1);
+  testData.extendedFormAttachments.size.should.not.equal(0);
+
+  const form = testData.extendedForms.last();
   if (route) {
-    return mockRoute(mediaFilesPath(), { attachToDocument })
-      .respondWithData(form)
+    const encodedFormId = encodeURIComponent(form.xmlFormId);
+    const path = `/projects/1/forms/${encodedFormId}/media-files`;
+    return mockRoute(path, { attachToDocument })
+      .respondWithData(() => testData.simpleProjects.last())
+      .respondWithData(() => form)
       .respondWithData(() => testData.extendedFormAttachments.sorted());
   }
   if (attachToDocument) throw new Error('invalid options');
   return mockHttp()
     .mount(FormAttachmentList, {
       propsData: {
-        form: new Form(form()),
+        projectId: 1,
+        form: new Form(form),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))
       }
@@ -36,17 +41,21 @@ const blankFiles = (names) => names.map(name => new File([''], name));
 describe('FormAttachmentList', () => {
   describe('routing', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute(mediaFilesPath())
+      mockRoute('/projects/1/forms/x/media-files')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
     it('redirects the user back after login', () =>
-      mockRouteThroughLogin(mediaFilesPath())
-        .respondWithData(form)
+      mockRouteThroughLogin('/projects/1/forms/x/media-files')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() =>
           testData.extendedFormAttachments.createPast(1).sorted())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal(mediaFilesPath());
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/x/media-files');
         }));
   });
 
@@ -54,10 +63,12 @@ describe('FormAttachmentList', () => {
     beforeEach(mockLogin);
 
     it('is not shown if there are no form attachments', () =>
-      mockRoute(overviewPath())
-        .respondWithData(form)
+      mockRoute('/projects/1/forms/x')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text());
@@ -65,12 +76,14 @@ describe('FormAttachmentList', () => {
         }));
 
     it('is shown if there are form attachments', () =>
-      mockRoute(overviewPath())
-        .respondWithData(form)
+      mockRoute('/projects/1/forms/x')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments
           .createPast(1, { exists: false })
           .sorted())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text().trim().iTrim());
@@ -160,10 +173,11 @@ describe('FormAttachmentList', () => {
           .eq(1)
           .find('a');
         $a.prop('tagName').should.equal('A');
-        const encodedFormId = encodeURIComponent(form().xmlFormId);
+        const form = testData.extendedForms.last();
+        const encodedFormId = encodeURIComponent(form.xmlFormId);
         const { name } = testData.extendedFormAttachments.last();
         const encodedName = encodeURIComponent(name);
-        $a.attr('href').should.equal(`/v1/forms/${encodedFormId}/attachments/${encodedName}`);
+        $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId}/attachments/${encodedName}`);
       });
     });
 

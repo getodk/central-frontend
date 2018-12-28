@@ -17,8 +17,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-introduction">
         <p>
           Are you sure you want to delete the form
-          <strong>{{ form.name || form.xmlFormId }}</strong> and all of its
-          submissions?
+          <strong>{{ form.nameOrId() }}</strong> and all of its submissions?
         </p>
         <p>This action cannot be undone.</p>
       </div>
@@ -37,19 +36,24 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormDelete',
   mixins: [request()],
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
+    form: {
+      type: Form,
+      required: true
+    },
     state: {
       type: Boolean,
       default: false
-    },
-    form: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -59,12 +63,10 @@ export default {
   },
   methods: {
     del() {
-      this
-        .delete(`/forms/${this.form.xmlFormId}`)
+      this.delete(`/projects/${this.projectId}/forms/${this.form.encodedId()}`)
         .then(() => {
           this.$emit('hide');
-          // Wait for the modal to hide.
-          this.$nextTick(() => this.$emit('success'));
+          this.$emit('success');
         })
         .catch(() => {});
     }

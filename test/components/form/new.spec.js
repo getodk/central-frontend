@@ -10,8 +10,13 @@ const XML = '<a><b/></a>';
 
 const findModal = (wrapper) => wrapper.first(FormNew);
 const openModal = (wrapper) => trigger
-  .click(wrapper.first('#form-list-new-button'))
+  .click(wrapper, '#project-overview-new-form-button')
   .then(() => findModal(wrapper));
+const propsData = () => ({
+  propsData: {
+    projectId: 1
+  }
+});
 const createForm = (modal) => {
   testData.extendedForms.createNew({ hasSubmission: false });
   return modal;
@@ -45,23 +50,29 @@ describe('FormNew', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      // Mocking the route, because the table uses <router-link>.
-      mockRoute('/forms')
+      // Mocking the route, because FormList uses <router-link>.
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
-        .then(modal => modal.getProp('state').should.be.false()));
+        .then(modal => {
+          modal.getProp('state').should.be.false();
+        }));
 
     it('is shown after button click', () =>
-      mockRoute('/forms')
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
-        .then(modal => modal.getProp('state').should.be.true()));
+        .then(modal => {
+          modal.getProp('state').should.be.true();
+        }));
   });
 
   describe('no file selection', () => {
     let modal;
     beforeEach(() => {
-      modal = mountAndMark(FormNew);
+      modal = mountAndMark(FormNew, propsData());
     });
 
     it('initially shows no alert', () => {
@@ -75,7 +86,7 @@ describe('FormNew', () => {
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
       it('disables the create button during file read', () =>
-        Promise.resolve(mountAndMark(FormNew))
+        Promise.resolve(mountAndMark(FormNew, propsData()))
           .then(createForm)
           .then(selectFile)
           .then(modal => {
@@ -87,7 +98,7 @@ describe('FormNew', () => {
           .then(waitForRead));
 
       it('modal is updated after file read', () =>
-        Promise.resolve(mountAndMark(FormNew))
+        Promise.resolve(mountAndMark(FormNew, propsData()))
           .then(createForm)
           .then(selectFile)
           .then(waitForRead)
@@ -101,7 +112,7 @@ describe('FormNew', () => {
 
       it('standard button thinking things', () =>
         mockHttp()
-          .mount(FormNew)
+          .mount(FormNew, propsData())
           .request(modal => Promise.resolve(modal)
             .then(createForm)
             .then(selectFile)
@@ -112,7 +123,8 @@ describe('FormNew', () => {
       describe('after successful submit', () => {
         let app;
         let form;
-        beforeEach(() => mockRoute('/forms')
+        beforeEach(() => mockRoute('/projects/1')
+          .respondWithData(() => testData.simpleProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
@@ -131,20 +143,20 @@ describe('FormNew', () => {
           .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
         it('redirects to the form overview', () => {
-          app.vm.$route.path.should.equal(`/forms/${form.xmlFormId}`);
+          app.vm.$route.path.should.equal(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`);
         });
 
         it('shows form name', () => {
-          app.first('#page-head h1').text().trim().should.equal(form.name);
+          app.first('#page-head-title').text().trim().should.equal(form.name);
         });
 
         it('shows success message', () => {
           app.should.alert('success');
         });
 
-        describe('after navigating back to forms list', () => {
+        describe('after navigating back to the project overview', () => {
           beforeEach(() => mockHttp()
-            .route('/forms')
+            .route('/projects/1')
             .respondWithData(() => testData.extendedForms.sorted()));
 
           it('table has the correct number of rows', () => {
@@ -155,7 +167,7 @@ describe('FormNew', () => {
 
       it('shows a custom error message for a 400.5 problem', () =>
         mockHttp()
-          .mount(FormNew)
+          .mount(FormNew, propsData())
           .request(modal => Promise.resolve(modal)
             .then(createForm)
             .then(selectFile)

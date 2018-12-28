@@ -37,9 +37,9 @@ except according to the terms contained in the LICENSE file.
               </root-entity>
             </div>
           </div>
-          <hr>
-          <root-entity :icons="['file-text']" name="Form"
-            data-from="/forms" route-to="/forms"
+          <!-- TODO. Remove this. -->
+          <root-entity v-show="false" :icons="['file-text']" name="Form"
+            data-from="/field-keys" route-to="/users/field-keys"
             @fetched="incrementCounter" @error="fetchError">
             which can be downloaded and administered as surveys on mobile
             clients.

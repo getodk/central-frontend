@@ -10,22 +10,37 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">Page Not Found</h1>
-        </div>
-        <div class="panel-body">
-          <p>The page you requested could not be found.</p>
-        </div>
-      </div>
+  <div class="page-section">
+    <div class="page-section-heading">
+      <slot name="heading"></slot>
+    </div>
+    <div>
+      <slot name="body"></slot>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'NotFound'
+  name: 'PageSection'
 };
 </script>
+
+<style lang="sass">
+.page-section {
+  border-top: 1px solid #777;
+  margin-bottom: 30px;
+}
+
+.page-section-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+
+  > span:first-child {
+    color: #555;
+    font-weight: bold;
+    margin-right: 6px;
+  }
+}
+</style>

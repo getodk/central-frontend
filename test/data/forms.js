@@ -3,7 +3,7 @@ import R from 'ramda';
 import faker from '../faker';
 import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
-import { sortByUpdatedAtOrCreatedAtDesc } from './sort';
+import { extendedProjects } from './projects';
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -43,6 +43,9 @@ export const extendedForms = dataStore({
     inPast,
     lastCreatedAt,
 
+    // eslint-disable-next-line no-unused-vars
+    project = extendedProjects.firstOrCreatePast(),
+    xmlFormId = faker.central.xmlFormId(),
     hasName = faker.random.boolean(),
     isOpen = !inPast || faker.random.boolean(),
 
@@ -75,11 +78,11 @@ export const extendedForms = dataStore({
       createdBy.createdAt
     ]);
     return {
-      xmlFormId: faker.central.xmlFormId(),
+      xmlFormId,
       name,
       version,
       state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
-      hash: faker.random.number({ max: (16 ** 32) - 1 }).toString(16).padStart('0'),
+      hash: faker.random.hash(32),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
       submissions,
@@ -99,7 +102,7 @@ export const extendedForms = dataStore({
       _schema: schema
     };
   },
-  sort: sortByUpdatedAtOrCreatedAtDesc
+  sort: 'name'
 });
 
 export const simpleForms = view(extendedForms, (extendedForm) => {

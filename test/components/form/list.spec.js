@@ -4,27 +4,35 @@ import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { trigger } from '../../event';
 
 describe('FormList', () => {
   describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
-      mockRoute('/forms')
+    it('redirects an anonymous user to login', () =>
+      mockRoute('/projects/1')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
-    it('after login, user is redirected back', () =>
-      mockRouteThroughLogin('/forms')
+    it('redirects the user back after login', () =>
+      mockRouteThroughLogin('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .afterResponse(app => app.vm.$route.path.should.equal('/forms')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/projects/1');
+        }));
   });
 
   describe('after login', () => {
     beforeEach(mockLogin);
 
     it('table contains the correct data', () => {
+      testData.extendedProjects.createPast(1);
       const forms = testData.extendedForms.createPast(2).sorted();
-      // Mocking the route, because the table uses <router-link>.
-      return mockRoute('/forms')
+      // Mocking the route, because FormList uses <router-link>.
+      return mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => forms)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
@@ -55,15 +63,35 @@ describe('FormList', () => {
 
     it('shows a message if there are no forms', () =>
       mockHttp()
-        .mount(FormList)
+        .mount(FormList, {
+          propsData: {
+            projectId: 1
+          }
+        })
         .respondWithData(() => [])
-        .afterResponse(page => {
-          const text = page.first('#page-body p').text().trim();
+        .afterResponse(component => {
+          const text = component.first('#form-list-message').text().trim();
           text.should.equal('To get started, add a form.');
         }));
 
-    it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/forms')
-        .testRefreshButton({ collection: testData.extendedForms }));
+    it('encodes the URL to the form overview page', () =>
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
+        .afterResponse(app => {
+          const href = app.first('.form-list-form-name').getAttribute('href');
+          href.should.equal('#/projects/1/forms/a%20b');
+        })
+        .request(app => trigger.click(app, '.form-list-form-name'))
+        .beforeEachResponse((app, request, index) => {
+          if (index === 0) request.url.should.equal('/projects/1/forms/a%20b');
+        })
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.simpleFieldKeys.sorted())
+        .afterResponses(app => {
+          app.vm.$route.params.xmlFormId.should.equal('a b');
+        }));
   });
 });

@@ -70,14 +70,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import request from '../../mixins/request';
 
 export default {
   name: 'FormEdit',
   mixins: [request()],
   props: {
+    projectId: {
+      type: Number,
+      required: true
+    },
     form: {
-      type: Object,
+      type: Form,
       required: true
     }
   },
@@ -90,8 +95,8 @@ export default {
   methods: {
     changeState(newState) {
       this.state = newState;
-      this
-        .patch(`/forms/${this.form.xmlFormId}`, { state: this.state })
+      const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}`;
+      this.patch(path, { state: this.state })
         .then(() => {
           this.$alert().success('Form settings saved!');
           this.$emit('state-change', this.state);

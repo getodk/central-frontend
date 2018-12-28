@@ -12,9 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="page-head" class="row">
     <div class="col-xs-12">
-      <h1 id="page-head-title"><slot name="title"></slot></h1>
-      <p><slot name="body"></slot></p>
-      <ul class="nav nav-tabs">
+      <div id="page-head-context">
+        <div><slot name="context"></slot></div>
+        <div></div>
+      </div>
+      <div id="page-head-title" class="h1"><slot name="title"></slot></div>
+      <p id="page-head-body"><slot name="body"></slot></p>
+      <ul id="page-head-tabs" class="nav nav-tabs">
         <slot name="tabs"></slot>
       </ul>
     </div>
@@ -33,28 +37,54 @@ export default {
 #page-head {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
+}
 
-  > .col-xs-12 {
-    > p {
-      color: #555;
-      font-size: 15px;
-      letter-spacing: -0.01em;
-      max-width: 645px;
+#page-head-context > :first-child {
+  background-color: #ddd;
+  font-size: 18px;
+
+  &:not(:empty) {
+    margin: 0 -15px;
+    padding: 15px;
+
+    + div {
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 12px solid #ddd;
+      height: 0;
+      margin-bottom: -10px;
+      width: 0;
     }
+  }
 
-    > .nav-tabs {
-      &:empty {
-        margin-top: 15px;
-      }
+  > span:first-child {
+    font-weight: bold;
+    margin-right: 5px;
+  }
 
-      > li {
-        margin-top: 5px;
+  > a {
+    font-size: 12px;
+  }
+}
 
-        &.active > a {
-          &, &:hover, &:focus {
-            background-color: $color-subpanel-active;
-          }
-        }
+#page-head-body {
+  color: #555;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  max-width: 645px;
+}
+
+#page-head-tabs {
+  &:empty {
+    margin-top: 15px;
+  }
+
+  > li {
+    margin-top: 5px;
+
+    &.active > a {
+      &, &:hover, &:focus {
+        background-color: $color-subpanel-active;
       }
     }
   }

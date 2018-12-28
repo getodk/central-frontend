@@ -3,22 +3,29 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../util';
 
-const overviewPath = (form) => `/forms/${form.xmlFormId}`;
+const overviewPath = (form) =>
+  `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`;
 
 describe('FormOverview', () => {
   describe('anonymous users', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute(overviewPath(testData.extendedForms.createPast(1).last()))
+      mockRoute('/projects/1/forms/x')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
     it('redirects the user back after login', () => {
-      const path = overviewPath(testData.extendedForms.createPast(1).last());
-      return mockRouteThroughLogin(path)
-        .respondWithData(() => testData.extendedForms.last())
+      const project = testData.simpleProjects.createPast(1).last();
+      const form = testData.extendedForms.createPast(1).last();
+      return mockRouteThroughLogin(overviewPath(form))
+        .respondWithData(() => project)
+        .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => testData.simpleFieldKeys.sorted())
-        .afterResponses(app => app.vm.$route.path.should.equal(path));
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal(overviewPath(form));
+        });
     });
   });
 
@@ -32,6 +39,7 @@ describe('FormOverview', () => {
       formIsOpen = true,
       fieldKeyCount = 0
     }) => {
+      testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { hasSubmission, isOpen: formIsOpen });
       if (attachmentCount !== 0) {
         testData.extendedFormAttachments.createPast(
@@ -42,6 +50,7 @@ describe('FormOverview', () => {
       // Using mockRoute() rather than mockHttp(), because FormOverview uses
       // <router-link>.
       return mockRoute(overviewPath(testData.extendedForms.last()))
+        .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         // Not using testData, because fieldKeyCount may be fairly large, and
@@ -91,7 +100,7 @@ describe('FormOverview', () => {
           const title = app.find('.form-overview-step')[4].first('p');
           title.hasClass('text-success').should.be.false();
         })
-        .route(`/forms/${testData.extendedForms.last().xmlFormId}/settings`)
+        .route(`/projects/1/forms/${testData.extendedForms.last().xmlFormId}/settings`)
         .request(app => {
           const formEdit = app.first('#form-edit');
           const closed = formEdit.first('input[type="radio"][value="closed"]');

@@ -8,11 +8,11 @@ import { mountAndMark } from '../../../destroy';
 import { trigger } from '../../../event';
 
 const createFormWithSubmission = () => {
-  testData.extendedForms.createPast(1);
-  testData.extendedSubmissions.createPast(1);
-  return testData.extendedForms.last();
+  testData.extendedProjects.createPast(1);
+  const form = testData.extendedForms.createPast(1, { submissions: 1 }).last();
+  testData.extendedSubmissions.createPast(1, { form });
+  return form;
 };
-const submissionsPath = (form) => `/forms/${form.xmlFormId}/submissions`;
 const clickAnalyzeButton = (wrapper) =>
   trigger.click(wrapper.first('#form-submission-list-analyze-button'))
     .then(() => wrapper);
@@ -30,7 +30,10 @@ describe('FormSubmissionAnalyze', () => {
   it('opens the modal upon button click', () =>
     mockHttp()
       .mount(FormSubmissionList, {
-        propsData: { form: new Form(createFormWithSubmission()) }
+        propsData: {
+          projectId: 1,
+          form: new Form(createFormWithSubmission())
+        }
       })
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
@@ -43,8 +46,11 @@ describe('FormSubmissionAnalyze', () => {
         component.first(FormSubmissionAnalyze).getProp('state').should.be.true();
       }));
 
-  it('selects the OData URL upon click', () =>
-    mockRoute(submissionsPath(createFormWithSubmission()), { attachToDocument: true })
+  it('selects the OData URL upon click', () => {
+    const { xmlFormId } = createFormWithSubmission();
+    const path = `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`;
+    return mockRoute(path, { attachToDocument: true })
+      .respondWithData(() => testData.simpleProjects.last())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
@@ -56,13 +62,17 @@ describe('FormSubmissionAnalyze', () => {
         const url = $('#form-submission-analyze-odata-url')[0];
         selection.anchorNode.should.equal(url);
         selection.focusNode.should.equal(url);
-      }));
+      });
+  });
 
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(FormSubmissionAnalyze, {
-        propsData: { form: new Form(createFormWithSubmission()) }
+        propsData: {
+          projectId: 1,
+          form: new Form(createFormWithSubmission())
+        }
       });
     });
 
@@ -72,7 +82,7 @@ describe('FormSubmissionAnalyze', () => {
       activeTab.first('a').text().trim().should.equal(tabText);
       // Test the OData URL.
       const { xmlFormId } = testData.extendedForms.last();
-      const baseUrl = `${window.location.origin}/v1/forms/${xmlFormId}.svc`;
+      const baseUrl = `${window.location.origin}/v1/projects/1/forms/${xmlFormId}.svc`;
       const url = `${baseUrl}${urlSuffix}`;
       modal.first('#form-submission-analyze-odata-url').text().trim().should.equal(url);
       // Test the presence of help text.
@@ -88,8 +98,12 @@ describe('FormSubmissionAnalyze', () => {
       .then(() => clickTab(modal, 'Excel/Power BI'))
       .then(() => assertContent('Excel/Power BI', '', true)));
 
-    it('Tableau', () => clickTab(modal, 'Tableau')
-      .then(() => assertContent('Tableau', '/Submissions?$wkt=true', true)));
+    it('Tableau', () =>
+      clickTab(modal, 'Tableau').then(() => assertContent(
+        'Tableau',
+        `/Submissions?${encodeURIComponent('$')}wkt=true`,
+        true
+      )));
 
     it('Other', () => clickTab(modal, 'Other')
       .then(() => assertContent('Other', '', false)));

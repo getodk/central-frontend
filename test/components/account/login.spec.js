@@ -98,17 +98,15 @@ describe('AccountLogin', () => {
   });
 
   describe('navigation to /login', () => {
-    it('redirects to the root page after a login through the login page', () => {
-      const { xmlFormId } = testData.extendedForms.createPast(1).last();
-      return mockRouteThroughLogin(`/forms/${xmlFormId}`)
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
+    it('redirects to the root page after a login through the login page', () =>
+      mockRouteThroughLogin('/users')
+        .respondWithData(() => testData.administrators.sorted())
         .complete()
         .route('/login')
         .respondWithProblems([500, 500, 500])
-        .afterResponse(app => app.vm.$route.path.should.equal('/'));
-    });
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
 
     it('redirects to the root page if the session is restored', () =>
       mockRoute('/login')

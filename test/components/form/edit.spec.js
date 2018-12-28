@@ -1,3 +1,4 @@
+import Form from '../../../lib/presenters/form';
 import FormEdit from '../../../lib/components/form/edit.vue';
 import Spinner from '../../../lib/components/spinner.vue';
 import faker from '../../faker';
@@ -6,11 +7,12 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const settingsPath = (form) => `/forms/${form.xmlFormId}/settings`;
-const propsData = () => {
-  const props = { form: testData.extendedForms.createPast(1).last() };
-  return { propsData: props };
-};
+const propsData = () => ({
+  propsData: {
+    projectId: 1,
+    form: new Form(testData.extendedForms.createPast(1).last())
+  }
+});
 const selectDifferentState = (formEdit) => {
   const inputs = formEdit.find('input')
     .filter(input => input.getAttribute('value') !== formEdit.data().state);
@@ -53,8 +55,10 @@ describe('FormEdit', () => {
           spinnerOfSelectedState(component).getProp('state').should.be.false()));
 
     it('shows a success message', () =>
-      mockRoute(settingsPath(testData.extendedForms.createPast(1).last()))
-        .respondWithData(() => testData.extendedForms.last())
+      mockRoute('/projects/1/forms/x/settings')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .complete()
         .request(app => selectDifferentState(app.first(FormEdit)))
