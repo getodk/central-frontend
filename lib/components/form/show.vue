@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="project != null && awaitingResponse"/>
+      <loading :state="project == null || awaitingResponse"/>
       <!-- It might be possible to remove this <div> element and move the v-if
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->

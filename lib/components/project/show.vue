@@ -22,14 +22,14 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="awaitingResponse"/>
+      <loading :state="project == null"/>
       <!-- It might be possible to remove this <div> element and move the v-show
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
       <div v-show="project != null">
         <keep-alive>
           <!-- <router-view> is immediately created and can send its own
-          requests even before the server has responded to ProjectShow's request
+          requests even before the server has responded to ProjectHome's request
           for the project. -->
           <router-view :project-id="projectId"/>
         </keep-alive>
