@@ -29,10 +29,9 @@ except according to the terms contained in the LICENSE file.
             </p>
             <p>
               For more information, please see
-              <!-- TODO. Add links. -->
-              <doc-link>this help article</doc-link>, and if you have any
-              feedback please visit
-              <a href="#" target="_blank">this forum thread</a>.
+              <doc-link to="central-projects/">this help article</doc-link>, and
+              if you have any feedback please visit
+              <a href="https://forum.opendatakit.org/t/16857" target="_blank">this forum thread</a>.
             </p>
           </template>
         </page-section>
