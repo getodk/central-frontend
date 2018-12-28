@@ -43,8 +43,8 @@ describe('FormSubmissionList', () => {
       mockLogin();
       const project = testData.simpleProjects.createPast(1).last();
       const forms = testData.extendedForms
-        .createPast(1, { xmlFormId: 'a', submissions: 1 })
-        .createPast(1, { xmlFormId: 'b', submissions: 1 })
+        .createPast(1, { xmlFormId: 'a', name: 'a', submissions: 1 })
+        .createPast(1, { xmlFormId: 'b', name: 'b', submissions: 1 })
         .sorted();
       forms[0].xmlFormId.should.equal('a');
       testData.extendedSubmissions
