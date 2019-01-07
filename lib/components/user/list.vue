@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-plus-circle"></span>Create Web User
       </button>
     </float-row>
-    <loading v-if="users == null" :state="awaitingResponse"/>
-    <table v-else id="user-list-table" class="table">
+    <loading :state="awaitingResponse && users == null"/>
+    <table v-if="users != null" id="user-list-table" class="table">
       <thead>
         <tr>
           <th>Email</th>
