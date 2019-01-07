@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
           <th>Created</th>
           <th>Last Used</th>
           <th>Configure Client</th>
-          <th class="field-key-list-actions">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
