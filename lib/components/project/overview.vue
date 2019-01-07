@@ -46,7 +46,8 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
-        <form-list :project-id="projectId"/>
+        <loading :state="awaitingResponse"/>
+        <form-list v-if="forms != null" :project-id="projectId" :forms="forms"/>
       </template>
     </page-section>
     <form-new :project-id="projectId" :state="newForm.state"
@@ -55,14 +56,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
 import modal from '../../mixins/modal';
+import request from '../../mixins/request';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
-  mixins: [modal('newForm')],
+  mixins: [modal('newForm'), request()],
   props: {
     projectId: {
       type: Number,
@@ -71,12 +74,26 @@ export default {
   },
   data() {
     return {
+      requestId: null,
+      forms: null,
       newForm: {
         state: false
       }
     };
   },
+  created() {
+    this.fetchData();
+  },
   methods: {
+    fetchData() {
+      this.forms = null;
+      const headers = { 'X-Extended-Metadata': 'true' };
+      this.get(`/projects/${this.projectId}/forms`, { headers })
+        .then(({ data }) => {
+          this.forms = data.map(form => new Form(form));
+        })
+        .catch(() => {});
+    },
     afterCreate(form) {
       // Wait for the modal to hide.
       this.$nextTick(() => {

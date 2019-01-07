@@ -2,8 +2,9 @@ import Form from '../../../lib/presenters/form';
 import FormList from '../../../lib/components/form/list.vue';
 import testData from '../../data';
 import { formatDate } from '../../../lib/util';
-import { mockHttp, mockRoute } from '../../http';
+import { mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mountAndMark } from '../../destroy';
 import { trigger } from '../../event';
 
 describe('FormList', () => {
@@ -30,7 +31,6 @@ describe('FormList', () => {
     it('table contains the correct data', () => {
       testData.extendedProjects.createPast(1);
       const forms = testData.extendedForms.createPast(2).sorted();
-      // Mocking the route, because FormList uses <router-link>.
       return mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.last())
         .respondWithData(() => forms)
@@ -61,18 +61,16 @@ describe('FormList', () => {
         });
     });
 
-    it('shows a message if there are no forms', () =>
-      mockHttp()
-        .mount(FormList, {
-          propsData: {
-            projectId: 1
-          }
-        })
-        .respondWithData(() => [])
-        .afterResponse(component => {
-          const text = component.first('#form-list-message').text().trim();
-          text.should.equal('To get started, add a form.');
-        }));
+    it('shows a message if there are no forms', () => {
+      const component = mountAndMark(FormList, {
+        propsData: {
+          projectId: 1,
+          forms: []
+        }
+      });
+      const text = component.first('#form-list-empty-message').text().trim();
+      text.should.equal('To get started, add a Form.');
+    });
 
     it('encodes the URL to the form overview page', () =>
       mockRoute('/projects/1')
