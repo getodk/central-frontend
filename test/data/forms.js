@@ -47,7 +47,9 @@ export const extendedForms = dataStore({
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
     name = faker.random.boolean() ? faker.name.findName() : null,
-    isOpen = !inPast || faker.random.boolean(),
+    state = !inPast
+      ? 'open'
+      : faker.random.arrayElement(['open', 'closing', 'closed']),
     submissions = !inPast || faker.random.boolean()
       ? 0
       : faker.random.number({ min: 1 }),
@@ -65,7 +67,7 @@ export const extendedForms = dataStore({
       xmlFormId,
       name,
       version,
-      state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
+      state,
       hash: faker.random.hash(32),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.

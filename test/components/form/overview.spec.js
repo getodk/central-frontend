@@ -41,8 +41,11 @@ describe('FormOverview', () => {
       fieldKeyCount = 0
     }) => {
       testData.extendedProjects.createPast(1);
+      const state = formIsOpen
+        ? 'open'
+        : faker.random.arrayElement(['closing', 'closed']);
       const submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-      testData.extendedForms.createPast(1, { isOpen: formIsOpen, submissions });
+      testData.extendedForms.createPast(1, { state, submissions });
       if (attachmentCount !== 0) {
         testData.extendedFormAttachments.createPast(
           attachmentCount,
