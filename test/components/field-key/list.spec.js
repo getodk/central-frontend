@@ -67,10 +67,6 @@ describe('FieldKeyList', () => {
           text.should.startWith('There are no app users yet.');
         }));
 
-    it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/users/field-keys')
-        .testRefreshButton({ collection: testData.extendedFieldKeys }));
-
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })

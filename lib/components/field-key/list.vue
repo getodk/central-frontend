@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <float-row class="table-actions">
-      <refresh-button slot="left" :fetching="awaitingResponse"
-        @refresh="fetchData({ clear: false })"/>
-      <button id="field-key-list-new-button" slot="right" type="button"
+      <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="newFieldKey.state = true">
         <span class="icon-plus-circle"></span>Create app user
       </button>
