@@ -11,14 +11,21 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <float-row class="table-actions">
+    <div id="field-key-list-heading">
       <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="showModal('newFieldKey')">
-        <span class="icon-plus-circle"></span>Create app user
+        <span class="icon-plus-circle"></span>Create App User
       </button>
-    </float-row>
+      <p>
+        App Users in this Project will be able to download and use all Forms
+        within this Project. A future update will allow you to customize which
+        App Users may access which Forms. Multiple devices can use the same App
+        User profile without problem. For more information,
+        <doc-link to="central-users/#managing-app-users">click here</doc-link>.
+      </p>
+    </div>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
-    <p v-else-if="fieldKeys.length === 0">
+    <p v-else-if="fieldKeys.length === 0" id="field-key-list-empty-message">
       There are no app users yet. You will need to create some to download forms
       and submit data from your device.
     </p>
@@ -180,6 +187,15 @@ export default {
 
 <style lang="sass">
 @import '../../../assets/scss/variables';
+
+#field-key-list-heading {
+  margin-bottom: 20px;
+
+  button {
+    float: right;
+    margin-left: 10px;
+  }
+}
 
 #field-key-list-table {
   > tbody > tr > td {

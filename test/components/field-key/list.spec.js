@@ -62,9 +62,8 @@ describe('FieldKeyList', () => {
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() => [])
-        .afterResponse(page => {
-          const text = page.first('p').text().trim();
-          text.should.startWith('There are no app users yet.');
+        .afterResponse(component => {
+          component.find('#field-key-list-empty-message').length.should.equal(1);
         }));
 
     describe('QR code', () => {
