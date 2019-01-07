@@ -40,6 +40,10 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
+        <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
+        ensure that there will be no component reuse if fieldKeys changes. Such
+        component reuse could add complexity around our use of the Bootstrap
+        plugin. -->
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
           :field-key="fieldKey" :highlighted="highlighted"
           @show-code="showPopover" @revoke="showRevoke"/>

@@ -74,8 +74,8 @@ export default {
       this.$emit('show-code', this.fieldKey, this.$refs.popoverLink);
     },
     revoke() {
-      // Bootstrap does not actually disable dropdown menu items marked as
-      // disabled.
+      // Bootstrap does not truly disable dropdown menu items marked as
+      // disabled, so we inspect the token again here.
       if (this.fieldKey.token == null) return;
       this.$emit('revoke', this.fieldKey);
     }
