@@ -62,12 +62,12 @@ except according to the terms contained in the LICENSE file.
               <strong>You have not created any App Users for this Project yet,
               so nobody will be able to use this Form.</strong> You can create
               them on the
-              <router-link to="/users/field-keys">
+              <router-link :to="`/projects/${projectId}/app-users`">
                 App Users tab of the Project page</router-link>.
             </template>
             <template v-else>
               Right now, this Project has
-              <router-link to="/users/field-keys">
+              <router-link :to="`/projects/${projectId}/app-users`">
                 <!-- Not using toLocaleString(), as a project with 1,000+ app
                 users is unlikely. -->
                 <strong>{{ $pluralize('App User', fieldKeys.length, true) }}</strong></router-link>,
