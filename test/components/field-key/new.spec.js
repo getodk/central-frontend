@@ -40,7 +40,12 @@ describe('FieldKeyNew', () => {
 
   it('standard button thinking things', () =>
     mockHttp()
-      .mount(FieldKeyNew)
+      .mount(FieldKeyNew, {
+        propsData: {
+          projectId: '1',
+          state: false
+        }
+      })
       .request(modal => submitForm(modal, 'form', [
         ['input', testData.extendedFieldKeys.createNew().displayName]
       ]))

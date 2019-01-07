@@ -80,6 +80,10 @@ export default {
   name: 'FieldKeyNew',
   mixins: [request()],
   props: {
+    projectId: {
+      type: String,
+      required: true
+    },
     state: {
       type: Boolean,
       default: false
@@ -100,8 +104,8 @@ export default {
       this.$refs.nickname.focus();
     },
     submit() {
-      this
-        .post('/field-keys', { displayName: this.nickname })
+      const path = `/projects/${this.projectId}/app-users`;
+      this.post(path, { displayName: this.nickname })
         .then(({ data }) => {
           // Reset the form.
           this.$alert().blank();

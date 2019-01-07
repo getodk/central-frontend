@@ -50,8 +50,8 @@ except according to the terms contained in the LICENSE file.
       </tbody>
     </table>
 
-    <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
-      @success="afterCreate"/>
+    <field-key-new :project-id="projectId" :state="newFieldKey.state"
+      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
     <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
       @success="afterRevoke"/>
   </div>
@@ -85,6 +85,7 @@ export default {
   ],
   data() {
     return {
+      projectId: '1',
       requestId: null,
       fieldKeys: null,
       highlighted: null,
