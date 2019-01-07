@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <loading :state="awaitingResponse"/>
-    <div v-if="fieldKeyCount !== null" class="panel panel-simple">
+    <loading :state="fieldKeys == null"/>
+    <div v-if="fieldKeys != null" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
         <form-overview-step :stage="stepStage(0)">
@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
             </template>
             App Users will be able to see this Form on their mobile device to
             download and fill out.
-            <template v-if="fieldKeyCount === 0">
+            <template v-if="fieldKeys.length === 0">
               <strong>You have not created any App Users for this Project yet,
               so nobody will be able to use this Form.</strong> You can create
               them on the
@@ -68,8 +68,9 @@ except according to the terms contained in the LICENSE file.
             <template v-else>
               Right now, this Project has
               <router-link to="/users/field-keys">
-                <strong>{{ fieldKeyCount.toLocaleString() }}
-                App Users</strong></router-link>,
+                <!-- Not using toLocaleString(), as a project with 1,000+ app
+                users is unlikely. -->
+                <strong>{{ $pluralize('App User', fieldKeys.length, true) }}</strong></router-link>,
               but you can always add more.
             </template>
             <doc-link to="central-submissions/">
@@ -120,12 +121,10 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import FormOverviewStep from './overview-step.vue';
-import request from '../../mixins/request';
 
 export default {
   name: 'FormOverview',
   components: { FormOverviewStep },
-  mixins: [request()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
@@ -134,6 +133,7 @@ export default {
       type: Number,
       required: true
     },
+    fieldKeys: Array, // eslint-disable-line vue/require-default-prop
     form: {
       type: Form,
       required: true
@@ -142,12 +142,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  data() {
-    return {
-      requestId: null,
-      fieldKeyCount: null
-    };
   },
   computed: {
     // Returns true if all form attachments exist and false if not. Returns true
@@ -169,19 +163,7 @@ export default {
       return this.stepCompletion.findIndex(isComplete => !isComplete);
     }
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
-    fetchData() {
-      this.fieldKeyCount = null;
-      this
-        .get('/field-keys')
-        .then(({ data }) => {
-          this.fieldKeyCount = data.length;
-        })
-        .catch(() => {});
-    },
     stepStage(step) {
       if (step === this.currentStep) return 'current';
       if (this.stepCompletion[step]) return 'complete';

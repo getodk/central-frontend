@@ -49,8 +49,9 @@ except according to the terms contained in the LICENSE file.
       supports that use case. -->
       <div v-if="project != null && form != null">
         <keep-alive>
-          <router-view :project-id="projectId" :form="form"
-            :attachments="attachments" :chunk-sizes="submissionChunkSizes"
+          <router-view :project-id="projectId" :field-keys="fieldKeys"
+            :form="form" :attachments="attachments"
+            :chunk-sizes="submissionChunkSizes"
             :scrolled-to-bottom="scrolledToBottom"
             @attachment-change="updateAttachment"
             @update:submissions="updateSubmissions"
@@ -76,7 +77,8 @@ export default {
       type: Number,
       required: true
     },
-    project: Object // eslint-disable-line vue/require-default-prop
+    project: Object, // eslint-disable-line vue/require-default-prop
+    fieldKeys: Array // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {

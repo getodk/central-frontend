@@ -14,6 +14,7 @@ describe('ProjectShow', () => {
         states.should.eql([true, true]);
       })
       .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedFieldKeys.sorted())
       .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponses(app => {
         const components = app.find(Loading);

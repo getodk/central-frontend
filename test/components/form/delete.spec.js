@@ -43,6 +43,7 @@ describe('FormDelete', () => {
       const { xmlFormId } = testData.extendedForms.first();
       return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
         .respondWithData(() => testData.simpleProjects.last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.first())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(component => {

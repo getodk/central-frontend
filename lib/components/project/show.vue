@@ -29,9 +29,9 @@ except according to the terms contained in the LICENSE file.
       <div v-show="project != null">
         <keep-alive>
           <!-- <router-view> is immediately created and can send its own
-          requests even before the server has responded to ProjectHome's request
-          for the project. -->
-          <router-view :project-id="projectId"/>
+          requests even before the server has responded to ProjectHome's
+          requests for the project and the project's app users. -->
+          <router-view :project-id="projectId" :field-keys="fieldKeys"/>
         </keep-alive>
       </div>
     </page-body>
@@ -49,7 +49,8 @@ export default {
       type: Number,
       required: true
     },
-    project: Object // eslint-disable-line vue/require-default-prop
+    project: Object, // eslint-disable-line vue/require-default-prop
+    fieldKeys: Array // eslint-disable-line vue/require-default-prop
   },
   methods: {
     tabPathPrefix() {

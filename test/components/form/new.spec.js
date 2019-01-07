@@ -50,9 +50,9 @@ describe('FormNew', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      // Mocking the route, because FormList uses <router-link>.
       mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
         .then(modal => {
@@ -62,6 +62,7 @@ describe('FormNew', () => {
     it('is shown after button click', () =>
       mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
         .then(modal => {
@@ -124,6 +125,7 @@ describe('FormNew', () => {
         let app;
         beforeEach(() => mockRoute('/projects/1')
           .respondWithData(() => testData.simpleProjects.createPast(1).last())
+          .respondWithData(() => testData.extendedFieldKeys.sorted())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
@@ -135,8 +137,7 @@ describe('FormNew', () => {
             .then(clickCreateButtonInModal))
           .respondWithData(() => testData.simpleForms.last()) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
-          .respondWithData(() => testData.extendedFormAttachments.sorted()) // FormShow
-          .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
+          .respondWithData(() => testData.extendedFormAttachments.sorted()));
 
         it('redirects to the form overview', () => {
           const form = testData.extendedForms.last();

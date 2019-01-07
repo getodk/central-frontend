@@ -70,7 +70,8 @@ export default {
     projectId: {
       type: Number,
       required: true
-    }
+    },
+    fieldKeys: Array // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {

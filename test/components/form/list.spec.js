@@ -19,6 +19,7 @@ describe('FormList', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/projects/1');
@@ -33,6 +34,7 @@ describe('FormList', () => {
       const forms = testData.extendedForms.createPast(2).sorted();
       return mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => forms)
         .afterResponse(page => {
           const tr = page.find('table tbody tr');
@@ -75,6 +77,7 @@ describe('FormList', () => {
     it('encodes the URL to the form overview page', () =>
       mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
         .afterResponse(app => {
@@ -87,7 +90,6 @@ describe('FormList', () => {
         })
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('a b');
         }));

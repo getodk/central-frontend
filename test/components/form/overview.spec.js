@@ -21,9 +21,9 @@ describe('FormOverview', () => {
       const form = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(overviewPath(form))
         .respondWithData(() => project)
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.simpleFieldKeys.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal(overviewPath(form));
         });
@@ -41,6 +41,7 @@ describe('FormOverview', () => {
       fieldKeyCount = 0
     }) => {
       testData.extendedProjects.createPast(1);
+      testData.extendedFieldKeys.createPast(fieldKeyCount);
       const state = formIsOpen
         ? 'open'
         : faker.random.arrayElement(['closing', 'closed']);
@@ -52,15 +53,11 @@ describe('FormOverview', () => {
           { exists: allAttachmentsExist }
         );
       }
-      // Using mockRoute() rather than mockHttp(), because FormOverview uses
-      // <router-link>.
       return mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.simpleProjects.last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
-        // Not using testData, because fieldKeyCount may be fairly large, and
-        // the component only uses the array length.
-        .respondWithData(() => new Array(fieldKeyCount));
+        .respondWithData(() => testData.extendedFormAttachments.sorted());
     };
 
     describe('submission count', () => {
@@ -92,13 +89,12 @@ describe('FormOverview', () => {
           text.should.containEql('You have not created any App Users for this Project yet');
         }));
 
-      it('at least one app user', () => {
-        const fieldKeyCount = 1000;
-        return loadOverview({ fieldKeyCount }).afterResponses(app => {
-          app.find('.form-overview-step')[2].find('p')[1].text().trim()
-            .should.containEql(fieldKeyCount.toLocaleString());
-        });
-      });
+      it('at least one app user', () =>
+        loadOverview({ fieldKeyCount: 1 }).afterResponses(app => {
+          const step = app.find('.form-overview-step')[2];
+          const text = step.find('p')[1].text().trim().iTrim();
+          text.should.containEql('1 App User');
+        }));
     });
 
     it('marks step 5 as complete if form state is changed from open', () =>
