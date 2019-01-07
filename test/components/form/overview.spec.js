@@ -66,10 +66,11 @@ describe('FormOverview', () => {
     describe('submission count', () => {
       it('no submissions', () =>
         loadOverview({ hasSubmission: false }).afterResponses(app => {
-          app.find('.form-overview-step')[2].find('p')[1].text().trim()
-            .should.containEql('Nobody has submitted any data to this form yet.');
-          app.find('.form-overview-step')[3].find('p')[1].text().trim()
-            .should.containEql('Once there is data for this form,');
+          const steps = app.find('.form-overview-step');
+          const step3Text = steps[2].find('p')[1].text().trim();
+          step3Text.should.containEql('Nobody has submitted any data to this Form yet.');
+          const step4Text = steps[3].find('p')[1].text().trim();
+          step4Text.should.containEql('Once there is data for this Form,');
         }));
 
       it('at least one submission', () =>
@@ -86,8 +87,9 @@ describe('FormOverview', () => {
     describe('app user count', () => {
       it('no app users', () =>
         loadOverview({ fieldKeyCount: 0 }).afterResponses(app => {
-          app.find('.form-overview-step')[2].find('p')[1].text().trim()
-            .should.containEql('You do not have any App Users on this server yet');
+          const step = app.find('.form-overview-step')[2];
+          const text = step.find('p')[1].text().trim();
+          text.should.containEql('You have not created any App Users for this Project yet');
         }));
 
       it('at least one app user', () => {
