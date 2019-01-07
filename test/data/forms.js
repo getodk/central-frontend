@@ -102,7 +102,15 @@ export const extendedForms = dataStore({
       _schema: schema
     };
   },
-  sort: 'name'
+  sort: (form1, form2) => {
+    const nameOrId1 = form1.name != null ? form1.name : form1.xmlFormId;
+    const nameOrId2 = form2.name != null ? form2.name : form2.xmlFormId;
+    if (nameOrId1 < nameOrId2)
+      return -1;
+    else if (nameOrId1 > nameOrId2)
+      return 1;
+    return 0;
+  }
 });
 
 export const simpleForms = view(extendedForms, (extendedForm) => {
