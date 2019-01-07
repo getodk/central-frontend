@@ -95,12 +95,9 @@ export default {
         .catch(() => {});
     },
     afterCreate(form) {
-      // Wait for the modal to hide.
-      this.$nextTick(() => {
-        const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
-        this.$router.push(path, () => {
-          this.$alert().success(`The Form “${form.nameOrId()}” was created successfully.`);
-        });
+      const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
+      this.$router.push(path, () => {
+        this.$alert().success(`The Form “${form.nameOrId()}” was created successfully.`);
       });
     }
   }

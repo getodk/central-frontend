@@ -158,7 +158,6 @@ export default {
       const headers = { 'Content-Type': 'application/xml' };
       this.post(`/projects/${this.projectId}/forms`, this.xml, { headers })
         .then(({ data }) => {
-          this.$emit('hide');
           this.filename = null;
           this.xml = null;
           this.$emit('success', new Form(data));
