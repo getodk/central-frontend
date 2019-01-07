@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <float-row class="table-actions">
       <button id="field-key-list-new-button" type="button"
-        class="btn btn-primary" @click="newFieldKey.state = true">
+        class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create app user
       </button>
     </float-row>
@@ -39,9 +39,9 @@ except according to the terms contained in the LICENSE file.
       </tbody>
     </table>
 
-    <field-key-new v-bind="newFieldKey" @hide="newFieldKey.state = false"
+    <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
       @success="afterCreate"/>
-    <field-key-revoke v-bind="revoke" @hide="revoke.state = false"
+    <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
       @success="afterRevoke"/>
   </div>
 </template>
