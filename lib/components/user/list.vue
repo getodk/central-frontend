@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <refresh-button slot="left" :fetching="awaitingResponse"
         @refresh="fetchData({ clear: false })"/>
       <button id="user-list-new-button" slot="right" type="button"
-        class="btn btn-primary" @click="newUser.state = true">
+        class="btn btn-primary" @click="showModal('newUser')">
         <span class="icon-plus-circle"></span>Create web user
       </button>
     </float-row>
@@ -34,11 +34,10 @@ except according to the terms contained in the LICENSE file.
       </tbody>
     </table>
 
-    <!-- Modals -->
-    <user-new v-bind="newUser" @hide="newUser.state = false"
+    <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
     <user-reset-password v-bind="resetPassword"
-      @hide="resetPassword.state = false" @success="afterResetPassword"/>
+      @hide="hideModal('resetPassword')" @success="afterResetPassword"/>
   </div>
 </template>
 
