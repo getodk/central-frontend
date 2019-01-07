@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
             <select :disabled="awaitingResponse" class="form-control">
               <option>Download and submit to all forms on this server</option>
               <option disabled>
-                More options available soon (to choose particular forms)
+                More options available soon (to choose particular Forms)
               </option>
             </select>
             <span class="form-label">Access *</span>
@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
         <div class="modal-introduction text-center">
           <div>
             <span class="icon-check-circle text-success"></span>
-            <strong>Success!</strong> The app user “{{ created.displayName }}”
+            <strong>Success!</strong> The App User “{{ created.displayName }}”
             has been created.
           </div>
           <div v-html="created.qrCodeHtml()"></div>

@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
     <p v-else-if="fieldKeys.length === 0" id="field-key-list-empty-message">
-      There are no App Users yet. You will need to create some to download forms
+      There are no App Users yet. You will need to create some to download Forms
       and submit data from your device.
     </p>
     <table v-else id="field-key-list-table" class="table">
