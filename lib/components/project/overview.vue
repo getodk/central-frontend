@@ -22,8 +22,8 @@ except according to the terms contained in the LICENSE file.
               Project.
             </p>
             <p>
-              Future releases of ODK Central will add more project-centric
-              features, including improvements to form states and workflow,
+              Future releases of ODK Central will add more Project-centric
+              features, including improvements to Form states and workflow,
               device state updates, Collect settings management, and more
               granular permissioning.
             </p>
@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
         <span>Forms</span>
         <button id="project-overview-new-form-button" type="button"
           class="btn btn-primary" @click="showModal('newForm')">
-          <span class="icon-plus-circle"></span>Create a new form
+          <span class="icon-plus-circle"></span>Create a new Form
         </button>
       </template>
       <template slot="body">
@@ -82,7 +82,7 @@ export default {
       this.$nextTick(() => {
         const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
         this.$router.push(path, () => {
-          this.$alert().success(`The form “${form.nameOrId()}” was created successfully.`);
+          this.$alert().success(`The Form “${form.nameOrId()}” was created successfully.`);
         });
       });
     }
