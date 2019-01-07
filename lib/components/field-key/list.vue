@@ -96,10 +96,8 @@ export default {
         state: false
       },
       revoke: {
-        state: false,
-        fieldKey: {
-          displayName: ''
-        }
+        fieldKey: null,
+        state: false
       }
     };
   },

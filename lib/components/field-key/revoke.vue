@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-introduction">
         <p>
           Are you sure you want to revoke access from the App User
-          <strong>{{ fieldKey.displayName }}</strong>?
+          <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>?
         </p>
         <p>
           Existing Submissions from this user will remain, but anybody relying
@@ -47,13 +47,10 @@ export default {
   name: 'FieldKeyRevoke',
   mixins: [request()],
   props: {
+    fieldKey: Object, // eslint-disable-line vue/require-default-prop
     state: {
       type: Boolean,
       default: false
-    },
-    fieldKey: {
-      type: Object,
-      required: true
     }
   },
   data() {
