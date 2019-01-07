@@ -10,22 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view :project-id="projectId" :maybe-project="maybeProject"
-    :maybe-field-keys="maybeFieldKeys"/>
+  <div>
+    <!-- This is pretty ugly -- is there another pattern we can use? -->
+    <project-field-keys-fetch :project-id="projectId"
+      :request-counter="fieldKeysRequestCounter" @complete="setMaybeFieldKeys"/>
+    <router-view :project-id="projectId" :maybe-project="maybeProject"
+      :maybe-field-keys="maybeFieldKeys"/>
+  </div>
 </template>
 
 <script>
-import FieldKey from '../../presenters/field-key';
 import MaybeData from '../../maybe-data';
+import ProjectFieldKeysFetch from './field-keys-fetch.vue';
 import request from '../../mixins/request';
 
 export default {
   name: 'ProjectHome',
+  components: { ProjectFieldKeysFetch },
   mixins: [request()],
   data() {
     return {
       requestId: null,
       maybeProject: null,
+      fieldKeysRequestCounter: 0,
       maybeFieldKeys: null
     };
   },
@@ -43,23 +50,26 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData() {
+    fetchProject() {
       this.maybeProject = MaybeData.awaiting();
-      this.maybeFieldKeys = MaybeData.awaiting();
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.requestAll([
-        this.$http.get(`/projects/${this.projectId}`),
-        this.$http.get(`/projects/${this.projectId}/app-users`, { headers })
-      ])
-        .then(([project, fieldKeys]) => {
-          this.maybeProject = MaybeData.success(project.data);
-          this.maybeFieldKeys = MaybeData.success(fieldKeys.data
-            .map(fieldKey => new FieldKey(fieldKey)));
+      this.get(`/projects/${this.projectId}`)
+        .then(({ data }) => {
+          this.maybeProject = MaybeData.success(data);
         })
         .catch(() => {
           this.maybeProject = MaybeData.error();
-          this.maybeFieldKeys = MaybeData.error();
         });
+    },
+    fetchFieldKeys() {
+      this.maybeFieldKeys = MaybeData.awaiting();
+      this.fieldKeysRequestCounter += 1;
+    },
+    fetchData() {
+      this.fetchProject();
+      this.fetchFieldKeys();
+    },
+    setMaybeFieldKeys(maybeFieldKeys) {
+      this.maybeFieldKeys = maybeFieldKeys;
     }
   }
 };
