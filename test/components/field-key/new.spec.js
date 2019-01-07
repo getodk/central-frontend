@@ -42,7 +42,7 @@ describe('FieldKeyNew', () => {
     mockHttp()
       .mount(FieldKeyNew)
       .request(modal => submitForm(modal, 'form', [
-        ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+        ['input', testData.extendedFieldKeys.createNew().displayName]
       ]))
       .standardButton());
 
@@ -55,7 +55,7 @@ describe('FieldKeyNew', () => {
       })
       .request(() => clickCreateButton(app)
         .then(() => submitForm(app, '#field-key-new form', [
-          ['input', testData.extendedFieldKeys.createNew('withAccess').displayName]
+          ['input', testData.extendedFieldKeys.createNew().displayName]
         ])))
       .respondWithData(() => testData.simpleFieldKeys.last()));
 

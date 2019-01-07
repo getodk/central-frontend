@@ -2,6 +2,7 @@ import jsQR from 'jsqr';
 import { inflate } from 'pako/lib/inflate';
 
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
+import faker from '../../faker';
 import testData from '../../data';
 import { formatDate } from '../../../lib/util';
 import { mockHttp, mockRoute } from '../../http';
@@ -69,8 +70,9 @@ describe('FieldKeyList', () => {
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
+        .respondWithData(() => testData.extendedFieldKeys
+          .createPast(1, { token: faker.central.token() })
+          .sorted())
         .afterResponse(component => {
           app = component;
         }));
@@ -111,7 +113,7 @@ describe('FieldKeyList', () => {
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
+          testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
         .afterResponse(page => {
           const td = page.find('#field-key-list-table td')[3];
           td.text().trim().should.equal('Access revoked');

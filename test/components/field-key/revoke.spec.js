@@ -1,5 +1,6 @@
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
+import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
@@ -19,8 +20,9 @@ describe('FieldKeyRevoke', () => {
     it('opens upon click for an app user whose access is not revoked', () =>
       mockHttp()
         .mount(FieldKeyList)
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
+        .respondWithData(() => testData.extendedFieldKeys
+          .createPast(1, { token: faker.central.token() })
+          .sorted())
         .afterResponse(page => {
           page.first(FieldKeyRevoke).getProp('state').should.be.false();
           return page;
@@ -34,7 +36,7 @@ describe('FieldKeyRevoke', () => {
       mockHttp()
         .mount(FieldKeyList)
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
+          testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
         .afterResponse(page => {
           page.first(FieldKeyRevoke).getProp('state').should.be.false();
           return page;
@@ -49,13 +51,14 @@ describe('FieldKeyRevoke', () => {
     mockHttp()
       .mount(FieldKeyList)
       .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
+        testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
       .afterResponse(page => {
         page.first('.dropdown-menu li').hasClass('disabled').should.be.true();
       }));
 
   it('standard button thinking things', () => {
-    const fieldKey = testData.extendedFieldKeys.createPast(1, 'withAccess').last();
+    const token = faker.central.token();
+    const fieldKey = testData.extendedFieldKeys.createPast(1, { token }).last();
     const propsData = { fieldKey };
     return mockHttp()
       .mount(FieldKeyRevoke, { propsData })
@@ -66,8 +69,10 @@ describe('FieldKeyRevoke', () => {
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute('/users/field-keys')
-      .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(2, 'withAccess').sorted())
+      .respondWithData(() => testData.extendedFieldKeys
+        .createPast(1, { token: faker.central.token() })
+        .createPast(1, { token: faker.central.token() })
+        .sorted())
       .afterResponse(component => {
         app = component;
       })
