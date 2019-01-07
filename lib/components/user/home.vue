@@ -18,14 +18,6 @@ except according to the terms contained in the LICENSE file.
         Soon, you will be able to assign Web Users rights to only manage
         particular Projects.
       </template>
-      <template slot="tabs">
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Web Users</router-link>
-        </li>
-        <li :class="tabClass('field-keys')" role="presentation">
-          <router-link :to="tabPath('field-keys')">App Users</router-link>
-        </li>
-      </template>
     </page-head>
     <page-body>
       <keep-alive>
@@ -36,15 +28,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import tab from '../../mixins/tab';
-
 export default {
-  name: 'UserHome',
-  mixins: [tab()],
-  methods: {
-    tabPathPrefix() {
-      return '/users';
-    }
-  }
+  name: 'UserHome'
 };
 </script>

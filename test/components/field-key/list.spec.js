@@ -27,15 +27,6 @@ describe('FieldKeyList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    it('app users tab is active', () =>
-      mockRoute('/users/field-keys')
-        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponse(app => {
-          const tab = app.first('.nav-tabs > .active');
-          const title = tab.first('a').text().trim();
-          title.should.equal('App Users');
-        }));
-
     it('table contains the correct data', () => {
       const fieldKeys = testData.extendedFieldKeys.createPast(2).sorted();
       return mockHttp()
