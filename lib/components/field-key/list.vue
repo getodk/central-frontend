@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
     <p v-else-if="fieldKeys.length === 0" id="field-key-list-empty-message">
-      There are no app users yet. You will need to create some to download forms
+      There are no App Users yet. You will need to create some to download forms
       and submit data from your device.
     </p>
     <table v-else id="field-key-list-table" class="table">
@@ -173,12 +173,12 @@ export default {
     },
     afterCreate(fieldKey) {
       this.fetchData({ clear: true });
-      this.$alert().success(`The app user “${fieldKey.displayName}” was created successfully.`);
+      this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
       this.fetchData({ clear: true });
-      this.$alert().success(`Access was revoked for the app user “${this.revoke.fieldKey.displayName}.”`);
+      this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }
   }
