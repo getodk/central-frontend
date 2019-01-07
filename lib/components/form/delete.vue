@@ -44,7 +44,7 @@ export default {
   mixins: [request()],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

@@ -68,7 +68,7 @@ export default {
   ],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     state: {

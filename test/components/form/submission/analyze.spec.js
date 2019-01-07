@@ -31,7 +31,7 @@ describe('FormSubmissionAnalyze', () => {
     mockHttp()
       .mount(FormSubmissionList, {
         propsData: {
-          projectId: 1,
+          projectId: '1',
           form: new Form(createFormWithSubmission())
         }
       })
@@ -71,7 +71,7 @@ describe('FormSubmissionAnalyze', () => {
     beforeEach(() => {
       modal = mountAndMark(FormSubmissionAnalyze, {
         propsData: {
-          projectId: 1,
+          projectId: '1',
           form: new Form(createFormWithSubmission())
         }
       });

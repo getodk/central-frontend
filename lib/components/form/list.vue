@@ -37,7 +37,7 @@ export default {
   components: { FormRow },
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     // Array of Form presenters

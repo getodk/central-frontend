@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     projectId() {
-      return parseInt(this.$route.params.projectId, 10);
+      return this.$route.params.projectId;
     }
   },
   watch: {

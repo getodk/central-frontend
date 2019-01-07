@@ -80,7 +80,7 @@ export default {
   name: 'FormSubmissionAnalyze',
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

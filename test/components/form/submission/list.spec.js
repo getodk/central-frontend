@@ -104,7 +104,7 @@ describe('FormSubmissionList', () => {
       return mockHttp()
         .mount(FormSubmissionList, {
           propsData: {
-            projectId: 1,
+            projectId: '1',
             form: new Form(form()),
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom

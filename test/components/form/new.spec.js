@@ -14,7 +14,7 @@ const openModal = (wrapper) => trigger
   .then(() => findModal(wrapper));
 const propsData = () => ({
   propsData: {
-    projectId: 1
+    projectId: '1'
   }
 });
 const createForm = (modal) => {

@@ -56,7 +56,7 @@ export default {
   name: 'FormSubmissionRow',
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

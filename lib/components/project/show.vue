@@ -46,7 +46,7 @@ export default {
   mixins: [tab()],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     project: Object, // eslint-disable-line vue/require-default-prop

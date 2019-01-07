@@ -30,7 +30,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   return mockHttp()
     .mount(FormAttachmentList, {
       propsData: {
-        projectId: 1,
+        projectId: '1',
         form: new Form(form),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))

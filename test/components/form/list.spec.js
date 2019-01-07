@@ -47,7 +47,7 @@ describe('FormList', () => {
   it('shows a message if there are no forms', () => {
     const component = mountAndMark(FormList, {
       propsData: {
-        projectId: 1,
+        projectId: '1',
         forms: []
       }
     });

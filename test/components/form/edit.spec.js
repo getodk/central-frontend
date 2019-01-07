@@ -9,7 +9,7 @@ import { trigger } from '../../util';
 
 const propsData = () => ({
   propsData: {
-    projectId: 1,
+    projectId: '1',
     form: new Form(testData.extendedForms.createPast(1).last())
   }
 });

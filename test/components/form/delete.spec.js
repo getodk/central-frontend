@@ -19,7 +19,7 @@ describe('FormDelete', () => {
 
   it('opens the modal upon button click', () => {
     const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { projectId: 1, form };
+    const propsData = { projectId: '1', form };
     const page = mountAndMark(FormSettings, { propsData });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
@@ -28,7 +28,7 @@ describe('FormDelete', () => {
 
   it('standard button thinking things', () => {
     const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { projectId: 1, form };
+    const propsData = { projectId: '1', form };
     return mockHttp()
       .mount(FormDelete, { propsData })
       .request(confirmDelete)

@@ -97,7 +97,7 @@ export default {
   mixins: [modal('newForm'), request()],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     fieldKeys: Array // eslint-disable-line vue/require-default-prop
