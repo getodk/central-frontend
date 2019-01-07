@@ -189,7 +189,7 @@ describe('FormNew', () => {
             }
           }))
           .afterResponse(modal => {
-            modal.should.alert('danger', 'A form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the form again.');
+            modal.should.alert('danger', 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
           }));
     });
   }

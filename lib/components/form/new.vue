@@ -15,13 +15,13 @@ except according to the terms contained in the LICENSE file.
     <template slot="body">
       <div class="modal-introduction">
         <p>
-          To create a form, upload an XForms XML file. If you don’t already have
+          To create a Form, upload an XForms XML file. If you don’t already have
           one, there are <doc-link to="form-tools/">tools available</doc-link>
-          to help you design your form.
+          to help you design your Form.
         </p>
         <p>
           If you have media, you will be able to upload that on the next page,
-          after the form has been created.
+          after the Form has been created.
         </p>
       </div>
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
@@ -113,7 +113,7 @@ export default {
         problem.details.fields.length === 2 &&
         problem.details.fields[0] === 'xmlFormId' &&
         problem.details.fields[1] === 'version')
-        return 'A form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the form again.';
+        return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
       return null;
     },
     hide() {
