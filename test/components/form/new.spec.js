@@ -122,16 +122,12 @@ describe('FormNew', () => {
 
       describe('after successful submit', () => {
         let app;
-        let form;
         beforeEach(() => mockRoute('/projects/1')
           .respondWithData(() => testData.simpleProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            form = testData.extendedForms.createNew({
-              hasName: true,
-              hasSubmission: false
-            });
+            testData.extendedForms.createNew({ name: 'xyz', submissions: 0 });
           })
           .request(() => openModal(app)
             .then(selectFile)
@@ -143,10 +139,13 @@ describe('FormNew', () => {
           .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
 
         it('redirects to the form overview', () => {
-          app.vm.$route.path.should.equal(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`);
+          const form = testData.extendedForms.last();
+          const encodedFormId = encodeURIComponent(form.xmlFormId);
+          app.vm.$route.path.should.equal(`/projects/1/forms/${encodedFormId}`);
         });
 
         it('shows form name', () => {
+          const form = testData.extendedForms.last();
           app.first('#page-head-title').text().trim().should.equal(form.name);
         });
 

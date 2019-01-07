@@ -46,7 +46,7 @@ export const extendedForms = dataStore({
     // eslint-disable-next-line no-unused-vars
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
-    hasName = faker.random.boolean(),
+    name = faker.random.boolean() ? faker.name.findName() : null,
     isOpen = !inPast || faker.random.boolean(),
 
     hasInstanceId = faker.random.boolean(),
@@ -70,7 +70,6 @@ export const extendedForms = dataStore({
       options.submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
     }
     const { submissions } = options;
-    const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const createdBy = administrators.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
