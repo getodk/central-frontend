@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <loading :state="fieldKeys == null"/>
-    <div v-if="fieldKeys != null" class="panel panel-simple">
+    <loading :state="maybeFieldKeys.awaiting"/>
+    <div v-if="maybeFieldKeys.success" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
         <form-overview-step :stage="stepStage(0)">
@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
             </template>
             App Users will be able to see this Form on their mobile device to
             download and fill out.
-            <template v-if="fieldKeys.length === 0">
+            <template v-if="maybeFieldKeys.data.length === 0">
               <strong>You have not created any App Users for this Project yet,
               so nobody will be able to use this Form.</strong> You can create
               them on the
@@ -70,7 +70,8 @@ except according to the terms contained in the LICENSE file.
               <router-link :to="`/projects/${projectId}/app-users`">
                 <!-- Not using toLocaleString(), as a project with 1,000+ app
                 users is unlikely. -->
-                <strong>{{ $pluralize('App User', fieldKeys.length, true) }}</strong></router-link>,
+                <!-- eslint-disable-next-line max-len -->
+                <strong>{{ $pluralize('App User', maybeFieldKeys.data.length, true) }}</strong></router-link>,
               but you can always add more.
             </template>
             <doc-link to="central-submissions/">
@@ -121,6 +122,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import FormOverviewStep from './overview-step.vue';
+import MaybeData from '../../maybe-data';
 
 export default {
   name: 'FormOverview',
@@ -133,7 +135,10 @@ export default {
       type: String,
       required: true
     },
-    fieldKeys: Array, // eslint-disable-line vue/require-default-prop
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    },
     form: {
       type: Form,
       required: true

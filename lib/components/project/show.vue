@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="project != null">
+    <page-head v-show="maybeProject.success">
       <template slot="title">
-        {{ project != null ? project.name : '' }}
+        {{ maybeProject.success ? maybeProject.data.name : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
@@ -22,16 +22,17 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="project == null"/>
+      <loading :state="maybeProject.awaiting"/>
       <!-- It might be possible to remove this <div> element and move the v-show
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
-      <div v-show="project != null">
+      <div v-show="maybeProject.success">
         <keep-alive>
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to ProjectHome's
           requests for the project and the project's app users. -->
-          <router-view :project-id="projectId" :field-keys="fieldKeys"/>
+          <router-view :project-id="projectId"
+            :maybe-field-keys="maybeFieldKeys"/>
         </keep-alive>
       </div>
     </page-body>
@@ -39,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import MaybeData from '../../maybe-data';
 import tab from '../../mixins/tab';
 
 export default {
@@ -49,8 +51,14 @@ export default {
       type: String,
       required: true
     },
-    project: Object, // eslint-disable-line vue/require-default-prop
-    fieldKeys: Array // eslint-disable-line vue/require-default-prop
+    maybeProject: {
+      type: MaybeData,
+      required: true
+    },
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    }
   },
   methods: {
     tabPathPrefix() {

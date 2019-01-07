@@ -10,12 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view :project-id="projectId" :project="project"
-    :field-keys="fieldKeys"/>
+  <router-view :project-id="projectId" :maybe-project="maybeProject"
+    :maybe-field-keys="maybeFieldKeys"/>
 </template>
 
 <script>
 import FieldKey from '../../presenters/field-key';
+import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 
 export default {
@@ -24,8 +25,8 @@ export default {
   data() {
     return {
       requestId: null,
-      project: null,
-      fieldKeys: null
+      maybeProject: null,
+      maybeFieldKeys: null
     };
   },
   computed: {
@@ -43,18 +44,22 @@ export default {
   },
   methods: {
     fetchData() {
-      this.project = null;
-      this.fieldKeys = null;
+      this.maybeProject = MaybeData.awaiting();
+      this.maybeFieldKeys = MaybeData.awaiting();
       const headers = { 'X-Extended-Metadata': 'true' };
       this.requestAll([
         this.$http.get(`/projects/${this.projectId}`),
         this.$http.get(`/projects/${this.projectId}/app-users`, { headers })
       ])
         .then(([project, fieldKeys]) => {
-          this.project = project.data;
-          this.fieldKeys = fieldKeys.data.map(fieldKey => new FieldKey(fieldKey));
+          this.maybeProject = MaybeData.success(project.data);
+          this.maybeFieldKeys = MaybeData.success(fieldKeys.data
+            .map(fieldKey => new FieldKey(fieldKey)));
         })
-        .catch(() => {});
+        .catch(() => {
+          this.maybeProject = MaybeData.error();
+          this.maybeFieldKeys = MaybeData.error();
+        });
     }
   }
 };

@@ -11,21 +11,21 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="project != null && form != null">
+    <page-head v-show="maybeProject.success && maybeForm.success">
       <template slot="context">
-        <span>{{ project != null ? project.name : '' }}</span>
+        <span>{{ maybeProject.success ? maybeProject.data.name : '' }}</span>
         <router-link :to="`/projects/${projectId}`">
           Back to Project Overview
         </router-link>
       </template>
       <template slot="title">
-        {{ form != null ? form.nameOrId() : '' }}
+        {{ maybeForm.success ? maybeForm.data.nameOrId() : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="attachments != null && attachments.length !== 0"
+        <li v-if="maybeAttachments.success && maybeAttachments.data.length !== 0"
           :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
@@ -43,14 +43,15 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="project == null || awaitingResponse"/>
+      <loading :state="maybeProject.awaiting || maybeForm.awaiting"/>
       <!-- It might be possible to remove this <div> element and move the v-if
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
-      <div v-if="project != null && form != null">
+      <div v-if="maybeProject.success && maybeForm.success">
         <keep-alive>
-          <router-view :project-id="projectId" :field-keys="fieldKeys"
-            :form="form" :attachments="attachments"
+          <router-view :project-id="projectId"
+            :maybe-field-keys="maybeFieldKeys" :form="maybeForm.data"
+            :attachments="maybeAttachments.data"
             :chunk-sizes="submissionChunkSizes"
             :scrolled-to-bottom="scrolledToBottom"
             @attachment-change="updateAttachment"
@@ -66,6 +67,7 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
 import FormSubmissionList from './submission/list.vue';
+import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -77,14 +79,20 @@ export default {
       type: String,
       required: true
     },
-    project: Object, // eslint-disable-line vue/require-default-prop
-    fieldKeys: Array // eslint-disable-line vue/require-default-prop
+    maybeProject: {
+      type: MaybeData,
+      required: true
+    },
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    }
   },
   data() {
     return {
       requestId: null,
-      form: null,
-      attachments: null,
+      maybeForm: null,
+      maybeAttachments: null,
       // Passing these to FormSubmissionList in order to facilitate
       // FormSubmissionList testing.
       submissionChunkSizes: FormSubmissionList.props.chunkSizes.default(),
@@ -99,7 +107,9 @@ export default {
       return encodeURIComponent(this.xmlFormId);
     },
     missingAttachments() {
-      return this.attachments.filter(attachment => !attachment.exists).length;
+      return this.maybeAttachments.data
+        .filter(attachment => !attachment.exists)
+        .length;
     }
   },
   watch: {
@@ -112,8 +122,8 @@ export default {
   },
   methods: {
     fetchData() {
-      this.form = null;
-      this.attachments = null;
+      this.maybeForm = MaybeData.awaiting();
+      this.maybeAttachments = MaybeData.awaiting();
       const formPath = `/projects/${this.projectId}/forms/${this.encodedFormId}`;
       const headers = { 'X-Extended-Metadata': 'true' };
       this.requestAll([
@@ -121,25 +131,30 @@ export default {
         this.$http.get(`${formPath}/attachments`, { headers })
       ])
         .then(([form, attachments]) => {
-          this.form = new Form(form.data);
-          this.attachments = attachments.data
-            .map(attachment => new FormAttachment(attachment));
+          this.maybeForm = MaybeData.success(new Form(form.data));
+          this.maybeAttachments = MaybeData.success(attachments.data
+            .map(attachment => new FormAttachment(attachment)));
         })
-        .catch(() => {});
+        .catch(() => {
+          this.maybeForm = MaybeData.error();
+          this.maybeAttachments = MaybeData.error();
+        });
     },
     tabPathPrefix() {
       return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
     },
     updateAttachment(newAttachment) {
-      const index = this.attachments
+      const index = this.maybeAttachments.data
         .findIndex(attachment => attachment.name === newAttachment.name);
-      this.$set(this.attachments, index, newAttachment);
+      this.$set(this.maybeAttachments.data, index, newAttachment);
     },
     updateSubmissions(submissions) {
-      this.form = this.form.with({ submissions });
+      const form = this.maybeForm.data.with({ submissions });
+      this.maybeForm = MaybeData.success(form);
     },
     updateState(newState) {
-      this.form = this.form.with({ state: newState });
+      const form = this.maybeForm.data.with({ state: newState });
+      this.maybeForm = MaybeData.success(form);
     }
   }
 };

@@ -40,25 +40,25 @@ except according to the terms contained in the LICENSE file.
         <page-section id="project-overview-right-now">
           <template slot="heading"><span>Right Now</span></template>
           <template slot="body">
-            <loading :state="fieldKeys == null || awaitingResponse"/>
-            <div v-if="fieldKeys != null && forms != null">
+            <loading :state="maybeFieldKeys.awaiting || maybeForms.awaiting"/>
+            <div v-if="maybeFieldKeys.success && maybeForms.success">
               <div>
                 <div class="project-overview-right-now-count">
-                  {{ fieldKeys.length }}
+                  {{ maybeFieldKeys.data.length }}
                 </div>
                 <div>
-                  {{ $pluralize('App User', fieldKeys.length) }} who can use a
-                  data collection client to download and submit Form data to
-                  this Project.
+                  {{ $pluralize('App User', maybeFieldKeys.data.length) }} who
+                  can use a data collection client to download and submit Form
+                  data to this Project.
                 </div>
               </div>
               <div>
                 <div class="project-overview-right-now-count">
-                  {{ forms.length }}
+                  {{ maybeForms.data.length }}
                 </div>
                 <div>
-                  {{ $pluralize('Form', forms.length) }} which can be downloaded
-                  and given as surveys on mobile clients.
+                  {{ $pluralize('Form', maybeForms.data.length) }} which can be
+                  downloaded and given as surveys on mobile clients.
                 </div>
               </div>
             </div>
@@ -75,8 +75,9 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
-        <loading :state="awaitingResponse"/>
-        <form-list v-if="forms != null" :project-id="projectId" :forms="forms"/>
+        <loading :state="maybeForms.awaiting"/>
+        <form-list v-if="maybeForms.success" :project-id="projectId"
+          :forms="maybeForms.data"/>
       </template>
     </page-section>
     <form-new :project-id="projectId" :state="newForm.state"
@@ -88,6 +89,7 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
+import MaybeData from '../../maybe-data';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
@@ -100,12 +102,15 @@ export default {
       type: String,
       required: true
     },
-    fieldKeys: Array // eslint-disable-line vue/require-default-prop
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    }
   },
   data() {
     return {
       requestId: null,
-      forms: null,
+      maybeForms: null,
       newForm: {
         state: false
       }
@@ -116,13 +121,15 @@ export default {
   },
   methods: {
     fetchData() {
-      this.forms = null;
+      this.maybeForms = MaybeData.awaiting();
       const headers = { 'X-Extended-Metadata': 'true' };
       this.get(`/projects/${this.projectId}/forms`, { headers })
         .then(({ data }) => {
-          this.forms = data.map(form => new Form(form));
+          this.maybeForms = MaybeData.success(data.map(form => new Form(form)));
         })
-        .catch(() => {});
+        .catch(() => {
+          this.maybeForms = MaybeData.error();
+        });
     },
     afterCreate(form) {
       const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
