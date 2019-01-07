@@ -54,10 +54,7 @@ export default {
       type: Object,
       required: true
     },
-    // eslint-disable-next-line vue/require-default-prop
-    highlighted: {
-      type: Number
-    }
+    highlighted: Number // eslint-disable-line vue/require-default-prop
   },
   computed: {
     created() {

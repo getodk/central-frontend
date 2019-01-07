@@ -29,29 +29,8 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in users" :key="user.id"
-          :class="highlight(user, 'id')">
-          <td>{{ user.email }}</td>
-          <!-- TODO: Once this is added to the API, pull it from `user`. -->
-          <td>Yes</td>
-          <td>
-            <div class="dropdown">
-              <button :id="actionsId(index)" type="button"
-                class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="icon-cog"></span><span class="caret"></span>
-              </button>
-              <ul :aria-labelledby="actionsId(index)"
-                class="dropdown-menu dropdown-menu-right">
-                <li>
-                  <a href="#" @click.prevent="showResetPassword(user)">
-                    Reset password
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </td>
-        </tr>
+        <user-row v-for="user of users" :key="user.id" :user="user"
+          :highlighted="highlighted" @reset-password="showResetPassword"/>
       </tbody>
     </table>
 
@@ -66,17 +45,16 @@ except according to the terms contained in the LICENSE file.
 <script>
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
-import highlight from '../../mixins/highlight';
+import UserRow from './row.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'UserList',
-  components: { UserNew, UserResetPassword },
+  components: { UserNew, UserResetPassword, UserRow },
   mixins: [
     request(),
-    modal(['newUser', 'resetPassword']),
-    highlight()
+    modal(['newUser', 'resetPassword'])
   ],
   data() {
     return {
@@ -107,9 +85,6 @@ export default {
           if (!clear) this.highlighted = null;
         })
         .catch(() => {});
-    },
-    actionsId(index) {
-      return `user-list-actions${index}`;
     },
     showResetPassword(user) {
       this.resetPassword.user = user;
