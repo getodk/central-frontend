@@ -1,39 +1,39 @@
 import jsQR from 'jsqr';
 import { inflate } from 'pako/lib/inflate';
 
-import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import faker from '../../faker';
 import testData from '../../data';
 import { formatDate } from '../../../lib/util';
-import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockRoute } from '../../http';
 import { trigger } from '../../util';
 
 describe('FieldKeyList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute('/users/field-keys')
+      mockRoute('/projects/1/app-users')
         .restoreSession(false)
         .afterResponse(app => app.vm.$route.path.should.equal('/login')));
 
     it('after login, user is redirected back', () =>
-      mockRouteThroughLogin('/users/field-keys')
+      mockRouteThroughLogin('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users/field-keys');
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/app-users');
         }));
   });
 
   describe('after login', () => {
     beforeEach(mockLogin);
 
-    it('table contains the correct data', () => {
-      const fieldKeys = testData.extendedFieldKeys.createPast(2).sorted();
-      return mockHttp()
-        .mount(FieldKeyList)
-        .respondWithData(() => fieldKeys)
-        .afterResponse(page => {
-          const tr = page.find('table tbody tr');
+    it('table contains the correct data', () =>
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(2).sorted())
+        .afterResponses(app => {
+          const tr = app.find('#field-key-list-table tbody tr');
+          const fieldKeys = testData.extendedFieldKeys.sorted();
           tr.length.should.equal(fieldKeys.length);
           for (let i = 0; i < tr.length; i += 1) {
             const td = tr[i].find('td');
@@ -47,24 +47,24 @@ describe('FieldKeyList', () => {
             td[2].text().trim().should.equal(formatDate(fieldKey.lastUsed));
             // We test the Configure Client column below.
           }
-        });
-    });
+        }));
 
     it('shows a message if there are no app users', () =>
-      mockHttp()
-        .mount(FieldKeyList)
-        .respondWithData(() => [])
-        .afterResponse(component => {
-          component.find('#field-key-list-empty-message').length.should.equal(1);
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.createPast(0).sorted())
+        .afterResponses(app => {
+          app.find('#field-key-list-empty-message').length.should.equal(1);
         }));
 
     describe('QR code', () => {
       let app;
-      beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
+      beforeEach(() => mockRoute('/projects/1/app-users', { attachToDocument: true })
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedFieldKeys
           .createPast(1, { token: faker.central.token() })
           .sorted())
-        .afterResponse(component => {
+        .afterResponses(component => {
           app = component;
         }));
 
@@ -101,12 +101,12 @@ describe('FieldKeyList', () => {
     });
 
     it('app user whose access is revoked is marked accordingly', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
-        .afterResponse(page => {
-          const td = page.find('#field-key-list-table td')[3];
+        .afterResponses(app => {
+          const td = app.find('#field-key-list-table td')[3];
           td.text().trim().should.equal('Access revoked');
         }));
   });

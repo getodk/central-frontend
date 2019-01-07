@@ -18,42 +18,43 @@ describe('FieldKeyRevoke', () => {
 
   describe('modal', () => {
     it('opens upon click for an app user whose access is not revoked', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedFieldKeys
           .createPast(1, { token: faker.central.token() })
           .sorted())
-        .afterResponse(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
-          return page;
+        .afterResponses(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return app;
         })
         .then(clickRevokeInMenu)
-        .then(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.true();
+        .then(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.true();
         }));
 
     it('does not open upon click for an app user whose access is revoked', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
-        .afterResponse(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
-          return page;
+        .afterResponses(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return app;
         })
         .then(clickRevokeInMenu)
-        .then(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
+        .then(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
         }));
   });
 
   it('revoke button is disabled for an app user whose access is revoked', () =>
-    mockHttp()
-      .mount(FieldKeyList)
+    mockRoute('/projects/1/app-users')
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
-      .afterResponse(page => {
-        page.first('.dropdown-menu li').hasClass('disabled').should.be.true();
+      .afterResponses(app => {
+        const li = app.first(FieldKeyList).first('.dropdown-menu li');
+        li.hasClass('disabled').should.be.true();
       }));
 
   it('standard button thinking things', () => {
@@ -68,12 +69,13 @@ describe('FieldKeyRevoke', () => {
 
   describe('after successful response', () => {
     let app;
-    beforeEach(() => mockRoute('/users/field-keys')
+    beforeEach(() => mockRoute('/projects/1/app-users')
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
       .respondWithData(() => testData.extendedFieldKeys
         .createPast(1, { token: faker.central.token() })
         .createPast(1, { token: faker.central.token() })
         .sorted())
-      .afterResponse(component => {
+      .afterResponses(component => {
         app = component;
       })
       .request(() => clickRevokeInMenu(app)

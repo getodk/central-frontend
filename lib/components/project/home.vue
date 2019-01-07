@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <project-field-keys-fetch :project-id="projectId"
       :request-counter="fieldKeysRequestCounter" @complete="setMaybeFieldKeys"/>
     <router-view :project-id="projectId" :maybe-project="maybeProject"
-      :maybe-field-keys="maybeFieldKeys"/>
+      :maybe-field-keys="maybeFieldKeys" @refresh-field-keys="fetchFieldKeys"/>
   </div>
 </template>
 

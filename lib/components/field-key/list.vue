@@ -24,31 +24,34 @@ except according to the terms contained in the LICENSE file.
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
-    <loading v-if="fieldKeys == null" :state="awaitingResponse"/>
-    <p v-else-if="fieldKeys.length === 0" id="field-key-list-empty-message">
-      There are no App Users yet. You will need to create some to download Forms
-      and submit data from your device.
-    </p>
-    <table v-else id="field-key-list-table" class="table">
-      <thead>
-        <tr>
-          <th>Nickname</th>
-          <th>Created</th>
-          <th>Last Used</th>
-          <th>Configure Client</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
-        ensure that there will be no component reuse if fieldKeys changes. Such
-        component reuse could add complexity around our use of the Bootstrap
-        plugin. -->
-        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
-          :field-key="fieldKey" :highlighted="highlighted"
-          @show-code="showPopover" @revoke="showRevoke"/>
-      </tbody>
-    </table>
+    <loading :state="maybeFieldKeys.awaiting"/>
+    <template v-if="maybeFieldKeys.success">
+      <p v-if="maybeFieldKeys.data.length === 0"
+        id="field-key-list-empty-message">
+        There are no App Users yet. You will need to create some to download
+        Forms and submit data from your device.
+      </p>
+      <table v-else id="field-key-list-table" class="table">
+        <thead>
+          <tr>
+            <th>Nickname</th>
+            <th>Created</th>
+            <th>Last Used</th>
+            <th>Configure Client</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
+          ensure that there will be no component reuse if maybeFieldKeys.data
+          changes. Such component reuse could add complexity around our use of
+          the Bootstrap plugin. -->
+          <field-key-row v-for="fieldKey of maybeFieldKeys.data"
+            :key="fieldKey.key" :field-key="fieldKey" :highlighted="highlighted"
+            @show-code="showPopover" @revoke="showRevoke"/>
+        </tbody>
+      </table>
+    </template>
 
     <field-key-new :project-id="projectId" :state="newFieldKey.state"
       @hide="hideModal('newFieldKey')" @success="afterCreate"/>
@@ -58,12 +61,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FieldKey from '../../presenters/field-key';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
+import MaybeData from '../../maybe-data';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
 
 const POPOVER_CONTENT_TEMPLATE = `
   <div id="field-key-list-popover-content">
@@ -79,15 +81,19 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
-  mixins: [
-    request(),
-    modal(['newFieldKey', 'revoke'])
-  ],
+  mixins: [modal(['newFieldKey', 'revoke'])],
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    }
+  },
   data() {
     return {
-      projectId: '1',
-      requestId: null,
-      fieldKeys: null,
       highlighted: null,
       enabledPopoverLinks: new Set(),
       // The <a> element whose popover is currently shown.
@@ -101,8 +107,16 @@ export default {
       }
     };
   },
-  created() {
-    this.fetchData({ clear: false });
+  watch: {
+    projectId() {
+      this.highlighted = null;
+      this.hidePopover();
+    },
+    maybeFieldKeys() {
+      this.enabledPopoverLinks = new Set();
+      this.revoke.fieldKey = null;
+      this.hidePopover();
+    }
   },
   activated() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -112,18 +126,6 @@ export default {
     $('body').off('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
   methods: {
-    fetchData({ clear }) {
-      if (clear) this.fieldKeys = null;
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this
-        .get('/field-keys', { headers })
-        .then(({ data }) => {
-          this.fieldKeys = data.map(fieldKey => new FieldKey(fieldKey));
-          this.enabledPopoverLinks = new Set();
-          if (!clear) this.highlighted = null;
-        })
-        .catch(() => {});
-    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -175,12 +177,12 @@ export default {
       this.revoke.state = true;
     },
     afterCreate(fieldKey) {
-      this.fetchData({ clear: true });
+      this.$emit('refresh-field-keys');
       this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
-      this.fetchData({ clear: true });
+      this.$emit('refresh-field-keys');
       this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }

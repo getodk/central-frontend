@@ -19,6 +19,9 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
+        <li :class="tabClass('app-users')" role="presentation">
+          <router-link :to="tabPath('app-users')">App Users</router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
@@ -32,7 +35,8 @@ except according to the terms contained in the LICENSE file.
           requests even before the server has responded to ProjectHome's
           requests for the project and the project's app users. -->
           <router-view :project-id="projectId"
-            :maybe-field-keys="maybeFieldKeys"/>
+            :maybe-field-keys="maybeFieldKeys"
+            @refresh-field-keys="$emit('refresh-field-keys')"/>
         </keep-alive>
       </div>
     </page-body>

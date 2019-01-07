@@ -1,4 +1,3 @@
-import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyNew from '../../../lib/components/field-key/new.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
@@ -13,25 +12,28 @@ describe('FieldKeyNew', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponse(page => {
-          page.first(FieldKeyNew).getProp('state').should.be.false();
+        .afterResponses(app => {
+          app.first(FieldKeyNew).getProp('state').should.be.false();
         }));
 
     describe('after button click', () => {
       it('modal is shown', () =>
-        mockHttp()
-          .mount(FieldKeyList)
+        mockRoute('/projects/1/app-users')
+          .respondWithData(() => testData.simpleProjects.createPast(1).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-          .afterResponse(clickCreateButton)
-          .then(page => page.first(FieldKeyNew).getProp('state').should.be.true()));
+          .afterResponses(clickCreateButton)
+          .then(app => {
+            app.first(FieldKeyNew).getProp('state').should.be.true();
+          }));
 
       it('focuses the nickname input', () =>
-        mockRoute('/users/field-keys', { attachToDocument: true })
+        mockRoute('/projects/1/app-users', { attachToDocument: true })
+          .respondWithData(() => testData.simpleProjects.createPast(1).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-          .afterResponse(clickCreateButton)
+          .afterResponses(clickCreateButton)
           .then(app => {
             app.first('#field-key-new input').should.be.focused();
           }));
@@ -53,9 +55,10 @@ describe('FieldKeyNew', () => {
 
   describe('after successful submit', () => {
     let app;
-    beforeEach(() => mockRoute('/users/field-keys', { attachToDocument: true })
+    beforeEach(() => mockRoute('/projects/1/app-users', { attachToDocument: true })
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
       .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-      .afterResponse(component => {
+      .afterResponses(component => {
         app = component;
       })
       .request(() => clickCreateButton(app)
