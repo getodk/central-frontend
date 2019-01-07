@@ -37,38 +37,31 @@ describe('RootHome', () => {
       it('immediately hides the loading message after an error');
     });
 
-    it('shows the correct counts', () => {
-      const users = faker.random.number();
-      const fieldKeys = faker.random.number();
-      // Using mockRoute() rather than mockHttp() because the page contains
-      // <router-link> tags.
-      return mockRoute('/')
-        // We don't actually fill the array with data, as the page does not use
+    it('shows the correct counts', () =>
+      mockRoute('/')
+        // We do not actually fill the array with data, as the page does not use
         // the data.
-        .respondWithData(() => new Array(users))
-        .respondWithData(() => new Array(fieldKeys))
-        .respondWithData(() => new Array(fieldKeys))
+        .respondWithData(() => new Array(1000))
+        .respondWithData(() => new Array(1000))
+        .respondWithData(() => new Array(1000))
         .afterResponses(app => {
           const counts = app
             .find('.root-entity-count a')
             .map(a => a.text().trim());
-          counts.length.should.equal(3);
-          counts[0].should.equal(users.toLocaleString());
-          counts[1].should.equal(fieldKeys.toLocaleString());
-          counts[2].should.equal(fieldKeys.toLocaleString());
-        });
-    });
+          counts.should.eql(['1,000', '1,000', '1,000']);
+        }));
 
     describe('clicking anywhere on the block routes to correct page', () => {
-      const routes = ['/users', '/users/field-keys', '/users/field-keys'];
+      const routes = ['/users', '/users', '/users'];
       for (let i = 0; i < routes.length; i += 1) {
         it(`renders 4 links in entity ${i}`, () =>
           mockRoute('/')
             .respondWithData(() => new Array(1))
             .respondWithData(() => new Array(1))
             .respondWithData(() => new Array(1))
-            .afterResponses(app =>
-              app.find('.root-entity')[i].find('a').length.should.equal(4)));
+            .afterResponses(app => {
+              app.find('.root-entity')[i].find('a').length.should.equal(4);
+            }));
 
         it(`routes to correct page after user clicks a link in entity ${i}`, () =>
           mockRoute('/')
@@ -81,7 +74,9 @@ describe('RootHome', () => {
               return trigger.click(faker.random.arrayElement(a));
             })
             .respondWithProblem()
-            .afterResponse(app => app.vm.$route.path.should.equal(routes[i])));
+            .afterResponse(app => {
+              app.vm.$route.path.should.equal(routes[i]);
+            }));
       }
     });
   });
