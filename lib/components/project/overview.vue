@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div class="row">
       <div class="col-xs-6">
-        <page-section id="project-overview-text">
+        <page-section id="project-overview-about">
           <template slot="heading"><span>About Projects</span></template>
           <template slot="body">
             <p>
@@ -33,6 +33,35 @@ except according to the terms contained in the LICENSE file.
               if you have any feedback please visit
               <a href="https://forum.opendatakit.org/t/16857" target="_blank">this forum thread</a>.
             </p>
+          </template>
+        </page-section>
+      </div>
+      <div class="col-xs-6">
+        <page-section id="project-overview-right-now">
+          <template slot="heading"><span>Right Now</span></template>
+          <template slot="body">
+            <loading :state="fieldKeys == null || awaitingResponse"/>
+            <div v-if="fieldKeys != null && forms != null">
+              <div>
+                <div class="project-overview-right-now-count">
+                  {{ fieldKeys.length }}
+                </div>
+                <div>
+                  {{ $pluralize('App User', fieldKeys.length) }} who can use a
+                  data collection client to download and submit Form data to
+                  this Project.
+                </div>
+              </div>
+              <div>
+                <div class="project-overview-right-now-count">
+                  {{ forms.length }}
+                </div>
+                <div>
+                  {{ $pluralize('Form', forms.length) }} which can be downloaded
+                  and given as surveys on mobile clients.
+                </div>
+              </div>
+            </div>
           </template>
         </page-section>
       </div>
@@ -106,7 +135,7 @@ export default {
 </script>
 
 <style lang="sass">
-#project-overview-text {
+#project-overview-about, #project-overview-right-now {
   margin-top: 10px;
 }
 </style>
