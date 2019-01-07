@@ -48,28 +48,13 @@ export const extendedForms = dataStore({
     xmlFormId = faker.central.xmlFormId(),
     name = faker.random.boolean() ? faker.name.findName() : null,
     isOpen = !inPast || faker.random.boolean(),
+    submissions = !inPast || faker.random.boolean()
+      ? 0
+      : faker.random.number({ min: 1 }),
 
     hasInstanceId = faker.random.boolean(),
-    schema = defaultSchema(hasInstanceId),
-
-    ...options
+    schema = defaultSchema(hasInstanceId)
   }) => {
-    if (options.submissions != null) {
-      if (!inPast && options.submissions !== 0)
-        throw new Error('inPast and submissions are inconsistent');
-      if (options.hasSubmission != null &&
-        (options.submissions !== 0) !== options.hasSubmission)
-        throw new Error('submissions and hasSubmission are inconsistent');
-    } else {
-      if (!inPast && options.hasSubmission === true)
-        throw new Error('inPast and hasSubmission are inconsistent');
-      const hasSubmission = options.hasSubmission != null
-        ? options.hasSubmission
-        : inPast && faker.random.boolean();
-      // eslint-disable-next-line no-param-reassign
-      options.submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-    }
-    const { submissions } = options;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const createdBy = administrators.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [

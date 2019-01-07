@@ -1,3 +1,4 @@
+import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
@@ -40,7 +41,8 @@ describe('FormOverview', () => {
       fieldKeyCount = 0
     }) => {
       testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { hasSubmission, isOpen: formIsOpen });
+      const submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
+      testData.extendedForms.createPast(1, { isOpen: formIsOpen, submissions });
       if (attachmentCount !== 0) {
         testData.extendedFormAttachments.createPast(
           attachmentCount,

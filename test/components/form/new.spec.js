@@ -18,7 +18,7 @@ const propsData = () => ({
   }
 });
 const createForm = (modal) => {
-  testData.extendedForms.createNew({ hasSubmission: false });
+  testData.extendedForms.createNew();
   return modal;
 };
 const file = () => new File([XML], XML_FILENAME);
