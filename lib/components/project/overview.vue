@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <page-section id="project-overview-text">
-          <template slot="heading"><span>Projects</span></template>
+          <template slot="heading"><span>About Projects</span></template>
           <template slot="body">
             <p>
               Any Forms you create in this Project will only be visible on data
