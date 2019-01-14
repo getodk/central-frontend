@@ -203,7 +203,11 @@ export default {
 
   button {
     float: right;
-    margin-left: 10px;
+    margin-left: 20px;
+  }
+
+  p {
+    max-width: 600px;
   }
 }
 
