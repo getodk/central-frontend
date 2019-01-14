@@ -11,62 +11,60 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <!-- This is pretty ugly -- is there another pattern we can use? -->
-    <project-field-keys-fetch :project-id="projectId"
-      :request-counter="fieldKeysRequestCounter" @complete="setMaybeFieldKeys"/>
     <router-view :project-id="projectId" :maybe-project="maybeProject"
       :maybe-field-keys="maybeFieldKeys" @refresh-field-keys="fetchFieldKeys"/>
   </div>
 </template>
 
 <script>
-import MaybeData from '../../maybe-data';
-import ProjectFieldKeysFetch from './field-keys-fetch.vue';
+import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
 
 export default {
   name: 'ProjectHome',
-  components: { ProjectFieldKeysFetch },
   mixins: [request()],
   data() {
     return {
       requestId: null,
       maybeProject: null,
-      fieldKeysRequestCounter: 0,
       maybeFieldKeys: null
     };
   },
   computed: {
     projectId() {
       return this.$route.params.projectId;
+    },
+    maybeGetFieldKeysOptions() {
+      return {
+        url: `/projects/${this.projectId}/app-users`,
+        extended: true,
+        transform: (data) => data.map(fieldKey => new FieldKey(fieldKey))
+      };
     }
   },
   watch: {
     projectId() {
-      this.fetchData();
+      this.fetchProjectAndFieldKeys();
     }
   },
   created() {
-    this.fetchData();
+    this.fetchProjectAndFieldKeys();
   },
   methods: {
-    fetchProject() {
+    fetchProjectAndFieldKeys() {
       this.maybeGet({
         maybeProject: {
           url: `/projects/${this.projectId}`
-        }
+        },
+        maybeFieldKeys: this.maybeGetFieldKeysOptions
       });
     },
     fetchFieldKeys() {
-      this.maybeFieldKeys = MaybeData.awaiting();
-      this.fieldKeysRequestCounter += 1;
-    },
-    fetchData() {
-      this.fetchProject();
-      this.fetchFieldKeys();
-    },
-    setMaybeFieldKeys(maybeFieldKeys) {
-      this.maybeFieldKeys = maybeFieldKeys;
+      // If there has not been a response yet to the request for the project,
+      // this request will effectively cancel that request. That means that this
+      // method should only be called once the project response has been
+      // received.
+      this.maybeGet({ maybeFieldKeys: this.maybeGetFieldKeysOptions });
     }
   }
 };
