@@ -44,20 +44,22 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="maybeProject.awaiting || maybeForm.awaiting"/>
-      <!-- It might be possible to remove this <div> element and move the v-if
-      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
-      supports that use case. -->
-      <div v-if="maybeProject.success && maybeForm.success">
-        <keep-alive>
-          <router-view :project-id="projectId"
-            :maybe-field-keys="maybeFieldKeys" :form="maybeForm.data"
-            :attachments="maybeAttachments.data"
-            :chunk-sizes="submissionChunkSizes"
-            :scrolled-to-bottom="scrolledToBottom"
-            @attachment-change="updateAttachment"
-            @update:submissions="updateSubmissions"
-            @state-change="updateState"/>
-        </keep-alive>
+      <!-- <router-view> is created and can send its own requests once the form
+      response has been received. We do not wait for the project response in a
+      similar way. -->
+      <div v-if="maybeForm.success">
+        <div v-show="maybeProject.success">
+          <keep-alive>
+            <router-view :project-id="projectId"
+              :maybe-field-keys="maybeFieldKeys" :form="maybeForm.data"
+              :attachments="maybeAttachments.data"
+              :chunk-sizes="submissionChunkSizes"
+              :scrolled-to-bottom="scrolledToBottom"
+              @attachment-change="updateAttachment"
+              @update:submissions="updateSubmissions"
+              @state-change="updateState"/>
+          </keep-alive>
+        </div>
       </div>
     </page-body>
   </div>
