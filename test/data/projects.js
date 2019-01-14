@@ -29,7 +29,7 @@ export const extendedProjects = dataStore({
       updatedAt
     };
   },
-  sort: 'name'
+  sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 
 export const simpleProjects = view(
