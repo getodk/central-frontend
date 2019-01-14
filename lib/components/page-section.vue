@@ -40,6 +40,7 @@ export default {
   > span:first-child {
     color: #555;
     font-weight: bold;
+    // In case there is a button next to the heading title
     margin-right: 6px;
   }
 }
