@@ -15,7 +15,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
-import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 
 export default {
@@ -33,12 +32,16 @@ export default {
   },
   data() {
     return {
-      requestId: null
+      requestId: null,
+      maybeFieldKeys: null
     };
   },
   watch: {
     requestCounter() {
       this.fetchData();
+    },
+    maybeFieldKeys(maybeFieldKeys) {
+      if (!maybeFieldKeys.awaiting) this.$emit('complete', maybeFieldKeys);
     }
   },
   created() {
@@ -46,15 +49,13 @@ export default {
   },
   methods: {
     fetchData() {
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.get(`/projects/${this.projectId}/app-users`, { headers })
-        .then(({ data }) => {
-          const fieldKeys = data.map(fieldKey => new FieldKey(fieldKey));
-          this.$emit('complete', MaybeData.success(fieldKeys));
-        })
-        .catch(() => {
-          this.$emit('complete', MaybeData.error());
-        });
+      this.maybeGet({
+        maybeFieldKeys: {
+          url: `/projects/${this.projectId}/app-users`,
+          extended: true,
+          transform: (data) => data.map(fieldKey => new FieldKey(fieldKey))
+        }
+      });
     }
   }
 };

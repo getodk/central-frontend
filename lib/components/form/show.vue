@@ -124,23 +124,18 @@ export default {
   },
   methods: {
     fetchData() {
-      this.maybeForm = MaybeData.awaiting();
-      this.maybeAttachments = MaybeData.awaiting();
-      const formPath = `/projects/${this.projectId}/forms/${this.encodedFormId}`;
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.requestAll([
-        this.$http.get(formPath, { headers }),
-        this.$http.get(`${formPath}/attachments`, { headers })
-      ])
-        .then(([form, attachments]) => {
-          this.maybeForm = MaybeData.success(new Form(form.data));
-          this.maybeAttachments = MaybeData.success(attachments.data
-            .map(attachment => new FormAttachment(attachment)));
-        })
-        .catch(() => {
-          this.maybeForm = MaybeData.error();
-          this.maybeAttachments = MaybeData.error();
-        });
+      this.maybeGet({
+        maybeForm: {
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
+          extended: true,
+          transform: (data) => new Form(data)
+        },
+        maybeAttachments: {
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
+          extended: true,
+          transform: (data) => data.map(attachment => new FormAttachment(attachment))
+        }
+      });
     },
     tabPathPrefix() {
       return `/projects/${this.projectId}/forms/${this.encodedFormId}`;

@@ -124,15 +124,13 @@ export default {
   },
   methods: {
     fetchData() {
-      this.maybeForms = MaybeData.awaiting();
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.get(`/projects/${this.projectId}/forms`, { headers })
-        .then(({ data }) => {
-          this.maybeForms = MaybeData.success(data.map(form => new Form(form)));
-        })
-        .catch(() => {
-          this.maybeForms = MaybeData.error();
-        });
+      this.maybeGet({
+        maybeForms: {
+          url: `/projects/${this.projectId}/forms`,
+          extended: true,
+          transform: (data) => data.map(form => new Form(form))
+        }
+      });
     },
     afterCreate(form) {
       const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;

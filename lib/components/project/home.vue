@@ -51,14 +51,11 @@ export default {
   },
   methods: {
     fetchProject() {
-      this.maybeProject = MaybeData.awaiting();
-      this.get(`/projects/${this.projectId}`)
-        .then(({ data }) => {
-          this.maybeProject = MaybeData.success(data);
-        })
-        .catch(() => {
-          this.maybeProject = MaybeData.error();
-        });
+      this.maybeGet({
+        maybeProject: {
+          url: `/projects/${this.projectId}`
+        }
+      });
     },
     fetchFieldKeys() {
       this.maybeFieldKeys = MaybeData.awaiting();
