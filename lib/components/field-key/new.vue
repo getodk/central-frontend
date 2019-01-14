@@ -18,7 +18,10 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
-              <option>Download and submit to all forms on this server</option>
+              <option>
+                {{ maybeProject.success ? maybeProject.data.name : '' }}
+                Forms
+              </option>
               <option disabled>
                 More options available soon (to choose particular Forms)
               </option>
@@ -74,6 +77,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
+import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 
 export default {
@@ -82,6 +86,10 @@ export default {
   props: {
     projectId: {
       type: String,
+      required: true
+    },
+    maybeProject: {
+      type: MaybeData,
       required: true
     },
     state: {

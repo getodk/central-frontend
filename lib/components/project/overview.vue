@@ -97,6 +97,9 @@ export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
   mixins: [modal('newForm'), request()],
+  // Setting this in order to ignore attributes from ProjectShow that are
+  // intended for other project components.
+  inheritAttrs: false,
   props: {
     projectId: {
       type: String,

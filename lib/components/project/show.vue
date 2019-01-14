@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to ProjectHome's
           requests for the project and the project's app users. -->
-          <router-view :project-id="projectId"
+          <router-view :project-id="projectId" :maybe-project="maybeProject"
             :maybe-field-keys="maybeFieldKeys"
             @refresh-field-keys="$emit('refresh-field-keys')"/>
         </keep-alive>
