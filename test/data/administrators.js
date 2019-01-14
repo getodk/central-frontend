@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 import faker from '../faker';
 import { dataStore } from './data-store';
 
@@ -10,5 +12,6 @@ export const administrators = dataStore({
     meta: null,
     ...faker.date.timestamps(inPast, [lastCreatedAt])
   }),
-  sort: 'email'
+  sort: R.comparator((administrator1, administrator2) =>
+    administrator1.email < administrator2.email)
 });

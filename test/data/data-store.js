@@ -131,34 +131,11 @@ class Collection {
 }
 
 class Store extends Collection {
-  constructor(options) {
+  constructor({ sort, ...factoryOptions }) {
     super();
-    const { sort, ...factoryOptions } = options;
     this._factory = new Factory(this, factoryOptions);
-    this._setCompareFunction(sort);
+    this._compareFunction = sort;
     this.clear();
-  }
-
-  _setCompareFunction(sort) {
-    if (sort == null) return;
-    if (typeof sort === 'function') {
-      this._compareFunction = sort;
-      return;
-    }
-    if (typeof sort === 'string') {
-      this._setCompareFunction([sort, true]);
-      return;
-    }
-    const [propertyName, asc] = sort;
-    this._compareFunction = (object1, object2) => {
-      const value1 = object1[propertyName];
-      const value2 = object2[propertyName];
-      if (value1 < value2)
-        return asc ? -1 : 1;
-      else if (value1 > value2)
-        return asc ? 1 : -1;
-      return 0;
-    };
   }
 
   createPast(count, constraintsOrOptions = undefined) {
@@ -203,9 +180,9 @@ class Store extends Collection {
   splice(start, deleteCount) { return this._objects.splice(start, deleteCount); }
 
   sorted() {
-    if (this._compareFunction == null) return [...this._objects];
-    const compare = this._compareFunction;
-    return [...this._objects].sort(compare);
+    const copy = [...this._objects];
+    if (this._compareFunction != null) copy.sort(this._compareFunction);
+    return copy;
   }
 
   factory() { return this._factory; }

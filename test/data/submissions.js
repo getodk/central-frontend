@@ -149,7 +149,8 @@ export const extendedSubmissions = dataStore({
       })
     };
   },
-  sort: ['createdAt', false]
+  sort: R.comparator((submission1, submission2) =>
+    submission1.createdAt > submission2.createdAt)
 });
 
 export const submissionOData = (top = 250, skip = 0) => {
