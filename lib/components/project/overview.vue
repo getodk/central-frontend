@@ -43,20 +43,34 @@ except according to the terms contained in the LICENSE file.
             <loading :state="maybeFieldKeys.awaiting || maybeForms.awaiting"/>
             <div v-if="maybeFieldKeys.success && maybeForms.success">
               <div>
+                <router-link :to="`/projects/${projectId}/app-users`"
+                  class="project-overview-right-now-icon-container">
+                  <span class="icon-user-circle"></span>
+                </router-link>
                 <div class="project-overview-right-now-count">
-                  {{ maybeFieldKeys.data.length }}
+                  <router-link :to="`/projects/${projectId}/app-users`">
+                    {{ maybeFieldKeys.data.length }}
+                    <span class="icon-angle-right"></span>
+                  </router-link>
                 </div>
-                <div>
+                <div class="project-overview-right-now-description">
                   {{ $pluralize('App User', maybeFieldKeys.data.length) }} who
                   can use a data collection client to download and submit Form
                   data to this Project.
                 </div>
               </div>
               <div>
+                <a href="#" class="project-overview-right-now-icon-container"
+                  @click.prevent="scrollToForms">
+                  <span class="icon-file-text"></span>
+                </a>
                 <div class="project-overview-right-now-count">
-                  {{ maybeForms.data.length }}
+                  <a href="#" @click.prevent="scrollToForms">
+                    {{ maybeForms.data.length }}
+                    <span class="icon-angle-right"></span>
+                  </a>
                 </div>
-                <div>
+                <div class="project-overview-right-now-description">
                   {{ $pluralize('Form', maybeForms.data.length) }} which can be
                   downloaded and given as surveys on mobile clients.
                 </div>
@@ -66,7 +80,7 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
-    <page-section>
+    <page-section id="project-overview-forms">
       <template slot="heading">
         <span>Forms</span>
         <button id="project-overview-new-form-button" type="button"
@@ -132,6 +146,10 @@ export default {
         }
       });
     },
+    scrollToForms() {
+      const scrollTop = Math.round($('#project-overview-forms').offset().top);
+      $('html, body').animate({ scrollTop });
+    },
     afterCreate(form) {
       const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
       this.$router.push(path, () => {
@@ -143,7 +161,55 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 #project-overview-about, #project-overview-right-now {
   margin-top: 10px;
+}
+
+#project-overview-right-now {
+  a {
+    color: unset;
+    text-decoration: unset;
+  }
+
+  .project-overview-right-now-icon-container {
+    float: left;
+    position: relative;
+
+    span {
+      color: #555;
+      font-size: 56px;
+      margin-right: 0;
+    }
+
+    .icon-file-text {
+      // .icon-file-text is a little more narrow than .icon-user-circle, so we
+      // use this to center it.
+      left: 4px;
+      position: relative;
+    }
+  }
+
+  .project-overview-right-now-count, .project-overview-right-now-description {
+    margin-left: 75px;
+  }
+
+  .project-overview-right-now-count {
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 3px;
+
+    .icon-angle-right {
+      color: $color-accent-primary;
+      font-size: 20px;
+      margin-right: 0;
+      vertical-align: 2px;
+    }
+  }
+
+  .project-overview-right-now-description {
+    margin-bottom: 30px;
+  }
 }
 </style>
