@@ -5,7 +5,13 @@ import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
 
 export const extendedFieldKeys = dataStore({
-  factory: ({ inPast, id, lastCreatedAt }) => {
+  factory: ({
+    inPast,
+    id,
+    lastCreatedAt,
+
+    token = !inPast || faker.random.boolean() ? faker.central.token() : null
+  }) => {
     const createdBy = administrators.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
@@ -14,7 +20,7 @@ export const extendedFieldKeys = dataStore({
     return {
       id,
       displayName: faker.name.findName(),
-      token: faker.random.arrayElement([faker.central.token(), null]),
+      token,
       meta: null,
       lastUsed: inPast && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
@@ -26,10 +32,6 @@ export const extendedFieldKeys = dataStore({
       createdAt,
       updatedAt
     };
-  },
-  constraints: {
-    withAccess: (fieldKey) => fieldKey.token != null,
-    withAccessRevoked: (fieldKey) => fieldKey.token == null
   },
   sort: (fieldKey1, fieldKey2) => {
     const accessRevoked1 = fieldKey1.token == null;

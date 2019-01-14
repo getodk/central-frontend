@@ -16,13 +16,13 @@ except according to the terms contained in the LICENSE file.
     <template slot="body">
       <div class="modal-introduction">
         <p>
-          Are you sure you want to revoke access from the app user
-          <strong>{{ fieldKey.displayName }}</strong>?
+          Are you sure you want to revoke access from the App User
+          <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>?
         </p>
         <p>
-          Existing submissions from this user will remain, but anybody relying
+          Existing Submissions from this user will remain, but anybody relying
           on this user will have to create a new one to continue downloading
-          forms or uploading submissions.
+          Forms or uploading Submissions.
         </p>
         <p>This action cannot be undone.</p>
       </div>
@@ -47,13 +47,10 @@ export default {
   name: 'FieldKeyRevoke',
   mixins: [request()],
   props: {
+    fieldKey: Object, // eslint-disable-line vue/require-default-prop
     state: {
       type: Boolean,
       default: false
-    },
-    fieldKey: {
-      type: Object,
-      required: true
     }
   },
   data() {

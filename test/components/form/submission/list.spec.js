@@ -30,6 +30,7 @@ describe('FormSubmissionList', () => {
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
         .respondWithData(() => project)
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
@@ -52,10 +53,11 @@ describe('FormSubmissionList', () => {
         .createPast(1, { form: forms[1] });
       return mockRoute(submissionsPath(forms[0]))
         .beforeEachResponse((app, request, index) => {
-          if (index === 3)
+          if (index === 4)
             request.url.should.equal('/projects/1/forms/a.schema.json?flatten=true');
         })
         .respondWithData(() => project)
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => forms[0])
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => forms[0]._schema)
@@ -102,7 +104,7 @@ describe('FormSubmissionList', () => {
       return mockHttp()
         .mount(FormSubmissionList, {
           propsData: {
-            projectId: 1,
+            projectId: '1',
             form: new Form(form()),
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom
@@ -456,6 +458,7 @@ describe('FormSubmissionList', () => {
           testData.extendedForms.createPast(1);
           return mockRoute(submissionsPath(form()))
             .respondWithData(() => testData.simpleProjects.last())
+            .respondWithData(() => testData.extendedFieldKeys.sorted())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .respondWithData(() => form()._schema)
@@ -689,9 +692,9 @@ describe('FormSubmissionList', () => {
           const [small = 250, large = 1000] = chunkSizes;
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
             .respondWithData(() => testData.simpleProjects.last())
+            .respondWithData(() => testData.extendedFieldKeys.sorted())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
-            .respondWithData(() => testData.simpleFieldKeys.sorted())
             .afterResponses(app => {
               const formShow = app.first(FormShow);
               formShow.setData({

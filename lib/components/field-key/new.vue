@@ -18,9 +18,12 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
-              <option>Download and submit to all forms on this server</option>
+              <option>
+                {{ maybeProject.success ? maybeProject.data.name : '' }}
+                Forms
+              </option>
               <option disabled>
-                More options available soon (to choose particular forms)
+                More options available soon (to choose particular Forms)
               </option>
             </select>
             <span class="form-label">Access *</span>
@@ -47,7 +50,7 @@ except according to the terms contained in the LICENSE file.
         <div class="modal-introduction text-center">
           <div>
             <span class="icon-check-circle text-success"></span>
-            <strong>Success!</strong> The app user “{{ created.displayName }}”
+            <strong>Success!</strong> The App User “{{ created.displayName }}”
             has been created.
           </div>
           <div v-html="created.qrCodeHtml()"></div>
@@ -74,12 +77,21 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
+import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 
 export default {
   name: 'FieldKeyNew',
   mixins: [request()],
   props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    maybeProject: {
+      type: MaybeData,
+      required: true
+    },
     state: {
       type: Boolean,
       default: false
@@ -100,8 +112,8 @@ export default {
       this.$refs.nickname.focus();
     },
     submit() {
-      this
-        .post('/field-keys', { displayName: this.nickname })
+      const path = `/projects/${this.projectId}/app-users`;
+      this.post(path, { displayName: this.nickname })
         .then(({ data }) => {
           // Reset the form.
           this.$alert().blank();

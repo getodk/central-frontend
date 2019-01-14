@@ -39,7 +39,7 @@ export default {
   name: 'FormRow',
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

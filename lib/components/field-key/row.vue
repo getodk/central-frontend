@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         Access revoked
       </template>
     </td>
-    <td class="field-key-list-actions">
+    <td>
       <div class="dropdown">
         <button :id="actionsId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
@@ -54,10 +54,7 @@ export default {
       type: Object,
       required: true
     },
-    // eslint-disable-next-line vue/require-default-prop
-    highlighted: {
-      type: Number
-    }
+    highlighted: Number // eslint-disable-line vue/require-default-prop
   },
   computed: {
     created() {
@@ -77,8 +74,8 @@ export default {
       this.$emit('show-code', this.fieldKey, this.$refs.popoverLink);
     },
     revoke() {
-      // Bootstrap does not actually disable dropdown menu items marked as
-      // disabled.
+      // Bootstrap does not truly disable dropdown menu items marked as
+      // disabled, so we inspect the token again here.
       if (this.fieldKey.token == null) return;
       this.$emit('revoke', this.fieldKey);
     }

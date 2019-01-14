@@ -51,7 +51,7 @@ export default {
   name: 'FormAttachmentRow',
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

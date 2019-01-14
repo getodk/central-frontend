@@ -14,11 +14,11 @@ const openModal = (wrapper) => trigger
   .then(() => findModal(wrapper));
 const propsData = () => ({
   propsData: {
-    projectId: 1
+    projectId: '1'
   }
 });
 const createForm = (modal) => {
-  testData.extendedForms.createNew({ hasSubmission: false });
+  testData.extendedForms.createNew();
   return modal;
 };
 const file = () => new File([XML], XML_FILENAME);
@@ -50,9 +50,9 @@ describe('FormNew', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      // Mocking the route, because FormList uses <router-link>.
       mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
         .then(modal => {
@@ -62,6 +62,7 @@ describe('FormNew', () => {
     it('is shown after button click', () =>
       mockRoute('/projects/1')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
         .then(modal => {
@@ -122,16 +123,13 @@ describe('FormNew', () => {
 
       describe('after successful submit', () => {
         let app;
-        let form;
         beforeEach(() => mockRoute('/projects/1')
           .respondWithData(() => testData.simpleProjects.createPast(1).last())
+          .respondWithData(() => testData.extendedFieldKeys.sorted())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            form = testData.extendedForms.createNew({
-              hasName: true,
-              hasSubmission: false
-            });
+            testData.extendedForms.createNew({ name: 'xyz', submissions: 0 });
           })
           .request(() => openModal(app)
             .then(selectFile)
@@ -139,14 +137,16 @@ describe('FormNew', () => {
             .then(clickCreateButtonInModal))
           .respondWithData(() => testData.simpleForms.last()) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
-          .respondWithData(() => testData.extendedFormAttachments.sorted()) // FormShow
-          .respondWithData(() => testData.simpleFieldKeys.sorted())); // FormOverview
+          .respondWithData(() => testData.extendedFormAttachments.sorted()));
 
         it('redirects to the form overview', () => {
-          app.vm.$route.path.should.equal(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`);
+          const form = testData.extendedForms.last();
+          const encodedFormId = encodeURIComponent(form.xmlFormId);
+          app.vm.$route.path.should.equal(`/projects/1/forms/${encodedFormId}`);
         });
 
         it('shows form name', () => {
+          const form = testData.extendedForms.last();
           app.first('#page-head-title').text().trim().should.equal(form.name);
         });
 
@@ -189,7 +189,7 @@ describe('FormNew', () => {
             }
           }))
           .afterResponse(modal => {
-            modal.should.alert('danger', 'A form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the form again.');
+            modal.should.alert('danger', 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
           }));
     });
   }

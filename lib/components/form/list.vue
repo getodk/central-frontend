@@ -10,63 +10,40 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <loading :state="awaitingResponse"/>
-    <template v-if="forms != null">
-      <p v-if="forms.length === 0" id="form-list-message">
-        To get started, add a form.
-      </p>
-      <table v-else id="form-list-table" class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Created by</th>
-            <th>Last Modified</th>
-            <th>Last Submission</th>
-          </tr>
-        </thead>
-        <tbody>
-          <form-row v-for="form of forms" :key="form.xmlFormId"
-            :project-id="projectId" :form="form"/>
-        </tbody>
-      </table>
-    </template>
-  </div>
+  <p v-if="forms.length === 0" id="form-list-empty-message">
+    To get started, add a Form.
+  </p>
+  <table v-else id="form-list-table" class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Created by</th>
+        <th>Last Modified</th>
+        <th>Last Submission</th>
+      </tr>
+    </thead>
+    <tbody>
+      <form-row v-for="form of forms" :key="form.xmlFormId"
+        :project-id="projectId" :form="form"/>
+    </tbody>
+  </table>
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import FormRow from './row.vue';
-import request from '../../mixins/request';
 
 export default {
   name: 'FormList',
   components: { FormRow },
-  mixins: [request()],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
-    }
-  },
-  data() {
-    return {
-      requestId: null,
-      forms: null
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.forms = null;
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.get(`/projects/${this.projectId}/forms`, { headers })
-        .then(({ data }) => {
-          this.forms = data.map(form => new Form(form));
-        })
-        .catch(() => {});
+    },
+    // Array of Form presenters
+    forms: {
+      type: Array,
+      required: true
     }
   }
 };

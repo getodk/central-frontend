@@ -1,5 +1,6 @@
 import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
+import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
@@ -17,45 +18,48 @@ describe('FieldKeyRevoke', () => {
 
   describe('modal', () => {
     it('opens upon click for an app user whose access is not revoked', () =>
-      mockHttp()
-        .mount(FieldKeyList)
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccess').sorted())
-        .afterResponse(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
-          return page;
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys
+          .createPast(1, { token: faker.central.token() })
+          .sorted())
+        .afterResponses(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return app;
         })
         .then(clickRevokeInMenu)
-        .then(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.true();
+        .then(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.true();
         }));
 
     it('does not open upon click for an app user whose access is revoked', () =>
-      mockHttp()
-        .mount(FieldKeyList)
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
         .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
-        .afterResponse(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
-          return page;
+          testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
+        .afterResponses(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return app;
         })
         .then(clickRevokeInMenu)
-        .then(page => {
-          page.first(FieldKeyRevoke).getProp('state').should.be.false();
+        .then(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
         }));
   });
 
   it('revoke button is disabled for an app user whose access is revoked', () =>
-    mockHttp()
-      .mount(FieldKeyList)
+    mockRoute('/projects/1/app-users')
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
       .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(1, 'withAccessRevoked').sorted())
-      .afterResponse(page => {
-        page.first('.dropdown-menu li').hasClass('disabled').should.be.true();
+        testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
+      .afterResponses(app => {
+        const li = app.first(FieldKeyList).first('.dropdown-menu li');
+        li.hasClass('disabled').should.be.true();
       }));
 
   it('standard button thinking things', () => {
-    const fieldKey = testData.extendedFieldKeys.createPast(1, 'withAccess').last();
+    const token = faker.central.token();
+    const fieldKey = testData.extendedFieldKeys.createPast(1, { token }).last();
     const propsData = { fieldKey };
     return mockHttp()
       .mount(FieldKeyRevoke, { propsData })
@@ -65,10 +69,13 @@ describe('FieldKeyRevoke', () => {
 
   describe('after successful response', () => {
     let app;
-    beforeEach(() => mockRoute('/users/field-keys')
-      .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(2, 'withAccess').sorted())
-      .afterResponse(component => {
+    beforeEach(() => mockRoute('/projects/1/app-users')
+      .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedFieldKeys
+        .createPast(1, { token: faker.central.token() })
+        .createPast(1, { token: faker.central.token() })
+        .sorted())
+      .afterResponses(component => {
         app = component;
       })
       .request(() => clickRevokeInMenu(app)

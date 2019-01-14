@@ -11,21 +11,21 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="project != null && form != null">
+    <page-head v-show="maybeProject.success && maybeForm.success">
       <template slot="context">
-        <span>{{ project != null ? project.name : '' }}</span>
+        <span>{{ maybeProject.success ? maybeProject.data.name : '' }}</span>
         <router-link :to="`/projects/${projectId}`">
           Back to Project Overview
         </router-link>
       </template>
       <template slot="title">
-        {{ form != null ? form.nameOrId() : '' }}
+        {{ maybeForm.success ? maybeForm.data.nameOrId() : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="attachments != null && attachments.length !== 0"
+        <li v-if="maybeAttachments.success && maybeAttachments.data.length !== 0"
           :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
@@ -43,19 +43,23 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="project == null || awaitingResponse"/>
-      <!-- It might be possible to remove this <div> element and move the v-if
-      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
-      supports that use case. -->
-      <div v-if="project != null && form != null">
-        <keep-alive>
-          <router-view :project-id="projectId" :form="form"
-            :attachments="attachments" :chunk-sizes="submissionChunkSizes"
-            :scrolled-to-bottom="scrolledToBottom"
-            @attachment-change="updateAttachment"
-            @update:submissions="updateSubmissions"
-            @state-change="updateState"/>
-        </keep-alive>
+      <loading :state="maybeProject.awaiting || maybeForm.awaiting"/>
+      <!-- <router-view> is created and can send its own requests once the form
+      response has been received. We do not wait for the project response in a
+      similar way. -->
+      <div v-if="maybeForm.success">
+        <div v-show="maybeProject.success">
+          <keep-alive>
+            <router-view :project-id="projectId"
+              :maybe-field-keys="maybeFieldKeys" :form="maybeForm.data"
+              :attachments="maybeAttachments.data"
+              :chunk-sizes="submissionChunkSizes"
+              :scrolled-to-bottom="scrolledToBottom"
+              @attachment-change="updateAttachment"
+              @update:submissions="updateSubmissions"
+              @state-change="updateState"/>
+          </keep-alive>
+        </div>
       </div>
     </page-body>
   </div>
@@ -65,6 +69,7 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
 import FormSubmissionList from './submission/list.vue';
+import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
 import tab from '../../mixins/tab';
 
@@ -73,16 +78,23 @@ export default {
   mixins: [request(), tab()],
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
-    project: Object // eslint-disable-line vue/require-default-prop
+    maybeProject: {
+      type: MaybeData,
+      required: true
+    },
+    maybeFieldKeys: {
+      type: MaybeData,
+      required: true
+    }
   },
   data() {
     return {
       requestId: null,
-      form: null,
-      attachments: null,
+      maybeForm: null,
+      maybeAttachments: null,
       // Passing these to FormSubmissionList in order to facilitate
       // FormSubmissionList testing.
       submissionChunkSizes: FormSubmissionList.props.chunkSizes.default(),
@@ -97,7 +109,9 @@ export default {
       return encodeURIComponent(this.xmlFormId);
     },
     missingAttachments() {
-      return this.attachments.filter(attachment => !attachment.exists).length;
+      return this.maybeAttachments.data
+        .filter(attachment => !attachment.exists)
+        .length;
     }
   },
   watch: {
@@ -110,34 +124,34 @@ export default {
   },
   methods: {
     fetchData() {
-      this.form = null;
-      this.attachments = null;
-      const formPath = `/projects/${this.projectId}/forms/${this.encodedFormId}`;
-      const headers = { 'X-Extended-Metadata': 'true' };
-      this.requestAll([
-        this.$http.get(formPath, { headers }),
-        this.$http.get(`${formPath}/attachments`, { headers })
-      ])
-        .then(([form, attachments]) => {
-          this.form = new Form(form.data);
-          this.attachments = attachments.data
-            .map(attachment => new FormAttachment(attachment));
-        })
-        .catch(() => {});
+      this.maybeGet({
+        maybeForm: {
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
+          extended: true,
+          transform: (data) => new Form(data)
+        },
+        maybeAttachments: {
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
+          extended: true,
+          transform: (data) => data.map(attachment => new FormAttachment(attachment))
+        }
+      });
     },
     tabPathPrefix() {
       return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
     },
     updateAttachment(newAttachment) {
-      const index = this.attachments
+      const index = this.maybeAttachments.data
         .findIndex(attachment => attachment.name === newAttachment.name);
-      this.$set(this.attachments, index, newAttachment);
+      this.$set(this.maybeAttachments.data, index, newAttachment);
     },
     updateSubmissions(submissions) {
-      this.form = this.form.with({ submissions });
+      const form = this.maybeForm.data.with({ submissions });
+      this.maybeForm = MaybeData.success(form);
     },
     updateState(newState) {
-      this.form = this.form.with({ state: newState });
+      const form = this.maybeForm.data.with({ state: newState });
+      this.maybeForm = MaybeData.success(form);
     }
   }
 };

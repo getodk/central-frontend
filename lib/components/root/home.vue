@@ -22,15 +22,16 @@ except according to the terms contained in the LICENSE file.
         <div class="panel-body">
           <div class="row">
             <div class="col-xs-6">
-              <root-entity :icons="['user-circle', 'cog']" name="Web User"
-                data-from="/users" route-to="/users"
+              <root-entity :icons="['user-circle', 'cog']"
+                name="Web User" data-from="/users" route-to="/users"
                 @fetched="incrementCounter" @error="fetchError">
                 who can administer projects through this website.
               </root-entity>
             </div>
+            <!-- TODO. Remove this. -->
             <div class="col-xs-6">
-              <root-entity :icons="['user-circle', 'mobile']" name="App User"
-                data-from="/field-keys" route-to="/users/field-keys"
+              <root-entity v-show="false" :icons="['user-circle', 'mobile']"
+                name="App User" data-from="/users" route-to="/users"
                 @fetched="incrementCounter" @error="fetchError">
                 who can use a data collection client to download and submit form
                 data to this server.
@@ -38,8 +39,8 @@ except according to the terms contained in the LICENSE file.
             </div>
           </div>
           <!-- TODO. Remove this. -->
-          <root-entity v-show="false" :icons="['file-text']" name="Form"
-            data-from="/field-keys" route-to="/users/field-keys"
+          <root-entity v-show="false" :icons="['file-text']"
+            name="Form" data-from="/users" route-to="/users"
             @fetched="incrementCounter" @error="fetchError">
             which can be downloaded and administered as surveys on mobile
             clients.

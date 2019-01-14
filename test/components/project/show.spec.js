@@ -11,13 +11,14 @@ describe('ProjectShow', () => {
       .beforeEachResponse(app => {
         const components = app.find(Loading);
         const states = components.map(component => component.getProp('state'));
-        states.should.eql([true, true]);
+        states.should.eql([true, true, true]);
       })
       .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedFieldKeys.sorted())
       .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponses(app => {
         const components = app.find(Loading);
         const states = components.map(component => component.getProp('state'));
-        states.should.eql([false, false]);
+        states.should.eql([false, false, false]);
       }));
 });

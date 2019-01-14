@@ -14,19 +14,9 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template slot="title">Users</template>
       <template slot="body">
-        Web Users can log into this website to perform administrative tasks,
-        while App Users can use mobile clients (like
-        <doc-link to="collect-intro/">Collect</doc-link>)
-        to download, fill out, and submit forms.
-        <doc-link to="central-users/">Learn more</doc-link>
-      </template>
-      <template slot="tabs">
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Web Users</router-link>
-        </li>
-        <li :class="tabClass('field-keys')" role="presentation">
-          <router-link :to="tabPath('field-keys')">App Users</router-link>
-        </li>
+        Web Users can log into this website to perform administrative tasks.
+        Soon, you will be able to assign Web Users rights to only manage
+        particular Projects.
       </template>
     </page-head>
     <page-body>
@@ -38,15 +28,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import tab from '../../mixins/tab';
-
 export default {
-  name: 'UserHome',
-  mixins: [tab()],
-  methods: {
-    tabPathPrefix() {
-      return '/users';
-    }
-  }
+  name: 'UserHome'
 };
 </script>

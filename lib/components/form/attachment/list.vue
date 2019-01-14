@@ -82,7 +82,7 @@ export default {
   inheritAttrs: false,
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     form: {

@@ -46,31 +46,17 @@ export const extendedForms = dataStore({
     // eslint-disable-next-line no-unused-vars
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
-    hasName = faker.random.boolean(),
-    isOpen = !inPast || faker.random.boolean(),
+    name = faker.random.boolean() ? faker.name.findName() : null,
+    state = !inPast
+      ? 'open'
+      : faker.random.arrayElement(['open', 'closing', 'closed']),
+    submissions = !inPast || faker.random.boolean()
+      ? 0
+      : faker.random.number({ min: 1 }),
 
     hasInstanceId = faker.random.boolean(),
-    schema = defaultSchema(hasInstanceId),
-
-    ...options
+    schema = defaultSchema(hasInstanceId)
   }) => {
-    if (options.submissions != null) {
-      if (!inPast && options.submissions !== 0)
-        throw new Error('inPast and submissions are inconsistent');
-      if (options.hasSubmission != null &&
-        (options.submissions !== 0) !== options.hasSubmission)
-        throw new Error('submissions and hasSubmission are inconsistent');
-    } else {
-      if (!inPast && options.hasSubmission === true)
-        throw new Error('inPast and hasSubmission are inconsistent');
-      const hasSubmission = options.hasSubmission != null
-        ? options.hasSubmission
-        : inPast && faker.random.boolean();
-      // eslint-disable-next-line no-param-reassign
-      options.submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-    }
-    const { submissions } = options;
-    const name = hasName ? faker.name.findName() : null;
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const createdBy = administrators.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
@@ -81,7 +67,7 @@ export const extendedForms = dataStore({
       xmlFormId,
       name,
       version,
-      state: isOpen ? 'open' : faker.random.arrayElement(['closing', 'closed']),
+      state,
       hash: faker.random.hash(32),
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
@@ -102,7 +88,11 @@ export const extendedForms = dataStore({
       _schema: schema
     };
   },
-  sort: 'name'
+  sort: (form1, form2) => {
+    const nameOrId1 = form1.name != null ? form1.name : form1.xmlFormId;
+    const nameOrId2 = form2.name != null ? form2.name : form2.xmlFormId;
+    return nameOrId1.localeCompare(nameOrId2);
+  }
 });
 
 export const simpleForms = view(extendedForms, (extendedForm) => {

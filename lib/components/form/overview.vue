@@ -11,16 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <loading :state="awaitingResponse"/>
-    <div v-if="fieldKeyCount !== null" class="panel panel-simple">
+    <loading :state="maybeFieldKeys.awaiting"/>
+    <div v-if="maybeFieldKeys.success" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
         <form-overview-step :stage="stepStage(0)">
-          <template slot="title">Create and upload form</template>
+          <template slot="title">Create and upload Form</template>
           <p>
-            <strong>Great work!</strong> Your form design has been loaded
-            successfully. It is ready to accept submissions. You will have to
-            start over with a new form if you wish to make changes to the form
+            <strong>Great work!</strong> Your Form design has been loaded
+            successfully. It is ready to accept Submissions. You will have to
+            start over with a new Form if you wish to make changes to the Form
             questions.
             <doc-link to="central-forms/#uploading-a-form-to-odk-central">
               Click here to find out more.
@@ -31,44 +31,48 @@ except according to the terms contained in the LICENSE file.
         consistent, which makes testing easier. -->
         <form-overview-step v-show="attachments.length !== 0"
           :stage="stepStage(1)">
-          <template slot="title">Upload form media files</template>
+          <template slot="title">Upload Form media files</template>
           <p>
-            Your form design references files that we need in order to present
-            your form. You can upload these for distribution under the
-            <router-link :to="formPath('media-files')">Media Files</router-link>
-            tab. If you change your mind or make a replace, you can always
-            replace the files.
+            Your Form design references files that we need in order to present
+            your Form. You can upload these for distribution under the
+            <router-link :to="formPath('media-files')">
+              Media Files tab</router-link>.
+            If you change your mind or make a mistake, you can always replace
+            the files.
             <doc-link to="central-forms/#forms-with-attachments">
               Click here to find out more.
             </doc-link>
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(2)">
-          <template slot="title">Download form on survey clients and submit data</template>
+          <template slot="title">Download Form on survey clients and submit data</template>
           <p>
             <template v-if="form.submissions === 0">
-              Nobody has submitted any data to this form yet.
+              Nobody has submitted any data to this Form yet.
             </template>
             <template v-else>
               A total of {{ form.submissions.toLocaleString() }}
-              {{ $pluralize('submission', form.submissions) }}
+              {{ $pluralize('Submission', form.submissions) }}
               {{ $pluralize('has', form.submissions) }} been sent to this
               server.
             </template>
-            App Users will be able to see this form on their mobile device to
+            App Users will be able to see this Form on their mobile device to
             download and fill out.
-            <template v-if="fieldKeyCount === 0">
-              <strong>You do not have any App Users on this server yet, so
-              nobody will be able to use this form.</strong> You can create them
-              on the <router-link to="/users/field-keys">App Users tab of the
-              Users settings</router-link>.
+            <template v-if="maybeFieldKeys.data.length === 0">
+              <strong>You have not created any App Users for this Project yet,
+              so nobody will be able to use this Form.</strong> You can create
+              them on the
+              <router-link :to="`/projects/${projectId}/app-users`">
+                App Users tab of the Project page</router-link>.
             </template>
             <template v-else>
-              Right now, you have
-              <router-link to="/users/field-keys">
-                <strong>{{ fieldKeyCount.toLocaleString() }} App Users</strong>
-              </router-link>
-              on this server, but you can always add more.
+              Right now, this Project has
+              <router-link :to="`/projects/${projectId}/app-users`">
+                <!-- Not using toLocaleString(), as a project with 1,000+ app
+                users is unlikely. -->
+                <!-- eslint-disable-next-line max-len -->
+                <strong>{{ $pluralize('App User', maybeFieldKeys.data.length, true) }}</strong></router-link>,
+              but you can always add more.
             </template>
             <doc-link to="central-submissions/">
               Click here to find out more.
@@ -79,14 +83,14 @@ except according to the terms contained in the LICENSE file.
           <template slot="title">Evaluate and analyze submitted data</template>
           <p>
             <template v-if="form.submissions === 0">
-              Once there is data for this form, you can export or synchronize it
+              Once there is data for this Form, you can export or synchronize it
               to monitor and analyze the data for quality and results.
             </template>
             <template v-else>
               You can export or synchronize the
               {{ form.submissions.toLocaleString() }}
-              {{ $pluralize('submission', form.submissions) }} on
-              this form to monitor and analyze them for quality and results.
+              {{ $pluralize('Submission', form.submissions) }} on
+              this Form to monitor and analyze them for quality and results.
             </template>
             You can do this with the Download and Analyze buttons on the
             <router-link :to="formPath('submissions')">Submissions tab</router-link>.
@@ -96,15 +100,15 @@ except according to the terms contained in the LICENSE file.
           </p>
         </form-overview-step>
         <form-overview-step :stage="stepStage(4)" last>
-          <template slot="title">Manage form retirement</template>
+          <template slot="title">Manage Form retirement</template>
           <p>
-            As you come to the end of your data collection project, you can use
-            the Form Lifecycle controls on
+            As you come to the end of your data collection, you can use the Form
+            Lifecycle controls on
             <router-link :to="formPath('settings')">
-              this form’s Settings tab
+              this Form’s Settings tab
             </router-link>
             to control whether, for example, App Users will be able to see or
-            create new submissions to this form.
+            create new Submissions to this Form.
             <doc-link to="central-forms/#managing-form-lifecycle">
               Click here to find out more.
             </doc-link>
@@ -118,18 +122,21 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import FormOverviewStep from './overview-step.vue';
-import request from '../../mixins/request';
+import MaybeData from '../../maybe-data';
 
 export default {
   name: 'FormOverview',
   components: { FormOverviewStep },
-  mixins: [request()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
   props: {
     projectId: {
-      type: Number,
+      type: String,
+      required: true
+    },
+    maybeFieldKeys: {
+      type: MaybeData,
       required: true
     },
     form: {
@@ -140,12 +147,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  data() {
-    return {
-      requestId: null,
-      fieldKeyCount: null
-    };
   },
   computed: {
     // Returns true if all form attachments exist and false if not. Returns true
@@ -167,19 +168,7 @@ export default {
       return this.stepCompletion.findIndex(isComplete => !isComplete);
     }
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
-    fetchData() {
-      this.fieldKeyCount = null;
-      this
-        .get('/field-keys')
-        .then(({ data }) => {
-          this.fieldKeyCount = data.length;
-        })
-        .catch(() => {});
-    },
     stepStage(step) {
       if (step === this.currentStep) return 'current';
       if (this.stepCompletion[step]) return 'complete';
