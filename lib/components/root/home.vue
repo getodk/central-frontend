@@ -11,10 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div id="root-home-heading">
-      <h1>Welcome to Central.</h1>
-      <p>Let’s get some things done.</p>
-    </div>
     <loading :state="fetch.counter < 3 && !fetch.error"/>
     <div v-show="fetch.counter === 3">
       <div class="panel panel-simple">
@@ -47,39 +43,6 @@ except according to the terms contained in the LICENSE file.
           </root-entity>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-6">
-          <div class="panel panel-simple">
-            <div class="panel-heading">
-              <h1 class="panel-title">Getting Started</h1>
-            </div>
-            <div class="panel-body">
-              <p>
-                If you’re not sure where to begin, we have a getting started
-                guide and user documentation available on the
-                <doc-link>Open Data Kit Docs website</doc-link>.
-              </p>
-              <p>
-                In addition, you can always get help from others on the
-                <a href="https://forum.opendatakit.org/" target="_blank">Open Data Kit community forum</a>,
-                where you can search for previous answers or ask one of your
-                own.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="panel panel-simple">
-            <div class="panel-heading">
-              <h1 class="panel-title">Latest News</h1>
-            </div>
-            <div class="panel-body">
-              <iframe id="root-home-news-iframe" src="https://opendatakit.github.io/central/news.html">
-              </iframe>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -108,19 +71,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-#root-home-heading {
-  margin-bottom: 20px;
-  margin-top: 30px;
-
-  p {
-    font-size: 20px;
-  }
-}
-
-#root-home-news-iframe {
-  border-width: 0;
-  width: 100%;
-}
-</style>

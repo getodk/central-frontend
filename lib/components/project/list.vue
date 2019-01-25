@@ -11,6 +11,37 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <div id="project-list-heading">
+      <span>Welcome to Central.</span><span>Let’s get some things done.</span>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <page-section>
+          <template slot="heading"><span>Getting Started</span></template>
+          <template slot="body">
+            <p>
+              If you’re not sure where to begin, we have a getting started guide
+              and user documentation available on the
+              <doc-link to="central-intro/">Open Data Kit Docs website</doc-link>.
+            </p>
+            <p>
+              In addition, you can always get help from others on the
+              <a href="https://forum.opendatakit.org/" target="_blank">
+                Open Data Kit community forum</a>,
+              where you can search for previous answers or ask one of your own.
+            </p>
+          </template>
+        </page-section>
+        <page-section>
+          <template slot="heading"><span>News</span></template>
+          <template slot="body">
+            <iframe id="project-list-news-iframe"
+              src="https://opendatakit.github.io/central/news.html">
+            </iframe>
+          </template>
+        </page-section>
+      </div>
+    </div>
     <page-section>
       <template slot="heading">
         <span>Projects</span>
@@ -86,6 +117,30 @@ export default {
 
 <style lang="sass">
 @import '../../../assets/scss/variables';
+
+#project-list-heading {
+  margin-bottom: 30px;
+  margin-top: 25px;
+
+  span {
+    &:first-child {
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    &:last-child {
+      color: #666;
+      font-size: 24px;
+      margin-left: 10px;
+    }
+  }
+}
+
+#project-list-news-iframe {
+  border-width: 0;
+  height: 75px;
+  width: 100%;
+}
 
 #project-list-table {
   tbody td {
