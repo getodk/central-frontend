@@ -62,7 +62,7 @@ describe('ProjectList', () => {
           a.text().trim().should.equal(project.name);
           a.getAttribute('href').should.equal('#/projects/1');
           td[1].text().trim().should.equal(pluralize('form', project.forms, true));
-          td[2].text().trim().should.equal(formatDate(project.submissions, '(none)'));
+          td[2].text().trim().should.equal(formatDate(project.lastSubmission, '(none)'));
         }));
 
     it('shows a message if there are no projects', () =>
