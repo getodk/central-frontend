@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
             <ul class="dropdown-menu">
               <li>
                 <router-link id="navbar-edit-profile-action" to="/account/edit">
-                  Edit Profile
+                  Edit profile
                 </router-link>
               </li>
               <li>
