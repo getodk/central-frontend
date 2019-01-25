@@ -58,6 +58,7 @@ describe('AccountResetPassword', () => {
         .complete()
         .route('/reset-password')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         }));
@@ -66,6 +67,7 @@ describe('AccountResetPassword', () => {
       mockRoute('/reset-password')
         .restoreSession(true)
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));

@@ -11,6 +11,7 @@ describe('ProjectNew', () => {
     it('does not show the modal initially', () =>
       mockRoute('/')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.first(ProjectNew).getProp('state').should.be.false();
         }));
@@ -19,6 +20,7 @@ describe('ProjectNew', () => {
       it('shows the modal', () =>
         mockRoute('/')
           .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+          .respondWithData(() => testData.administrators.sorted())
           .afterResponses(app => trigger.click(app, '#project-list-new-button'))
           .then(app => {
             app.first(ProjectNew).getProp('state').should.be.true();
@@ -27,6 +29,7 @@ describe('ProjectNew', () => {
       it('focuses the input', () =>
         mockRoute('/', { attachToDocument: true })
           .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+          .respondWithData(() => testData.administrators.sorted())
           .afterResponses(app => trigger.click(app, '#project-list-new-button'))
           .then(app => {
             app.first('#project-new input').should.be.focused();
@@ -48,6 +51,7 @@ describe('ProjectNew', () => {
     let app;
     beforeEach(() => mockRoute('/')
       .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+      .respondWithData(() => testData.administrators.sorted())
       .afterResponses(component => {
         app = component;
       })

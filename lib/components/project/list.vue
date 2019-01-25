@@ -41,8 +41,55 @@ except according to the terms contained in the LICENSE file.
           </template>
         </page-section>
       </div>
+      <div class="col-xs-6">
+        <page-section id="project-list-right-now">
+          <template slot="heading"><span>Right Now</span></template>
+          <template slot="body">
+            <loading :state="maybeUserCount.awaiting || maybeProjects.awaiting"/>
+            <div v-if="maybeUserCount.success && maybeProjects.success">
+              <div>
+                <router-link to="/users"
+                  class="project-list-right-now-icon-container">
+                  <span class="icon-user-circle"></span>
+                </router-link>
+                <div class="project-list-right-now-count">
+                  <router-link to="/users">
+                    {{ maybeUserCount.data }}
+                    <span class="icon-angle-right"></span>
+                  </router-link>
+                </div>
+                <div class="project-list-right-now-description">
+                  <router-link to="/users">
+                    <strong>{{ $pluralize('Web User', maybeUserCount.data) }}</strong>
+                    who can administer Projects through this website.
+                  </router-link>
+                </div>
+              </div>
+              <div>
+                <a href="#" class="project-list-right-now-icon-container"
+                  @click.prevent="scrollToProjects">
+                  <span class="icon-archive"></span>
+                </a>
+                <div class="project-list-right-now-count">
+                  <a href="#" @click.prevent="scrollToProjects">
+                    {{ maybeProjects.data.length }}
+                    <span class="icon-angle-right"></span>
+                  </a>
+                </div>
+                <div class="project-list-right-now-description">
+                  <a href="#" @click.prevent="scrollToProjects">
+                    <strong>{{ $pluralize('Projects', maybeProjects.data.length) }}</strong>
+                    which can organize Forms and App Users for device
+                    deployment.
+                  </a>
+                </div>
+              </div>
+            </div>
+          </template>
+        </page-section>
+      </div>
     </div>
-    <page-section>
+    <page-section id="project-list-projects">
       <template slot="heading">
         <span>Projects</span>
         <button id="project-list-new-button" type="button"
@@ -97,6 +144,7 @@ export default {
     return {
       requestId: null,
       maybeProjects: null,
+      maybeUserCount: null,
       newProject: {
         state: false
       },
@@ -111,10 +159,18 @@ export default {
       maybeProjects: {
         url: '/projects',
         extended: true
+      },
+      maybeUserCount: {
+        url: '/users',
+        transform: (data) => data.length
       }
     });
   },
   methods: {
+    scrollToProjects() {
+      const scrollTop = Math.round($('#project-list-projects').offset().top);
+      $('html, body').animate({ scrollTop });
+    },
     afterCreate(project) {
       this.$router.push(`/projects/${project.id}`, () => {
         this.$alert().success('Your new Project has been successfully created.');
@@ -153,6 +209,50 @@ export default {
   border-width: 0;
   height: 75px;
   width: 100%;
+}
+
+#project-list-right-now {
+  a {
+    color: $color-text;
+    text-decoration: none;
+  }
+
+  .project-list-right-now-icon-container {
+    float: left;
+
+    span {
+      color: #555;
+      font-size: 56px;
+      margin-right: 0;
+    }
+  }
+
+  .project-list-right-now-count, .project-list-right-now-description {
+    margin-left: 75px;
+  }
+
+  .project-list-right-now-count {
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 3px;
+
+    .icon-angle-right {
+      color: $color-accent-primary;
+      font-size: 20px;
+      margin-right: 0;
+      vertical-align: 2px;
+    }
+  }
+
+  .project-list-right-now-description {
+    color: #666;
+    margin-bottom: 30px;
+
+    strong {
+      color: $color-text;
+      font-weight: normal;
+    }
+  }
 }
 
 #project-list-table {

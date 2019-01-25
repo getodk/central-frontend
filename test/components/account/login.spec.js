@@ -104,6 +104,7 @@ describe('AccountLogin', () => {
         .complete()
         .route('/login')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         }));
@@ -112,6 +113,7 @@ describe('AccountLogin', () => {
       mockRoute('/login')
         .restoreSession(true)
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));
@@ -131,6 +133,7 @@ describe('AccountLogin', () => {
         })
         .restoreSession(true)
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.first(Navbar).vm.$el.style.display.should.equal('');
         }));

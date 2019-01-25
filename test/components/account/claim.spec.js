@@ -14,6 +14,7 @@ describe('AccountClaim', () => {
         .complete()
         .route(LOCATION)
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));
