@@ -12,6 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="page-section">
     <div class="page-section-heading">
+      <!-- The first element of this slot should be a <span> element, which
+      should contain the title of the page section. -->
       <slot name="heading"></slot>
     </div>
     <div>
@@ -40,8 +42,10 @@ export default {
   > span:first-child {
     color: #555;
     font-weight: bold;
-    // In case there is a button next to the heading title
-    margin-right: 6px;
+
+    + button {
+      margin-left: 6px;
+    }
   }
 }
 </style>
