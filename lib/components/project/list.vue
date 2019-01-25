@@ -66,19 +66,24 @@ except according to the terms contained in the LICENSE file.
               </tr>
             </thead>
             <tbody>
-              <project-row v-for="project of maybeProjects.data" :key="project.id"
-                :project="project"/>
+              <project-row v-for="project of maybeProjects.data"
+                :key="project.id" :project-count="maybeProjects.data.length"
+                :project="project" @show-introduction="showIntroduction"/>
             </tbody>
           </table>
         </template>
       </template>
     </page-section>
+
     <project-new v-bind="newProject" @hide="hideModal('newProject')"
       @success="afterCreate"/>
+    <project-introduction v-bind="introduction"
+      @hide="hideModal('introduction')"/>
   </div>
 </template>
 
 <script>
+import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import modal from '../../mixins/modal';
@@ -86,13 +91,17 @@ import request from '../../mixins/request';
 
 export default {
   name: 'ProjectList',
-  components: { ProjectNew, ProjectRow },
-  mixins: [modal(['newProject']), request()],
+  components: { ProjectIntroduction, ProjectNew, ProjectRow },
+  mixins: [modal(['newProject', 'introduction']), request()],
   data() {
     return {
       requestId: null,
       maybeProjects: null,
       newProject: {
+        state: false
+      },
+      introduction: {
+        migrated: false,
         state: false
       }
     };
@@ -110,6 +119,10 @@ export default {
       this.$router.push(`/projects/${project.id}`, () => {
         this.$alert().success('Your new Project has been successfully created.');
       });
+    },
+    showIntroduction(migrated) {
+      this.introduction.state = true;
+      this.introduction.migrated = migrated;
     }
   }
 };
@@ -146,7 +159,7 @@ export default {
   tbody td {
     vertical-align: middle;
 
-    &.project-list-project-name a {
+    .project-list-project-name a {
       color: inherit;
       font-size: 24px;
       text-decoration: initial;
