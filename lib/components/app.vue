@@ -101,6 +101,11 @@ export default {
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// STYLES FOR THE APP COMPONENT
+
 #app-alert {
   border-bottom: 1px solid transparent;
   border-left: 1px solid transparent;
@@ -127,7 +132,10 @@ export default {
   }
 }
 
-// Global styles should go here.
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLOBAL STYLES
 
 html {
   background-color: $color-accent-secondary;
@@ -148,10 +156,10 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
-a:focus {
-  background-color: transparentize(#000, 0.94);
-  outline: none;
-}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ICONS
 
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
@@ -177,13 +185,52 @@ class. */
   @extend .icon-bar;
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LINKS AND BUTTONS
+
+a, .btn-link {
+  &, &:hover {
+    color: $color-action-foreground;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus, &:active:focus {
+    outline: none;
+  }
+
+  &:focus {
+    background-color: transparentize(#000, 0.94);
+    color: #23527c;
+    text-decoration: underline;
+  }
+}
+
+@media print {
+  a, a:visited {
+    text-decoration: none;
+  }
+
+  a[href]:after {
+    content: "";
+  }
+}
+
 .btn {
   border: none;
-  border-radius: 2px;
   font-size: 12px;
   overflow: hidden;
   padding: 6px 10px 5px;
+  // I think we set this in order to position Spinner components.
   position: relative;
+}
+
+.btn:not(.btn-link) {
+  border-radius: 2px;
 
   &:focus {
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
@@ -220,8 +267,15 @@ class. */
 }
 
 .btn-link {
-  color: $color-action-foreground;
+  &:focus {
+    background-clip: content-box;
+  }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FORMS
 
 .form-group {
   display: block;
@@ -293,6 +347,11 @@ class. */
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TABLES
+
 .table {
   margin-bottom: $margin-bottom-table;
 
@@ -333,9 +392,19 @@ class. */
   margin-bottom: 20px;
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LABELS
+
 .label-primary {
   background-color: $color-action-background;
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PANELS
 
 .panel {
   border: none;
@@ -429,6 +498,11 @@ class. */
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// NAVS
+
 .nav-tabs {
   border-bottom: none;
 
@@ -464,6 +538,11 @@ class. */
     }
   }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// POPOVERS
 
 .popover {
   background-color: $color-action-background;
