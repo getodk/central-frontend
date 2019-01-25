@@ -27,5 +27,4 @@ You can use `mockHttp().standardButton()` to test some of these things for a par
 * For each field, the user should see a clear indication as to whether the field is required.
   * If a field is required, add an asterisk to its label and its placeholder.
 * If the user submits a form with an invalid field, the user should be informed about the validation error.
-  * If the user resubmits the form, and all its fields are valid, the previous validation error should disappear.
   * If the user resubmits the form, and it is invalid for a different reason, the user should be informed about the new validation error.
