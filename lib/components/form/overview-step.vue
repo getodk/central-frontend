@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="form-overview-step">
-      <p :class="headingClass">
-        <span :class="iconClass"></span><slot name="title"></slot>
+    <div :class="htmlClass">
+      <p class="form-overview-step-heading">
+        <span class="icon-check-circle"></span><slot name="title"></slot>
       </p>
       <slot></slot>
     </div>
@@ -43,21 +43,16 @@ export default {
     }
   },
   computed: {
-    headingClass() {
-      const textClass = {
-        'text-muted': this.stage === 'later',
-        'text-success': this.stage === 'complete'
-      };
-      return ['form-overview-step-heading', textClass];
-    },
-    iconClass() {
-      return ['icon-check-circle', { 'text-muted': this.stage !== 'complete' }];
+    htmlClass() {
+      return ['form-overview-step', `form-overview-step-${this.stage}`];
     }
   }
 };
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 .form-overview-step {
   p {
     margin-left: 21px;
@@ -77,5 +72,19 @@ export default {
       width: 21px;
     }
   }
+}
+
+.form-overview-step-later .form-overview-step-heading {
+  color: #999;
+}
+
+.form-overview-step-current .form-overview-step-heading {
+  .icon-check-circle {
+    color: #999;
+  }
+}
+
+.form-overview-step-complete .form-overview-step-heading {
+  color: $color-success;
 }
 </style>

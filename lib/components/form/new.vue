@@ -34,8 +34,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           to upload.
         </div>
-        <div v-show="filename != null" id="form-new-filename"
-          class="text-monospace">
+        <div v-show="filename != null" id="form-new-filename">
           {{ filename }}
         </div>
       </div>
@@ -193,6 +192,7 @@ $drop-zone-vpadding: 15px;
 #form-new-filename {
   background-color: $color-input-background;
   border-top: 1px solid #ddd;
+  font-family: $font-family-monospace;
   margin-bottom: -$drop-zone-vpadding;
   margin-top: 10px;
   padding: 6px 0;

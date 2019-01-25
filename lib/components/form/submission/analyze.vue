@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
         </ul>
       </div>
       <!-- eslint-disable-next-line max-len -->
-      <p id="form-submission-analyze-odata-url" ref="oDataUrl" class="modal-introduction text-monospace" @click="selectUrl">{{ oDataUrl }}</p>
+      <p id="form-submission-analyze-odata-url" ref="oDataUrl" class="modal-introduction" @click="selectUrl">{{ oDataUrl }}</p>
       <div id="form-submission-analyze-tool-help" class="modal-introduction">
         <p v-if="tool === 'microsoft'">
           For help using OData with Excel, see
@@ -159,6 +159,7 @@ export default {
 
   #form-submission-analyze-odata-url {
     background-color: $color-subpanel-background;
+    font-family: $font-family-monospace;
     overflow-x: scroll;
     padding: 12px $padding-modal-body;
   }

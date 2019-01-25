@@ -340,7 +340,7 @@ export default {
     }
 
     &.form-submission-list-row-number {
-      color: $color-text-muted;
+      color: #999;
       font-size: 11px;
       // Adding min-width so that the table's width does not increase as the row
       // numbers increase.
@@ -390,6 +390,7 @@ export default {
     text-decoration: none;
 
     .icon-check {
+      color: $color-success;
       margin-right: 0;
     }
 

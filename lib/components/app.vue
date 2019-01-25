@@ -153,34 +153,6 @@ a:focus {
   outline: none;
 }
 
-.text-muted {
-  color: $color-text-muted;
-}
-
-.text-success {
-  color: $color-success;
-
-  a {
-    &:hover, &:focus {
-      color: $color-success-dark;
-    }
-  }
-}
-
-.text-danger {
-  color: $color-danger;
-
-  a {
-    &:hover, &:focus {
-      color: $color-danger-dark;
-    }
-  }
-}
-
-.text-monospace {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
