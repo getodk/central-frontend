@@ -22,17 +22,19 @@ describe('ProjectList', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
-    it('redirects user to project list upon a click on .navbar-brand', () => {
-      mockLogin();
-      return mockRoute('/users')
-        .respondWithData(() => testData.administrators.sorted())
-        .complete()
-        .request(app => trigger.click(app, '.navbar-brand'))
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        });
-    });
+    for (const selector of ['.navbar-brand', '#navbar-projects-link']) {
+      it(`redirects user to project list upon a click on ${selector}`, () => {
+        mockLogin();
+        return mockRoute('/users')
+          .respondWithData(() => testData.administrators.sorted())
+          .complete()
+          .request(app => trigger.click(app, selector))
+          .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+    }
   });
 
   describe('after login', () => {

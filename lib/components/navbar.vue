@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       links: [
-        // TODO. Add a link to the project list.
+        { text: 'Projects', to: '/', id: 'navbar-projects-link' },
         { text: 'Users', to: '/users', id: 'navbar-users-link' },
         { text: 'System', to: '/system/backups', id: 'navbar-system-link' }
       ]
@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     routePathStartsWith(path) {
-      if (path.endsWith('/')) throw new Error('invalid path');
+      if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
       return this.$route.path === path ||
         this.$route.path.startsWith(`${path}/`);
     },
@@ -187,7 +187,7 @@ $shadow-color: #dedede;
         }
       }
 
-      #navbar-forms-link, #navbar-users-link {
+      #navbar-projects-link, #navbar-users-link {
         margin-left: 30px;
       }
 
