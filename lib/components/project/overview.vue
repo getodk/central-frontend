@@ -54,9 +54,11 @@ except according to the terms contained in the LICENSE file.
                   </router-link>
                 </div>
                 <div class="project-overview-right-now-description">
-                  <strong>{{ $pluralize('App User', maybeFieldKeys.data.length) }}</strong>
-                  who can use a data collection client to download and submit
-                  Form data to this Project.
+                  <router-link :to="`/projects/${projectId}/app-users`">
+                    <strong>{{ $pluralize('App User', maybeFieldKeys.data.length) }}</strong>
+                    who can use a data collection client to download and submit
+                    Form data to this Project.
+                  </router-link>
                 </div>
               </div>
               <div>
@@ -71,9 +73,11 @@ except according to the terms contained in the LICENSE file.
                   </a>
                 </div>
                 <div class="project-overview-right-now-description">
-                  <strong>{{ $pluralize('Form', maybeForms.data.length) }}</strong>
-                  which can be downloaded and given as surveys on mobile
-                  clients.
+                  <a href="#" @click.prevent="scrollToForms">
+                    <strong>{{ $pluralize('Form', maybeForms.data.length) }}</strong>
+                    which can be downloaded and given as surveys on mobile
+                    clients.
+                  </a>
                 </div>
               </div>
             </div>

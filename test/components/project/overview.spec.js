@@ -38,7 +38,8 @@ describe('ProjectOverview', () => {
 
       const targets = [
         ['icon', '.project-overview-right-now-icon-container'],
-        ['count', '.project-overview-right-now-count a']
+        ['count', '.project-overview-right-now-count a'],
+        ['description', '.project-overview-right-now-description a']
       ];
       for (const [description, selector] of targets) {
         it(`navigates to app users page upon a click on app users ${description}`, () =>
