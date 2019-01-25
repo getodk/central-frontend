@@ -54,9 +54,9 @@ except according to the terms contained in the LICENSE file.
                   </router-link>
                 </div>
                 <div class="project-overview-right-now-description">
-                  {{ $pluralize('App User', maybeFieldKeys.data.length) }} who
-                  can use a data collection client to download and submit Form
-                  data to this Project.
+                  <strong>{{ $pluralize('App User', maybeFieldKeys.data.length) }}</strong>
+                  who can use a data collection client to download and submit
+                  Form data to this Project.
                 </div>
               </div>
               <div>
@@ -71,8 +71,9 @@ except according to the terms contained in the LICENSE file.
                   </a>
                 </div>
                 <div class="project-overview-right-now-description">
-                  {{ $pluralize('Form', maybeForms.data.length) }} which can be
-                  downloaded and given as surveys on mobile clients.
+                  <strong>{{ $pluralize('Form', maybeForms.data.length) }}</strong>
+                  which can be downloaded and given as surveys on mobile
+                  clients.
                 </div>
               </div>
             </div>
@@ -209,7 +210,13 @@ export default {
   }
 
   .project-overview-right-now-description {
+    color: #666;
     margin-bottom: 30px;
+
+    strong {
+      color: $color-text;
+      font-weight: normal;
+    }
   }
 }
 </style>

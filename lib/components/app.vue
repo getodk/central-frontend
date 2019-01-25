@@ -137,7 +137,7 @@ html {
 body {
   background-color: $color-page-background;
   box-shadow: 0 -2px 0 #777 inset;
-  color: #333;
+  color: $color-text;
   min-height: 100vh;
 }
 
