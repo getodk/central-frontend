@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title">Change Password</h1>
     </div>
     <div class="panel-body">
-      <form @submit="submit">
+      <form @submit.prevent="submit">
         <label class="form-group">
           <input id="form-edit-password-old-password" v-model="oldPassword"
             type="password" class="form-control" placeholder="Old password *"

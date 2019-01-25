@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="account-edit-basic-details" class="panel panel-simple">
     <div class="panel-heading"><h1 class="panel-title">Basic Details</h1></div>
     <div class="panel-body">
-      <form @submit="submit">
+      <form @submit.prevent="submit">
         <label class="form-group">
           <input v-model.trim="email" type="email" class="form-control"
             placeholder="Email address *" required>
