@@ -12,7 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-section>
-      <template slot="heading">Projects</template>
+      <template slot="heading">
+        <span>Projects</span>
+        <button id="project-list-new-button" type="button"
+          class="btn btn-primary" @click="showModal('newProject')">
+          <span class="icon-plus-circle"></span>Create a new Project
+        </button>
+      </template>
       <template slot="body">
         <loading :state="maybeProjects.awaiting"/>
         <template v-if="maybeProjects.success">
@@ -36,21 +42,28 @@ except according to the terms contained in the LICENSE file.
         </template>
       </template>
     </page-section>
+    <project-new v-bind="newProject" @hide="hideModal('newProject')"
+      @success="afterCreate"/>
   </div>
 </template>
 
 <script>
+import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
+import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 
 export default {
   name: 'ProjectList',
-  components: { ProjectRow },
-  mixins: [request()],
+  components: { ProjectNew, ProjectRow },
+  mixins: [modal(['newProject']), request()],
   data() {
     return {
       requestId: null,
-      maybeProjects: null
+      maybeProjects: null,
+      newProject: {
+        state: false
+      }
     };
   },
   created() {
@@ -60,6 +73,13 @@ export default {
         extended: true
       }
     });
+  },
+  methods: {
+    afterCreate(project) {
+      this.$router.push(`/projects/${project.id}`, () => {
+        this.$alert().success('Your new Project has been successfully created.');
+      });
+    }
   }
 };
 </script>
