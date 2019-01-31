@@ -255,6 +255,10 @@ export default {
   }
 }
 
+#project-list-projects {
+  margin-top: 10px;
+}
+
 #project-list-table {
   tbody td {
     vertical-align: middle;
