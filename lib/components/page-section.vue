@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       should contain the title of the page section. -->
       <slot name="heading"></slot>
     </div>
-    <div>
+    <div class="page-section-body">
       <slot name="body"></slot>
     </div>
   </div>

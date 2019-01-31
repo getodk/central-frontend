@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <page-section>
-          <template slot="heading"><span>Getting Started</span></template>
+          <span slot="heading">Getting Started</span>
           <template slot="body">
             <p>
               If you’re not sure where to begin, we have a getting started guide
@@ -33,20 +33,18 @@ except according to the terms contained in the LICENSE file.
           </template>
         </page-section>
         <page-section>
-          <template slot="heading"><span>News</span></template>
-          <template slot="body">
-            <iframe id="project-list-news-iframe"
-              src="https://opendatakit.github.io/central/news.html">
-            </iframe>
-          </template>
+          <span slot="heading">News</span>
+          <iframe id="project-list-news-iframe" slot="body"
+            src="https://opendatakit.github.io/central/news.html">
+          </iframe>
         </page-section>
       </div>
       <div class="col-xs-6">
         <page-section id="project-list-right-now">
-          <template slot="heading"><span>Right Now</span></template>
+          <span slot="heading">Right Now</span>
           <template slot="body">
             <loading :state="maybeUserCount.awaiting || maybeProjects.awaiting"/>
-            <div v-if="maybeUserCount.success && maybeProjects.success">
+            <template v-if="maybeUserCount.success && maybeProjects.success">
               <div>
                 <router-link to="/users"
                   class="project-list-right-now-icon-container">
@@ -84,7 +82,7 @@ except according to the terms contained in the LICENSE file.
                   </a>
                 </div>
               </div>
-            </div>
+            </template>
           </template>
         </page-section>
       </div>
@@ -211,7 +209,7 @@ export default {
   width: 100%;
 }
 
-#project-list-right-now {
+#project-list-right-now .page-section-body {
   a {
     color: inherit;
     text-decoration: none;

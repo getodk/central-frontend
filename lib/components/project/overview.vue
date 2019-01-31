@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="project-overview">
     <div class="row">
       <div class="col-xs-6">
         <page-section id="project-overview-about">
-          <template slot="heading"><span>About Projects</span></template>
+          <span slot="heading">About Projects</span>
           <template slot="body">
             <p>
               Any Forms you create in this Project will only be visible on data
@@ -38,10 +38,10 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-6">
         <page-section id="project-overview-right-now">
-          <template slot="heading"><span>Right Now</span></template>
+          <span slot="heading">Right Now</span>
           <template slot="body">
             <loading :state="maybeFieldKeys.awaiting || maybeForms.awaiting"/>
-            <div v-if="maybeFieldKeys.success && maybeForms.success">
+            <template v-if="maybeFieldKeys.success && maybeForms.success">
               <div>
                 <router-link :to="`/projects/${projectId}/app-users`"
                   class="project-overview-right-now-icon-container">
@@ -80,7 +80,7 @@ except according to the terms contained in the LICENSE file.
                   </a>
                 </div>
               </div>
-            </div>
+            </template>
           </template>
         </page-section>
       </div>
@@ -168,11 +168,11 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#project-overview-about, #project-overview-right-now {
+#project-overview {
   margin-top: 10px;
 }
 
-#project-overview-right-now {
+#project-overview-right-now .page-section-body {
   a {
     color: inherit;
     text-decoration: none;
