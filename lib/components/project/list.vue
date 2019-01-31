@@ -207,7 +207,7 @@ export default {
 
 #project-list-news-iframe {
   border-width: 0;
-  height: 75px;
+  height: 80px;
   width: 100%;
 }
 
