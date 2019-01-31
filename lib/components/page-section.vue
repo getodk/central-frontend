@@ -31,7 +31,7 @@ export default {
 <style lang="sass">
 .page-section {
   border-top: 1px solid #777;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .page-section-heading {
