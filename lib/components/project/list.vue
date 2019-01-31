@@ -92,7 +92,7 @@ except according to the terms contained in the LICENSE file.
         <span>Projects</span>
         <button id="project-list-new-button" type="button"
           class="btn btn-primary" @click="showModal('newProject')">
-          <span class="icon-plus-circle"></span>Create a new Project
+          <span class="icon-plus-circle"></span>New
         </button>
       </template>
       <template slot="body">

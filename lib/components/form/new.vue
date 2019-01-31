@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <button :disabled="disabled" type="button" class="btn btn-link"
           @click="hide">
-          Close
+          Cancel
         </button>
       </div>
     </template>

@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           <button :disabled="awaitingResponse" type="button"
             class="btn btn-link" @click="$emit('hide')">
-            Close
+            Cancel
           </button>
         </div>
       </form>
