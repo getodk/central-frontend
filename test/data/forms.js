@@ -67,8 +67,12 @@ export const extendedForms = dataStore({
       xmlFormId,
       name,
       version,
-      state,
+      // We currently do not use the XML anywhere. If/when we do, we should
+      // consider whether to keep it in sync with the hash and _schema
+      // properties.
+      xml: '',
       hash: faker.random.hash(32),
+      state,
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
       submissions,
@@ -76,13 +80,9 @@ export const extendedForms = dataStore({
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
       createdBy: R.pick(
-        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+        ['id', 'displayName', 'createdAt', 'updatedAt'],
         createdBy
       ),
-      // We currently do not use the XML anywhere. If/when we do, we should
-      // consider whether to keep it in sync with the hash and _schema
-      // properties.
-      xml: '',
       createdAt,
       updatedAt,
       _schema: schema
@@ -95,8 +95,7 @@ export const extendedForms = dataStore({
   }
 });
 
-export const simpleForms = view(extendedForms, (extendedForm) => {
-  const form = R.omit(['lastSubmission', 'submissions'], extendedForm);
-  form.createdBy = form.createdBy.id;
-  return form;
-});
+export const simpleForms = view(
+  extendedForms,
+  R.omit(['xml', 'submissions', 'lastSubmission', 'createdBy'])
+);
