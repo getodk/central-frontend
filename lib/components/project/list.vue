@@ -78,7 +78,7 @@ except according to the terms contained in the LICENSE file.
                 </div>
                 <div class="project-list-right-now-description">
                   <a href="#" @click.prevent="scrollToProjects">
-                    <strong>{{ $pluralize('Projects', maybeProjects.data.length) }}</strong>
+                    <strong>{{ $pluralize('Project', maybeProjects.data.length) }}</strong>
                     which can organize Forms and App Users for device
                     deployment.
                   </a>
