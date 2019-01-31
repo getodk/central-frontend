@@ -262,7 +262,7 @@ export default {
     .project-list-project-name a {
       color: inherit;
       font-size: 24px;
-      text-decoration: initial;
+      text-decoration: none;
 
       .icon-angle-right {
         color: $color-accent-primary;

@@ -174,8 +174,8 @@ export default {
 
 #project-overview-right-now {
   a {
-    color: unset;
-    text-decoration: unset;
+    color: inherit;
+    text-decoration: none;
   }
 
   .project-overview-right-now-icon-container {
