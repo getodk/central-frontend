@@ -213,7 +213,7 @@ export default {
 
 #project-list-right-now {
   a {
-    color: $color-text;
+    color: inherit;
     text-decoration: none;
   }
 
