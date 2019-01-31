@@ -1,5 +1,3 @@
-import R from 'ramda';
-
 import faker from '../faker';
 import { dataStore } from './data-store';
 
@@ -11,6 +9,6 @@ export const administrators = dataStore({
     email: faker.internet.uniqueEmail(),
     ...faker.date.timestamps(inPast, [lastCreatedAt])
   }),
-  sort: R.comparator((administrator1, administrator2) =>
-    administrator1.email < administrator2.email)
+  sort: (administrator1, administrator2) =>
+    administrator1.email.localeCompare(administrator2.email)
 });
