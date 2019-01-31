@@ -36,7 +36,8 @@ export default {
       return {
         url: `/projects/${this.projectId}/app-users`,
         extended: true,
-        transform: (data) => data.map(fieldKey => new FieldKey(fieldKey))
+        transform: (data) =>
+          data.map(fieldKey => new FieldKey(this.projectId, fieldKey))
       };
     }
   },

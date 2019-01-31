@@ -94,7 +94,7 @@ describe('FieldKeyList', () => {
           const inflated = inflate(atob(encoded), { to: 'string' });
           const data = JSON.parse(inflated);
           const { token } = testData.extendedFieldKeys.first();
-          const url = `${window.location.origin}/v1/key/${token}`;
+          const url = `${window.location.origin}/v1/key/${token}/projects/1`;
           data.should.eql({ general: { server_url: url }, admin: {} });
         });
       });
