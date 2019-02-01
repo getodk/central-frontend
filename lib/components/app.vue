@@ -223,9 +223,10 @@ a, .btn-link {
 .btn {
   border: none;
   font-size: 12px;
-  overflow: hidden;
   padding: 6px 10px 5px;
-  // I think we set this in order to position Spinner components.
+
+  // I think we set these for the Spinner component.
+  overflow: hidden;
   position: relative;
 }
 
