@@ -214,10 +214,6 @@ a, .btn-link {
   a, a:visited {
     text-decoration: none;
   }
-
-  a[href]:after {
-    content: "";
-  }
 }
 
 .btn {
