@@ -15,6 +15,14 @@ describe('util', () => {
       Settings.now = originalNow;
     });
 
+    it('formats null as an empty string by default', () => {
+      formatDate(null).should.equal('');
+    });
+
+    it('formats null according to the second parameter', () => {
+      formatDate(null, 'something').should.equal('something');
+    });
+
     /*
     Array of test cases, where each case is an array with the following
     structure:

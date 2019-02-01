@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="panel-body">
         <div id="backup-list-status-icon-container">
-          <span :class="iconClasses"></span>
+          <span :class="iconClass"></span>
         </div>
         <div id="backup-list-button-container">
           <button v-if="backups.status === 'notConfigured'"
@@ -184,15 +184,15 @@ export default {
     };
   },
   computed: {
-    iconClasses() {
+    iconClass() {
       switch (this.backups.status) {
         case 'notConfigured':
-          return ['icon-question-circle', 'text-muted'];
+          return 'icon-question-circle';
         case 'neverRun':
         case 'success':
-          return ['icon-check-circle', 'text-success'];
+          return 'icon-check-circle';
         default: // 'somethingWentWrong'
-          return ['icon-times-circle', 'text-danger'];
+          return 'icon-times-circle';
       }
     },
     mostRecentlyLoggedAt() {
@@ -250,6 +250,18 @@ $title-font-size: 28px;
     font-size: 32px;
     position: absolute;
     top: 4px;
+  }
+
+  .icon-question-circle {
+    color: #999;
+  }
+
+  .icon-check-circle {
+    color: $color-success;
+  }
+
+  .icon-times-circle {
+    color: $color-danger;
   }
 }
 

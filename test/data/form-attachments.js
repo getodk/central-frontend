@@ -43,5 +43,6 @@ export const extendedFormAttachments = dataStore({
       : null;
     return { type, name, exists, updatedAt };
   },
-  sort: 'name'
+  sort: (attachment1, attachment2) =>
+    attachment1.name.localeCompare(attachment2.name)
 });

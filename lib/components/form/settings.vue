@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">Danger Zone</h1>
           </div>
           <div class="panel-body">
-            <p class="text-center">
+            <p>
               <button :disabled="awaitingResponse" type="button"
                 class="btn btn-danger" @click="showModal('deleteForm')">
                 Delete this form
@@ -87,5 +87,6 @@ export default {
 #form-settings .panel-simple-danger .panel-body p {
   margin-bottom: 15px;
   margin-top: 10px;
+  text-align: center;
 }
 </style>

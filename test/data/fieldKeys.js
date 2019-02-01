@@ -21,12 +21,11 @@ export const extendedFieldKeys = dataStore({
       id,
       displayName: faker.name.findName(),
       token,
-      meta: null,
       lastUsed: inPast && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
       createdBy: R.pick(
-        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+        ['id', 'displayName', 'createdAt', 'updatedAt'],
         createdBy
       ),
       createdAt,

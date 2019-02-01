@@ -41,17 +41,16 @@ except according to the terms contained in the LICENSE file.
             </button>
             <button :disabled="awaitingResponse" type="button"
               class="btn btn-link" @click="hideOrComplete">
-              Close
+              Cancel
             </button>
           </div>
         </form>
       </template>
       <template v-else>
-        <div class="modal-introduction text-center">
+        <div class="modal-introduction">
           <div>
-            <span class="icon-check-circle text-success"></span>
-            <strong>Success!</strong> The App User “{{ created.displayName }}”
-            has been created.
+            <span class="icon-check-circle"></span> <strong>Success!</strong>
+            The App User “{{ created.displayName }}” has been created.
           </div>
           <div v-html="created.qrCodeHtml()"></div>
           <div>
@@ -120,7 +119,7 @@ export default {
           this.nickname = '';
 
           this.step = 2;
-          this.created = new FieldKey(data);
+          this.created = new FieldKey(this.projectId, data);
         })
         .catch(() => {});
     },
@@ -147,8 +146,13 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
 #field-key-new .modal-introduction {
+  text-align: center;
+
   .icon-check-circle {
+    color: $color-success;
     font-size: 32px;
     vertical-align: middle;
   }

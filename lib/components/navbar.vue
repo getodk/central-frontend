@@ -25,14 +25,31 @@ except according to the terms contained in the LICENSE file.
         <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li v-for="(link, index) in links" :key="index"
-            :class="{ active: link.active }">
-            <router-link :to="link.to" :id="link.id">
-              {{ link.text }}
-              <span v-show="link.active" class="sr-only">(current)</span>
+          <li :class="{ active: $route.path === '/' || routePathStartsWith('/projects') }">
+            <router-link id="navbar-projects-link" to="/">
+              Projects
+              <span v-show="$route.path === '/' || routePathStartsWith('/projects')"
+                class="sr-only">
+                (current)
+              </span>
+            </router-link>
+          </li>
+          <li :class="{ active: routePathStartsWith('/users') }">
+            <router-link id="navbar-users-link" to="/users">
+              Users
+              <span v-show="routePathStartsWith('/users')" class="sr-only">
+                (current)
+              </span>
+            </router-link>
+          </li>
+          <li :class="{ active: routePathStartsWith('/system/backups') }">
+            <router-link id="navbar-system-link" to="/system/backups">
+              System
+              <span v-show="routePathStartsWith('/system/backups')" class="sr-only">
+                (current)
+              </span>
             </router-link>
           </li>
         </ul>
@@ -51,7 +68,7 @@ except according to the terms contained in the LICENSE file.
             <ul class="dropdown-menu">
               <li>
                 <router-link id="navbar-edit-profile-action" to="/account/edit">
-                  Edit Profile
+                  Edit profile
                 </router-link>
               </li>
               <li>
@@ -62,43 +79,14 @@ except according to the terms contained in the LICENSE file.
             </ul>
           </li>
         </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+      </div>
+    </div>
   </nav>
 </template>
 
 <script>
 import { logOut } from '../session';
 import { logRequestError } from '../util';
-
-const DEFAULT_ACTIVE_PATH = '/';
-
-class Link {
-  constructor(component, text, to, id) {
-    this.component = component;
-    this.text = text;
-    this.to = to;
-    this.id = id;
-  }
-
-  _activePath() {
-    const routePath = this.component.$route.path;
-    switch (routePath) {
-      case '/login':
-      case '/reset-password':
-        return this.component.$route.query.next || DEFAULT_ACTIVE_PATH;
-      case '/account/claim':
-        return DEFAULT_ACTIVE_PATH;
-      default:
-        return routePath;
-    }
-  }
-
-  get active() {
-    const activePath = this._activePath();
-    return this.to === activePath || activePath.startsWith(`${this.to}/`);
-  }
-}
 
 export default {
   name: 'Navbar',
@@ -108,16 +96,12 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      links: [
-        // TODO. Add a link to the project list.
-        new Link(this, 'Users', '/users', 'navbar-users-link'),
-        new Link(this, 'System', '/system/backups', 'navbar-system-link')
-      ]
-    };
-  },
   methods: {
+    routePathStartsWith(path) {
+      if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
+      return this.$route.path === path ||
+        this.$route.path.startsWith(`${path}/`);
+    },
     deleteSession() {
       const encodedToken = encodeURIComponent(this.$session.token);
       // Using $http directly rather than the request mixin, because multiple
@@ -210,7 +194,7 @@ $shadow-color: #dedede;
         }
       }
 
-      #navbar-forms-link, #navbar-users-link {
+      #navbar-projects-link, #navbar-users-link {
         margin-left: 30px;
       }
 

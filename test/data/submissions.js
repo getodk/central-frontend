@@ -84,7 +84,6 @@ const oData = ({ form, instanceId, partial, exists }) => form._schema.reduce(
 export const extendedSubmissions = dataStore({
   factory: ({
     inPast,
-    id,
     lastCreatedAt,
 
     form = extendedForms.randomOrCreatePast(),
@@ -112,14 +111,12 @@ export const extendedSubmissions = dataStore({
       submitter.createdAt
     ]);
     return {
-      id,
-      formId: form.id,
       instanceId,
       // We currently do not use the XML anywhere. If/when we do, we should
       // consider whether to keep it in sync with the _oData property.
       xml: '',
       submitter: R.pick(
-        ['id', 'displayName', 'meta', 'createdAt', 'updatedAt'],
+        ['id', 'displayName', 'createdAt', 'updatedAt'],
         submitter
       ),
       createdAt,
@@ -149,7 +146,8 @@ export const extendedSubmissions = dataStore({
       })
     };
   },
-  sort: ['createdAt', false]
+  sort: R.comparator((submission1, submission2) =>
+    submission1.createdAt > submission2.createdAt)
 });
 
 export const submissionOData = (top = 250, skip = 0) => {

@@ -103,7 +103,8 @@ describe('AccountLogin', () => {
         .respondWithData(() => testData.administrators.sorted())
         .complete()
         .route('/login')
-        .respondWithProblems([500, 500, 500])
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         }));
@@ -111,8 +112,11 @@ describe('AccountLogin', () => {
     it('redirects to the root page if the session is restored', () =>
       mockRoute('/login')
         .restoreSession(true)
-        .respondWithProblems([500, 500, 500])
-        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
   });
 
   describe('after session restore', () => {
@@ -128,7 +132,8 @@ describe('AccountLogin', () => {
           app.first(Navbar).vm.$el.style.display.should.equal('none');
         })
         .restoreSession(true)
-        .respondWithProblems([500, 500, 500])
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.first(Navbar).vm.$el.style.display.should.equal('');
         }));

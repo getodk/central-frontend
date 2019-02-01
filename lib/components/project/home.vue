@@ -10,10 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <router-view :project-id="projectId" :maybe-project="maybeProject"
-      :maybe-field-keys="maybeFieldKeys" @refresh-field-keys="fetchFieldKeys"/>
-  </div>
+  <router-view :project-id="projectId" :maybe-project="maybeProject"
+    :maybe-field-keys="maybeFieldKeys" @refresh-field-keys="fetchFieldKeys"/>
 </template>
 
 <script>
@@ -38,7 +36,8 @@ export default {
       return {
         url: `/projects/${this.projectId}/app-users`,
         extended: true,
-        transform: (data) => data.map(fieldKey => new FieldKey(fieldKey))
+        transform: (data) =>
+          data.map(fieldKey => new FieldKey(this.projectId, fieldKey))
       };
     }
   },

@@ -25,6 +25,17 @@ describe('ProjectOverview', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
+    it('displays the navbar projects link as active', () =>
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedForms.sorted())
+        .afterResponses(app => {
+          const $li = $(app.vm.$el).find('#navbar-projects-link').parent();
+          $li.length.should.equal(1);
+          $li.hasClass('active').should.be.true();
+        }));
+
     describe('Right Now', () => {
       it('shows counts', () =>
         mockRoute('/projects/1')
@@ -38,7 +49,8 @@ describe('ProjectOverview', () => {
 
       const targets = [
         ['icon', '.project-overview-right-now-icon-container'],
-        ['count', '.project-overview-right-now-count a']
+        ['count', '.project-overview-right-now-count a'],
+        ['description', '.project-overview-right-now-description a']
       ];
       for (const [description, selector] of targets) {
         it(`navigates to app users page upon a click on app users ${description}`, () =>

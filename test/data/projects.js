@@ -12,7 +12,7 @@ export const extendedProjects = dataStore({
     name = faker.name.findName(),
     // The default value of this property does not necessarily match
     // testData.extendedForms.
-    forms = faker.random.number()
+    forms = inPast ? faker.random.number() : 0
   }) => {
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt
@@ -29,7 +29,7 @@ export const extendedProjects = dataStore({
       updatedAt
     };
   },
-  sort: 'name'
+  sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 
 export const simpleProjects = view(

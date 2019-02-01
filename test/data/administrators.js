@@ -7,8 +7,8 @@ export const administrators = dataStore({
     id,
     displayName: faker.name.findName(),
     email: faker.internet.uniqueEmail(),
-    meta: null,
     ...faker.date.timestamps(inPast, [lastCreatedAt])
   }),
-  sort: 'email'
+  sort: (administrator1, administrator2) =>
+    administrator1.email.localeCompare(administrator2.email)
 });

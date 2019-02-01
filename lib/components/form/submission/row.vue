@@ -25,8 +25,7 @@ except according to the terms contained in the LICENSE file.
         <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
           class="form-submission-list-binary-link" target="_blank"
           title="File was submitted. Click to download.">
-          <span class="icon-check text-success"></span>
-          <span class="icon-download"></span>
+          <span class="icon-check"></span> <span class="icon-download"></span>
         </a>
       </template>
       <template v-else>

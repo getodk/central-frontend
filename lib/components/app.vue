@@ -101,6 +101,11 @@ export default {
 @import '../../assets/scss/icomoon';
 @import '../../assets/scss/variables';
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// STYLES FOR THE APP COMPONENT
+
 #app-alert {
   border-bottom: 1px solid transparent;
   border-left: 1px solid transparent;
@@ -127,7 +132,10 @@ export default {
   }
 }
 
-// Global styles should go here.
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLOBAL STYLES
 
 html {
   background-color: $color-accent-secondary;
@@ -137,7 +145,7 @@ html {
 body {
   background-color: $color-page-background;
   box-shadow: 0 -2px 0 #777 inset;
-  color: #333;
+  color: $color-text;
   min-height: 100vh;
 }
 
@@ -148,38 +156,10 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
-a:focus {
-  background-color: transparentize(#000, 0.94);
-  outline: none;
-}
 
-.text-muted {
-  color: $color-text-muted;
-}
 
-.text-success {
-  color: $color-success;
-
-  a {
-    &:hover, &:focus {
-      color: $color-success-dark;
-    }
-  }
-}
-
-.text-danger {
-  color: $color-danger;
-
-  a {
-    &:hover, &:focus {
-      color: $color-danger-dark;
-    }
-  }
-}
-
-.text-monospace {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
+////////////////////////////////////////////////////////////////////////////////
+// ICONS
 
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
@@ -205,12 +185,19 @@ class. */
   @extend .icon-bar;
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LINKS AND BUTTONS
+
 .btn {
   border: none;
   border-radius: 2px;
   font-size: 12px;
-  overflow: hidden;
   padding: 6px 10px 5px;
+
+  // I think we set these for the Spinner component.
+  overflow: hidden;
   position: relative;
 
   &:focus {
@@ -247,9 +234,51 @@ class. */
   }
 }
 
-.btn-link {
-  color: $color-action-foreground;
+a, .btn-link {
+  &, &:hover {
+    color: $color-action-foreground;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    background-color: transparentize(#000, 0.94);
+    color: #23527c;
+    text-decoration: underline;
+  }
 }
+
+a {
+  &:focus {
+    outline: none;
+  }
+
+  &, &:visited {
+    @media print {
+      text-decoration: none;
+    }
+  }
+}
+
+.btn-link {
+  border-radius: 0;
+
+  &:focus {
+    background-clip: content-box;
+    box-shadow: none;
+  }
+
+  &:active:focus {
+    outline: none;
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FORMS
 
 .form-group {
   display: block;
@@ -321,6 +350,11 @@ class. */
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TABLES
+
 .table {
   margin-bottom: $margin-bottom-table;
 
@@ -361,9 +395,19 @@ class. */
   margin-bottom: 20px;
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LABELS
+
 .label-primary {
   background-color: $color-action-background;
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PANELS
 
 .panel {
   border: none;
@@ -457,6 +501,11 @@ class. */
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// NAVS
+
 .nav-tabs {
   border-bottom: none;
 
@@ -492,6 +541,11 @@ class. */
     }
   }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// POPOVERS
 
 .popover {
   background-color: $color-action-background;

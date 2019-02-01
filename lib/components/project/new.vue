@@ -10,27 +10,26 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="focusEmailInput">
-    <template slot="title">Create Web User</template>
+  <modal id="project-new" :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="$emit('hide')" @shown="focusInput">
+    <template slot="title">Create Project</template>
     <template slot="body">
-      <p class="modal-introduction">
-        Once you create this account, the email address you provide will be sent
-        instructions on how to set a password and proceed.
-      </p>
+      <div class="modal-introduction">
+        <p>
+          Projects group Forms and App Users together to make them easier to
+          organize and manage, both on this website and on your data collection
+          device.
+        </p>
+        <p>
+          For more information, please see
+          <doc-link to="central-projects/">this help article</doc-link>.
+        </p>
+      </div>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <select :disabled="awaitingResponse" class="form-control">
-            <option>Administrator</option>
-            <option disabled>More options available soon</option>
-          </select>
-          <span class="form-label">Role *</span>
-        </label>
-        <label class="form-group">
-          <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
-            type="email" class="form-control" placeholder="Email address *"
-            required>
-          <span class="form-label">Email address *</span>
+          <input ref="name" v-model.trim="name" :disabled="awaitingResponse"
+            class="form-control" placeholder="My Project name *" required>
+          <span class="form-label">Name *</span>
         </label>
         <div class="modal-actions">
           <button :disabled="awaitingResponse" type="submit"
@@ -51,7 +50,7 @@ except according to the terms contained in the LICENSE file.
 import request from '../../mixins/request';
 
 export default {
-  name: 'UserNew',
+  name: 'ProjectNew',
   mixins: [request()],
   props: {
     state: {
@@ -62,20 +61,18 @@ export default {
   data() {
     return {
       requestId: null,
-      email: ''
+      name: ''
     };
   },
   methods: {
-    focusEmailInput() {
-      this.$refs.email.focus();
+    focusInput() {
+      this.$refs.name.focus();
     },
     submit() {
-      this
-        .post('/users', { email: this.email })
+      this.post('/projects', { name: this.name })
         .then(({ data }) => {
-          this.$emit('hide');
           this.$alert().blank();
-          this.email = '';
+          this.name = '';
           this.$emit('success', data);
         })
         .catch(() => {});

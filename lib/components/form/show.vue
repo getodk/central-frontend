@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="maybeProject.success && maybeForm.success">
+    <page-head v-show="maybeProject.success && maybeForm.success && maybeAttachments.success">
       <template slot="context">
         <span>{{ maybeProject.success ? maybeProject.data.name : '' }}</span>
         <router-link :to="`/projects/${projectId}`">
@@ -43,11 +43,11 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="maybeProject.awaiting || maybeForm.awaiting"/>
-      <!-- <router-view> is created and can send its own requests once the form
-      response has been received. We do not wait for the project response in a
-      similar way. -->
-      <div v-if="maybeForm.success">
+      <loading :state="maybeProject.awaiting || maybeForm.awaiting || maybeAttachments.awaiting"/>
+      <!-- <router-view> is created and can send its own requests once responses
+      have been received for the form and its attachments. We do not wait in a
+      similar way for the responses for the project and its app users. -->
+      <div v-if="maybeForm.success && maybeAttachments.success">
         <div v-show="maybeProject.success">
           <keep-alive>
             <router-view :project-id="projectId"

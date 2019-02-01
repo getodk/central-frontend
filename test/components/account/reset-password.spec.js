@@ -57,7 +57,8 @@ describe('AccountResetPassword', () => {
         .respondWithData(() => testData.administrators.sorted())
         .complete()
         .route('/reset-password')
-        .respondWithProblems([500, 500, 500])
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         }));
@@ -65,7 +66,10 @@ describe('AccountResetPassword', () => {
     it('redirects to the root page if the session is restored', () =>
       mockRoute('/reset-password')
         .restoreSession(true)
-        .respondWithProblems([500, 500, 500])
-        .afterResponses(app => app.vm.$route.path.should.equal('/')));
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
   });
 });

@@ -13,7 +13,8 @@ describe('AccountClaim', () => {
         .respondWithData(() => testData.administrators.sorted())
         .complete()
         .route(LOCATION)
-        .respondWithProblems([500, 500, 500])
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));

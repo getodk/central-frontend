@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <visibility-delay :state="state">
-    <p class="text-center text-muted">Loading…</p>
+  <visibility-delay :state="state" class="loading">
+    <p>Loading…</p>
   </visibility-delay>
 </template>
 
@@ -29,3 +29,10 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+.loading p {
+  color: #999;
+  text-align: center;
+}
+</style>

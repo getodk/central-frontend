@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="project-overview">
     <div class="row">
       <div class="col-xs-6">
         <page-section id="project-overview-about">
-          <template slot="heading"><span>About Projects</span></template>
+          <span slot="heading">About Projects</span>
           <template slot="body">
             <p>
               Any Forms you create in this Project will only be visible on data
@@ -38,10 +38,10 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-6">
         <page-section id="project-overview-right-now">
-          <template slot="heading"><span>Right Now</span></template>
+          <span slot="heading">Right Now</span>
           <template slot="body">
             <loading :state="maybeFieldKeys.awaiting || maybeForms.awaiting"/>
-            <div v-if="maybeFieldKeys.success && maybeForms.success">
+            <template v-if="maybeFieldKeys.success && maybeForms.success">
               <div>
                 <router-link :to="`/projects/${projectId}/app-users`"
                   class="project-overview-right-now-icon-container">
@@ -54,9 +54,11 @@ except according to the terms contained in the LICENSE file.
                   </router-link>
                 </div>
                 <div class="project-overview-right-now-description">
-                  {{ $pluralize('App User', maybeFieldKeys.data.length) }} who
-                  can use a data collection client to download and submit Form
-                  data to this Project.
+                  <router-link :to="`/projects/${projectId}/app-users`">
+                    <strong>{{ $pluralize('App User', maybeFieldKeys.data.length) }}</strong>
+                    who can use a data collection client to download and submit
+                    Form data to this Project.
+                  </router-link>
                 </div>
               </div>
               <div>
@@ -71,11 +73,14 @@ except according to the terms contained in the LICENSE file.
                   </a>
                 </div>
                 <div class="project-overview-right-now-description">
-                  {{ $pluralize('Form', maybeForms.data.length) }} which can be
-                  downloaded and given as surveys on mobile clients.
+                  <a href="#" @click.prevent="scrollToForms">
+                    <strong>{{ $pluralize('Form', maybeForms.data.length) }}</strong>
+                    which can be downloaded and given as surveys on mobile
+                    clients.
+                  </a>
                 </div>
               </div>
-            </div>
+            </template>
           </template>
         </page-section>
       </div>
@@ -85,7 +90,7 @@ except according to the terms contained in the LICENSE file.
         <span>Forms</span>
         <button id="project-overview-new-form-button" type="button"
           class="btn btn-primary" @click="showModal('newForm')">
-          <span class="icon-plus-circle"></span>Create a new Form
+          <span class="icon-plus-circle"></span>New
         </button>
       </template>
       <template slot="body">
@@ -163,14 +168,14 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-#project-overview-about, #project-overview-right-now {
+#project-overview {
   margin-top: 10px;
 }
 
-#project-overview-right-now {
+#project-overview-right-now .page-section-body {
   a {
-    color: unset;
-    text-decoration: unset;
+    color: inherit;
+    text-decoration: none;
   }
 
   .project-overview-right-now-icon-container {
@@ -209,7 +214,17 @@ export default {
   }
 
   .project-overview-right-now-description {
+    color: #666;
     margin-bottom: 30px;
+
+    strong {
+      color: $color-text;
+      font-weight: normal;
+    }
   }
+}
+
+#project-overview-forms {
+  margin-top: 10px;
 }
 </style>

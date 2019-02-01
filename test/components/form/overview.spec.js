@@ -100,8 +100,8 @@ describe('FormOverview', () => {
     it('marks step 5 as complete if form state is changed from open', () =>
       loadOverview({ formIsOpen: true })
         .afterResponses(app => {
-          const title = app.find('.form-overview-step')[4].first('p');
-          title.hasClass('text-success').should.be.false();
+          const step = app.find('.form-overview-step')[4];
+          step.hasClass('form-overview-step-complete').should.be.false();
         })
         .route(`/projects/1/forms/${testData.extendedForms.last().xmlFormId}/settings`)
         .request(app => {
@@ -113,8 +113,8 @@ describe('FormOverview', () => {
         .complete()
         .route(overviewPath(testData.extendedForms.last()))
         .then(app => {
-          const title = app.find('.form-overview-step')[4].first('p');
-          title.hasClass('text-success').should.be.true();
+          const step = app.find('.form-overview-step')[4];
+          step.hasClass('form-overview-step-complete').should.be.true();
         }));
 
     describe('step stages', () => {
@@ -184,20 +184,12 @@ describe('FormOverview', () => {
           const steps = app.find('.form-overview-step');
           steps.length.should.equal(5);
           for (let i = 0; i < steps.length; i += 1) {
-            const heading = steps[i].first('.form-overview-step-heading');
-            const icon = heading.first('.icon-check-circle');
             if (completedSteps.includes(i)) {
-              heading.hasClass('text-success').should.be.true();
-              heading.hasClass('text-muted').should.be.false();
-              icon.hasClass('text-muted').should.be.false();
+              steps[i].hasClass('form-overview-step-complete').should.be.true();
             } else if (i === currentStep) {
-              heading.hasClass('text-success').should.be.false();
-              heading.hasClass('text-muted').should.be.false();
-              icon.hasClass('text-muted').should.be.true();
+              steps[i].hasClass('form-overview-step-current').should.be.true();
             } else {
-              heading.hasClass('text-success').should.be.false();
-              heading.hasClass('text-muted').should.be.true();
-              icon.hasClass('text-muted').should.be.true();
+              steps[i].hasClass('form-overview-step-later').should.be.true();
             }
           }
         });
