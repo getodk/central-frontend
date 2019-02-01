@@ -190,44 +190,15 @@ class. */
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
-a, .btn-link {
-  &, &:hover {
-    color: $color-action-foreground;
-  }
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &:focus, &:active:focus {
-    outline: none;
-  }
-
-  &:focus {
-    background-color: transparentize(#000, 0.94);
-    color: #23527c;
-    text-decoration: underline;
-  }
-}
-
-@media print {
-  a, a:visited {
-    text-decoration: none;
-  }
-}
-
 .btn {
   border: none;
+  border-radius: 2px;
   font-size: 12px;
   padding: 6px 10px 5px;
 
   // I think we set these for the Spinner component.
   overflow: hidden;
   position: relative;
-}
-
-.btn:not(.btn-link) {
-  border-radius: 2px;
 
   &:focus {
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
@@ -263,9 +234,44 @@ a, .btn-link {
   }
 }
 
+a, .btn-link {
+  &, &:hover {
+    color: $color-action-foreground;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    background-color: transparentize(#000, 0.94);
+    color: #23527c;
+    text-decoration: underline;
+  }
+}
+
+a {
+  &:focus {
+    outline: none;
+  }
+
+  &, &:visited {
+    @media print {
+      text-decoration: none;
+    }
+  }
+}
+
 .btn-link {
+  border-radius: 0;
+
   &:focus {
     background-clip: content-box;
+    box-shadow: none;
+  }
+
+  &:active:focus {
+    outline: none;
   }
 }
 
