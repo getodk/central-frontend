@@ -27,11 +27,27 @@ except according to the terms contained in the LICENSE file.
 
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li v-for="link of links" :key="link.id"
-            :class="{ active: routePathStartsWith(link.to) }">
-            <router-link :to="link.to" :id="link.id">
-              {{ link.text }}
-              <span v-show="routePathStartsWith(link.to)" class="sr-only">
+          <li :class="{ active: $route.path === '/' || routePathStartsWith('/projects') }">
+            <router-link id="navbar-projects-link" to="/">
+              Projects
+              <span v-show="$route.path === '/' || routePathStartsWith('/projects')"
+                class="sr-only">
+                (current)
+              </span>
+            </router-link>
+          </li>
+          <li :class="{ active: routePathStartsWith('/users') }">
+            <router-link id="navbar-users-link" to="/users">
+              Users
+              <span v-show="routePathStartsWith('/users')" class="sr-only">
+                (current)
+              </span>
+            </router-link>
+          </li>
+          <li :class="{ active: routePathStartsWith('/system/backups') }">
+            <router-link id="navbar-system-link" to="/system/backups">
+              System
+              <span v-show="routePathStartsWith('/system/backups')" class="sr-only">
                 (current)
               </span>
             </router-link>
@@ -79,15 +95,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  data() {
-    return {
-      links: [
-        { text: 'Projects', to: '/', id: 'navbar-projects-link' },
-        { text: 'Users', to: '/users', id: 'navbar-users-link' },
-        { text: 'System', to: '/system/backups', id: 'navbar-system-link' }
-      ]
-    };
   },
   methods: {
     routePathStartsWith(path) {
