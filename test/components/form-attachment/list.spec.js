@@ -326,7 +326,7 @@ describe('FormAttachmentList', () => {
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const popupText = popup.first('.modal-body p').text().trim().iTrim();
+            const popupText = popup.first('p').text().trim().iTrim();
             popupText.should.equal('1 file ready for upload.');
             const unmatched = popup.first('#form-attachment-popups-unmatched');
             unmatched.should.be.visible();
@@ -353,15 +353,27 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly if all files are unmatched', () =>
-        loadAttachments({ route: true })
+        loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['d', 'e'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const popupText = popup.first('.modal-body').text().trim().iTrim();
+            const popupText = popup.first('p').text().trim().iTrim();
             popupText.should.containEql('We don’t recognize any of the files you are trying to upload.');
             popup.find('#form-attachment-popups-unmatched').should.be.empty();
-            popup.find('.btn-primary').should.be.empty();
+            popup.first('.btn-primary').should.be.focused();
+          }));
+
+      it('allows the user to close the popup if all files are unmatched', () =>
+        loadAttachments({ route: true })
+          .then(app => select(app, blankFiles(['d', 'e'])))
+          .then(app => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.element.style.display.should.equal('');
+            return trigger.click(popup, '.btn-primary');
+          })
+          .then(popup => {
+            popup.element.style.display.should.equal('none');
           }));
     });
   };
@@ -395,7 +407,7 @@ describe('FormAttachmentList', () => {
       it('shows the popup with the correct text', () => {
         const popup = app.first('#form-attachment-popups-main');
         popup.should.be.visible();
-        const text = popup.first('.modal-body').text().trim().iTrim();
+        const text = popup.first('p').text().trim().iTrim();
         text.should.equal(!ie
           ? 'Drop now to prepare 2 files for upload to this form.'
           : 'Drop now to upload to this form.');
@@ -441,7 +453,7 @@ describe('FormAttachmentList', () => {
           .beforeEachResponse((app, request, index) => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.find('.modal-body p').map(p => p.text().trim());
+            const text = popup.find('p').map(p => p.text().trim());
             text.length.should.equal(3);
             text[1].should.containEql(`Sending ${request.data.name}`);
             if (index !== 2)
@@ -661,7 +673,7 @@ describe('FormAttachmentList', () => {
         drop('a').then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.first('.modal-body p').text().trim().iTrim();
+          const text = popup.first('p').text().trim().iTrim();
           text.should.equal('1 file ready for upload.');
         }));
 
@@ -705,11 +717,22 @@ describe('FormAttachmentList', () => {
         drop('c', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.first('.modal-body').text().trim().iTrim();
+          const text = popup.first('p').text().trim().iTrim();
           text.should.containEql('We don’t recognize the file you are trying to upload.');
           popup.find('#form-attachment-popups-unmatched').should.be.empty();
-          popup.find('.btn-primary').should.be.empty();
+          popup.first('.btn-primary').should.be.focused();
         }));
+
+      it('allows the user to close the popup if the file does not match', () =>
+        drop('c')
+          .then(app => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.element.style.display.should.equal('');
+            return trigger.click(popup, '.btn-primary');
+          })
+          .then(popup => {
+            popup.element.style.display.should.equal('none');
+          }));
     });
   };
 
@@ -753,7 +776,7 @@ describe('FormAttachmentList', () => {
         .beforeEachResponse((app, request) => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.find('.modal-body p').map(p => p.text().trim());
+          const text = popup.find('p').map(p => p.text().trim());
           text.length.should.equal(2);
           text[1].should.containEql(`Sending ${request.data.name}`);
         }));
@@ -886,7 +909,7 @@ describe('FormAttachmentList', () => {
       it('shows the popup with the correct text', () => {
         const popup = app.first('#form-attachment-popups-main');
         popup.should.be.visible();
-        const text = popup.first('.modal-body').text().trim().iTrim();
+        const text = popup.first('p').text().trim().iTrim();
         text.should.containEql(!ie
           ? 'Drag over the file entry you wish to replace'
           : 'Drop now to upload to this form.');
@@ -1020,7 +1043,7 @@ describe('FormAttachmentList', () => {
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('.modal-body').text().trim().iTrim();
+            const text = popup.first('p').text().trim().iTrim();
             text.should.equal('Drop now to upload this file as first_attachment.');
           });
       });
