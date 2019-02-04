@@ -10,14 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-popups" class="modal-dialog">
+  <div id="form-attachment-popups" ref="popups" class="modal-dialog">
     <div v-show="state" id="form-attachment-popups-main" class="modal-content">
       <div class="modal-header">
         <span class="icon-cloud-upload"></span>
         <h4 class="modal-title">Upload Files</h4>
       </div>
       <div class="modal-body">
-        <template v-if="uploadStatus.current != null">
+        <template v-if="shownDuringUpload">
           <p>
             Please wait, uploading your
             {{ $pluralize('file', uploadStatus.total) }}:
@@ -35,72 +35,77 @@ except according to the terms contained in the LICENSE file.
             </template>
           </p>
         </template>
-        <template v-else-if="plannedUploads.length !== 0 && !nameMismatch.state">
-          <p id="form-attachment-popups-action-text">
-            <strong>{{ plannedUploads.length.toLocaleString() }}
-            {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
-            upload.
-          </p>
-          <p v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
-            id="form-attachment-popups-unmatched">
+        <template v-else-if="shownAfterDrop">
+          <template v-if="plannedUploads.length !== 0">
+            <p>
+              <strong>{{ plannedUploads.length.toLocaleString() }}
+              {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
+              upload.
+            </p>
+            <p v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
+              id="form-attachment-popups-unmatched">
+              <template v-if="unmatchedFiles.length === 1">
+                <span class="icon-exclamation-triangle">
+                </span><strong>1 file</strong> has a name we don’t recognize and
+                will be ignored. To upload it, rename it or drag it onto its
+                target.
+              </template>
+              <template v-else>
+                <span class="icon-exclamation-triangle">
+                </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
+                files</strong> have a name we don’t recognize and will be
+                ignored. To upload them, rename them or drag them individually
+                onto their targets.
+              </template>
+            </p>
+            <p>
+              <button type="button" class="btn btn-primary"
+                @click="$emit('confirm')">
+                Looks good, proceed
+              </button>
+              <button type="button" class="btn btn-link"
+                @click="$emit('cancel')">
+                Cancel
+              </button>
+            </p>
+          </template>
+          <template v-else>
             <template v-if="unmatchedFiles.length === 1">
-              <span class="icon-exclamation-triangle">
-              </span><strong>1 file</strong> has a name we don’t recognize and will be
-              ignored. To upload it, rename it or drag it onto its target.
+              We don’t recognize the file you are trying to upload. Please
+              rename it to match the names listed above, or drag it
+              individually onto its target.
             </template>
             <template v-else>
-              <span class="icon-exclamation-triangle">
-              </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
-              files</strong> have a name we don’t recognize and will be ignored. To
-              upload them, rename them or drag them individually onto their targets.
+              We don’t recognize any of the files you are trying to upload.
+              Please rename them to match the names listed above, or drag them
+              individually onto their targets.
             </template>
-          </p>
-          <p>
-            <button ref="confirmButton" type="button" class="btn btn-primary"
-              @click="$emit('confirm')">
-              Looks good, proceed
-            </button>
-            <button type="button" class="btn btn-link" @click="$emit('cancel')">
-              Cancel
-            </button>
-          </p>
+          </template>
         </template>
-        <template v-else-if="unmatchedFiles.length === 1">
-          We don’t recognize the file you are trying to upload. Please rename it
-          to match the names listed above, or drag it individually onto its
-          target.
-        </template>
-        <template v-else-if="unmatchedFiles.length > 1">
-          We don’t recognize any of the files you are trying to upload. Please
-          rename them to match the names listed above, or drag them individually
-          onto their targets.
-        </template>
-        <template v-else-if="dragoverAttachment != null">
-          <p id="form-attachment-popups-action-text">
+        <template v-else-if="shownDuringDragover">
+          <p v-if="dragoverAttachment != null">
             Drop now to upload this file as
             <strong>{{ dragoverAttachment.name }}</strong>.
           </p>
-        </template>
-        <template v-else-if="countOfFilesOverDropZone === 1">
-          <p id="form-attachment-popups-action-text">
-            Drag over the file entry you wish to replace with the file and drop
-            to upload.
-          </p>
-        </template>
-        <template v-else-if="countOfFilesOverDropZone > 1">
-          <p id="form-attachment-popups-action-text">
-            Drop now to prepare <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
-            files</strong> for upload to this form.
-          </p>
-        </template>
-        <template v-else-if="countOfFilesOverDropZone === -1">
-          <p id="form-attachment-popups-action-text">
-            Drop now to upload to this form.
+          <p v-else>
+            <template v-if="countOfFilesOverDropZone === 1">
+              Drag over the file entry you wish to replace with the file and
+              drop to upload.
+            </template>
+            <template v-else-if="countOfFilesOverDropZone > 1">
+              Drop now to prepare
+              <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
+              files</strong> for upload to this form.
+            </template>
+            <!-- countOfFilesOverDropZone === -1 -->
+            <template v-else>
+              Drop now to upload to this form.
+            </template>
           </p>
         </template>
       </div>
     </div>
-    <div v-show="uploadStatus.total !== 0" id="form-attachment-popups-backdrop">
+    <div v-show="shownDuringUpload" id="form-attachment-popups-backdrop">
     </div>
   </div>
 </template>
@@ -132,12 +137,21 @@ export default {
     }
   },
   computed: {
+    shownDuringDragover() {
+      return this.countOfFilesOverDropZone !== 0;
+    },
+    shownAfterDrop() {
+      // If the user dropped a single file over a row (and we are not in IE),
+      // FormAttachmentNameMismatch is shown, not FormAttachmentPopups.
+      return (this.plannedUploads.length !== 0 && !this.nameMismatch.state) ||
+        this.unmatchedFiles.length !== 0;
+    },
+    shownDuringUpload() {
+      return this.uploadStatus.current != null;
+    },
     state() {
-      const showDuringDragover = this.countOfFilesOverDropZone !== 0;
-      const showAfterDrop = this.unmatchedFiles.length !== 0 ||
-        (this.plannedUploads.length !== 0 && !this.nameMismatch.state);
-      const showDuringUpload = this.uploadStatus.current != null;
-      return showDuringDragover || showAfterDrop || showDuringUpload;
+      return this.shownDuringDragover || this.shownAfterDrop ||
+        this.shownDuringUpload;
     },
     hasProgress() {
       const { progress } = this.uploadStatus;
@@ -151,8 +165,7 @@ export default {
     }
   },
   updated() {
-    if (this.plannedUploads.length !== 0 && !this.nameMismatch.state)
-      this.$refs.confirmButton.focus();
+    if (this.shownAfterDrop) $(this.$refs.popups).find('.btn-primary').focus();
   }
 };
 </script>
