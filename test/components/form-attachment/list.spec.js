@@ -1,13 +1,13 @@
-import Form from '../../../../lib/presenters/form';
-import FormAttachment from '../../../../lib/presenters/form-attachment';
-import FormAttachmentList from '../../../../lib/components/form/attachment/list.vue';
-import FormAttachmentNameMismatch from '../../../../lib/components/form/attachment/name-mismatch.vue';
-import FormAttachmentUploadFiles from '../../../../lib/components/form/attachment/upload-files.vue';
-import testData from '../../../data';
-import { dataTransfer, trigger } from '../../../event';
-import { formatDate } from '../../../../lib/util';
-import { mockHttp, mockRoute } from '../../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../../session';
+import Form from '../../../lib/presenters/form';
+import FormAttachment from '../../../lib/presenters/form-attachment';
+import FormAttachmentList from '../../../lib/components/form-attachment/list.vue';
+import FormAttachmentNameMismatch from '../../../lib/components/form-attachment/name-mismatch.vue';
+import FormAttachmentUploadFiles from '../../../lib/components/form-attachment/upload-files.vue';
+import testData from '../../data';
+import { dataTransfer, trigger } from '../../event';
+import { formatDate } from '../../../lib/util';
+import { mockHttp, mockRoute } from '../../http';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   // It is expected that test data is created before loadAttachments() is

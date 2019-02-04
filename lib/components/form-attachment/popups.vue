@@ -158,7 +158,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../../../assets/scss/variables';
+@import '../../../assets/scss/variables';
 
 $z-index-backdrop: 1;
 $z-index-main: $z-index-backdrop + 1;

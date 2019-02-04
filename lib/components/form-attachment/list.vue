@@ -60,9 +60,9 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import dropZone from '../../../mixins/drop-zone';
-import modal from '../../../mixins/modal';
-import request from '../../../mixins/request';
+import dropZone from '../../mixins/drop-zone';
+import modal from '../../mixins/modal';
+import request from '../../mixins/request';
 
 export default {
   name: 'FormAttachmentList',
