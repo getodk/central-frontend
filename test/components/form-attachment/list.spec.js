@@ -314,8 +314,8 @@ describe('FormAttachmentList', () => {
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('p').text().trim().iTrim();
-            text.should.equal('2 files ready for upload.');
+            const popupText = popup.first('p').text().trim().iTrim();
+            popupText.should.equal('2 files ready for upload.');
             popup.first('#form-attachment-popups-unmatched').should.be.hidden();
             popup.first('.btn-primary').should.be.focused();
           }));
@@ -358,8 +358,8 @@ describe('FormAttachmentList', () => {
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('.modal-body').text().trim().iTrim();
-            text.should.containEql('We don’t recognize any of the files you are trying to upload.');
+            const popupText = popup.first('.modal-body').text().trim().iTrim();
+            popupText.should.containEql('We don’t recognize any of the files you are trying to upload.');
             popup.find('#form-attachment-popups-unmatched').should.be.empty();
             popup.find('.btn-primary').should.be.empty();
           }));
