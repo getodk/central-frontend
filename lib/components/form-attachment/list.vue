@@ -248,7 +248,11 @@ export default {
         : 'No files were successfully uploaded.';
       return `${problem.message} ${summary}`;
     },
-    uploadFile(attachment, file) {
+    // uploadFile() may mutate `updated`.
+    uploadFile({ attachment, file }, updated) {
+      // We decrement uploadStatus.remaining here rather than after the POST so
+      // that uploadStatus.remaining and uploadStatus.current continue to be in
+      // sync.
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
@@ -258,22 +262,29 @@ export default {
         onUploadProgress: (progressEvent) => {
           this.uploadStatus.progress = progressEvent;
         }
-      });
+      })
+        .then(() => {
+          // This may differ a little from updatedAt on the server, but that
+          // should be OK.
+          const updatedAt = new Date().toISOString();
+          updated.push(attachment.with({ exists: true, updatedAt }));
+        });
     },
     uploadFiles() {
-      const updated = [];
       this.$alert().blank();
       this.uploadStatus.total = this.plannedUploads.length;
+      // This will soon be decremented by 1.
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
-      const promise = this.plannedUploads.reduce(
-        (acc, { attachment, file }) => acc
-          .then(() => this.uploadFile(attachment, file))
-          .then(() => {
-            const updatedAt = new Date().toISOString();
-            updated.push(attachment.with({ exists: true, updatedAt }));
-          }),
-        Promise.resolve()
-      );
+      const updated = [];
+      // Using `let` and this approach so that uploadStatus.total and
+      // uploadStatus.current are initialized in the same tick, and
+      // uploadStatus.remaining does not continue to be greater than
+      // uploadStatus.total.
+      let promise = this.uploadFile(this.plannedUploads[0], updated);
+      for (let i = 1; i < this.plannedUploads.length; i += 1) {
+        const upload = this.plannedUploads[i];
+        promise = promise.then(() => this.uploadFile(upload, updated));
+      }
       promise
         .finally(() => {
           if (updated.length === this.uploadStatus.total) {
