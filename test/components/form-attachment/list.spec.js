@@ -308,7 +308,7 @@ describe('FormAttachmentList', () => {
           .createPast(1, { name: 'c' });
       });
 
-      it('no unmatched files', () =>
+      it('renders correctly if there are no unmatched files', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'b'])))
           .then(app => {
@@ -320,7 +320,7 @@ describe('FormAttachmentList', () => {
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('one unmatched file', () =>
+      it('renders correctly if there is one unmatched file', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd'])))
           .then(app => {
@@ -336,7 +336,7 @@ describe('FormAttachmentList', () => {
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('multiple unmatched files', () =>
+      it('renders correctly if there are multiple unmatched files', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd', 'e'])))
           .then(app => {
@@ -352,7 +352,7 @@ describe('FormAttachmentList', () => {
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('all files are unmatched', () =>
+      it('renders correctly if all files are unmatched', () =>
         loadAttachments({ route: true })
           .then(app => select(app, blankFiles(['d', 'e'])))
           .then(app => {
@@ -691,7 +691,7 @@ describe('FormAttachmentList', () => {
           .createPast(1, { name: 'b' });
       });
 
-      it('correctly renders when the file matches', () =>
+      it('correctly renders if the file matches', () =>
         drop('a', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
@@ -701,7 +701,7 @@ describe('FormAttachmentList', () => {
           popup.first('.btn-primary').should.be.focused();
         }));
 
-      it('correctly renders when the file does not match', () =>
+      it('correctly renders if the file does not match', () =>
         drop('c', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
