@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormAttachmentExportFiles',
+  name: 'FormAttachmentUploadFiles',
   props: {
     state: {
       type: Boolean,
