@@ -237,7 +237,7 @@ describe('FormAttachmentList', () => {
     1. The user drops multiple files over the page as if under IE.
     2. The user drops multiple files over the page normally (not as if under
        IE).
-    3. The user selects multiple files using the file picker dialog.
+    3. The user selects multiple files using the file input.
 
   For each scenario, the function is passed a callback (`select`) that selects
   the files.
@@ -616,7 +616,7 @@ describe('FormAttachmentList', () => {
        (where countOfFilesOverDropZone === -1).
     2. The user drops a single file outside a row of the table normally
        (where countOfFilesOverDropZone === 1).
-    3. The user selects a single file using the file picker dialog.
+    3. The user selects a single file using the file input.
 
   The tests are not run under the following scenario, which differs in a few
   ways:
@@ -629,11 +629,11 @@ describe('FormAttachmentList', () => {
   The user must be logged in before these tests.
   */
   const testSingleFileSelection = (select) => {
-    const drop = (filename, options = {}) =>
+    const loadAndSelect = (filename, options = {}) =>
       loadAttachments({ ...options, route: true })
         .then(app => select(app, blankFiles([filename])));
 
-    describe('drop', () => {
+    describe('after a selection', () => {
       beforeEach(() => {
         testData.extendedFormAttachments
           .createPast(1, { name: 'a', exists: true })
@@ -643,7 +643,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('highlights only the matching row', () =>
-        drop('a').then(app => {
+        loadAndSelect('a').then(app => {
           const targeted = app.find('#form-attachment-list-table tbody tr')
             .map(tr => tr.hasClass('form-attachment-row-targeted'));
           targeted.should.eql([true, false, false, false]);
@@ -651,7 +651,7 @@ describe('FormAttachmentList', () => {
 
       describe('Replace label', () => {
         it('shows the label when the file matches an existing attachment', () =>
-          drop('a').then(app => {
+          loadAndSelect('a').then(app => {
             const tr = app.find('#form-attachment-list-table tbody tr');
             tr[0].first('.label').should.be.visible();
             tr[1].find('.label').length.should.equal(0);
@@ -660,7 +660,7 @@ describe('FormAttachmentList', () => {
           }));
 
         it('does not show the label when the file matches a missing attachment', () =>
-          drop('b').then(app => {
+          loadAndSelect('b').then(app => {
             const tr = app.find('#form-attachment-list-table tbody tr');
             tr[0].first('.label').should.be.hidden();
             tr[1].find('.label').length.should.equal(0);
@@ -670,7 +670,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows the popup with the correct text', () =>
-        drop('a').then(app => {
+        loadAndSelect('a').then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
           const text = popup.first('p').text().trim().iTrim();
@@ -679,7 +679,7 @@ describe('FormAttachmentList', () => {
 
       describe('after the uploads are canceled', () => {
         it('unhighlights the rows', () =>
-          drop('a')
+          loadAndSelect('a')
             .then(app =>
               trigger.click(app, '#form-attachment-popups-main .btn-link'))
             .then(app => {
@@ -687,7 +687,7 @@ describe('FormAttachmentList', () => {
             }));
 
         it('hides the popup', () =>
-          drop('a')
+          loadAndSelect('a')
             .then(app =>
               trigger.click(app, '#form-attachment-popups-main .btn-link'))
             .then(app => {
@@ -696,7 +696,7 @@ describe('FormAttachmentList', () => {
       });
     });
 
-    describe('unmatched file after a drop', () => {
+    describe('unmatched file after a selection', () => {
       beforeEach(() => {
         testData.extendedFormAttachments
           .createPast(1, { name: 'a' })
@@ -704,7 +704,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('correctly renders if the file matches', () =>
-        drop('a', { attachToDocument: true }).then(app => {
+        loadAndSelect('a', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
           const text = popup.first('p').text().trim().iTrim();
@@ -714,7 +714,7 @@ describe('FormAttachmentList', () => {
         }));
 
       it('correctly renders if the file does not match', () =>
-        drop('c', { attachToDocument: true }).then(app => {
+        loadAndSelect('c', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
           const text = popup.first('p').text().trim().iTrim();
@@ -724,7 +724,7 @@ describe('FormAttachmentList', () => {
         }));
 
       it('allows the user to close the popup if the file does not match', () =>
-        drop('c')
+        loadAndSelect('c')
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.element.style.display.should.equal('');

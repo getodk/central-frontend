@@ -43,7 +43,7 @@ some point. -->
             </template>
           </p>
         </template>
-        <template v-else-if="shownAfterDrop">
+        <template v-else-if="shownAfterSelection">
           <template v-if="plannedUploads.length !== 0">
             <p>
               <strong>{{ plannedUploads.length.toLocaleString() }}
@@ -153,7 +153,7 @@ export default {
     shownDuringDragover() {
       return this.countOfFilesOverDropZone !== 0;
     },
-    shownAfterDrop() {
+    shownAfterSelection() {
       // If the user dropped a single file over a row (and we are not in IE),
       // FormAttachmentNameMismatch is shown, not FormAttachmentPopups.
       return (this.plannedUploads.length !== 0 && !this.nameMismatch.state) ||
@@ -163,7 +163,7 @@ export default {
       return this.uploadStatus.current != null;
     },
     state() {
-      return this.shownDuringDragover || this.shownAfterDrop ||
+      return this.shownDuringDragover || this.shownAfterSelection ||
         this.shownDuringUpload;
     },
     hasProgress() {
@@ -178,7 +178,8 @@ export default {
     }
   },
   updated() {
-    if (this.shownAfterDrop) $(this.$refs.popups).find('.btn-primary').focus();
+    if (this.shownAfterSelection)
+      $(this.$refs.popups).find('.btn-primary').focus();
   }
 };
 </script>

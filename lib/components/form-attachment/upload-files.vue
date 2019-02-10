@@ -47,7 +47,7 @@ export default {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
     $(this.$refs.input).on('change.form-attachment-upload-files', (event) =>
-      this.$emit('choose', event.target.files));
+      this.$emit('select', event.target.files));
   },
   beforeDestroy() {
     $(this.$refs.input).off('.form-attachment-upload-files');

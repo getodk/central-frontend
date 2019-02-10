@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
-      @hide="hideModal('uploadFilesModal')" @choose="afterChoose"/>
+      @hide="hideModal('uploadFilesModal')" @select="afterFileInputSelection"/>
     <form-attachment-name-mismatch :state="nameMismatch.state"
       :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       /*
-      Most properties fall in one of four groups:
+      Most properties fall into exactly one of four groups:
 
         1. Properties set on dragenter and reset on dragleave or drop
            - fileIsOverDropZone. Indicates whether there is a file over the drop
@@ -109,14 +109,14 @@ export default {
              countOfFilesOverDropZone === 1. When the user drags a single file
              over a row, dragoverAttachment is the attachment that corresponds
              to the row.
-        2. Properties set on drop and reset once the uploads have started or
-           been canceled
+        2. Properties that are set once files have been selected (either by a
+           drop or using the file input) and that are reset once the uploads
+           have started or been canceled
            - plannedUploads. An array of file/attachment pairs, indicating which
              file to upload for which attachment. plannedUploads is used to
              confirm or cancel the uploads, then to start them, but it is not
              used during the uploads themselves.
-           - unmatchedFiles. Only applicable for countOfFilesOverDropZone !== 1.
-             An array of dropped files whose names did not match any
+           - unmatchedFiles. An array of the files whose names did not match any
              attachment's.
         3. Properties set once the uploads have started and reset once they have
            finished or stopped
@@ -126,7 +126,7 @@ export default {
              - current. The name of the file currently being uploaded.
              - progress. The latest ProgressEvent for the current upload.
         4. Properties set once the uploads have finished or stopped and reset
-           once a new drag is started
+           once a new drag is started or another file input selection is made
            - updatedAttachments. An array of the attachments for which files
              were successfully uploaded.
       */
@@ -158,15 +158,15 @@ export default {
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
-    // File picker
+    // FILE INPUT
 
-    afterChoose(files) {
+    afterFileInputSelection(files) {
       this.uploadFilesModal.state = false;
       this.matchFilesToAttachments(files);
     },
 
     ////////////////////////////////////////////////////////////////////////////
-    // Drag and drop
+    // DRAG AND DROP
 
     // items is a DataTransferItemList, not an Array.
     fileItemCount(maybeItems) {
@@ -215,7 +215,7 @@ export default {
     },
 
     ////////////////////////////////////////////////////////////////////////////
-    // Core logic
+    // CORE LOGIC
 
     matchFilesToAttachments(files) {
       this.plannedUploads = [];
@@ -233,7 +233,7 @@ export default {
       // popup will show in the next tick.
     },
     // cancelUploads() cancels the uploads before they start, after files have
-    // been dropped. (It does not cancel an upload in progress.)
+    // been selected. (It does not cancel an upload in progress.)
     cancelUploads() {
       // Checking `length` in order to avoid setting these properties
       // unnecessarily, which could result in Vue calculations.
