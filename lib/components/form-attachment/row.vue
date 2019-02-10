@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../../util';
+import { formatDate } from '../../util';
 
 const TYPES = {
   image: 'Image',
@@ -114,7 +114,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../../../assets/scss/variables';
+@import '../../../assets/scss/variables';
 
 #form-attachment-list-table {
   > tbody > tr {

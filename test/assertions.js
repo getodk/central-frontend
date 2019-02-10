@@ -20,6 +20,8 @@ should.Assertion.add('hidden', function hidden() {
   element(this.obj).style.display.should.equal('none');
 });
 
+// If a test does not attach the component to the document, then uses this
+// assertion, it may time out rather than fail. (I am not sure why.)
 should.Assertion.add('focused', function focused() {
   this.params = { operator: 'to be focused' };
   element(this.obj).should.equal(document.activeElement);

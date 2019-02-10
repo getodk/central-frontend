@@ -1,13 +1,13 @@
-import Form from '../../../../lib/presenters/form';
-import FormAttachment from '../../../../lib/presenters/form-attachment';
-import FormAttachmentList from '../../../../lib/components/form/attachment/list.vue';
-import FormAttachmentNameMismatch from '../../../../lib/components/form/attachment/name-mismatch.vue';
-import FormAttachmentUploadFiles from '../../../../lib/components/form/attachment/upload-files.vue';
-import testData from '../../../data';
-import { dataTransfer, trigger } from '../../../event';
-import { formatDate } from '../../../../lib/util';
-import { mockHttp, mockRoute } from '../../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../../session';
+import Form from '../../../lib/presenters/form';
+import FormAttachment from '../../../lib/presenters/form-attachment';
+import FormAttachmentList from '../../../lib/components/form-attachment/list.vue';
+import FormAttachmentNameMismatch from '../../../lib/components/form-attachment/name-mismatch.vue';
+import FormAttachmentUploadFiles from '../../../lib/components/form-attachment/upload-files.vue';
+import testData from '../../data';
+import { dataTransfer, trigger } from '../../event';
+import { formatDate } from '../../../lib/util';
+import { mockHttp, mockRoute } from '../../http';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   // It is expected that test data is created before loadAttachments() is
@@ -38,6 +38,18 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     });
 };
 const blankFiles = (names) => names.map(name => new File([''], name));
+const selectFilesUsingModal = (app, files) =>
+  trigger.click(app, '#form-attachment-list-heading button')
+    .then(() =>
+      trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
+    .then(() => {
+      const input = app.first('#form-attachment-upload-files input[type="file"]');
+      const target = { files: dataTransfer(files).files };
+      const event = $.Event('change', { target });
+      $(input.element).trigger(event);
+      return app.vm.$nextTick();
+    })
+    .then(() => app);
 
 describe('FormAttachmentList', () => {
   describe('routing', () => {
@@ -237,7 +249,7 @@ describe('FormAttachmentList', () => {
     1. The user drops multiple files over the page as if under IE.
     2. The user drops multiple files over the page normally (not as if under
        IE).
-    3. The user selects multiple files using the file picker dialog.
+    3. The user selects multiple files using the file input.
 
   For each scenario, the function is passed a callback (`select`) that selects
   the files.
@@ -308,25 +320,25 @@ describe('FormAttachmentList', () => {
           .createPast(1, { name: 'c' });
       });
 
-      it('no unmatched files', () =>
+      it('renders correctly if there are no unmatched files', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'b'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('p').text().trim().iTrim();
-            text.should.equal('2 files ready for upload.');
+            const popupText = popup.first('p').text().trim().iTrim();
+            popupText.should.equal('2 files ready for upload.');
             popup.first('#form-attachment-popups-unmatched').should.be.hidden();
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('one unmatched file', () =>
+      it('renders correctly if there is one unmatched file', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const popupText = popup.first('.modal-body p').text().trim().iTrim();
+            const popupText = popup.first('p').text().trim().iTrim();
             popupText.should.equal('1 file ready for upload.');
             const unmatched = popup.first('#form-attachment-popups-unmatched');
             unmatched.should.be.visible();
@@ -336,7 +348,7 @@ describe('FormAttachmentList', () => {
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('multiple unmatched files', () =>
+      it('renders correctly if there are multiple unmatched files', () =>
         loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd', 'e'])))
           .then(app => {
@@ -352,245 +364,31 @@ describe('FormAttachmentList', () => {
             popup.first('.btn-primary').should.be.focused();
           }));
 
-      it('all files are unmatched', () =>
-        loadAttachments({ route: true })
+      it('renders correctly if all files are unmatched', () =>
+        loadAttachments({ route: true, attachToDocument: true })
           .then(app => select(app, blankFiles(['d', 'e'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('.modal-body').text().trim().iTrim();
-            text.should.containEql('We don’t recognize any of the files you are trying to upload.');
+            const popupText = popup.first('p').text().trim().iTrim();
+            popupText.should.containEql('We don’t recognize any of the files you are trying to upload.');
             popup.find('#form-attachment-popups-unmatched').should.be.empty();
-            popup.find('.btn-primary').should.be.empty();
+            popup.first('.btn-primary').should.be.focused();
+          }));
+
+      it('allows the user to close the popup if all files are unmatched', () =>
+        loadAttachments({ route: true })
+          .then(app => select(app, blankFiles(['d', 'e'])))
+          .then(app => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.element.style.display.should.equal('');
+            return trigger.click(popup, '.btn-primary');
+          })
+          .then(popup => {
+            popup.element.style.display.should.equal('none');
           }));
     });
   };
-
-  // The following tests will be run once as if under IE (where
-  // countOfFilesOverDropZone === -1) and once normally (where
-  // countOfFilesOverDropZone > 1). The user must be logged in before these
-  // tests.
-  const testMultipleFileDragAndDrop = (ie) => describe('multiple files', () => {
-    describe('drag', () => {
-      let app;
-      beforeEach(() => {
-        testData.extendedFormAttachments.createPast(2);
-        // Specifying `route: true` in order to trigger the Vue activated hook,
-        // which attaches the jQuery event handlers.
-        return loadAttachments({ route: true }).then(component => {
-          app = component;
-          return trigger.dragenter(
-            app,
-            '#form-attachment-list-heading div',
-            { files: blankFiles(['a', 'b']), ie }
-          );
-        });
-      });
-
-      it('highlights all the rows of the table', () => {
-        for (const tr of app.find('#form-attachment-list-table tbody tr'))
-          tr.hasClass('info').should.be.true();
-      });
-
-      it('shows the popup with the correct text', () => {
-        const popup = app.first('#form-attachment-popups-main');
-        popup.should.be.visible();
-        const text = popup.first('.modal-body').text().trim().iTrim();
-        text.should.equal(!ie
-          ? 'Drop now to prepare 2 files for upload to this form.'
-          : 'Drop now to upload to this form.');
-      });
-    });
-
-    describe('drop', () => testMultipleFileSelection((app, files) =>
-      trigger.dragAndDrop(app, FormAttachmentList, { files, ie })));
-
-    describe('confirming the uploads', () => {
-      beforeEach(() => {
-        testData.extendedFormAttachments
-          .createPast(1, { name: 'a', exists: true })
-          .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
-          // Deleted attachment
-          .createPast(1, { name: 'c', exists: false, hasUpdatedAt: true })
-          .createPast(1, { name: 'd' });
-      });
-
-      const confirmUploads = () => loadAttachments({ route: true })
-        .afterResponses(app => trigger.dragAndDrop(
-          app,
-          FormAttachmentList,
-          { files: blankFiles(['a', 'b', 'c']), ie }
-        ))
-        .request(app =>
-          trigger.click(app, '#form-attachment-popups-main .btn-primary'));
-
-      it('shows a backdrop', () =>
-        confirmUploads()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .beforeEachResponse(app => {
-            app.first('#form-attachment-popups-backdrop').should.be.visible();
-          }));
-
-      it('shows the popup with the correct text', () =>
-        confirmUploads()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .beforeEachResponse((app, request, index) => {
-            const popup = app.first('#form-attachment-popups-main');
-            popup.should.be.visible();
-            const text = popup.find('.modal-body p').map(p => p.text().trim());
-            text.length.should.equal(3);
-            text[1].should.containEql(`Sending ${request.data.name}`);
-            if (index !== 2)
-              text[2].should.equal(`${3 - index} files remain.`);
-            else
-              text[2].should.equal('This is the last file.');
-          }));
-
-      describe('all uploads succeed', () => {
-        let app;
-        beforeEach(() => confirmUploads()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .afterResponses(component => {
-            app = component;
-          }));
-
-        it('updates the table', () => {
-          const oldUpdatedAt = testData.extendedFormAttachments.sorted()
-            .map(attachment => attachment.updatedAt);
-          const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
-            .map(attachment => attachment.updatedAt);
-          (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
-          should.exist(newUpdatedAt[1]);
-          (newUpdatedAt[2] > oldUpdatedAt[2]).should.be.true();
-        });
-
-        it('shows a success alert', () => {
-          app.should.alert('success', '3 files have been successfully uploaded.');
-        });
-
-        describe('highlight', () => {
-          it('highlights the updated attachments', () => {
-            const highlighted = app.find('#form-attachment-list-table tbody tr')
-              .map(tr => tr.hasClass('success'));
-            highlighted.should.eql([true, true, true, false]);
-          });
-
-          it('no longer highlights attachments once a new drag starts', () => {
-            const files = blankFiles(['y', 'z']);
-            return trigger.dragenter(app, FormAttachmentList, { files, ie })
-              .then(() => {
-                const highlighted = app.find('#form-attachment-list-table .success');
-                highlighted.should.be.empty();
-              });
-          });
-        });
-      });
-
-      describe('only 2 uploads succeed', () => {
-        let app;
-        beforeEach(() => confirmUploads()
-          .respondWithSuccess()
-          .respondWithSuccess()
-          .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
-          .afterResponses(component => {
-            app = component;
-          }));
-
-        it('updates the table', () => {
-          const oldUpdatedAt = testData.extendedFormAttachments.sorted()
-            .map(attachment => attachment.updatedAt);
-          const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
-            .map(attachment => attachment.updatedAt);
-          (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
-          should.exist(newUpdatedAt[1]);
-          newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-        });
-
-        it('shows a danger alert', () => {
-          app.should.alert(
-            'danger',
-            'Failed. Only 2 of 3 files were successfully uploaded.'
-          );
-        });
-
-        it('highlights the updated attachments', () => {
-          const highlighted = app.find('#form-attachment-list-table tbody tr')
-            .map(tr => tr.hasClass('success'));
-          highlighted.should.eql([true, true, false, false]);
-        });
-      });
-
-      describe('only 1 upload succeeds', () => {
-        let app;
-        beforeEach(() => confirmUploads()
-          .respondWithSuccess()
-          .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
-          .afterResponses(component => {
-            app = component;
-          }));
-
-        it('updates the table', () => {
-          const oldUpdatedAt = testData.extendedFormAttachments.sorted()
-            .map(attachment => attachment.updatedAt);
-          const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
-            .map(attachment => attachment.updatedAt);
-          (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
-          should.not.exist(newUpdatedAt[1]);
-          newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-        });
-
-        it('shows a danger alert', () => {
-          app.should.alert(
-            'danger',
-            'Failed. Only 1 of 3 files was successfully uploaded.'
-          );
-        });
-
-        it('highlights the updated attachment', () => {
-          const highlighted = app.find('#form-attachment-list-table tbody tr')
-            .map(tr => tr.hasClass('success'));
-          highlighted.should.eql([true, false, false, false]);
-        });
-      });
-
-      describe('no uploads succeed', () => {
-        let app;
-        beforeEach(() => confirmUploads()
-          .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
-          .afterResponses(component => {
-            app = component;
-          }));
-
-        it('does not update the table', () => {
-          const oldUpdatedAt = testData.extendedFormAttachments.sorted()
-            .map(attachment => attachment.updatedAt);
-          const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
-            .map(attachment => attachment.updatedAt);
-          newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
-          should.not.exist(newUpdatedAt[1]);
-          newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-        });
-
-        it('shows a danger alert', () => {
-          app.should.alert(
-            'danger',
-            'Failed. No files were successfully uploaded.'
-          );
-        });
-
-        it('does not highlight any attachment', () => {
-          const highlighted = app.find('#form-attachment-list-table .success');
-          highlighted.should.be.empty();
-        });
-      });
-    });
-  });
 
   /*
   testSingleFileSelection() tests the effects of selecting a single file to
@@ -604,7 +402,7 @@ describe('FormAttachmentList', () => {
        (where countOfFilesOverDropZone === -1).
     2. The user drops a single file outside a row of the table normally
        (where countOfFilesOverDropZone === 1).
-    3. The user selects a single file using the file picker dialog.
+    3. The user selects a single file using the file input.
 
   The tests are not run under the following scenario, which differs in a few
   ways:
@@ -617,11 +415,11 @@ describe('FormAttachmentList', () => {
   The user must be logged in before these tests.
   */
   const testSingleFileSelection = (select) => {
-    const drop = (filename, options = {}) =>
+    const loadAndSelect = (filename, options = {}) =>
       loadAttachments({ ...options, route: true })
         .then(app => select(app, blankFiles([filename])));
 
-    describe('drop', () => {
+    describe('after a selection', () => {
       beforeEach(() => {
         testData.extendedFormAttachments
           .createPast(1, { name: 'a', exists: true })
@@ -631,7 +429,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('highlights only the matching row', () =>
-        drop('a').then(app => {
+        loadAndSelect('a').then(app => {
           const targeted = app.find('#form-attachment-list-table tbody tr')
             .map(tr => tr.hasClass('form-attachment-row-targeted'));
           targeted.should.eql([true, false, false, false]);
@@ -639,7 +437,7 @@ describe('FormAttachmentList', () => {
 
       describe('Replace label', () => {
         it('shows the label when the file matches an existing attachment', () =>
-          drop('a').then(app => {
+          loadAndSelect('a').then(app => {
             const tr = app.find('#form-attachment-list-table tbody tr');
             tr[0].first('.label').should.be.visible();
             tr[1].find('.label').length.should.equal(0);
@@ -648,7 +446,7 @@ describe('FormAttachmentList', () => {
           }));
 
         it('does not show the label when the file matches a missing attachment', () =>
-          drop('b').then(app => {
+          loadAndSelect('b').then(app => {
             const tr = app.find('#form-attachment-list-table tbody tr');
             tr[0].first('.label').should.be.hidden();
             tr[1].find('.label').length.should.equal(0);
@@ -658,16 +456,16 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows the popup with the correct text', () =>
-        drop('a').then(app => {
+        loadAndSelect('a').then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.first('.modal-body p').text().trim().iTrim();
+          const text = popup.first('p').text().trim().iTrim();
           text.should.equal('1 file ready for upload.');
         }));
 
       describe('after the uploads are canceled', () => {
         it('unhighlights the rows', () =>
-          drop('a')
+          loadAndSelect('a')
             .then(app =>
               trigger.click(app, '#form-attachment-popups-main .btn-link'))
             .then(app => {
@@ -675,7 +473,7 @@ describe('FormAttachmentList', () => {
             }));
 
         it('hides the popup', () =>
-          drop('a')
+          loadAndSelect('a')
             .then(app =>
               trigger.click(app, '#form-attachment-popups-main .btn-link'))
             .then(app => {
@@ -684,15 +482,15 @@ describe('FormAttachmentList', () => {
       });
     });
 
-    describe('unmatched file after a drop', () => {
+    describe('unmatched file after a selection', () => {
       beforeEach(() => {
         testData.extendedFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' });
       });
 
-      it('correctly renders when the file matches', () =>
-        drop('a', { attachToDocument: true }).then(app => {
+      it('correctly renders if the file matches', () =>
+        loadAndSelect('a', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
           const text = popup.first('p').text().trim().iTrim();
@@ -701,15 +499,26 @@ describe('FormAttachmentList', () => {
           popup.first('.btn-primary').should.be.focused();
         }));
 
-      it('correctly renders when the file does not match', () =>
-        drop('c', { attachToDocument: true }).then(app => {
+      it('correctly renders if the file does not match', () =>
+        loadAndSelect('c', { attachToDocument: true }).then(app => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.first('.modal-body').text().trim().iTrim();
+          const text = popup.first('p').text().trim().iTrim();
           text.should.containEql('We don’t recognize the file you are trying to upload.');
           popup.find('#form-attachment-popups-unmatched').should.be.empty();
-          popup.find('.btn-primary').should.be.empty();
+          popup.first('.btn-primary').should.be.focused();
         }));
+
+      it('allows the user to close the popup if the file does not match', () =>
+        loadAndSelect('c')
+          .then(app => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.element.style.display.should.equal('');
+            return trigger.click(popup, '.btn-primary');
+          })
+          .then(popup => {
+            popup.element.style.display.should.equal('none');
+          }));
     });
   };
 
@@ -753,7 +562,7 @@ describe('FormAttachmentList', () => {
         .beforeEachResponse((app, request) => {
           const popup = app.first('#form-attachment-popups-main');
           popup.should.be.visible();
-          const text = popup.find('.modal-body p').map(p => p.text().trim());
+          const text = popup.find('p').map(p => p.text().trim());
           text.length.should.equal(2);
           text[1].should.containEql(`Sending ${request.data.name}`);
         }));
@@ -817,11 +626,21 @@ describe('FormAttachmentList', () => {
               highlighted.should.eql([true, false, false]);
             }));
 
-        it('no longer highlights the attachment once a new drag starts', () =>
+        it('unhighlights the attachment once a new drag starts', () =>
           upload('a')
             .respondWithSuccess()
             .afterResponses(app =>
               trigger.dragenter(app, FormAttachmentList, blankFiles(['d'])))
+            .then(app => {
+              const highlighted = app.find('#form-attachment-list-table .success');
+              highlighted.should.be.empty();
+            }));
+
+        it('unhighlights the attachment after a file input selection', () =>
+          upload('a')
+            .respondWithSuccess()
+            .afterResponses(app =>
+              selectFilesUsingModal(app, blankFiles(['d'])))
             .then(app => {
               const highlighted = app.find('#form-attachment-list-table .success');
               highlighted.should.be.empty();
@@ -858,61 +677,293 @@ describe('FormAttachmentList', () => {
     });
   };
 
-  // The following tests will be run once as if under IE (where
-  // countOfFilesOverDropZone === -1) and once normally (where
-  // countOfFilesOverDropZone === 1). The user must be logged in before these
-  // tests.
-  const description = 'single file outside a row of the table';
-  const testSingleFileOutsideRow = (ie) => describe(description, () => {
-    describe('drag', () => {
-      let app;
-      beforeEach(() => {
-        testData.extendedFormAttachments.createPast(2);
-        return loadAttachments({ route: true }).then(component => {
-          app = component;
-          return trigger.dragenter(
-            app,
-            '#form-attachment-list-heading div',
-            { files: blankFiles(['a']), ie }
-          );
+  // One way for the user to select what to upload is to drag and drop one or
+  // more files outside a row of the table. Here we test that drag and drop, as
+  // well as the upload that follows.
+  for (const ie of [false, true]) {
+    const not = ie ? '' : 'not ';
+    describe(`dragging and dropping outside a row of the table ${not}using IE`, () => {
+      beforeEach(mockLogin);
+
+      describe('multiple files', () => {
+        describe('drag', () => {
+          let app;
+          beforeEach(() => {
+            testData.extendedFormAttachments.createPast(2);
+            // Specifying `route: true` in order to trigger the Vue activated
+            // hook, which attaches the jQuery event handlers.
+            return loadAttachments({ route: true }).then(component => {
+              app = component;
+              return trigger.dragenter(
+                app,
+                '#form-attachment-list-heading div',
+                { files: blankFiles(['a', 'b']), ie }
+              );
+            });
+          });
+
+          it('highlights all the rows of the table', () => {
+            for (const tr of app.find('#form-attachment-list-table tbody tr'))
+              tr.hasClass('info').should.be.true();
+          });
+
+          it('shows the popup with the correct text', () => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.should.be.visible();
+            const text = popup.first('p').text().trim().iTrim();
+            text.should.equal(!ie
+              ? 'Drop now to prepare 2 files for upload to this form.'
+              : 'Drop now to upload to this form.');
+          });
+        });
+
+        describe('drop', () => {
+          testMultipleFileSelection((app, files) =>
+            trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
+        });
+
+        describe('confirming the uploads', () => {
+          beforeEach(() => {
+            testData.extendedFormAttachments
+              .createPast(1, { name: 'a', exists: true })
+              .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
+              // Deleted attachment
+              .createPast(1, { name: 'c', exists: false, hasUpdatedAt: true })
+              .createPast(1, { name: 'd' });
+          });
+
+          const confirmUploads = () => loadAttachments({ route: true })
+            .afterResponses(app => trigger.dragAndDrop(
+              app,
+              FormAttachmentList,
+              { files: blankFiles(['a', 'b', 'c']), ie }
+            ))
+            .request(app =>
+              trigger.click(app, '#form-attachment-popups-main .btn-primary'));
+
+          it('shows a backdrop', () =>
+            confirmUploads()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .beforeEachResponse(app => {
+                const backdrop = app.first('#form-attachment-popups-backdrop');
+                backdrop.should.be.visible();
+              }));
+
+          it('shows the popup with the correct text', () =>
+            confirmUploads()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .beforeEachResponse((app, request, index) => {
+                const popup = app.first('#form-attachment-popups-main');
+                popup.should.be.visible();
+                const text = popup.find('p').map(p => p.text().trim());
+                text.length.should.equal(3);
+                text[1].should.containEql(`Sending ${request.data.name}`);
+                if (index !== 2)
+                  text[2].should.equal(`${3 - index} files remain.`);
+                else
+                  text[2].should.equal('This is the last file.');
+              }));
+
+          describe('all uploads succeed', () => {
+            let app;
+            beforeEach(() => confirmUploads()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .afterResponses(component => {
+                app = component;
+              }));
+
+            it('updates the table', () => {
+              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+                .map(attachment => attachment.updatedAt);
+              const formAttachmentList = app.first(FormAttachmentList);
+              const newUpdatedAt = formAttachmentList.getProp('attachments')
+                .map(attachment => attachment.updatedAt);
+              (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
+              should.exist(newUpdatedAt[1]);
+              (newUpdatedAt[2] > oldUpdatedAt[2]).should.be.true();
+            });
+
+            it('shows a success alert', () => {
+              app.should.alert('success', '3 files have been successfully uploaded.');
+            });
+
+            describe('highlight', () => {
+              it('highlights the updated attachments', () => {
+                const rows = app.find('#form-attachment-list-table tbody tr');
+                const highlighted = rows.map(row => row.hasClass('success'));
+                highlighted.should.eql([true, true, true, false]);
+              });
+
+              it('unhighlights the attachments once a new drag starts', () => {
+                const files = blankFiles(['y', 'z']);
+                return trigger.dragenter(app, FormAttachmentList, { files, ie })
+                  .then(() => {
+                    const table = app.first('#form-attachment-list-table');
+                    table.find('.success').should.be.empty();
+                  });
+              });
+
+              it('unhighlights the attachments after a file input selection', () =>
+                selectFilesUsingModal(app, blankFiles(['y', 'z'])).then(() => {
+                  const table = app.first('#form-attachment-list-table');
+                  table.find('.success').should.be.empty();
+                }));
+            });
+          });
+
+          describe('only 2 uploads succeed', () => {
+            let app;
+            beforeEach(() => confirmUploads()
+              .respondWithSuccess()
+              .respondWithSuccess()
+              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .afterResponses(component => {
+                app = component;
+              }));
+
+            it('updates the table', () => {
+              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+                .map(attachment => attachment.updatedAt);
+              const formAttachmentList = app.first(FormAttachmentList);
+              const newUpdatedAt = formAttachmentList.getProp('attachments')
+                .map(attachment => attachment.updatedAt);
+              (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
+              should.exist(newUpdatedAt[1]);
+              newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
+            });
+
+            it('shows a danger alert', () => {
+              app.should.alert(
+                'danger',
+                'Failed. Only 2 of 3 files were successfully uploaded.'
+              );
+            });
+
+            it('highlights the updated attachments', () => {
+              const rows = app.find('#form-attachment-list-table tbody tr');
+              const highlighted = rows.map(row => row.hasClass('success'));
+              highlighted.should.eql([true, true, false, false]);
+            });
+          });
+
+          describe('only 1 upload succeeds', () => {
+            let app;
+            beforeEach(() => confirmUploads()
+              .respondWithSuccess()
+              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .afterResponses(component => {
+                app = component;
+              }));
+
+            it('updates the table', () => {
+              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+                .map(attachment => attachment.updatedAt);
+              const formAttachmentList = app.first(FormAttachmentList);
+              const newUpdatedAt = formAttachmentList.getProp('attachments')
+                .map(attachment => attachment.updatedAt);
+              (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
+              should.not.exist(newUpdatedAt[1]);
+              newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
+            });
+
+            it('shows a danger alert', () => {
+              app.should.alert(
+                'danger',
+                'Failed. Only 1 of 3 files was successfully uploaded.'
+              );
+            });
+
+            it('highlights the updated attachment', () => {
+              const rows = app.find('#form-attachment-list-table tbody tr');
+              const highlighted = rows.map(row => row.hasClass('success'));
+              highlighted.should.eql([true, false, false, false]);
+            });
+          });
+
+          describe('no uploads succeed', () => {
+            let app;
+            beforeEach(() => confirmUploads()
+              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .afterResponses(component => {
+                app = component;
+              }));
+
+            it('does not update the table', () => {
+              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+                .map(attachment => attachment.updatedAt);
+              const formAttachmentList = app.first(FormAttachmentList);
+              const newUpdatedAt = formAttachmentList.getProp('attachments')
+                .map(attachment => attachment.updatedAt);
+              newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
+              should.not.exist(newUpdatedAt[1]);
+              newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
+            });
+
+            it('shows a danger alert', () => {
+              app.should.alert(
+                'danger',
+                'Failed. No files were successfully uploaded.'
+              );
+            });
+
+            it('does not highlight any attachment', () => {
+              const table = app.first('#form-attachment-list-table');
+              table.find('.success').should.be.empty();
+            });
+          });
         });
       });
 
-      it('highlights all the rows of the table', () => {
-        for (const tr of app.find('#form-attachment-list-table tbody tr'))
-          tr.hasClass('info').should.be.true();
+      describe('single file', () => {
+        describe('drag', () => {
+          let app;
+          beforeEach(() => {
+            testData.extendedFormAttachments.createPast(2);
+            return loadAttachments({ route: true }).then(component => {
+              app = component;
+              return trigger.dragenter(
+                app,
+                '#form-attachment-list-heading div',
+                { files: blankFiles(['a']), ie }
+              );
+            });
+          });
+
+          it('highlights all the rows of the table', () => {
+            for (const tr of app.find('#form-attachment-list-table tbody tr'))
+              tr.hasClass('info').should.be.true();
+          });
+
+          it('shows the popup with the correct text', () => {
+            const popup = app.first('#form-attachment-popups-main');
+            popup.should.be.visible();
+            const text = popup.first('p').text().trim().iTrim();
+            text.should.containEql(!ie
+              ? 'Drag over the file entry you wish to replace'
+              : 'Drop now to upload to this form.');
+          });
+        });
+
+        testSingleFileSelection((app, files) =>
+          trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
+
+        describe('confirming the upload', () =>
+          testSingleFileUpload(attachmentName =>
+            loadAttachments({ route: true })
+              .afterResponses(app => trigger.dragAndDrop(
+                app,
+                FormAttachmentList,
+                { files: blankFiles([attachmentName]), ie }
+              ))
+              .request(app =>
+                trigger.click(app, '#form-attachment-popups-main .btn-primary'))));
       });
-
-      it('shows the popup with the correct text', () => {
-        const popup = app.first('#form-attachment-popups-main');
-        popup.should.be.visible();
-        const text = popup.first('.modal-body').text().trim().iTrim();
-        text.should.containEql(!ie
-          ? 'Drag over the file entry you wish to replace'
-          : 'Drop now to upload to this form.');
-      });
-    });
-
-    testSingleFileSelection((app, files) =>
-      trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
-
-    describe('confirming the upload', () =>
-      testSingleFileUpload(attachmentName => loadAttachments({ route: true })
-        .afterResponses(app => trigger.dragAndDrop(
-          app,
-          FormAttachmentList,
-          { files: blankFiles([attachmentName]), ie }
-        ))
-        .request(app =>
-          trigger.click(app, '#form-attachment-popups-main .btn-primary'))));
-  });
-
-  for (const ie of [false, true]) {
-    describe(ie ? 'using IE' : 'not using IE', () => {
-      beforeEach(mockLogin);
-
-      testMultipleFileDragAndDrop(ie);
-      testSingleFileOutsideRow(ie);
     });
   }
 
@@ -942,20 +993,13 @@ describe('FormAttachmentList', () => {
           }));
     });
 
-    const select = (app, files) =>
-      trigger.click(app, '#form-attachment-list-heading button')
-        .then(() =>
-          trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
-        .then(() => {
-          const input = app.first('#form-attachment-upload-files input[type="file"]');
-          const target = { files: dataTransfer(files).files };
-          const event = $.Event('change', { target });
-          $(input.element).trigger(event);
-          return app.vm.$nextTick();
-        })
-        .then(() => app);
-    describe('select single file', () => testSingleFileSelection(select));
-    describe('select multiple files', () => testMultipleFileSelection(select));
+    describe('select single file', () => {
+      testSingleFileSelection(selectFilesUsingModal);
+    });
+
+    describe('select multiple files', () => {
+      testMultipleFileSelection(selectFilesUsingModal);
+    });
   });
 
   describe('dragging and dropping a single file over a row', () => {
@@ -1020,40 +1064,36 @@ describe('FormAttachmentList', () => {
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
-            const text = popup.first('.modal-body').text().trim().iTrim();
+            const text = popup.first('p').text().trim().iTrim();
             text.should.equal('Drop now to upload this file as first_attachment.');
           });
       });
     });
 
+    const dragAndDropOntoRow = (app, attachmentName, filename) => {
+      const tr = app.find('#form-attachment-list-table tbody tr');
+      const attachments = testData.extendedFormAttachments.sorted();
+      tr.length.should.equal(attachments.length);
+      for (let i = 0; i < tr.length; i += 1) {
+        if (attachments[i].name === attachmentName) {
+          return trigger.dragAndDrop(tr[i], blankFiles([filename]))
+            .then(() => app);
+        }
+      }
+      throw new Error('matching attachment not found');
+    };
+
     describe('drop over an attachment with the same name', () => {
       testSingleFileUpload(attachmentName => loadAttachments({ route: true })
         .complete()
-        .request(app => {
-          const tr = app.find('#form-attachment-list-table tbody tr');
-          tr.length.should.equal(testData.extendedFormAttachments.size);
-          for (let i = 0; i < testData.extendedFormAttachments.size; i += 1) {
-            if (testData.extendedFormAttachments.get(i).name === attachmentName)
-              return trigger.dragAndDrop(tr[i], blankFiles([attachmentName]))
-                .then(() => app);
-          }
-          throw new Error('matching attachment not found');
-        }));
+        .request(app =>
+          dragAndDropOntoRow(app, attachmentName, attachmentName)));
     });
 
     describe('drop over an attachment with a different name', () => {
       const dropMismatchingFile = (attachmentName) =>
-        loadAttachments({ route: true }).afterResponses(app => {
-          const tr = app.find('#form-attachment-list-table tbody tr');
-          const attachments = testData.extendedFormAttachments.sorted();
-          tr.length.should.equal(attachments.length);
-          for (let i = 0; i < tr.length; i += 1) {
-            if (attachments[i].name === attachmentName)
-              return trigger.dragAndDrop(tr[i], blankFiles(['mismatching_file']))
-                .then(() => app);
-          }
-          throw new Error('matching attachment not found');
-        });
+        loadAttachments({ route: true }).afterResponses(app =>
+          dragAndDropOntoRow(app, attachmentName, 'mismatching_file'));
 
       describe('name mismatch modal', () => {
         beforeEach(() => {
