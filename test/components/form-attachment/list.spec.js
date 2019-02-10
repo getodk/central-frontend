@@ -38,6 +38,18 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     });
 };
 const blankFiles = (names) => names.map(name => new File([''], name));
+const selectFilesUsingModal = (app, files) =>
+  trigger.click(app, '#form-attachment-list-heading button')
+    .then(() =>
+      trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
+    .then(() => {
+      const input = app.first('#form-attachment-upload-files input[type="file"]');
+      const target = { files: dataTransfer(files).files };
+      const event = $.Event('change', { target });
+      $(input.element).trigger(event);
+      return app.vm.$nextTick();
+    })
+    .then(() => app);
 
 describe('FormAttachmentList', () => {
   describe('routing', () => {
@@ -614,11 +626,21 @@ describe('FormAttachmentList', () => {
               highlighted.should.eql([true, false, false]);
             }));
 
-        it('no longer highlights the attachment once a new drag starts', () =>
+        it('unhighlights the attachment once a new drag starts', () =>
           upload('a')
             .respondWithSuccess()
             .afterResponses(app =>
               trigger.dragenter(app, FormAttachmentList, blankFiles(['d'])))
+            .then(app => {
+              const highlighted = app.find('#form-attachment-list-table .success');
+              highlighted.should.be.empty();
+            }));
+
+        it('unhighlights the attachment after a file input selection', () =>
+          upload('a')
+            .respondWithSuccess()
+            .afterResponses(app =>
+              selectFilesUsingModal(app, blankFiles(['d'])))
             .then(app => {
               const highlighted = app.find('#form-attachment-list-table .success');
               highlighted.should.be.empty();
@@ -695,8 +717,10 @@ describe('FormAttachmentList', () => {
           });
         });
 
-        describe('drop', () => testMultipleFileSelection((app, files) =>
-          trigger.dragAndDrop(app, FormAttachmentList, { files, ie })));
+        describe('drop', () => {
+          testMultipleFileSelection((app, files) =>
+            trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
+        });
 
         describe('confirming the uploads', () => {
           beforeEach(() => {
@@ -776,7 +800,7 @@ describe('FormAttachmentList', () => {
                 highlighted.should.eql([true, true, true, false]);
               });
 
-              it('no longer highlights attachments once a new drag starts', () => {
+              it('unhighlights the attachments once a new drag starts', () => {
                 const files = blankFiles(['y', 'z']);
                 return trigger.dragenter(app, FormAttachmentList, { files, ie })
                   .then(() => {
@@ -784,6 +808,12 @@ describe('FormAttachmentList', () => {
                     table.find('.success').should.be.empty();
                   });
               });
+
+              it('unhighlights the attachments after a file input selection', () =>
+                selectFilesUsingModal(app, blankFiles(['y', 'z'])).then(() => {
+                  const table = app.first('#form-attachment-list-table');
+                  table.find('.success').should.be.empty();
+                }));
             });
           });
 
@@ -963,20 +993,13 @@ describe('FormAttachmentList', () => {
           }));
     });
 
-    const select = (app, files) =>
-      trigger.click(app, '#form-attachment-list-heading button')
-        .then(() =>
-          trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
-        .then(() => {
-          const input = app.first('#form-attachment-upload-files input[type="file"]');
-          const target = { files: dataTransfer(files).files };
-          const event = $.Event('change', { target });
-          $(input.element).trigger(event);
-          return app.vm.$nextTick();
-        })
-        .then(() => app);
-    describe('select single file', () => testSingleFileSelection(select));
-    describe('select multiple files', () => testMultipleFileSelection(select));
+    describe('select single file', () => {
+      testSingleFileSelection(selectFilesUsingModal);
+    });
+
+    describe('select multiple files', () => {
+      testMultipleFileSelection(selectFilesUsingModal);
+    });
   });
 
   describe('dragging and dropping a single file over a row', () => {

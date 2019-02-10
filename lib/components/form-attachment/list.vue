@@ -162,6 +162,7 @@ export default {
 
     afterFileInputSelection(files) {
       this.uploadFilesModal.state = false;
+      if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
       this.matchFilesToAttachments(files);
     },
 
