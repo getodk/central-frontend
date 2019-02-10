@@ -17,21 +17,24 @@ except according to the terms contained in the LICENSE file.
         <h4 class="modal-title">Upload Files</h4>
       </div>
       <div class="modal-body">
-        <template v-if="shownDuringUpload">
+        <template v-if="shownDuringDragover">
           <p>
-            Please wait, uploading your
-            {{ $pluralize('file', uploadStatus.total) }}:
-          </p>
-          <p id="form-attachment-popups-current">
-            <strong>Sending {{ uploadStatus.current }}</strong>
-            <span v-if="hasProgress">({{ percentLoaded }})</span>
-          </p>
-          <p v-if="uploadStatus.total !== 1">
-            <template v-if="uploadStatus.remaining > 1">
-              {{ uploadStatus.remaining.toLocaleString() }} files remain.
+            <template v-if="dragoverAttachment != null">
+              Drop now to upload this file as
+              <strong>{{ dragoverAttachment.name }}</strong>.
             </template>
+            <template v-else-if="countOfFilesOverDropZone === 1">
+              Drag over the file entry you wish to replace with the file and
+              drop to upload.
+            </template>
+            <template v-else-if="countOfFilesOverDropZone > 1">
+              Drop now to prepare
+              <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
+              files</strong> for upload to this form.
+            </template>
+            <!-- countOfFilesOverDropZone === -1 -->
             <template v-else>
-              This is the last file.
+              Drop now to upload to this form.
             </template>
           </p>
         </template>
@@ -42,7 +45,7 @@ except according to the terms contained in the LICENSE file.
               {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
               upload.
             </p>
-            <p v-show="plannedUploads.length !== 0 && unmatchedFiles.length !== 0"
+            <p v-show="unmatchedFiles.length !== 0"
               id="form-attachment-popups-unmatched">
               <template v-if="unmatchedFiles.length === 1">
                 <span class="icon-exclamation-triangle">
@@ -90,24 +93,21 @@ except according to the terms contained in the LICENSE file.
             </p>
           </template>
         </template>
-        <template v-else-if="shownDuringDragover">
-          <p v-if="dragoverAttachment != null">
-            Drop now to upload this file as
-            <strong>{{ dragoverAttachment.name }}</strong>.
+        <template v-else-if="shownDuringUpload">
+          <p>
+            Please wait, uploading your
+            {{ $pluralize('file', uploadStatus.total) }}:
           </p>
-          <p v-else>
-            <template v-if="countOfFilesOverDropZone === 1">
-              Drag over the file entry you wish to replace with the file and
-              drop to upload.
+          <p id="form-attachment-popups-current">
+            <strong>Sending {{ uploadStatus.current }}</strong>
+            <span v-if="hasProgress">({{ percentLoaded }})</span>
+          </p>
+          <p v-if="uploadStatus.total !== 1">
+            <template v-if="uploadStatus.remaining > 1">
+              {{ uploadStatus.remaining.toLocaleString() }} files remain.
             </template>
-            <template v-else-if="countOfFilesOverDropZone > 1">
-              Drop now to prepare
-              <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
-              files</strong> for upload to this form.
-            </template>
-            <!-- countOfFilesOverDropZone === -1 -->
             <template v-else>
-              Drop now to upload to this form.
+              This is the last file.
             </template>
           </p>
         </template>
