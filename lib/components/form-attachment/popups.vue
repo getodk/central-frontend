@@ -9,6 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- FormAttachmentPopups used to contain multiple popups, but it now contains
+only one. However, we have not changed its name to reflect that. It is also
+possible that FormAttachmentPopups will need to contain a second popup again at
+some point. -->
 <template>
   <div id="form-attachment-popups" ref="popups" class="modal-dialog">
     <div v-show="state" id="form-attachment-popups-main" class="modal-content">
