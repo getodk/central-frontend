@@ -168,11 +168,12 @@ export default {
     ////////////////////////////////////////////////////////////////////////////
     // DRAG AND DROP
 
-    // items is a DataTransferItemList, not an Array.
+    // maybeItems is either a DataTransferItemList or null.
     fileItemCount(maybeItems) {
       // IE
       if (maybeItems == null) return -1;
       let count = 0;
+      // maybeItems is not an Array, hence the style of for-loop.
       for (let i = 0; i < maybeItems.length; i += 1)
         if (maybeItems[i].kind === 'file') count += 1;
       return count;
