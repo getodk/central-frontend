@@ -1070,34 +1070,30 @@ describe('FormAttachmentList', () => {
       });
     });
 
+    const dragAndDropOntoRow = (app, attachmentName, filename) => {
+      const tr = app.find('#form-attachment-list-table tbody tr');
+      const attachments = testData.extendedFormAttachments.sorted();
+      tr.length.should.equal(attachments.length);
+      for (let i = 0; i < tr.length; i += 1) {
+        if (attachments[i].name === attachmentName) {
+          return trigger.dragAndDrop(tr[i], blankFiles([filename]))
+            .then(() => app);
+        }
+      }
+      throw new Error('matching attachment not found');
+    };
+
     describe('drop over an attachment with the same name', () => {
       testSingleFileUpload(attachmentName => loadAttachments({ route: true })
         .complete()
-        .request(app => {
-          const tr = app.find('#form-attachment-list-table tbody tr');
-          tr.length.should.equal(testData.extendedFormAttachments.size);
-          for (let i = 0; i < testData.extendedFormAttachments.size; i += 1) {
-            if (testData.extendedFormAttachments.get(i).name === attachmentName)
-              return trigger.dragAndDrop(tr[i], blankFiles([attachmentName]))
-                .then(() => app);
-          }
-          throw new Error('matching attachment not found');
-        }));
+        .request(app =>
+          dragAndDropOntoRow(app, attachmentName, attachmentName)));
     });
 
     describe('drop over an attachment with a different name', () => {
       const dropMismatchingFile = (attachmentName) =>
-        loadAttachments({ route: true }).afterResponses(app => {
-          const tr = app.find('#form-attachment-list-table tbody tr');
-          const attachments = testData.extendedFormAttachments.sorted();
-          tr.length.should.equal(attachments.length);
-          for (let i = 0; i < tr.length; i += 1) {
-            if (attachments[i].name === attachmentName)
-              return trigger.dragAndDrop(tr[i], blankFiles(['mismatching_file']))
-                .then(() => app);
-          }
-          throw new Error('matching attachment not found');
-        });
+        loadAttachments({ route: true }).afterResponses(app =>
+          dragAndDropOntoRow(app, attachmentName, 'mismatching_file'));
 
       describe('name mismatch modal', () => {
         beforeEach(() => {
