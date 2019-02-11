@@ -1,5 +1,5 @@
 import jsQR from 'jsqr';
-import { inflate } from 'pako/lib/inflate';
+import pako from 'pako';
 
 import faker from '../../faker';
 import testData from '../../data';
@@ -91,7 +91,7 @@ describe('FieldKeyList', () => {
           context.drawImage(img[0], 0, 0);
           const imageData = context.getImageData(0, 0, width, height);
           const encoded = jsQR(imageData.data, width, height).data;
-          const inflated = inflate(atob(encoded), { to: 'string' });
+          const inflated = pako.inflate(atob(encoded), { to: 'string' });
           const data = JSON.parse(inflated);
           const { token } = testData.extendedFieldKeys.first();
           const url = `${window.location.origin}/v1/key/${token}/projects/1`;

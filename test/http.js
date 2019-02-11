@@ -306,7 +306,10 @@ class MockHttp {
   Promise or a non-Promise value, but it should not send a request. To send
   another request after the responses have been processed, use the returned
   MockHttp. */
-  afterResponses(callback) {
+  afterResponses(optionsOrCallback) {
+    if (typeof optionsOrCallback === 'function')
+      return this.afterResponses({ callback: optionsOrCallback });
+    const { callback, pollWork = undefined } = optionsOrCallback;
     if (this._route == null && this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
@@ -323,7 +326,7 @@ class MockHttp {
       // Using finally() rather than then() so that even if the promise is
       // rejected, we know that any responses will be processed by the end of
       // the promise.
-      .finally(this._waitForResponsesToBeProcessed)
+      .finally(() => this._waitOnWork(pollWork))
       .finally(() => this._restoreHttp())
       .then(() => this._checkStateAfterWait())
       .then(() => callback(this._component))
@@ -332,7 +335,10 @@ class MockHttp {
     return new MockHttp({ previousPromise: promise });
   }
 
-  afterResponse(callback) { return this.afterResponses(callback); }
+  afterResponse(optionsOrCallback) {
+    return this.afterResponses(optionsOrCallback);
+  }
+
   complete() { return this.afterResponses(component => component); }
 
   _initialPromise() {
@@ -519,10 +525,24 @@ class MockHttp {
     }
   }
 
-  _waitForResponsesToBeProcessed() {
-    // setTimeout(resolve) calls `resolve` after pending promises settle.
-    // https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html
-    return new Promise(resolve => setTimeout(resolve));
+  /* _waitOnWork() waits for the app to complete any ongoing work, for example,
+  processing the response to a request. _waitOnWork() calls setTimeout(),
+  thereby resolving pending promises: see
+  https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html.
+  Additionally, if _waitOnWork() receives a callback, it will repeatedly invoke
+  the callback until the callback returns a truthy value (or until Karma times
+  out). */
+  _waitOnWork(callback = undefined) {
+    return new Promise(resolve => {
+      const wait = () => {
+        if (callback == null || callback(this._component)) {
+          setTimeout(resolve);
+        } else {
+          setTimeout(wait, 10);
+        }
+      };
+      wait();
+    });
   }
 
   _restoreHttp() {
