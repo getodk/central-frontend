@@ -1,3 +1,5 @@
+import pako from 'pako';
+
 import Form from '../../../lib/presenters/form';
 import FormAttachment from '../../../lib/presenters/form-attachment';
 import FormAttachmentList from '../../../lib/components/form-attachment/list.vue';
@@ -1149,5 +1151,53 @@ describe('FormAttachmentList', () => {
           return trigger.click(modal, '.btn-primary').then(() => app);
         }));
     });
+  });
+
+  describe('gzipping', () => {
+    beforeEach(mockLogin);
+
+    const cases = [
+      {
+        name: 'not_csv.txt',
+        contents: 'abcd',
+        gzip: false
+      },
+      {
+        name: 'small_csv.csv',
+        contents: 'a,b,c,d\na,b,c,d\n',
+        gzip: false
+      },
+      {
+        name: 'large_csv.csv',
+        contents: 'a,b,c,d\n'.repeat(2000),
+        gzip: true
+      }
+    ];
+
+    for (const { name, contents, gzip } of cases) {
+      it(`${gzip ? 'gzips' : 'does not gzip'} ${name}`, () => {
+        testData.extendedFormAttachments.createPast(1, { name });
+        const file = new File([contents], name);
+        return loadAttachments({ route: true })
+          .complete()
+          .request(app =>
+            trigger.dragAndDrop(app, '#form-attachment-list-table tbody tr', [file]))
+          .beforeEachResponse((app, request) => {
+            const encoding = gzip ? 'gzip' : 'identity';
+            request.headers['Content-Encoding'].should.equal(encoding);
+            if (!gzip) {
+              request.data.should.equal(file);
+            } else {
+              const inflated = pako.inflate(request.data, { to: 'string' });
+              inflated.should.equal(contents);
+            }
+          })
+          .respondWithSuccess()
+          .afterResponses({
+            pollWork: (app) => !app.first(FormAttachmentList).data().uploading,
+            callback: () => {}
+          });
+      });
+    }
   });
 });

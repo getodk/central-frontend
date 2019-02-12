@@ -56,6 +56,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import pako from 'pako/lib/deflate';
+
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
@@ -148,7 +150,9 @@ export default {
       },
       nameMismatch: {
         state: false
-      }
+      },
+      // Used for testing
+      uploading: false
     };
   },
   computed: {
@@ -250,6 +254,41 @@ export default {
         : 'No files were successfully uploaded.';
       return `${problem.message} ${summary}`;
     },
+    /*
+    maybeGzip() takes a file and returns a Promise that, if fulfilled, resolves
+    to an object with two properties:
+
+      - data. Either the original File or a Uint8Array of the file's gzipped
+        contents. We only gzip the file if it is CSV and large enough that
+        gzipping it would have much of an effect.
+      - encoding. The value of the Content-Encoding header to specify for the
+        data: either 'identity' or 'gzip'.
+
+    When we gzip a CSV file, we read the entire file into memory. That should be
+    OK, because any CSV file is likely intended for a data collection client on
+    a relatively low-resource device: we expect that a CSV file will not exceed
+    a few dozen MBs. */
+    maybeGzip(file) {
+      // We determine whether the file is CSV using its file extension rather
+      // than its MIME type. I think the MIME type for a CSV file should be
+      // text/csv, but apparently some clients use application/vnd.ms-excel
+      // instead.
+      const fileIsCsv = file.name.length >= 4 &&
+        file.name.slice(-4).toLowerCase() === '.csv';
+      if (!fileIsCsv || file.size < 16000)
+        return Promise.resolve({ data: file, encoding: 'identity' });
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
+        };
+        reader.onerror = () => {
+          this.$alert().danger(`Something went wrong while reading “${file.name}”.`);
+          reject(new Error());
+        };
+        reader.readAsText(file);
+      });
+    },
     // uploadFile() may mutate `updated`.
     uploadFile({ attachment, file }, updated) {
       // We decrement uploadStatus.remaining here rather than after the POST so
@@ -258,13 +297,19 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
-      const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
-      return this.post(path, file, {
-        headers: { 'Content-Type': file.type },
-        onUploadProgress: (progressEvent) => {
-          this.uploadStatus.progress = progressEvent;
-        }
-      })
+      return this.maybeGzip(file)
+        .then(({ data, encoding }) => {
+          const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
+          return this.post(path, data, {
+            headers: {
+              'Content-Type': file.type,
+              'Content-Encoding': encoding
+            },
+            onUploadProgress: (progressEvent) => {
+              this.uploadStatus.progress = progressEvent;
+            }
+          });
+        })
         .then(() => {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
@@ -273,6 +318,7 @@ export default {
         });
     },
     uploadFiles() {
+      this.uploading = true;
       this.$alert().blank();
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
@@ -288,6 +334,7 @@ export default {
         promise = promise.then(() => this.uploadFile(upload, updated));
       }
       promise
+        .catch(() => {})
         .finally(() => {
           if (updated.length === this.uploadStatus.total) {
             this.$alert().success(updated.length === 1
@@ -298,8 +345,8 @@ export default {
             this.$emit('attachment-change', attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
           if (updated.length !== 0) this.updatedAttachments = updated;
-        })
-        .catch(() => {});
+          this.uploading = false;
+        });
       this.plannedUploads = [];
       this.unmatchedFiles = [];
     }

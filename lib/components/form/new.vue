@@ -136,7 +136,6 @@ export default {
         this.filename = null;
         this.xml = null;
       };
-      reader.onabort = request.onerror;
       reader.onloadend = () => {
         this.$refs.input.value = '';
         this.reading = false;
