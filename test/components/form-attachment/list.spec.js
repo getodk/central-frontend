@@ -1153,37 +1153,51 @@ describe('FormAttachmentList', () => {
     });
   });
 
-  it('gzips a sufficiently large CSV file', () => {
-    mockLogin();
-    const largeCsvContents = 'a,b,c,d\n'.repeat(2000);
-    const files = [
-      new File(['abcd'], 'not_csv.txt'),
-      new File(['a,b,c,d\na,b,c,d\n'], 'small_csv.csv'),
-      new File([largeCsvContents], 'large_csv.csv')
+  describe('gzipping', () => {
+    beforeEach(mockLogin);
+
+    const cases = [
+      {
+        name: 'not_csv.txt',
+        contents: 'abcd',
+        gzip: false
+      },
+      {
+        name: 'small_csv.csv',
+        contents: 'a,b,c,d\na,b,c,d\n',
+        gzip: false
+      },
+      {
+        name: 'large_csv.csv',
+        contents: 'a,b,c,d\n'.repeat(2000),
+        gzip: true
+      }
     ];
-    for (const file of files)
-      testData.extendedFormAttachments.createPast(1, { name: file.name });
-    return loadAttachments({ route: true })
-      .complete()
-      .request(app => trigger.dragAndDrop(app, FormAttachmentList, files)
-        .then(() =>
-          trigger.click(app, '#form-attachment-popups-main .btn-primary')))
-      .beforeEachResponse((app, request, index) => {
-        if (index <= 1) {
-          request.data.should.equal(files[index]);
-          request.headers['Content-Encoding'].should.equal('identity');
-        } else {
-          const inflated = pako.inflate(request.data, { to: 'string' });
-          inflated.should.equal(largeCsvContents);
-          request.headers['Content-Encoding'].should.equal('gzip');
-        }
-      })
-      .respondWithSuccess()
-      .respondWithSuccess()
-      .respondWithSuccess()
-      .afterResponses({
-        pollWork: (app) => !app.first(FormAttachmentList).data().uploading,
-        callback: () => {}
+
+    for (const { name, contents, gzip } of cases) {
+      it(`${gzip ? 'gzips' : 'does not gzip'} ${name}`, () => {
+        testData.extendedFormAttachments.createPast(1, { name });
+        const file = new File([contents], name);
+        return loadAttachments({ route: true })
+          .complete()
+          .request(app =>
+            trigger.dragAndDrop(app, '#form-attachment-list-table tbody tr', [file]))
+          .beforeEachResponse((app, request) => {
+            const encoding = gzip ? 'gzip' : 'identity';
+            request.headers['Content-Encoding'].should.equal(encoding);
+            if (!gzip) {
+              request.data.should.equal(file);
+            } else {
+              const inflated = pako.inflate(request.data, { to: 'string' });
+              inflated.should.equal(contents);
+            }
+          })
+          .respondWithSuccess()
+          .afterResponses({
+            pollWork: (app) => !app.first(FormAttachmentList).data().uploading,
+            callback: () => {}
+          });
       });
+    }
   });
 });
