@@ -121,23 +121,26 @@ class Backups {
       : null;
   }
 
-  // recentForConfig() returns the recent backup attempts for the latest config
-  // Note that failed backup attempts do not have a `configSetAt` property, so
-  // it is not always possible to determine their corresponding config.
-  // recentForConfig() takes an inclusive approach, including all backup
-  // attempts that might correspond to the latest config.
+  // recentForConfig() returns the recent backup attempts for the current
+  // config.
   static recentForConfig({ setAt, recent }) {
     const result = [];
     for (const attempt of recent) {
-      const { details } = attempt;
-      if (details.configSetAt !== setAt && details.configSetAt != null) {
-        // We have reached backup attempts from a previous config. Assuming that
-        // a backup attempt from a previous config cannot be logged after a new
-        // config is set up, this means that all backup attempts that follow are
-        // from a previous config.
+      if (attempt.loggedAt < setAt) {
+        // Any attempts that follow are for a previous config.
         break;
       }
-      result.push(attempt);
+
+      /* This will evaluate to `false` only if an attempt for a previous config
+      was logged after the current config was created, which seems unlikely. A
+      failed attempt might not have a configSetAt property, which means that if
+      a failed attempt was logged after the current config was created, we might
+      not be able to determine whether the attempt corresponds to the current
+      config or (again unlikely) to a previous one. We assume that an attempt
+      without a configSetAt property corresponds to the current config. */
+      if (attempt.details.configSetAt === setAt ||
+        attempt.details.configSetAt == null)
+        result.push(attempt);
     }
     return result;
   }

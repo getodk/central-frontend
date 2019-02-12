@@ -43,30 +43,6 @@ describe('BackupList', () => {
             'Set up now'
           )));
 
-      it('has no recent attempt and was recently set up', () =>
-        mockHttp()
-          .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew({
-            recentlySetUp: true, latestRecentAttempt: null
-          }))
-          .afterResponse(assertContent(
-            'icon-check-circle',
-            'The configured backup has not yet run.',
-            'Terminate'
-          )));
-
-      it('has no recent attempt and was not recently set up', () =>
-        mockHttp()
-          .mount(BackupList)
-          .respondWithData(() => testData.backups.createNew({
-            recentlySetUp: false, latestRecentAttempt: null
-          }))
-          .afterResponse(assertContent(
-            'icon-times-circle',
-            'Something is wrong!',
-            'Terminate'
-          )));
-
       it('latest recent attempt was a success', () =>
         mockHttp()
           .mount(BackupList)
@@ -96,6 +72,46 @@ describe('BackupList', () => {
             'Something is wrong!',
             'Terminate'
           )));
+
+      describe('no recent attempt for the current config', () => {
+        it('renders correctly if the config was recently set up', () =>
+          mockHttp()
+            .mount(BackupList)
+            .respondWithData(() => testData.backups.createNew({
+              recentlySetUp: true, latestRecentAttempt: null
+            }))
+            .afterResponse(assertContent(
+              'icon-check-circle',
+              'The configured backup has not yet run.',
+              'Terminate'
+            )));
+
+        it('renders correctly if the config was not recently set up', () =>
+          mockHttp()
+            .mount(BackupList)
+            .respondWithData(() => testData.backups.createNew({
+              recentlySetUp: false, latestRecentAttempt: null
+            }))
+            .afterResponse(assertContent(
+              'icon-times-circle',
+              'Something is wrong!',
+              'Terminate'
+            )));
+
+        it('renders correctly if latest recent attempt for a previous config failed', () =>
+          mockHttp()
+            .mount(BackupList)
+            .respondWithData(() => testData.backups.createNew({
+              recentlySetUp: true,
+              latestRecentAttempt: null,
+              latestRecentAttemptForPrevious: { success: false }
+            }))
+            .afterResponse(assertContent(
+              'icon-check-circle',
+              'The configured backup has not yet run.',
+              'Terminate'
+            )));
+      });
     });
   });
 });

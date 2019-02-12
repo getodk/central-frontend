@@ -38,7 +38,8 @@ const fakeRecent = ({
   setAtFloor,
   recentDate,
   setAt,
-  latestRecentAttempt
+  latestRecentAttempt,
+  latestRecentAttemptForPrevious
 }) => {
   const recent = [];
 
@@ -63,8 +64,7 @@ const fakeRecent = ({
     }
   }
 
-  // Possibly add a backup attempt to `recent` from an earlier config.
-  if (recentlySetUp && faker.random.boolean()) {
+  if (latestRecentAttemptForPrevious != null) {
     const previousSetAt = faker.date.between(
       setAtFloor.toISOString(),
       setAt.toISOString()
@@ -73,7 +73,7 @@ const fakeRecent = ({
       ? previousSetAt
       : recentDate;
     recent.push(attempt({
-      success: true,
+      success: latestRecentAttemptForPrevious.success,
       loggedAt: faker.date.between(
         loggedAtFloor.toISOString(),
         setAt.toISOString()
@@ -97,7 +97,15 @@ export const backups = dataStore({
       { success: true },
       { success: false },
       null
-    ])
+    ]),
+    // Indicates whether there was a recent backup attempt for a previous config
+    // and if so, whether the latest such attempt was successful.
+    latestRecentAttemptForPrevious = recentlySetUp && faker.random.boolean()
+      // Specifying `true` rather than faker.random.boolean() for backward
+      // compatibility, though it may be that no test actually assumes that
+      // `success` cannot be `false`.
+      ? { success: true }
+      : null
   }) => {
     const recentDate = BackupList.methods.recentDate();
     // The earliest time, for testing purposes, for backups to have been
@@ -115,7 +123,8 @@ export const backups = dataStore({
         setAtFloor,
         recentDate,
         setAt,
-        latestRecentAttempt
+        latestRecentAttempt,
+        latestRecentAttemptForPrevious
       })
     };
   }
