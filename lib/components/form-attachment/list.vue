@@ -335,9 +335,7 @@ export default {
       }
       promise
         .catch(() => {})
-        // Using then(), not finally(), because the catch() above does not
-        // rethrow the error, resulting in a fulfilled promise.
-        .then(() => {
+        .finally(() => {
           if (updated.length === this.uploadStatus.total) {
             this.$alert().success(updated.length === 1
               ? '1 file has been successfully uploaded.'
