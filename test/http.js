@@ -526,22 +526,22 @@ class MockHttp {
   }
 
   /* _waitOnWork() waits for the app to complete any ongoing work, for example,
-  processing the response to a request. _waitOnWork() calls setTimeout(),
-  thereby resolving pending promises: see
+  processing the response to a request. _waitOnWork() first uses setTimeout() to
+  resolve pending promises: see
   https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html.
-  Additionally, if _waitOnWork() receives a callback, it will repeatedly invoke
-  the callback until the callback returns a truthy value (or until Karma times
+  Then, if _waitOnWork() receives a callback, it will repeatedly invoke the
+  callback until the callback returns a truthy value (or until Karma times
   out). */
   _waitOnWork(callback = undefined) {
     return new Promise(resolve => {
       const wait = () => {
         if (callback == null || callback(this._component)) {
-          setTimeout(resolve);
+          resolve();
         } else {
           setTimeout(wait, 10);
         }
       };
-      wait();
+      setTimeout(wait);
     });
   }
 
