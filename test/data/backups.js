@@ -2,31 +2,25 @@ import { DateTime } from 'luxon';
 
 import BackupList from '../../lib/components/backup/list.vue';
 import faker from '../faker';
-import { MAXIMUM_TEST_DURATION } from '../util';
 import { dataStore } from './data-store';
 
-// Returns a random time for backups to have been configured.
+// In the functions that follow, date parameters expect Date values, not
+// DateTime or String.
+
+// Returns a random value of setAt for the current backups config, as a Date.
 const fakeSetAt = ({ recentlySetUp, setAtFloor, recentDate }) => {
-  if (recentlySetUp) {
-    const sinceString = DateTime
-      .fromJSDate(recentDate)
-      // Adding this duration to ensure that the resulting date is
-      // considered recent throughout the test.
-      .plus(MAXIMUM_TEST_DURATION)
-      .toISO();
-    return faker.date.pastSince(sinceString);
-  }
+  if (recentlySetUp) return faker.date.pastSince(recentDate.toISOString());
   return faker.date.between(
     setAtFloor.toISOString(),
     DateTime.fromJSDate(recentDate).minus({ milliseconds: 1 }).toISO()
   );
 };
-// Returns a backup attempt (an audit log).
+// Returns a backup attempt (an audit log entry).
 const attempt = ({ success, loggedAt, configSetAt }) => {
   const details = { success };
-  if (success)
+  if (success) {
     details.configSetAt = configSetAt.toISOString();
-  else {
+  } else {
     const error = new Error('error');
     Object.assign(details, { message: error.message, stack: error.stack });
   }
@@ -38,6 +32,7 @@ const attempt = ({ success, loggedAt, configSetAt }) => {
     loggedAt: loggedAt.toISOString()
   };
 };
+// Returns a random array of recent backup attempts.
 const fakeRecent = ({
   recentlySetUp,
   setAtFloor,
@@ -46,6 +41,7 @@ const fakeRecent = ({
   latestRecentAttempt
 }) => {
   const recent = [];
+
   if (latestRecentAttempt != null) {
     const loggedAtFloor = recentlySetUp ? setAt : recentDate;
     recent.push(attempt({
@@ -53,7 +49,8 @@ const fakeRecent = ({
       loggedAt: faker.date.pastSince(loggedAtFloor),
       configSetAt: setAt
     }));
-    // 50% of the time, we add an earlier backup attempt to `recent`.
+    // 50% of the time, we add a second, earlier backup attempt for the current
+    // config.
     if (faker.random.boolean()) {
       recent.push(attempt({
         success: faker.random.boolean(),
@@ -65,6 +62,7 @@ const fakeRecent = ({
       }));
     }
   }
+
   // Possibly add a backup attempt to `recent` from an earlier config.
   if (recentlySetUp && faker.random.boolean()) {
     const previousSetAt = faker.date.between(
@@ -83,11 +81,14 @@ const fakeRecent = ({
       configSetAt: previousSetAt
     }));
   }
+
   return recent;
 };
 
 // eslint-disable-next-line import/prefer-default-export
 export const backups = dataStore({
+  // The factory does not use createdAt, so createPast() and createNew() should
+  // return similar results.
   factory: ({
     recentlySetUp = faker.random.boolean(),
     // Indicates whether there has been a recent backup attempt for the current
