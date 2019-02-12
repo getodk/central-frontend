@@ -86,7 +86,8 @@ const fakeRecent = ({
   return recent;
 };
 
-const store = dataStore({
+// eslint-disable-next-line import/prefer-default-export
+export const backups = dataStore({
   factory: ({
     recentlySetUp = faker.random.boolean(),
     // Indicates whether there has been a recent backup attempt for the current
@@ -116,24 +117,5 @@ const store = dataStore({
         latestRecentAttempt
       })
     };
-  },
-  constraints: {
-    recentlySetUp: (backups) =>
-      new Date(backups.setAt) >= BackupList.methods.recentDate(),
-    notRecentlySetUp: (backups) =>
-      new Date(backups.setAt) < BackupList.methods.recentDate(),
-    noRecentAttempt: (backups) =>
-      BackupList.methods.recentForConfig(backups).length === 0,
-    mostRecentAttemptWasSuccess: (backups) => {
-      const recent = BackupList.methods.recentForConfig(backups);
-      return recent.length !== 0 && recent[0].details.success;
-    },
-    mostRecentAttemptWasFailure: (backups) => {
-      const recent = BackupList.methods.recentForConfig(backups);
-      return recent.length !== 0 && !recent[0].details.success;
-    }
   }
 });
-
-// eslint-disable-next-line import/prefer-default-export
-export const backups = store;

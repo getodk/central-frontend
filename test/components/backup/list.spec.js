@@ -46,8 +46,9 @@ describe('BackupList', () => {
       it('has no recent attempt and was recently set up', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() =>
-            testData.backups.createNew(['noRecentAttempt', 'recentlySetUp']))
+          .respondWithData(() => testData.backups.createNew({
+            recentlySetUp: true, latestRecentAttempt: null
+          }))
           .afterResponse(assertContent(
             'icon-check-circle',
             'The configured backup has not yet run.',
@@ -57,8 +58,9 @@ describe('BackupList', () => {
       it('has no recent attempt and was not recently set up', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() =>
-            testData.backups.createNew(['noRecentAttempt', 'notRecentlySetUp']))
+          .respondWithData(() => testData.backups.createNew({
+            recentlySetUp: false, latestRecentAttempt: null
+          }))
           .afterResponse(assertContent(
             'icon-times-circle',
             'Something is wrong!',
@@ -68,8 +70,9 @@ describe('BackupList', () => {
       it('latest recent attempt was a success', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() =>
-            testData.backups.createNew('mostRecentAttemptWasSuccess'))
+          .respondWithData(() => testData.backups.createNew({
+            latestRecentAttempt: { success: true }
+          }))
           .afterResponse(assertContent(
             'icon-check-circle',
             'Backup is working.',
@@ -85,8 +88,9 @@ describe('BackupList', () => {
       it('latest recent attempt was a failure', () =>
         mockHttp()
           .mount(BackupList)
-          .respondWithData(() =>
-            testData.backups.createNew('mostRecentAttemptWasFailure'))
+          .respondWithData(() => testData.backups.createNew({
+            latestRecentAttempt: { success: false }
+          }))
           .afterResponse(assertContent(
             'icon-times-circle',
             'Something is wrong!',
