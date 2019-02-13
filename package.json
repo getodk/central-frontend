@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "watchify -vd -p browserify-hmr -e lib/main.js -o dist/build.js",
+    "dev": "cross-env NODE_ENV=production watchify -vd -g envify -p [ vueify/plugins/extract-css -o dist/build.css ] -e lib/main.js -o dist/build.js",
     "lint": "eslint --ext .js,.vue lib test",
     "test": "karma start",
     "build": "cross-env NODE_ENV=production browserify -g envify -p [ vueify/plugins/extract-css -o dist/build.css ] -e lib/main.js | uglifyjs -c warnings=false -m > dist/build.js"
@@ -35,7 +35,6 @@
     "babel-runtime": "~6.26",
     "babelify": "~7.3",
     "browserify": "~13.3",
-    "browserify-hmr": "~0.3",
     "cached-path-relative": "~1.0.2",
     "cross-env": "~2.0",
     "envify": "~3.4",

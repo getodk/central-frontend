@@ -31,7 +31,7 @@ Follow these instructions to run ODK Central Frontend in development. For deploy
 
 First, run ODK Central Backend.
 
-Next, build ODK Central Frontend files for development by running `npm run dev`. The files will be outputted to `dist/`, and hot reload will be available. For more details on this command, see the [documentation for vueify](https://github.com/vuejs/vueify).
+Next, build ODK Central Frontend files for development by running `npm run dev`. The files will be outputted to `dist/`. As you update the source code, the files will be automatically rebuilt.
 
 Finally, run NGINX by changing the working directory to the root directory of the repository, then typing the following:
 
