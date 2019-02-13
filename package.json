@@ -36,6 +36,7 @@
     "babelify": "~7.3",
     "browserify": "~13.3",
     "browserify-hmr": "~0.3",
+    "cached-path-relative": "~1.0.2",
     "cross-env": "~2.0",
     "envify": "~3.4",
     "eslint": "~4",
