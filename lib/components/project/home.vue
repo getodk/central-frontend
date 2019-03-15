@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view :project-id="projectId" :maybe-project="maybeProject"
-    :maybe-field-keys="maybeFieldKeys" @refresh-field-keys="fetchFieldKeys"/>
+  <router-view :maybe-project="maybeProject" :maybe-field-keys="maybeFieldKeys"
+    @refresh-field-keys="fetchFieldKeys"/>
 </template>
 
 <script>
@@ -21,6 +21,12 @@ import request from '../../mixins/request';
 export default {
   name: 'ProjectHome',
   mixins: [request()],
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       requestId: null,
@@ -29,9 +35,6 @@ export default {
     };
   },
   computed: {
-    projectId() {
-      return this.$route.params.projectId;
-    },
     maybeGetFieldKeysOptions() {
       return {
         url: `/projects/${this.projectId}/app-users`,
