@@ -33,8 +33,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Alert from './alert.vue';
+
 export default {
   name: 'Modal',
+  components: { Alert },
   props: {
     state: {
       type: Boolean,

@@ -23,12 +23,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 import { routerState } from '../router';
 
 export default {
   name: 'App',
-  components: { Navbar },
+  components: { Alert, Navbar },
   data() {
     return {
       /* Vue seems to trigger the initial navigation before creating App. If the
