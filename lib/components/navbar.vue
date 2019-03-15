@@ -85,8 +85,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { logAxiosError } from '../util/request';
 import { logOut } from '../session';
-import { logRequestError } from '../util/request';
 
 export default {
   name: 'Navbar',
@@ -106,7 +106,7 @@ export default {
       const encodedToken = encodeURIComponent(this.$session.token);
       // Using $http directly rather than the request mixin, because multiple
       // pending DELETE requests are possible and unproblematic.
-      this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
+      this.$http.delete(`/sessions/${encodedToken}`).catch(logAxiosError);
     },
     logOut() {
       this.deleteSession();
