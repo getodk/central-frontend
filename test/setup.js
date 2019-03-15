@@ -13,7 +13,6 @@ import { MockLogger } from './util';
 import { clearNavGuards, initNavGuards } from './router';
 import { clearUniqueFakerResults } from './faker';
 import { destroyMarkedComponent, mountAndMark } from './destroy';
-import { logOut } from '../lib/session';
 import { setHttp } from './http';
 import './assertions';
 
@@ -50,16 +49,12 @@ afterEach(() => {
   }
 });
 
-// Reset global application state.
-afterEach(() => {
-  if (Vue.prototype.$session.loggedIn()) logOut();
-});
-
 // Reset the Vuex store.
 afterEach(() => {
   store.commit('resetAlert');
   store.commit('resetRequests');
   store.commit('clearData');
+  store.commit('resetSession');
 
   // We do not reset the router state, because mockHttp() does that. (Though
   // perhaps it would be better to move that code here?)

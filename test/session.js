@@ -1,14 +1,16 @@
 import Vue from 'vue';
 
+import store from '../lib/store';
 import testData from './data';
-import { logIn } from '../lib/session';
 import { mockRoute } from './http';
 import { submitForm } from './event';
 
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
     throw new Error('administrator already exists');
-  logIn(testData.sessions.createNew(), testData.administrators.createPast(1).first());
+  store.commit('setSession', testData.sessions.createNew());
+  const user = testData.administrators.createPast(1).first();
+  store.commit('setData', { path: ['currentUser'], value: user, extended: false });
 };
 
 export const submitLoginForm = (wrapper) =>

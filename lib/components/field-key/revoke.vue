@@ -60,9 +60,8 @@ export default {
   },
   methods: {
     revoke() {
-      const encodedToken = encodeURIComponent(this.fieldKey.token);
-      this
-        .delete(`/sessions/${encodedToken}`)
+      // Backend ensures that the token is URL-safe.
+      this.delete(`/sessions/${this.fieldKey.token}`)
         .then(() => {
           this.$emit('hide');
           this.$alert().blank();

@@ -83,7 +83,7 @@ describe('AccountLogin', () => {
           .respondWithProblem());
 
         it('user is logged out', () => {
-          app.vm.$session.loggedOut().should.be.true();
+          app.vm.$store.getters.loggedOut.should.be.true();
         });
 
         it('user is redirected to login', () => {

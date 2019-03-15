@@ -14,10 +14,10 @@ except according to the terms contained in the LICENSE file.
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
-    <navbar v-show="firstNavigationConfirmed" :session="session"/>
+    <navbar v-show="firstNavigationConfirmed"/>
     <alert id="app-alert"/>
     <div class="container-fluid">
-      <router-view @update:session="updateSession"/>
+      <router-view/>
     </div>
   </div>
 </template>
@@ -29,24 +29,6 @@ import Navbar from './navbar.vue';
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  data() {
-    return {
-      /*
-      this.$session is not a reactive property, so we store a copy of it here in
-      order to pass it to Navbar. This copy can change in one of two ways:
-
-        1. The router changes $session along with $route. App watches for
-           changes to $route, which is a reactive property.
-        2. The router view changes $session, then notes the change by triggering
-           an update:session event.
-
-      Between the router, session, and alert, App is doing a fair amount of
-      global state management at this point. We may end up wanting to implement
-      a more comprehensive state management strategy.
-      */
-      session: this.$session
-    };
-  },
   computed: {
     // Vue seems to trigger the initial navigation before creating App. If the
     // initial navigation is synchronous, Vue seems to confirm the navigation
@@ -56,22 +38,12 @@ export default {
       return this.$store.state.router.navigations.first.confirmed;
     }
   },
-  watch: {
-    $route() {
-      this.session = this.$session;
-    }
-  },
   mounted() {
     // The `disabled` class on an <a> element does not prevent keyboard
     // navigation.
     $(this.$refs.app).on('click', 'a.disabled', (event) => {
       event.preventDefault();
     });
-  },
-  methods: {
-    updateSession() {
-      this.session = this.$session;
-    }
   }
 };
 </script>

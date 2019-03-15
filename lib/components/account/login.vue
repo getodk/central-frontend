@@ -45,7 +45,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
-import { logIn } from '../../session';
 
 export default {
   name: 'AccountLogin',
@@ -99,9 +98,8 @@ export default {
           key: 'currentUser',
           url: '/users/current',
           headers: { Authorization: `Bearer ${data.token}` },
-          success: ({ currentUser }) => {
+          success: () => {
             this.$store.commit('setData', { key: 'session', value: data });
-            logIn(data, currentUser);
           }
         }]))
         .finally(() => {

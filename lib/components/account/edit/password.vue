@@ -65,8 +65,9 @@ export default {
         this.$alert().danger('Please check that your new passwords match.');
         return;
       }
+      const { id } = this.$store.state.request.data.currentUser;
       const data = { old: this.oldPassword, new: this.newPassword };
-      this.put(`/users/${this.$session.user.id}/password`, data)
+      this.put(`/users/${id}/password`, data)
         .then(() => {
           this.$alert().success('Success! Your password has been updated.');
         })
