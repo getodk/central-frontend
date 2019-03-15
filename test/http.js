@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import store from '../lib/store';
 import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
@@ -211,7 +212,9 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    return this._with({ mount: () => mountAndMark(component, options) });
+    return this._with({
+      mount: () => mountAndMark(component, { ...options, store })
+    });
   }
 
   // The callback may return a Promise or a non-Promise value.
