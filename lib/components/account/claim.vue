@@ -46,25 +46,29 @@ export default {
   mixins: [request()],
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       password: ''
     };
   },
   methods: {
-    problemToAlert(problem) {
-      return problem.code === 401.2
-        ? `${problem.message} The link in your email may have expired, and a new email may have to be sent.`
-        : null;
-    },
     submit() {
       const headers = {};
       const { token } = this.$route.query;
       if (token != null) headers.Authorization = `Bearer ${token}`;
-      this
-        .post('/users/reset/verify', { new: this.password }, { headers })
-        .then(() => this.$router.push('/login', () => {
-          this.$alert().success('The password was reset successfully.');
-        }))
+      this.request({
+        method: 'POST',
+        url: '/users/reset/verify',
+        headers,
+        data: { new: this.password },
+        problemToAlert: ({ code, message }) => (code === 401.2
+          ? `${message} The link in your email may have expired, and a new email may have to be sent.`
+          : null)
+      })
+        .then(() => {
+          this.$router.push('/login', () => {
+            this.$alert().success('The password was reset successfully.');
+          });
+        })
         .catch(() => {});
     }
   }

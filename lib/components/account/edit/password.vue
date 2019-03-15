@@ -51,7 +51,7 @@ export default {
   mixins: [request()],
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       oldPassword: '',
       newPassword: '',
       confirm: '',

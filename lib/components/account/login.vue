@@ -52,7 +52,6 @@ export default {
   mixins: [request()],
   data() {
     return {
-      requestId: null,
       disabled: false,
       email: '',
       password: ''
@@ -74,11 +73,6 @@ export default {
     }
   },
   methods: {
-    problemToAlert(problem) {
-      return problem.code === 401.2
-        ? 'Incorrect email address and/or password.'
-        : null;
-    },
     nextPath() {
       const { next } = this.$route.query;
       if (next == null) return '/';
@@ -93,8 +87,14 @@ export default {
     },
     submit() {
       this.disabled = true;
-      this
-        .post('/sessions', { email: this.email, password: this.password })
+      this.request({
+        method: 'POST',
+        url: '/sessions',
+        data: { email: this.email, password: this.password },
+        problemToAlert: ({ code }) => (code === 401.2
+          ? 'Incorrect email address and/or password.'
+          : null)
+      })
         .then(({ data }) => this.$store.dispatch('get', [{
           key: 'currentUser',
           url: '/users/current',

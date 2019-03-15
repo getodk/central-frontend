@@ -84,7 +84,7 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       state: this.$store.state.request.data.form
     };
   },

@@ -50,7 +50,7 @@ export default {
   mixins: [request()],
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       email: ''
     };
   },

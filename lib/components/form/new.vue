@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       fileIsOverDropZone: false,
-      requestId: null,
+      awaitingResponse: false,
       reading: false,
       filename: null,
       xml: null
@@ -107,14 +107,6 @@ export default {
     $(this.$refs.input).off('.form-new');
   },
   methods: {
-    problemToAlert(problem) {
-      if (problem.code === 400.5 && problem.details.table === 'forms' &&
-        problem.details.fields.length === 2 &&
-        problem.details.fields[0] === 'xmlFormId' &&
-        problem.details.fields[1] === 'version')
-        return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
-      return null;
-    },
     hide() {
       this.$emit('hide');
       const alert = this.$alert();
@@ -153,8 +145,19 @@ export default {
         this.$alert().info(NO_FILE_MESSAGE);
         return;
       }
-      const headers = { 'Content-Type': 'application/xml' };
-      this.post(`/projects/${this.projectId}/forms`, this.xml, { headers })
+      this.request({
+        method: 'POST',
+        url: `/projects/${this.projectId}/forms`,
+        headers: { 'Content-Type': 'application/xml' },
+        data: this.xml,
+        problemToAlert: ({ code, details }) => {
+          if (code === 400.5 && details.table === 'forms' &&
+            details.fields.length === 2 && details.fields[0] === 'xmlFormId' &&
+            details.fields[1] === 'version')
+            return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
+          return null;
+        }
+      })
         .then(({ data }) => {
           this.filename = null;
           this.xml = null;

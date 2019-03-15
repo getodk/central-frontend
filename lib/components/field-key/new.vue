@@ -91,7 +91,7 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       // There are two steps/screens in the app user creation process. `step`
       // indicates the current step. Note that it is 1-indexed.
       step: 1,

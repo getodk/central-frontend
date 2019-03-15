@@ -42,7 +42,7 @@ export default {
   mixins: [request()],
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       email: this.$session.user.email,
       displayName: this.$session.user.displayName
     };

@@ -116,7 +116,7 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       // The step in the wizard (1-indexed)
       step: 1,
       passphrase: '',
@@ -126,11 +126,6 @@ export default {
     };
   },
   methods: {
-    problemToAlert(problem) {
-      return this.step !== 3
-        ? problem.message
-        : `${problem.message} Please try again, and go to the community forum if the problem continues.`;
-    },
     focusPassphraseInput() {
       this.$refs.passphrase.focus();
     },
@@ -172,10 +167,14 @@ export default {
       this.$nextTick(() => this.$refs.confirmationText.focus());
     },
     verify() {
-      const data = { code: this.confirmationText };
-      const headers = { Authorization: `Bearer ${this.authToken}` };
-      this
-        .post('/config/backups/verify', data, { headers })
+      this.request({
+        method: 'POST',
+        url: '/config/backups/verify',
+        headers: { Authorization: `Bearer ${this.authToken}` },
+        data: { code: this.confirmationText },
+        problemToAlert: ({ message }) =>
+          `${message} Please try again, and go to the community forum if the problem continues.`
+      })
         .then(() => {
           this.$emit('hide');
           this.reset();

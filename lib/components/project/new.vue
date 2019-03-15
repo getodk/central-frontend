@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       name: ''
     };
   },
