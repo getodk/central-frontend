@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 import R from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
-import { formatDate } from '../../../util';
+import { formatDate } from '../../../util/util';
 
 const TITLE_FIELD_TYPES = [
   'string',

@@ -86,7 +86,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { logOut } from '../session';
-import { logRequestError } from '../util';
+import { logRequestError } from '../util/request';
 
 export default {
   name: 'Navbar',

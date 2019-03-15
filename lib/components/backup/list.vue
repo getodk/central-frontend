@@ -103,7 +103,7 @@ import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
-import { formatDate } from '../../util';
+import { formatDate } from '../../util/util';
 
 // The duration for which a backup attempt is considered "recent": if the server
 // returns no log of a recent backup attempt, that means that there have been no

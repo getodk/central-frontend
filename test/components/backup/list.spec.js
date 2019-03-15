@@ -1,6 +1,6 @@
 import BackupList from '../../../lib/components/backup/list.vue';
 import testData from '../../data';
-import { formatDate } from '../../../lib/util';
+import { formatDate } from '../../../lib/util/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 

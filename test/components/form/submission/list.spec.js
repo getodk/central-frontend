@@ -5,7 +5,7 @@ import FormShow from '../../../../lib/components/form/show.vue';
 import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import Spinner from '../../../../lib/components/spinner.vue';
 import testData from '../../../data';
-import { formatDate, uniqueSequence } from '../../../../lib/util';
+import { formatDate, uniqueSequence } from '../../../../lib/util/util';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';

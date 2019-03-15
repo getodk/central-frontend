@@ -7,7 +7,7 @@ import FormAttachmentNameMismatch from '../../../lib/components/form-attachment/
 import FormAttachmentUploadFiles from '../../../lib/components/form-attachment/upload-files.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../event';
-import { formatDate } from '../../../lib/util';
+import { formatDate } from '../../../lib/util/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 

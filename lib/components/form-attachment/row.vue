@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util';
+import { formatDate } from '../../util/util';
 
 const TYPES = {
   image: 'Image',
