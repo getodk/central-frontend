@@ -197,6 +197,25 @@ export default {
     $(window).off('.form-submission-list');
   },
   methods: {
+    loadingMessageText({ top, skip = 0 }) {
+      if (skip === 0) {
+        if (this.form.submissions > top) {
+          const count = this.form.submissions.toLocaleString();
+          return `Loading the first ${top.toLocaleString()} of ${count} submissions…`;
+        }
+        return this.form.submissions === 1
+          ? 'Loading 1 submission…'
+          : `Loading ${this.form.submissions.toLocaleString()} submissions…`;
+      }
+      const remaining = this.originalCount - this.submissions.length;
+      // This case should be rare or impossible.
+      if (remaining <= 0) return 'Loading submissions…';
+      if (remaining > top)
+        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining submissions…`;
+      return remaining === 1
+        ? 'Loading the last submission…'
+        : `Loading the last ${remaining.toLocaleString()} submissions…`;
+    },
     chunkURL({ top, skip = 0 }) {
       const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
       return `/projects/${this.projectId}/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
@@ -247,26 +266,11 @@ export default {
         };
       }
     },
-    loadingMessageText({ top, skip = 0 }) {
-      if (skip === 0) {
-        if (this.form.submissions > top) {
-          const count = this.form.submissions.toLocaleString();
-          return `Loading the first ${top.toLocaleString()} of ${count} submissions…`;
-        }
-        return this.form.submissions === 1
-          ? 'Loading 1 submission…'
-          : `Loading ${this.form.submissions.toLocaleString()} submissions…`;
-      }
-      const remaining = this.originalCount - this.submissions.length;
-      // This case should be rare or impossible.
-      if (remaining <= 0) return 'Loading submissions…';
-      if (remaining > top)
-        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining submissions…`;
-      return remaining === 1
-        ? 'Loading the last submission…'
-        : `Loading the last ${remaining.toLocaleString()} submissions…`;
-    },
     fetchSchemaAndFirstChunk() {
+      this.message = {
+        text: this.loadingMessageText({ top: this.chunkSizes.small }),
+        spinner: true
+      };
       this.$store.dispatch('get', [
         {
           key: 'schema',
@@ -277,11 +281,10 @@ export default {
           url: this.chunkURL({ top: this.chunkSizes.small }),
           success: this.processChunk
         }
-      ]).catch(() => {});
-      this.message = {
-        text: this.loadingMessageText({ top: this.chunkSizes.small }),
-        spinner: true
-      };
+      ])
+        .catch(() => {
+          this.message = null;
+        });
     },
     // Returns the value of the $skip query parameter for skipping the specified
     // number of chunks.
@@ -301,17 +304,20 @@ export default {
       const top = this.chunkCount < MAX_SMALL_CHUNKS
         ? this.chunkSizes.small
         : this.chunkSizes.large;
+      this.message = {
+        text: this.loadingMessageText({ top, skip }),
+        spinner: true
+      };
       this.$store.dispatch('get', [{
         key: 'submissionsChunk',
         url: this.chunkURL({ top, skip }),
         success: () => {
           this.processChunk(false);
         }
-      }]).catch(() => {});
-      this.message = {
-        text: this.loadingMessageText({ top, skip }),
-        spinner: true
-      };
+      }])
+        .catch(() => {
+          this.message = null;
+        });
     }
   }
 };
