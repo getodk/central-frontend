@@ -125,19 +125,23 @@ export default {
     readFile(files) {
       if (files.length === 0) return;
       this.reading = true;
+      const { currentRoute } = this.$store.state.router;
       const file = files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$alert().blank();
         this.filename = file.name;
         this.xml = event.target.result;
       };
       reader.onerror = () => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$alert().danger('Something went wrong while reading the file.');
         this.filename = null;
         this.xml = null;
       };
       reader.onloadend = () => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$refs.input.value = '';
         this.reading = false;
       };
