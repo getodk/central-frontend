@@ -138,6 +138,9 @@ export default {
       }
     };
   },
+  watch: {
+    projectId: 'fetchData'
+  },
   created() {
     this.fetchData();
   },
