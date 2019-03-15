@@ -97,6 +97,15 @@ export default {
       };
     }
   },
+  watch: {
+    state(state) {
+      if (state) return;
+      this.reading = false;
+      this.filename = null;
+      this.xml = null;
+      this.$refs.input.value = '';
+    }
+  },
   mounted() {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
@@ -159,8 +168,6 @@ export default {
         }
       })
         .then(({ data }) => {
-          this.filename = null;
-          this.xml = null;
           this.$emit('success', new Form(data));
         })
         .catch(() => {});

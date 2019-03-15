@@ -92,6 +92,7 @@ export default {
     },
     afterCreate(user) {
       this.fetchData();
+      this.hideModal('newUser');
       this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     },

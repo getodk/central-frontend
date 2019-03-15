@@ -151,8 +151,9 @@ export default {
       }]).catch(() => {});
     },
     afterCreate() {
-      this.$alert().success('Success! Automatic backups are now configured.');
       this.fetchData();
+      this.hideAlert('newBackup');
+      this.$alert().success('Success! Automatic backups are now configured.');
     },
     afterTerminate() {
       this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');

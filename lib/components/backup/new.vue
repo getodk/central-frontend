@@ -125,6 +125,16 @@ export default {
       confirmationText: ''
     };
   },
+  watch: {
+    state(state) {
+      if (!state) return;
+      this.step = 1;
+      this.passphrase = '';
+      this.googleUrl = null;
+      this.authToken = null;
+      this.confirmationText = '';
+    }
+  },
   methods: {
     focusPassphraseInput() {
       this.$refs.passphrase.focus();
@@ -139,17 +149,8 @@ export default {
         })
         .catch(() => {});
     },
-    reset() {
-      this.$alert().blank();
-      this.step = 1;
-      this.passphrase = '';
-      this.googleUrl = null;
-      this.authToken = null;
-      this.confirmationText = '';
-    },
     cancel() {
       this.$emit('hide');
-      this.reset();
     },
     openGoogle() {
       const size = window.innerWidth >= GOOGLE_BREAKPOINT
@@ -176,8 +177,6 @@ export default {
           `${message} Please try again, and go to the community forum if the problem continues.`
       })
         .then(() => {
-          this.$emit('hide');
-          this.reset();
           this.$emit('success');
         })
         .catch(() => {});

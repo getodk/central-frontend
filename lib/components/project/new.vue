@@ -64,6 +64,11 @@ export default {
       name: ''
     };
   },
+  watch: {
+    state(state) {
+      if (!state) this.name = '';
+    }
+  },
   methods: {
     focusInput() {
       this.$refs.name.focus();
@@ -71,8 +76,6 @@ export default {
     submit() {
       this.post('/projects', { name: this.name })
         .then(({ data }) => {
-          this.$alert().blank();
-          this.name = '';
           this.$emit('success', data);
         })
         .catch(() => {});

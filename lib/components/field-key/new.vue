@@ -100,6 +100,14 @@ export default {
     };
   },
   computed: requestData(['project']),
+  watch: {
+    state(state) {
+      if (!state) return;
+      this.step = 1;
+      this.nickname = '';
+      this.created = null;
+    }
+  },
   methods: {
     focusNicknameInput() {
       this.$refs.nickname.focus();
@@ -118,10 +126,7 @@ export default {
         .catch(() => {});
     },
     complete() {
-      this.$emit('hide');
       this.$emit('success', this.created);
-      this.step = 1;
-      this.created = null;
     },
     hideOrComplete() {
       if (this.created == null)

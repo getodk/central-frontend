@@ -187,6 +187,7 @@ export default {
     },
     afterCreate(fieldKey) {
       this.fetchData();
+      this.hideModal('newFieldKey');
       this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
