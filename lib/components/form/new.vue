@@ -172,6 +172,7 @@ export default {
         }
       })
         .then(({ data }) => {
+          // The `forms` property of the project is now likely out-of-date.
           this.$emit('success', new Form(data));
         })
         .catch(() => {});

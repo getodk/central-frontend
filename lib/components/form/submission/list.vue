@@ -223,6 +223,8 @@ export default {
     processChunk(replace = true) {
       const chunk = this.submissionsChunk;
       if (chunk['@odata.count'] !== this.form.submissions) {
+        // We update this.form.submissions, but not this.form.lastSubmission,
+        // nor lastSubmission for the project.
         this.$store.commit('setData', {
           key: 'form',
           value: this.form.with({ submissions: chunk['@odata.count'] })

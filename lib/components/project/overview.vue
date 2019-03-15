@@ -134,6 +134,8 @@ export default {
   },
   methods: {
     fetchData() {
+      // Note that we do not keep this.project.forms and this.forms.length in
+      // sync.
       this.$store.dispatch('get', [{
         key: 'forms',
         url: `/projects/${this.projectId}/forms`,
