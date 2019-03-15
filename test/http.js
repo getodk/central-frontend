@@ -265,6 +265,7 @@ class MockHttp {
     return this._respond(() => {
       const error = new Error();
       const data = responseOrResponses();
+      error.request = {};
       error.response = { status: Math.floor(data.code), data };
       return error;
     });
