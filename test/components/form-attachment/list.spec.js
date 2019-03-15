@@ -24,15 +24,14 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     const path = `/projects/1/forms/${encodedFormId}/media-files`;
     return mockRoute(path, { attachToDocument })
       .respondWithData(() => testData.simpleProjects.last())
-      .respondWithData(() => testData.extendedFieldKeys.sorted())
       .respondWithData(() => form)
       .respondWithData(() => testData.extendedFormAttachments.sorted());
   }
   if (attachToDocument) throw new Error('invalid options');
   return mockHttp()
     .mount(FormAttachmentList, {
-      propsData: {
-        projectId: '1',
+      propsData: { projectId: '1' },
+      requestData: {
         form: new Form(form),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))
@@ -65,7 +64,6 @@ describe('FormAttachmentList', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1/forms/x/media-files')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() =>
@@ -81,10 +79,10 @@ describe('FormAttachmentList', () => {
     it('is not shown if there are no form attachments', () =>
       mockRoute('/projects/1/forms/x')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text());
@@ -94,12 +92,12 @@ describe('FormAttachmentList', () => {
     it('is shown if there are form attachments', () =>
       mockRoute('/projects/1/forms/x')
         .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments
           .createPast(1, { exists: false })
           .sorted())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text().trim().iTrim());
@@ -577,7 +575,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(app => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
               should.not.exist(newUpdatedAt[1]);
@@ -590,7 +588,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(app => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.exist(newUpdatedAt[1]);
@@ -603,7 +601,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(app => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
@@ -661,7 +659,7 @@ describe('FormAttachmentList', () => {
       it('does not update the table', () => {
         const oldUpdatedAt = testData.extendedFormAttachments.sorted()
           .map(attachment => attachment.updatedAt);
-        const newUpdatedAt = app.first(FormAttachmentList).getProp('attachments')
+        const newUpdatedAt = app.vm.$store.state.request.data.attachments
           .map(attachment => attachment.updatedAt);
         newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
         should.not.exist(newUpdatedAt[1]);
@@ -783,8 +781,7 @@ describe('FormAttachmentList', () => {
             it('updates the table', () => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const formAttachmentList = app.first(FormAttachmentList);
-              const newUpdatedAt = formAttachmentList.getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
               should.exist(newUpdatedAt[1]);
@@ -832,8 +829,7 @@ describe('FormAttachmentList', () => {
             it('updates the table', () => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const formAttachmentList = app.first(FormAttachmentList);
-              const newUpdatedAt = formAttachmentList.getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
               should.exist(newUpdatedAt[1]);
@@ -866,8 +862,7 @@ describe('FormAttachmentList', () => {
             it('updates the table', () => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const formAttachmentList = app.first(FormAttachmentList);
-              const newUpdatedAt = formAttachmentList.getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               (newUpdatedAt[0] > oldUpdatedAt[0]).should.be.true();
               should.not.exist(newUpdatedAt[1]);
@@ -899,8 +894,7 @@ describe('FormAttachmentList', () => {
             it('does not update the table', () => {
               const oldUpdatedAt = testData.extendedFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const formAttachmentList = app.first(FormAttachmentList);
-              const newUpdatedAt = formAttachmentList.getProp('attachments')
+              const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);

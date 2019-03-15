@@ -10,63 +10,30 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view :maybe-project="maybeProject" :maybe-field-keys="maybeFieldKeys"
-    @refresh-field-keys="fetchFieldKeys"/>
+  <router-view/>
 </template>
 
 <script>
-import FieldKey from '../../presenters/field-key';
-import request from '../../mixins/request';
-
 export default {
   name: 'ProjectHome',
-  mixins: [request()],
   props: {
     projectId: {
       type: String,
       required: true
     }
   },
-  data() {
-    return {
-      requestId: null,
-      maybeProject: null,
-      maybeFieldKeys: null
-    };
-  },
-  computed: {
-    maybeGetFieldKeysOptions() {
-      return {
-        url: `/projects/${this.projectId}/app-users`,
-        extended: true,
-        transform: (data) =>
-          data.map(fieldKey => new FieldKey(this.projectId, fieldKey))
-      };
-    }
-  },
   watch: {
-    projectId() {
-      this.fetchProjectAndFieldKeys();
-    }
+    projectId: 'fetchData'
   },
   created() {
-    this.fetchProjectAndFieldKeys();
+    this.fetchData();
   },
   methods: {
-    fetchProjectAndFieldKeys() {
-      this.maybeGet({
-        maybeProject: {
-          url: `/projects/${this.projectId}`
-        },
-        maybeFieldKeys: this.maybeGetFieldKeysOptions
-      });
-    },
-    fetchFieldKeys() {
-      // If there has not been a response yet to the request for the project,
-      // this request will effectively cancel that request. That means that this
-      // method should only be called once the project response has been
-      // received.
-      this.maybeGet({ maybeFieldKeys: this.maybeGetFieldKeysOptions });
+    fetchData() {
+      this.$store.dispatch('get', [{
+        key: 'project',
+        url: `/projects/${this.projectId}`
+      }]).catch(() => {});
     }
   }
 };

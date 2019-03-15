@@ -207,13 +207,15 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // OTHER REQUESTS
 
-  mount(component, options = {}) {
+  mount(component, { requestData = {}, ...avoriazOptions } = {}) {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
+    for (const [key, value] of Object.entries(requestData))
+      store.commit('setData', { key, value });
     return this._with({
-      mount: () => mountAndMark(component, { ...options, store })
+      mount: () => mountAndMark(component, { ...avoriazOptions, store })
     });
   }
 
@@ -424,10 +426,13 @@ class MockHttp {
           }
           const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
-          if (validateStatus(response.status))
-            resolve(response);
-          else
+          const responseWithConfig = { ...response, config };
+          if (validateStatus(response.status)) {
+            resolve(responseWithConfig);
+          } else {
+            if (result instanceof Error) result.response = responseWithConfig;
             reject(result);
+          }
         }));
     };
   }

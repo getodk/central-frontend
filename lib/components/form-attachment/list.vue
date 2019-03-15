@@ -32,8 +32,7 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody>
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :project-id="projectId" :form="form"
-          :attachment="attachment"
+          :key="attachment.key" :project-id="projectId" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -65,6 +64,7 @@ import FormAttachmentUploadFiles from './upload-files.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormAttachmentList',
@@ -85,14 +85,6 @@ export default {
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    form: {
-      type: Object,
-      required: true
-    },
-    attachments: {
-      type: Array,
       required: true
     }
   },
@@ -156,6 +148,7 @@ export default {
     };
   },
   computed: {
+    ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -317,6 +310,15 @@ export default {
           updated.push(attachment.with({ exists: true, updatedAt }));
         });
     },
+    updateAttachment(updatedAttachment) {
+      const index = this.attachments.findIndex(attachment =>
+        attachment.name === updatedAttachment.name);
+      this.$store.commit('setDataProp', {
+        key: 'attachments',
+        prop: index,
+        value: updatedAttachment
+      });
+    },
     uploadFiles() {
       this.uploading = true;
       this.$alert().blank();
@@ -342,7 +344,7 @@ export default {
               : `${updated.length} files have been successfully uploaded.`);
           }
           for (const attachment of updated)
-            this.$emit('attachment-change', attachment);
+            this.updateAttachment(attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
           if (updated.length !== 0) this.updatedAttachments = updated;
           this.uploading = false;

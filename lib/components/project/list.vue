@@ -43,8 +43,9 @@ except according to the terms contained in the LICENSE file.
         <page-section id="project-list-right-now">
           <span slot="heading">Right Now</span>
           <template slot="body">
-            <loading :state="maybeUserCount.awaiting || maybeProjects.awaiting"/>
-            <template v-if="maybeUserCount.success && maybeProjects.success">
+            <loading
+              :state="$store.getters.initiallyLoading(['users', 'projects'])"/>
+            <template v-if="users != null && projects != null">
               <div>
                 <router-link to="/users"
                   class="project-list-right-now-icon-container">
@@ -52,13 +53,12 @@ except according to the terms contained in the LICENSE file.
                 </router-link>
                 <div class="project-list-right-now-count">
                   <router-link to="/users">
-                    {{ maybeUserCount.data }}
-                    <span class="icon-angle-right"></span>
+                    {{ users.length }} <span class="icon-angle-right"></span>
                   </router-link>
                 </div>
                 <div class="project-list-right-now-description">
                   <router-link to="/users">
-                    <strong>{{ $pluralize('Web User', maybeUserCount.data) }}</strong>
+                    <strong>{{ $pluralize('Web User', users.length) }}</strong>
                     who can administer Projects through this website.
                   </router-link>
                 </div>
@@ -70,13 +70,12 @@ except according to the terms contained in the LICENSE file.
                 </a>
                 <div class="project-list-right-now-count">
                   <a href="#" @click.prevent="scrollToProjects">
-                    {{ maybeProjects.data.length }}
-                    <span class="icon-angle-right"></span>
+                    {{ projects.length }} <span class="icon-angle-right"></span>
                   </a>
                 </div>
                 <div class="project-list-right-now-description">
                   <a href="#" @click.prevent="scrollToProjects">
-                    <strong>{{ $pluralize('Project', maybeProjects.data.length) }}</strong>
+                    <strong>{{ $pluralize('Project', projects.length) }}</strong>
                     which can organize Forms and App Users for device
                     deployment.
                   </a>
@@ -96,9 +95,9 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
-        <loading :state="maybeProjects.awaiting"/>
-        <template v-if="maybeProjects.success">
-          <p v-if="maybeProjects.data.length === 0"
+        <loading :state="$store.getters.initiallyLoading(['projects'])"/>
+        <template v-if="projects != null">
+          <p v-if="projects.length === 0"
             id="project-list-empty-message">
             To get started, add a Project.
           </p>
@@ -111,9 +110,9 @@ except according to the terms contained in the LICENSE file.
               </tr>
             </thead>
             <tbody>
-              <project-row v-for="project of maybeProjects.data"
-                :key="project.id" :project-count="maybeProjects.data.length"
-                :project="project" @show-introduction="showIntroduction"/>
+              <project-row v-for="project of projects" :key="project.id"
+                :project-count="projects.length" :project="project"
+                @show-introduction="showIntroduction"/>
             </tbody>
           </table>
         </template>
@@ -132,17 +131,14 @@ import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectList',
   components: { ProjectIntroduction, ProjectNew, ProjectRow },
-  mixins: [modal(['newProject', 'introduction']), request()],
+  mixins: [modal(['newProject', 'introduction'])],
   data() {
     return {
-      requestId: null,
-      maybeProjects: null,
-      maybeUserCount: null,
       newProject: {
         state: false
       },
@@ -152,17 +148,19 @@ export default {
       }
     };
   },
+  computed: requestData(['projects', 'users']),
   created() {
-    this.maybeGet({
-      maybeProjects: {
+    this.$store.dispatch('get', [
+      {
+        key: 'projects',
         url: '/projects',
         extended: true
       },
-      maybeUserCount: {
-        url: '/users',
-        transform: (data) => data.length
+      {
+        key: 'users',
+        url: '/users'
       }
-    });
+    ]).catch(() => {});
   },
   methods: {
     scrollToProjects() {

@@ -13,8 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-settings">
     <div class="row">
       <div class="col-xs-8">
-        <form-edit :project-id="projectId" :form="form"
-          @state-change="emitStateChange"/>
+        <form-edit :project-id="projectId"/>
       </div>
       <div class="col-xs-4">
         <div class="panel panel-simple-danger">
@@ -32,13 +31,12 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete :project-id="projectId" :form="form" :state="deleteForm.state"
+    <form-delete :project-id="projectId" :state="deleteForm.state"
       @hide="hideModal('deleteForm')" @success="afterDelete"/>
   </div>
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import FormDelete from './delete.vue';
 import FormEdit from './edit.vue';
 import modal from '../../mixins/modal';
@@ -54,10 +52,6 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    form: {
-      type: Form,
-      required: true
     }
   },
   data() {
@@ -68,15 +62,9 @@ export default {
     };
   },
   methods: {
-    emitStateChange(newState) {
-      this.$emit('state-change', newState);
-    },
-    afterDelete() {
-      // Wait for the modal to hide.
-      this.$nextTick(() => {
-        this.$router.push(`/projects/${this.projectId}`, () => {
-          this.$alert().success(`The form “${this.form.nameOrId()}” was deleted.`);
-        });
+    afterDelete(form) {
+      this.$router.push(`/projects/${this.projectId}`, () => {
+        this.$alert().success(`The form “${form.nameOrId()}” was deleted.`);
       });
     }
   }

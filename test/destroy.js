@@ -18,7 +18,10 @@ export const destroyMarkedComponent = () => {
   componentToDestroy = null;
 };
 
-export const mountAndMark = (component, mountOptions = {}) => {
+export const mountAndMark = (component, options = {}) => {
+  const { requestData = {}, ...mountOptions } = options;
+  for (const [key, value] of Object.entries(requestData))
+    store.commit('setData', { key, value });
   const wrapper = mount(component, { ...mountOptions, store });
   markComponentForDestruction(wrapper);
   return wrapper;

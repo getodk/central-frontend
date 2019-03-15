@@ -18,10 +18,7 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
-              <option>
-                {{ maybeProject.success ? maybeProject.data.name : '' }}
-                Forms
-              </option>
+              <option>{{ project != null ? project.name : '' }} Forms</option>
               <option disabled>
                 More options available soon (to choose particular Forms)
               </option>
@@ -76,8 +73,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
-import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
@@ -85,10 +82,6 @@ export default {
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    maybeProject: {
-      type: MaybeData,
       required: true
     },
     state: {
@@ -106,6 +99,7 @@ export default {
       created: null
     };
   },
+  computed: requestData(['project']),
   methods: {
     focusNicknameInput() {
       this.$refs.nickname.focus();

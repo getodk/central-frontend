@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="backup-list">
-    <loading v-if="backups == null" :state="awaitingResponse"/>
-    <div v-else class="panel panel-simple">
+    <loading :state="$store.getters.initiallyLoading(['backupsConfig'])"/>
+    <div v-if="backups != null" class="panel panel-simple">
       <div class="panel-heading">
         <h1 class="panel-title">Current Status</h1>
       </div>
@@ -101,20 +101,14 @@ import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupsConfig from '../../presenters/backups-config';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
 import { formatDate } from '../../util/util';
-
-const validateBackupsResponseStatus = (status) =>
-  (status >= 200 && status < 300) || status === 404;
 
 export default {
   name: 'BackupList',
   components: { BackupNew, BackupTerminate },
-  mixins: [modal(['newBackup', 'terminate']), request()],
+  mixins: [modal(['newBackup', 'terminate'])],
   data() {
     return {
-      requestId: null,
-      backups: null,
       newBackup: {
         state: false
       },
@@ -124,6 +118,9 @@ export default {
     };
   },
   computed: {
+    backups() {
+      return this.$store.state.request.data.backupsConfig;
+    },
     iconClass() {
       switch (this.backups.status) {
         case 'notConfigured':
@@ -146,13 +143,12 @@ export default {
   },
   methods: {
     fetchData() {
-      this.backups = null;
-      this
-        .get('/config/backups', { validateStatus: validateBackupsResponseStatus })
-        .then(response => {
-          this.backups = BackupsConfig.fromResponse(response);
-        })
-        .catch(() => {});
+      this.$store.dispatch('get', [{
+        key: 'backupsConfig',
+        url: '/config/backups',
+        validateStatus: (status) =>
+          (status >= 200 && status < 300) || status === 404
+      }]).catch(() => {});
     },
     afterCreate() {
       this.$alert().success('Success! Automatic backups are now configured.');
@@ -160,7 +156,10 @@ export default {
     },
     afterTerminate() {
       this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
-      this.backups = BackupsConfig.notConfigured();
+      this.$store.commit('setData', {
+        key: 'backupsConfig',
+        value: BackupsConfig.notConfigured()
+      });
     }
   }
 };

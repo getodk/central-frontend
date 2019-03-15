@@ -74,17 +74,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../../presenters/form';
+import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormSubmissionAnalyze',
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    form: {
-      type: Form,
       required: true
     },
     state: {
@@ -98,6 +94,7 @@ export default {
     };
   },
   computed: {
+    ...requestData(['form']),
     links() {
       return {
         excel: {

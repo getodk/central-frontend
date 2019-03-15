@@ -70,8 +70,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormEdit',
@@ -80,18 +80,15 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    form: {
-      type: Form,
-      required: true
     }
   },
   data() {
     return {
       requestId: null,
-      state: this.form.state
+      state: this.$store.state.request.data.form
     };
   },
+  computed: requestData(['form']),
   methods: {
     changeState(newState) {
       this.state = newState;
@@ -99,7 +96,12 @@ export default {
       this.patch(path, { state: this.state })
         .then(() => {
           this.$alert().success('Form settings saved!');
-          this.$emit('state-change', this.state);
+          this.$store.commit('setData', {
+            key: 'form',
+            // Not using the response data, because we need extended metadata.
+            // This means that this.form.updatedAt will be out-of-date.
+            value: this.form.with({ state: this.state })
+          });
         })
         .catch(() => {});
     }

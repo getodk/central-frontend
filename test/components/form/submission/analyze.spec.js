@@ -30,10 +30,8 @@ describe('FormSubmissionAnalyze', () => {
   it('opens the modal upon button click', () =>
     mockHttp()
       .mount(FormSubmissionList, {
-        propsData: {
-          projectId: '1',
-          form: new Form(createFormWithSubmission())
-        }
+        propsData: { projectId: '1' },
+        requestData: { form: new Form(createFormWithSubmission()) }
       })
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
@@ -51,7 +49,6 @@ describe('FormSubmissionAnalyze', () => {
     const path = `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`;
     return mockRoute(path, { attachToDocument: true })
       .respondWithData(() => testData.simpleProjects.last())
-      .respondWithData(() => testData.extendedFieldKeys.sorted())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
@@ -70,10 +67,8 @@ describe('FormSubmissionAnalyze', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(FormSubmissionAnalyze, {
-        propsData: {
-          projectId: '1',
-          form: new Form(createFormWithSubmission())
-        }
+        propsData: { projectId: '1' },
+        requestData: { form: new Form(createFormWithSubmission()) }
       });
     });
 

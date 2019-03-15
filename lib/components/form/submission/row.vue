@@ -41,6 +41,7 @@ import R from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
 import { formatDate } from '../../../util/util';
+import { requestData } from '../../../store/modules/request';
 
 const TITLE_FIELD_TYPES = [
   'string',
@@ -58,10 +59,6 @@ export default {
       type: String,
       required: true
     },
-    form: {
-      type: Object,
-      required: true
-    },
     submission: {
       type: Object,
       required: true
@@ -74,6 +71,7 @@ export default {
     fieldColumns: Array // eslint-disable-line vue/require-default-prop
   },
   computed: {
+    ...requestData(['form']),
     submissionDate() {
       return formatDate(this.submission.__system.submissionDate);
     }

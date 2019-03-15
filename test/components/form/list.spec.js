@@ -46,10 +46,8 @@ describe('FormList', () => {
 
   it('shows a message if there are no forms', () => {
     const component = mountAndMark(FormList, {
-      propsData: {
-        projectId: '1',
-        forms: []
-      }
+      propsData: { projectId: '1' },
+      requestData: { forms: [] }
     });
     const text = component.first('#form-list-empty-message').text().trim();
     text.should.equal('To get started, add a Form.');
@@ -67,7 +65,7 @@ describe('FormList', () => {
       })
       .request(app => trigger.click(app, '.form-list-form-name'))
       .beforeEachResponse((app, request, index) => {
-        if (index === 0) request.url.should.equal('/projects/1/forms/a%20b');
+        if (index === 0) request.url.should.equal('/v1/projects/1/forms/a%20b');
       })
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())

@@ -21,9 +21,9 @@ describe('FormOverview', () => {
       const form = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(overviewPath(form))
         .respondWithData(() => project)
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal(overviewPath(form));
         });
@@ -55,9 +55,9 @@ describe('FormOverview', () => {
       }
       return mockRoute(overviewPath(testData.extendedForms.last()))
         .respondWithData(() => testData.simpleProjects.last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted());
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.extendedFieldKeys.sorted());
     };
 
     describe('submission count', () => {

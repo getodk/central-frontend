@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <loading :state="maybeFieldKeys.awaiting"/>
-    <div v-if="maybeFieldKeys.success" class="panel panel-simple">
+    <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
+    <div v-if="fieldKeys != null" class="panel panel-simple">
       <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
       <div class="panel-body">
         <form-overview-step :stage="stepStage(0)">
@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
             </template>
             App Users will be able to see this Form on their mobile device to
             download and fill out.
-            <template v-if="maybeFieldKeys.data.length === 0">
+            <template v-if="fieldKeys.length === 0">
               <strong>You have not created any App Users for this Project yet,
               so nobody will be able to use this Form.</strong> You can create
               them on the
@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
                 <!-- Not using toLocaleString(), as a project with 1,000+ app
                 users is unlikely. -->
                 <!-- eslint-disable-next-line max-len -->
-                <strong>{{ $pluralize('App User', maybeFieldKeys.data.length, true) }}</strong></router-link>,
+                <strong>{{ $pluralize('App User', fieldKeys.length, true) }}</strong></router-link>,
               but you can always add more.
             </template>
             <doc-link to="central-submissions/">
@@ -120,9 +120,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import FormOverviewStep from './overview-step.vue';
-import MaybeData from '../../maybe-data';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormOverview',
@@ -134,21 +133,10 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    maybeFieldKeys: {
-      type: MaybeData,
-      required: true
-    },
-    form: {
-      type: Form,
-      required: true
-    },
-    attachments: {
-      type: Array,
-      required: true
     }
   },
   computed: {
+    ...requestData(['form', 'attachments', 'fieldKeys']),
     // Returns true if all form attachments exist and false if not. Returns true
     // if there are no form attachments.
     allAttachmentsExist() {
@@ -167,6 +155,15 @@ export default {
     currentStep() {
       return this.stepCompletion.findIndex(isComplete => !isComplete);
     }
+  },
+  created() {
+    if (this.fieldKeys != null || this.$store.getters.loading('fieldKeys'))
+      return;
+    this.$store.dispatch('get', [{
+      key: 'fieldKeys',
+      url: `/projects/${this.projectId}/app-users`,
+      extended: true
+    }]);
   },
   methods: {
     stepStage(step) {

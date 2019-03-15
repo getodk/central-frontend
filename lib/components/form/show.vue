@@ -11,21 +11,21 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="maybeProject.success && maybeForm.success && maybeAttachments.success">
+    <page-head v-show="project != null && form != null && attachments != null">
       <template slot="context">
-        <span>{{ maybeProject.success ? maybeProject.data.name : '' }}</span>
+        <span>{{ project != null ? project.name : '' }}</span>
         <router-link :to="`/projects/${projectId}`">
           Back to Project Overview
         </router-link>
       </template>
       <template slot="title">
-        {{ maybeForm.success ? maybeForm.data.nameOrId() : '' }}
+        {{ form != null ? form.nameOrId() : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="maybeAttachments.success && maybeAttachments.data.length !== 0"
+        <li v-if="attachments != null && attachments.length !== 0"
           :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
@@ -43,21 +43,17 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="maybeProject.awaiting || maybeForm.awaiting || maybeAttachments.awaiting"/>
+      <loading
+        :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
       <!-- <router-view> is created and can send its own requests once responses
       have been received for the form and its attachments. We do not wait in a
       similar way for the responses for the project and its app users. -->
-      <div v-if="maybeForm.success && maybeAttachments.success">
-        <div v-show="maybeProject.success">
+      <div v-if="form != null && attachments != null">
+        <div v-show="project != null">
           <keep-alive>
             <router-view :project-id="projectId"
-              :maybe-field-keys="maybeFieldKeys" :form="maybeForm.data"
-              :attachments="maybeAttachments.data"
               :chunk-sizes="submissionChunkSizes"
-              :scrolled-to-bottom="scrolledToBottom"
-              @attachment-change="updateAttachment"
-              @update:submissions="updateSubmissions"
-              @state-change="updateState"/>
+              :scrolled-to-bottom="scrolledToBottom"/>
           </keep-alive>
         </div>
       </div>
@@ -66,35 +62,25 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
-import FormAttachment from '../../presenters/form-attachment';
 import FormSubmissionList from './submission/list.vue';
-import MaybeData from '../../maybe-data';
-import request from '../../mixins/request';
 import tab from '../../mixins/tab';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormShow',
-  mixins: [request(), tab()],
+  mixins: [tab()],
   props: {
     projectId: {
       type: String,
       required: true
     },
-    maybeProject: {
-      type: MaybeData,
-      required: true
-    },
-    maybeFieldKeys: {
-      type: MaybeData,
+    xmlFormId: {
+      type: String,
       required: true
     }
   },
   data() {
     return {
-      requestId: null,
-      maybeForm: null,
-      maybeAttachments: null,
       // Passing these to FormSubmissionList in order to facilitate
       // FormSubmissionList testing.
       submissionChunkSizes: FormSubmissionList.props.chunkSizes.default(),
@@ -102,16 +88,12 @@ export default {
     };
   },
   computed: {
-    xmlFormId() {
-      return this.$route.params.xmlFormId;
-    },
+    ...requestData(['project', 'form', 'attachments']),
     encodedFormId() {
       return encodeURIComponent(this.xmlFormId);
     },
     missingAttachments() {
-      return this.maybeAttachments.data
-        .filter(attachment => !attachment.exists)
-        .length;
+      return this.attachments.filter(attachment => !attachment.exists).length;
     }
   },
   watch: {
@@ -123,35 +105,22 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData() {
-      this.maybeGet({
-        maybeForm: {
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
-          extended: true,
-          transform: (data) => new Form(data)
-        },
-        maybeAttachments: {
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
-          extended: true,
-          transform: (data) => data.map(attachment => new FormAttachment(attachment))
-        }
-      });
-    },
     tabPathPrefix() {
       return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
     },
-    updateAttachment(newAttachment) {
-      const index = this.maybeAttachments.data
-        .findIndex(attachment => attachment.name === newAttachment.name);
-      this.$set(this.maybeAttachments.data, index, newAttachment);
-    },
-    updateSubmissions(submissions) {
-      const form = this.maybeForm.data.with({ submissions });
-      this.maybeForm = MaybeData.success(form);
-    },
-    updateState(newState) {
-      const form = this.maybeForm.data.with({ state: newState });
-      this.maybeForm = MaybeData.success(form);
+    fetchData() {
+      this.$store.dispatch('get', [
+        {
+          key: 'form',
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
+          extended: true
+        },
+        {
+          key: 'attachments',
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
+          extended: true
+        }
+      ]).catch(() => {});
     }
   }
 };
