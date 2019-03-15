@@ -6,6 +6,7 @@ import 'should';
 // in which lib/setup.js imports modules matters.
 import '../lib/setup';
 import App from '../lib/components/app.vue';
+import router from '../lib/router';
 import store from '../lib/store';
 import testData from './data';
 import { MockLogger } from './util';
@@ -13,7 +14,6 @@ import { clearNavGuards, initNavGuards } from './router';
 import { clearUniqueFakerResults } from './faker';
 import { destroyMarkedComponent, mountAndMark } from './destroy';
 import { logOut } from '../lib/session';
-import { router } from '../lib/router';
 import { setHttp } from './http';
 import './assertions';
 
@@ -58,6 +58,9 @@ afterEach(() => {
 // Reset the Vuex store.
 afterEach(() => {
   store.commit('resetAlert');
+
+  // We do not reset the router state, because mockHttp() does that. (Though
+  // perhaps it would be better to move that code here?)
 });
 
 afterEach(testData.reset);

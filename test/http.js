@@ -2,11 +2,11 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import router from '../lib/router';
 import store from '../lib/store';
 import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
-import { router, routerState } from '../lib/router';
 import { trigger } from './util';
 
 
@@ -379,9 +379,7 @@ class MockHttp {
         return new Promise((resolve, reject) => router.push(
           `/_initialPromise${Vue.prototype.$uniqueId()}`,
           () => {
-            // Reset router state.
-            routerState.navigations.first = { triggered: false, confirmed: false };
-            routerState.navigations.last = { triggered: false, confirmed: false };
+            store.commit('resetRouterState');
             resolve();
           },
           () => reject(new Error('navigation aborted'))
@@ -491,7 +489,7 @@ class MockHttp {
         but that might not be long enough for an asynchronous guard to
         return.) */
         () => Vue.nextTick(() => {
-          if (routerState.navigations.last.confirmed)
+          if (store.state.router.navigations.last.confirmed)
             resolve();
           else
             reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));

@@ -25,23 +25,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
-import { routerState } from '../router';
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
   data() {
     return {
-      /* Vue seems to trigger the initial navigation before creating App. If the
-      initial navigation is synchronous, Vue seems to confirm the navigation
-      before creating App -- in which case firstNavigationConfirmed will be
-      initialized to true and the $route watcher will not be called until the
-      user navigates elsewhere. However, if the initial navigation is
-      asynchronous, Vue seems to create App before waiting to confirm the
-      navigation. In that case, firstNavigationConfirmed will be initialized to
-      false and the $route watcher will be called once the initial navigation is
-      confirmed. */
-      firstNavigationConfirmed: routerState.navigations.first.confirmed,
       /*
       this.$session is not a reactive property, so we store a copy of it here in
       order to pass it to Navbar. This copy can change in one of two ways:
@@ -58,9 +47,17 @@ export default {
       session: this.$session
     };
   },
+  computed: {
+    // Vue seems to trigger the initial navigation before creating App. If the
+    // initial navigation is synchronous, Vue seems to confirm the navigation
+    // before creating App. However, if the initial navigation is asynchronous,
+    // Vue seems to create App before waiting to confirm the navigation.
+    firstNavigationConfirmed() {
+      return this.$store.state.router.navigations.first.confirmed;
+    }
+  },
   watch: {
     $route() {
-      this.firstNavigationConfirmed = true;
       this.session = this.$session;
     }
   },
