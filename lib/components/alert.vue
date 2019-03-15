@@ -11,43 +11,34 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-show="state" :class="htmlClass" :key="atEpoch" role="alert">
-    <!-- Instead of using Boostrap's alert plugin, which would remove the alert
-    from the DOM, we simply emit a close event, for which the parent component
-    should listen. -->
-    <button type="button" class="close" aria-label="Close" @click="$emit('close')">
+    <!-- When the button is clicked, we simply hide the alert, rather than using
+    Bootstrap's alert plugin and calling $(...).alert('close'): the plugin would
+    remove the alert from the DOM. -->
+    <button type="button" class="close" aria-label="Close" @click="hideAlert">
       <span aria-hidden="true">&times;</span>
     </button>
-    {{ message }}
+    <span class="alert-message">{{ message }}</span>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
+
 export default {
   name: 'Alert',
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    type: {
-      type: String,
-      required: true
-    },
-    message: {
-      type: String,
-      default: ''
-    },
-    at: {
-      type: Date,
-      required: true
-    }
-  },
   computed: {
+    ...mapState({
+      type: (state) => state.alert.type,
+      message: (state) => state.alert.message,
+      state: (state) => state.alert.state,
+      at: (state) => state.alert.at
+    }),
     htmlClass() {
       return ['alert', 'alert-dismissible', `alert-${this.type}`];
     },
     atEpoch() { return this.at.getTime(); }
-  }
+  },
+  methods: mapMutations(['hideAlert'])
 };
 </script>
 

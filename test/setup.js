@@ -6,9 +6,8 @@ import 'should';
 // in which lib/setup.js imports modules matters.
 import '../lib/setup';
 import App from '../lib/components/app.vue';
+import store from '../lib/store';
 import testData from './data';
-import { ComponentAlert, closestComponentWithAlert } from '../lib/alert';
-import { MockComponentAlert } from './alert';
 import { MockLogger } from './util';
 import { clearNavGuards, initNavGuards } from './router';
 import { clearUniqueFakerResults } from './faker';
@@ -24,12 +23,6 @@ String.prototype.iTrim = function iTrim() {
   return this.replace(/\s+/g, ' ');
 };
 
-Vue.prototype.$alert = function $alert() {
-  const component = closestComponentWithAlert(this);
-  return component != null
-    ? new ComponentAlert(component)
-    : new MockComponentAlert();
-};
 Vue.prototype.$logger = new MockLogger();
 
 // Set up the router for testing.
@@ -60,6 +53,11 @@ afterEach(() => {
 // Reset global application state.
 afterEach(() => {
   if (Vue.prototype.$session.loggedIn()) logOut();
+});
+
+// Reset the Vuex store.
+afterEach(() => {
+  store.commit('resetAlert');
 });
 
 afterEach(testData.reset);

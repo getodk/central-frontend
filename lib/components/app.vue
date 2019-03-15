@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
     <navbar v-show="firstNavigationConfirmed" :session="session"/>
-    <alert id="app-alert" v-bind="alert" @close="alert.state = false"/>
+    <alert id="app-alert"/>
     <div class="container-fluid">
       <router-view @update:session="updateSession"/>
     </div>
@@ -24,7 +24,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Navbar from './navbar.vue';
-import { blankAlert } from '../alert';
 import { routerState } from '../router';
 
 export default {
@@ -55,30 +54,13 @@ export default {
       global state management at this point. We may end up wanting to implement
       a more comprehensive state management strategy.
       */
-      session: this.$session,
-      alert: blankAlert()
+      session: this.$session
     };
-  },
-  computed: {
-    routeAndAlert() {
-      return [this.$route, this.alert];
-    }
   },
   watch: {
     $route() {
       this.firstNavigationConfirmed = true;
       this.session = this.$session;
-    },
-    // Using a strategy similar to the one here:
-    // https://github.com/vuejs/vue/issues/844
-    routeAndAlert([currentRoute, currentAlert], [previousRoute, previousAlert]) {
-      // If both the route and alert have changed, the router view will be
-      // updated, and if the new alert is visible, it will be shown. On the
-      // other hand, if only the route has changed, then if there is an alert
-      // currently visible, it will be hidden.
-      if (currentRoute !== previousRoute && currentAlert === previousAlert &&
-        this.alert.state)
-        this.alert.state = false;
     }
   },
   mounted() {
@@ -130,6 +112,10 @@ export default {
   &.alert-danger {
     border-color: $color-danger;
   }
+}
+
+body.modal-open #app-alert {
+  display: none;
 }
 
 

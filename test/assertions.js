@@ -27,9 +27,10 @@ should.Assertion.add('focused', function focused() {
   element(this.obj).should.equal(document.activeElement);
 });
 
-should.Assertion.add('alert', function assertAlert(type = null, message = null) {
+should.Assertion.add('alert', function assertAlert(type = undefined, message = undefined) {
   const alert = this.obj.first(Alert);
-  alert.getProp('state').should.be.true();
-  if (type != null) alert.getProp('type').should.equal(type);
-  if (message != null) alert.getProp('message').should.equal(message);
+  alert.vm.$el.style.display.should.equal('');
+  if (type != null) alert.hasClass(`alert-${type}`).should.be.true();
+  if (message != null)
+    alert.first('.alert-message').text().should.equal(message);
 });
