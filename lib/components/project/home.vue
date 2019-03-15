@@ -26,7 +26,8 @@ export default {
     projectId: 'fetchData'
   },
   created() {
-    this.fetchData();
+    if (this.project == null && !this.$store.getters.loading('project'))
+      this.fetchData();
   },
   methods: {
     fetchData() {
