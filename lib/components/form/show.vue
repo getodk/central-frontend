@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
         :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
       <!-- <router-view> is created and can send its own requests once responses
       have been received for the form and its attachments. We do not wait in a
-      similar way for the responses for the project and its app users. -->
+      similar way for the response for the project. -->
       <div v-if="form != null && attachments != null">
         <div v-show="project != null">
           <keep-alive>

@@ -32,7 +32,15 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'project',
-        url: `/projects/${this.projectId}`
+        url: `/projects/${this.projectId}`,
+        extended: true,
+        success: ({ project, fieldKeys }) => {
+          if (fieldKeys == null) return;
+          this.$store.commit('setData', {
+            key: 'project',
+            value: { ...project, appUsers: fieldKeys.length }
+          });
+        }
       }]).catch(() => {});
     }
   }

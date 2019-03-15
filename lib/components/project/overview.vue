@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
         <page-section id="project-overview-right-now">
           <span slot="heading">Right Now</span>
           <template slot="body">
-            <loading :state="$store.getters.initiallyLoading(['fieldKeys', 'forms'])"/>
-            <template v-if="fieldKeys != null && forms != null">
+            <loading :state="$store.getters.initiallyLoading(['project', 'forms'])"/>
+            <template v-if="project != null && forms != null">
               <div>
                 <router-link :to="`/projects/${projectId}/app-users`"
                   class="project-overview-right-now-icon-container">
@@ -49,13 +49,13 @@ except according to the terms contained in the LICENSE file.
                 </router-link>
                 <div class="project-overview-right-now-count">
                   <router-link :to="`/projects/${projectId}/app-users`">
-                    {{ fieldKeys.length }}
+                    {{ project.appUsers }}
                     <span class="icon-angle-right"></span>
                   </router-link>
                 </div>
                 <div class="project-overview-right-now-description">
                   <router-link :to="`/projects/${projectId}/app-users`">
-                    <strong>{{ $pluralize('App User', fieldKeys.length) }}</strong>
+                    <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
                     who can use a data collection client to download and submit
                     Form data to this Project.
                   </router-link>
@@ -125,7 +125,7 @@ export default {
       }
     };
   },
-  computed: requestData(['forms', 'fieldKeys']),
+  computed: requestData(['project', 'forms']),
   watch: {
     projectId: 'fetchData'
   },
@@ -134,13 +134,6 @@ export default {
   },
   methods: {
     fetchData() {
-      if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys')) {
-        this.$store.dispatch('get', [{
-          key: 'fieldKeys',
-          url: `/projects/${this.projectId}/app-users`,
-          extended: true
-        }]).catch(() => {});
-      }
       this.$store.dispatch('get', [{
         key: 'forms',
         url: `/projects/${this.projectId}/forms`,

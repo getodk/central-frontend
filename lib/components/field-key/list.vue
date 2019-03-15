@@ -117,8 +117,7 @@ export default {
     }
   },
   created() {
-    if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys'))
-      this.fetchData();
+    this.fetchData();
   },
   activated() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -132,7 +131,14 @@ export default {
       this.$store.dispatch('get', [{
         key: 'fieldKeys',
         url: `/projects/${this.projectId}/app-users`,
-        extended: true
+        extended: true,
+        success: ({ project, fieldKeys }) => {
+          if (project == null) return;
+          this.$store.commit('setData', {
+            key: 'project',
+            value: { ...project, appUsers: fieldKeys.length }
+          });
+        }
       }]).catch(() => {});
     },
     hidePopover() {
