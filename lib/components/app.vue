@@ -266,6 +266,12 @@ a {
     &:placeholder-shown + .form-label {
       transform: translateY(-15px);
     }
+
+    &[disabled], &[readonly] {
+      &, &::placeholder {
+        color: $color-input-inactive;
+      }
+    }
   }
 
   .form-label {
@@ -349,6 +355,11 @@ a {
 
 .table-actions {
   margin-bottom: 20px;
+}
+
+.empty-table-message {
+  color: #555;
+  font-size: 15px;
 }
 
 

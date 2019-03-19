@@ -292,7 +292,10 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // HOOKS FOR BEFORE RESPONSES
 
-  // Specifies a callback to run before each response is sent.
+  // Specifies a callback to run before each response is returned. The callback
+  // may return a Promise or a non-Promise value. The callback may itself send
+  // one or more requests. (Note that the callback will also be run for those
+  // requests.)
   beforeEachResponse(callback) {
     if (this._beforeEachResponse != null)
       throw new Error('cannot call beforeEachResponse() more than once in a single series');
@@ -411,10 +414,9 @@ class MockHttp {
       // Wait a tick after this._request() or the previous response so that Vue
       // is updated before this._beforeEachResponse() is called.
       return Vue.nextTick()
-        .then(() => {
-          if (this._beforeEachResponse != null)
-            this._tryBeforeEachResponse(config, index);
-        })
+        .then(() => (this._beforeEachResponse != null
+          ? this._tryBeforeEachResponse(config, index)
+          : null))
         .then(() => new Promise((resolve, reject) => {
           let result;
           try {
@@ -437,18 +439,26 @@ class MockHttp {
     };
   }
 
-  _tryBeforeEachResponse(request, index) {
-    if (this._errorFromBeforeEachResponse != null) return;
-    /* Adding a try/catch block here even though _beforeEachResponse() is called
-    within a promise chain, because the promise is not returned to Mocha, but
-    rather to the app itself from $http. We want to eventually return a rejected
-    promise to Mocha, but we want to return the specified response to the app
-    regardless of whether _beforeEachResponse() throws an error. */
+  _tryBeforeEachResponse(config, index) {
+    if (this._errorFromBeforeEachResponse != null) return null;
+    /* Here, we catch any error from this._beforeEachResponse(), even though
+    this._beforeEachResponse() is called within a promise chain. That's because
+    the promise is not returned to Mocha, but rather to Frontend itself from
+    $http. By catching and storing the error, we will later be able to return a
+    rejected promise to Mocha. this._beforeEachResponse() may return a Promise,
+    or it may simply make an assertion that may throw an error. That means that
+    we have to be prepared to catch any error in two ways. In neither case do we
+    re-throw the error, because doing so would prevent Frontend from receiving
+    the specified response. */
     try {
-      this._beforeEachResponse(this._component, request, index);
+      return Promise.resolve(this._beforeEachResponse(this._component, config, index))
+        .catch(e => {
+          this._errorFromBeforeEachResponse = e;
+        });
     } catch (e) {
       this._errorFromBeforeEachResponse = e;
     }
+    return null;
   }
 
   _tryBeforeEachNav(to, from) {

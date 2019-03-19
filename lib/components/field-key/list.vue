@@ -218,7 +218,7 @@ export default {
   }
 
   p {
-    max-width: 600px;
+    max-width: $max-width-p;
   }
 }
 
