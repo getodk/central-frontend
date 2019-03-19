@@ -13,9 +13,9 @@ except according to the terms contained in the LICENSE file.
   <tr>
     <td>
       <div class="project-list-project-name">
-        <a :href="`/projects/${project.id}`" @click.prevent="navigateToProject">
+        <router-link :to="`/projects/${project.id}`">
           {{ project.name }} <span class="icon-angle-right"></span>
-        </a>
+        </router-link>
       </div>
       <template v-if="projectCount === 1">
         <div v-if="project.name === 'Default Project' && project.forms === 0">
@@ -53,12 +53,6 @@ export default {
   computed: {
     latestSubmission() {
       return formatDate(this.project.lastSubmission, '(none)');
-    }
-  },
-  methods: {
-    navigateToProject() {
-      this.$store.commit('setData', { key: 'project', value: this.project });
-      this.$router.push(`/projects/${this.project.id}`);
     }
   }
 };
