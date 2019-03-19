@@ -54,7 +54,6 @@ afterEach(() => {
   store.commit('resetAlert');
   store.commit('resetRequests');
   store.commit('clearData');
-  store.commit('resetSession');
 
   // We do not reset the router state, because mockHttp() does that. (Though
   // perhaps it would be better to move that code here?)

@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import store from '../lib/store';
 import testData from './data';
 import { mockRoute } from './http';
@@ -8,9 +6,10 @@ import { submitForm } from './event';
 export const mockLogin = () => {
   if (testData.administrators.size !== 0)
     throw new Error('administrator already exists');
-  store.commit('setSession', testData.sessions.createNew());
+  const session = testData.sessions.createNew();
+  store.commit('setData', { key: 'session', value: session });
   const user = testData.administrators.createPast(1).first();
-  store.commit('setData', { path: ['currentUser'], value: user, extended: false });
+  store.commit('setData', { key: 'currentUser', value: user });
 };
 
 export const submitLoginForm = (wrapper) =>
@@ -20,8 +19,7 @@ export const submitLoginForm = (wrapper) =>
   ]);
 
 export const mockRouteThroughLogin = (location, mountOptions = {}) => {
-  if (Vue.prototype.$session.loggedIn())
-    throw new Error('session cannot be logged in');
+  if (store.getters.loggedIn) throw new Error('user cannot be logged in');
   return mockRoute(location, mountOptions)
     .restoreSession(false)
     .complete()
