@@ -85,7 +85,7 @@ export default {
   data() {
     return {
       awaitingResponse: false,
-      state: this.$store.state.request.data.form
+      state: this.$store.state.request.data.form.state
     };
   },
   computed: requestData(['form']),
