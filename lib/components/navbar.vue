@@ -85,11 +85,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { logAxiosError } from '../util/request';
+import request from '../mixins/request';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
+  mixins: [request()],
   computed: requestData(['session', 'currentUser']),
   methods: {
     routePathStartsWith(path) {
@@ -99,7 +100,7 @@ export default {
     },
     logOut() {
       // Backend ensures that the token is URL-safe.
-      this.$http.delete(`/sessions/${this.session.token}`).catch(logAxiosError);
+      this.delete(`/sessions/${this.session.token}`).catch(() => {});
       this.$store.commit('clearData');
       this.$router.push('/login', () => {
         this.$alert().success('You have logged out successfully.');
