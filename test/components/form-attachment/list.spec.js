@@ -23,7 +23,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     const encodedFormId = encodeURIComponent(form.xmlFormId);
     const path = `/projects/1/forms/${encodedFormId}/media-files`;
     return mockRoute(path, { attachToDocument })
-      .respondWithData(() => testData.simpleProjects.last())
+      .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => form)
       .respondWithData(() => testData.extendedFormAttachments.sorted());
   }
@@ -63,7 +63,7 @@ describe('FormAttachmentList', () => {
 
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1/forms/x/media-files')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() =>
@@ -78,11 +78,10 @@ describe('FormAttachmentList', () => {
 
     it('is not shown if there are no form attachments', () =>
       mockRoute('/projects/1/forms/x')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text());
@@ -91,13 +90,12 @@ describe('FormAttachmentList', () => {
 
     it('is shown if there are form attachments', () =>
       mockRoute('/projects/1/forms/x')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments
           .createPast(1, { exists: false })
           .sorted())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text().trim().iTrim());

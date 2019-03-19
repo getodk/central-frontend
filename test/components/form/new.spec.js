@@ -51,8 +51,7 @@ describe('FormNew', () => {
   describe('modal', () => {
     it('is initially hidden', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(findModal)
         .then(modal => {
@@ -61,8 +60,7 @@ describe('FormNew', () => {
 
     it('is shown after button click', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .then(openModal)
         .then(modal => {
@@ -124,8 +122,7 @@ describe('FormNew', () => {
       describe('after successful submit', () => {
         let app;
         beforeEach(() => mockRoute('/projects/1')
-          .respondWithData(() => testData.simpleProjects.createPast(1).last())
-          .respondWithData(() => testData.extendedFieldKeys.sorted())
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;

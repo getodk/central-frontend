@@ -48,7 +48,7 @@ describe('FormSubmissionAnalyze', () => {
     const { xmlFormId } = createFormWithSubmission();
     const path = `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`;
     return mockRoute(path, { attachToDocument: true })
-      .respondWithData(() => testData.simpleProjects.last())
+      .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)

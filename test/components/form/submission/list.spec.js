@@ -23,7 +23,7 @@ describe('FormSubmissionList', () => {
         }));
 
     it('after login, user is redirected back', () => {
-      const project = testData.simpleProjects.createPast(1).last();
+      const project = testData.extendedProjects.createPast(1).last();
       const form = testData.extendedForms
         .createPast(1, { submissions: 0 })
         .last();
@@ -41,7 +41,7 @@ describe('FormSubmissionList', () => {
 
     it('updates the component after the route updates', () => {
       mockLogin();
-      const project = testData.simpleProjects.createPast(1).last();
+      const project = testData.extendedProjects.createPast(1).last();
       const forms = testData.extendedForms
         .createPast(1, { xmlFormId: 'a', name: 'a', submissions: 1 })
         .createPast(1, { xmlFormId: 'b', name: 'b', submissions: 1 })
@@ -457,7 +457,7 @@ describe('FormSubmissionList', () => {
           testData.extendedProjects.createPast(1);
           testData.extendedForms.createPast(1);
           return mockRoute(submissionsPath(form()))
-            .respondWithData(() => testData.simpleProjects.last())
+            .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .respondWithData(() => form()._schema)
@@ -690,10 +690,9 @@ describe('FormSubmissionList', () => {
           testData.extendedSubmissions.createPast(submissionCount);
           const [small = 250, large = 1000] = chunkSizes;
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
-            .respondWithData(() => testData.simpleProjects.last())
+            .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
-            .respondWithData(() => testData.extendedFieldKeys.sorted())
             .afterResponses(app => {
               const formShow = app.first(FormShow);
               formShow.setData({

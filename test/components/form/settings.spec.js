@@ -13,7 +13,7 @@ describe('FormSettings', () => {
 
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1/forms/x/settings')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())

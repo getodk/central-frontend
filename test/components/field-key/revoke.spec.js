@@ -19,7 +19,8 @@ describe('FieldKeyRevoke', () => {
   describe('modal', () => {
     it('opens upon click for an app user whose access is not revoked', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys
           .createPast(1, { token: faker.central.token() })
           .sorted())
@@ -34,7 +35,8 @@ describe('FieldKeyRevoke', () => {
 
     it('does not open upon click for an app user whose access is revoked', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() =>
           testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
         .afterResponses(app => {
@@ -49,7 +51,8 @@ describe('FieldKeyRevoke', () => {
 
   it('revoke button is disabled for an app user whose access is revoked', () =>
     mockRoute('/projects/1/app-users')
-      .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
       .respondWithData(() =>
         testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
       .afterResponses(app => {
@@ -58,6 +61,7 @@ describe('FieldKeyRevoke', () => {
       }));
 
   it('standard button thinking things', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
     const token = faker.central.token();
     const fieldKey = testData.extendedFieldKeys.createPast(1, { token }).last();
     const propsData = { fieldKey };
@@ -70,7 +74,8 @@ describe('FieldKeyRevoke', () => {
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute('/projects/1/app-users')
-      .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
       .respondWithData(() => testData.extendedFieldKeys
         .createPast(1, { token: faker.central.token() })
         .createPast(1, { token: faker.central.token() })
