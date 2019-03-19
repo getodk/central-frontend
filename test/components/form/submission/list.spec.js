@@ -713,8 +713,8 @@ describe('FormSubmissionList', () => {
           loadFormOverview(10)
             .afterResponses(app => {
               const p = app.find('.form-overview-step')[2].find('p')[1];
-              p.text().should.containEql('10');
-              p.text().should.not.containEql('11');
+              p.text().should.containEql('10\n');
+              p.text().should.not.containEql('11\n');
             })
             .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => form()._schema)
@@ -726,8 +726,8 @@ describe('FormSubmissionList', () => {
             .route(`/projects/1/forms/${encodedFormId()}`)
             .then(app => {
               const p = app.find('.form-overview-step')[2].find('p')[1];
-              p.text().should.containEql('11');
-              p.text().should.not.containEql('10');
+              p.text().should.containEql('11\n');
+              p.text().should.not.containEql('10\n');
             }));
 
         it('updates the count in the download button', () =>
