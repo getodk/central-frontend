@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <float-row class="table-actions">
       <template slot="left">
-        <refresh-button :configs="refreshConfigs" :disabled="schema == null"/>
+        <refresh-button :configs="refreshConfigs"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
