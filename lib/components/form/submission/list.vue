@@ -131,6 +131,12 @@ export default {
     };
   },
   computed: {
+    /* We use the 'submissionsChunk' request key to store the latest chunk of
+    submissions that we have fetched. 'submissionsChunk' is only used in this
+    component, and it feels a little unnecessary to store this data in the
+    store. However, the way we have it set up right now, we need
+    'submissionsChunk' to be its own request key so that we can determine
+    whether the associated request is loading. */
     ...requestData(['form', 'schema', 'submissionsChunk']),
     refreshConfigs() {
       return [{
