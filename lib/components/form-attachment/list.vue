@@ -239,14 +239,6 @@ export default {
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
-    problemToAlert(problem) {
-      if (this.uploadStatus.total === 1) return null;
-      const uploaded = this.uploadStatus.total - this.uploadStatus.remaining;
-      const summary = uploaded !== 0
-        ? `Only ${uploaded} of ${this.uploadStatus.total} files ${this.$pluralize('was', uploaded)} successfully uploaded.`
-        : 'No files were successfully uploaded.';
-      return `${problem.message} ${summary}`;
-    },
     /*
     maybeGzip() takes a file and returns a Promise that, if fulfilled, resolves
     to an object with two properties:
@@ -300,6 +292,15 @@ export default {
             },
             onUploadProgress: (progressEvent) => {
               this.uploadStatus.progress = progressEvent;
+            },
+            problemToAlert: ({ message }) => {
+              if (this.uploadStatus.total === 1) return null;
+              const uploaded = this.uploadStatus.total -
+                this.uploadStatus.remaining;
+              const summary = uploaded !== 0
+                ? `Only ${uploaded} of ${this.uploadStatus.total} files ${this.$pluralize('was', uploaded)} successfully uploaded.`
+                : 'No files were successfully uploaded.';
+              return `${message} ${summary}`;
             }
           });
         })
