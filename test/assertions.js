@@ -12,7 +12,11 @@ const unwrapElement = (elementOrWrapper) => {
 
 should.Assertion.add('visible', function visible() {
   this.params = { operator: 'to be visible' };
-  unwrapElement(this.obj).style.display.should.equal('');
+  let element = unwrapElement(this.obj);
+  while (element !== document.body && element != null) {
+    element.style.display.should.not.equal('none');
+    element = element.parentNode;
+  }
 });
 
 should.Assertion.add('hidden', function hidden() {
