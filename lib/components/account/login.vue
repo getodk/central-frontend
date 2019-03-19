@@ -31,8 +31,8 @@ except according to the terms contained in the LICENSE file.
                 class="btn btn-primary">
                 Log in <spinner :state="disabled"/>
               </button>
-              <router-link :to="resetPasswordLocation" tag="button"
-                type="button" class="btn btn-link">
+              <router-link :to="resetPasswordLocation" :disabled="disabled"
+                tag="button" type="button" class="btn btn-link">
                 Reset password
               </router-link>
             </div>
@@ -45,14 +45,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
-import { logIn } from '../../session';
 
 export default {
   name: 'AccountLogin',
   mixins: [request()],
   data() {
     return {
-      requestId: null,
       disabled: false,
       email: '',
       password: ''
@@ -66,18 +64,14 @@ export default {
       };
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.disabled) {
+      next(false);
+    } else {
+      next();
+    }
+  },
   methods: {
-    problemToAlert(problem) {
-      return problem.code === 401.2
-        ? 'Incorrect email address and/or password.'
-        : null;
-    },
-    fetchUser(session) {
-      const headers = { Authorization: `Bearer ${session.token}` };
-      return this
-        .get('/users/current', { headers })
-        .then(({ data }) => ({ session, user: data }));
-    },
     nextPath() {
       const { next } = this.$route.query;
       if (next == null) return '/';
@@ -92,16 +86,29 @@ export default {
     },
     submit() {
       this.disabled = true;
-      this
-        .post('/sessions', { email: this.email, password: this.password })
-        .then(({ data }) => this.fetchUser(data))
-        .then(({ session, user }) => {
-          logIn(session, user);
+      this.request({
+        method: 'POST',
+        url: '/sessions',
+        data: { email: this.email, password: this.password },
+        problemToAlert: ({ code }) => (code === 401.2
+          ? 'Incorrect email address and/or password.'
+          : null)
+      })
+        .then(({ data }) => this.$store.dispatch('get', [{
+          key: 'currentUser',
+          url: '/users/current',
+          headers: { Authorization: `Bearer ${data.token}` },
+          success: () => {
+            this.$store.commit('setData', { key: 'session', value: data });
+          }
+        }]))
+        .finally(() => {
+          this.disabled = false;
+        })
+        .then(() => {
           this.routeToNext();
         })
-        .catch(() => {
-          this.disabled = false;
-        });
+        .catch(() => {});
     }
   }
 };

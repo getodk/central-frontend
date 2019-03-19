@@ -55,7 +55,8 @@ describe('BackupTerminate', () => {
     });
 
     it('backup status is updated', () => {
-      app.first(BackupList).data().backups.status.should.equal('notConfigured');
+      const { backupsConfig } = app.vm.$store.state.request.data;
+      backupsConfig.status.should.equal('notConfigured');
     });
 
     it('success message is shown', () => {

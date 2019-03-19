@@ -14,8 +14,7 @@ describe('ProjectOverview', () => {
 
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.createPast(1).sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1');
@@ -27,8 +26,7 @@ describe('ProjectOverview', () => {
 
     it('displays the navbar projects link as active', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.sorted())
         .afterResponses(app => {
           const $li = $(app.vm.$el).find('#navbar-projects-link').parent();
@@ -39,8 +37,8 @@ describe('ProjectOverview', () => {
     describe('Right Now', () => {
       it('shows counts', () =>
         mockRoute('/projects/1')
-          .respondWithData(() => testData.simpleProjects.createPast(1).last())
-          .respondWithData(() => testData.extendedFieldKeys.createPast(2).sorted())
+          .respondWithData(() =>
+            testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
           .respondWithData(() => testData.extendedForms.createPast(3).sorted())
           .afterResponses(app => {
             const counts = app.find('.project-overview-right-now-count');
@@ -55,18 +53,20 @@ describe('ProjectOverview', () => {
       for (const [description, selector] of targets) {
         it(`navigates to app users page upon a click on app users ${description}`, () =>
           mockRoute('/projects/1')
-            .respondWithData(() => testData.simpleProjects.createPast(1).last())
-            .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
+            .respondWithData(() =>
+              testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
             .respondWithData(() => testData.extendedForms.sorted())
-            .afterResponses(app => trigger.click(app, selector))
+            .complete()
+            .request(app => trigger.click(app, selector))
+            .respondWithData(() =>
+              testData.extendedFieldKeys.createPast(1).sorted())
             .then(app => {
               app.vm.$route.path.should.equal('/projects/1/app-users');
             }));
 
         it(`scrolls down the page upon a click on the forms ${description}`, () =>
           mockRoute('/projects/1', { attachToDocument: true })
-            .respondWithData(() => testData.simpleProjects.createPast(1).last())
-            .respondWithData(() => testData.extendedFieldKeys.sorted())
+            .respondWithData(() => testData.extendedProjects.createPast(1).last())
             .respondWithData(() => testData.extendedForms.createPast(1).sorted())
             .afterResponses(app => {
               window.pageYOffset.should.equal(0);

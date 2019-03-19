@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import BackupList from '../../lib/components/backup/list.vue';
+import BackupsConfig from '../../lib/presenters/backups-config';
 import faker from '../faker';
 import { dataStore } from './data-store';
 
@@ -107,7 +107,7 @@ export const backups = dataStore({
       ? { success: true }
       : null
   }) => {
-    const recentDate = BackupList.methods.recentDate();
+    const recentDate = BackupsConfig.recentDateTime().toJSDate();
     // The earliest time, for testing purposes, for backups to have been
     // configured.
     const setAtFloor = DateTime

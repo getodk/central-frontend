@@ -2,10 +2,11 @@ import Vue from 'vue';
 
 import App from '../lib/components/app.vue';
 import Spinner from '../lib/components/spinner.vue';
+import router from '../lib/router';
+import store from '../lib/store';
 import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
-import { router, routerState } from '../lib/router';
 import { trigger } from './util';
 
 
@@ -206,12 +207,16 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // OTHER REQUESTS
 
-  mount(component, options = {}) {
+  mount(component, { requestData = {}, ...avoriazOptions } = {}) {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    return this._with({ mount: () => mountAndMark(component, options) });
+    for (const [key, value] of Object.entries(requestData))
+      store.commit('setData', { key, value });
+    return this._with({
+      mount: () => mountAndMark(component, { ...avoriazOptions, store })
+    });
   }
 
   // The callback may return a Promise or a non-Promise value.
@@ -262,6 +267,7 @@ class MockHttp {
     return this._respond(() => {
       const error = new Error();
       const data = responseOrResponses();
+      error.request = {};
       error.response = { status: Math.floor(data.code), data };
       return error;
     });
@@ -376,9 +382,7 @@ class MockHttp {
         return new Promise((resolve, reject) => router.push(
           `/_initialPromise${Vue.prototype.$uniqueId()}`,
           () => {
-            // Reset router state.
-            routerState.navigations.first = { triggered: false, confirmed: false };
-            routerState.navigations.last = { triggered: false, confirmed: false };
+            store.commit('resetRouterState');
             resolve();
           },
           () => reject(new Error('navigation aborted'))
@@ -422,10 +426,13 @@ class MockHttp {
           }
           const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
-          if (validateStatus(response.status))
-            resolve(response);
-          else
+          const responseWithConfig = { ...response, config };
+          if (validateStatus(response.status)) {
+            resolve(responseWithConfig);
+          } else {
+            if (result instanceof Error) result.response = responseWithConfig;
             reject(result);
+          }
         }));
     };
   }
@@ -488,7 +495,7 @@ class MockHttp {
         but that might not be long enough for an asynchronous guard to
         return.) */
         () => Vue.nextTick(() => {
-          if (routerState.navigations.last.confirmed)
+          if (store.state.router.navigations.last.confirmed)
             resolve();
           else
             reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));

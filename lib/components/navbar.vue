@@ -54,7 +54,7 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li v-if="session.loggedOut()">
+          <li v-if="$store.getters.loggedOut">
             <a href="#" @click.prevent>
               <span class="icon-user-circle-o"></span>Not logged in
             </a>
@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span>{{ session.user.displayName }}
+              <span class="icon-user-circle-o"></span>{{ currentUser.displayName }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -85,32 +85,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { logOut } from '../session';
-import { logRequestError } from '../util';
+import request from '../mixins/request';
+import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  props: {
-    session: {
-      type: Object,
-      required: true
-    }
-  },
+  mixins: [request()],
+  computed: requestData(['session', 'currentUser']),
   methods: {
     routePathStartsWith(path) {
       if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
       return this.$route.path === path ||
         this.$route.path.startsWith(`${path}/`);
     },
-    deleteSession() {
-      const encodedToken = encodeURIComponent(this.$session.token);
-      // Using $http directly rather than the request mixin, because multiple
-      // pending DELETE requests are possible and unproblematic.
-      this.$http.delete(`/sessions/${encodedToken}`).catch(logRequestError);
-    },
     logOut() {
-      this.deleteSession();
-      logOut();
+      // Backend ensures that the token is URL-safe.
+      this.delete(`/sessions/${this.session.token}`).catch(() => {});
+      this.$store.commit('clearData');
       this.$router.push('/login', () => {
         this.$alert().success('You have logged out successfully.');
       });

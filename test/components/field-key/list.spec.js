@@ -3,7 +3,7 @@ import pako from 'pako';
 
 import faker from '../../faker';
 import testData from '../../data';
-import { formatDate } from '../../../lib/util';
+import { formatDate } from '../../../lib/util/util';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../util';
@@ -17,7 +17,8 @@ describe('FieldKeyList', () => {
 
     it('after login, user is redirected back', () =>
       mockRouteThroughLogin('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/app-users');
@@ -29,7 +30,8 @@ describe('FieldKeyList', () => {
 
     it('table contains the correct data', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(2).sorted())
         .afterResponses(app => {
           const tr = app.find('#field-key-list-table tbody tr');
@@ -51,7 +53,8 @@ describe('FieldKeyList', () => {
 
     it('shows a message if there are no app users', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 0 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(0).sorted())
         .afterResponses(app => {
           app.find('#field-key-list-empty-message').length.should.equal(1);
@@ -60,7 +63,8 @@ describe('FieldKeyList', () => {
     describe('QR code', () => {
       let app;
       beforeEach(() => mockRoute('/projects/1/app-users', { attachToDocument: true })
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys
           .createPast(1, { token: faker.central.token() })
           .sorted())
@@ -102,7 +106,8 @@ describe('FieldKeyList', () => {
 
     it('app user whose access is revoked is marked accordingly', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() =>
           testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
         .afterResponses(app => {

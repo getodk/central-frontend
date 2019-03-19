@@ -1,7 +1,7 @@
 import Form from '../../../lib/presenters/form';
 import FormList from '../../../lib/components/form/list.vue';
 import testData from '../../data';
-import { formatDate } from '../../../lib/util';
+import { formatDate } from '../../../lib/util/util';
 import { mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
@@ -14,8 +14,7 @@ describe('FormList', () => {
     testData.extendedProjects.createPast(1);
     const forms = testData.extendedForms.createPast(2).sorted();
     return mockRoute('/projects/1')
-      .respondWithData(() => testData.simpleProjects.last())
-      .respondWithData(() => testData.extendedFieldKeys.sorted())
+      .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => forms)
       .afterResponse(page => {
         const tr = page.find('table tbody tr');
@@ -46,10 +45,8 @@ describe('FormList', () => {
 
   it('shows a message if there are no forms', () => {
     const component = mountAndMark(FormList, {
-      propsData: {
-        projectId: '1',
-        forms: []
-      }
+      propsData: { projectId: '1' },
+      requestData: { forms: [] }
     });
     const text = component.first('#form-list-empty-message').text().trim();
     text.should.equal('To get started, add a Form.');
@@ -57,8 +54,7 @@ describe('FormList', () => {
 
   it('encodes the URL to the form overview page', () =>
     mockRoute('/projects/1')
-      .respondWithData(() => testData.simpleProjects.createPast(1).last())
-      .respondWithData(() => testData.extendedFieldKeys.sorted())
+      .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
       .afterResponse(app => {
@@ -67,7 +63,7 @@ describe('FormList', () => {
       })
       .request(app => trigger.click(app, '.form-list-form-name'))
       .beforeEachResponse((app, request, index) => {
-        if (index === 0) request.url.should.equal('/projects/1/forms/a%20b');
+        if (index === 0) request.url.should.equal('/v1/projects/1/forms/a%20b');
       })
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())

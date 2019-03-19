@@ -1,5 +1,5 @@
 import faker from '../faker';
-import { uniqueSequence } from '../../lib/util';
+import { uniqueSequence } from '../../lib/util/util';
 
 class Factory {
   constructor(store, options) {

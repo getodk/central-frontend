@@ -59,9 +59,8 @@ describe('ProjectNew', () => {
         .then(() => submitForm(app, '#project-new form', [
           ['input', testData.extendedProjects.createNew().name]
         ])))
-      .respondWithData(() => testData.simpleProjects.last()) // ProjectNew
-      .respondWithData(() => testData.simpleProjects.last()) // ProjectHome
-      .respondWithData(() => testData.extendedFieldKeys.sorted())
+      .respondWithData(() => testData.standardProjects.last()) // ProjectNew
+      .respondWithData(() => testData.extendedProjects.last()) // ProjectHome
       .respondWithData(() => testData.extendedForms.sorted()));
 
     it('redirects to the project overview', () => {

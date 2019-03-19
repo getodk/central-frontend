@@ -12,14 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <float-row class="table-actions">
-      <refresh-button slot="left" :fetching="awaitingResponse"
-        @refresh="fetchData({ clear: false })"/>
+      <refresh-button slot="left" :configs="refreshConfigs"/>
       <button id="user-list-new-button" slot="right" type="button"
         class="btn btn-primary" @click="showModal('newUser')">
         <span class="icon-plus-circle"></span>Create Web User
       </button>
     </float-row>
-    <loading :state="awaitingResponse && users == null"/>
+    <loading :state="$store.getters.initiallyLoading(['users'])"/>
     <table v-if="users != null" id="user-list-table" class="table">
       <thead>
         <tr>
@@ -46,19 +45,14 @@ import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRow from './row.vue';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword, UserRow },
-  mixins: [
-    request(),
-    modal(['newUser', 'resetPassword'])
-  ],
+  mixins: [modal(['newUser', 'resetPassword'])],
   data() {
     return {
-      requestId: null,
-      users: null,
       highlighted: null,
       newUser: {
         state: false
@@ -71,18 +65,25 @@ export default {
       }
     };
   },
+  computed: {
+    ...requestData(['users']),
+    refreshConfigs() {
+      return [{
+        key: 'users',
+        url: '/users',
+        success: () => {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.highlighted = null;
+        }
+      }];
+    }
+  },
   created() {
-    this.fetchData({ clear: false });
+    this.fetchData();
   },
   methods: {
-    fetchData({ clear }) {
-      if (clear) this.users = null;
-      this
-        .get('/users')
-        .then(({ data }) => {
-          this.users = data;
-          if (!clear) this.highlighted = null;
-        })
+    fetchData() {
+      this.$store.dispatch('get', [{ key: 'users', url: '/users' }])
         .catch(() => {});
     },
     showResetPassword(user) {
@@ -90,7 +91,8 @@ export default {
       this.resetPassword.state = true;
     },
     afterCreate(user) {
-      this.fetchData({ clear: true });
+      this.fetchData();
+      this.hideModal('newUser');
       this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     },

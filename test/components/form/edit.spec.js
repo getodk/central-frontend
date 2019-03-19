@@ -7,12 +7,6 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const propsData = () => ({
-  propsData: {
-    projectId: '1',
-    form: new Form(testData.extendedForms.createPast(1).last())
-  }
-});
 const selectDifferentState = (formEdit) => {
   const inputs = formEdit.find('input')
     .filter(input => input.getAttribute('value') !== formEdit.data().state);
@@ -36,7 +30,12 @@ describe('FormEdit', () => {
   describe('after selection', () => {
     it('disables fieldset', () =>
       mockHttp()
-        .mount(FormEdit, propsData())
+        .mount(FormEdit, {
+          propsData: { projectId: '1' },
+          requestData: {
+            form: new Form(testData.extendedForms.createPast(1).last())
+          }
+        })
         .request(selectDifferentState)
         .respondWithSuccess()
         .beforeEachResponse(component => {
@@ -46,7 +45,12 @@ describe('FormEdit', () => {
 
     it('shows a spinner', () =>
       mockHttp()
-        .mount(FormEdit, propsData())
+        .mount(FormEdit, {
+          propsData: { projectId: '1' },
+          requestData: {
+            form: new Form(testData.extendedForms.createPast(1).last())
+          }
+        })
         .request(selectDifferentState)
         .respondWithSuccess()
         .beforeEachResponse(component =>
@@ -56,8 +60,7 @@ describe('FormEdit', () => {
 
     it('shows a success message', () =>
       mockRoute('/projects/1/forms/x/settings')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())

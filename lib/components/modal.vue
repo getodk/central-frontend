@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div class="modal-body">
-          <alert v-bind="alert" @close="alert.state = false"/>
+          <alert/>
           <slot name="body"></slot>
         </div>
       </div>
@@ -33,10 +33,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { blankAlert, hideAncestorAlerts } from '../alert';
+import Alert from './alert.vue';
 
 export default {
   name: 'Modal',
+  components: { Alert },
   props: {
     state: {
       type: Boolean,
@@ -57,7 +58,6 @@ export default {
     const id = this.$uniqueId();
     return {
       titleId: `modal-title${id}`,
-      alert: blankAlert(),
       mousedownOutsideDialog: false
     };
   },
@@ -67,12 +67,24 @@ export default {
       // possible for the modal to hide without communicating that change to its
       // parent component. See toggle() for more details.
       return this.backdrop ? 'static' : 'false';
+    },
+    stateAndAlertAt() {
+      return [this.state, this.$store.state.alert.at];
     }
   },
   watch: {
     state(newState) {
-      if (newState) hideAncestorAlerts(this);
       this.toggle(newState);
+    },
+    // Hides the alert when this.state changes. We use a strategy similar to the
+    // one here: https://github.com/vuejs/vue/issues/844.
+    stateAndAlertAt([newState, newAlertAt], [oldState, oldAlertAt]) {
+      if (newState === oldState) return;
+      // If the modal is being hidden, and the alert has also changed, do not
+      // hide the alert: if the alert is visible, then #app-alert will be shown.
+      // This allows the modal to display an alert after it is hidden.
+      if (!newState && newAlertAt !== oldAlertAt) return;
+      if (this.$store.state.alert.state) this.$store.commit('hideAlert');
     }
   },
   mounted() {

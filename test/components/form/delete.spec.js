@@ -18,22 +18,27 @@ describe('FormDelete', () => {
   beforeEach(mockLogin);
 
   it('opens the modal upon button click', () => {
-    const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { projectId: '1', form };
-    const page = mountAndMark(FormSettings, { propsData });
+    const page = mountAndMark(FormSettings, {
+      propsData: { projectId: '1' },
+      requestData: {
+        form: new Form(testData.extendedForms.createPast(1).last())
+      }
+    });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
       .then(() => page.first(FormDelete).getProp('state').should.be.true());
   });
 
-  it('standard button thinking things', () => {
-    const form = new Form(testData.extendedForms.createPast(1).last());
-    const propsData = { projectId: '1', form };
-    return mockHttp()
-      .mount(FormDelete, { propsData })
+  it('standard button thinking things', () =>
+    mockHttp()
+      .mount(FormDelete, {
+        propsData: { projectId: '1' },
+        requestData: {
+          form: new Form(testData.extendedForms.createPast(1).last())
+        }
+      })
       .request(confirmDelete)
-      .standardButton('.btn-danger');
-  });
+      .standardButton('.btn-danger'));
 
   describe('after successful response', () => {
     let app;
@@ -42,8 +47,7 @@ describe('FormDelete', () => {
       testData.extendedForms.createPast(2);
       const { xmlFormId } = testData.extendedForms.first();
       return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
-        .respondWithData(() => testData.simpleProjects.last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.last())
         .respondWithData(() => testData.extendedForms.first())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(component => {

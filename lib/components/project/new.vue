@@ -60,9 +60,14 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       name: ''
     };
+  },
+  watch: {
+    state(state) {
+      if (!state) this.name = '';
+    }
   },
   methods: {
     focusInput() {
@@ -71,8 +76,6 @@ export default {
     submit() {
       this.post('/projects', { name: this.name })
         .then(({ data }) => {
-          this.$alert().blank();
-          this.name = '';
           this.$emit('success', data);
         })
         .catch(() => {});

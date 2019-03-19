@@ -17,11 +17,10 @@ describe('FormOverview', () => {
         }));
 
     it('redirects the user back after login', () => {
-      const project = testData.simpleProjects.createPast(1).last();
+      const project = testData.extendedProjects.createPast(1).last();
       const form = testData.extendedForms.createPast(1).last();
       return mockRouteThroughLogin(overviewPath(form))
         .respondWithData(() => project)
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(app => {
@@ -40,8 +39,7 @@ describe('FormOverview', () => {
       formIsOpen = true,
       fieldKeyCount = 0
     }) => {
-      testData.extendedProjects.createPast(1);
-      testData.extendedFieldKeys.createPast(fieldKeyCount);
+      testData.extendedProjects.createPast(1, { appUsers: fieldKeyCount });
       const state = formIsOpen
         ? 'open'
         : faker.random.arrayElement(['closing', 'closed']);
@@ -54,8 +52,7 @@ describe('FormOverview', () => {
         );
       }
       return mockRoute(overviewPath(testData.extendedForms.last()))
-        .respondWithData(() => testData.simpleProjects.last())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => testData.extendedProjects.last())
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted());
     };

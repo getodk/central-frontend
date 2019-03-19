@@ -14,71 +14,28 @@ except according to the terms contained in the LICENSE file.
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
-    <navbar v-show="firstNavigationConfirmed" :session="session"/>
-    <alert id="app-alert" v-bind="alert" @close="alert.state = false"/>
+    <navbar v-show="firstNavigationConfirmed"/>
+    <alert id="app-alert"/>
     <div class="container-fluid">
-      <router-view @update:session="updateSession"/>
+      <router-view/>
     </div>
   </div>
 </template>
 
 <script>
+import Alert from './alert.vue';
 import Navbar from './navbar.vue';
-import { blankAlert } from '../alert';
-import { routerState } from '../router';
 
 export default {
   name: 'App',
-  components: { Navbar },
-  data() {
-    return {
-      /* Vue seems to trigger the initial navigation before creating App. If the
-      initial navigation is synchronous, Vue seems to confirm the navigation
-      before creating App -- in which case firstNavigationConfirmed will be
-      initialized to true and the $route watcher will not be called until the
-      user navigates elsewhere. However, if the initial navigation is
-      asynchronous, Vue seems to create App before waiting to confirm the
-      navigation. In that case, firstNavigationConfirmed will be initialized to
-      false and the $route watcher will be called once the initial navigation is
-      confirmed. */
-      firstNavigationConfirmed: routerState.navigations.first.confirmed,
-      /*
-      this.$session is not a reactive property, so we store a copy of it here in
-      order to pass it to Navbar. This copy can change in one of two ways:
-
-        1. The router changes $session along with $route. App watches for
-           changes to $route, which is a reactive property.
-        2. The router view changes $session, then notes the change by triggering
-           an update:session event.
-
-      Between the router, session, and alert, App is doing a fair amount of
-      global state management at this point. We may end up wanting to implement
-      a more comprehensive state management strategy.
-      */
-      session: this.$session,
-      alert: blankAlert()
-    };
-  },
+  components: { Alert, Navbar },
   computed: {
-    routeAndAlert() {
-      return [this.$route, this.alert];
-    }
-  },
-  watch: {
-    $route() {
-      this.firstNavigationConfirmed = true;
-      this.session = this.$session;
-    },
-    // Using a strategy similar to the one here:
-    // https://github.com/vuejs/vue/issues/844
-    routeAndAlert([currentRoute, currentAlert], [previousRoute, previousAlert]) {
-      // If both the route and alert have changed, the router view will be
-      // updated, and if the new alert is visible, it will be shown. On the
-      // other hand, if only the route has changed, then if there is an alert
-      // currently visible, it will be hidden.
-      if (currentRoute !== previousRoute && currentAlert === previousAlert &&
-        this.alert.state)
-        this.alert.state = false;
+    // Vue seems to trigger the initial navigation before creating App. If the
+    // initial navigation is synchronous, Vue seems to confirm the navigation
+    // before creating App. However, if the initial navigation is asynchronous,
+    // Vue seems to create App before waiting to confirm the navigation.
+    firstNavigationConfirmed() {
+      return this.$store.state.router.navigations.first.confirmed;
     }
   },
   mounted() {
@@ -87,11 +44,6 @@ export default {
     $(this.$refs.app).on('click', 'a.disabled', (event) => {
       event.preventDefault();
     });
-  },
-  methods: {
-    updateSession() {
-      this.session = this.$session;
-    }
   }
 };
 </script>
@@ -130,6 +82,10 @@ export default {
   &.alert-danger {
     border-color: $color-danger;
   }
+}
+
+body.modal-open #app-alert {
+  display: none;
 }
 
 

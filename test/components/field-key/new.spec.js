@@ -1,5 +1,4 @@
 import FieldKeyNew from '../../../lib/components/field-key/new.vue';
-import MaybeData from '../../../lib/maybe-data';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
@@ -15,7 +14,8 @@ describe('FieldKeyNew', () => {
   describe('modal', () => {
     it('is initially hidden', () =>
       mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.simpleProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
         .afterResponses(app => {
           app.first(FieldKeyNew).getProp('state').should.be.false();
@@ -24,7 +24,8 @@ describe('FieldKeyNew', () => {
     describe('after button click', () => {
       it('modal is shown', () =>
         mockRoute('/projects/1/app-users')
-          .respondWithData(() => testData.simpleProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponses(clickCreateButton)
           .then(app => {
@@ -33,7 +34,8 @@ describe('FieldKeyNew', () => {
 
       it('focuses the nickname input', () =>
         mockRoute('/projects/1/app-users', { attachToDocument: true })
-          .respondWithData(() => testData.simpleProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
           .afterResponses(clickCreateButton)
           .then(app => {
@@ -43,13 +45,10 @@ describe('FieldKeyNew', () => {
   });
 
   it('includes the project name in the first option of the access field', () => {
-    const project = testData.simpleProjects.createPast(1).last();
+    const project = testData.extendedProjects.createPast(1).last();
     const modal = mountAndMark(FieldKeyNew, {
-      propsData: {
-        projectId: project.id.toString(),
-        maybeProject: MaybeData.success(project),
-        state: false
-      }
+      propsData: { projectId: project.id.toString(), state: false },
+      requestData: { project }
     });
     const text = modal.first('option').text().trim().iTrim();
     text.should.equal(`${project.name} Forms`);
@@ -58,12 +57,8 @@ describe('FieldKeyNew', () => {
   it('standard button thinking things', () =>
     mockHttp()
       .mount(FieldKeyNew, {
-        propsData: {
-          projectId: '1',
-          maybeProject:
-            MaybeData.success(testData.simpleProjects.createPast(1).last()),
-          state: false
-        }
+        propsData: { projectId: '1', state: false },
+        requestData: { project: testData.extendedProjects.createPast(1).last() }
       })
       .request(modal => submitForm(modal, 'form', [
         ['input', testData.extendedFieldKeys.createNew().displayName]
@@ -73,7 +68,8 @@ describe('FieldKeyNew', () => {
   describe('after successful submit', () => {
     let app;
     beforeEach(() => mockRoute('/projects/1/app-users', { attachToDocument: true })
-      .respondWithData(() => testData.simpleProjects.createPast(1).last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
       .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
       .afterResponses(component => {
         app = component;

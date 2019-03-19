@@ -18,10 +18,7 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
-              <option>
-                {{ maybeProject.success ? maybeProject.data.name : '' }}
-                Forms
-              </option>
+              <option>{{ project != null ? project.name : '' }} Forms</option>
               <option disabled>
                 More options available soon (to choose particular Forms)
               </option>
@@ -76,8 +73,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FieldKey from '../../presenters/field-key';
-import MaybeData from '../../maybe-data';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
@@ -87,10 +84,6 @@ export default {
       type: String,
       required: true
     },
-    maybeProject: {
-      type: MaybeData,
-      required: true
-    },
     state: {
       type: Boolean,
       default: false
@@ -98,13 +91,22 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       // There are two steps/screens in the app user creation process. `step`
       // indicates the current step. Note that it is 1-indexed.
       step: 1,
       nickname: '',
       created: null
     };
+  },
+  computed: requestData(['project']),
+  watch: {
+    state(state) {
+      if (!state) return;
+      this.step = 1;
+      this.nickname = '';
+      this.created = null;
+    }
   },
   methods: {
     focusNicknameInput() {
@@ -124,10 +126,7 @@ export default {
         .catch(() => {});
     },
     complete() {
-      this.$emit('hide');
       this.$emit('success', this.created);
-      this.step = 1;
-      this.created = null;
     },
     hideOrComplete() {
       if (this.created == null)

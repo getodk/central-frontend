@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <button :disabled="disabled" type="button"
+  <button :disabled="disabled || refreshing" type="button"
     class="btn btn-secondary btn-refresh" @click="refresh">
     <span class="icon-refresh"></span>Refresh list
-    <spinner :state="refreshStatus === 'inProgress'"/>
+    <spinner :state="refreshing"/>
   </button>
 </template>
 
@@ -21,39 +21,32 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'RefreshButton',
   props: {
-    // true if the parent component is fetching data -- either after clicking
-    // the refresh button or through some other process -- and false if not.
-    fetching: {
+    // Configs for this.$store.dispatch('get')
+    configs: {
+      type: Array,
+      required: true
+    },
+    disabled: {
       type: Boolean,
       default: false
     }
   },
-  data: () => ({
-    // The refresh status starts as 'notInProgress'. Once the refresh button is
-    // clicked, the status moves to 'triggered'. Then, once `fetching` changes
-    // to `true`, the status moves to 'inProgress'. Once `fetching` changes back
-    // to `false`, the status reverts back to 'notInProgress'.
-    refreshStatus: 'notInProgress'
-  }),
-  computed: {
-    disabled() {
-      return this.fetching || this.refreshStatus === 'triggered';
-    }
-  },
-  watch: {
-    fetching() {
-      if (this.refreshStatus === 'notInProgress') return;
-      this.refreshStatus = this.refreshStatus === 'triggered'
-        ? 'inProgress'
-        : 'notInProgress';
-    }
+  data() {
+    return {
+      refreshing: false
+    };
   },
   methods: {
     refresh() {
-      this.refreshStatus = 'triggered';
-      // Once this event is emitted, the parent component should toggle
-      // `fetching`.
-      this.$emit('refresh');
+      this.refreshing = true;
+      this.$store.dispatch('get', this.configs.map(config => ({
+        clear: false,
+        ...config
+      })))
+        .catch(() => {})
+        .finally(() => {
+          this.refreshing = false;
+        });
     }
   }
 };

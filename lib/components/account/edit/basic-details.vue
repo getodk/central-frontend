@@ -35,26 +35,28 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../../mixins/request';
-import { logIn } from '../../../session';
 
 export default {
   name: 'FormEditBasicDetails',
   mixins: [request()],
   data() {
+    const { email, displayName } = this.$store.state.request.data.currentUser;
     return {
-      requestId: null,
-      email: this.$session.user.email,
-      displayName: this.$session.user.displayName
+      awaitingResponse: false,
+      email,
+      displayName
     };
   },
   methods: {
     submit() {
+      const { id } = this.$store.state.request.data.currentUser;
       const data = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${this.$session.user.id}`, data)
+      this.patch(`/users/${id}`, data)
         .then(response => {
-          const { token, expiresAt } = this.$session;
-          logIn({ token, expiresAt }, response.data);
-          this.$emit('update:session');
+          this.$store.commit('setData', {
+            key: 'currentUser',
+            value: response.data
+          });
           this.$alert().success('Success! Your user details have been updated.');
         })
         .catch(() => {});

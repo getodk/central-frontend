@@ -116,7 +116,7 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       // The step in the wizard (1-indexed)
       step: 1,
       passphrase: '',
@@ -125,12 +125,17 @@ export default {
       confirmationText: ''
     };
   },
+  watch: {
+    state(state) {
+      if (!state) return;
+      this.step = 1;
+      this.passphrase = '';
+      this.googleUrl = null;
+      this.authToken = null;
+      this.confirmationText = '';
+    }
+  },
   methods: {
-    problemToAlert(problem) {
-      return this.step !== 3
-        ? problem.message
-        : `${problem.message} Please try again, and go to the community forum if the problem continues.`;
-    },
     focusPassphraseInput() {
       this.$refs.passphrase.focus();
     },
@@ -144,17 +149,8 @@ export default {
         })
         .catch(() => {});
     },
-    reset() {
-      this.$alert().blank();
-      this.step = 1;
-      this.passphrase = '';
-      this.googleUrl = null;
-      this.authToken = null;
-      this.confirmationText = '';
-    },
     cancel() {
       this.$emit('hide');
-      this.reset();
     },
     openGoogle() {
       const size = window.innerWidth >= GOOGLE_BREAKPOINT
@@ -172,13 +168,15 @@ export default {
       this.$nextTick(() => this.$refs.confirmationText.focus());
     },
     verify() {
-      const data = { code: this.confirmationText };
-      const headers = { Authorization: `Bearer ${this.authToken}` };
-      this
-        .post('/config/backups/verify', data, { headers })
+      this.request({
+        method: 'POST',
+        url: '/config/backups/verify',
+        headers: { Authorization: `Bearer ${this.authToken}` },
+        data: { code: this.confirmationText },
+        problemToAlert: ({ message }) =>
+          `${message} Please try again, and go to the community forum if the problem continues.`
+      })
         .then(() => {
-          this.$emit('hide');
-          this.reset();
           this.$emit('success');
         })
         .catch(() => {});

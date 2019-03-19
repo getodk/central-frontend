@@ -5,7 +5,7 @@ import FormShow from '../../../../lib/components/form/show.vue';
 import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import Spinner from '../../../../lib/components/spinner.vue';
 import testData from '../../../data';
-import { formatDate, uniqueSequence } from '../../../../lib/util';
+import { formatDate, uniqueSequence } from '../../../../lib/util/util';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';
@@ -23,14 +23,13 @@ describe('FormSubmissionList', () => {
         }));
 
     it('after login, user is redirected back', () => {
-      const project = testData.simpleProjects.createPast(1).last();
+      const project = testData.extendedProjects.createPast(1).last();
       const form = testData.extendedForms
         .createPast(1, { submissions: 0 })
         .last();
       const path = submissionsPath(form);
       return mockRouteThroughLogin(path)
         .respondWithData(() => project)
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => form._schema)
@@ -42,7 +41,7 @@ describe('FormSubmissionList', () => {
 
     it('updates the component after the route updates', () => {
       mockLogin();
-      const project = testData.simpleProjects.createPast(1).last();
+      const project = testData.extendedProjects.createPast(1).last();
       const forms = testData.extendedForms
         .createPast(1, { xmlFormId: 'a', name: 'a', submissions: 1 })
         .createPast(1, { xmlFormId: 'b', name: 'b', submissions: 1 })
@@ -53,11 +52,10 @@ describe('FormSubmissionList', () => {
         .createPast(1, { form: forms[1] });
       return mockRoute(submissionsPath(forms[0]))
         .beforeEachResponse((app, request, index) => {
-          if (index === 4)
-            request.url.should.equal('/projects/1/forms/a.schema.json?flatten=true');
+          if (index === 3)
+            request.url.should.equal('/v1/projects/1/forms/a.schema.json?flatten=true');
         })
         .respondWithData(() => project)
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => forms[0])
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => forms[0]._schema)
@@ -66,7 +64,7 @@ describe('FormSubmissionList', () => {
         .route(submissionsPath(forms[1]))
         .beforeEachResponse((app, request, index) => {
           if (index === 2)
-            request.url.should.equal('/projects/1/forms/b.schema.json?flatten=true');
+            request.url.should.equal('/v1/projects/1/forms/b.schema.json?flatten=true');
         })
         .respondWithData(() => forms[1])
         .respondWithData(() => testData.extendedFormAttachments.sorted())
@@ -89,6 +87,7 @@ describe('FormSubmissionList', () => {
       chunkSizes = [],
       scrolledToBottom = true
     ) => {
+      // Create test data.
       if (testData.extendedForms.size === 0) {
         if (testData.extendedProjects.size === 0)
           testData.extendedProjects.createPast(1);
@@ -100,15 +99,16 @@ describe('FormSubmissionList', () => {
       if (form().submissions !== count)
         throw new Error('form().submissions and count are inconsistent');
       testData.extendedSubmissions.createPast(count, factoryOptions);
+
       const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
         .mount(FormSubmissionList, {
           propsData: {
             projectId: '1',
-            form: new Form(form()),
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom
-          }
+          },
+          requestData: { form: new Form(form()) }
         })
         .respondWithData(() => form()._schema)
         .respondWithData(() => testData.submissionOData(small, 0));
@@ -457,8 +457,7 @@ describe('FormSubmissionList', () => {
           testData.extendedProjects.createPast(1);
           testData.extendedForms.createPast(1);
           return mockRoute(submissionsPath(form()))
-            .respondWithData(() => testData.simpleProjects.last())
-            .respondWithData(() => testData.extendedFieldKeys.sorted())
+            .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .respondWithData(() => form()._schema)
@@ -691,8 +690,7 @@ describe('FormSubmissionList', () => {
           testData.extendedSubmissions.createPast(submissionCount);
           const [small = 250, large = 1000] = chunkSizes;
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
-            .respondWithData(() => testData.simpleProjects.last())
-            .respondWithData(() => testData.extendedFieldKeys.sorted())
+            .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
             .afterResponses(app => {
@@ -715,8 +713,8 @@ describe('FormSubmissionList', () => {
           loadFormOverview(10)
             .afterResponses(app => {
               const p = app.find('.form-overview-step')[2].find('p')[1];
-              p.text().should.containEql('10');
-              p.text().should.not.containEql('11');
+              p.text().should.containEql('10\n');
+              p.text().should.not.containEql('11\n');
             })
             .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => form()._schema)
@@ -728,8 +726,8 @@ describe('FormSubmissionList', () => {
             .route(`/projects/1/forms/${encodedFormId()}`)
             .then(app => {
               const p = app.find('.form-overview-step')[2].find('p')[1];
-              p.text().should.containEql('11');
-              p.text().should.not.containEql('10');
+              p.text().should.containEql('11\n');
+              p.text().should.not.containEql('10\n');
             }));
 
         it('updates the count in the download button', () =>

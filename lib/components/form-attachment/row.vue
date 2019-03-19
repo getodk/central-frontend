@@ -38,7 +38,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util';
+import { formatDate } from '../../util/util';
+import { requestData } from '../../store/modules/request';
 
 const TYPES = {
   image: 'Image',
@@ -52,10 +53,6 @@ export default {
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    form: {
-      type: Object,
       required: true
     },
     attachment: {
@@ -77,6 +74,7 @@ export default {
     }
   },
   computed: {
+    ...requestData(['form']),
     targeted() {
       const targetedByDragover = this.dragoverAttachment != null &&
         this.attachment.name === this.dragoverAttachment.name;

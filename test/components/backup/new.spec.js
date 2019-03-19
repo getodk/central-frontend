@@ -99,7 +99,8 @@ describe('BackupNew', () => {
 
     it('backup status is updated', () =>
       completeSetup(BackupList).then(page => {
-        page.data().backups.status.should.not.equal('notConfigured');
+        const { backupsConfig } = page.vm.$store.state.request.data;
+        backupsConfig.status.should.not.equal('notConfigured');
       }));
 
     it('success message is shown', () =>

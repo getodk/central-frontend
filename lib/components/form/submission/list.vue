@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <float-row class="table-actions">
       <template slot="left">
-        <refresh-button :fetching="awaitingResponse" @refresh="refresh"/>
+        <refresh-button :configs="refreshConfigs"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <form-submission-row v-for="(submission, index) in submissions"
-            :key="submission.__id" :project-id="projectId" :form="form"
+            :key="submission.__id" :project-id="projectId"
             :submission="submission" :row-number="originalCount - index"/>
         </tbody>
       </table>
@@ -78,37 +78,26 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div id="form-submission-list-message-text">{{ message.text }}</div>
     </div>
-    <form-submission-analyze :project-id="projectId" :form="form"
-      :state="analyze.state" @hide="hideModal('analyze')"/>
+    <form-submission-analyze :project-id="projectId" :state="analyze.state"
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
 <script>
-import Form from '../../../presenters/form';
 import FormSubmissionAnalyze from './analyze.vue';
 import FormSubmissionRow from './row.vue';
 import modal from '../../../mixins/modal';
-import request from '../../../mixins/request';
+import { requestData } from '../../../store/modules/request';
 
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
   name: 'FormSubmissionList',
   components: { FormSubmissionAnalyze, FormSubmissionRow },
-  mixins: [
-    modal('analyze'),
-    request()
-  ],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
+  mixins: [modal('analyze')],
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    form: {
-      type: Form,
       required: true
     },
     chunkSizes: {
@@ -127,8 +116,6 @@ export default {
   },
   data() {
     return {
-      requestId: null,
-      schema: null,
       submissions: null,
       instanceIds: new Set(),
       // The count of submissions at the time of the initial fetch or last
@@ -136,7 +123,7 @@ export default {
       originalCount: null,
       // The number of chunks that have been fetched since the initial fetch or
       // last refresh
-      chunks: 0,
+      chunkCount: 0,
       message: null,
       analyze: {
         state: false
@@ -144,6 +131,20 @@ export default {
     };
   },
   computed: {
+    /* We use the 'submissionsChunk' request key to store the latest chunk of
+    submissions that we have fetched. 'submissionsChunk' is only used in this
+    component, and it feels a little unnecessary to store this data in the
+    store. However, the way we have it set up right now, we need
+    'submissionsChunk' to be its own request key so that we can determine
+    whether the associated request is loading. */
+    ...requestData(['form', 'schema', 'submissionsChunk']),
+    refreshConfigs() {
+      return [{
+        key: 'submissionsChunk',
+        url: this.chunkURL({ top: this.chunkSizes.small }),
+        success: this.processChunk
+      }];
+    },
     downloadHref() {
       return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
     },
@@ -202,51 +203,6 @@ export default {
     $(window).off('.form-submission-list');
   },
   methods: {
-    chunkURL({ top, skip = 0 }) {
-      const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
-      return `/projects/${this.projectId}/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
-    },
-    processChunk({ data }, replace) {
-      if (data['@odata.count'] !== this.form.submissions)
-        this.$emit('update:submissions', data['@odata.count']);
-      if (replace) {
-        this.submissions = data.value != null ? data.value : [];
-        this.instanceIds.clear();
-        for (const submission of this.submissions)
-          this.instanceIds.add(submission.__id);
-        this.originalCount = data['@odata.count'];
-        this.chunks = 1;
-      } else {
-        if (data.value != null) {
-          const lastSubmission = this.submissions[this.submissions.length - 1];
-          const lastSubmissionDate = lastSubmission.__system.submissionDate;
-          for (const submission of data.value) {
-            // If one or more submissions have been created since the initial
-            // fetch or last refresh, then the latest chunk of submissions may
-            // include a newly created submission or a submission that is
-            // already shown in the table.
-            if (submission.__system.submissionDate <= lastSubmissionDate &&
-              !this.instanceIds.has(submission.__id)) {
-              this.submissions.push(submission);
-              this.instanceIds.add(submission.__id);
-            }
-          }
-        }
-        this.chunks += 1;
-      }
-      const remaining = this.originalCount - this.submissions.length;
-      // A negative value should be rare or impossible.
-      if (remaining <= 0)
-        this.message = null;
-      else {
-        this.message = {
-          text: remaining === 1
-            ? '1 row remains.'
-            : `${remaining.toLocaleString()} rows remain.`,
-          spinner: false
-        };
-      }
-    },
     loadingMessageText({ top, skip = 0 }) {
       if (skip === 0) {
         if (this.form.submissions > top) {
@@ -266,50 +222,110 @@ export default {
         ? 'Loading the last submission…'
         : `Loading the last ${remaining.toLocaleString()} submissions…`;
     },
+    chunkURL({ top, skip = 0 }) {
+      const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
+      return `/projects/${this.projectId}/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
+    },
+    processChunk(replace = true) {
+      const chunk = this.submissionsChunk;
+      if (chunk['@odata.count'] !== this.form.submissions) {
+        // We update this.form.submissions, but not this.form.lastSubmission,
+        // nor lastSubmission for the project.
+        this.$store.commit('setData', {
+          key: 'form',
+          value: this.form.with({ submissions: chunk['@odata.count'] })
+        });
+      }
+      if (replace) {
+        this.submissions = chunk.value != null ? chunk.value : [];
+        this.instanceIds.clear();
+        for (const submission of this.submissions)
+          this.instanceIds.add(submission.__id);
+        this.originalCount = chunk['@odata.count'];
+        this.chunkCount = 1;
+      } else {
+        if (chunk.value != null) {
+          const lastSubmission = this.submissions[this.submissions.length - 1];
+          const lastSubmissionDate = lastSubmission.__system.submissionDate;
+          for (const submission of chunk.value) {
+            // If one or more submissions have been created since the initial
+            // fetch or last refresh, then the latest chunk of submissions may
+            // include a newly created submission or a submission that is
+            // already shown in the table.
+            if (submission.__system.submissionDate <= lastSubmissionDate &&
+              !this.instanceIds.has(submission.__id)) {
+              this.submissions.push(submission);
+              this.instanceIds.add(submission.__id);
+            }
+          }
+        }
+        this.chunkCount += 1;
+      }
+      const remaining = this.originalCount - this.submissions.length;
+      // A negative value should be rare or impossible.
+      if (remaining <= 0)
+        this.message = null;
+      else {
+        this.message = {
+          text: remaining === 1
+            ? '1 row remains.'
+            : `${remaining.toLocaleString()} rows remain.`,
+          spinner: false
+        };
+      }
+    },
     fetchSchemaAndFirstChunk() {
-      const schemaRequest = this.$http
-        .get(`/projects/${this.projectId}/forms/${this.form.encodedId()}.schema.json?flatten=true`);
-      const submissionsRequest = this.$http
-        .get(this.chunkURL({ top: this.chunkSizes.small }));
-      this.requestAll([schemaRequest, submissionsRequest])
-        .then(([schema, submissions]) => {
-          this.schema = schema.data;
-          this.processChunk(submissions, true);
-        })
-        .catch(() => {});
       this.message = {
         text: this.loadingMessageText({ top: this.chunkSizes.small }),
         spinner: true
       };
-    },
-    refresh() {
-      this.get(this.chunkURL({ top: this.chunkSizes.small }))
-        .then(submissions => this.processChunk(submissions, true))
-        .catch(() => {});
+      this.$store.dispatch('get', [
+        {
+          key: 'schema',
+          url: `/projects/${this.projectId}/forms/${this.form.encodedId()}.schema.json?flatten=true`
+        },
+        {
+          key: 'submissionsChunk',
+          url: this.chunkURL({ top: this.chunkSizes.small }),
+          success: this.processChunk
+        }
+      ])
+        .catch(() => {
+          this.message = null;
+        });
     },
     // Returns the value of the $skip query parameter for skipping the specified
     // number of chunks.
-    skip(chunks) {
-      if (chunks <= MAX_SMALL_CHUNKS) return chunks * this.chunkSizes.small;
+    skip(chunkCount) {
+      if (chunkCount <= MAX_SMALL_CHUNKS)
+        return chunkCount * this.chunkSizes.small;
       return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
-        ((chunks - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
+        ((chunkCount - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
-      const skip = this.skip(this.chunks);
-      if (skip >= this.form.submissions || this.awaitingResponse ||
+      const skip = this.skip(this.chunkCount);
+      if (skip >= this.form.submissions ||
+        this.$store.getters.loading('submissionsChunk') ||
         !this.scrolledToBottom())
         return;
-      const top = this.chunks < MAX_SMALL_CHUNKS
+      const top = this.chunkCount < MAX_SMALL_CHUNKS
         ? this.chunkSizes.small
         : this.chunkSizes.large;
-      this.get(this.chunkURL({ top, skip }))
-        .then(submissions => this.processChunk(submissions, false))
-        .catch(() => {});
       this.message = {
         text: this.loadingMessageText({ top, skip }),
         spinner: true
       };
+      this.$store.dispatch('get', [{
+        key: 'submissionsChunk',
+        url: this.chunkURL({ top, skip }),
+        success: () => {
+          this.processChunk(false);
+        }
+      }])
+        .catch(() => {
+          this.message = null;
+        });
     }
   }
 };

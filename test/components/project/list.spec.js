@@ -1,7 +1,7 @@
 import pluralize from 'pluralize';
 
 import testData from '../../data';
-import { formatDate } from '../../../lib/util';
+import { formatDate } from '../../../lib/util/util';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../event';

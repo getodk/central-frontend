@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head>
-      <template slot="title">{{ displayName }}</template>
+      <template slot="title">{{ currentUser.displayName }}</template>
     </page-head>
     <page-body>
       <div class="row">
         <div class="col-xs-7">
-          <form-edit-basic-details @update:session="afterUpdateSession"/>
+          <form-edit-basic-details/>
         </div>
         <div class="col-xs-5">
           <form-edit-password/>
@@ -30,20 +30,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormEditBasicDetails from './edit/basic-details.vue';
 import FormEditPassword from './edit/password.vue';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'AccountEdit',
   components: { FormEditBasicDetails, FormEditPassword },
-  data() {
-    return {
-      displayName: this.$session.user.displayName
-    };
-  },
-  methods: {
-    afterUpdateSession() {
-      this.displayName = this.$session.user.displayName;
-      this.$emit('update:session');
-    }
-  }
+  computed: requestData(['currentUser'])
 };
 </script>

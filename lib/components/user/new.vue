@@ -61,9 +61,14 @@ export default {
   },
   data() {
     return {
-      requestId: null,
+      awaitingResponse: false,
       email: ''
     };
+  },
+  watch: {
+    state(state) {
+      if (!state) this.email = '';
+    }
   },
   methods: {
     focusEmailInput() {
@@ -73,9 +78,6 @@ export default {
       this
         .post('/users', { email: this.email })
         .then(({ data }) => {
-          this.$emit('hide');
-          this.$alert().blank();
-          this.email = '';
           this.$emit('success', data);
         })
         .catch(() => {});

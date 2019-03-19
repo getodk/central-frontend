@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="backup-list">
-    <loading v-if="backups == null" :state="awaitingResponse"/>
-    <div v-else class="panel panel-simple">
+    <loading :state="$store.getters.initiallyLoading(['backupsConfig'])"/>
+    <div v-if="backups != null" class="panel panel-simple">
       <div class="panel-heading">
         <h1 class="panel-title">Current Status</h1>
       </div>
@@ -97,87 +97,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { DateTime } from 'luxon';
-
 import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
+import BackupsConfig from '../../presenters/backups-config';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
-import { formatDate } from '../../util';
-
-// The duration for which a backup attempt is considered "recent": if the server
-// returns no log of a recent backup attempt, that means that there have been no
-// backup attempts for that duration into the past. If the server returns no log
-// of a recent backup attempt, and if backups were configured more than that
-// duration into the past (that is, if the latest config is itself not recent),
-// then the user is informed that something has gone wrong.
-const RECENT_DURATION = { days: 3 };
-
-class Backups {
-  constructor(data = {}) {
-    this._setAt = data.setAt;
-    this._recent = data.recent != null
-      ? this.constructor.recentForConfig(data)
-      : null;
-  }
-
-  // recentForConfig() returns the recent backup attempts for the current
-  // config.
-  static recentForConfig({ setAt, recent }) {
-    const result = [];
-    for (const attempt of recent) {
-      if (attempt.loggedAt < setAt) {
-        // Any attempts that follow are for a previous config.
-        break;
-      }
-
-      /* This will evaluate to `false` only if an attempt for a previous config
-      was logged after the current config was created, which seems unlikely. A
-      failed attempt might not have a configSetAt property, which means that if
-      a failed attempt was logged after the current config was created, we might
-      not be able to determine whether the attempt corresponds to the current
-      config or (again unlikely) to a previous one. We assume that an attempt
-      without a configSetAt property corresponds to the current config. */
-      if (attempt.details.configSetAt === setAt ||
-        attempt.details.configSetAt == null)
-        result.push(attempt);
-    }
-    return result;
-  }
-
-  static notConfigured() { return new Backups(); }
-
-  static fromResponse(response) {
-    return response.status !== 404
-      ? new Backups(response.data)
-      : Backups.notConfigured();
-  }
-
-  get setAt() { return this._setAt; }
-  get recent() { return this._recent; }
-
-  get status() {
-    if (this._setAt == null) return 'notConfigured';
-    if (this._recent.length === 0) {
-      return DateTime.fromISO(this._setAt) < DateTime.local().minus(RECENT_DURATION)
-        ? 'somethingWentWrong'
-        : 'neverRun';
-    }
-    return this._recent[0].details.success ? 'success' : 'somethingWentWrong';
-  }
-}
-
-const validateBackupsResponseStatus = (status) =>
-  (status >= 200 && status < 300) || status === 404;
+import { formatDate } from '../../util/util';
 
 export default {
   name: 'BackupList',
   components: { BackupNew, BackupTerminate },
-  mixins: [modal(['newBackup', 'terminate']), request()],
+  mixins: [modal(['newBackup', 'terminate'])],
   data() {
     return {
-      requestId: null,
-      backups: null,
       newBackup: {
         state: false
       },
@@ -187,6 +118,9 @@ export default {
     };
   },
   computed: {
+    backups() {
+      return this.$store.state.request.data.backupsConfig;
+    },
     iconClass() {
       switch (this.backups.status) {
         case 'notConfigured':
@@ -209,29 +143,24 @@ export default {
   },
   methods: {
     fetchData() {
-      this.backups = null;
-      this
-        .get('/config/backups', { validateStatus: validateBackupsResponseStatus })
-        .then(response => {
-          this.backups = Backups.fromResponse(response);
-        })
-        .catch(() => {});
+      this.$store.dispatch('get', [{
+        key: 'backupsConfig',
+        url: '/config/backups',
+        validateStatus: (status) =>
+          (status >= 200 && status < 300) || status === 404
+      }]).catch(() => {});
     },
     afterCreate() {
-      this.$alert().success('Success! Automatic backups are now configured.');
       this.fetchData();
+      this.hideModal('newBackup');
+      this.$alert().success('Success! Automatic backups are now configured.');
     },
     afterTerminate() {
       this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
-      this.backups = Backups.notConfigured();
-    },
-    // The following methods are used in tests. (It does not seem otherwise
-    // possible to export them from this single file component.)
-    recentDate() {
-      return DateTime.local().minus(RECENT_DURATION).toJSDate();
-    },
-    recentForConfig(data) {
-      return Backups.recentForConfig(data);
+      this.$store.commit('setData', {
+        key: 'backupsConfig',
+        value: BackupsConfig.notConfigured()
+      });
     }
   }
 };

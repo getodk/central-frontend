@@ -1,6 +1,6 @@
 import { DateTime, Settings } from 'luxon';
 
-import { formatDate } from '../../lib/util';
+import { formatDate } from '../../lib/util/util';
 
 describe('util', () => {
   describe('formatDate()', () => {

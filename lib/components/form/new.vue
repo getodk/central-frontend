@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       fileIsOverDropZone: false,
-      requestId: null,
+      awaitingResponse: false,
       reading: false,
       filename: null,
       xml: null
@@ -97,6 +97,15 @@ export default {
       };
     }
   },
+  watch: {
+    state(state) {
+      if (state) return;
+      this.reading = false;
+      this.filename = null;
+      this.xml = null;
+      this.$refs.input.value = '';
+    }
+  },
   mounted() {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
@@ -107,14 +116,6 @@ export default {
     $(this.$refs.input).off('.form-new');
   },
   methods: {
-    problemToAlert(problem) {
-      if (problem.code === 400.5 && problem.details.table === 'forms' &&
-        problem.details.fields.length === 2 &&
-        problem.details.fields[0] === 'xmlFormId' &&
-        problem.details.fields[1] === 'version')
-        return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
-      return null;
-    },
     hide() {
       this.$emit('hide');
       const alert = this.$alert();
@@ -124,19 +125,23 @@ export default {
     readFile(files) {
       if (files.length === 0) return;
       this.reading = true;
+      const { currentRoute } = this.$store.state.router;
       const file = files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$alert().blank();
         this.filename = file.name;
         this.xml = event.target.result;
       };
       reader.onerror = () => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$alert().danger('Something went wrong while reading the file.');
         this.filename = null;
         this.xml = null;
       };
       reader.onloadend = () => {
+        if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$refs.input.value = '';
         this.reading = false;
       };
@@ -153,11 +158,21 @@ export default {
         this.$alert().info(NO_FILE_MESSAGE);
         return;
       }
-      const headers = { 'Content-Type': 'application/xml' };
-      this.post(`/projects/${this.projectId}/forms`, this.xml, { headers })
+      this.request({
+        method: 'POST',
+        url: `/projects/${this.projectId}/forms`,
+        headers: { 'Content-Type': 'application/xml' },
+        data: this.xml,
+        problemToAlert: ({ code, details }) => {
+          if (code === 400.5 && details.table === 'forms' &&
+            details.fields.length === 2 && details.fields[0] === 'xmlFormId' &&
+            details.fields[1] === 'version')
+            return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
+          return null;
+        }
+      })
         .then(({ data }) => {
-          this.filename = null;
-          this.xml = null;
+          // The `forms` property of the project is now likely out-of-date.
           this.$emit('success', new Form(data));
         })
         .catch(() => {});

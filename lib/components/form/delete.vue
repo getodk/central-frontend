@@ -36,8 +36,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDelete',
@@ -47,10 +47,6 @@ export default {
       type: String,
       required: true
     },
-    form: {
-      type: Form,
-      required: true
-    },
     state: {
       type: Boolean,
       default: false
@@ -58,15 +54,15 @@ export default {
   },
   data() {
     return {
-      requestId: null
+      awaitingResponse: false
     };
   },
+  computed: requestData(['form']),
   methods: {
     del() {
       this.delete(`/projects/${this.projectId}/forms/${this.form.encodedId()}`)
         .then(() => {
-          this.$emit('hide');
-          this.$emit('success');
+          this.$emit('success', this.form);
         })
         .catch(() => {});
     }

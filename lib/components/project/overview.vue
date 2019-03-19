@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
         <page-section id="project-overview-right-now">
           <span slot="heading">Right Now</span>
           <template slot="body">
-            <loading :state="maybeFieldKeys.awaiting || maybeForms.awaiting"/>
-            <template v-if="maybeFieldKeys.success && maybeForms.success">
+            <loading :state="$store.getters.initiallyLoading(['project', 'forms'])"/>
+            <template v-if="project != null && forms != null">
               <div>
                 <router-link :to="`/projects/${projectId}/app-users`"
                   class="project-overview-right-now-icon-container">
@@ -49,13 +49,13 @@ except according to the terms contained in the LICENSE file.
                 </router-link>
                 <div class="project-overview-right-now-count">
                   <router-link :to="`/projects/${projectId}/app-users`">
-                    {{ maybeFieldKeys.data.length }}
+                    {{ project.appUsers }}
                     <span class="icon-angle-right"></span>
                   </router-link>
                 </div>
                 <div class="project-overview-right-now-description">
                   <router-link :to="`/projects/${projectId}/app-users`">
-                    <strong>{{ $pluralize('App User', maybeFieldKeys.data.length) }}</strong>
+                    <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
                     who can use a data collection client to download and submit
                     Form data to this Project.
                   </router-link>
@@ -68,13 +68,12 @@ except according to the terms contained in the LICENSE file.
                 </a>
                 <div class="project-overview-right-now-count">
                   <a href="#" @click.prevent="scrollToForms">
-                    {{ maybeForms.data.length }}
-                    <span class="icon-angle-right"></span>
+                    {{ forms.length }} <span class="icon-angle-right"></span>
                   </a>
                 </div>
                 <div class="project-overview-right-now-description">
                   <a href="#" @click.prevent="scrollToForms">
-                    <strong>{{ $pluralize('Form', maybeForms.data.length) }}</strong>
+                    <strong>{{ $pluralize('Form', forms.length) }}</strong>
                     which can be downloaded and given as surveys on mobile
                     clients.
                   </a>
@@ -94,9 +93,8 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
-        <loading :state="maybeForms.awaiting"/>
-        <form-list v-if="maybeForms.success" :project-id="projectId"
-          :forms="maybeForms.data"/>
+        <loading :state="$store.getters.initiallyLoading(['forms'])"/>
+        <form-list v-if="forms != null" :project-id="projectId"/>
       </template>
     </page-section>
     <form-new :project-id="projectId" :state="newForm.state"
@@ -105,51 +103,44 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
-import MaybeData from '../../maybe-data';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
-  mixins: [modal('newForm'), request()],
-  // Setting this in order to ignore attributes from ProjectShow that are
-  // intended for other project components.
-  inheritAttrs: false,
+  mixins: [modal('newForm')],
   props: {
     projectId: {
       type: String,
-      required: true
-    },
-    maybeFieldKeys: {
-      type: MaybeData,
       required: true
     }
   },
   data() {
     return {
-      requestId: null,
-      maybeForms: null,
       newForm: {
         state: false
       }
     };
+  },
+  computed: requestData(['project', 'forms']),
+  watch: {
+    projectId: 'fetchData'
   },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.maybeGet({
-        maybeForms: {
-          url: `/projects/${this.projectId}/forms`,
-          extended: true,
-          transform: (data) => data.map(form => new Form(form))
-        }
-      });
+      // Note that we do not keep this.project.forms and this.forms.length in
+      // sync.
+      this.$store.dispatch('get', [{
+        key: 'forms',
+        url: `/projects/${this.projectId}/forms`,
+        extended: true
+      }]).catch(() => {});
     },
     scrollToForms() {
       const scrollTop = Math.round($('#project-overview-forms').offset().top);

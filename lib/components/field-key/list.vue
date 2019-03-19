@@ -24,9 +24,9 @@ except according to the terms contained in the LICENSE file.
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
-    <loading :state="maybeFieldKeys.awaiting"/>
-    <template v-if="maybeFieldKeys.success">
-      <p v-if="maybeFieldKeys.data.length === 0"
+    <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
+    <template v-if="fieldKeys != null">
+      <p v-if="fieldKeys.length === 0"
         id="field-key-list-empty-message">
         There are no App Users yet. You will need to create some to download
         Forms and submit data from your device.
@@ -43,19 +43,18 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
-          ensure that there will be no component reuse if maybeFieldKeys.data
-          changes. Such component reuse could add complexity around our use of
-          the Bootstrap plugin. -->
-          <field-key-row v-for="fieldKey of maybeFieldKeys.data"
-            :key="fieldKey.key" :field-key="fieldKey" :highlighted="highlighted"
+          ensure that there will be no component reuse if fieldKeys changes.
+          Such component reuse could add complexity around our use of the
+          Bootstrap plugin. -->
+          <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
+            :field-key="fieldKey" :highlighted="highlighted"
             @show-code="showPopover" @revoke="showRevoke"/>
         </tbody>
       </table>
     </template>
 
-    <field-key-new :project-id="projectId" :maybe-project="maybeProject"
-      :state="newFieldKey.state" @hide="hideModal('newFieldKey')"
-      @success="afterCreate"/>
+    <field-key-new :project-id="projectId" :state="newFieldKey.state"
+      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
     <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
       @success="afterRevoke"/>
   </div>
@@ -65,8 +64,8 @@ except according to the terms contained in the LICENSE file.
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
-import MaybeData from '../../maybe-data';
 import modal from '../../mixins/modal';
+import { requestData } from '../../store/modules/request';
 
 const POPOVER_CONTENT_TEMPLATE = `
   <div id="field-key-list-popover-content">
@@ -87,14 +86,6 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    maybeProject: {
-      type: MaybeData,
-      required: true
-    },
-    maybeFieldKeys: {
-      type: MaybeData,
-      required: true
     }
   },
   data() {
@@ -112,16 +103,21 @@ export default {
       }
     };
   },
+  computed: requestData(['fieldKeys']),
   watch: {
     projectId() {
+      this.fetchData();
       this.highlighted = null;
       this.hidePopover();
     },
-    maybeFieldKeys() {
+    fieldKeys() {
       this.enabledPopoverLinks = new Set();
       this.revoke.fieldKey = null;
       this.hidePopover();
     }
+  },
+  created() {
+    this.fetchData();
   },
   activated() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -131,6 +127,20 @@ export default {
     $('body').off('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
   methods: {
+    fetchData() {
+      this.$store.dispatch('get', [{
+        key: 'fieldKeys',
+        url: `/projects/${this.projectId}/app-users`,
+        extended: true,
+        success: ({ project, fieldKeys }) => {
+          if (project == null) return;
+          this.$store.commit('setData', {
+            key: 'project',
+            value: { ...project, appUsers: fieldKeys.length }
+          });
+        }
+      }]).catch(() => {});
+    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -182,12 +192,13 @@ export default {
       this.revoke.state = true;
     },
     afterCreate(fieldKey) {
-      this.$emit('refresh-field-keys');
+      this.fetchData();
+      this.hideModal('newFieldKey');
       this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
-      this.$emit('refresh-field-keys');
+      this.fetchData();
       this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }

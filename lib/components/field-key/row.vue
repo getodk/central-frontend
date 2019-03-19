@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import highlight from '../../mixins/highlight';
-import { formatDate } from '../../util';
+import { formatDate } from '../../util/util';
 
 export default {
   name: 'FieldKeyRow',

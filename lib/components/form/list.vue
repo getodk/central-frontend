@@ -31,6 +31,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormRow from './row.vue';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormList',
@@ -39,13 +40,9 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    // Array of Form presenters
-    forms: {
-      type: Array,
-      required: true
     }
-  }
+  },
+  computed: requestData(['forms'])
 };
 </script>
 

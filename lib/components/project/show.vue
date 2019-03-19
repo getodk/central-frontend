@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="maybeProject.success">
+    <page-head v-show="project != null">
       <template slot="title">
-        {{ maybeProject.success ? maybeProject.data.name : '' }}
+        {{ project != null ? project.name : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
@@ -25,18 +25,16 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="maybeProject.awaiting"/>
+      <loading :state="$store.getters.initiallyLoading(['project'])"/>
       <!-- It might be possible to remove this <div> element and move the v-show
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
-      <div v-show="maybeProject.success">
+      <div v-show="project != null">
         <keep-alive>
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to ProjectHome's
-          requests for the project and the project's app users. -->
-          <router-view :project-id="projectId" :maybe-project="maybeProject"
-            :maybe-field-keys="maybeFieldKeys"
-            @refresh-field-keys="$emit('refresh-field-keys')"/>
+          request for the project. -->
+          <router-view/>
         </keep-alive>
       </div>
     </page-body>
@@ -44,8 +42,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import MaybeData from '../../maybe-data';
 import tab from '../../mixins/tab';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectShow',
@@ -54,16 +52,9 @@ export default {
     projectId: {
       type: String,
       required: true
-    },
-    maybeProject: {
-      type: MaybeData,
-      required: true
-    },
-    maybeFieldKeys: {
-      type: MaybeData,
-      required: true
     }
   },
+  computed: requestData(['project']),
   methods: {
     tabPathPrefix() {
       return `/projects/${this.projectId}`;
