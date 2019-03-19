@@ -152,7 +152,7 @@ export default {
     },
     afterCreate() {
       this.fetchData();
-      this.hideAlert('newBackup');
+      this.hideModal('newBackup');
       this.$alert().success('Success! Automatic backups are now configured.');
     },
     afterTerminate() {
