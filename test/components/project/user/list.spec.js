@@ -87,8 +87,10 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeQ(component, 'some search term'))
           .respondWithData(() => testData.administrators.sorted())
-          .afterResponse(component => trigger.click(component, '.close'))
-          .then(component => {
+          .complete()
+          .request(component => trigger.click(component, '.close'))
+          .respondWithData(() => [])
+          .afterResponse(component => {
             component.first('.empty-table-message').should.be.visible();
           }));
     });
@@ -282,57 +284,42 @@ describe('ProjectUserList', () => {
       });
 
       describe('clearing the search', () => {
-        it('does not refresh the managers if there was no change', () =>
-          search()
-            .complete()
-            .request(component => trigger.click(component, '.close'))
-            // There is a subtle assertion here: if the request callback sends a
-            // request, then the number of requests will be greater than the
-            // number of responses, and an error will be thrown.
-            .respondWithData([/* no responses */]));
+        const addManagerThenClearSearch = (button = true) => search()
+          .complete()
+          .request(component => changeRole(component, 'manager'))
+          .respondWithSuccess()
+          .complete()
+          .request(component => (button
+            ? trigger.click(component, '.close')
+            : changeQ(component, '')))
+          .respondWithData(() => [
+            // test.administrators.get(0) is the current user, who is not a
+            // manager.
+            testData.administrators.get(1),
+            testData.administrators.get(2),
+            testData.administrators.get(3)
+          ]);
+
+        it('disables search button during refresh of managers', () =>
+          addManagerThenClearSearch().beforeEachResponse(component => {
+            const form = component.first('#project-user-list-search-form');
+            form.first('input').getAttribute('disabled').should.be.ok();
+          }));
+
+        it('hides the .close button during the refresh of the managers', () =>
+          addManagerThenClearSearch().beforeEachResponse(component => {
+            component.first('.close').should.be.hidden();
+          }));
 
         it('shows the managers after the .close button is clicked', () =>
-          search()
-            .afterResponses(component => trigger.click(component, '.close'))
-            .then(component => {
-              component.find('tbody tr').length.should.equal(2);
-            }));
+          addManagerThenClearSearch(true).afterResponse(component => {
+            component.find('tbody tr').length.should.equal(3);
+          }));
 
         it("shows managers after user changes input to '' without clicking .close", () =>
-          search()
-            .afterResponses(component => changeQ(component, ''))
-            .then(component => {
-              component.find('tbody tr').length.should.equal(2);
-            }));
-
-        describe('refresh after manager is added and search is cleared', () => {
-          const refresh = () => search()
-            .complete()
-            .request(component => changeRole(component, 'manager'))
-            .respondWithSuccess()
-            .complete()
-            .request(component => trigger.click(component, '.close'))
-            .respondWithData(() => [
-              // test.administrators.get(0) is the current user, who is not a
-              // manager.
-              testData.administrators.get(1),
-              testData.administrators.get(2),
-              testData.administrators.get(3)
-            ]);
-
-          it('refreshes the managers successfully', refresh);
-
-          it('disables the search button during the refresh', () =>
-            refresh().beforeEachResponse(component => {
-              const form = component.first('#project-user-list-search-form');
-              form.first('input').getAttribute('disabled').should.be.ok();
-            }));
-
-          it('hides the .close button during the refresh', () =>
-            refresh().beforeEachResponse(component => {
-              component.first('.close').should.be.hidden();
-            }));
-        });
+          addManagerThenClearSearch(false).afterResponse(component => {
+            component.find('tbody tr').length.should.equal(3);
+          }));
       });
     });
   });

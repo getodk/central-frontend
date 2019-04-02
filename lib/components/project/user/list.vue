@@ -83,10 +83,7 @@ export default {
       // search
       searchAssignments: null,
       // The number of POST or DELETE requests in progress
-      assignRequestCount: 0,
-      // Indicates whether this.managerAssignments needs to be refreshed once
-      // the current search is cleared.
-      refreshAssignments: false
+      assignRequestCount: 0
     };
   },
   computed: {
@@ -122,7 +119,6 @@ export default {
       this.q = '';
       this.searchAssignments = null;
       this.assignRequestCount = 0;
-      this.refreshAssignments = false;
     }
   },
   created() {
@@ -136,15 +132,12 @@ export default {
         url: `/projects/${this.projectId}/assignments/manager`,
         success: ({ managers }) => {
           this.managerAssignments = managers
-            .map(actor => ({ actor, manager: true, searchOnly: false }));
+            .map(actor => ({ actor, manager: true }));
         }
       }]).catch(noop);
     },
     clearSearch() {
-      if (this.refreshAssignments) {
-        this.fetchData();
-        this.refreshAssignments = false;
-      }
+      this.fetchData();
       this.q = '';
       this.searchAssignments = null;
     },
@@ -165,7 +158,7 @@ export default {
             const assignment = this.managerAssignments
               .find(a => a.actor.id === user.id);
             if (assignment != null) return assignment;
-            return { actor: user, manager: false, searchOnly: true };
+            return { actor: user, manager: false };
           });
         }
       }]).catch(noop);
@@ -178,11 +171,10 @@ export default {
     },
     // Run after a user is assigned a new role (including None).
     afterAssign(assignment, manager) {
-      this.$set(assignment, 'manager', manager);
-      if (assignment.searchOnly) this.refreshAssignments = true;
       const { displayName } = assignment.actor;
       const roleName = manager ? 'Manager' : 'None';
       this.$alert().success(`Success! ${displayName} has been given a Project Role of “${roleName}” on this Project.`);
+      this.$set(assignment, 'manager', manager);
     }
   }
 };
