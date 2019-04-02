@@ -6,9 +6,9 @@ import { submitForm } from '../../../event';
 
 const submitPasswords = (wrapper, { match }) =>
   submitForm(wrapper, '#account-edit-password form', [
-    ['#form-edit-password-old-password', 'x'],
-    ['#form-edit-password-new-password', 'y'],
-    ['#form-edit-password-confirm', match ? 'y' : 'z']
+    ['#account-edit-password-old-password', 'x'],
+    ['#account-edit-password-new-password', 'y'],
+    ['#account-edit-password-confirm', match ? 'y' : 'z']
   ]);
 
 describe('AccountEditPassword', () => {

@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
 import request from '../../../mixins/request';
 
 export default {
-  name: 'FormEditBasicDetails',
+  name: 'AccountEditBasicDetails',
   mixins: [request()],
   data() {
     const { email, displayName } = this.$store.state.request.data.currentUser;

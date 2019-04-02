@@ -17,19 +17,19 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-body">
       <form @submit.prevent="submit">
         <label class="form-group">
-          <input id="form-edit-password-old-password" v-model="oldPassword"
+          <input id="account-edit-password-old-password" v-model="oldPassword"
             type="password" class="form-control" placeholder="Old password *"
             required>
           <span class="form-label">Old password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="form-edit-password-new-password" v-model="newPassword"
+          <input id="account-edit-password-new-password" v-model="newPassword"
             type="password" class="form-control" placeholder="New password *"
             required>
           <span class="form-label">New password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="form-edit-password-confirm" v-model="confirm"
+          <input id="account-edit-password-confirm" v-model="confirm"
             type="password" class="form-control"
             placeholder="New password (confirm) *" required>
           <span class="form-label">New password (confirm) *</span>
@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 import request from '../../../mixins/request';
 
 export default {
-  name: 'FormEditPassword',
+  name: 'AccountEditPassword',
   mixins: [request()],
   data() {
     return {
