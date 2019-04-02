@@ -112,6 +112,11 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
+p {
+  // 15-17 words per line
+  max-width: 600px;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,6 +365,8 @@ a {
 .empty-table-message {
   color: #555;
   font-size: 15px;
+  // Unless the message is quite long, we want it to fit on one line.
+  max-width: 650px;
 }
 
 

@@ -207,7 +207,6 @@ $title-font-size: 28px;
 #backup-list-status-message {
   p {
     margin-left: 41px;
-    max-width: 585px;
 
     &:first-child {
       font-size: $title-font-size;

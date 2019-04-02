@@ -71,7 +71,7 @@ export default {
   color: #555;
   font-size: 15px;
   letter-spacing: -0.01em;
-  max-width: 645px;
+  max-width: 650px;
 }
 
 #page-head-tabs {

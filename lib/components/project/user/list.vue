@@ -200,7 +200,6 @@ export default {
 
 #project-user-list-heading {
   margin-bottom: 20px;
-  max-width: $max-width-p;
 }
 
 #project-user-list-search-form {

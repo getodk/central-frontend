@@ -216,10 +216,6 @@ export default {
     float: right;
     margin-left: 20px;
   }
-
-  p {
-    max-width: $max-width-p;
-  }
 }
 
 #field-key-list-table {
