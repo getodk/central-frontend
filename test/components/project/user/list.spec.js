@@ -74,13 +74,24 @@ describe('ProjectUserList', () => {
         }));
     });
 
-    it('shows the table headers and a message if there are no managers', () =>
-      loadProjectUsers({ count: 0 })
-        .afterResponse(component => {
+    describe('no managers', () => {
+      it('shows the table headers and a message', () =>
+        loadProjectUsers({ count: 0 }).afterResponse(component => {
           const tr = component.find('thead tr');
           tr.length.should.equal(1);
           component.first('.empty-table-message').should.be.visible();
         }));
+
+      it('shows the message after the search is cleared', () =>
+        loadProjectUsers({ count: 0 })
+          .complete()
+          .request(component => changeQ(component, 'some search term'))
+          .respondWithData(() => testData.administrators.sorted())
+          .afterResponse(component => trigger.click(component, '.close'))
+          .then(component => {
+            component.first('.empty-table-message').should.be.visible();
+          }));
+    });
 
     it('shows the current managers in the table', () =>
       loadProjectUsers({ count: 2, currentUser: true })

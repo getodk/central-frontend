@@ -112,7 +112,7 @@ export default {
       return this.managerAssignments;
     },
     emptyMessageShown() {
-      return this.$store.getters.needsRequest('users') &&
+      return this.searchAssignments == null &&
         this.managerAssignments != null && this.managerAssignments.length === 0;
     }
   },
