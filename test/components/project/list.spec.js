@@ -18,10 +18,20 @@ describe('ProjectList', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));
+
+    it('does not redirect a user with minimal grants', () => {
+      mockLogin({ role: 'none' });
+      return mockRoute('/')
+        .respondWithData(() => testData.extendedProjects.sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
 
     for (const selector of ['.navbar-brand', '#navbar-projects-link']) {
       it(`redirects user to project list upon a click on ${selector}`, () => {

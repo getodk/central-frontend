@@ -1,6 +1,6 @@
 import testData from '../../data';
+import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { mockRouteThroughLogin } from '../../session';
 import { trigger } from '../../event';
 
 describe('AccountEdit', () => {
@@ -14,6 +14,13 @@ describe('AccountEdit', () => {
       mockRouteThroughLogin('/account/edit').then(app => {
         app.vm.$route.path.should.equal('/account/edit');
       }));
+
+    it('does not redirect a user with minimal grants', () => {
+      mockLogin({ role: 'none' });
+      return mockRoute('/account/edit').then(app => {
+        app.vm.$route.path.should.equal('/account/edit');
+      });
+    });
   });
 
   it('navigates to AccountEdit after user clicks "Edit Profile" in navbar', () =>

@@ -6,17 +6,29 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 
 describe('BackupList', () => {
   describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
+    it('redirects an anonymous user to login', () =>
       mockRoute('/system/backups')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
-    it('after login, user is redirected back', () =>
+    it('redirects the user back after login', () =>
       mockRouteThroughLogin('/system/backups')
         .respondWithProblem(404.1)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/system/backups');
         }));
+
+    it('redirects a user without a grant to config.read', () => {
+      mockLogin({ role: 'none' });
+      return mockRoute('/system/backups')
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
   });
 
   describe('after login', () => {

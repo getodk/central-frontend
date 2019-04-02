@@ -5,18 +5,48 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 
 describe('UserList', () => {
   describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
+    it('redirects an anonymous user to login', () =>
       mockRoute('/users')
         .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/login');
+        }));
 
-    it('after login, user is redirected back', () =>
+    it('redirects the user back after login', () =>
       mockRouteThroughLogin('/users')
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => app.vm.$route.path.should.equal('/users')));
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/users');
+        }));
+
+    it('redirects a user without a grant to assignment.list', () => {
+      mockLogin({ verbs: ['project.list', 'user.list'] });
+      return mockRoute('/account/edit')
+        .complete()
+        .route('/users')
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it('redirects a user without a grant to user.list', () => {
+      mockLogin({ verbs: ['project.list', 'assignment.list'] });
+      return mockRoute('/account/edit')
+        .complete()
+        .route('/users')
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
   });
 
-  describe('after login', () => {
+  describe('after login as an administrator', () => {
     beforeEach(mockLogin);
 
     it('table contains the correct data', () => {
