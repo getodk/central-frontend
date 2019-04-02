@@ -112,6 +112,11 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
+p {
+  // 15-17 words per line
+  max-width: 600px;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,6 +271,12 @@ a {
     &:placeholder-shown + .form-label {
       transform: translateY(-15px);
     }
+
+    &[disabled], &[readonly] {
+      &, &::placeholder {
+        color: $color-input-inactive;
+      }
+    }
   }
 
   .form-label {
@@ -349,6 +360,13 @@ a {
 
 .table-actions {
   margin-bottom: 20px;
+}
+
+.empty-table-message {
+  color: #555;
+  font-size: 15px;
+  // Unless the message is quite long, we want it to fit on one line.
+  max-width: 650px;
 }
 
 

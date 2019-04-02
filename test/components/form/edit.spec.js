@@ -37,11 +37,11 @@ describe('FormEdit', () => {
           }
         })
         .request(selectDifferentState)
-        .respondWithSuccess()
-        .beforeEachResponse(component => {
+        .beforeResponse(component => {
           const disabled = component.first('fieldset').getAttribute('disabled');
           disabled.should.equal('disabled');
-        }));
+        })
+        .respondWithSuccess());
 
     it('shows a spinner', () =>
       mockHttp()
@@ -52,11 +52,13 @@ describe('FormEdit', () => {
           }
         })
         .request(selectDifferentState)
+        .beforeResponse(component => {
+          spinnerOfSelectedState(component).getProp('state').should.be.true();
+        })
         .respondWithSuccess()
-        .beforeEachResponse(component =>
-          spinnerOfSelectedState(component).getProp('state').should.be.true())
-        .afterResponse(component =>
-          spinnerOfSelectedState(component).getProp('state').should.be.false()));
+        .afterResponse(component => {
+          spinnerOfSelectedState(component).getProp('state').should.be.false();
+        }));
 
     it('shows a success message', () =>
       mockRoute('/projects/1/forms/x/settings')

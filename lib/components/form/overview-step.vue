@@ -57,7 +57,6 @@ export default {
   p {
     margin-left: 21px;
     line-height: 17px;
-    max-width: 565px;
   }
 
   .form-overview-step-heading {
