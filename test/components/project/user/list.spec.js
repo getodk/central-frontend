@@ -266,7 +266,7 @@ describe('ProjectUserList', () => {
           }));
 
         it('shows the .close button', () =>
-          search().beforeEachResponse(component => {
+          search().afterResponse(component => {
             component.first('.close').should.be.visible();
           }));
 

@@ -9,9 +9,9 @@ describe('FormShow', () => {
   it('shows a loading message until all responses are returned', () =>
     mockRoute('/projects/1/forms/x/media-files')
       .beforeEachResponse(app => {
-        const components = app.find(Loading);
-        const states = components.map(component => component.getProp('state'));
-        states.should.eql([true]);
+        const loading = app.find(Loading);
+        loading.length.should.equal(1);
+        loading[0].getProp('state').should.eql(true);
       })
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
@@ -19,8 +19,8 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedFormAttachments.createPast(1).sorted())
       .afterResponses(app => {
-        const components = app.find(Loading);
-        const states = components.map(component => component.getProp('state'));
-        states.should.eql([false]);
+        const loading = app.find(Loading);
+        loading.length.should.equal(1);
+        loading[0].getProp('state').should.eql(false);
       }));
 });

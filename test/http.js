@@ -314,10 +314,48 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // HOOKS FOR BEFORE RESPONSES
 
-  // Specifies a callback to run before each response is returned. The callback
-  // may return a Promise or a non-Promise value. The callback may itself send
-  // one or more requests. (Note that the callback will also be run for those
-  // requests.)
+  /*
+  beforeEachResponse() specifies a callback to run before each response is
+  returned. The callback may return a Promise or a non-Promise value. The
+  callback may itself send one or more requests. (Note that the callback will
+  also be run for those requests.)
+
+  When there are concurrent requests, the beforeEachResponse() callback is run
+  once between each pair of responses. Vue.nextTick() is called before and after
+  the beforeEachResponse() callback, giving Vue a chance to react. Together,
+  that means that for two concurrent requests, we would see the following
+  sequence:
+
+    1. Two requests are sent concurrently.
+       -> Vue reacts.
+    2. The beforeEachResponse() callback is run for the first response.
+       -> Vue reacts.
+    3. The first response is returned.
+       -> Vue reacts.
+    4. The beforeEachResponse() callback is run for the second response.
+       -> Vue reacts.
+    5. The second response is returned.
+
+  Note that if Frontend calls then() or catch() on a response's promise,
+  starting a promise chain, there is little guarantee where within the sequence
+  the promise chain will resolve. For example:
+
+    1. Two requests are sent concurrently.
+    2. The beforeEachResponse() callback is run for the first response.
+    3. The first response is returned.
+       -> The first response's promise becomes the start of a potentially long
+          promise chain: then() or catch is called on the response's promise,
+          then perhaps then() or catch() is called on that resulting promise,
+          and so on. The response's promise might resolve before the next time
+          the beforeEachResponse() callback is run -- but it might also not.
+    4. The beforeEachResponse() callback is run for the second response.
+       -> The first response's promise chain might resolve here.
+    5. The second response is returned.
+       -> The first response's promise chain might resolve here.
+
+  As a result, if you are testing the result of a response's promise chain, you
+  may wish to do so in an after responses hook.
+  */
   beforeEachResponse(callback) {
     if (this._beforeEachResponse != null)
       throw new Error('cannot call beforeEachResponse() more than once in a single series');
@@ -346,7 +384,9 @@ class MockHttp {
     const promise = this._initialPromise()
       .then(() => {
         if (this._beforeEachNavGuard == null) return;
-        beforeEachNav((to, from) => this._tryBeforeEachNav(to, from));
+        beforeEachNav((to, from) => {
+          this._tryBeforeEachNav(to, from);
+        });
       })
       .then(() => this._routeAndMount())
       .then(() => {
@@ -392,6 +432,28 @@ class MockHttp {
         this._previousHttp = Vue.prototype.$http;
         setHttp(this._http());
         this._component = component;
+        /*
+        MockHttp uses two promises:
+
+          1. The first promise is chained on this._previousPromise and returned
+             by the after responses hooks. Usually it is ultimately returned to
+             Mocha.
+          2. The second promise, stored in this._responseChain, holds the
+             responses, chained in order of request. this._responseChain is not
+             returned to Mocha, but rather to Frontend from $http.
+
+        The two promises are related: the first promise triggers one or more
+        requests; for which responses are returned to Frontend through the
+        second promise; then the first promise is returned to Mocha or whatever
+        else comes after the hook.
+
+        It is because the second promise is returned to Frontend and not Mocha
+        that _tryBeforeEachNav() and _tryBeforeEachResponse() catch any error
+        even though they are called within a promise chain. Those methods catch
+        and store any error so that the after responses hook is able to reject
+        the first promise.
+        */
+        this._responsesPromise = Promise.resolve();
         this._errorFromBeforeEachResponse = null;
         this._errorFromResponse = null;
         this._requestWithoutResponse = false;
@@ -433,9 +495,10 @@ class MockHttp {
       const responseCallback = this._responses[count];
       const index = count;
       count += 1;
-      // Wait a tick after this._request() or the previous response so that Vue
-      // is updated before this._beforeEachResponse() is called.
-      return Vue.nextTick()
+      this._responsesPromise = this._responsesPromise
+        // Run Vue.nextTick() so that Vue has a chance to react after the
+        // initial requests or the previous response.
+        .then(() => Vue.nextTick())
         .then(() => (this._beforeEachResponse != null
           ? this._tryBeforeEachResponse(config, index)
           : null))
@@ -458,29 +521,32 @@ class MockHttp {
             reject(result);
           }
         }));
+      return this._responsesPromise;
     };
   }
 
+  // _tryBeforeEachResponse() runs this._beforeEachResponse(), catching any
+  // resulting error. It does not run this._beforeEachResponse() if the callback
+  // resulted in an error for a previous response. After running
+  // this._beforeEachResponse(), _tryBeforeEachResponse() runs Vue.nextTick() so
+  // that Vue has a chance to react to any changes that the callback made.
   _tryBeforeEachResponse(config, index) {
     if (this._errorFromBeforeEachResponse != null) return null;
-    /* Here, we catch any error from this._beforeEachResponse(), even though
-    this._beforeEachResponse() is called within a promise chain. That's because
-    the promise is not returned to Mocha, but rather to Frontend itself from
-    $http. By catching and storing the error, we will later be able to return a
-    rejected promise to Mocha. this._beforeEachResponse() may return a Promise,
-    or it may simply make an assertion that may throw an error. That means that
-    we have to be prepared to catch any error in two ways. In neither case do we
-    re-throw the error, because doing so would prevent Frontend from receiving
-    the specified response. */
+    // this._beforeEachResponse() may return a Promise, or it may simply make an
+    // assertion that may throw an error. That means that we have to be prepared
+    // to catch any error in two ways. In neither case do we re-throw the error,
+    // because doing so would prevent Frontend from receiving the specified
+    // response.
     try {
       return Promise.resolve(this._beforeEachResponse(this._component, config, index))
         .catch(e => {
           this._errorFromBeforeEachResponse = e;
-        });
+        })
+        .finally(() => Vue.nextTick());
     } catch (e) {
       this._errorFromBeforeEachResponse = e;
     }
-    return null;
+    return Vue.nextTick();
   }
 
   _tryBeforeEachNav(to, from) {
@@ -730,13 +796,12 @@ class MockHttp {
   // PROMISE METHODS
 
   promise() {
-    const anySpecification = this._route != null ||
+    const anySetup = this._route != null ||
       this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
       this._beforeEachResponse != null;
-    if (!anySpecification && this._previousPromise == null)
-      return Promise.resolve();
-    const promise = anySpecification
+    if (!anySetup && this._previousPromise == null) return Promise.resolve();
+    const promise = anySetup
       ? this.complete()._previousPromise
       : this._previousPromise;
     return promise.then(({ result }) => result);
