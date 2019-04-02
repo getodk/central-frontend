@@ -9,6 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- Although Backend supports more complex use cases, we assume in this
+component that each user is assigned only one role and that further, each user
+either is an Administrator or has no role. -->
 <template>
   <div>
     <div class="heading-with-button">
@@ -28,19 +32,22 @@ except according to the terms contained in the LICENSE file.
       </p>
     </div>
     <div class="table-actions">
-      <refresh-button :configs="configsForRefresh"/>
+      <refresh-button :configs="configsForRefresh"
+        :disabled="assignRequestCount !== 0"/>
     </div>
     <table id="user-list-table" class="table">
       <thead>
         <tr>
           <th>Email Address</th>
-          <th>Is Administrator?</th>
+          <th>Sitewide Role</th>
           <th class="user-actions">Actions</th>
         </tr>
       </thead>
       <tbody v-if="users != null && adminIds != null && users.length !== 0">
         <user-row v-for="user of users" :key="user.id" :user="user"
-          :highlighted="highlighted" @reset-password="showResetPassword"/>
+          :admin="adminIds.has(user.id)" :highlighted="highlighted"
+          @increment-count="incrementCount" @decrement-count="decrementCount"
+          @assigned-role="afterAssignRole" @reset-password="showResetPassword"/>
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['users', 'assignmentActors'])"/>
@@ -68,6 +75,8 @@ export default {
     return {
       // The id of the highlighted user
       highlighted: null,
+      // The number of POST or DELETE requests in progress
+      assignRequestCount: 0,
       // Modals
       newUser: {
         state: false
@@ -114,15 +123,31 @@ export default {
         }
       ];
     },
-    showResetPassword(user) {
-      this.resetPassword.user = user;
-      this.resetPassword.state = true;
-    },
     afterCreate(user) {
       this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
       this.hideModal('newUser');
       this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
+    },
+    incrementCount() {
+      this.assignRequestCount += 1;
+    },
+    decrementCount() {
+      this.assignRequestCount -= 1;
+    },
+    // Called after a user is assigned a new role (including None).
+    afterAssignRole(user, admin) {
+      const roleName = admin ? 'Administrator' : 'None';
+      this.$alert().success(`Success! ${user.displayName} has been given a Project Role of “${roleName}” on this Project.`);
+      if (admin) {
+        this.adminIds.add(user.id);
+      } else {
+        this.adminIds.delete(user.id);
+      }
+    },
+    showResetPassword(user) {
+      this.resetPassword.user = user;
+      this.resetPassword.state = true;
     },
     afterResetPassword() {
       const { email } = this.resetPassword.user;
@@ -147,10 +172,6 @@ $actions-width: $padding-left-table-data + $padding-right-table-data + 160px;
     &.user-actions {
       width: $actions-width;
     }
-  }
-
-  td {
-    vertical-align: middle;
   }
 }
 </style>

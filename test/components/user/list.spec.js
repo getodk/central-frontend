@@ -1,4 +1,6 @@
+import Spinner from '../../../lib/components/spinner.vue';
 import UserList from '../../../lib/components/user/list.vue';
+import UserRow from '../../../lib/components/user/row.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
@@ -62,7 +64,9 @@ describe('UserList', () => {
   });
 
   describe('after login as an administrator', () => {
-    beforeEach(mockLogin);
+    beforeEach(() => {
+      mockLogin({ email: 'a@email.com' });
+    });
 
     it('shows the table headers while the users are loading', () =>
       mockHttp()
@@ -74,31 +78,161 @@ describe('UserList', () => {
           component.find('thead tr').length.should.equal(1);
         }));
 
-    it('displays the correct data in the table', () =>
+    it('lists the users in the correct order', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData(() => testData.standardUsers
+          .createPast(1, { email: 'b@email.com' })
+          .sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(component => {
+          const rows = component.find('table tbody tr');
+          const emails = rows.map(row => row.first('td').text());
+          emails.should.eql(['a@email.com', 'b@email.com']);
+        }));
+
+    it('correctly renders the role selects', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData(() => testData.standardUsers
+          .createPast(1, { email: 'b@email.com', role: 'none' })
+          .sorted())
+        .respondWithData(() =>
+          [testData.toActor(testData.standardUsers.first())])
+        .afterResponses(component => {
+          const selects = component.find('table select');
+          selects.map(select => select.element.value).should.eql(['admin', '']);
+          selects.map(select => $(select.element).find(':selected').text())
+            .should
+            .eql(['Administrator', 'None']);
+        }));
+
+    it('renders the role select correctly for the current user', () =>
       mockHttp()
         .mount(UserList)
         .respondWithData(() => testData.standardUsers.createPast(1).sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
         .afterResponses(component => {
-          const tr = component.find('table tbody tr');
-          tr.length.should.equal(2);
-          const users = testData.extendedUsers.sorted();
-          for (let i = 0; i < tr.length; i += 1) {
-            const td = tr[i].find('td');
-            td.length.should.equal(3);
-            td[0].text().should.equal(users[i].email);
-            td[1].text().should.equal('Yes');
+          const { currentUser } = component.vm.$store.state.request.data;
+          for (const tr of component.find('table tbody tr')) {
+            const select = tr.first('select');
+            const { disabled, title } = select.element;
+            const td = tr.first('td');
+            const isCurrentUser = td.text() === currentUser.email;
+            disabled.should.equal(isCurrentUser);
+            (title !== '').should.equal(isCurrentUser);
           }
         }));
 
-    it('refreshes after the refresh button is clicked', () =>
-      mockRoute('/users').testRefreshButton({
-        collection: testData.standardUsers,
-        respondWithData: [
-          () => testData.standardUsers.sorted(),
-          () => testData.standardUsers.sorted().map(testData.toActor)
-        ]
-      }));
+    describe('clicking the refresh button', () => {
+      it('refreshes the list of users', () =>
+        mockRoute('/users').testRefreshButton({
+          collection: testData.standardUsers,
+          respondWithData: [
+            () => testData.standardUsers.sorted(),
+            () => testData.standardUsers.sorted().map(testData.toActor)
+          ]
+        }));
+
+      it('disables the role selects while the refresh is in progress', () =>
+        mockHttp()
+          .mount(UserList)
+          .respondWithData(() => testData.standardUsers.createPast(1).sorted())
+          .respondWithData(() =>
+            testData.standardUsers.sorted().map(testData.toActor))
+          .complete()
+          .request(component => trigger.click(component, '.btn-refresh'))
+          .beforeEachResponse(component => {
+            for (const select of component.find('table select'))
+              select.getAttribute('disabled').should.equal('disabled');
+          })
+          .respondWithData(() => testData.standardUsers.sorted())
+          .respondWithData(() =>
+            testData.standardUsers.sorted().map(testData.toActor)));
+    });
+
+    describe('changing a role', () => {
+      const loadUsersAndChangeRole =
+        ({ rowIndex, selectValue, route = false }) =>
+          (route ? mockHttp().mount(UserList) : mockRoute('/users'))
+            .respondWithData(() => testData.standardUsers
+              .createPast(1, {
+                displayName: 'Person 1',
+                email: 'b@email.com',
+                role: 'admin'
+              })
+              .createPast(1, {
+                displayName: 'Person 2',
+                email: 'c@email.com',
+                role: 'none'
+              })
+              .sorted())
+            .respondWithData(() =>
+              testData.toActor(testData.standardUsers.sorted().slice(0, 2)))
+            .complete()
+            .request(component => {
+              const select = component.find('table select')[rowIndex];
+              if (select.element.value === selectValue)
+                throw new Error('no change');
+              select.element.value = selectValue;
+              return trigger.change(select);
+            });
+
+      // Array of test cases, where each case is an array with the following
+      // structure:
+      //
+      //   [row index, role name, new select value, request method]
+      //
+      const cases = [
+        [1, 'None', 'none', 'DELETE'],
+        [2, 'Administrator', 'admin', 'POST']
+      ];
+      for (const [rowIndex, roleName, selectValue, method] of cases) {
+        describe(`changing to ${selectValue}`, () => {
+          it('sends the request using the correct method', () =>
+            loadUsersAndChangeRole({ rowIndex, selectValue })
+              .beforeEachResponse((component, config) => {
+                config.method.should.equal(method);
+              })
+              .respondWithSuccess());
+
+          it('disables the select during the request', () =>
+            loadUsersAndChangeRole({ rowIndex, selectValue })
+              .beforeResponse(component => {
+                const select = component.find('table select')[rowIndex];
+                select.getAttribute('disabled').should.equal('disabled');
+              })
+              .respondWithSuccess());
+
+          it('disables the refresh button during the request', () =>
+            loadUsersAndChangeRole({ rowIndex, selectValue })
+              .beforeResponse(component => {
+                const button = component.first('.btn-refresh');
+                button.getAttribute('disabled').should.equal('disabled');
+              })
+              .respondWithSuccess());
+
+          it('shows a spinner during the request', () =>
+            loadUsersAndChangeRole({ rowIndex, selectValue })
+              .beforeResponse(component => {
+                const rows = component.find(UserRow);
+                rows[rowIndex].first(Spinner).getProp('state').should.be.true();
+              })
+              .respondWithSuccess());
+
+          it('shows a success alert after the response', () =>
+            loadUsersAndChangeRole({ rowIndex, selectValue, route: true })
+              .respondWithSuccess()
+              .afterResponse(app => {
+                app.should.alert(
+                  'success',
+                  `Success! Person ${rowIndex} has been given a Project Role of “${roleName}” on this Project.`
+                );
+              }));
+        });
+      }
+    });
   });
 });

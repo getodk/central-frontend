@@ -109,6 +109,7 @@ export default {
 
   .spinner-container {
     margin-left: 15px;
+    // Spinner is positioned absolutely.
     position: relative;
   }
 }

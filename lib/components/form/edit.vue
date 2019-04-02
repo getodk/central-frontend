@@ -112,6 +112,7 @@ export default {
 <style lang="sass">
 #form-edit .radio span {
   margin-left: 20px;
+  // Spinner is positioned absolutely.
   position: relative;
 }
 </style>

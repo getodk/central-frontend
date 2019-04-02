@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <!-- Although Backend supports more complex use cases, we assume in this
-component that each that each user is assigned only one role and that further,
-each user either is a Project Manager or has no role. -->
+component that each user is assigned only one role and that further, each user
+either is a Project Manager or has no role. -->
 <template>
   <div id="project-user-list">
     <p id="project-user-list-heading">
