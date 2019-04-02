@@ -14,17 +14,19 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')" @shown="focusLink">
     <template slot="title">Upload Files</template>
     <template slot="body">
-      <p class="modal-introduction">
-        To upload files, you can <strong>drag and drop</strong> one or more
-        files onto the table on this page.
-      </p>
-      <p>
-        If you would rather select files from a prompt, ensure that their names
-        match the ones in the table and then
-        <input ref="input" type="file" class="hidden" multiple>
-        <a ref="link" href="#" role="button" @click.prevent="clickInput">
-          <span class="icon-folder-open"></span>click here to choose</a>.
-      </p>
+      <div class="modal-introduction">
+        <p>
+          To upload files, you can <strong>drag and drop</strong> one or more
+          files onto the table on this page.
+        </p>
+        <p>
+          If you would rather select files from a prompt, ensure that their
+          names match the ones in the table and then
+          <input ref="input" type="file" class="hidden" multiple>
+          <a ref="link" href="#" role="button" @click.prevent="clickInput">
+            <span class="icon-folder-open"></span>click here to choose</a>.
+        </p>
+      </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           Okay
