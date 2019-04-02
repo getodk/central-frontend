@@ -32,7 +32,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '../../assets/scss/variables';
+@import '../../../assets/scss/variables';
 
 #page-head {
   background-color: $color-subpanel-background;
