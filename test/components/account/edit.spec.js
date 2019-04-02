@@ -1,4 +1,3 @@
-import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../event';
@@ -24,12 +23,15 @@ describe('AccountEdit', () => {
   });
 
   it('navigates to AccountEdit after user clicks "Edit Profile" in navbar', () =>
-    mockRouteThroughLogin('/users', { attachToDocument: true })
-      .respondWithData(() => testData.administrators.sorted())
+    mockRouteThroughLogin('/system/backups', { attachToDocument: true })
+      .respondWithProblem(404.1)
       .afterResponse(app => {
-        $(app.element).find('.navbar .dropdown-toggle').click();
+        const toggle = app.first('.navbar-right .dropdown-toggle');
+        $(toggle.element).click();
         return app.vm.$nextTick().then(() => app);
       })
       .then(app => trigger.click(app, '#navbar-edit-profile-action'))
-      .then(app => app.vm.$route.path.should.equal('/account/edit')));
+      .then(app => {
+        app.vm.$route.path.should.equal('/account/edit');
+      }));
 });

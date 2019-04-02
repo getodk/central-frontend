@@ -35,12 +35,11 @@ describe('ProjectList', () => {
     for (const selector of ['.navbar-brand', '#navbar-projects-link']) {
       it(`navigates to the project list after a click on ${selector}`, () => {
         mockLogin();
-        return mockRoute('/users')
-          .respondWithData(() => testData.administrators.sorted())
+        return mockRoute('/account/edit')
           .complete()
           .request(app => trigger.click(app, selector))
           .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-          .respondWithData(() => testData.administrators.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           });

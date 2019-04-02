@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
       </p>
     </div>
     <div class="table-actions">
-      <refresh-button :configs="refreshConfigs"/>
+      <refresh-button :configs="configsForRefresh"/>
     </div>
     <table id="user-list-table" class="table">
       <thead>
@@ -38,12 +38,12 @@ except according to the terms contained in the LICENSE file.
           <th class="user-actions">Actions</th>
         </tr>
       </thead>
-      <tbody v-if="users != null && users.length !== 0">
+      <tbody v-if="users != null && adminIds != null && users.length !== 0">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :highlighted="highlighted" @reset-password="showResetPassword"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['users'])"/>
+    <loading :state="$store.getters.initiallyLoading(['users', 'assignmentActors'])"/>
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
@@ -57,6 +57,7 @@ import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRow from './row.vue';
 import modal from '../../mixins/modal';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -79,31 +80,44 @@ export default {
   },
   computed: {
     ...requestData(['users']),
-    refreshConfigs() {
-      return [{
-        key: 'users',
-        url: '/users',
-        success: () => {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.highlighted = null;
-        }
-      }];
+    configsForRefresh() {
+      return this.configsForGet(true);
     }
   },
   created() {
-    this.fetchData();
+    this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
   },
   methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{ key: 'users', url: '/users' }])
-        .catch(() => {});
+    configsForGet(resetHighlighted) {
+      return [
+        {
+          key: 'users',
+          url: '/users',
+          success: () => {
+            if (resetHighlighted) {
+              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+              this.highlighted = null;
+            }
+          }
+        },
+        {
+          key: 'assignmentActors',
+          url: '/assignments/admin',
+          success: ({ assignmentActors }) => {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.adminIds = new Set();
+            for (const actor of assignmentActors)
+              this.adminIds.add(actor.id);
+          }
+        }
+      ];
     },
     showResetPassword(user) {
       this.resetPassword.user = user;
       this.resetPassword.state = true;
     },
     afterCreate(user) {
-      this.fetchData();
+      this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
       this.hideModal('newUser');
       this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;

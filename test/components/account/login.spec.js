@@ -53,21 +53,21 @@ describe('AccountLogin', () => {
           app.should.alert('danger', 'Incorrect email address and/or password.');
         }));
 
-    it('clicking the reset password button navigates to that page', () =>
+    it('clicking the reset password button navigates to that route', () =>
       mockRoute('/login')
         .restoreSession(false)
-        .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
-          .then(() => app.vm.$route.path.should.equal('/reset-password'))));
+        .afterResponses(app => trigger.click(app, '.panel-footer .btn-link'))
+        .then(app => {
+          app.vm.$route.path.should.equal('/reset-password');
+        }));
   });
 
   describe('after a login through the login page', () => {
     it("displays the user's display name in the navbar", () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => {
-          const link = app.first('.navbar-right > li > a');
-          link.text().trim().should.equal(testData.administrators.first().displayName);
-        }));
+      mockRouteThroughLogin('/account/edit').then(app => {
+        const link = app.first('.navbar-right > li > a');
+        link.text().trim().should.equal(testData.extendedUsers.first().displayName);
+      }));
 
     describe("after clicking the user's display name", () => {
       let app;
@@ -116,13 +116,12 @@ describe('AccountLogin', () => {
 
   describe('navigation to /login', () => {
     it('redirects to the root page after a login through the login page', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
+      mockRouteThroughLogin('/account/edit')
         .complete()
         .route('/login')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => {
+        .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));
 
@@ -138,10 +137,11 @@ describe('AccountLogin', () => {
 
   describe('after session restore', () => {
     it('does not redirect other pages to the login page', () =>
-      mockRoute('/users')
+      mockRoute('/account/edit')
         .restoreSession(true)
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => app.vm.$route.path.should.equal('/users')));
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/account/edit');
+        }));
 
     it('does not show the navbar until the first confirmed navigation', () =>
       mockRoute('/login')
