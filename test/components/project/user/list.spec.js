@@ -79,7 +79,9 @@ describe('ProjectUserList', () => {
         loadProjectUsers({ count: 0 }).afterResponse(component => {
           const tr = component.find('thead tr');
           tr.length.should.equal(1);
-          component.first('.empty-table-message').should.be.visible();
+          const message = component.first('.empty-table-message');
+          message.should.be.visible();
+          message.text().trim().should.startWith('There are no Project Managers');
         }));
 
       it('shows the message after the search is cleared', () =>
@@ -229,6 +231,17 @@ describe('ProjectUserList', () => {
       });
 
       describe('after a successful response to the search request', () => {
+        it('shows a message if there are no search results', () =>
+          loadProjectUsers({ count: 1 })
+            .complete()
+            .request(component => changeQ(component, 'some search term'))
+            .respondWithData(() => [])
+            .afterResponse(component => {
+              const message = component.first('.empty-table-message');
+              message.should.be.visible();
+              message.text().trim().should.equal('No results');
+            }));
+
         it('shows the search results', () =>
           search().afterResponse(component => {
             const tr = component.find('table tbody tr');

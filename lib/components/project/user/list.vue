@@ -51,9 +51,8 @@ each user either is a Project Manager or has no role. -->
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['managers', 'users'])"/>
-    <p v-if="emptyMessageShown" class="empty-table-message">
-      There are no Project Managers assigned to this Project yet. To add one,
-      search for a user above.
+    <p v-show="emptyMessage != null" class="empty-table-message">
+      {{ emptyMessage }}
     </p>
   </div>
 </template>
@@ -108,9 +107,15 @@ export default {
       if (this.searchAssignments != null) return this.searchAssignments;
       return this.managerAssignments;
     },
-    emptyMessageShown() {
-      return this.searchAssignments == null &&
-        this.managerAssignments != null && this.managerAssignments.length === 0;
+    emptyMessage() {
+      if (this.searchAssignments == null) {
+        if (this.managerAssignments != null &&
+          this.managerAssignments.length === 0)
+          return 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.';
+      } else if (this.searchAssignments.length === 0) {
+        return 'No results';
+      }
+      return null;
     }
   },
   watch: {
