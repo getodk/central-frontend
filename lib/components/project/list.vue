@@ -43,10 +43,9 @@ except according to the terms contained in the LICENSE file.
         <page-section id="project-list-right-now">
           <span slot="heading">Right Now</span>
           <template slot="body">
-            <loading
-              :state="$store.getters.initiallyLoading(['users', 'projects'])"/>
-            <template v-if="users != null && projects != null">
-              <div>
+            <loading :state="loadingRightNow"/>
+            <template v-if="showsRightNow">
+              <div v-if="currentUser.can('user.list')">
                 <router-link to="/users"
                   class="project-list-right-now-icon-container">
                   <span class="icon-user-circle"></span>
@@ -89,8 +88,9 @@ except according to the terms contained in the LICENSE file.
     <page-section id="project-list-projects">
       <template slot="heading">
         <span>Projects</span>
-        <button id="project-list-new-button" type="button"
-          class="btn btn-primary" @click="showModal('newProject')">
+        <button v-if="currentUser.can('project.create')"
+          id="project-list-new-button" type="button" class="btn btn-primary"
+          @click="showModal('newProject')">
           <span class="icon-plus-circle"></span>New
         </button>
       </template>
@@ -131,6 +131,7 @@ import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import modal from '../../mixins/modal';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -148,19 +149,28 @@ export default {
       }
     };
   },
-  computed: requestData(['projects', 'users']),
+  computed: {
+    ...requestData(['currentUser', 'projects', 'users']),
+    loadingRightNow() {
+      const keys = ['projects'];
+      if (this.currentUser.can('user.list')) keys.push('users');
+      return this.$store.getters.initiallyLoading(keys);
+    },
+    showsRightNow() {
+      if (this.projects == null) return false;
+      return !(this.currentUser.can('user.list') && this.users == null);
+    }
+  },
   created() {
-    this.$store.dispatch('get', [
-      {
-        key: 'projects',
-        url: '/projects',
-        extended: true
-      },
-      {
-        key: 'users',
-        url: '/users'
-      }
-    ]).catch(() => {});
+    this.$store.dispatch('get', [{
+      key: 'projects',
+      url: '/projects',
+      extended: true
+    }]).catch(noop);
+    if (this.currentUser.can('user.list')) {
+      this.$store.dispatch('get', [{ key: 'users', url: '/users' }])
+        .catch(noop);
+    }
   },
   methods: {
     scrollToProjects() {

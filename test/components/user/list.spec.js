@@ -40,8 +40,7 @@ describe('UserList', () => {
         .route('/users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
+        .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         });
     });
