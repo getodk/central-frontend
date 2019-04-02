@@ -549,10 +549,10 @@ describe('FormAttachmentList', () => {
 
     it('shows a backdrop', () =>
       upload('a')
-        .respondWithSuccess()
-        .beforeEachResponse(app => {
+        .beforeResponse(app => {
           app.first('#form-attachment-popups-backdrop').should.be.visible();
-        }));
+        })
+        .respondWithSuccess());
 
     it('shows the popup with the correct text', () =>
       upload('a')

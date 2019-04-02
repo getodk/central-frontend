@@ -106,8 +106,8 @@ its own callback, thereby completing the series of request-response cycles.
 In other words, using mockHttp() involves two phases:
 
   1. Setup. Specify the series of request-response cycles, as well as some
-     hooks, such as beforeEachResponse() and beforeEachNav(). As a precaution,
-     many setup methods will throw an error if they are called more than once.
+     hooks, such as beforeResponses() and beforeEachNav(). As a precaution, many
+     setup methods will throw an error if they are called more than once.
   2. Execution. Once you specify a hook to run after the responses, the series
      of request-response cycles is kicked off.
 
@@ -178,6 +178,7 @@ class MockHttp {
     request = null,
     // Array of response callbacks
     responses = [],
+    beforeResponses = null,
     beforeEachResponse = null
   } = {}) {
     this._previousPromise = previousPromise;
@@ -186,6 +187,7 @@ class MockHttp {
     this._mount = mount;
     this._request = request;
     this._responses = responses;
+    this._beforeResponses = beforeResponses;
     this._beforeEachResponse = beforeEachResponse;
   }
 
@@ -197,6 +199,7 @@ class MockHttp {
       mount: this._mount,
       request: this._request,
       responses: this._responses,
+      beforeResponses: this._beforeResponses,
       beforeEachResponse: this._beforeEachResponse,
       ...options
     });
@@ -313,6 +316,19 @@ class MockHttp {
 
   //////////////////////////////////////////////////////////////////////////////
   // HOOKS FOR BEFORE RESPONSES
+
+  // Specifies a callback to run before any response is returned. The callback
+  // may return a Promise or a non-Promise value. The callback may itself send
+  // one or more requests.
+  beforeResponses(callback) {
+    if (this._beforeResponses != null)
+      throw new Error('cannot call beforeResponses() more than once in a single series');
+    // When we run the callback later, we do not want it to be bound to the
+    // MockHttp.
+    return this._with({ beforeResponses: callback.bind(null) });
+  }
+
+  beforeResponse(callback) { return this.beforeResponses(callback); }
 
   /*
   beforeEachResponse() specifies a callback to run before each response is
@@ -448,12 +464,13 @@ class MockHttp {
         else comes after the hook.
 
         It is because the second promise is returned to Frontend and not Mocha
-        that _tryBeforeEachNav() and _tryBeforeEachResponse() catch any error
-        even though they are called within a promise chain. Those methods catch
-        and store any error so that the after responses hook is able to reject
-        the first promise.
+        that _tryBeforeEachNav(), _tryBeforeResponses(), and
+        _tryBeforeEachResponse() catch any error even though they are called
+        within a promise chain. Those methods catch and store any error so that
+        the after responses hook is able to reject the first promise.
         */
         this._responsesPromise = Promise.resolve();
+        this._errorFromBeforeResponses = null;
         this._errorFromBeforeEachResponse = null;
         this._errorFromResponse = null;
         this._requestWithoutResponse = false;
@@ -499,6 +516,9 @@ class MockHttp {
         // Run Vue.nextTick() so that Vue has a chance to react after the
         // initial requests or the previous response.
         .then(() => Vue.nextTick())
+        .then(() => (index === 0 && this._beforeResponses != null
+          ? this._tryBeforeResponses()
+          : null))
         .then(() => (this._beforeEachResponse != null
           ? this._tryBeforeEachResponse(config, index)
           : null))
@@ -523,6 +543,27 @@ class MockHttp {
         }));
       return this._responsesPromise;
     };
+  }
+
+  // _tryBeforeResponses() runs this._beforeResponses(), catching any resulting
+  // error. Afterwards, it runs Vue.nextTick() so that Vue has a chance to
+  // react to any changes that the callback made.
+  _tryBeforeResponses() {
+    // this._beforeResponses() may return a Promise, or it may simply make an
+    // assertion that may throw an error. That means that we have to be prepared
+    // to catch any error in two ways. In neither case do we re-throw the error,
+    // because doing so would prevent Frontend from receiving the specified
+    // response.
+    try {
+      return Promise.resolve(this._beforeResponses(this._component))
+        .catch(e => {
+          this._errorFromBeforeResponses = e;
+        })
+        .finally(() => Vue.nextTick());
+    } catch (e) {
+      this._errorFromBeforeResponses = e;
+    }
+    return Vue.nextTick();
   }
 
   // _tryBeforeEachResponse() runs this._beforeEachResponse(), catching any
@@ -665,6 +706,11 @@ class MockHttp {
       console.log('the beforeEachNav() callback threw an error');
       throw this._errorFromBeforeEachNav;
     }
+    if (this._errorFromBeforeResponses != null) {
+      // eslint-disable-next-line no-console
+      console.log('the beforeResponses() callback threw an error');
+      throw this._errorFromBeforeResponses;
+    }
     if (this._errorFromBeforeEachResponse != null) {
       // eslint-disable-next-line no-console
       console.log('the beforeEachResponse() callback threw an error');
@@ -709,7 +755,7 @@ class MockHttp {
     };
     return this
       .respondWithProblem()
-      .beforeEachResponse(component => {
+      .beforeResponse(component => {
         const button = component.first(buttonSelector);
         button.getAttribute('disabled').should.be.ok();
         spinner(button).getProp('state').should.be.true();
@@ -799,7 +845,7 @@ class MockHttp {
     const anySetup = this._route != null ||
       this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
-      this._beforeEachResponse != null;
+      this._beforeResponses != null || this._beforeEachResponse != null;
     if (!anySetup && this._previousPromise == null) return Promise.resolve();
     const promise = anySetup
       ? this.complete()._previousPromise
