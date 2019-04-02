@@ -60,12 +60,10 @@ each user either is a Project Manager or has no role. -->
 
 <script>
 import ProjectUserRow from './row.vue';
-import request from '../../../mixins/request';
 
 export default {
   name: 'ProjectUserList',
   components: { ProjectUserRow },
-  mixins: [request()],
   props: {
     projectId: {
       type: String,
