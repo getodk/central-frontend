@@ -158,17 +158,19 @@ class Store extends Collection {
   get size() { return this._objects.length; }
   get(index) { return this._objects[index]; }
 
-  update(object, callback) {
-    const { createdAt } = object;
-    callback(object);
-    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
-      // eslint-disable-next-line no-param-reassign
-      object.updatedAt = new Date().toISOString();
-    }
-    if (object.createdAt !== createdAt) {
+  // update() updates an existing object, setting the properties specified by
+  // `props`. If the object has an updatedAt property, it is set to the current
+  // time.
+  update(object, props) {
+    if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
       // this._objects is sorted by createdAt, so we currently do not support
       // updates to createdAt.
       throw new Error('createdAt cannot be updated');
+    }
+    Object.assign(object, props);
+    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
+      // eslint-disable-next-line no-param-reassign
+      object.updatedAt = new Date().toISOString();
     }
   }
 

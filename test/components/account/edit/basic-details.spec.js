@@ -22,9 +22,7 @@ describe('AccountEditBasicDetails', () => {
       ]))
       .respondWithData(() => {
         const user = testData.administrators.last();
-        testData.administrators.update(user, () => {
-          user.email = newEmail;
-        });
+        testData.administrators.update(user, { email: newEmail });
         return user;
       })
       .afterResponse(app => app.should.alert('success'));
@@ -38,9 +36,7 @@ describe('AccountEditBasicDetails', () => {
         ['input[type="text"]', newName]
       ]))
       .respondWithData(() => {
-        testData.administrators.update(user, () => {
-          user.displayName = newName;
-        });
+        testData.administrators.update(user, { displayName: newName });
         return user;
       })
       .afterResponse(app => {

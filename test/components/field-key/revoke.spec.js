@@ -86,10 +86,10 @@ describe('FieldKeyRevoke', () => {
       .request(() => clickRevokeInMenu(app)
         .then(confirmRevoke)
         .then(() => {
-          const first = testData.extendedFieldKeys.sorted()[0];
-          testData.extendedFieldKeys.update(first, () => {
-            first.token = null;
-          });
+          testData.extendedFieldKeys.update(
+            testData.extendedFieldKeys.sorted()[0],
+            { token: null }
+          );
         }))
       .respondWithSuccess()
       .respondWithData(() => testData.extendedFieldKeys.sorted()));
