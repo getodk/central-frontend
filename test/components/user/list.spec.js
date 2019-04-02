@@ -60,6 +60,14 @@ describe('UserList', () => {
   describe('after login as an administrator', () => {
     beforeEach(mockLogin);
 
+    it('shows the table headers while the users are loading', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData(() => testData.standardUsers.sorted())
+        .beforeEachResponse(component => {
+          component.find('thead tr').length.should.equal(1);
+        }));
+
     it('table contains the correct data', () => {
       const users = testData.administrators.createPast(1).sorted();
       return mockHttp()

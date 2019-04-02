@@ -30,8 +30,7 @@ except according to the terms contained in the LICENSE file.
     <div class="table-actions">
       <refresh-button :configs="refreshConfigs"/>
     </div>
-    <loading :state="$store.getters.initiallyLoading(['users'])"/>
-    <table v-if="users != null" id="user-list-table" class="table">
+    <table id="user-list-table" class="table">
       <thead>
         <tr>
           <th>Email Address</th>
@@ -39,11 +38,12 @@ except according to the terms contained in the LICENSE file.
           <th class="user-actions">Actions</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="users != null && users.length !== 0">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :highlighted="highlighted" @reset-password="showResetPassword"/>
       </tbody>
     </table>
+    <loading :state="$store.getters.initiallyLoading(['users'])"/>
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
