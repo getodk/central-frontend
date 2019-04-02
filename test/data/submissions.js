@@ -2,7 +2,7 @@ import R from 'ramda';
 import { DateTime } from 'luxon';
 
 import faker from '../faker';
-import { administrators } from './administrators';
+import { administrators } from './users';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 

@@ -1,7 +1,7 @@
 import R from 'ramda';
 
 import faker from '../faker';
-import { administrators } from './administrators';
+import { administrators } from './users';
 import { dataStore, view } from './data-store';
 
 export const extendedFieldKeys = dataStore({
