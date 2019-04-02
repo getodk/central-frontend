@@ -34,7 +34,7 @@ describe('ProjectList', () => {
     });
 
     for (const selector of ['.navbar-brand', '#navbar-projects-link']) {
-      it(`redirects user to project list upon a click on ${selector}`, () => {
+      it(`navigates to the project list after a click on ${selector}`, () => {
         mockLogin();
         return mockRoute('/users')
           .respondWithData(() => testData.administrators.sorted())

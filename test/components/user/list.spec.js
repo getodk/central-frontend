@@ -2,6 +2,7 @@ import UserList from '../../../lib/components/user/list.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { trigger } from '../../event';
 
 describe('UserList', () => {
   describe('routing', () => {
@@ -42,6 +43,17 @@ describe('UserList', () => {
         .respondWithData(() => testData.standardUsers.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it('navigates to /users after a click on the navbar link', () => {
+      mockLogin();
+      return mockRoute('/account/edit')
+        .complete()
+        .request(app => trigger.click(app, '#navbar-users-link'))
+        .respondWithData(() => testData.standardUsers.sorted())
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/users');
         });
     });
   });

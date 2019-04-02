@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       </div>
 
       <div id="navbar-collapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
+        <ul v-if="currentUser != null" id="navbar-links" class="nav navbar-nav">
           <li :class="{ active: $route.path === '/' || routePathStartsWith('/projects') }">
             <router-link id="navbar-projects-link" to="/">
               Projects
@@ -36,7 +36,8 @@ except according to the terms contained in the LICENSE file.
               </span>
             </router-link>
           </li>
-          <li :class="{ active: routePathStartsWith('/users') }">
+          <li v-if="canRoute('UserList')"
+            :class="{ active: routePathStartsWith('/users') }">
             <router-link id="navbar-users-link" to="/users">
               Users
               <span v-show="routePathStartsWith('/users')" class="sr-only">
@@ -44,7 +45,8 @@ except according to the terms contained in the LICENSE file.
               </span>
             </router-link>
           </li>
-          <li :class="{ active: routePathStartsWith('/system/backups') }">
+          <li v-if="canRoute('BackupList')"
+            :class="{ active: routePathStartsWith('/system/backups') }">
             <router-link id="navbar-system-link" to="/system/backups">
               System
               <span v-show="routePathStartsWith('/system/backups')" class="sr-only">
@@ -86,6 +88,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../mixins/request';
+import { canRoute } from '../router';
 import { requestData } from '../store/modules/request';
 
 export default {
@@ -97,6 +100,9 @@ export default {
       if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
       return this.$route.path === path ||
         this.$route.path.startsWith(`${path}/`);
+    },
+    canRoute(routeName) {
+      return canRoute(this.currentUser, routeName);
     },
     logOut() {
       // Backend ensures that the token is URL-safe.

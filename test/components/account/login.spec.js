@@ -5,8 +5,23 @@ import { mockRouteThroughLogin, submitLoginForm } from '../../session';
 import { trigger } from '../../util';
 
 describe('AccountLogin', () => {
-  describe('user is logged out and has no cookie', () => {
-    it('navbar indicates that the user is logged out', () =>
+  describe('user is logged out, and their session is not restored', () => {
+    it('changes next query parameter after .navbar-brand is clicked', () =>
+      mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(app => trigger.click(app, '.navbar-brand'))
+        .then(app => {
+          app.vm.$route.fullPath.should.equal('/login?next=%2F');
+        }));
+
+    it('does not show the navbar links', () =>
+      mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(app => {
+          app.find('#navbar-links').should.be.empty();
+        }));
+
+    it('indicates in the navbar that the user is logged out', () =>
       mockRoute('/login')
         .restoreSession(false)
         .afterResponse(app => {
@@ -14,16 +29,14 @@ describe('AccountLogin', () => {
           link.text().trim().should.equal('Not logged in');
         }));
 
-    it('first field is focused', () =>
-      // We need mockRoute() and not just mockHttp(), because AccountLogin uses
-      // $route at render.
+    it('focuses the first field of the login form', () =>
       mockRoute('/login', { attachToDocument: true })
         .restoreSession(false)
         .afterResponse(app => {
           app.first('#account-login input[type="email"]').should.be.focused();
         }));
 
-    it('standard button thinking things', () =>
+    it('implements some standard button things for the login form', () =>
       mockRoute('/login')
         .restoreSession(false)
         .complete()
@@ -48,7 +61,7 @@ describe('AccountLogin', () => {
   });
 
   describe('after a login through the login page', () => {
-    it("navbar shows the user's display name", () =>
+    it("displays the user's display name in the navbar", () =>
       mockRouteThroughLogin('/users')
         .respondWithData(() => testData.administrators.sorted())
         .afterResponse(app => {
