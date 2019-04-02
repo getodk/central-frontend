@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-attachment-list" ref="dropZone">
-    <div id="form-attachment-list-heading">
+    <div class="heading-with-button">
       <button class="btn btn-primary" type="button"
         @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span>Upload files
@@ -362,15 +362,6 @@ export default {
   // Extend to the bottom of the page (or slightly beyond it) so that the drop
   // zone includes the entire page below the PageHead.
   min-height: calc(100vh - 146px);
-}
-
-#form-attachment-list-heading {
-  margin-bottom: 20px;
-
-  button {
-    float: right;
-    margin-left: 10px;
-  }
 }
 
 #form-attachment-list-table {

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div id="field-key-list-heading">
+    <div class="heading-with-button">
       <button id="field-key-list-new-button" type="button"
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
@@ -208,15 +208,6 @@ export default {
 
 <style lang="sass">
 @import '../../../assets/scss/variables';
-
-#field-key-list-heading {
-  margin-bottom: 20px;
-
-  button {
-    float: right;
-    margin-left: 20px;
-  }
-}
 
 #field-key-list-table {
   > tbody > tr > td {
