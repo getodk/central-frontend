@@ -35,6 +35,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../../mixins/request';
+import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'AccountEditBasicDetails',
@@ -47,11 +48,11 @@ export default {
       displayName
     };
   },
+  computed: requestData(['currentUser']),
   methods: {
     submit() {
-      const { id } = this.$store.state.request.data.currentUser;
       const data = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${id}`, data)
+      this.patch(`/users/${this.currentUser.id}`, data)
         .then(response => {
           this.$store.commit('setData', {
             key: 'currentUser',
