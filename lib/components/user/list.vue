@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
     <table v-if="users != null" id="user-list-table" class="table">
       <thead>
         <tr>
-          <th>Email</th>
+          <th>Email Address</th>
           <th>Is Administrator?</th>
           <th class="user-actions">Actions</th>
         </tr>
