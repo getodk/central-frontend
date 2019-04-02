@@ -1,3 +1,4 @@
+import User from '../lib/presenters/user';
 import store from '../lib/store';
 import testData from './data';
 import { mockRoute } from './http';
@@ -10,7 +11,7 @@ export const mockLogin = (options = undefined) => {
   const user = testData.extendedUsers
     .createPast(1, { role: 'admin', ...options })
     .first();
-  store.commit('setData', { key: 'currentUser', value: user });
+  store.commit('setData', { key: 'currentUser', value: new User(user) });
 };
 
 export const submitLoginForm = (wrapper, email) =>

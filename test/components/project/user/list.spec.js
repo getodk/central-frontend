@@ -1,5 +1,6 @@
 import ProjectUserList from '../../../../lib/components/project/user/list.vue';
 import Spinner from '../../../../lib/components/spinner.vue';
+import User from '../../../../lib/presenters/user';
 import testData from '../../../data';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
@@ -20,7 +21,7 @@ const loadProjectUsers = ({ count, currentUser = false, route = false }) => {
   return mockHttp()
     .mount(ProjectUserList, {
       propsData: { projectId: '1' },
-      requestData: { currentUser: testData.administrators.first() }
+      requestData: { currentUser: new User(testData.administrators.first()) }
     })
     .respondWithData(() => managers);
 };

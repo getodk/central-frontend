@@ -53,10 +53,12 @@ export default {
     submit() {
       const data = { email: this.email, displayName: this.displayName };
       this.patch(`/users/${this.currentUser.id}`, data)
-        .then(response => {
+        .then(() => {
+          // Not using the response data, because it does not have the `verbs`
+          // extended metadata property.
           this.$store.commit('setData', {
             key: 'currentUser',
-            value: response.data
+            value: this.currentUser.with(data)
           });
           this.$alert().success('Success! Your user details have been updated.');
         })
