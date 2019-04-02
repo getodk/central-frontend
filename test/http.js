@@ -489,14 +489,18 @@ class MockHttp {
         // navigate to a different location; otherwise the navigation will be
         // aborted. Here, we navigate to a location that we also know will not
         // send a request.
-        return new Promise((resolve, reject) => router.push(
-          `/_initialPromise${Vue.prototype.$uniqueId()}`,
-          () => {
-            store.commit('resetRouterState');
-            resolve();
-          },
-          () => reject(new Error('navigation aborted'))
-        ));
+        return new Promise((resolve, reject) => {
+          router.push(
+            `/_initialPromise${Vue.prototype.$uniqueId()}`,
+            () => {
+              store.commit('resetRouterState');
+              resolve();
+            },
+            () => {
+              reject(new Error('navigation aborted'));
+            }
+          );
+        });
       });
   }
 
@@ -639,12 +643,15 @@ class MockHttp {
         navigation to this._route is aborted: the onAbort callback waits a tick,
         but that might not be long enough for an asynchronous guard to
         return.) */
-        () => Vue.nextTick(() => {
-          if (store.state.router.navigations.last.confirmed)
-            resolve();
-          else
-            reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));
-        })
+        () => {
+          Vue.nextTick(() => {
+            if (store.state.router.navigations.last.confirmed) {
+              resolve();
+            } else {
+              reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));
+            }
+          });
+        }
       );
       if (this._mount != null) {
         // If the initial navigation is asynchronous, we mount before waiting
