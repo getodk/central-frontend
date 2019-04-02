@@ -11,13 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <float-row class="table-actions">
-      <refresh-button slot="left" :configs="refreshConfigs"/>
-      <button id="user-list-new-button" slot="right" type="button"
-        class="btn btn-primary" @click="showModal('newUser')">
+    <div class="heading-with-button">
+      <button id="user-list-new-button" type="button" class="btn btn-primary"
+        @click="showModal('newUser')">
         <span class="icon-plus-circle"></span>Create Web User
       </button>
-    </float-row>
+      <p>
+        Web Users have accounts on this website to oversee and administer the
+        Projects on this server. Administrators can manage anything on the site.
+        Users with no role can still be made Project Managers on any Project,
+        from that Project's settings.
+      </p>
+      <p>
+        For more information,
+        <doc-link to="central-users/#managing-app-users">click here</doc-link>.
+      </p>
+    </div>
+    <div class="table-actions">
+      <refresh-button :configs="refreshConfigs"/>
+    </div>
     <loading :state="$store.getters.initiallyLoading(['users'])"/>
     <table v-if="users != null" id="user-list-table" class="table">
       <thead>

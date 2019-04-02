@@ -13,11 +13,6 @@ except according to the terms contained in the LICENSE file.
   <div>
     <page-head>
       <template slot="title">Users</template>
-      <template slot="body">
-        Web Users can log into this website to perform administrative tasks.
-        Soon, you will be able to assign Web Users rights to only manage
-        particular Projects.
-      </template>
     </page-head>
     <page-body>
       <keep-alive>
