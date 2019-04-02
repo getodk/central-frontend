@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="highlight(user, 'id')">
+  <tr :class="{ success: user.id === highlighted }">
     <td>{{ user.email }}</td>
     <td>Yes</td>
     <td class="user-actions">
@@ -33,11 +33,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import highlight from '../../mixins/highlight';
-
 export default {
   name: 'UserRow',
-  mixins: [highlight()],
   props: {
     user: {
       type: Object,

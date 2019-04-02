@@ -66,7 +66,9 @@ export default {
   mixins: [modal(['newUser', 'resetPassword'])],
   data() {
     return {
+      // The id of the highlighted user
       highlighted: null,
+      // Modals
       newUser: {
         state: false
       },
