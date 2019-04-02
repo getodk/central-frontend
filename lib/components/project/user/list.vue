@@ -188,8 +188,9 @@ export default {
 <style lang="scss">
 @import '../../../../assets/scss/variables';
 
-#project-user-list {
-  // Fixing column widths so that they do not change during search.
+#project-user-list table {
+  table-layout: fixed;
+
   th, td {
     width: 50%;
   }
