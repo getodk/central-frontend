@@ -53,7 +53,7 @@ describe('ProjectUserList', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/projects/1/users')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => []) // managers
+        .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/users');
         }));

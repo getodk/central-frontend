@@ -50,7 +50,7 @@ each user either is a Project Manager or has no role. -->
           @decrement-count="decrementCount" @success="afterAssign"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['managers', 'users'])"/>
+    <loading :state="$store.getters.initiallyLoading(['assignmentActors', 'users'])"/>
     <p v-show="emptyMessage != null" class="empty-table-message">
       {{ emptyMessage }}
     </p>
@@ -98,7 +98,7 @@ export default {
     should update that element.
     */
     searchDisabled() {
-      return this.$store.getters.loading('managers') ||
+      return this.$store.getters.loading('assignmentActors') ||
         this.assignRequestCount !== 0;
     },
     // The assignments to show in the table
@@ -133,10 +133,10 @@ export default {
     fetchData() {
       this.managerAssignments = null;
       this.$store.dispatch('get', [{
-        key: 'managers',
+        key: 'assignmentActors',
         url: `/projects/${this.projectId}/assignments/manager`,
-        success: ({ managers }) => {
-          this.managerAssignments = managers
+        success: ({ assignmentActors }) => {
+          this.managerAssignments = assignmentActors
             .map(actor => ({ actor, manager: true }));
         }
       }]).catch(noop);
