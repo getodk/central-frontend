@@ -225,9 +225,15 @@ describe('ProjectUserList', () => {
 
         it('allows another search, canceling the first search', () =>
           search()
+            // Sends a request for a second search.
             .beforeResponses(component =>
               changeQ(component, 'some other search term'))
-            .respondWithData(() => []));
+            // search() specifies the response to the first search: this is the
+            // response to the second search.
+            .respondWithData(() => [testData.administrators.last()])
+            .afterResponses(component => {
+              component.find('tbody tr').length.should.equal(1);
+            }));
       });
 
       describe('after a successful response to the search request', () => {
