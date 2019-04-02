@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             <option value="">None</option>
           </select>
           <span class="spinner-container">
-            <spinner :state="requesting"/>
+            <spinner :state="awaitingResponse"/>
           </span>
         </div>
       </form>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      requesting: false,
+      awaitingResponse: false,
       selectedRole: this.assignment.manager ? 'manager' : ''
     };
   },
@@ -57,7 +57,7 @@ export default {
     ...requestData(['currentUser']),
     disabled() {
       return this.assignment.actor.id === this.currentUser.id ||
-        this.requesting;
+        this.awaitingResponse;
     },
     title() {
       if (this.assignment.actor.id !== this.currentUser.id) return '';
@@ -71,8 +71,6 @@ export default {
       const newRole = this.$refs.select.value;
 
       this.$emit('increment-count');
-      this.requesting = true;
-
       const manager = newRole === 'manager';
       const method = manager ? 'POST' : 'DELETE';
       const { actor } = this.assignment;
@@ -84,9 +82,8 @@ export default {
         })
         .catch(() => {})
         .finally(() => {
-          if (this.$store.state.router.currentRoute !== currentRoute) return;
-          this.$emit('decrement-count');
-          this.requesting = false;
+          if (this.$store.state.router.currentRoute === currentRoute)
+            this.$emit('decrement-count');
         });
 
       this.selectedRole = newRole;
