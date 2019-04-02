@@ -10,17 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <visibility-delay :state="state" class="loading">
-    <p>Loading…</p>
-  </visibility-delay>
+  <div v-show="state" class="loading">Loading…</div>
 </template>
 
 <script>
-import VisibilityDelay from './visibility-delay.vue';
-
 export default {
   name: 'Loading',
-  components: { VisibilityDelay },
   props: {
     state: {
       type: Boolean,
@@ -31,8 +26,9 @@ export default {
 </script>
 
 <style lang="sass">
-.loading p {
+.loading {
   color: #999;
+  margin-bottom: 10px;
   text-align: center;
 }
 </style>
