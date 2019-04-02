@@ -213,13 +213,19 @@ export default {
     width: 250px;
   }
 
-  // Styled similarly to .alert-dismissable .close
   .close {
+    // Similar to .alert-dismissable .close.
     position: relative;
     right: 30px;
     top: 4px;
     // 1 greater than the z-index for .form-control
     z-index: 2;
+
+    opacity: 0.5;
+
+    &:hover, &:focus {
+      opacity: 0.2;
+    }
   }
 }
 </style>
