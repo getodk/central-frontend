@@ -95,27 +95,25 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template slot="body">
+        <table id="project-list-table" class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Forms</th>
+              <th>Latest Submission</th>
+            </tr>
+          </thead>
+          <tbody v-if="projects != null">
+            <project-row v-for="project of projects" :key="project.id"
+              :project-count="projects.length" :project="project"
+              @show-introduction="showIntroduction"/>
+          </tbody>
+        </table>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
-        <template v-if="projects != null">
-          <p v-if="projects.length === 0"
-            id="project-list-empty-message">
-            You do not have access to any Projects.
-          </p>
-          <table v-else id="project-list-table" class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Forms</th>
-                <th>Latest Submission</th>
-              </tr>
-            </thead>
-            <tbody>
-              <project-row v-for="project of projects" :key="project.id"
-                :project-count="projects.length" :project="project"
-                @show-introduction="showIntroduction"/>
-            </tbody>
-          </table>
-        </template>
+        <p v-if="projects != null && projects.length === 0"
+          class="empty-table-message">
+          You do not have access to any Projects.
+        </p>
       </template>
     </page-section>
 
@@ -266,6 +264,12 @@ export default {
 }
 
 #project-list-table {
+  table-layout: fixed;
+
+  th, td {
+    width: 33.33%;
+  }
+
   tbody td {
     vertical-align: middle;
 

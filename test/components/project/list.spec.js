@@ -111,6 +111,14 @@ describe('ProjectList', () => {
   describe('after login as an administrator', () => {
     beforeEach(mockLogin);
 
+    it('shows the table headers while the projects are loading', () =>
+      mockRoute('/')
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .beforeEachResponse(app => {
+          app.find('thead tr').length.should.equal(1);
+        }));
+
     it('lists the projects in the correct order', () =>
       mockRoute('/')
         .respondWithData(() => testData.extendedProjects
@@ -145,7 +153,7 @@ describe('ProjectList', () => {
         .respondWithData(() => testData.extendedProjects.sorted())
         .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
-          app.find('#project-list-empty-message').length.should.equal(1);
+          app.find('.empty-table-message').length.should.equal(1);
         }));
   });
 });
