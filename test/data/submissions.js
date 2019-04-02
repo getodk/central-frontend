@@ -2,9 +2,9 @@ import R from 'ramda';
 import { DateTime } from 'luxon';
 
 import faker from '../faker';
-import { administrators } from './users';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
+import { extendedUsers } from './users';
 
 // Returns a random OData value for a particular field of a submission.
 const oDataValue = (field, instanceId) => {
@@ -105,7 +105,7 @@ export const extendedSubmissions = dataStore({
     // false, the int field will have the specified value.
     ...partialOData
   }) => {
-    const submitter = administrators.randomOrCreatePast();
+    const submitter = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       submitter.createdAt

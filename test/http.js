@@ -72,16 +72,17 @@ After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(UserList)
-    .respondWithData(() => testData.administrators.sorted());
+    .respondWithData(() => testData.standardUsers.sorted());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
 
   mockHttp()
     .mount(App, { router })
-    .request(submitLoginForm)
+    .request(component => submitLoginForm(component, 'test@email.com'))
     .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() => testData.administrators.first());
+    .respondWithData(() =>
+      testData.extendedUsers.createPast(1, { email: 'test@email.com' }));
 
 In rare cases, you may know that mount() and/or request() will not send any
 request. In that case, simply do not specify a response. What is important is
@@ -93,7 +94,7 @@ component once the responses have been processed:
   mockHttp()
     .mount(ProjectList)
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
-    .respondWithData(() => testData.administrators.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     });
@@ -117,7 +118,7 @@ Mocha. You can call then(), catch(), or finally() on the thenable:
   mockHttp()
     .mount(ProjectList)
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
-    .respondWithData(() => testData.administrators.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     })
@@ -133,16 +134,17 @@ cycles: series can be chained. For example:
 
   mockHttp()
     .mount(App, { router })
-    .request(submitLoginForm)
+    .request(component => submitLoginForm(component, 'test@email.com'))
     .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() => testData.administrators.first())
+    .respondWithData(() =>
+      testData.extendedUsers.createPast(1, { email: 'test@email.com' }))
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
-    .respondWithData(() => testData.administrators.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     })
     .request(component => trigger.click(component, '#navbar-users-link'))
-    .respondWithData(() => testData.administrators.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
     })
@@ -306,7 +308,11 @@ class MockHttp {
     if (!restore) return this.respondWithProblem(404.1);
     return this.respondWithData([
       () => testData.sessions.createNew(),
-      () => testData.administrators.firstOrCreatePast()
+      () => {
+        if (testData.extendedUsers.size !== 0)
+          throw new Error('user already exists');
+        return testData.extendedUsers.createPast(1, { role: 'admin' }).last();
+      }
     ]);
   }
 

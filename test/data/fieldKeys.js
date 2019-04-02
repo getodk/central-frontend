@@ -1,8 +1,8 @@
 import R from 'ramda';
 
 import faker from '../faker';
-import { administrators } from './users';
 import { dataStore, view } from './data-store';
+import { extendedUsers } from './users';
 
 export const extendedFieldKeys = dataStore({
   factory: ({
@@ -12,7 +12,7 @@ export const extendedFieldKeys = dataStore({
 
     token = !inPast || faker.random.boolean() ? faker.central.token() : null
   }) => {
-    const createdBy = administrators.randomOrCreatePast();
+    const createdBy = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       createdBy.createdAt

@@ -1,14 +1,41 @@
-import faker from '../faker';
-import { dataStore } from './data-store';
+import R from 'ramda';
 
-// eslint-disable-next-line import/prefer-default-export
-export const administrators = dataStore({
-  factory: ({ inPast, id, lastCreatedAt }) => ({
+import faker from '../faker';
+import { dataStore, view } from './data-store';
+
+const verbsByRole = {
+  admin: [
+    'assignment.list',
+    'config.read',
+    'project.create',
+    'project.list',
+    'user.list'
+  ],
+  none: ['project.list']
+};
+
+export const extendedUsers = dataStore({
+  factory: ({
+    inPast,
     id,
-    displayName: faker.name.findName(),
-    email: faker.internet.uniqueEmail(),
+    lastCreatedAt,
+
+    displayName = faker.name.findName(),
+    email = faker.internet.uniqueEmail(),
+    role = 'admin',
+    verbs = verbsByRole[role]
+  }) => ({
+    id,
+    displayName,
+    email,
+    verbs,
     ...faker.date.timestamps(inPast, [lastCreatedAt])
   }),
   sort: (administrator1, administrator2) =>
     administrator1.email.localeCompare(administrator2.email)
 });
+
+export const standardUsers = view(extendedUsers, R.omit(['verbs']));
+
+// Deprecated.
+export const administrators = standardUsers;

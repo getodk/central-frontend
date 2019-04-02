@@ -1,9 +1,9 @@
 import R from 'ramda';
 
 import faker from '../faker';
-import { administrators } from './users';
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
+import { extendedUsers } from './users';
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -58,7 +58,7 @@ export const extendedForms = dataStore({
     schema = defaultSchema(hasInstanceId)
   }) => {
     const version = faker.random.boolean() ? faker.random.number().toString() : '';
-    const createdBy = administrators.randomOrCreatePast();
+    const createdBy = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       createdBy.createdAt

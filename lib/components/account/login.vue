@@ -98,6 +98,7 @@ export default {
           key: 'currentUser',
           url: '/users/current',
           headers: { Authorization: `Bearer ${data.token}` },
+          extended: true,
           success: () => {
             this.$store.commit('setData', { key: 'session', value: data });
           }

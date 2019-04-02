@@ -27,14 +27,14 @@ describe('AccountLogin', () => {
       mockRoute('/login')
         .restoreSession(false)
         .complete()
-        .request(submitLoginForm)
+        .request(app => submitLoginForm(app, 'test@email.com'))
         .standardButton());
 
     it('incorrect credentials result in error message', () =>
       mockRoute('/login')
         .restoreSession(false)
         .complete()
-        .request(submitLoginForm)
+        .request(app => submitLoginForm(app, 'test@email.com'))
         .respondWithProblem(401.2)
         .afterResponse(app => {
           app.should.alert('danger', 'Incorrect email address and/or password.');
