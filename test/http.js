@@ -551,11 +551,12 @@ class MockHttp {
     and the response.) */
     if (this._requestResponseLog.length === 0) return;
     this._listRequestResponseLog();
-    throw new Error('a request was sent before the request() callback was invoked');
+    throw new Error('a request was sent before the request() callback was run');
   }
 
   _listRequestResponseLog() {
-    console.log('request/response log:'); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.log('request/response log for the last series executed:');
     if (this._requestResponseLog.length === 0)
       console.log('(empty)'); // eslint-disable-line no-console
     else {
