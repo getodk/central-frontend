@@ -99,7 +99,7 @@ except according to the terms contained in the LICENSE file.
         <template v-if="projects != null">
           <p v-if="projects.length === 0"
             id="project-list-empty-message">
-            To get started, add a Project.
+            You do not have access to any Projects.
           </p>
           <table v-else id="project-list-table" class="table">
             <thead>
