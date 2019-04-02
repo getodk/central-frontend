@@ -13,15 +13,14 @@ except according to the terms contained in the LICENSE file.
   <tr :class="highlight(user, 'id')">
     <td>{{ user.email }}</td>
     <td>Yes</td>
-    <td>
+    <td class="user-actions">
       <div class="dropdown">
-        <button :id="actionsId" type="button"
+        <button :id="actionsButtonId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <span class="icon-cog"></span><span class="caret"></span>
         </button>
-        <ul :aria-labelledby="actionsId"
-          class="dropdown-menu dropdown-menu-right">
+        <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
           <li>
             <a href="#" @click.prevent="$emit('reset-password', user)">
               Reset password
@@ -47,8 +46,8 @@ export default {
     highlighted: Number // eslint-disable-line vue/require-default-prop
   },
   computed: {
-    actionsId() {
-      return `user-row-actions${this.user.id}`;
+    actionsButtonId() {
+      return `user-row-actions-button${this.user.id}`;
     }
   }
 };

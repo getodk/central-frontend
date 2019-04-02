@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         <tr>
           <th>Email</th>
           <th>Is Administrator?</th>
-          <th>Actions</th>
+          <th class="user-actions">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -117,18 +117,23 @@ export default {
 </script>
 
 <style lang="sass">
+@import '../../../assets/scss/variables';
+
+// 160px is the width of the .dropdown-menu.
+$actions-width: $padding-left-table-data + $padding-right-table-data + 160px;
+
 #user-list-table {
-  & > thead > tr > th:nth-child(2),
-  & > tbody > tr > td:nth-child(2) {
-    width: 235px;
+  table-layout: fixed;
+
+  th, td {
+    width: calc(50% - #{$actions-width / 2});
+
+    &.user-actions {
+      width: $actions-width;
+    }
   }
 
-  & > thead > tr > th:nth-child(3),
-  & > tbody > tr > td:nth-child(3) {
-    width: 90px;
-  }
-
-  > tbody > tr > td {
+  td {
     vertical-align: middle;
   }
 }
