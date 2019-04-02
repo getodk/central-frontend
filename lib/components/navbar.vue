@@ -27,11 +27,10 @@ except according to the terms contained in the LICENSE file.
 
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <ul v-if="currentUser != null" id="navbar-links" class="nav navbar-nav">
-          <li :class="{ active: $route.path === '/' || routePathStartsWith('/projects') }">
+          <li :class="{ active: projectsLinkIsActive }">
             <router-link id="navbar-projects-link" to="/">
               Projects
-              <span v-show="$route.path === '/' || routePathStartsWith('/projects')"
-                class="sr-only">
+              <span v-show="projectsLinkIsActive" class="sr-only">
                 (current)
               </span>
             </router-link>
@@ -94,7 +93,12 @@ import { requestData } from '../store/modules/request';
 export default {
   name: 'Navbar',
   mixins: [request()],
-  computed: requestData(['session', 'currentUser']),
+  computed: {
+    ...requestData(['session', 'currentUser']),
+    projectsLinkIsActive() {
+      return this.$route.path === '/' || this.routePathStartsWith('/projects');
+    }
+  },
   methods: {
     routePathStartsWith(path) {
       if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
