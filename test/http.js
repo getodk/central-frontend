@@ -45,106 +45,122 @@ First, specify a component to mount. Some components will send a request after
 being mounted, for example:
 
   mockHttp()
-    .mount(UserList)
+    .mount(UserList);
 
 Other components will not send a request. Specify a request after mounting the
 component:
 
+  mockLogin();
   mockHttp()
-    // Redirects to login: no request.
-    .mount(App)
-    // Requests the user list.
-    .request(component => {
-      mockLogin();
-      component.vm.$router.push('/users');
-    })
+    // Mounting AccountEdit does not send a request.
+    .mount(AccountEdit)
+    // Sends a PATCH request.
+    .request(component => submitForm(component, '#account-edit-basic-details', [
+      ['[type="email"]', 'example@opendatakit.org']
+    ]);
 
 If you already have a mounted component, you can skip mockHttp().mount():
 
-  const component = mount(App);
+  const component = mountAndMark(App, { router });
 
   ...
 
   mockHttp()
-    .request(() => {
-      mockLogin();
-      component.vm.$router.push('/users');
-    })
-
-  ...
-
-  // Destroy component.
-
-The important thing is that you call either mount() or request() (or both).
+    .request(component => trigger.click(component, '#navbar-users-link'));
 
 After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(UserList)
-    .respondWithData(() => testData.administrators.sorted())
+    .respondWithData(() => testData.administrators.sorted());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
-specify all the responses, in order:
+specify all the responses, in order of the request:
 
   mockHttp()
-    .mount(App)
+    .mount(App, { router })
     .request(submitLoginForm)
     .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() => testData.administrators.first())
+    .respondWithData(() => testData.administrators.first());
 
 In rare cases, you may know that mount() and/or request() will not send any
-request. For example, that's true for some uses of mockRoute(). In that case,
-simply do not specify a response. What is important is that the number of
-requests matches the number of responses.
+request. In that case, simply do not specify a response. What is important is
+that the number of requests matches the number of responses.
 
-After specifying requests and responses, you can examine the state of the
+After specifying the requests and responses, you can examine the state of the
 component once the responses have been processed:
 
   mockHttp()
-    .mount(FormList)
-    .respondWithData(() => testData.extendedForms.createPast(3).sorted())
-    .afterResponse(component => {
-      component.find('table tbody tr').length.should.equal(3);
-    })
+    .mount(ProjectList)
+    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
+    .respondWithData(() => testData.administrators.sorted())
+    .afterResponses(component => {
+      component.find('#project-list-table tbody tr').length.should.equal(3);
+    });
 
-It is not until afterResponse() that the component is actually mounted and the
-request() callback is invoked. afterResponse() mounts the component, runs the
+It is not until afterResponses() that the component is actually mounted and the
+request() callback is run. afterResponses() mounts the component, runs the
 request() callback, waits for the responses to be processed, then finally runs
 its own callback, thereby completing the series of request-response cycles.
 
-After afterResponse(), you can call any Promise method:
+In other words, using mockHttp() involves two phases:
+
+  1. Setup. Specify the series of request-response cycles, as well as some
+     hooks, such as beforeEachResponse() and beforeEachNav(). As a precaution,
+     many setup methods will throw an error if they are called more than once.
+  2. Execution. Once you specify a hook to run after the responses, the series
+     of request-response cycles is kicked off.
+
+afterResponses() returns a thenable, which usually is ultimately returned to
+Mocha. You can call then(), catch(), or finally() on the thenable:
 
   mockHttp()
-    .mount(FormList)
-    .respondWithData(() => testData.extendedForms.createPast(3))
-    .afterResponse(component => {
-      component.find('table tbody tr').length.should.equal(3);
+    .mount(ProjectList)
+    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
+    .respondWithData(() => testData.administrators.sorted())
+    .afterResponses(component => {
+      component.find('#project-list-table tbody tr').length.should.equal(3);
     })
-    .then(() => console.log('table has 3 rows'))
-    .catch(() => console.log('there was an error'))
+    .then(() => {
+      console.log('table has 3 rows');
+    })
+    .catch(() => {
+      console.log('an error was thrown');
+    });
 
 Alternatively, you can follow the series with a new series of request-response
 cycles: series can be chained. For example:
 
   mockHttp()
-    .mount(App)
-    .request(component => {
-      mockLogin();
-      component.vm.$router.push('/forms');
+    .mount(App, { router })
+    .request(submitLoginForm)
+    .respondWithData(() => testData.sessions.createNew())
+    .respondWithData(() => testData.administrators.first())
+    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
+    .respondWithData(() => testData.administrators.sorted())
+    .afterResponses(component => {
+      component.find('#project-list-table tbody tr').length.should.equal(3);
     })
-    .respondWithData(() => testData.extendedForms.createPast(3))
-    .afterResponse(component => {
-      component.find('table tbody tr').length.should.equal(3);
-    })
-    .complete()
-    .request(component => component.vm.$router.push('/users/field-keys'))
-    .respondWithData(() => testData.extendedFieldKeys.createPast(4))
-    .afterResponse(component => {
-      component.find('table tbody tr').length.should.equal(4);
+    .request(component => trigger.click(component, '#navbar-users-link'))
+    .respondWithData(() => testData.administrators.sorted())
+    .afterResponses(component => {
+      component.find('#user-list-table tbody tr').length.should.equal(1);
     })
 
-Notice how the mounted component is passed to each request() and afterResponse()
-callback, even in the second series.
+Notice how the mounted component is passed to each request() and
+afterResponses() callback, even in the second series.
+
+In some cases, you may need multiple series of request-response cycles, yet do
+not need to assert something in each series. In that case, use complete(), which
+is a shortcut for `afterResponses(component => component)`. Because it calls
+afterResponses(), complete() will also execute the series.
+
+If you are testing a single page, you can usually use mockHttp(). However, if a
+test changes the current route, or if the page uses <router-link>, you should
+use mockRoute().
+
+There is a lot you can do with mockHttp(), and you can learn more by reviewing
+the comments above each method below.
 */
 
 let inProgress = false;
@@ -152,23 +168,23 @@ const statusIs2xx = (status) => status >= 200 && status < 300;
 
 class MockHttp {
   constructor({
+    // If the current series follows a previous series of request-response
+    // cycles, previousPromise is the promise from the previous series.
+    // previousPromise is used to chain series.
     previousPromise = null,
     route = null,
     beforeEachNavGuard = null,
     mount = null,
     request = null,
+    // Array of response callbacks
     responses = [],
     beforeEachResponse = null
   } = {}) {
-    // If the current series follows a previous series of request-response
-    // cycles, this._previousPromise is the promise from the previous series.
-    // this._previousPromise is used to chain series.
     this._previousPromise = previousPromise;
     this._route = route;
     this._beforeEachNavGuard = beforeEachNavGuard;
     this._mount = mount;
     this._request = request;
-    // Array of response callbacks
     this._responses = responses;
     this._beforeEachResponse = beforeEachResponse;
   }
@@ -189,6 +205,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
 
+  /* In addition to mounting a component with mount() and specifying one or more
+  requests with request(), you can change the current route by specifying
+  route(). This mocks the behavior of the user navigating to a different route.
+  route() is called before request(). If changing the route results in a
+  request, do not specify request() in the same series. Instead, specify
+  request() in a chained series. */
   route(location) {
     if (this._route != null)
       throw new Error('cannot call route() more than once in a single series');
@@ -198,7 +220,7 @@ class MockHttp {
   beforeEachNav(callback) {
     if (this._beforeEachNavGuard != null)
       throw new Error('cannot call beforeEachNav() more than once in a single chain');
-    // When we invoke the callback later, we do not want it to be bound to the
+    // When we run the callback later, we do not want it to be bound to the
     // MockHttp.
     const beforeEachNavGuard = callback.bind(null);
     return this._with({ beforeEachNavGuard });
@@ -223,7 +245,7 @@ class MockHttp {
   request(callback) {
     if (this._request != null)
       throw new Error('cannot call request() more than once in a single series');
-    // When we invoke the callback later, we do not want it to be bound to the
+    // When we run the callback later, we do not want it to be bound to the
     // MockHttp.
     return this._with({ request: callback.bind(null) });
   }
@@ -299,7 +321,7 @@ class MockHttp {
   beforeEachResponse(callback) {
     if (this._beforeEachResponse != null)
       throw new Error('cannot call beforeEachResponse() more than once in a single series');
-    // When we invoke the callback later, we do not want it to be bound to the
+    // When we run the callback later, we do not want it to be bound to the
     // MockHttp.
     return this._with({ beforeEachResponse: callback.bind(null) });
   }
@@ -542,11 +564,11 @@ class MockHttp {
     }
   }
 
-  /* _waitOnWork() waits for the app to complete any ongoing work, for example,
+  /* _waitOnWork() waits for Frontend to complete any ongoing work, for example,
   processing the response to a request. _waitOnWork() first uses setTimeout() to
   resolve pending promises: see
   https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html.
-  Then, if _waitOnWork() receives a callback, it will repeatedly invoke the
+  Then, if _waitOnWork() receives a callback, it will repeatedly run the
   callback until the callback returns a truthy value (or until Karma times
   out). */
   _waitOnWork(callback = undefined) {
