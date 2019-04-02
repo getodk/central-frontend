@@ -60,6 +60,7 @@ each user either is a Project Manager or has no role. -->
 
 <script>
 import ProjectUserRow from './row.vue';
+import { noop } from '../../../util/util';
 
 export default {
   name: 'ProjectUserList',
@@ -137,7 +138,7 @@ export default {
           this.managerAssignments = managers
             .map(actor => ({ actor, manager: true, searchOnly: false }));
         }
-      }]).catch(() => {});
+      }]).catch(noop);
     },
     clearSearch() {
       if (this.refreshAssignments) {
@@ -167,7 +168,7 @@ export default {
             return { actor: user, manager: false, searchOnly: true };
           });
         }
-      }]).catch(() => {});
+      }]).catch(noop);
     },
     incrementCount() {
       this.assignRequestCount += 1;

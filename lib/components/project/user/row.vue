@@ -32,6 +32,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../../mixins/request';
+import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
 export default {
@@ -80,7 +81,7 @@ export default {
         .then(() => {
           this.$emit('success', this.assignment, manager);
         })
-        .catch(() => {})
+        .catch(noop)
         .finally(() => {
           if (this.$store.state.router.currentRoute === currentRoute)
             this.$emit('decrement-count');
