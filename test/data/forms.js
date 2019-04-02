@@ -4,6 +4,7 @@ import faker from '../faker';
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
+import { toActor } from './actors';
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -79,10 +80,7 @@ export const extendedForms = dataStore({
       lastSubmission: submissions !== 0
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
-      createdBy: R.pick(
-        ['id', 'displayName', 'createdAt', 'updatedAt'],
-        createdBy
-      ),
+      createdBy: toActor(createdBy),
       createdAt,
       updatedAt,
       _schema: schema

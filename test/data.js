@@ -1,3 +1,4 @@
+import * as Actors from './data/actors';
 import * as Backups from './data/backups';
 import * as FieldKeys from './data/fieldKeys';
 import * as FormAttachments from './data/form-attachments';
@@ -10,6 +11,7 @@ import { resetDataStores } from './data/data-store';
 
 const testData = Object.assign(
   {},
+  Actors,
   Backups,
   FieldKeys,
   FormAttachments,
