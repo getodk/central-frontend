@@ -69,8 +69,6 @@ export default {
       // Using this.$refs rather than passing $event.target.value to the method
       // in order to facilitate testing.
       const newRole = this.$refs.select.value;
-      if (newRole !== 'manager' && newRole !== '')
-        throw new Error('invalid new role');
 
       this.$emit('increment-count');
       this.requesting = true;
