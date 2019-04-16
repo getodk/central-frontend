@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <!-- Although Backend supports more complex use cases, we assume in this
-component that each that each user is assigned only one role and that further,
-each user either is a Project Manager or has no role. -->
+component that each user is assigned only one role and that further, each user
+either is a Project Manager or has no role. -->
 <template>
   <div id="project-user-list">
     <p id="project-user-list-heading">
@@ -50,7 +50,7 @@ each user either is a Project Manager or has no role. -->
           @decrement-count="decrementCount" @success="afterAssign"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['managers', 'users'])"/>
+    <loading :state="$store.getters.initiallyLoading(['assignmentActors', 'users'])"/>
     <p v-show="emptyMessage != null" class="empty-table-message">
       {{ emptyMessage }}
     </p>
@@ -98,7 +98,7 @@ export default {
     should update that element.
     */
     searchDisabled() {
-      return this.$store.getters.loading('managers') ||
+      return this.$store.getters.loading('assignmentActors') ||
         this.assignRequestCount !== 0;
     },
     // The assignments to show in the table
@@ -133,10 +133,10 @@ export default {
     fetchData() {
       this.managerAssignments = null;
       this.$store.dispatch('get', [{
-        key: 'managers',
+        key: 'assignmentActors',
         url: `/projects/${this.projectId}/assignments/manager`,
-        success: ({ managers }) => {
-          this.managerAssignments = managers
+        success: ({ assignmentActors }) => {
+          this.managerAssignments = assignmentActors
             .map(actor => ({ actor, manager: true }));
         }
       }]).catch(noop);
@@ -188,8 +188,9 @@ export default {
 <style lang="scss">
 @import '../../../../assets/scss/variables';
 
-#project-user-list {
-  // Fixing column widths so that they do not change during search.
+#project-user-list table {
+  table-layout: fixed;
+
   th, td {
     width: 50%;
   }

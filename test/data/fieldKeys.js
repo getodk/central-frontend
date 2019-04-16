@@ -1,8 +1,9 @@
 import R from 'ramda';
 
 import faker from '../faker';
-import { administrators } from './administrators';
 import { dataStore, view } from './data-store';
+import { extendedUsers } from './users';
+import { toActor } from './actors';
 
 export const extendedFieldKeys = dataStore({
   factory: ({
@@ -12,7 +13,7 @@ export const extendedFieldKeys = dataStore({
 
     token = !inPast || faker.random.boolean() ? faker.central.token() : null
   }) => {
-    const createdBy = administrators.randomOrCreatePast();
+    const createdBy = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       createdBy.createdAt
@@ -24,10 +25,7 @@ export const extendedFieldKeys = dataStore({
       lastUsed: inPast && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
-      createdBy: R.pick(
-        ['id', 'displayName', 'createdAt', 'updatedAt'],
-        createdBy
-      ),
+      createdBy: toActor(createdBy),
       createdAt,
       updatedAt
     };

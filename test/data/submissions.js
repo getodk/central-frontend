@@ -2,9 +2,10 @@ import R from 'ramda';
 import { DateTime } from 'luxon';
 
 import faker from '../faker';
-import { administrators } from './administrators';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
+import { extendedUsers } from './users';
+import { toActor } from './actors';
 
 // Returns a random OData value for a particular field of a submission.
 const oDataValue = (field, instanceId) => {
@@ -105,7 +106,7 @@ export const extendedSubmissions = dataStore({
     // false, the int field will have the specified value.
     ...partialOData
   }) => {
-    const submitter = administrators.randomOrCreatePast();
+    const submitter = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       submitter.createdAt
@@ -115,10 +116,7 @@ export const extendedSubmissions = dataStore({
       // We currently do not use the XML anywhere. If/when we do, we should
       // consider whether to keep it in sync with the _oData property.
       xml: '',
-      submitter: R.pick(
-        ['id', 'displayName', 'createdAt', 'updatedAt'],
-        submitter
-      ),
+      submitter: toActor(submitter),
       createdAt,
       updatedAt,
       _oData: oData({

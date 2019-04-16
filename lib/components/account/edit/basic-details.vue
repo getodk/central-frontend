@@ -35,9 +35,10 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../../mixins/request';
+import { requestData } from '../../../store/modules/request';
 
 export default {
-  name: 'FormEditBasicDetails',
+  name: 'AccountEditBasicDetails',
   mixins: [request()],
   data() {
     const { email, displayName } = this.$store.state.request.data.currentUser;
@@ -47,15 +48,17 @@ export default {
       displayName
     };
   },
+  computed: requestData(['currentUser']),
   methods: {
     submit() {
-      const { id } = this.$store.state.request.data.currentUser;
       const data = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${id}`, data)
-        .then(response => {
+      this.patch(`/users/${this.currentUser.id}`, data)
+        .then(() => {
+          // Not using the response data, because it does not have the `verbs`
+          // extended metadata property.
           this.$store.commit('setData', {
             key: 'currentUser',
-            value: response.data
+            value: this.currentUser.with(data)
           });
           this.$alert().success('Success! Your user details have been updated.');
         })

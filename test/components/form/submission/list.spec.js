@@ -10,34 +10,27 @@ import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';
 
-const submissionsPath = (form) =>
-  `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}/submissions`;
-
 describe('FormSubmissionList', () => {
   describe('routing', () => {
     it('anonymous user is redirected to login', () =>
-      mockRoute('/projects/1/forms/x/submissions')
+      mockRoute('/projects/1/forms/f/submissions')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
-    it('after login, user is redirected back', () => {
-      const project = testData.extendedProjects.createPast(1).last();
-      const form = testData.extendedForms
-        .createPast(1, { submissions: 0 })
-        .last();
-      const path = submissionsPath(form);
-      return mockRouteThroughLogin(path)
-        .respondWithData(() => project)
-        .respondWithData(() => form)
+    it('after login, user is redirected back', () =>
+      mockRouteThroughLogin('/projects/1/forms/f/submissions')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', submissions: 0 })
+          .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
-        .respondWithData(() => form._schema)
+        .respondWithData(() => testData.extendedForms.last()._schema)
         .respondWithData(testData.submissionOData)
         .afterResponses(app => {
-          app.vm.$route.path.should.equal(path);
-        });
-    });
+          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        }));
 
     it('updates the component after the route updates', () => {
       mockLogin();
@@ -50,7 +43,7 @@ describe('FormSubmissionList', () => {
       testData.extendedSubmissions
         .createPast(1, { form: forms[0] })
         .createPast(1, { form: forms[1] });
-      return mockRoute(submissionsPath(forms[0]))
+      return mockRoute('/projects/1/forms/a/submissions')
         .beforeEachResponse((app, request, index) => {
           if (index === 3)
             request.url.should.equal('/v1/projects/1/forms/a.schema.json?flatten=true');
@@ -61,7 +54,7 @@ describe('FormSubmissionList', () => {
         .respondWithData(() => forms[0]._schema)
         .respondWithData(() => testData.submissionOData(1, 0))
         .complete()
-        .route(submissionsPath(forms[1]))
+        .route('/projects/1/forms/b/submissions')
         .beforeEachResponse((app, request, index) => {
           if (index === 2)
             request.url.should.equal('/v1/projects/1/forms/b.schema.json?flatten=true');
@@ -456,7 +449,7 @@ describe('FormSubmissionList', () => {
         it(`refreshes part ${i} of table after refresh button is clicked`, () => {
           testData.extendedProjects.createPast(1);
           testData.extendedForms.createPast(1);
-          return mockRoute(submissionsPath(form()))
+          return mockRoute(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.extendedFormAttachments.sorted())
@@ -657,7 +650,7 @@ describe('FormSubmissionList', () => {
               // Sends a request.
               component.vm.onScroll();
             })
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               // This should not send a request. If it does, then the number of
               // requests will exceed the number of responses, and the
               // mockHttp() object will throw an error.
@@ -666,7 +659,7 @@ describe('FormSubmissionList', () => {
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component => trigger.click(component, '.btn-refresh'))
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               // Should not send a request.
               component.vm.onScroll();
             })

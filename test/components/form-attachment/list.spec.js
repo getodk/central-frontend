@@ -40,7 +40,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
 };
 const blankFiles = (names) => names.map(name => new File([''], name));
 const selectFilesUsingModal = (app, files) =>
-  trigger.click(app, '#form-attachment-list-heading button')
+  trigger.click(app, '#form-attachment-list .heading-with-button button')
     .then(() =>
       trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
     .then(() => {
@@ -549,7 +549,7 @@ describe('FormAttachmentList', () => {
 
     it('shows a backdrop', () =>
       upload('a')
-        .beforeResponse(app => {
+        .beforeAnyResponse(app => {
           app.first('#form-attachment-popups-backdrop').should.be.visible();
         })
         .respondWithSuccess());
@@ -694,7 +694,7 @@ describe('FormAttachmentList', () => {
               app = component;
               return trigger.dragenter(
                 app,
-                '#form-attachment-list-heading div',
+                '#form-attachment-list .heading-with-button div',
                 { files: blankFiles(['a', 'b']), ie }
               );
             });
@@ -923,7 +923,7 @@ describe('FormAttachmentList', () => {
               app = component;
               return trigger.dragenter(
                 app,
-                '#form-attachment-list-heading div',
+                '#form-attachment-list .heading-with-button div',
                 { files: blankFiles(['a']), ie }
               );
             });
@@ -980,7 +980,7 @@ describe('FormAttachmentList', () => {
       it('is shown after button click', () =>
         loadAttachments()
           .then(component =>
-            trigger.click(component, '#form-attachment-list-heading button'))
+            trigger.click(component, '.heading-with-button button'))
           .then(component => {
             const modal = component.first(FormAttachmentUploadFiles);
             modal.getProp('state').should.be.true();

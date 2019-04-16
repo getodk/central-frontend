@@ -5,13 +5,6 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const openModal = (wrapper) =>
-  trigger.click(wrapper.first('#user-list-table .dropdown-menu a'))
-    .then(() => wrapper);
-const confirmResetPassword = (wrapper) =>
-  trigger.click(wrapper.first('#user-reset-password-button'))
-    .then(() => wrapper);
-
 describe('UserResetPassword', () => {
   beforeEach(mockLogin);
 
@@ -19,37 +12,46 @@ describe('UserResetPassword', () => {
     it('is initially hidden', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(page => {
-          page.first(UserResetPassword).getProp('state').should.be.false();
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(component => {
+          component.first(UserResetPassword).getProp('state').should.be.false();
         }));
 
     it('opens after button click', () =>
       mockHttp()
         .mount(UserList)
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(openModal)
-        .then(page => {
-          page.first(UserResetPassword).getProp('state').should.be.true();
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(component =>
+          trigger.click(component, '#user-list-table .dropdown-menu a'))
+        .then(component => {
+          component.first(UserResetPassword).getProp('state').should.be.true();
         }));
   });
 
-  it('standard button thinking things', () => {
-    const propsData = { user: testData.administrators.first() };
-    return mockHttp()
-      .mount(UserResetPassword, { propsData })
-      .request(confirmResetPassword)
-      .standardButton('#user-reset-password-button');
-  });
+  it('standard button thinking things', () =>
+    mockHttp()
+      .mount(UserResetPassword, {
+        propsData: { user: testData.standardUsers.first() }
+      })
+      .request(component =>
+        trigger.click(component, '#user-reset-password-button'))
+      .standardButton('#user-reset-password-button'));
 
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute('/users')
-      .respondWithData(() => testData.administrators.sorted())
+      .respondWithData(() => testData.standardUsers.sorted())
+      .respondWithData(() =>
+        testData.standardUsers.sorted().map(testData.toActor))
       .afterResponse(component => {
         app = component;
       })
-      .request(() => openModal(app).then(confirmResetPassword))
+      .request(() => trigger.click(app, '#user-list-table .dropdown-menu a')
+        .then(() => trigger.click(app, '#user-reset-password-button')))
       .respondWithSuccess());
 
     it('modal hides', () => {

@@ -158,17 +158,19 @@ class Store extends Collection {
   get size() { return this._objects.length; }
   get(index) { return this._objects[index]; }
 
-  update(object, callback) {
-    const { createdAt } = object;
-    callback(object);
-    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
-      // eslint-disable-next-line no-param-reassign
-      object.updatedAt = new Date().toISOString();
-    }
-    if (object.createdAt !== createdAt) {
+  // update() updates an existing object, setting the properties specified by
+  // `props`. If the object has an updatedAt property, it is set to the current
+  // time.
+  update(object, props) {
+    if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
       // this._objects is sorted by createdAt, so we currently do not support
       // updates to createdAt.
       throw new Error('createdAt cannot be updated');
+    }
+    Object.assign(object, props);
+    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
+      // eslint-disable-next-line no-param-reassign
+      object.updatedAt = new Date().toISOString();
     }
   }
 
@@ -192,7 +194,14 @@ class View extends Collection {
   constructor(store, transform) {
     super();
     this._store = store;
-    this._callback = transform;
+    // When we run the callback later, we do not want it to be bound to the
+    // View.
+    this._callback = transform.bind(null);
+    // Successively accessing the same index of a Store will return the same
+    // object. To mirror that, each View maintains a cache. That means that
+    // successively accessing the same index of a View will not transform the
+    // same object multiple times -- resulting in different objects -- but
+    // instead will return the same transformed object.
     this._cache = new Map();
   }
 
@@ -208,7 +217,11 @@ class View extends Collection {
   get size() { return this._store.size; }
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }
-  splice(start, deleteCount) { return this._store.splice(start, deleteCount); }
+
+  splice(start, deleteCount) {
+    return this._store.splice(start, deleteCount)
+      .map(object => this._transform(object));
+  }
 
   sorted() {
     const sorted = this._store.sorted();
@@ -218,10 +231,9 @@ class View extends Collection {
   }
 
   _transform(object) {
-    if (object == null) return object;
+    if (object == null) return null;
     if (this._cache.has(object)) return this._cache.get(object);
-    const transform = this._callback;
-    const result = transform(object);
+    const result = this._callback(object);
     this._cache.set(object, result);
     return result;
   }

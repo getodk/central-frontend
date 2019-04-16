@@ -20,13 +20,6 @@ except according to the terms contained in the LICENSE file.
       </p>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <select :disabled="awaitingResponse" class="form-control">
-            <option>Administrator</option>
-            <option disabled>More options available soon</option>
-          </select>
-          <span class="form-label">Role *</span>
-        </label>
-        <label class="form-group">
           <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
             type="email" class="form-control" placeholder="Email address *"
             required>

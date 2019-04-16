@@ -5,8 +5,23 @@ import { mockRouteThroughLogin, submitLoginForm } from '../../session';
 import { trigger } from '../../util';
 
 describe('AccountLogin', () => {
-  describe('user is logged out and has no cookie', () => {
-    it('navbar indicates that the user is logged out', () =>
+  describe('user is logged out, and their session is not restored', () => {
+    it('changes next query parameter after .navbar-brand is clicked', () =>
+      mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(app => trigger.click(app, '.navbar-brand'))
+        .then(app => {
+          app.vm.$route.fullPath.should.equal('/login?next=%2F');
+        }));
+
+    it('does not show the navbar links', () =>
+      mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(app => {
+          app.find('#navbar-links').should.be.empty();
+        }));
+
+    it('indicates in the navbar that the user is logged out', () =>
       mockRoute('/login')
         .restoreSession(false)
         .afterResponse(app => {
@@ -14,67 +29,69 @@ describe('AccountLogin', () => {
           link.text().trim().should.equal('Not logged in');
         }));
 
-    it('first field is focused', () =>
-      // We need mockRoute() and not just mockHttp(), because AccountLogin uses
-      // $route at render.
+    it('focuses the first field of the login form', () =>
       mockRoute('/login', { attachToDocument: true })
         .restoreSession(false)
         .afterResponse(app => {
           app.first('#account-login input[type="email"]').should.be.focused();
         }));
 
-    it('standard button thinking things', () =>
+    it('implements some standard button things for the login form', () =>
       mockRoute('/login')
         .restoreSession(false)
         .complete()
-        .request(submitLoginForm)
+        .request(app => submitLoginForm(app, 'test@email.com'))
         .standardButton());
 
     it('incorrect credentials result in error message', () =>
       mockRoute('/login')
         .restoreSession(false)
         .complete()
-        .request(submitLoginForm)
+        .request(app => submitLoginForm(app, 'test@email.com'))
         .respondWithProblem(401.2)
         .afterResponse(app => {
           app.should.alert('danger', 'Incorrect email address and/or password.');
         }));
 
-    it('clicking the reset password button navigates to that page', () =>
+    it('clicking the reset password button navigates to that route', () =>
       mockRoute('/login')
         .restoreSession(false)
-        .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
-          .then(() => app.vm.$route.path.should.equal('/reset-password'))));
+        .afterResponses(app => trigger.click(app, '.panel-footer .btn-link'))
+        .then(app => {
+          app.vm.$route.path.should.equal('/reset-password');
+        }));
   });
 
   describe('after a login through the login page', () => {
-    it("navbar shows the user's display name", () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => {
-          const link = app.first('.navbar-right > li > a');
-          link.text().trim().should.equal(testData.administrators.first().displayName);
-        }));
+    it("displays the user's display name in the navbar", () =>
+      mockRouteThroughLogin('/account/edit').then(app => {
+        const link = app.first('.navbar-right > li > a');
+        link.text().trim().should.equal(testData.extendedUsers.first().displayName);
+      }));
 
     describe("after clicking the user's display name", () => {
       let app;
-      let dropdown;
+      beforeEach(() =>
+        mockRouteThroughLogin(
+          '/account/edit',
+          // We need to attach the component to the document, because some of
+          // Bootstrap's dropdown event handlers are on the document.
+          { attachToDocument: true },
+          { role: 'none' }
+        )
+          .then(component => {
+            app = component;
+            const toggle = app.first('.navbar-right .dropdown-toggle');
+            // Using $(...).click() rather than `trigger`, because `trigger`
+            // only triggers Vue event handlers, not jQuery ones (I think). (Or
+            // is it needed because the events that `trigger` creates do not
+            // bubble?)
+            $(toggle.element).click();
+            return app.vm.$nextTick();
+          }));
 
-      // We need to attach the component to the document, because some of
-      // Bootstrap's dropdown listeners are on the document.
-      beforeEach(() => mockRouteThroughLogin('/users', { attachToDocument: true })
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(component => {
-          app = component;
-          dropdown = app.first('.navbar-right .dropdown');
-          // Have the event bubble so that it triggers Bootstrap's dropdown
-          // listeners on the document.
-          $(dropdown.first('.dropdown-toggle').element).click();
-          return app.vm.$nextTick();
-        }));
-
-      it('a menu is shown', () => {
-        dropdown.is('.open').should.be.true();
+      it('shows a menu', () => {
+        app.first('.navbar-right .dropdown').hasClass('open').should.be.true();
       });
 
       describe('after clicking logout button', () => {
@@ -99,13 +116,12 @@ describe('AccountLogin', () => {
 
   describe('navigation to /login', () => {
     it('redirects to the root page after a login through the login page', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.administrators.sorted())
+      mockRouteThroughLogin('/account/edit')
         .complete()
         .route('/login')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
         .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => {
+        .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         }));
 
@@ -121,10 +137,11 @@ describe('AccountLogin', () => {
 
   describe('after session restore', () => {
     it('does not redirect other pages to the login page', () =>
-      mockRoute('/users')
+      mockRoute('/account/edit')
         .restoreSession(true)
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => app.vm.$route.path.should.equal('/users')));
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/account/edit');
+        }));
 
     it('does not show the navbar until the first confirmed navigation', () =>
       mockRoute('/login')

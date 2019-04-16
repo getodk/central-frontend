@@ -1,51 +1,48 @@
-import faker from '../../../faker';
 import testData from '../../../data';
 import { mockLogin } from '../../../session';
 import { mockRoute } from '../../../http';
 import { submitForm } from '../../../event';
 
 describe('AccountEditBasicDetails', () => {
-  beforeEach(mockLogin);
+  beforeEach(() => {
+    mockLogin({ displayName: 'Old Name', email: 'old@email.com' });
+  });
 
   it('standard button thinking things', () =>
     mockRoute('/account/edit')
       .request(app => submitForm(app, '#account-edit-basic-details form', [
-        ['input[type="email"]', faker.internet.email()]
+        ['input[type="email"]', 'new@email.com']
       ]))
       .standardButton('#account-edit-basic-details button'));
 
-  it('shows a success alert after a successful submit', () => {
-    const newEmail = faker.internet.uniqueEmail();
-    return mockRoute('/account/edit')
+  it('shows a success alert after a successful submit', () =>
+    mockRoute('/account/edit')
       .request(app => submitForm(app, '#account-edit-basic-details form', [
-        ['input[type="email"]', newEmail]
+        ['input[type="email"]', 'new@email.com']
       ]))
       .respondWithData(() => {
-        const user = testData.administrators.last();
-        testData.administrators.update(user, () => {
-          user.email = newEmail;
+        testData.extendedUsers.update(testData.extendedUsers.last(), {
+          email: 'new@email.com'
         });
-        return user;
-      })
-      .afterResponse(app => app.should.alert('success'));
-  });
-
-  it("updates the user's display name after a successful submit", () => {
-    const user = testData.administrators.last();
-    const newName = `${user.displayName}x`;
-    return mockRoute('/account/edit')
-      .request(app => submitForm(app, '#account-edit-basic-details form', [
-        ['input[type="text"]', newName]
-      ]))
-      .respondWithData(() => {
-        testData.administrators.update(user, () => {
-          user.displayName = newName;
-        });
-        return user;
+        return testData.standardUsers.last();
       })
       .afterResponse(app => {
-        app.first('.dropdown-toggle').text().trim().should.equal(user.displayName);
-        app.first('#page-head-title').text().should.equal(user.displayName);
-      });
-  });
+        app.should.alert('success');
+      }));
+
+  it("updates the user's display name after a successful submit", () =>
+    mockRoute('/account/edit')
+      .request(app => submitForm(app, '#account-edit-basic-details form', [
+        ['input[type="text"]', 'New Name']
+      ]))
+      .respondWithData(() => {
+        testData.extendedUsers.update(testData.extendedUsers.last(), {
+          displayName: 'New Name'
+        });
+        return testData.standardUsers.last();
+      })
+      .afterResponse(app => {
+        app.first('.dropdown-toggle').text().trim().should.equal('New Name');
+        app.first('#page-head-title').text().should.equal('New Name');
+      }));
 });

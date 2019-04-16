@@ -4,29 +4,25 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../util';
 
-const overviewPath = (form) =>
-  `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`;
-
 describe('FormOverview', () => {
   describe('anonymous users', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/forms/x')
+      mockRoute('/projects/1/forms/f')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
-    it('redirects the user back after login', () => {
-      const project = testData.extendedProjects.createPast(1).last();
-      const form = testData.extendedForms.createPast(1).last();
-      return mockRouteThroughLogin(overviewPath(form))
-        .respondWithData(() => project)
-        .respondWithData(() => form)
+    it('redirects the user back after login', () =>
+      mockRouteThroughLogin('/projects/1/forms/f')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f' })
+          .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(app => {
-          app.vm.$route.path.should.equal(overviewPath(form));
-        });
-    });
+          app.vm.$route.path.should.equal('/projects/1/forms/f');
+        }));
   });
 
   describe('after login', () => {
@@ -44,14 +40,15 @@ describe('FormOverview', () => {
         ? 'open'
         : faker.random.arrayElement(['closing', 'closed']);
       const submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-      testData.extendedForms.createPast(1, { state, submissions });
+      testData.extendedForms
+        .createPast(1, { xmlFormId: 'f', state, submissions });
       if (attachmentCount !== 0) {
         testData.extendedFormAttachments.createPast(
           attachmentCount,
           { exists: allAttachmentsExist }
         );
       }
-      return mockRoute(overviewPath(testData.extendedForms.last()))
+      return mockRoute('/projects/1/forms/f')
         .respondWithData(() => testData.extendedProjects.last())
         .respondWithData(() => testData.extendedForms.last())
         .respondWithData(() => testData.extendedFormAttachments.sorted());
@@ -100,7 +97,7 @@ describe('FormOverview', () => {
           const step = app.find('.form-overview-step')[4];
           step.hasClass('form-overview-step-complete').should.be.false();
         })
-        .route(`/projects/1/forms/${testData.extendedForms.last().xmlFormId}/settings`)
+        .route('/projects/1/forms/f/settings')
         .request(app => {
           const formEdit = app.first('#form-edit');
           const closed = formEdit.first('input[type="radio"][value="closed"]');
@@ -108,7 +105,7 @@ describe('FormOverview', () => {
         })
         .respondWithSuccess()
         .complete()
-        .route(overviewPath(testData.extendedForms.last()))
+        .route('/projects/1/forms/f')
         .then(app => {
           const step = app.find('.form-overview-step')[4];
           step.hasClass('form-overview-step-complete').should.be.true();
