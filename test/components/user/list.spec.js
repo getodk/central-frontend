@@ -117,12 +117,14 @@ describe('UserList', () => {
         .afterResponses(component => {
           const { currentUser } = component.vm.$store.state.request.data;
           for (const tr of component.find('table tbody tr')) {
-            const select = tr.first('select');
-            const { disabled, title } = select.element;
             const td = tr.first('td');
             const isCurrentUser = td.text() === currentUser.email;
-            disabled.should.equal(isCurrentUser);
-            (title !== '').should.equal(isCurrentUser);
+            const select = tr.first('select');
+            if (isCurrentUser)
+              select.should.be.disabled();
+            else
+              select.should.not.be.disabled();
+            (select.element.title !== '').should.equal(isCurrentUser);
           }
         }));
 
@@ -184,9 +186,13 @@ describe('UserList', () => {
             loadUsersAndChangeRole({ rowIndex, selectValue })
               .beforeAnyResponse(component => {
                 const select = component.find('table select')[rowIndex];
-                select.getAttribute('disabled').should.equal('disabled');
+                select.should.be.disabled();
               })
-              .respondWithSuccess());
+              .respondWithSuccess()
+              .afterResponse(component => {
+                const select = component.find('table select')[rowIndex];
+                select.should.not.be.disabled();
+              }));
 
           it('shows a spinner during the request', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
