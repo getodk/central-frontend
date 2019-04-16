@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
             <th>Created</th>
             <th>Last Used</th>
             <th>Configure Client</th>
-            <th>Actions</th>
+            <th class="field-key-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -210,8 +210,21 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
+// 160px is the width of the .dropdown-menu.
+$actions-width: $padding-left-table-data + $padding-right-table-data + 160px;
+
 #field-key-list-table {
-  > tbody > tr > td {
+  table-layout: fixed;
+
+  th, td {
+    width: calc(25% - #{$actions-width / 4});
+
+    &.field-key-actions {
+      width: $actions-width;
+    }
+  }
+
+  td {
     vertical-align: middle;
   }
 }

@@ -24,15 +24,14 @@ except according to the terms contained in the LICENSE file.
         Access revoked
       </template>
     </td>
-    <td>
+    <td class="field-key-actions">
       <div class="dropdown">
         <button :id="actionsId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <span class="icon-cog"></span><span class="caret"></span>
         </button>
-        <ul :aria-labelledby="actionsId"
-          class="dropdown-menu dropdown-menu-right">
+        <ul :aria-labelledby="actionsId" class="dropdown-menu">
           <li :class="{ disabled: fieldKey.token == null }">
             <a href="#" @click.prevent="revoke">Revoke access</a>
           </li>
