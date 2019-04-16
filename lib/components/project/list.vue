@@ -112,7 +112,7 @@ except according to the terms contained in the LICENSE file.
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
         <p v-if="projects != null && projects.length === 0"
           class="empty-table-message">
-          You do not have access to any Projects.
+          There are no Projects for you to see.
         </p>
       </template>
     </page-section>
