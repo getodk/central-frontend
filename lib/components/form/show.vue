@@ -12,14 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null && form != null && attachments != null">
-      <template slot="context">
-        <span>{{ project != null ? project.name : '' }}</span>
+      <template v-if="project != null" slot="context">
+        <span>
+          {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+        </span>
         <router-link :to="`/projects/${projectId}`">
           Back to Project Overview
         </router-link>
       </template>
-      <template slot="title">
-        {{ form != null ? form.nameOrId() : '' }}
+      <template v-if="form != null" slot="title">
+        {{ form.nameOrId() }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
