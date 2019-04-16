@@ -217,7 +217,11 @@ class View extends Collection {
   get size() { return this._store.size; }
   get(index) { return this._transform(this._store.get(index)); }
   clear() { this._store.clear(); }
-  splice(start, deleteCount) { return this._store.splice(start, deleteCount); }
+
+  splice(start, deleteCount) {
+    return this._store.splice(start, deleteCount)
+      .map(object => this._transform(object));
+  }
 
   sorted() {
     const sorted = this._store.sorted();
