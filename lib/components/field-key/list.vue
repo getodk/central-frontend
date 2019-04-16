@@ -12,10 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button id="field-key-list-new-button" type="button"
+      <button v-if="project != null && !project.archived" type="button"
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
       </button>
+      <!-- TODO. Update this text to account for archived projects? -->
       <p>
         App Users in this Project will be able to download and use all Forms
         within this Project. A future update will allow you to customize which
@@ -47,8 +48,13 @@ except according to the terms contained in the LICENSE file.
     <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
     <p v-if="fieldKeys != null && fieldKeys.length === 0"
       class="empty-table-message">
-      There are no App Users yet. You will need to create some to download Forms
-      and submit data from your device.
+      <template v-if="project != null && !project.archived">
+        There are no App Users yet. You will need to create some to download
+        Forms and submit data from your device.
+      </template>
+      <template v-else>
+        There are no App Users to show.
+      </template>
     </p>
 
     <field-key-new :project-id="projectId" :state="newFieldKey.state"
@@ -101,7 +107,7 @@ export default {
       }
     };
   },
-  computed: requestData(['fieldKeys']),
+  computed: requestData(['project', 'fieldKeys']),
   watch: {
     projectId() {
       this.fetchData();

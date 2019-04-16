@@ -5,11 +5,19 @@ import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
 import { submitForm, trigger } from '../../event';
 
-const clickCreateButton = (wrapper) =>
-  trigger.click(wrapper, '#field-key-list-new-button');
-
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
+
+  it('does not render the create button if the project is archived', () =>
+    mockRoute('/projects/1/app-users')
+      .respondWithData(() => testData.extendedProjects
+        .createPast(1, { archived: true, appUsers: 1 })
+        .last())
+      .respondWithData(() =>
+        testData.extendedFieldKeys.createPast(1).sorted())
+      .afterResponses(app => {
+        app.find('.heading-with-button button').length.should.equal(0);
+      }));
 
   describe('modal', () => {
     it('is initially hidden', () =>
@@ -27,7 +35,8 @@ describe('FieldKeyNew', () => {
           .respondWithData(() =>
             testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-          .afterResponses(clickCreateButton)
+          .afterResponses(app =>
+            trigger.click(app, '.heading-with-button button'))
           .then(app => {
             app.first(FieldKeyNew).getProp('state').should.be.true();
           }));
@@ -37,7 +46,8 @@ describe('FieldKeyNew', () => {
           .respondWithData(() =>
             testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
           .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-          .afterResponses(clickCreateButton)
+          .afterResponses(app =>
+            trigger.click(app, '.heading-with-button button'))
           .then(app => {
             app.first('#field-key-new input').should.be.focused();
           }));
@@ -74,7 +84,7 @@ describe('FieldKeyNew', () => {
       .afterResponses(component => {
         app = component;
       })
-      .request(() => clickCreateButton(app)
+      .request(() => trigger.click(app, '.heading-with-button button')
         .then(() => submitForm(app, '#field-key-new form', [
           ['input', testData.extendedFieldKeys.createNew().displayName]
         ])))
