@@ -75,7 +75,7 @@ export default {
     FormAttachmentUploadFiles
   },
   mixins: [
-    dropZone({ keepAlive: true, eventNamespace: 'form-attachment-list' }),
+    dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
     modal(['uploadFilesModal', 'nameMismatch']),
     request()
   ],

@@ -117,14 +117,15 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys'))
+      this.fetchData();
   },
-  activated() {
+  mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
-  deactivated() {
+  beforeDestroy() {
     this.hidePopover();
-    $('body').off('click.field-key-list', this.hidePopoverAfterClickOutside);
+    $('body').off('.field-key-list');
   },
   methods: {
     fetchData() {

@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
       similar way for the response for the project. -->
       <div v-if="form != null && attachments != null">
         <div v-show="project != null">
-          <keep-alive>
+          <keep-alive include="FormSubmissionList">
             <router-view :project-id="projectId"
               :chunk-sizes="submissionChunkSizes"
               :scrolled-to-bottom="scrolledToBottom"/>

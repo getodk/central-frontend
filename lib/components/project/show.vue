@@ -36,12 +36,10 @@ except according to the terms contained in the LICENSE file.
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
       <div v-show="project != null">
-        <keep-alive>
-          <!-- <router-view> is immediately created and can send its own
-          requests even before the server has responded to ProjectHome's
-          request for the project. -->
-          <router-view/>
-        </keep-alive>
+        <!-- <router-view> is immediately created and can send its own requests
+        even before the server has responded to ProjectHome's request for the
+        project. -->
+        <router-view/>
       </div>
     </page-body>
   </div>

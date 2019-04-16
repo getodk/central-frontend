@@ -181,12 +181,28 @@ describe('ProjectUserList', () => {
             .respondWithSuccess());
       });
 
-      it('shows a success alert after a POST or DELETE request', () =>
-        loadAndRequest(true)
-          .respondWithSuccess()
-          .afterResponse(app => {
-            app.should.alert();
-          }));
+      describe('after a POST or DELETE request', () => {
+        it('shows a success alert', () =>
+          loadAndRequest(true)
+            .respondWithSuccess()
+            .afterResponse(app => {
+              app.should.alert();
+            }));
+
+        it('refreshes data if user leaves route, then returns', () =>
+          loadAndRequest(true)
+            .respondWithSuccess()
+            .complete()
+            .route('/projects/1/settings')
+            .complete()
+            .route('/projects/1/users')
+            .beforeEachResponse((app, config) => {
+              config.url.should.equal('/v1/projects/1/assignments/manager');
+            })
+            // Don't bother returning a successful response, which we don't
+            // check.
+            .respondWithProblem());
+      });
     };
 
     testAssignmentRequest((route) =>

@@ -131,7 +131,8 @@ export default {
     projectId: 'fetchData'
   },
   created() {
-    this.fetchData();
+    if (this.forms == null && !this.$store.getters.loading('forms'))
+      this.fetchData();
   },
   methods: {
     fetchData() {

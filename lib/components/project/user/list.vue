@@ -60,6 +60,7 @@ either is a Project Manager or has no role. -->
 <script>
 import ProjectUserRow from './row.vue';
 import { noop } from '../../../util/util';
+import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
@@ -86,6 +87,7 @@ export default {
     };
   },
   computed: {
+    ...requestData(['assignmentActors']),
     /*
     We disable search while a request for project managers is in progress,
     because we match up search results with the project managers.
@@ -127,7 +129,12 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    if (this.assignmentActors != null) {
+      this.managerAssignments = this.assignmentActors
+        .map(actor => ({ actor, manager: true }));
+    } else {
+      this.fetchData();
+    }
   },
   methods: {
     fetchData() {
@@ -176,6 +183,9 @@ export default {
     },
     // Run after a user is assigned a new role (including None).
     afterAssign(assignment, manager) {
+      // This data is now out-of-date. (Perhaps it would be better to update the
+      // data rather than clear it?)
+      this.$store.commit('clearData', 'assignmentActors');
       const { displayName } = assignment.actor;
       const roleName = manager ? 'Manager' : 'None';
       this.$alert().success(`Success! ${displayName} has been given a Project Role of “${roleName}” on this Project.`);
