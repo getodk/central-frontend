@@ -57,3 +57,26 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+@import '../../../assets/scss/variables';
+
+#project-list-table {
+  td {
+    vertical-align: middle;
+
+    .project-list-project-name a {
+      color: inherit;
+      font-size: 24px;
+      text-decoration: none;
+
+      .icon-angle-right {
+        color: $color-accent-primary;
+        font-size: 20px;
+        margin-left: 2px;
+        margin-right: 0;
+      }
+    }
+  }
+}
+</style>
