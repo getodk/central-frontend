@@ -24,7 +24,7 @@ either is an Administrator or has no role. -->
         Web Users have accounts on this website to oversee and administer the
         Projects on this server. Administrators can manage anything on the site.
         Users with no role can still be made Project Managers on any Project,
-        from that Project's settings.
+        from that Project’s settings.
       </p>
       <p>
         For more information,
