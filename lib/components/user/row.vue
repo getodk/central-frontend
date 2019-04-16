@@ -74,11 +74,7 @@ export default {
   computed: {
     ...requestData(['currentUser']),
     disabled() {
-      return this.user.id === this.currentUser.id ||
-        // Disable assignment while a refresh is in progress.
-        this.$store.getters.loading('users') ||
-        this.$store.getters.loading('assignmentActors') ||
-        this.awaitingResponse;
+      return this.user.id === this.currentUser.id || this.awaitingResponse;
     },
     title() {
       if (this.user.id !== this.currentUser.id) return '';
@@ -90,7 +86,6 @@ export default {
   },
   methods: {
     assignRole() {
-      this.$emit('increment-count');
       // Using this.$refs rather than passing $event.target.value to the method
       // in order to facilitate testing.
       this.selectedRole = this.$refs.select.value;
@@ -101,10 +96,7 @@ export default {
         .then(() => {
           this.$emit('assigned-role', this.user, this.selectedRole === 'admin');
         })
-        .catch(noop)
-        .finally(() => {
-          this.$emit('decrement-count');
-        });
+        .catch(noop);
     }
   }
 };

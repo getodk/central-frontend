@@ -126,32 +126,14 @@ describe('UserList', () => {
           }
         }));
 
-    describe('clicking the refresh button', () => {
-      it('refreshes the list of users', () =>
-        mockRoute('/users').testRefreshButton({
-          collection: testData.standardUsers,
-          respondWithData: [
-            () => testData.standardUsers.sorted(),
-            () => testData.standardUsers.sorted().map(testData.toActor)
-          ]
-        }));
-
-      it('disables the role selects while the refresh is in progress', () =>
-        mockHttp()
-          .mount(UserList)
-          .respondWithData(() => testData.standardUsers.createPast(1).sorted())
-          .respondWithData(() =>
-            testData.standardUsers.sorted().map(testData.toActor))
-          .complete()
-          .request(component => trigger.click(component, '.btn-refresh'))
-          .beforeEachResponse(component => {
-            for (const select of component.find('table select'))
-              select.getAttribute('disabled').should.equal('disabled');
-          })
-          .respondWithData(() => testData.standardUsers.sorted())
-          .respondWithData(() =>
-            testData.standardUsers.sorted().map(testData.toActor)));
-    });
+    it('refreshes data after a click on the refresh button', () =>
+      mockRoute('/users').testRefreshButton({
+        collection: testData.standardUsers,
+        respondWithData: [
+          () => testData.standardUsers.sorted(),
+          () => testData.standardUsers.sorted().map(testData.toActor)
+        ]
+      }));
 
     describe('changing a role', () => {
       const loadUsersAndChangeRole =
@@ -203,14 +185,6 @@ describe('UserList', () => {
               .beforeResponse(component => {
                 const select = component.find('table select')[rowIndex];
                 select.getAttribute('disabled').should.equal('disabled');
-              })
-              .respondWithSuccess());
-
-          it('disables the refresh button during the request', () =>
-            loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeResponse(component => {
-                const button = component.first('.btn-refresh');
-                button.getAttribute('disabled').should.equal('disabled');
               })
               .respondWithSuccess());
 

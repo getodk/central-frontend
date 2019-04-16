@@ -32,8 +32,7 @@ either is an Administrator or has no role. -->
       </p>
     </div>
     <div class="table-actions">
-      <refresh-button :configs="configsForRefresh"
-        :disabled="assignRequestCount !== 0"/>
+      <refresh-button :configs="configsForRefresh"/>
     </div>
     <table id="user-list-table" class="table">
       <thead>
@@ -46,7 +45,6 @@ either is an Administrator or has no role. -->
       <tbody v-if="users != null && adminIds != null">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
-          @increment-count="incrementCount" @decrement-count="decrementCount"
           @assigned-role="afterAssignRole" @reset-password="showResetPassword"/>
       </tbody>
     </table>
@@ -77,8 +75,6 @@ export default {
       adminIds: null,
       // The id of the highlighted user
       highlighted: null,
-      // The number of POST or DELETE requests in progress
-      assignRequestCount: 0,
       // Modals
       newUser: {
         state: false
@@ -132,20 +128,32 @@ export default {
       this.$alert().success(`A user was created successfully for ${user.email}.`);
       this.highlighted = user.id;
     },
-    incrementCount() {
-      this.assignRequestCount += 1;
-    },
-    decrementCount() {
-      this.assignRequestCount -= 1;
-    },
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
       const roleName = admin ? 'Administrator' : 'None';
       this.$alert().success(`Success! ${user.displayName} has been given a Project Role of “${roleName}” on this Project.`);
-      if (admin) {
-        this.adminIds.add(user.id);
-      } else {
-        this.adminIds.delete(user.id);
+
+      /*
+      Here we update this.adminIds. If the current user has also refreshed the
+      data, then in rare cases, the update to this.adminIds will not be shown.
+      For example:
+
+        1. The current user changes another user's sitewide role.
+        2. Immediately after, the user clicks the refresh button.
+        3. The response for the role change is received first, updating
+           this.adminIds.
+        4. The response for the refresh is received, possibly undoing the
+           update to this.adminIds.
+
+      In cases like this, the current user will likely refresh Frontend or redo
+      the change.
+      */
+      if (this.adminIds != null) {
+        if (admin) {
+          this.adminIds.add(user.id);
+        } else {
+          this.adminIds.delete(user.id);
+        }
       }
     },
     showResetPassword(user) {
