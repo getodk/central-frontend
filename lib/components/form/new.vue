@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!disabled" backdrop @hide="hide">
+  <modal :state="state" :hideable="!disabled" backdrop @hide="$emit('hide')">
     <template slot="title">Create Form</template>
     <template slot="body">
       <div class="modal-introduction">
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
           Create <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="disabled" type="button" class="btn btn-link"
-          @click="hide">
+          @click="$emit('hide')">
           Cancel
         </button>
       </div>
@@ -56,8 +56,6 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
-
-const NO_FILE_MESSAGE = 'Please choose a file.';
 
 export default {
   name: 'FormNew',
@@ -116,12 +114,6 @@ export default {
     $(this.$refs.input).off('.form-new');
   },
   methods: {
-    hide() {
-      this.$emit('hide');
-      const alert = this.$alert();
-      if (alert.type === 'info' && alert.message === NO_FILE_MESSAGE)
-        alert.blank();
-    },
     readFile(files) {
       if (files.length === 0) return;
       this.reading = true;
@@ -155,7 +147,7 @@ export default {
     },
     create() {
       if (this.xml == null) {
-        this.$alert().info(NO_FILE_MESSAGE);
+        this.$alert().info('Please choose a file.');
         return;
       }
       this.request({
