@@ -7,23 +7,26 @@ import { mockLogin, mockRouteThroughLogin } from '../../../session';
 import { trigger } from '../../../event';
 
 const loadProjectUsers = ({ count, currentUser = false, route = false }) => {
-  const users = testData.administrators
+  // Create test data.
+  testData.extendedUsers.size.should.equal(1);
+  const users = testData.extendedUsers
     .createPast(count - (currentUser ? 1 : 0))
     .sorted();
   const managers = currentUser
     ? users
-    : users.filter(user => user !== testData.administrators.first());
+    : users.filter(user => user !== testData.extendedUsers.first());
+
   if (route) {
     return mockRoute('/projects/1/users')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() => managers);
+      .respondWithData(() => managers.map(testData.toActor));
   }
   return mockHttp()
     .mount(ProjectUserList, {
       propsData: { projectId: '1' },
-      requestData: { currentUser: new User(testData.administrators.first()) }
+      requestData: { currentUser: new User(testData.extendedUsers.first()) }
     })
-    .respondWithData(() => managers);
+    .respondWithData(() => managers.map(testData.toActor));
 };
 // Changes the select of the first row of the table to a new value, triggering a
 // `change` event.
