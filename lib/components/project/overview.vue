@@ -87,7 +87,8 @@ except according to the terms contained in the LICENSE file.
     <page-section id="project-overview-forms">
       <template slot="heading">
         <span>Forms</span>
-        <button id="project-overview-new-form-button" type="button"
+        <button v-if="project != null && !project.archived"
+          id="project-overview-new-form-button" type="button"
           class="btn btn-primary" @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>New
         </button>
