@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="project-settings">
     <div class="row">
       <div class="col-xs-8">
-        <!-- TODO. Add basic details panel. -->
+        <project-edit v-if="project != null"/>
       </div>
       <div class="col-xs-4">
         <div class="panel panel-simple-danger">
@@ -39,13 +39,14 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import ProjectArchive from './archive.vue';
+import ProjectEdit from './edit.vue';
 import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
-  components: { ProjectArchive },
+  components: { ProjectArchive, ProjectEdit },
   mixins: [
     conditionalRoute({ project: (project) => !project.archived }),
     modal()
