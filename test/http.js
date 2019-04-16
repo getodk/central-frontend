@@ -559,21 +559,14 @@ class MockHttp {
   // error. Afterwards, it runs Vue.nextTick() so that Vue has a chance to
   // react to any changes that the callback made.
   _tryBeforeResponses() {
-    // this._beforeResponses() may return a Promise, or it may simply make an
-    // assertion that may throw an error. That means that we have to be prepared
-    // to catch any error in two ways. In neither case do we re-throw the error,
-    // because doing so would prevent Frontend from receiving the specified
-    // response.
-    try {
-      return Promise.resolve(this._beforeResponses(this._component))
-        .catch(e => {
-          this._errorFromBeforeResponses = e;
-        })
-        .finally(() => Vue.nextTick());
-    } catch (e) {
-      this._errorFromBeforeResponses = e;
-    }
-    return Vue.nextTick();
+    return Promise.resolve()
+      .then(() => this._beforeResponses(this._component))
+      .catch(error => {
+        // We do not re-throw the error, because doing so would prevent Frontend
+        // from receiving the response to follow.
+        this._errorFromBeforeResponses = error;
+      })
+      .finally(() => Vue.nextTick());
   }
 
   // _tryBeforeEachResponse() runs this._beforeEachResponse(), catching any
@@ -583,21 +576,14 @@ class MockHttp {
   // that Vue has a chance to react to any changes that the callback made.
   _tryBeforeEachResponse(config, index) {
     if (this._errorFromBeforeEachResponse != null) return null;
-    // this._beforeEachResponse() may return a Promise, or it may simply make an
-    // assertion that may throw an error. That means that we have to be prepared
-    // to catch any error in two ways. In neither case do we re-throw the error,
-    // because doing so would prevent Frontend from receiving the specified
-    // response.
-    try {
-      return Promise.resolve(this._beforeEachResponse(this._component, config, index))
-        .catch(e => {
-          this._errorFromBeforeEachResponse = e;
-        })
-        .finally(() => Vue.nextTick());
-    } catch (e) {
-      this._errorFromBeforeEachResponse = e;
-    }
-    return Vue.nextTick();
+    return Promise.resolve()
+      .then(() => this._beforeEachResponse(this._component, config, index))
+      .catch(e => {
+        // We do not re-throw the error, because doing so would prevent Frontend
+        // from receiving the response to follow.
+        this._errorFromBeforeEachResponse = e;
+      })
+      .finally(() => Vue.nextTick());
   }
 
   _tryBeforeEachNav(to, from) {
