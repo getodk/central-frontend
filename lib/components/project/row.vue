@@ -10,11 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr>
+  <tr :class="{ archived: project.archived }">
     <td>
       <div class="project-list-project-name">
         <router-link :to="`/projects/${project.id}`">
-          {{ project.name }} <span class="icon-angle-right"></span>
+          {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+          <span class="icon-angle-right"></span>
         </router-link>
       </div>
       <template v-if="projectCount === 1">
@@ -77,6 +78,10 @@ export default {
         margin-right: 0;
       }
     }
+  }
+
+  .archived {
+    color: #999;
   }
 }
 </style>

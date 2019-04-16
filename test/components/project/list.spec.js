@@ -150,9 +150,33 @@ describe('ProjectList', () => {
     it('shows a message if there are no projects', () =>
       mockRoute('/')
         .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.administrators.sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
         .afterResponses(app => {
           app.find('.empty-table-message').length.should.equal(1);
         }));
+
+    describe('archived project', () => {
+      it('adds an HTML class to the row', () =>
+        mockRoute('/')
+          .respondWithData(() => testData.extendedProjects
+            .createPast(1, { archived: true })
+            .sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            const tr = app.first('#project-list-table tbody tr');
+            tr.hasClass('archived').should.be.true();
+          }));
+
+      it("appends (archived) to the project's name", () =>
+        mockRoute('/')
+          .respondWithData(() => testData.extendedProjects
+            .createPast(1, { name: 'My Project', archived: true })
+            .sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            const name = app.first('.project-list-project-name a').text().trim();
+            name.should.equal('My Project (archived)');
+          }));
+    });
   });
 });
