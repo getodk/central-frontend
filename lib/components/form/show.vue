@@ -39,7 +39,8 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('submissions')" role="presentation">
           <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
-        <li :class="tabClass('settings')" role="presentation">
+        <li v-if="project != null && !project.archived"
+          :class="tabClass('settings')" role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>

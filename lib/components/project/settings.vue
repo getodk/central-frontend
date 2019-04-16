@@ -39,13 +39,17 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import ProjectArchive from './archive.vue';
+import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
   components: { ProjectArchive },
-  mixins: [modal()],
+  mixins: [
+    conditionalRoute({ project: (project) => !project.archived }),
+    modal()
+  ],
   data() {
     return {
       archive: {
