@@ -32,6 +32,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     .mount(FormAttachmentList, {
       propsData: { projectId: '1' },
       requestData: {
+        project: testData.extendedProjects.last(),
         form: new Form(form),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))
@@ -1267,5 +1268,23 @@ describe('FormAttachmentList', () => {
           });
       });
     }
+  });
+
+  describe('archived project', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { archived: true });
+      testData.extendedFormAttachments.createPast(1);
+    });
+
+    it('does not render the upload files button', () =>
+      loadAttachments().then(component => {
+        component.find('.heading-with-button button').length.should.equal(0);
+      }));
+
+    it('disables the drop zone', () =>
+      loadAttachments().then(component => {
+        component.vm.disabled.should.be.true();
+      }));
   });
 });
