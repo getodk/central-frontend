@@ -16,14 +16,58 @@ except according to the terms contained in the LICENSE file.
         <!-- TODO. Add basic details panel. -->
       </div>
       <div class="col-xs-4">
-        <!-- TODO. Add danger zone panel. -->
+        <div class="panel panel-simple-danger">
+          <div class="panel-heading">
+            <h1 class="panel-title">Danger Zone</h1>
+          </div>
+          <div class="panel-body">
+            <p>
+              <button id="project-settings-archive-button"
+                :disabled="awaitingResponse" type="button"
+                class="btn btn-danger" @click="showModal('archive')">
+                Archive this Project
+              </button>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
+    <project-archive :state="archive.state" @hide="hideModal('archive')"
+      @success="afterArchive"/>
   </div>
 </template>
 
 <script>
+import ProjectArchive from './archive.vue';
+import modal from '../../mixins/modal';
+import { requestData } from '../../store/modules/request';
+
 export default {
-  name: 'ProjectSettings'
+  name: 'ProjectSettings',
+  components: { ProjectArchive },
+  mixins: [modal(['archive'])],
+  data() {
+    return {
+      archive: {
+        state: false
+      }
+    };
+  },
+  computed: requestData(['project']),
+  methods: {
+    afterArchive() {
+      this.$router.push(`/projects/${this.project.id}`, () => {
+        this.$alert().success(`The Project “${this.project.name}” was archived.`);
+      });
+    }
+  }
 };
 </script>
+
+<style lang="sass">
+#project-settings .panel-simple-danger p {
+  margin-bottom: 15px;
+  margin-top: 10px;
+  text-align: center;
+}
+</style>
