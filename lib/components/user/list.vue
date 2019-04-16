@@ -43,7 +43,7 @@ either is an Administrator or has no role. -->
           <th class="user-actions">Actions</th>
         </tr>
       </thead>
-      <tbody v-if="users != null && adminIds != null && users.length !== 0">
+      <tbody v-if="users != null && adminIds != null">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
           @increment-count="incrementCount" @decrement-count="decrementCount"
