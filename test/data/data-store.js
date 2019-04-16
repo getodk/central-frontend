@@ -194,7 +194,14 @@ class View extends Collection {
   constructor(store, transform) {
     super();
     this._store = store;
-    this._callback = transform;
+    // When we run the callback later, we do not want it to be bound to the
+    // View.
+    this._callback = transform.bind(null);
+    // Successively accessing the same index of a Store will return the same
+    // object. To mirror that, each View maintains a cache. That means that
+    // successively accessing the same index of a View will not transform the
+    // same object multiple times -- resulting in different objects -- but
+    // instead will return the same transformed object.
     this._cache = new Map();
   }
 
@@ -220,10 +227,9 @@ class View extends Collection {
   }
 
   _transform(object) {
-    if (object == null) return object;
+    if (object == null) return null;
     if (this._cache.has(object)) return this._cache.get(object);
-    const transform = this._callback;
-    const result = transform(object);
+    const result = this._callback(object);
     this._cache.set(object, result);
     return result;
   }
