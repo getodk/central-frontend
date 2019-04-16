@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="modal" :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
-    class="modal" tabindex="-1" role="dialog"
-    data-keyboard="false" @keydown.esc="hideIfCan"
+  <div :aria-labelledby="titleId" :data-backdrop="bsBackdrop" class="modal"
+    tabindex="-1" role="dialog" data-keyboard="false" @keydown.esc="hideIfCan"
     @mousedown="modalMousedown" @click="modalClick">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -88,7 +87,7 @@ export default {
     }
   },
   mounted() {
-    $(this.$refs.modal)
+    $(this.$el)
       .on('shown.bs.modal', () => this.$emit('shown'))
       .on('hidden.bs.modal', () => this.$emit('hidden'));
     if (this.state) this.toggle(this.state);
@@ -100,7 +99,7 @@ export default {
   },
   beforeDestroy() {
     this.toggle(false);
-    $(this.$refs.modal).off();
+    $(this.$el).off();
   },
   methods: {
     /* toggle() manually toggles the modal. It is the only way the modal is
@@ -114,8 +113,8 @@ export default {
       // For tests in which the component is not attached to the document, we
       // return immediately rather than calling modal(), because it has side
       // effects on the document.
-      if ($(this.$refs.modal).closest('body').length === 0) return;
-      $(this.$refs.modal).modal(state ? 'show' : 'hide');
+      if ($(this.$el).closest('body').length === 0) return;
+      $(this.$el).modal(state ? 'show' : 'hide');
     },
     hideIfCan() {
       if (this.hideable) this.$emit('hide');
@@ -134,9 +133,9 @@ export default {
       if (!this.state) return;
       // Do not focus the modal if it contains the active element.
       if (document.activeElement != null &&
-        $(document.activeElement).closest('.modal')[0] === this.$refs.modal)
+        $(document.activeElement).closest('.modal')[0] === this.$el)
         return;
-      this.$refs.modal.focus();
+      this.$el.focus();
     }
   }
 };
