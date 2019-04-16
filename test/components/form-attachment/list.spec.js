@@ -55,21 +55,21 @@ const selectFilesUsingModal = (app, files) =>
 describe('FormAttachmentList', () => {
   describe('routing', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/forms/x/media-files')
+      mockRoute('/projects/1/forms/f/media-files')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
     it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/forms/x/media-files')
+      mockRouteThroughLogin('/projects/1/forms/f/media-files')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
+          testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
         .respondWithData(() =>
           testData.extendedFormAttachments.createPast(1).sorted())
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/x/media-files');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/media-files');
         }));
 
     it('resets the component after the route updates', () => {
@@ -98,6 +98,54 @@ describe('FormAttachmentList', () => {
           const { unmatchedFiles } = app.first(FormAttachmentList).data();
           unmatchedFiles.length.should.equal(0);
         });
+    });
+
+    describe('no form attachments', () => {
+      beforeEach(mockLogin);
+
+      it('redirects a user whose first navigation is to the tab', () =>
+        mockRoute('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user who navigates to the tab from another tab', () =>
+        mockRoute('/projects/1/forms/f')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .complete()
+          .route('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user navigating from a different form', () =>
+        mockRoute('/projects/1/forms/f1/media-files')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
+          .respondWithData(() =>
+            testData.extendedFormAttachments.createPast(1).sorted())
+          .complete()
+          .route('/projects/1/forms/f2/media-files')
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
+          .respondWithData(() => []) // attachments
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
     });
   });
 
