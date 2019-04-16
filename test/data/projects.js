@@ -23,14 +23,15 @@ export const extendedProjects = dataStore({
     return {
       id,
       name,
+      createdAt,
+      updatedAt,
+      // Extended metadata
       forms,
       // This property does not necessarily match testData.extendedSubmissions.
       lastSubmission: forms !== 0 && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
-      appUsers,
-      createdAt,
-      updatedAt
+      appUsers
     };
   },
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
