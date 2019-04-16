@@ -57,7 +57,7 @@ describe('FieldKeyList', () => {
           testData.extendedProjects.createPast(1, { appUsers: 0 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(0).sorted())
         .afterResponses(app => {
-          app.find('#field-key-list-empty-message').length.should.equal(1);
+          app.find('.empty-table-message').length.should.equal(1);
         }));
 
     describe('QR code', () => {
