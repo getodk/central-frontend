@@ -81,7 +81,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
-  mixins: [modal(['newFieldKey', 'revoke'])],
+  mixins: [modal()],
   props: {
     projectId: {
       type: String,

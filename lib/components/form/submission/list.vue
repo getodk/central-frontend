@@ -93,7 +93,7 @@ const MAX_SMALL_CHUNKS = 4;
 export default {
   name: 'FormSubmissionList',
   components: { FormSubmissionAnalyze, FormSubmissionRow },
-  mixins: [modal('analyze')],
+  mixins: [modal()],
   props: {
     projectId: {
       type: String,

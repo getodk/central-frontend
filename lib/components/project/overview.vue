@@ -112,7 +112,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
-  mixins: [modal('newForm')],
+  mixins: [modal()],
   props: {
     projectId: {
       type: String,

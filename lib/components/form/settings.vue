@@ -45,7 +45,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormSettings',
   components: { FormEdit, FormDelete },
-  mixins: [modal('deleteForm')],
+  mixins: [modal()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,

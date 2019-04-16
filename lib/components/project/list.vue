@@ -135,7 +135,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectList',
   components: { ProjectIntroduction, ProjectNew, ProjectRow },
-  mixins: [modal(['newProject', 'introduction'])],
+  mixins: [modal()],
   data() {
     return {
       newProject: {

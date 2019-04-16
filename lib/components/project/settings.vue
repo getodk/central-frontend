@@ -45,7 +45,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectSettings',
   components: { ProjectArchive },
-  mixins: [modal(['archive'])],
+  mixins: [modal()],
   data() {
     return {
       archive: {

@@ -78,7 +78,7 @@ export default {
   },
   mixins: [
     dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
-    modal(['uploadFilesModal', 'nameMismatch']),
+    modal(),
     request()
   ],
   // Setting this in order to ignore attributes from FormShow that are intended

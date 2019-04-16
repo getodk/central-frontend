@@ -72,6 +72,14 @@ export default {
     }
   },
   watch: {
+    $route() {
+      // When the current route changes, any Modal that is shown becomes hidden.
+      // Emitting a 'hide' event here does not actually hide the Modal -- the
+      // router does that -- but it should ensure that the Modal's `state` prop
+      // matches the DOM. Further, modal components that contain state typically
+      // reset themselves when they are hidden.
+      this.$emit('hide');
+    },
     state(state) {
       this.toggle(state);
     },
@@ -115,11 +123,11 @@ export default {
     also aids modularity, because parent components can use this modal component
     without knowing that it uses Bootstrap. */
     toggle(state) {
-      // For tests in which the component is not attached to the document, we
-      // return immediately rather than calling modal(), because it has side
-      // effects on the document.
-      if ($(this.$el).closest('body').length === 0) return;
-      $(this.$el).modal(state ? 'show' : 'hide');
+      if (state)
+        this.$store.dispatch('showModal', this.$el);
+      // In some cases, the router may hide the modal before toggle() is called.
+      else if (this.$store.state.modal.ref != null)
+        this.$store.dispatch('hideModal');
     },
     hideIfCan() {
       if (this.hideable) this.$emit('hide');
