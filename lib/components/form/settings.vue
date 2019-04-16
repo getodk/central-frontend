@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
             <p>
               <button :disabled="awaitingResponse" type="button"
                 class="btn btn-danger" @click="showModal('deleteForm')">
-                Delete this form
+                Delete this Form
               </button>
             </p>
           </div>
@@ -64,7 +64,7 @@ export default {
   methods: {
     afterDelete(form) {
       this.$router.push(`/projects/${this.projectId}`, () => {
-        this.$alert().success(`The form “${form.nameOrId()}” was deleted.`);
+        this.$alert().success(`The Form “${form.nameOrId()}” was deleted.`);
       });
     }
   }

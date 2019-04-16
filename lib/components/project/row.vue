@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </template>
     </td>
-    <td>{{ $pluralize('form', project.forms, true) }}</td>
+    <td>{{ $pluralize('Form', project.forms, true) }}</td>
     <td>{{ latestSubmission }}</td>
   </tr>
 </template>
