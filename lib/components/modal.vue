@@ -72,8 +72,8 @@ export default {
     }
   },
   watch: {
-    state(newState) {
-      this.toggle(newState);
+    state(state) {
+      this.toggle(state);
     },
     // Hides the alert when this.state changes. We use a strategy similar to the
     // one here: https://github.com/vuejs/vue/issues/844.
@@ -88,9 +88,13 @@ export default {
   },
   mounted() {
     $(this.$el)
-      .on('shown.bs.modal', () => this.$emit('shown'))
-      .on('hidden.bs.modal', () => this.$emit('hidden'));
-    if (this.state) this.toggle(this.state);
+      .on('shown.bs.modal', () => {
+        this.$emit('shown');
+      })
+      .on('hidden.bs.modal', () => {
+        this.$emit('hidden');
+      });
+    if (this.state) this.toggle(true);
   },
   updated() {
     // Wait a tick so that all child components are re-rendered:
@@ -99,6 +103,7 @@ export default {
   },
   beforeDestroy() {
     this.toggle(false);
+    // TODO. Does this actually remove all modal-related event handlers?
     $(this.$el).off();
   },
   methods: {
