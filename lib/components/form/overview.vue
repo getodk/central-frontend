@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="project != null" class="panel panel-simple">
+  <div v-if="project != null && form != null && attachments != null"
+    class="panel panel-simple">
     <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
     <div class="panel-body">
       <form-overview-step :stage="stepStage(0)">

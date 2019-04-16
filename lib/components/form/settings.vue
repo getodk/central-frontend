@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-settings">
+  <div v-if="form != null" id="form-settings">
     <div class="row">
       <div class="col-xs-8">
         <form-edit :project-id="projectId"/>
@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 import FormDelete from './delete.vue';
 import FormEdit from './edit.vue';
 import modal from '../../mixins/modal';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSettings',
@@ -61,6 +62,7 @@ export default {
       }
     };
   },
+  computed: requestData(['form']),
   methods: {
     afterDelete(form) {
       this.$router.push(`/projects/${this.projectId}`, () => {

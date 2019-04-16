@@ -13,9 +13,6 @@ const createFormWithSubmission = () => {
   testData.extendedSubmissions.createPast(1, { form });
   return form;
 };
-const clickAnalyzeButton = (wrapper) =>
-  trigger.click(wrapper.first('#form-submission-list-analyze-button'))
-    .then(() => wrapper);
 const clickTab = (wrapper, tabText) => {
   for (const a of wrapper.find('#form-submission-analyze .nav-tabs a')) {
     if (a.text().trim() === tabText)
@@ -33,13 +30,19 @@ describe('FormSubmissionAnalyze', () => {
         propsData: { projectId: '1' },
         requestData: { form: new Form(createFormWithSubmission()) }
       })
+      .request(component => {
+        // Normally the activated hook calls this method, but that hook is not
+        // called here, so we call the method ourselves instead.
+        component.vm.fetchSchemaAndFirstChunk();
+      })
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
-      .afterResponse(component => {
+      .afterResponses(component => {
         component.first(FormSubmissionAnalyze).getProp('state').should.be.false();
         return component;
       })
-      .then(clickAnalyzeButton)
+      .then(component =>
+        trigger.click(component, '#form-submission-list-analyze-button'))
       .then(component => {
         component.first(FormSubmissionAnalyze).getProp('state').should.be.true();
       }));
@@ -53,7 +56,8 @@ describe('FormSubmissionAnalyze', () => {
       .respondWithData(() => testData.extendedFormAttachments.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
-      .afterResponses(clickAnalyzeButton)
+      .afterResponses(app =>
+        trigger.click(app, '#form-submission-list-analyze-button'))
       .then(app => trigger.click(app, '#form-submission-analyze-odata-url'))
       .then(() => {
         const selection = window.getSelection();

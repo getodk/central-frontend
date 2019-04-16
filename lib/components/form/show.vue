@@ -47,17 +47,18 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <loading
         :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
-      <!-- <router-view> is created and can send its own requests once responses
-      have been received for the form and its attachments. We do not wait in a
-      similar way for the response for the project. -->
-      <div v-if="form != null && attachments != null">
-        <div v-show="project != null">
-          <keep-alive include="FormSubmissionList">
-            <router-view :project-id="projectId"
-              :chunk-sizes="submissionChunkSizes"
-              :scrolled-to-bottom="scrolledToBottom"/>
-          </keep-alive>
-        </div>
+      <div v-show="project != null && form != null && attachments != null">
+        <!-- We only include FormSubmissionList, because it is the only
+        component whose state we want to preserve when the user navigates to a
+        different tab. -->
+        <keep-alive include="FormSubmissionList">
+          <!-- <router-view> is immediately created and can send its own
+          requests even before the server has responded to the requests from
+          ProjectHome and FormShow. -->
+          <router-view :project-id="projectId"
+            :chunk-sizes="submissionChunkSizes"
+            :scrolled-to-bottom="scrolledToBottom"/>
+        </keep-alive>
       </div>
     </page-body>
   </div>

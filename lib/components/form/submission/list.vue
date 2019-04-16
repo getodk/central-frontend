@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div v-if="form != null">
     <float-row class="table-actions">
       <template slot="left">
         <refresh-button :configs="refreshConfigs"/>
@@ -193,10 +193,36 @@ export default {
       return this.schemaAnalysis.columns;
     }
   },
-  created() {
-    this.fetchSchemaAndFirstChunk();
+  watch: {
+    // Reset the component if it is reused or kept alive after a route change.
+    // (We do not reset the component if the user is merely navigating to
+    // another tab for the same form.)
+    $route(newRoute, oldRoute) {
+      if (newRoute.params.projectId === oldRoute.params.projectId &&
+        newRoute.params.xmlFormId === oldRoute.params.xmlFormId)
+        return;
+      this.submissions = null;
+      this.instanceIds = new Set();
+      this.originalCount = null;
+      this.chunkCount = 0;
+      this.message = null;
+    },
+    form(newForm, oldForm) {
+      if (oldForm == null && newForm != null) this.fetchSchemaAndFirstChunk();
+    }
   },
+  // This hook is called if the user's first navigation is to this route, but it
+  // is also called if the user navigates to this route from another FormShow
+  // tab. This hook is called when the user navigates to this route for the
+  // first time, but it is also called if the user navigates from this route to
+  // another FormShow tab, then back again.
   activated() {
+    // If the form has already loaded, but we still need to fetch the schema and
+    // the first chunk, we do so here. If the form has not yet loaded, then the
+    // form watcher will fetch the schema and the first chunk.
+    if (this.form != null && this.schema == null &&
+      !this.$store.getters.loading('schema'))
+      this.fetchSchemaAndFirstChunk();
     $(window).on('scroll.form-submission-list', this.onScroll);
   },
   deactivated() {
@@ -304,6 +330,7 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
+      if (this.form == null) return;
       const skip = this.skip(this.chunkCount);
       if (skip >= this.form.submissions ||
         this.$store.getters.loading('submissionsChunk') ||

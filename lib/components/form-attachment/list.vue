@@ -10,7 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list" ref="dropZone">
+  <!-- We use v-show rather than v-if so that this.$refs.dropZone is in the DOM
+  from the first render. -->
+  <div v-show="attachments != null" id="form-attachment-list" ref="dropZone">
     <div class="heading-with-button">
       <button class="btn btn-primary" type="button"
         @click="showModal('uploadFilesModal')">
@@ -30,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-uploaded">Uploaded</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
           :key="attachment.key" :project-id="projectId" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
@@ -151,6 +153,17 @@ export default {
     ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
+    }
+  },
+  watch: {
+    // Reset the component if it is reused after a route change.
+    $route() {
+      this.countOfFilesOverDropZone = 0;
+      this.dragoverAttachment = null;
+      this.plannedUploads = [];
+      this.unmatchedFiles = [];
+      this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
+      this.updatedAttachments = [];
     }
   },
   methods: {

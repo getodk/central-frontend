@@ -71,6 +71,34 @@ describe('FormAttachmentList', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/x/media-files');
         }));
+
+    it('resets the component after the route updates', () => {
+      mockLogin();
+      return mockRoute('/projects/1/forms/f1/media-files')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
+        .respondWithData(() =>
+          testData.extendedFormAttachments.createPast(1).sorted())
+        .afterResponses(app => {
+          const files = blankFiles(['a']);
+          return trigger.dragAndDrop(app, FormAttachmentList, { files })
+            .then(() => {
+              const { unmatchedFiles } = app.first(FormAttachmentList).data();
+              unmatchedFiles.length.should.equal(1);
+            });
+        })
+        .route('/projects/1/forms/f2/media-files')
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
+        .respondWithData(() => testData.extendedFormAttachments
+          .createPast(1, { hasUpdatedAt: false })
+          .sorted())
+        .afterResponses(app => {
+          const { unmatchedFiles } = app.first(FormAttachmentList).data();
+          unmatchedFiles.length.should.equal(0);
+        });
+    });
   });
 
   describe('Media Files tab', () => {
