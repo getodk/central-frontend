@@ -106,7 +106,7 @@ export default {
         this.$route.path.startsWith(`${path}/`);
     },
     canRoute(routeName) {
-      return canRoute(this.currentUser, routeName);
+      return canRoute(routeName);
     },
     logOut() {
       // Backend ensures that the token is URL-safe.
