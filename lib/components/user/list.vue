@@ -73,6 +73,8 @@ export default {
   mixins: [modal(['newUser', 'resetPassword'])],
   data() {
     return {
+      // The ids of the users who are administrators
+      adminIds: null,
       // The id of the highlighted user
       highlighted: null,
       // The number of POST or DELETE requests in progress
@@ -124,6 +126,7 @@ export default {
       ];
     },
     afterCreate(user) {
+      this.adminIds = null;
       this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
       this.hideModal('newUser');
       this.$alert().success(`A user was created successfully for ${user.email}.`);

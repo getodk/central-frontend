@@ -68,7 +68,7 @@ describe('UserList', () => {
       mockLogin({ email: 'a@email.com' });
     });
 
-    it('shows the table headers while the users are loading', () =>
+    it('shows the table headers while data is loading', () =>
       mockHttp()
         .mount(UserList)
         .respondWithData(() => testData.standardUsers.sorted())

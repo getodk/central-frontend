@@ -9,7 +9,7 @@ describe('UserNew', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockHttp()
         .mount(UserList)
         .respondWithData(() => testData.standardUsers.sorted())
@@ -20,7 +20,7 @@ describe('UserNew', () => {
         }));
 
     describe('after button click', () => {
-      it('modal is shown', () =>
+      it('shows the modal', () =>
         mockHttp()
           .mount(UserList)
           .respondWithData(() => testData.standardUsers.sorted())
@@ -32,7 +32,7 @@ describe('UserNew', () => {
             component.first(UserNew).getProp('state').should.be.true();
           }));
 
-      it('email input is focused', () =>
+      it('focuses the email input', () =>
         mockRoute('/users', { attachToDocument: true })
           .respondWithData(() => testData.standardUsers.sorted())
           .respondWithData(() =>
@@ -45,7 +45,7 @@ describe('UserNew', () => {
     });
   });
 
-  it('standard button thinking things', () =>
+  it('implements some standard button things', () =>
     mockHttp()
       .mount(UserNew)
       .request(modal => submitForm(modal, 'form', [
@@ -53,34 +53,40 @@ describe('UserNew', () => {
       ]))
       .standardButton());
 
-  describe('after successful submit', () => {
-    let app;
-    beforeEach(() => mockRoute('/users')
-      .respondWithData(() => testData.standardUsers.sorted())
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor))
-      .afterResponses(component => {
-        app = component;
-      })
-      .request(() => trigger.click(app, '#user-list-new-button')
-        .then(() => submitForm(app, '#user-new form', [
-          ['input[type="email"]', testData.standardUsers.createNew().email]
-        ])))
-      .respondWithData(() => testData.standardUsers.last())
-      .respondWithData(() => testData.standardUsers.sorted())
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor)));
+  describe('successful submit', () => {
+    const submitWithSuccess = ({ route = false } = {}) =>
+      (route ? mockRoute('/users') : mockHttp().mount(UserList))
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .complete()
+        .request(component => trigger.click(component, '#user-list-new-button')
+          .then(() => submitForm(component, '#user-new form', [
+            ['input[type="email"]', testData.standardUsers.createNew().email]
+          ])))
+        .respondWithData(() => testData.standardUsers.last())
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor));
 
-    it('modal is hidden', () => {
-      app.first(UserNew).getProp('state').should.be.false();
-    });
+    it('hides the modal', () =>
+      submitWithSuccess().afterResponses(component => {
+        component.first(UserNew).getProp('state').should.be.false();
+      }));
 
-    it('table has the correct number of rows', () => {
-      app.find('#user-list-table tbody tr').length.should.equal(2);
-    });
+    it('does not show the table data while it refreshes the data', () =>
+      submitWithSuccess().beforeEachResponse((component, config, index) => {
+        if (index !== 0) component.find('tbody tr').length.should.equal(0);
+      }));
 
-    it('success message is shown', () => {
-      app.should.alert('success');
-    });
+    it('refreshes the data', () =>
+      submitWithSuccess().afterResponses(component => {
+        component.find('tbody tr').length.should.equal(2);
+      }));
+
+    it('shows a success alert', () =>
+      submitWithSuccess({ route: true }).afterResponses(app => {
+        app.should.alert('success');
+      }));
   });
 });
