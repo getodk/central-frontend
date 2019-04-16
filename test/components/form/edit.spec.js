@@ -37,7 +37,7 @@ describe('FormEdit', () => {
           }
         })
         .request(selectDifferentState)
-        .beforeResponse(component => {
+        .beforeAnyResponse(component => {
           const disabled = component.first('fieldset').getAttribute('disabled');
           disabled.should.equal('disabled');
         })
@@ -52,7 +52,7 @@ describe('FormEdit', () => {
           }
         })
         .request(selectDifferentState)
-        .beforeResponse(component => {
+        .beforeAnyResponse(component => {
           spinnerOfSelectedState(component).getProp('state').should.be.true();
         })
         .respondWithSuccess()

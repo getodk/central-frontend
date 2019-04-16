@@ -182,7 +182,7 @@ describe('UserList', () => {
 
           it('disables the select during the request', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeResponse(component => {
+              .beforeAnyResponse(component => {
                 const select = component.find('table select')[rowIndex];
                 select.getAttribute('disabled').should.equal('disabled');
               })
@@ -190,7 +190,7 @@ describe('UserList', () => {
 
           it('shows a spinner during the request', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeResponse(component => {
+              .beforeAnyResponse(component => {
                 const rows = component.find(UserRow);
                 rows[rowIndex].first(Spinner).getProp('state').should.be.true();
               })

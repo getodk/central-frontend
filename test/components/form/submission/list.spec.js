@@ -650,7 +650,7 @@ describe('FormSubmissionList', () => {
               // Sends a request.
               component.vm.onScroll();
             })
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               // This should not send a request. If it does, then the number of
               // requests will exceed the number of responses, and the
               // mockHttp() object will throw an error.
@@ -659,7 +659,7 @@ describe('FormSubmissionList', () => {
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component => trigger.click(component, '.btn-refresh'))
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               // Should not send a request.
               component.vm.onScroll();
             })

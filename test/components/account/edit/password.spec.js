@@ -45,7 +45,7 @@ describe('AccountEditPassword', () => {
         .mount(AccountEditPassword)
         .request(component => submitPasswords(component, { match: false })
           .then(() => submitPasswords(component, { match: true })))
-        .beforeResponse(component => {
+        .beforeAnyResponse(component => {
           const formGroups = component.find('.form-group');
           formGroups[1].hasClass('has-error').should.be.false();
           formGroups[2].hasClass('has-error').should.be.false();

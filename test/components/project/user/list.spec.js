@@ -64,13 +64,13 @@ describe('ProjectUserList', () => {
 
     describe('during initial fetch of managers', () => {
       it('disables the search button', () =>
-        loadProjectUsers({ count: 0 }).beforeResponse(component => {
+        loadProjectUsers({ count: 0 }).beforeAnyResponse(component => {
           const input = component.first('#project-user-list-search-form input');
           input.getAttribute('disabled').should.be.ok();
         }));
 
       it('hides the .close button', () =>
-        loadProjectUsers({ count: 0 }).beforeResponse(component => {
+        loadProjectUsers({ count: 0 }).beforeAnyResponse(component => {
           component.first('.close').should.be.hidden();
         }));
     });
@@ -157,21 +157,21 @@ describe('ProjectUserList', () => {
       describe('during a POST or DELETE request', () => {
         it('disables the select', () =>
           loadAndRequest(false)
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               component.first('select').getAttribute('disabled').should.be.ok();
             })
             .respondWithSuccess());
 
         it('shows a spinner', () =>
           loadAndRequest(false)
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               component.first(Spinner).getProp('state').should.be.true();
             })
             .respondWithSuccess());
 
         it('disables the search button', () =>
           loadAndRequest(false)
-            .beforeResponse(component => {
+            .beforeAnyResponse(component => {
               const form = component.first('#project-user-list-search-form');
               form.first('input').getAttribute('disabled').should.be.ok();
             })
@@ -209,25 +209,25 @@ describe('ProjectUserList', () => {
 
       describe('during the search request', () => {
         it('hides the managers', () =>
-          search().beforeResponse(component => {
+          search().beforeAnyResponse(component => {
             component.find('tbody tr').should.be.empty();
           }));
 
         it('does not disable the search button', () =>
-          search().beforeResponse(component => {
+          search().beforeAnyResponse(component => {
             const form = component.first('#project-user-list-search-form');
             form.first('input').element.disabled.should.be.false();
           }));
 
         it('shows the .close button', () =>
-          search().beforeResponse(component => {
+          search().beforeAnyResponse(component => {
             component.first('.close').should.be.visible();
           }));
 
         it('allows another search, canceling the first search', () =>
           search()
             // Sends a request for a second search.
-            .beforeResponses(component =>
+            .beforeAnyResponse(component =>
               changeQ(component, 'some other search term'))
             // search() specifies the response to the first search: this is the
             // response to the second search.
@@ -321,13 +321,13 @@ describe('ProjectUserList', () => {
           ]);
 
         it('disables search button during refresh of managers', () =>
-          addManagerThenClearSearch().beforeResponse(component => {
+          addManagerThenClearSearch().beforeAnyResponse(component => {
             const form = component.first('#project-user-list-search-form');
             form.first('input').getAttribute('disabled').should.be.ok();
           }));
 
         it('hides the .close button during the refresh of the managers', () =>
-          addManagerThenClearSearch().beforeResponse(component => {
+          addManagerThenClearSearch().beforeAnyResponse(component => {
             component.first('.close').should.be.hidden();
           }));
 
