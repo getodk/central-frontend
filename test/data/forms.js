@@ -93,7 +93,10 @@ export const extendedForms = dataStore({
   }
 });
 
-export const simpleForms = view(
+export const standardForms = view(
   extendedForms,
   R.omit(['xml', 'submissions', 'lastSubmission', 'createdBy'])
 );
+
+// Deprecated.
+export const simpleForms = standardForms;

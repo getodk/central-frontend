@@ -98,12 +98,13 @@ describe('FormOverview', () => {
           step.hasClass('form-overview-step-complete').should.be.false();
         })
         .route('/projects/1/forms/f/settings')
-        .request(app => {
-          const formEdit = app.first('#form-edit');
-          const closed = formEdit.first('input[type="radio"][value="closed"]');
-          return trigger.change(closed);
+        .request(app => trigger.change(app, '#form-edit input[value="closed"]'))
+        .respondWithData(() => {
+          testData.extendedForms.update(testData.extendedForms.last(), {
+            state: 'closed'
+          });
+          return testData.standardForms.last();
         })
-        .respondWithSuccess()
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {

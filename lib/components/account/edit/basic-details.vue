@@ -51,14 +51,17 @@ export default {
   computed: requestData(['currentUser']),
   methods: {
     submit() {
-      const data = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${this.currentUser.id}`, data)
-        .then(() => {
-          // Not using the response data, because it does not have the `verbs`
-          // extended metadata property.
+      const patchData = { email: this.email, displayName: this.displayName };
+      this.patch(`/users/${this.currentUser.id}`, patchData)
+        .then(response => {
           this.$store.commit('setData', {
             key: 'currentUser',
-            value: this.currentUser.with(data)
+            // We do not simply specify response.data, because it does not
+            // include extended metadata.
+            value: this.currentUser.with({
+              ...patchData,
+              updatedAt: response.data.updatedAt
+            })
           });
           this.$alert().success('Success! Your user details have been updated.');
         })

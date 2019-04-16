@@ -91,19 +91,22 @@ export default {
   computed: requestData(['form']),
   methods: {
     changeState(newState) {
-      this.state = newState;
       const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}`;
-      this.patch(path, { state: this.state })
-        .then(() => {
-          this.$alert().success('Form settings saved!');
+      this.patch(path, { state: newState })
+        .then(response => {
           this.$store.commit('setData', {
             key: 'form',
-            // Not using the response data, because we need extended metadata.
-            // This means that this.form.updatedAt will be out-of-date.
-            value: this.form.with({ state: this.state })
+            // We do not simply specify response.data, because it does not
+            // include extended metadata.
+            value: this.form.with({
+              state: newState,
+              updatedAt: response.data.updatedAt
+            })
           });
+          this.$alert().success('Form settings saved!');
         })
         .catch(() => {});
+      this.state = newState;
     }
   }
 };
