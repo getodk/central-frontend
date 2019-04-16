@@ -25,6 +25,9 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('app-users')" role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
         </li>
+        <li :class="tabClass('settings')" role="presentation">
+          <router-link :to="tabPath('settings')">Settings</router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
