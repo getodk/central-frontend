@@ -22,7 +22,8 @@ either is a Project Manager or has no role. -->
       learn more about Projects and Managers, please see
       <doc-link to="central-projects/#project-managers">this article</doc-link>.
     </p>
-    <form id="project-user-list-search-form" @submit.prevent>
+    <form v-if="project != null && !project.archived"
+      id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
       <button v-show="q != '' && !searchDisabled" type="button" class="close"
@@ -87,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['assignmentActors']),
+    ...requestData(['project', 'assignmentActors']),
     /*
     We disable search while a request for project managers is in progress,
     because we match up search results with the project managers.
@@ -113,7 +114,9 @@ export default {
       if (this.searchAssignments == null) {
         if (this.managerAssignments != null &&
           this.managerAssignments.length === 0)
-          return 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.';
+          return !this.project.archived
+            ? 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.'
+            : 'There are no Project Managers assigned to this Project.';
       } else if (this.searchAssignments.length === 0) {
         return 'No results';
       }

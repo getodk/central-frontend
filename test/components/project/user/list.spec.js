@@ -8,6 +8,11 @@ import { trigger } from '../../../event';
 
 const loadProjectUsers = ({ count, currentUser = false, route = false }) => {
   // Create test data.
+  if (testData.extendedProjects.size === 0)
+    testData.extendedProjects.createPast(1);
+  else
+    testData.extendedProjects.size.should.equal(1);
+  const project = testData.extendedProjects.last();
   testData.extendedUsers.size.should.equal(1);
   const users = testData.extendedUsers
     .createPast(count - (currentUser ? 1 : 0))
@@ -18,13 +23,16 @@ const loadProjectUsers = ({ count, currentUser = false, route = false }) => {
 
   if (route) {
     return mockRoute('/projects/1/users')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() => project)
       .respondWithData(() => managers.map(testData.toActor));
   }
   return mockHttp()
     .mount(ProjectUserList, {
       propsData: { projectId: '1' },
-      requestData: { currentUser: new User(testData.extendedUsers.first()) }
+      requestData: {
+        currentUser: new User(testData.extendedUsers.first()),
+        project
+      }
     })
     .respondWithData(() => managers.map(testData.toActor));
 };
@@ -66,7 +74,7 @@ describe('ProjectUserList', () => {
     beforeEach(mockLogin);
 
     describe('during initial fetch of managers', () => {
-      it('disables the search button', () =>
+      it('disables the search input', () =>
         loadProjectUsers({ count: 0 }).beforeAnyResponse(component => {
           const input = component.first('#project-user-list-search-form input');
           input.getAttribute('disabled').should.be.ok();
@@ -172,7 +180,7 @@ describe('ProjectUserList', () => {
             })
             .respondWithSuccess());
 
-        it('disables the search button', () =>
+        it('disables the search input', () =>
           loadAndRequest(false)
             .beforeAnyResponse(component => {
               const form = component.first('#project-user-list-search-form');
@@ -232,7 +240,7 @@ describe('ProjectUserList', () => {
             component.find('tbody tr').should.be.empty();
           }));
 
-        it('does not disable the search button', () =>
+        it('does not disable the search input', () =>
           search().beforeAnyResponse(component => {
             const form = component.first('#project-user-list-search-form');
             form.first('input').element.disabled.should.be.false();
@@ -339,7 +347,7 @@ describe('ProjectUserList', () => {
             testData.administrators.get(3)
           ]);
 
-        it('disables search button during refresh of managers', () =>
+        it('disables search input during refresh of managers', () =>
           addManagerThenClearSearch().beforeAnyResponse(component => {
             const form = component.first('#project-user-list-search-form');
             form.first('input').getAttribute('disabled').should.be.ok();
@@ -360,6 +368,23 @@ describe('ProjectUserList', () => {
             component.find('tbody tr').length.should.equal(3);
           }));
       });
+    });
+
+    describe('archived project', () => {
+      beforeEach(() => {
+        testData.extendedProjects.createPast(1, { archived: true });
+      });
+
+      it('does not render the search input', () =>
+        loadProjectUsers({ count: 1 }).then(component => {
+          const form = component.find('#project-user-list-search-form');
+          form.length.should.equal(0);
+        }));
+
+      it('disables the select', () =>
+        loadProjectUsers({ count: 1 }).then(component => {
+          component.first('select').should.be.disabled();
+        }));
     });
   });
 });
