@@ -6,6 +6,26 @@ import { mockRoute } from '../../http';
 describe('ProjectShow', () => {
   beforeEach(mockLogin);
 
+  it("shows the project's name", () =>
+    mockRoute('/projects/1')
+      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedForms.sorted())
+      .afterResponses(app => {
+        const project = testData.extendedProjects.last();
+        app.first('#page-head-title').text().trim().should.equal(project.name);
+      }));
+
+  it("appends (archived) to an archived project's name", () =>
+    mockRoute('/projects/1')
+      .respondWithData(() => testData.extendedProjects
+        .createPast(1, { name: 'My Project', archived: true })
+        .last())
+      .respondWithData(() => testData.extendedForms.sorted())
+      .afterResponses(app => {
+        const title = app.first('#page-head-title').text().trim();
+        title.should.equal('My Project (archived)');
+      }));
+
   it('shows a loading message until all responses are returned', () =>
     mockRoute('/projects/1')
       .beforeEachResponse((app, config, index) => {

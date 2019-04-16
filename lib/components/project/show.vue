@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null">
-      <template slot="title">
-        {{ project != null ? project.name : '' }}
+      <template v-if="project != null" slot="title">
+        {{ project.name }} {{ project.archived ? '(archived)' : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">

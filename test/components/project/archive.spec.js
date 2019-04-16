@@ -57,6 +57,11 @@ describe('ProjectArchive', () => {
       app.vm.$route.path.should.equal('/projects/1');
     });
 
+    it("appends (archived) to project's name in project overview", () => {
+      const title = app.first('#page-head-title').text().trim();
+      title.should.equal('My Project (archived)');
+    });
+
     it('shows a success alert', () => {
       app.should.alert('success');
     });
