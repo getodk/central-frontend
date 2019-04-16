@@ -198,14 +198,6 @@ export default {
 <style lang="scss">
 @import '../../../../assets/scss/variables';
 
-#project-user-list table {
-  table-layout: fixed;
-
-  th, td {
-    width: 50%;
-  }
-}
-
 #project-user-list-heading {
   margin-bottom: 20px;
 }
@@ -233,6 +225,14 @@ export default {
     &:hover, &:focus {
       opacity: 0.2;
     }
+  }
+}
+
+#project-user-list table {
+  table-layout: fixed;
+
+  th, td {
+    width: 50%;
   }
 }
 </style>
