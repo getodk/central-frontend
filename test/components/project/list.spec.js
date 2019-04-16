@@ -1,5 +1,3 @@
-import pluralize from 'pluralize';
-
 import testData from '../../data';
 import { formatDate } from '../../../lib/util/util';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
@@ -134,7 +132,8 @@ describe('ProjectList', () => {
 
     it('displays a row of the table correctly', () =>
       mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { forms: 2 }).sorted())
         .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           const td = app.find('#project-list-table td');
@@ -143,7 +142,7 @@ describe('ProjectList', () => {
           const a = td[0].first('a');
           a.text().trim().should.equal(project.name);
           a.getAttribute('href').should.equal('#/projects/1');
-          td[1].text().trim().should.equal(pluralize('Form', project.forms, true));
+          td[1].text().trim().should.equal('2 Forms');
           td[2].text().trim().should.equal(formatDate(project.lastSubmission, '(none)'));
         }));
 

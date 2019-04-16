@@ -20,8 +20,7 @@ except according to the terms contained in the LICENSE file.
         <a id="form-submission-list-download-button" :href="downloadHref"
           class="btn btn-primary" target="_blank">
           <span class="icon-arrow-circle-down"></span>Download all
-          {{ form.submissions.toLocaleString() }}
-          {{ $pluralize('record', form.submissions) }}
+          {{ $pluralize('record', form.submissions, true) }}
         </a>
         <button id="form-submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="showModal('analyze')">
