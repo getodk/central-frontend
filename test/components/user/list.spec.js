@@ -138,7 +138,7 @@ describe('UserList', () => {
     describe('changing a role', () => {
       const loadUsersAndChangeRole =
         ({ rowIndex, selectValue, route = false }) =>
-          (route ? mockHttp().mount(UserList) : mockRoute('/users'))
+          (route ? mockRoute('/users') : mockHttp().mount(UserList))
             .respondWithData(() => testData.standardUsers
               .createPast(1, {
                 displayName: 'Person 1',
