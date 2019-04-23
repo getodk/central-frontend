@@ -139,7 +139,9 @@ export default {
       return [{
         key: 'submissionsChunk',
         url: this.chunkURL({ top: this.chunkSizes.small }),
-        success: this.processChunk
+        success: () => {
+          this.processChunk();
+        }
       }];
     },
     encodedFormId() {
@@ -326,7 +328,9 @@ export default {
         {
           key: 'submissionsChunk',
           url: this.chunkURL({ top: this.chunkSizes.small }),
-          success: this.processChunk
+          success: () => {
+            this.processChunk();
+          }
         }
       ])
         .catch(() => {
