@@ -55,9 +55,10 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser']),
+    ...requestData(['currentUser', 'project']),
     disabled() {
-      return this.assignment.actor.id === this.currentUser.id ||
+      return this.project == null || this.project.archived ||
+        this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;
     },
     title() {

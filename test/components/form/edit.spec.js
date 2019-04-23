@@ -1,17 +1,11 @@
 import Form from '../../../lib/presenters/form';
 import FormEdit from '../../../lib/components/form/edit.vue';
 import Spinner from '../../../lib/components/spinner.vue';
-import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const selectDifferentState = (formEdit) => {
-  const inputs = formEdit.find('input')
-    .filter(input => input.getAttribute('value') !== formEdit.data().state);
-  return trigger.change(faker.random.arrayElement(inputs));
-};
 // Returns the spinner associated with the currently selected radio.
 const spinnerOfSelectedState = (formEdit) => {
   const radios = formEdit.find('.radio');
@@ -33,42 +27,66 @@ describe('FormEdit', () => {
         .mount(FormEdit, {
           propsData: { projectId: '1' },
           requestData: {
-            form: new Form(testData.extendedForms.createPast(1).last())
+            form: new Form(testData.extendedForms
+              .createPast(1, { state: 'open' })
+              .last())
           }
         })
-        .request(selectDifferentState)
+        .request(component =>
+          trigger.change(component, 'input[value="closing"]'))
         .beforeAnyResponse(component => {
           const disabled = component.first('fieldset').getAttribute('disabled');
           disabled.should.equal('disabled');
         })
-        .respondWithSuccess());
+        .respondWithData(() => {
+          testData.extendedForms.update(testData.extendedForms.last(), {
+            state: 'closing'
+          });
+          return testData.standardForms.last();
+        }));
 
     it('shows a spinner', () =>
       mockHttp()
         .mount(FormEdit, {
           propsData: { projectId: '1' },
           requestData: {
-            form: new Form(testData.extendedForms.createPast(1).last())
+            form: new Form(testData.extendedForms
+              .createPast(1, { state: 'closing' })
+              .last())
           }
         })
-        .request(selectDifferentState)
+        .request(component =>
+          trigger.change(component, 'input[value="closed"]'))
         .beforeAnyResponse(component => {
           spinnerOfSelectedState(component).getProp('state').should.be.true();
         })
-        .respondWithSuccess()
+        .respondWithData(() => {
+          testData.extendedForms.update(testData.extendedForms.last(), {
+            state: 'closed'
+          });
+          return testData.standardForms.last();
+        })
         .afterResponse(component => {
           spinnerOfSelectedState(component).getProp('state').should.be.false();
         }));
 
     it('shows a success message', () =>
-      mockRoute('/projects/1/forms/x/settings')
+      mockRoute('/projects/1/forms/f/settings')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', state: 'closed' })
+          .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .complete()
-        .request(app => selectDifferentState(app.first(FormEdit)))
-        .respondWithSuccess()
-        .afterResponse(app => app.should.alert('success')));
+        .request(app => trigger.change(app, '#form-edit input[value="open"]'))
+        .respondWithData(() => {
+          testData.extendedForms.update(testData.extendedForms.last(), {
+            state: 'open'
+          });
+          return testData.standardForms.last();
+        })
+        .afterResponse(app => {
+          app.should.alert('success');
+        }));
   });
 });

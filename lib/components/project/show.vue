@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null">
-      <template slot="title">
-        {{ project != null ? project.name : '' }}
+      <template v-if="project != null" slot="title">
+        {{ project.name }} {{ project.archived ? '(archived)' : '' }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
@@ -25,6 +25,10 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('app-users')" role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
         </li>
+        <li v-if="project != null && !project.archived"
+          :class="tabClass('settings')" role="presentation">
+          <router-link :to="tabPath('settings')">Settings</router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
@@ -33,12 +37,10 @@ except according to the terms contained in the LICENSE file.
       to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
       supports that use case. -->
       <div v-show="project != null">
-        <keep-alive>
-          <!-- <router-view> is immediately created and can send its own
-          requests even before the server has responded to ProjectHome's
-          request for the project. -->
-          <router-view/>
-        </keep-alive>
+        <!-- <router-view> is immediately created and can send its own requests
+        even before the server has responded to ProjectHome's request for the
+        project. -->
+        <router-view/>
       </div>
     </page-body>
   </div>

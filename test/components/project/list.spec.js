@@ -1,5 +1,3 @@
-import pluralize from 'pluralize';
-
 import testData from '../../data';
 import { formatDate } from '../../../lib/util/util';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
@@ -134,7 +132,8 @@ describe('ProjectList', () => {
 
     it('displays a row of the table correctly', () =>
       mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { forms: 2 }).sorted())
         .respondWithData(() => testData.administrators.sorted())
         .afterResponses(app => {
           const td = app.find('#project-list-table td');
@@ -143,16 +142,40 @@ describe('ProjectList', () => {
           const a = td[0].first('a');
           a.text().trim().should.equal(project.name);
           a.getAttribute('href').should.equal('#/projects/1');
-          td[1].text().trim().should.equal(pluralize('form', project.forms, true));
+          td[1].text().trim().should.equal('2 Forms');
           td[2].text().trim().should.equal(formatDate(project.lastSubmission, '(none)'));
         }));
 
     it('shows a message if there are no projects', () =>
       mockRoute('/')
         .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.administrators.sorted())
+        .respondWithData(() => testData.standardUsers.sorted())
         .afterResponses(app => {
           app.find('.empty-table-message').length.should.equal(1);
         }));
+
+    describe('archived project', () => {
+      it('adds an HTML class to the row', () =>
+        mockRoute('/')
+          .respondWithData(() => testData.extendedProjects
+            .createPast(1, { archived: true })
+            .sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            const tr = app.first('#project-list-table tbody tr');
+            tr.hasClass('archived').should.be.true();
+          }));
+
+      it("appends (archived) to the project's name", () =>
+        mockRoute('/')
+          .respondWithData(() => testData.extendedProjects
+            .createPast(1, { name: 'My Project', archived: true })
+            .sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            const name = app.first('.project-list-project-name a').text().trim();
+            name.should.equal('My Project (archived)');
+          }));
+    });
   });
 });

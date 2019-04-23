@@ -10,11 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr>
+  <tr :class="{ archived: project.archived }">
     <td>
       <div class="project-list-project-name">
         <router-link :to="`/projects/${project.id}`">
-          {{ project.name }} <span class="icon-angle-right"></span>
+          {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+          <span class="icon-angle-right"></span>
         </router-link>
       </div>
       <template v-if="projectCount === 1">
@@ -30,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </template>
     </td>
-    <td>{{ $pluralize('form', project.forms, true) }}</td>
+    <td>{{ $pluralize('Form', project.forms, true) }}</td>
     <td>{{ latestSubmission }}</td>
   </tr>
 </template>
@@ -57,3 +58,30 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+@import '../../../assets/scss/variables';
+
+#project-list-table {
+  td {
+    vertical-align: middle;
+
+    .project-list-project-name a {
+      color: inherit;
+      font-size: 24px;
+      text-decoration: none;
+
+      .icon-angle-right {
+        color: $color-accent-primary;
+        font-size: 20px;
+        margin-left: 2px;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .archived {
+    color: #999;
+  }
+}
+</style>

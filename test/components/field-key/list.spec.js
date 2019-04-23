@@ -28,6 +28,17 @@ describe('FieldKeyList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
+    it('does not send a new request if user navigates back to tab', () =>
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 0 }).last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .complete()
+        .route('/projects/1/settings')
+        .complete()
+        .route('/projects/1/app-users')
+        .respondWithData([/* no responses */]));
+
     it('table contains the correct data', () =>
       mockRoute('/projects/1/app-users')
         .respondWithData(() =>
@@ -57,7 +68,7 @@ describe('FieldKeyList', () => {
           testData.extendedProjects.createPast(1, { appUsers: 0 }).last())
         .respondWithData(() => testData.extendedFieldKeys.createPast(0).sorted())
         .afterResponses(app => {
-          app.find('#field-key-list-empty-message').length.should.equal(1);
+          app.find('.empty-table-message').length.should.equal(1);
         }));
 
     describe('QR code', () => {

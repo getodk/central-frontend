@@ -10,17 +10,21 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list" ref="dropZone">
+  <!-- We use v-show rather than v-if so that this.$refs.dropZone is in the DOM
+  from the first render. -->
+  <div v-show="attachments != null" id="form-attachment-list" ref="dropZone">
     <div class="heading-with-button">
-      <button class="btn btn-primary" type="button"
-        @click="showModal('uploadFilesModal')">
+      <button v-if="project != null && !project.archived" type="button"
+        class="btn btn-primary" @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span>Upload files
       </button>
       <div>
         Based on the form you uploaded, the following files are expected. You
         can see which ones have been uploaded or are still missing.
       </div>
-      <div>To upload files, drag and drop one or more files onto the page.</div>
+      <div v-if="project != null && !project.archived">
+        To upload files, drag and drop one or more files onto the page.
+      </div>
     </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
@@ -30,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-uploaded">Uploaded</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
           :key="attachment.key" :project-id="projectId" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
@@ -61,6 +65,7 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
+import conditionalRoute from '../../mixins/conditional-route';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -75,8 +80,11 @@ export default {
     FormAttachmentUploadFiles
   },
   mixins: [
-    dropZone({ keepAlive: true, eventNamespace: 'form-attachment-list' }),
-    modal(['uploadFilesModal', 'nameMismatch']),
+    conditionalRoute({
+      attachments: (attachments) => attachments.length !== 0
+    }),
+    dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
+    modal(),
     request()
   ],
   // Setting this in order to ignore attributes from FormShow that are intended
@@ -148,9 +156,21 @@ export default {
     };
   },
   computed: {
-    ...requestData(['form', 'attachments']),
+    ...requestData(['project', 'form', 'attachments']),
     disabled() {
-      return this.uploadStatus.total !== 0;
+      return this.project == null || this.project.archived ||
+        this.uploadStatus.total !== 0;
+    }
+  },
+  watch: {
+    // Reset the component if it is reused after a route change.
+    $route() {
+      this.countOfFilesOverDropZone = 0;
+      this.dragoverAttachment = null;
+      this.plannedUploads = [];
+      this.unmatchedFiles = [];
+      this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
+      this.updatedAttachments = [];
     }
   },
   methods: {

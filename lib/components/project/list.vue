@@ -135,7 +135,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectList',
   components: { ProjectIntroduction, ProjectNew, ProjectRow },
-  mixins: [modal(['newProject', 'introduction'])],
+  mixins: [modal()],
   data() {
     return {
       newProject: {
@@ -268,23 +268,6 @@ export default {
 
   th, td {
     width: 33.33%;
-  }
-
-  tbody td {
-    vertical-align: middle;
-
-    .project-list-project-name a {
-      color: inherit;
-      font-size: 24px;
-      text-decoration: none;
-
-      .icon-angle-right {
-        color: $color-accent-primary;
-        font-size: 20px;
-        margin-left: 2px;
-        margin-right: 0;
-      }
-    }
   }
 }
 </style>

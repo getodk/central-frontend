@@ -10,18 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div v-if="form != null">
     <float-row class="table-actions">
       <template slot="left">
-        <refresh-button :configs="refreshConfigs"/>
+        <refresh-button :configs="configsForRefresh"/>
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
         <a id="form-submission-list-download-button" :href="downloadHref"
           class="btn btn-primary" target="_blank">
           <span class="icon-arrow-circle-down"></span>Download all
-          {{ form.submissions.toLocaleString() }}
-          {{ $pluralize('record', form.submissions) }}
+          {{ $pluralize('record', form.submissions, true) }}
         </a>
         <button id="form-submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="showModal('analyze')">
@@ -94,9 +93,13 @@ const MAX_SMALL_CHUNKS = 4;
 export default {
   name: 'FormSubmissionList',
   components: { FormSubmissionAnalyze, FormSubmissionRow },
-  mixins: [modal('analyze')],
+  mixins: [modal()],
   props: {
     projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
       type: String,
       required: true
     },
@@ -131,22 +134,21 @@ export default {
     };
   },
   computed: {
-    /* We use the 'submissionsChunk' request key to store the latest chunk of
-    submissions that we have fetched. 'submissionsChunk' is only used in this
-    component, and it feels a little unnecessary to store this data in the
-    store. However, the way we have it set up right now, we need
-    'submissionsChunk' to be its own request key so that we can determine
-    whether the associated request is loading. */
     ...requestData(['form', 'schema', 'submissionsChunk']),
-    refreshConfigs() {
+    configsForRefresh() {
       return [{
         key: 'submissionsChunk',
         url: this.chunkURL({ top: this.chunkSizes.small }),
-        success: this.processChunk
+        success: () => {
+          this.processChunk();
+        }
       }];
     },
+    encodedFormId() {
+      return encodeURIComponent(this.xmlFormId);
+    },
     downloadHref() {
-      return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
+      return `/v1/projects/${this.projectId}/forms/${this.encodedFormId}/submissions.csv.zip`;
     },
     // Returns information about the schema after processing it.
     schemaAnalysis() {
@@ -193,10 +195,38 @@ export default {
       return this.schemaAnalysis.columns;
     }
   },
-  created() {
-    this.fetchSchemaAndFirstChunk();
+  watch: {
+    $route(newRoute, oldRoute) {
+      // Do not do anything if the user has simply navigated to another tab for
+      // the same form.
+      if (newRoute.params.projectId === oldRoute.params.projectId &&
+        newRoute.params.xmlFormId === oldRoute.params.xmlFormId)
+        return;
+
+      // Reset the component. Even if after the route change, the component is
+      // not rendered by the FormShow <router-view> (that is, even if the
+      // component is not the active tab), the component will still be kept
+      // alive, so it must be reset.
+      this.submissions = null;
+      this.instanceIds = new Set();
+      this.originalCount = null;
+      this.chunkCount = 0;
+      this.message = null;
+
+      if (oldRoute.name === 'FormSubmissionList' &&
+        newRoute.name === 'FormSubmissionList') {
+        // The route has changed, but the component's `activated` hook will not
+        // be called. Because of that, we call this.fetchSchemaAndFirstChunk()
+        // here instead.
+        this.fetchSchemaAndFirstChunk();
+      }
+    }
   },
   activated() {
+    // If the user navigates from this tab to another tab, then back to this
+    // tab, we do not send a new request.
+    if (this.schema == null && !this.$store.getters.loading('schema'))
+      this.fetchSchemaAndFirstChunk();
     $(window).on('scroll.form-submission-list', this.onScroll);
   },
   deactivated() {
@@ -205,6 +235,7 @@ export default {
   methods: {
     loadingMessageText({ top, skip = 0 }) {
       if (skip === 0) {
+        if (this.form == null) return 'Loading submissions…';
         if (this.form.submissions > top) {
           const count = this.form.submissions.toLocaleString();
           return `Loading the first ${top.toLocaleString()} of ${count} submissions…`;
@@ -224,30 +255,39 @@ export default {
     },
     chunkURL({ top, skip = 0 }) {
       const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
-      return `/projects/${this.projectId}/forms/${this.form.encodedId()}.svc/Submissions?${queryString}`;
+      return `/projects/${this.projectId}/forms/${this.encodedFormId}.svc/Submissions?${queryString}`;
+    },
+    // Sets this.form.submissions to this.submissionsChunk['@odata.count'].
+    updateFormSubmissionCount() {
+      if (this.form == null) return;
+      if (this.form.submissions === this.submissionsChunk['@odata.count'])
+        return;
+      this.$store.commit('setData', {
+        key: 'form',
+        value: this.form.with({
+          submissions: this.submissionsChunk['@odata.count']
+        })
+      });
     },
     processChunk(replace = true) {
-      const chunk = this.submissionsChunk;
-      if (chunk['@odata.count'] !== this.form.submissions) {
-        // We update this.form.submissions, but not this.form.lastSubmission,
-        // nor lastSubmission for the project.
-        this.$store.commit('setData', {
-          key: 'form',
-          value: this.form.with({ submissions: chunk['@odata.count'] })
-        });
-      }
+      // We update this.form.submissions, but not this.form.lastSubmission, nor
+      // lastSubmission for the project.
+      this.updateFormSubmissionCount();
+
       if (replace) {
-        this.submissions = chunk.value != null ? chunk.value : [];
+        this.submissions = this.submissionsChunk.value != null
+          ? this.submissionsChunk.value
+          : [];
         this.instanceIds.clear();
         for (const submission of this.submissions)
           this.instanceIds.add(submission.__id);
-        this.originalCount = chunk['@odata.count'];
+        this.originalCount = this.submissionsChunk['@odata.count'];
         this.chunkCount = 1;
       } else {
-        if (chunk.value != null) {
+        if (this.submissionsChunk.value != null) {
           const lastSubmission = this.submissions[this.submissions.length - 1];
           const lastSubmissionDate = lastSubmission.__system.submissionDate;
-          for (const submission of chunk.value) {
+          for (const submission of this.submissionsChunk.value) {
             // If one or more submissions have been created since the initial
             // fetch or last refresh, then the latest chunk of submissions may
             // include a newly created submission or a submission that is
@@ -261,6 +301,7 @@ export default {
         }
         this.chunkCount += 1;
       }
+
       const remaining = this.originalCount - this.submissions.length;
       // A negative value should be rare or impossible.
       if (remaining <= 0)
@@ -282,12 +323,14 @@ export default {
       this.$store.dispatch('get', [
         {
           key: 'schema',
-          url: `/projects/${this.projectId}/forms/${this.form.encodedId()}.schema.json?flatten=true`
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}.schema.json?flatten=true`
         },
         {
           key: 'submissionsChunk',
           url: this.chunkURL({ top: this.chunkSizes.small }),
-          success: this.processChunk
+          success: () => {
+            this.processChunk();
+          }
         }
       ])
         .catch(() => {
@@ -304,6 +347,7 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
+      if (this.form == null) return;
       const skip = this.skip(this.chunkCount);
       if (skip >= this.form.submissions ||
         this.$store.getters.loading('submissionsChunk') ||

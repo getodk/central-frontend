@@ -32,6 +32,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     .mount(FormAttachmentList, {
       propsData: { projectId: '1' },
       requestData: {
+        project: testData.extendedProjects.last(),
         form: new Form(form),
         attachments: testData.extendedFormAttachments.sorted()
           .map(attachment => new FormAttachment(attachment))
@@ -55,22 +56,98 @@ const selectFilesUsingModal = (app, files) =>
 describe('FormAttachmentList', () => {
   describe('routing', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/forms/x/media-files')
+      mockRoute('/projects/1/forms/f/media-files')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
     it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/forms/x/media-files')
+      mockRouteThroughLogin('/projects/1/forms/f/media-files')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
+          testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
         .respondWithData(() =>
           testData.extendedFormAttachments.createPast(1).sorted())
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/x/media-files');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/media-files');
         }));
+
+    it('resets the component after the route updates', () => {
+      mockLogin();
+      return mockRoute('/projects/1/forms/f1/media-files')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
+        .respondWithData(() =>
+          testData.extendedFormAttachments.createPast(1).sorted())
+        .afterResponses(app => {
+          const files = blankFiles(['a']);
+          return trigger.dragAndDrop(app, FormAttachmentList, { files })
+            .then(() => {
+              const { unmatchedFiles } = app.first(FormAttachmentList).data();
+              unmatchedFiles.length.should.equal(1);
+            });
+        })
+        .route('/projects/1/forms/f2/media-files')
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
+        .respondWithData(() => testData.extendedFormAttachments
+          .createPast(1, { hasUpdatedAt: false })
+          .sorted())
+        .afterResponses(app => {
+          const { unmatchedFiles } = app.first(FormAttachmentList).data();
+          unmatchedFiles.length.should.equal(0);
+        });
+    });
+
+    describe('no form attachments', () => {
+      beforeEach(mockLogin);
+
+      it('redirects a user whose first navigation is to the tab', () =>
+        mockRoute('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user who navigates to the tab from another tab', () =>
+        mockRoute('/projects/1/forms/f')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .complete()
+          .route('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user navigating from a different form', () =>
+        mockRoute('/projects/1/forms/f1/media-files')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
+          .respondWithData(() =>
+            testData.extendedFormAttachments.createPast(1).sorted())
+          .complete()
+          .route('/projects/1/forms/f2/media-files')
+          .respondWithData(() =>
+            testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
+          .respondWithData(() => []) // attachments
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .respondWithData(() => testData.standardUsers.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
   });
 
   describe('Media Files tab', () => {
@@ -1191,5 +1268,23 @@ describe('FormAttachmentList', () => {
           });
       });
     }
+  });
+
+  describe('archived project', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { archived: true });
+      testData.extendedFormAttachments.createPast(1);
+    });
+
+    it('does not render the upload files button', () =>
+      loadAttachments().then(component => {
+        component.find('.heading-with-button button').length.should.equal(0);
+      }));
+
+    it('disables the drop zone', () =>
+      loadAttachments().then(component => {
+        component.vm.disabled.should.be.true();
+      }));
   });
 });

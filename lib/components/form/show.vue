@@ -12,14 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null && form != null && attachments != null">
-      <template slot="context">
-        <span>{{ project != null ? project.name : '' }}</span>
+      <template v-if="project != null" slot="context">
+        <span>
+          {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+        </span>
         <router-link :to="`/projects/${projectId}`">
           Back to Project Overview
         </router-link>
       </template>
-      <template slot="title">
-        {{ form != null ? form.nameOrId() : '' }}
+      <template v-if="form != null" slot="title">
+        {{ form.nameOrId() }}
       </template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
@@ -37,7 +39,8 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('submissions')" role="presentation">
           <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
-        <li :class="tabClass('settings')" role="presentation">
+        <li v-if="project != null && !project.archived"
+          :class="tabClass('settings')" role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>
@@ -45,17 +48,18 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <loading
         :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
-      <!-- <router-view> is created and can send its own requests once responses
-      have been received for the form and its attachments. We do not wait in a
-      similar way for the response for the project. -->
-      <div v-if="form != null && attachments != null">
-        <div v-show="project != null">
-          <keep-alive>
-            <router-view :project-id="projectId"
-              :chunk-sizes="submissionChunkSizes"
-              :scrolled-to-bottom="scrolledToBottom"/>
-          </keep-alive>
-        </div>
+      <div v-show="project != null && form != null && attachments != null">
+        <!-- We only include FormSubmissionList, because it is the only
+        component whose state we want to preserve when the user navigates to a
+        different tab. -->
+        <keep-alive include="FormSubmissionList">
+          <!-- <router-view> is immediately created and can send its own
+          requests even before the server has responded to the requests from
+          ProjectHome and FormShow. -->
+          <router-view :project-id="projectId" :xml-form-id="xmlFormId"
+            :chunk-sizes="submissionChunkSizes"
+            :scrolled-to-bottom="scrolledToBottom"/>
+        </keep-alive>
       </div>
     </page-body>
   </div>
@@ -113,7 +117,18 @@ export default {
         {
           key: 'form',
           url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
-          extended: true
+          extended: true,
+          success: ({ submissionsChunk }) => {
+            if (submissionsChunk == null) return;
+            if (submissionsChunk['@odata.count'] === this.form.submissions)
+              return;
+            this.$store.commit('setData', {
+              key: 'form',
+              value: this.form.with({
+                submissions: submissionsChunk['@odata.count']
+              })
+            });
+          }
         },
         {
           key: 'attachments',

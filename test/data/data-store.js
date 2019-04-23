@@ -172,6 +172,7 @@ class Store extends Collection {
       // eslint-disable-next-line no-param-reassign
       object.updatedAt = new Date().toISOString();
     }
+    return object;
   }
 
   clear() {

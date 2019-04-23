@@ -10,6 +10,7 @@ export const extendedProjects = dataStore({
     lastCreatedAt,
 
     name = faker.name.findName(),
+    archived = false,
     // The default value of this property does not necessarily match
     // testData.extendedForms.
     forms = inPast ? faker.random.number() : 0,
@@ -23,14 +24,16 @@ export const extendedProjects = dataStore({
     return {
       id,
       name,
+      archived,
+      createdAt,
+      updatedAt,
+      // Extended metadata
       forms,
       // This property does not necessarily match testData.extendedSubmissions.
       lastSubmission: forms !== 0 && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()
         : null,
-      appUsers,
-      createdAt,
-      updatedAt
+      appUsers
     };
   },
   sort: (project1, project2) => project1.name.localeCompare(project2.name)

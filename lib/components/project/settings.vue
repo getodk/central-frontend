@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
 
@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="form != null" id="form-settings">
+  <div id="project-settings">
     <div class="row">
       <div class="col-xs-8">
-        <form-edit :project-id="projectId"/>
+        <project-edit v-if="project != null"/>
       </div>
       <div class="col-xs-4">
         <div class="panel panel-simple-danger">
@@ -22,57 +22,46 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="panel-body">
             <p>
-              <button :disabled="awaitingResponse" type="button"
-                class="btn btn-danger" @click="showModal('deleteForm')">
-                Delete this Form
+              <button id="project-settings-archive-button" type="button"
+                class="btn btn-danger" @click="showModal('archive')">
+                Archive this Project
               </button>
             </p>
           </div>
         </div>
       </div>
     </div>
-    <form-delete :project-id="projectId" :state="deleteForm.state"
-      @hide="hideModal('deleteForm')" @success="afterDelete"/>
+    <project-archive :state="archive.state" @hide="hideModal('archive')"
+      @success="afterArchive"/>
   </div>
 </template>
 
 <script>
-import FormDelete from './delete.vue';
-import FormEdit from './edit.vue';
+import ProjectArchive from './archive.vue';
+import ProjectEdit from './edit.vue';
 import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'FormSettings',
-  components: { FormEdit, FormDelete },
+  name: 'ProjectSettings',
+  components: { ProjectArchive, ProjectEdit },
   mixins: [
-    conditionalRoute({
-      project: (project) => !project.archived
-    }),
+    conditionalRoute({ project: (project) => !project.archived }),
     modal()
   ],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
-      deleteForm: {
+      archive: {
         state: false
       }
     };
   },
-  computed: requestData(['form']),
+  computed: requestData(['project']),
   methods: {
-    afterDelete(form) {
-      this.$router.push(`/projects/${this.projectId}`, () => {
-        this.$alert().success(`The Form “${form.nameOrId()}” was deleted.`);
+    afterArchive() {
+      this.$router.push(`/projects/${this.project.id}`, () => {
+        this.$alert().success(`The Project “${this.project.name}” was archived.`);
       });
     }
   }
@@ -80,7 +69,7 @@ export default {
 </script>
 
 <style lang="sass">
-#form-settings .panel-simple-danger .panel-body p {
+#project-settings .panel-simple-danger p {
   margin-bottom: 15px;
   margin-top: 10px;
   text-align: center;

@@ -15,9 +15,7 @@ except according to the terms contained in the LICENSE file.
       <template slot="title">Users</template>
     </page-head>
     <page-body>
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
+      <router-view/>
     </page-body>
   </div>
 </template>

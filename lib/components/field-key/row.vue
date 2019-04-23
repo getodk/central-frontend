@@ -24,16 +24,15 @@ except according to the terms contained in the LICENSE file.
         Access revoked
       </template>
     </td>
-    <td>
+    <td class="field-key-actions">
       <div class="dropdown">
         <button :id="actionsId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <span class="icon-cog"></span><span class="caret"></span>
         </button>
-        <ul :aria-labelledby="actionsId"
-          class="dropdown-menu dropdown-menu-right">
-          <li :class="{ disabled: fieldKey.token == null }">
+        <ul :aria-labelledby="actionsId" class="dropdown-menu">
+          <li :class="{ disabled: revokeDisabled }">
             <a href="#" @click.prevent="revoke">Revoke access</a>
           </li>
         </ul>
@@ -45,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import highlight from '../../mixins/highlight';
 import { formatDate } from '../../util/util';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyRow',
@@ -57,6 +57,7 @@ export default {
     highlighted: Number // eslint-disable-line vue/require-default-prop
   },
   computed: {
+    ...requestData(['project']),
     created() {
       const createdAt = formatDate(this.fieldKey.createdAt);
       const createdBy = this.fieldKey.createdBy.displayName;
@@ -67,6 +68,10 @@ export default {
     },
     actionsId() {
       return `field-key-row-actions${this.fieldKey.id}`;
+    },
+    revokeDisabled() {
+      return (this.project != null && this.project.archived) ||
+        this.fieldKey.token == null;
     }
   },
   methods: {
@@ -75,8 +80,8 @@ export default {
     },
     revoke() {
       // Bootstrap does not truly disable dropdown menu items marked as
-      // disabled, so we inspect the token again here.
-      if (this.fieldKey.token == null) return;
+      // disabled.
+      if (this.revokeDisabled) return;
       this.$emit('revoke', this.fieldKey);
     }
   }

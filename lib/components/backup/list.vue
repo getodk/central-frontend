@@ -106,7 +106,7 @@ import { formatDate } from '../../util/util';
 export default {
   name: 'BackupList',
   components: { BackupNew, BackupTerminate },
-  mixins: [modal(['newBackup', 'terminate'])],
+  mixins: [modal()],
   data() {
     return {
       newBackup: {

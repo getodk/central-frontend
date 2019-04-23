@@ -12,10 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button id="field-key-list-new-button" type="button"
+      <button v-if="project != null && !project.archived" type="button"
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
       </button>
+      <!-- TODO. Update this text to account for archived projects? -->
       <p>
         App Users in this Project will be able to download and use all Forms
         within this Project. A future update will allow you to customize which
@@ -24,34 +25,37 @@ except according to the terms contained in the LICENSE file.
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
+    <table id="field-key-list-table" class="table">
+      <thead>
+        <tr>
+          <th>Nickname</th>
+          <th>Created</th>
+          <th>Last Used</th>
+          <th>Configure Client</th>
+          <th class="field-key-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody v-if="fieldKeys != null">
+        <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
+        ensure that there will be no component reuse if fieldKeys changes. Such
+        component reuse could add complexity around our use of the Bootstrap
+        plugin. -->
+        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
+          :field-key="fieldKey" :highlighted="highlighted"
+          @show-code="showPopover" @revoke="showRevoke"/>
+      </tbody>
+    </table>
     <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
-    <template v-if="fieldKeys != null">
-      <p v-if="fieldKeys.length === 0"
-        id="field-key-list-empty-message">
+    <p v-if="fieldKeys != null && fieldKeys.length === 0"
+      class="empty-table-message">
+      <template v-if="project != null && !project.archived">
         There are no App Users yet. You will need to create some to download
         Forms and submit data from your device.
-      </p>
-      <table v-else id="field-key-list-table" class="table">
-        <thead>
-          <tr>
-            <th>Nickname</th>
-            <th>Created</th>
-            <th>Last Used</th>
-            <th>Configure Client</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
-          ensure that there will be no component reuse if fieldKeys changes.
-          Such component reuse could add complexity around our use of the
-          Bootstrap plugin. -->
-          <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
-            :field-key="fieldKey" :highlighted="highlighted"
-            @show-code="showPopover" @revoke="showRevoke"/>
-        </tbody>
-      </table>
-    </template>
+      </template>
+      <template v-else>
+        There are no App Users to show.
+      </template>
+    </p>
 
     <field-key-new :project-id="projectId" :state="newFieldKey.state"
       @hide="hideModal('newFieldKey')" @success="afterCreate"/>
@@ -81,7 +85,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
-  mixins: [modal(['newFieldKey', 'revoke'])],
+  mixins: [modal()],
   props: {
     projectId: {
       type: String,
@@ -103,7 +107,7 @@ export default {
       }
     };
   },
-  computed: requestData(['fieldKeys']),
+  computed: requestData(['project', 'fieldKeys']),
   watch: {
     projectId() {
       this.fetchData();
@@ -117,14 +121,17 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    // If the user navigates from this tab to another tab, then back to this
+    // tab, we do not send a new request.
+    if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys'))
+      this.fetchData();
   },
-  activated() {
+  mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
   },
-  deactivated() {
+  beforeDestroy() {
     this.hidePopover();
-    $('body').off('click.field-key-list', this.hidePopoverAfterClickOutside);
+    $('body').off('.field-key-list');
   },
   methods: {
     fetchData() {
@@ -133,7 +140,7 @@ export default {
         url: `/projects/${this.projectId}/app-users`,
         extended: true,
         success: ({ project, fieldKeys }) => {
-          if (project == null) return;
+          if (project == null || project.appUsers === fieldKeys.length) return;
           this.$store.commit('setData', {
             key: 'project',
             value: { ...project, appUsers: fieldKeys.length }
@@ -209,8 +216,21 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
+// 160px is the width of the .dropdown-menu.
+$actions-width: $padding-left-table-data + $padding-right-table-data + 160px;
+
 #field-key-list-table {
-  > tbody > tr > td {
+  table-layout: fixed;
+
+  th, td {
+    width: calc(25% - #{$actions-width / 4});
+
+    &.field-key-actions {
+      width: $actions-width;
+    }
+  }
+
+  td {
     vertical-align: middle;
   }
 }

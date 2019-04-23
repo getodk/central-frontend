@@ -87,7 +87,8 @@ except according to the terms contained in the LICENSE file.
     <page-section id="project-overview-forms">
       <template slot="heading">
         <span>Forms</span>
-        <button id="project-overview-new-form-button" type="button"
+        <button v-if="project != null && !project.archived"
+          id="project-overview-new-form-button" type="button"
           class="btn btn-primary" @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>New
         </button>
@@ -111,7 +112,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew },
-  mixins: [modal('newForm')],
+  mixins: [modal()],
   props: {
     projectId: {
       type: String,
@@ -130,7 +131,10 @@ export default {
     projectId: 'fetchData'
   },
   created() {
-    this.fetchData();
+    // If the user navigates from this tab to another tab, then back to this
+    // tab, we do not send a new request.
+    if (this.forms == null && !this.$store.getters.loading('forms'))
+      this.fetchData();
   },
   methods: {
     fetchData() {

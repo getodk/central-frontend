@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="modal" :aria-labelledby="titleId" :data-backdrop="bsBackdrop"
-    class="modal" tabindex="-1" role="dialog"
-    data-keyboard="false" @keydown.esc="hideIfCan"
+  <div :aria-labelledby="titleId" :data-backdrop="bsBackdrop" class="modal"
+    tabindex="-1" role="dialog" data-keyboard="false" @keydown.esc="hideIfCan"
     @mousedown="modalMousedown" @click="modalClick">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -73,8 +72,16 @@ export default {
     }
   },
   watch: {
-    state(newState) {
-      this.toggle(newState);
+    $route() {
+      // When the current route changes, any Modal that is shown becomes hidden.
+      // Emitting a 'hide' event here does not actually hide the Modal -- the
+      // router does that -- but it should ensure that the Modal's `state` prop
+      // matches the DOM. Further, modal components that contain state typically
+      // reset themselves when they are hidden.
+      this.$emit('hide');
+    },
+    state(state) {
+      this.toggle(state);
     },
     // Hides the alert when this.state changes. We use a strategy similar to the
     // one here: https://github.com/vuejs/vue/issues/844.
@@ -88,10 +95,14 @@ export default {
     }
   },
   mounted() {
-    $(this.$refs.modal)
-      .on('shown.bs.modal', () => this.$emit('shown'))
-      .on('hidden.bs.modal', () => this.$emit('hidden'));
-    if (this.state) this.toggle(this.state);
+    $(this.$el)
+      .on('shown.bs.modal', () => {
+        this.$emit('shown');
+      })
+      .on('hidden.bs.modal', () => {
+        this.$emit('hidden');
+      });
+    if (this.state) this.toggle(true);
   },
   updated() {
     // Wait a tick so that all child components are re-rendered:
@@ -100,7 +111,8 @@ export default {
   },
   beforeDestroy() {
     this.toggle(false);
-    $(this.$refs.modal).off();
+    // TODO. Does this actually remove all modal-related event handlers?
+    $(this.$el).off();
   },
   methods: {
     /* toggle() manually toggles the modal. It is the only way the modal is
@@ -111,11 +123,11 @@ export default {
     also aids modularity, because parent components can use this modal component
     without knowing that it uses Bootstrap. */
     toggle(state) {
-      // For tests in which the component is not attached to the document, we
-      // return immediately rather than calling modal(), because it has side
-      // effects on the document.
-      if ($(this.$refs.modal).closest('body').length === 0) return;
-      $(this.$refs.modal).modal(state ? 'show' : 'hide');
+      if (state)
+        this.$store.dispatch('showModal', this.$el);
+      // In some cases, the router may hide the modal before toggle() is called.
+      else if (this.$store.state.modal.ref != null)
+        this.$store.dispatch('hideModal');
     },
     hideIfCan() {
       if (this.hideable) this.$emit('hide');
@@ -134,9 +146,9 @@ export default {
       if (!this.state) return;
       // Do not focus the modal if it contains the active element.
       if (document.activeElement != null &&
-        $(document.activeElement).closest('.modal')[0] === this.$refs.modal)
+        $(document.activeElement).closest('.modal')[0] === this.$el)
         return;
-      this.$refs.modal.focus();
+      this.$el.focus();
     }
   }
 };

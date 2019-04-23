@@ -35,7 +35,8 @@ export default {
         url: `/projects/${this.projectId}`,
         extended: true,
         success: ({ project, fieldKeys }) => {
-          if (fieldKeys == null) return;
+          if (fieldKeys == null || fieldKeys.length === project.appUsers)
+            return;
           this.$store.commit('setData', {
             key: 'project',
             value: { ...project, appUsers: fieldKeys.length }

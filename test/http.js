@@ -632,7 +632,7 @@ class MockHttp {
             if (store.state.router.navigations.last.confirmed) {
               resolve();
             } else {
-              reject(new Error('The last navigation was not confirmed. This may be because you are navigating away from a page with a modal.'));
+              reject(new Error('last navigation not confirmed'));
             }
           });
         }

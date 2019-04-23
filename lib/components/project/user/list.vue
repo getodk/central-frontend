@@ -22,7 +22,8 @@ either is a Project Manager or has no role. -->
       learn more about Projects and Managers, please see
       <doc-link to="central-projects/#project-managers">this article</doc-link>.
     </p>
-    <form id="project-user-list-search-form" @submit.prevent>
+    <form v-if="project != null && !project.archived"
+      id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
       <button v-show="q != '' && !searchDisabled" type="button" class="close"
@@ -60,6 +61,7 @@ either is a Project Manager or has no role. -->
 <script>
 import ProjectUserRow from './row.vue';
 import { noop } from '../../../util/util';
+import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
@@ -72,20 +74,21 @@ export default {
   },
   data() {
     return {
-      // Assignments for the users that were returned by
-      // /projects/:projectId/assignments/manager. Note that we use a different
-      // schema for these objects compared to a Backend Assignment object.
+      // An array of assignment-like objects for the users that were returned by
+      // /projects/:projectId/assignments/manager. (We use a different schema
+      // for these objects compared to a Backend Assignment object.)
       managerAssignments: null,
       // User search term
       q: '',
-      // Assignments for the users that were returned for the most recent
-      // search
+      // An array of assignment-like objects for the users that were returned
+      // for the most recent search
       searchAssignments: null,
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
   },
   computed: {
+    ...requestData(['project', 'assignmentActors']),
     /*
     We disable search while a request for project managers is in progress,
     because we match up search results with the project managers.
@@ -111,7 +114,9 @@ export default {
       if (this.searchAssignments == null) {
         if (this.managerAssignments != null &&
           this.managerAssignments.length === 0)
-          return 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.';
+          return !this.project.archived
+            ? 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.'
+            : 'There are no Project Managers assigned to this Project.';
       } else if (this.searchAssignments.length === 0) {
         return 'No results';
       }
@@ -127,18 +132,26 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    // If the user navigates from this tab to another tab, then back to this
+    // tab, we do not send a new request.
+    if (this.assignmentActors == null &&
+      !this.$store.getters.loading('assignmentActors')) {
+      this.fetchData();
+    } else {
+      this.setManagerAssignments();
+    }
   },
   methods: {
+    setManagerAssignments() {
+      this.managerAssignments = this.assignmentActors
+        .map(actor => ({ actor, manager: true }));
+    },
     fetchData() {
       this.managerAssignments = null;
       this.$store.dispatch('get', [{
         key: 'assignmentActors',
         url: `/projects/${this.projectId}/assignments/manager`,
-        success: ({ assignmentActors }) => {
-          this.managerAssignments = assignmentActors
-            .map(actor => ({ actor, manager: true }));
-        }
+        success: this.setManagerAssignments
       }]).catch(noop);
     },
     clearSearch() {
@@ -176,6 +189,8 @@ export default {
     },
     // Run after a user is assigned a new role (including None).
     afterAssign(assignment, manager) {
+      // This data is now out-of-date.
+      this.$store.commit('clearData', 'assignmentActors');
       const { displayName } = assignment.actor;
       const roleName = manager ? 'Manager' : 'None';
       this.$alert().success(`Success! ${displayName} has been given a Project Role of “${roleName}” on this Project.`);
@@ -187,14 +202,6 @@ export default {
 
 <style lang="scss">
 @import '../../../../assets/scss/variables';
-
-#project-user-list table {
-  table-layout: fixed;
-
-  th, td {
-    width: 50%;
-  }
-}
 
 #project-user-list-heading {
   margin-bottom: 20px;
@@ -223,6 +230,14 @@ export default {
     &:hover, &:focus {
       opacity: 0.2;
     }
+  }
+}
+
+#project-user-list table {
+  table-layout: fixed;
+
+  th, td {
+    width: 50%;
   }
 }
 </style>

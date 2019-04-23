@@ -68,7 +68,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword, UserRow },
-  mixins: [modal(['newUser', 'resetPassword'])],
+  mixins: [modal()],
   data() {
     return {
       // The ids of the users who are administrators

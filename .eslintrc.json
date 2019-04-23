@@ -39,6 +39,11 @@ except according to the terms contained in the LICENSE file.
       "minProperties": 0,
       "consistent": true
     }],
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
     "spaced-comment": "off",
     "vue/html-indent": "off",
     "vue/html-self-closing": ["error", {

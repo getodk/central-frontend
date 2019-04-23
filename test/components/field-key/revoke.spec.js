@@ -1,4 +1,3 @@
-import FieldKeyList from '../../../lib/components/field-key/list.vue';
 import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
 import faker from '../../faker';
 import testData from '../../data';
@@ -6,18 +5,11 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const clickRevokeInMenu = (wrapper) =>
-  trigger.click(wrapper.first('#field-key-list-table .dropdown-menu a'))
-    .then(() => wrapper);
-const confirmRevoke = (wrapper) =>
-  trigger.click(wrapper.first('#field-key-revoke .btn-danger'))
-    .then(() => wrapper);
-
 describe('FieldKeyRevoke', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('opens upon click for an app user whose access is not revoked', () =>
+    it("is shown after a click if app user's access has not been revoked", () =>
       mockRoute('/projects/1/app-users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
@@ -28,12 +20,13 @@ describe('FieldKeyRevoke', () => {
           app.first(FieldKeyRevoke).getProp('state').should.be.false();
           return app;
         })
-        .then(clickRevokeInMenu)
+        .then(app =>
+          trigger.click(app, '#field-key-list-table .dropdown-menu a'))
         .then(app => {
           app.first(FieldKeyRevoke).getProp('state').should.be.true();
         }));
 
-    it('does not open upon click for an app user whose access is revoked', () =>
+    it("is not shown after a click if app user's access has been revoked", () =>
       mockRoute('/projects/1/app-users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
@@ -43,22 +36,36 @@ describe('FieldKeyRevoke', () => {
           app.first(FieldKeyRevoke).getProp('state').should.be.false();
           return app;
         })
-        .then(clickRevokeInMenu)
+        .then(app => {
+          const li = app.first('#field-key-list-table .dropdown-menu li');
+          li.should.be.disabled();
+          return trigger.click(app, '#field-key-list-table .dropdown-menu a');
+        })
+        .then(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+        }));
+
+    it('is not shown after a click if the project is archived', () =>
+      mockRoute('/projects/1/app-users')
+        .respondWithData(() => testData.extendedProjects
+          .createPast(1, { archived: true, appUsers: 1 })
+          .last())
+        .respondWithData(() => testData.extendedFieldKeys
+          .createPast(1, { token: faker.central.token() })
+          .sorted())
+        .afterResponses(app => {
+          app.first(FieldKeyRevoke).getProp('state').should.be.false();
+          return app;
+        })
+        .then(app => {
+          const li = app.first('#field-key-list-table .dropdown-menu li');
+          li.should.be.disabled();
+          return trigger.click(app, '#field-key-list-table .dropdown-menu a');
+        })
         .then(app => {
           app.first(FieldKeyRevoke).getProp('state').should.be.false();
         }));
   });
-
-  it('revoke button is disabled for an app user whose access is revoked', () =>
-    mockRoute('/projects/1/app-users')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-      .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(1, { token: null }).sorted())
-      .afterResponses(app => {
-        const li = app.first(FieldKeyList).first('.dropdown-menu li');
-        li.hasClass('disabled').should.be.true();
-      }));
 
   it('standard button thinking things', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
@@ -67,7 +74,8 @@ describe('FieldKeyRevoke', () => {
     const propsData = { fieldKey };
     return mockHttp()
       .mount(FieldKeyRevoke, { propsData })
-      .request(confirmRevoke)
+      .request(component =>
+        trigger.click(component, '#field-key-revoke .btn-danger'))
       .standardButton('.btn-danger');
   });
 
@@ -83,14 +91,15 @@ describe('FieldKeyRevoke', () => {
       .afterResponses(component => {
         app = component;
       })
-      .request(() => clickRevokeInMenu(app)
-        .then(confirmRevoke)
-        .then(() => {
-          testData.extendedFieldKeys.update(
-            testData.extendedFieldKeys.sorted()[0],
-            { token: null }
-          );
-        }))
+      .request(() =>
+        trigger.click(app, '#field-key-list-table .dropdown-menu a')
+          .then(() => trigger.click(app, '#field-key-revoke .btn-danger'))
+          .then(() => {
+            testData.extendedFieldKeys.update(
+              testData.extendedFieldKeys.sorted()[0],
+              { token: null }
+            );
+          }))
       .respondWithSuccess()
       .respondWithData(() => testData.extendedFieldKeys.sorted()));
 

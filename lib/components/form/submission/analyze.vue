@@ -115,6 +115,11 @@ export default {
       return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
     }
   },
+  watch: {
+    state(state) {
+      if (!state) this.tool = 'microsoft';
+    }
+  },
   methods: {
     tabClass(tool) {
       return { active: this.tool === tool };

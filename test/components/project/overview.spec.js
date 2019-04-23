@@ -24,6 +24,16 @@ describe('ProjectOverview', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
+    it('does not send a new request if user navigates back to tab', () =>
+      mockRoute('/projects/1')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedForms.sorted())
+        .complete()
+        .route('/projects/1/settings')
+        .complete()
+        .route('/projects/1')
+        .respondWithData([/* no responses */]));
+
     it('displays the navbar projects link as active', () =>
       mockRoute('/projects/1')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
