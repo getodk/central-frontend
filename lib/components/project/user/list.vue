@@ -132,10 +132,14 @@ export default {
     }
   },
   created() {
-    if (this.assignmentActors != null)
-      this.setManagerAssignments();
-    else
+    // If the user navigates from this tab to another tab, then back to this
+    // tab, we do not send a new request.
+    if (this.assignmentActors == null &&
+      !this.$store.getters.loading('assignmentActors')) {
       this.fetchData();
+    } else {
+      this.setManagerAssignments();
+    }
   },
   methods: {
     setManagerAssignments() {

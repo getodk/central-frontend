@@ -73,6 +73,16 @@ describe('ProjectUserList', () => {
   describe('after login', () => {
     beforeEach(mockLogin);
 
+    it('does not send a new request if user navigates back to tab', () =>
+      mockRoute('/projects/1/users')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => []) // assignmentActors
+        .complete()
+        .route('/projects/1/settings')
+        .complete()
+        .route('/projects/1/users')
+        .respondWithData([/* no responses */]));
+
     describe('during initial fetch of managers', () => {
       it('disables the search input', () =>
         loadProjectUsers({ count: 0 }).beforeAnyResponse(component => {
