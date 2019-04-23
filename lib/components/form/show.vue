@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to the requests from
           ProjectHome and FormShow. -->
-          <router-view :project-id="projectId"
+          <router-view :project-id="projectId" :xml-form-id="xmlFormId"
             :chunk-sizes="submissionChunkSizes"
             :scrolled-to-bottom="scrolledToBottom"/>
         </keep-alive>
@@ -117,7 +117,18 @@ export default {
         {
           key: 'form',
           url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
-          extended: true
+          extended: true,
+          success: ({ submissionsChunk }) => {
+            if (submissionsChunk == null) return;
+            if (submissionsChunk['@odata.count'] === this.form.submissions)
+              return;
+            this.$store.commit('setData', {
+              key: 'form',
+              value: this.form.with({
+                submissions: submissionsChunk['@odata.count']
+              })
+            });
+          }
         },
         {
           key: 'attachments',

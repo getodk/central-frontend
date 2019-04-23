@@ -35,7 +35,6 @@ describe('FormSubmissionList', () => {
     describe('after login', () => {
       beforeEach(mockLogin);
 
-      // Test the `form` watcher.
       it('requests schema for a user whose first navigation is to the tab', () =>
         mockRoute('/projects/1/forms/f/submissions')
           .beforeEachResponse((app, request, index) => {
@@ -50,7 +49,6 @@ describe('FormSubmissionList', () => {
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(testData.submissionOData));
 
-      // Test the activated hook.
       it('requests schema for a user who navigates to the tab from another tab', () =>
         mockRoute('/projects/1/forms/f')
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
@@ -67,7 +65,6 @@ describe('FormSubmissionList', () => {
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(testData.submissionOData));
 
-      // Test the $route and `form` watchers.
       it('resets and updates the component after the route updates', () =>
         mockRoute('/projects/1/forms/f1/submissions')
           .beforeEachResponse((app, request, index) => {
@@ -136,8 +133,8 @@ describe('FormSubmissionList', () => {
       testData.extendedProjects.size.should.equal(1);
       testData.extendedForms.size.should.equal(1);
       testData.extendedSubmissions.size.should.equal(0);
-      if (form().submissions !== count)
-        throw new Error('form().submissions and count are inconsistent');
+      if (testData.extendedForms.last().submissions !== count)
+        throw new Error('submission count inconsistency');
       testData.extendedSubmissions.createPast(count, factoryOptions);
 
       const [small = 250, large = 1000] = chunkSizes;
@@ -145,19 +142,35 @@ describe('FormSubmissionList', () => {
         .mount(FormSubmissionList, {
           propsData: {
             projectId: '1',
+            xmlFormId: testData.extendedForms.last().xmlFormId,
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom
           },
-          requestData: { form: new Form(form()) }
+          requestData: { form: new Form(testData.extendedForms.last()) }
         })
         .request(component => {
-          // Normally the activated hook calls this method, but that hook is not
-          // called here, so we call the method ourselves instead.
+          // Normally the `activated` hook calls this method, but that hook is
+          // not called here, so we call the method ourselves instead.
           component.vm.fetchSchemaAndFirstChunk();
         })
-        .respondWithData(() => form()._schema)
+        .respondWithData(() => testData.extendedForms.last()._schema)
         .respondWithData(() => testData.submissionOData(small, 0));
     };
+
+    it('does not send a new request if user navigates back to tab', () =>
+      mockRoute('/projects/1/forms/f/submissions')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', submissions: 0 })
+          .last())
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.extendedForms.last()._schema)
+        .respondWithData(testData.submissionOData)
+        .complete()
+        .route('/projects/1/forms/f')
+        .complete()
+        .route('/projects/1/forms/f/submissions')
+        .respondWithData([/* no responses */]));
 
     describe('table data', () => {
       it('contains the correct data for the left half of the table', () =>
