@@ -74,14 +74,14 @@ export default {
   },
   data() {
     return {
-      // Assignments for the users that were returned by
-      // /projects/:projectId/assignments/manager. Note that we use a different
-      // schema for these objects compared to a Backend Assignment object.
+      // An array of assignment-like objects for the users that were returned by
+      // /projects/:projectId/assignments/manager. (We use a different schema
+      // for these objects compared to a Backend Assignment object.)
       managerAssignments: null,
       // User search term
       q: '',
-      // Assignments for the users that were returned for the most recent
-      // search
+      // An array of assignment-like objects for the users that were returned
+      // for the most recent search
       searchAssignments: null,
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
@@ -132,23 +132,22 @@ export default {
     }
   },
   created() {
-    if (this.assignmentActors != null) {
-      this.managerAssignments = this.assignmentActors
-        .map(actor => ({ actor, manager: true }));
-    } else {
+    if (this.assignmentActors != null)
+      this.setManagerAssignments();
+    else
       this.fetchData();
-    }
   },
   methods: {
+    setManagerAssignments() {
+      this.managerAssignments = this.assignmentActors
+        .map(actor => ({ actor, manager: true }));
+    },
     fetchData() {
       this.managerAssignments = null;
       this.$store.dispatch('get', [{
         key: 'assignmentActors',
         url: `/projects/${this.projectId}/assignments/manager`,
-        success: ({ assignmentActors }) => {
-          this.managerAssignments = assignmentActors
-            .map(actor => ({ actor, manager: true }));
-        }
+        success: this.setManagerAssignments
       }]).catch(noop);
     },
     clearSearch() {
@@ -186,8 +185,7 @@ export default {
     },
     // Run after a user is assigned a new role (including None).
     afterAssign(assignment, manager) {
-      // This data is now out-of-date. (Perhaps it would be better to update the
-      // data rather than clear it?)
+      // This data is now out-of-date.
       this.$store.commit('clearData', 'assignmentActors');
       const { displayName } = assignment.actor;
       const roleName = manager ? 'Manager' : 'None';
