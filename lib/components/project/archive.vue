@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           “{{ project != null ? project.name : '' }}”. It will still be viewable
           and its data will remain accessible for download and over OData, but
           it will no longer be updatable, and it will be inaccessible to mobile
-          clients like Collect.
+          apps like Collect.
         </p>
         <p>
           <strong>This action cannot be undone</strong>, but the ability to
