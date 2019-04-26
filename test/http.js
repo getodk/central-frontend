@@ -46,7 +46,7 @@ First, specify a component to mount. Some components will send a request after
 being mounted, for example:
 
   mockHttp()
-    .mount(UserList);
+    .mount(BackupList);
 
 Other components will not send a request. Specify a request after mounting the
 component:
@@ -72,18 +72,19 @@ If you already have a mounted component, you can skip mockHttp().mount():
 After specifying the request, specify the response as a callback:
 
   mockHttp()
-    .mount(UserList)
-    .respondWithData(() => testData.standardUsers.sorted());
+    .mount(BackupList)
+    .respondWithData(() => testData.backups.createNew());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'test@email.com'))
+    .request(component => submitLoginForm(component, 'example@opendatakit.org'))
     .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() =>
-      testData.extendedUsers.createPast(1, { email: 'test@email.com' }));
+    .respondWithData(() => testData.extendedUsers
+      .createPast(1, { email: 'example@opendatakit.org' })
+      .last());
 
 In rare cases, you may know that mount() and/or request() will not send any
 request. In that case, simply do not specify a response. What is important is
@@ -93,7 +94,7 @@ After specifying the requests and responses, you can examine the state of the
 component once the responses have been processed:
 
   mockHttp()
-    .mount(ProjectList)
+    .mount(ProjectList, { router })
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
@@ -117,7 +118,7 @@ afterResponses() returns a thenable, which usually is ultimately returned to
 Mocha. You can call then(), catch(), or finally() on the thenable:
 
   mockHttp()
-    .mount(ProjectList)
+    .mount(ProjectList, { router })
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
@@ -135,10 +136,11 @@ cycles: series can be chained. For example:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'test@email.com'))
+    .request(component => submitLoginForm(component, 'example@opendatakit.org'))
     .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() =>
-      testData.extendedUsers.createPast(1, { email: 'test@email.com' }))
+    .respondWithData(() => testData.extendedUsers
+      .createPast(1, { email: 'example@opendatakit.org' })
+      .last())
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
