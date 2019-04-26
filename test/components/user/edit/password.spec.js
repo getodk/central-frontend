@@ -1,3 +1,4 @@
+import UserEdit from '../../../../lib/components/user/edit.vue';
 import UserEditPassword from '../../../../lib/components/user/edit/password.vue';
 import testData from '../../../data';
 import { fillForm, submitForm } from '../../../event';
@@ -45,6 +46,17 @@ describe('UserEditPassword', () => {
         ];
         for (const selector of selectors)
           app.first(selector).element.value.should.equal('');
+      }));
+
+  it("does not render form if it is not current user's own account", () =>
+    mockHttp()
+      .mount(UserEdit, {
+        propsData: { id: '2' }
+      })
+      .respondWithData(() => testData.standardUsers.createPast(1).last())
+      .afterResponse(component => {
+        const panelBody = component.first('#user-edit-password .panel-body');
+        panelBody.find('form').length.should.equal(0);
       }));
 
   it('standard button thinking things', () =>

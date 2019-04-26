@@ -15,7 +15,8 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title">Change Password</h1>
     </div>
     <div class="panel-body">
-      <form @submit.prevent="submit">
+      <form v-if="user != null && user.id === currentUser.id"
+        @submit.prevent="submit">
         <label class="form-group">
           <input id="user-edit-password-old-password" v-model="oldPassword"
             type="password" class="form-control" placeholder="Old password *"
@@ -39,6 +40,9 @@ except according to the terms contained in the LICENSE file.
           Change password <spinner :state="awaitingResponse"/>
         </button>
       </form>
+      <template v-else>
+        Only the owner of the account may directly set their own password.
+      </template>
     </div>
   </div>
 </template>
@@ -60,7 +64,7 @@ export default {
       mismatch: false
     };
   },
-  computed: requestData(['user']),
+  computed: requestData(['currentUser', 'user']),
   watch: {
     $route() {
       this.oldPassword = '';
