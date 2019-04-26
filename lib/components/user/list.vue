@@ -125,7 +125,7 @@ export default {
       this.adminIds = null;
       this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
       this.hideModal('newUser');
-      this.$alert().success(`A user was created successfully for ${user.email}.`);
+      this.$alert().success(`A user was created successfully for “${user.displayName}.”`);
       this.highlighted = user.id;
     },
     // Called after a user is assigned a new role (including None).

@@ -1,12 +1,14 @@
 import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import testData from '../../data';
+import { fillForm, submitForm, trigger } from '../../event';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { submitForm, trigger } from '../../event';
 
 describe('UserNew', () => {
-  beforeEach(mockLogin);
+  beforeEach(() => {
+    mockLogin({ email: 'some@email.com', displayName: 'Some Name' });
+  });
 
   describe('modal', () => {
     it('does not show the modal initially', () =>
@@ -19,7 +21,7 @@ describe('UserNew', () => {
           component.first(UserNew).getProp('state').should.be.false();
         }));
 
-    describe('after button click', () => {
+    describe('after the create button is clicked', () => {
       it('shows the modal', () =>
         mockHttp()
           .mount(UserList)
@@ -43,6 +45,53 @@ describe('UserNew', () => {
             app.first('#user-new [type="email"]').should.be.focused();
           }));
     });
+
+    it('resets the modal when it is hidden', () =>
+      mockHttp()
+        .mount(UserList)
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(component =>
+          trigger.click(component, '#user-list-new-button'))
+        .then(component =>
+          fillForm(component.first('#user-new form'), [
+            ['input[type="email"]', 'new@email.com'],
+            ['input[type="text"]', 'New Name']
+          ])
+            .then(() => component))
+        .then(component => trigger.click(component, '#user-new .btn-link'))
+        .then(component => trigger.click(component, '#user-list-new-button'))
+        .then(component => {
+          const modal = component.first('#user-new');
+          modal.first('input[type="email"]').element.value.should.equal('');
+          modal.first('input[type="text"]').element.value.should.equal('');
+        }));
+  });
+
+  describe('display name', () => {
+    it('includes the display name in the request if it is specified', () =>
+      mockHttp()
+        .mount(UserNew)
+        .request(modal => submitForm(modal, 'form', [
+          ['input[type="email"]', 'new@email.com'],
+          ['input[type="text"]', 'New Name']
+        ]))
+        .beforeEachResponse((modal, config) => {
+          config.data.displayName.should.equal('New Name');
+        })
+        .respondWithProblem());
+
+    it('does not include display name in request if it is not specified', () =>
+      mockHttp()
+        .mount(UserNew)
+        .request(modal => submitForm(modal, 'form', [
+          ['input[type="email"]', 'new@email.com']
+        ]))
+        .beforeEachResponse((modal, config) => {
+          should.not.exist(config.data.displayName);
+        })
+        .respondWithProblem());
   });
 
   it('implements some standard button things', () =>
@@ -62,9 +111,12 @@ describe('UserNew', () => {
         .complete()
         .request(component => trigger.click(component, '#user-list-new-button')
           .then(() => submitForm(component, '#user-new form', [
-            ['input[type="email"]', testData.standardUsers.createNew().email]
+            ['input[type="email"]', 'new@email.com']
           ])))
-        .respondWithData(() => testData.standardUsers.last())
+        .respondWithData(() => testData.standardUsers.createNew({
+          email: 'new@email.com',
+          displayName: 'new@email.com'
+        }))
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor));
@@ -87,6 +139,13 @@ describe('UserNew', () => {
     it('shows a success alert', () =>
       submitWithSuccess({ route: true }).afterResponses(app => {
         app.should.alert('success');
+      }));
+
+    it('includes display name in alert even if it was not specified', () =>
+      submitWithSuccess().afterResponses(app => {
+        const message = app.first('#app-alert .alert-message').text();
+        const { displayName } = testData.extendedUsers.last();
+        message.should.containEql(displayName);
       }));
   });
 });
