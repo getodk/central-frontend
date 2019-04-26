@@ -527,6 +527,16 @@ a {
         border-bottom-color: $color-accent-primary;
       }
     }
+
+    &.disabled > a {
+      &, &:hover, &:focus {
+        color: #999;
+      }
+
+      &:hover, &:focus {
+        border-bottom-color: transparent;
+      }
+    }
   }
 }
 
