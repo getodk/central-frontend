@@ -37,6 +37,7 @@ either is an Administrator or has no role. -->
     <table id="user-list-table" class="table">
       <thead>
         <tr>
+          <th>Display Name</th>
           <th>Email Address</th>
           <th>Sitewide Role</th>
           <th class="user-actions">Actions</th>

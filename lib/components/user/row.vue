@@ -11,7 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr :class="{ success: user.id === highlighted }">
-    <td>{{ user.email }}</td>
+    <td class="user-display-name">
+      <router-link :to="`/users/${user.id}/edit`">
+        {{ user.displayName }}
+      </router-link>
+    </td>
+    <td class="user-email">{{ user.email }}</td>
     <td class="user-role">
       <form>
         <div class="form-group">
@@ -105,6 +110,12 @@ export default {
 <style lang="sass">
 #user-list-table td {
   vertical-align: middle;
+
+  &.user-display-name, &.user-email {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   &.user-role {
     .form-group {

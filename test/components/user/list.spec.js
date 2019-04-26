@@ -1,9 +1,8 @@
 import Spinner from '../../../lib/components/spinner.vue';
-import UserList from '../../../lib/components/user/list.vue';
 import UserRow from '../../../lib/components/user/row.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockRoute } from '../../http';
 import { trigger } from '../../event';
 
 describe('UserList', () => {
@@ -66,39 +65,48 @@ describe('UserList', () => {
     });
 
     it('shows the table headers while data is loading', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .beforeEachResponse(component => {
-          component.find('thead tr').length.should.equal(1);
+        .beforeEachResponse(app => {
+          app.find('#user-list-table thead tr').length.should.equal(1);
         }));
 
     it('lists the users in the correct order', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers
           .createPast(1, { email: 'b@email.com' })
           .sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component => {
-          const rows = component.find('table tbody tr');
-          const emails = rows.map(row => row.first('td').text());
+        .afterResponses(app => {
+          const rows = app.find('#user-list-table tbody tr');
+          const emails = rows.map(row => row.find('td')[1].text());
           emails.should.eql(['a@email.com', 'b@email.com']);
         }));
 
+    it('correctly renders the display name', () =>
+      mockRoute('/users')
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(app => {
+          const link = app.first('#user-list-table td a');
+          link.getAttribute('href').should.equal('#/users/1/edit');
+          const user = testData.standardUsers.last();
+          link.text().trim().should.equal(user.displayName);
+        }));
+
     it('correctly renders the role selects', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers
           .createPast(1, { email: 'b@email.com', role: 'none' })
           .sorted())
         .respondWithData(() =>
           [testData.toActor(testData.standardUsers.first())])
-        .afterResponses(component => {
-          const selects = component.find('table select');
+        .afterResponses(app => {
+          const selects = app.find('#user-list-table select');
           selects.map(select => select.element.value).should.eql(['admin', '']);
           selects.map(select => $(select.element).find(':selected').text())
             .should
@@ -106,16 +114,15 @@ describe('UserList', () => {
         }));
 
     it('renders the role select correctly for the current user', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.createPast(1).sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component => {
-          const { currentUser } = component.vm.$store.state.request.data;
-          for (const tr of component.find('table tbody tr')) {
-            const td = tr.first('td');
-            const isCurrentUser = td.text() === currentUser.email;
+        .afterResponses(app => {
+          const { currentUser } = app.vm.$store.state.request.data;
+          for (const tr of app.find('#user-list-table tbody tr')) {
+            const email = tr.find('td')[1].text();
+            const isCurrentUser = email === currentUser.email;
             const select = tr.first('select');
             if (isCurrentUser)
               select.should.be.disabled();
@@ -136,8 +143,8 @@ describe('UserList', () => {
 
     describe('changing a role', () => {
       const loadUsersAndChangeRole =
-        ({ rowIndex, selectValue, route = false }) =>
-          (route ? mockRoute('/users') : mockHttp().mount(UserList))
+        ({ rowIndex, selectValue }) =>
+          mockRoute('/users')
             .respondWithData(() => testData.standardUsers
               .createPast(1, {
                 displayName: 'Person 1',
@@ -153,8 +160,8 @@ describe('UserList', () => {
             .respondWithData(() =>
               testData.toActor(testData.standardUsers.sorted().slice(0, 2)))
             .complete()
-            .request(component => {
-              const select = component.find('table select')[rowIndex];
+            .request(app => {
+              const select = app.find('#user-list-table select')[rowIndex];
               if (select.element.value === selectValue)
                 throw new Error('no change');
               select.element.value = selectValue;
@@ -174,33 +181,33 @@ describe('UserList', () => {
         describe(`changing to ${selectValue}`, () => {
           it('sends the request using the correct method', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeEachResponse((component, config) => {
+              .beforeEachResponse((app, config) => {
                 config.method.should.equal(method);
               })
               .respondWithSuccess());
 
           it('disables the select during the request', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeAnyResponse(component => {
-                const select = component.find('table select')[rowIndex];
+              .beforeAnyResponse(app => {
+                const select = app.find('#user-list-table select')[rowIndex];
                 select.should.be.disabled();
               })
               .respondWithSuccess()
-              .afterResponse(component => {
-                const select = component.find('table select')[rowIndex];
+              .afterResponse(app => {
+                const select = app.find('#user-list-table select')[rowIndex];
                 select.should.not.be.disabled();
               }));
 
           it('shows a spinner during the request', () =>
             loadUsersAndChangeRole({ rowIndex, selectValue })
-              .beforeAnyResponse(component => {
-                const rows = component.find(UserRow);
+              .beforeAnyResponse(app => {
+                const rows = app.find(UserRow);
                 rows[rowIndex].first(Spinner).getProp('state').should.be.true();
               })
               .respondWithSuccess());
 
           it('shows a success alert after the response', () =>
-            loadUsersAndChangeRole({ rowIndex, selectValue, route: true })
+            loadUsersAndChangeRole({ rowIndex, selectValue })
               .respondWithSuccess()
               .afterResponse(app => {
                 app.should.alert('success');

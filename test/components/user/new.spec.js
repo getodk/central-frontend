@@ -1,4 +1,3 @@
-import UserList from '../../../lib/components/user/list.vue';
 import UserNew from '../../../lib/components/user/new.vue';
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../event';
@@ -12,26 +11,23 @@ describe('UserNew', () => {
 
   describe('modal', () => {
     it('does not show the modal initially', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component => {
-          component.first(UserNew).getProp('state').should.be.false();
+        .afterResponses(app => {
+          app.first(UserNew).getProp('state').should.be.false();
         }));
 
     describe('after the create button is clicked', () => {
       it('shows the modal', () =>
-        mockHttp()
-          .mount(UserList)
+        mockRoute('/users')
           .respondWithData(() => testData.standardUsers.sorted())
           .respondWithData(() =>
             testData.standardUsers.sorted().map(testData.toActor))
-          .afterResponses(component =>
-            trigger.click(component, '#user-list-new-button'))
-          .then(component => {
-            component.first(UserNew).getProp('state').should.be.true();
+          .afterResponses(app => trigger.click(app, '#user-list-new-button'))
+          .then(app => {
+            app.first(UserNew).getProp('state').should.be.true();
           }));
 
       it('focuses the email input', () =>
@@ -47,23 +43,21 @@ describe('UserNew', () => {
     });
 
     it('resets the modal when it is hidden', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component =>
-          trigger.click(component, '#user-list-new-button'))
-        .then(component =>
-          fillForm(component.first('#user-new form'), [
+        .afterResponses(app => trigger.click(app, '#user-list-new-button'))
+        .then(app =>
+          fillForm(app.first('#user-new form'), [
             ['input[type="email"]', 'new@email.com'],
             ['input[type="text"]', 'New Name']
           ])
-            .then(() => component))
-        .then(component => trigger.click(component, '#user-new .btn-link'))
-        .then(component => trigger.click(component, '#user-list-new-button'))
-        .then(component => {
-          const modal = component.first('#user-new');
+            .then(() => app))
+        .then(app => trigger.click(app, '#user-new .btn-link'))
+        .then(app => trigger.click(app, '#user-list-new-button'))
+        .then(app => {
+          const modal = app.first('#user-new');
           modal.first('input[type="email"]').element.value.should.equal('');
           modal.first('input[type="text"]').element.value.should.equal('');
         }));
@@ -103,14 +97,14 @@ describe('UserNew', () => {
       .standardButton());
 
   describe('successful submit', () => {
-    const submitWithSuccess = ({ route = false } = {}) =>
-      (route ? mockRoute('/users') : mockHttp().mount(UserList))
+    const submitWithSuccess = () =>
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
         .complete()
-        .request(component => trigger.click(component, '#user-list-new-button')
-          .then(() => submitForm(component, '#user-new form', [
+        .request(app => trigger.click(app, '#user-list-new-button')
+          .then(() => submitForm(app, '#user-new form', [
             ['input[type="email"]', 'new@email.com']
           ])))
         .respondWithData(() => testData.standardUsers.createNew({
@@ -122,22 +116,23 @@ describe('UserNew', () => {
           testData.standardUsers.sorted().map(testData.toActor));
 
     it('hides the modal', () =>
-      submitWithSuccess().afterResponses(component => {
-        component.first(UserNew).getProp('state').should.be.false();
+      submitWithSuccess().afterResponses(app => {
+        app.first(UserNew).getProp('state').should.be.false();
       }));
 
     it('does not show the table data while it refreshes the data', () =>
-      submitWithSuccess().beforeEachResponse((component, config, index) => {
-        if (index !== 0) component.find('tbody tr').length.should.equal(0);
+      submitWithSuccess().beforeEachResponse((app, config, index) => {
+        if (index !== 0)
+          app.find('#user-list-table tbody tr').length.should.equal(0);
       }));
 
     it('refreshes the data', () =>
-      submitWithSuccess().afterResponses(component => {
-        component.find('tbody tr').length.should.equal(2);
+      submitWithSuccess().afterResponses(app => {
+        app.find('#user-list-table tbody tr').length.should.equal(2);
       }));
 
     it('shows a success alert', () =>
-      submitWithSuccess({ route: true }).afterResponses(app => {
+      submitWithSuccess().afterResponses(app => {
         app.should.alert('success');
       }));
 

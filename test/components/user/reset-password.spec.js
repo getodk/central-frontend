@@ -1,4 +1,3 @@
-import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
@@ -10,25 +9,23 @@ describe('UserResetPassword', () => {
 
   describe('modal', () => {
     it('is initially hidden', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component => {
-          component.first(UserResetPassword).getProp('state').should.be.false();
+        .afterResponses(app => {
+          app.first(UserResetPassword).getProp('state').should.be.false();
         }));
 
     it('opens after button click', () =>
-      mockHttp()
-        .mount(UserList)
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component =>
-          trigger.click(component, '#user-list-table .dropdown-menu a'))
-        .then(component => {
-          component.first(UserResetPassword).getProp('state').should.be.true();
+        .afterResponses(app =>
+          trigger.click(app, '#user-list-table .dropdown-menu a'))
+        .then(app => {
+          app.first(UserResetPassword).getProp('state').should.be.true();
         }));
   });
 
