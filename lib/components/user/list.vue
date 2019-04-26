@@ -46,7 +46,8 @@ either is an Administrator or has no role. -->
       <tbody v-if="users != null && adminIds != null">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
-          @assigned-role="afterAssignRole" @reset-password="showResetPassword"/>
+          @assigned-role="afterAssignRole" @reset-password="showResetPassword"
+          @retire="showRetire"/>
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['users', 'assignmentActors'])"/>
@@ -55,12 +56,15 @@ either is an Administrator or has no role. -->
       @success="afterCreate"/>
     <user-reset-password v-bind="resetPassword"
       @hide="hideModal('resetPassword')" @success="afterResetPassword"/>
+    <user-retire v-bind="retire" @hide="hideModal('retire')"
+      @success="afterRetire"/>
   </div>
 </template>
 
 <script>
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
+import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
@@ -68,7 +72,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserList',
-  components: { UserNew, UserResetPassword, UserRow },
+  components: { UserNew, UserResetPassword, UserRetire, UserRow },
   mixins: [modal()],
   data() {
     return {
@@ -82,9 +86,11 @@ export default {
       },
       resetPassword: {
         state: false,
-        user: {
-          email: ''
-        }
+        user: null
+      },
+      retire: {
+        state: false,
+        user: null
       }
     };
   },
@@ -161,9 +167,18 @@ export default {
       this.resetPassword.user = user;
       this.resetPassword.state = true;
     },
-    afterResetPassword() {
-      const { email } = this.resetPassword.user;
-      this.$alert().success(`The password for ${email} has been invalidated. An email has been sent to ${email} with instructions on how to proceed.`);
+    afterResetPassword(user) {
+      this.resetPassword.state = false;
+      this.$alert().success(`The password for “${user.displayName}” has been invalidated. An email has been sent to ${user.email} with instructions on how to proceed.`);
+    },
+    showRetire(user) {
+      this.retire.user = user;
+      this.retire.state = true;
+    },
+    afterRetire(user) {
+      this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
+      this.retire.state = false;
+      this.$alert().success(`The user “${user.displayName}” has been retired.`);
     }
   }
 };

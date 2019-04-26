@@ -5,13 +5,18 @@ import { dataStore, view } from './data-store';
 
 const verbsByRole = {
   admin: [
+    'assignment.create',
     'assignment.list',
+    'assignment.delete',
     'config.read',
     'project.create',
     'project.list',
+    'user.create',
     'user.list',
     'user.read',
-    'user.update'
+    'user.update',
+    'user.delete',
+    'user.password.invalidate'
   ],
   none: ['project.list']
 };

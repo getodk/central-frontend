@@ -57,6 +57,10 @@ describe('UserResetPassword', () => {
 
     it('success message is shown', () => {
       app.should.alert('success');
+      const message = app.first('#app-alert .alert-message').text();
+      const user = testData.extendedUsers.last();
+      message.should.containEql(user.displayName);
+      message.should.containEql(user.email);
     });
   });
 });
