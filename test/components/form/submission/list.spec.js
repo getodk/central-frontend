@@ -1,6 +1,5 @@
 import { DateTime, Settings } from 'luxon';
 
-import Form from '../../../../lib/presenters/form';
 import FormShow from '../../../../lib/components/form/show.vue';
 import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import Spinner from '../../../../lib/components/spinner.vue';
@@ -146,7 +145,7 @@ describe('FormSubmissionList', () => {
             chunkSizes: { small, large },
             scrolledToBottom: () => scrolledToBottom
           },
-          requestData: { form: new Form(testData.extendedForms.last()) }
+          requestData: { form: testData.extendedForms.last() }
         })
         .request(component => {
           // Normally the `activated` hook calls this method, but that hook is

@@ -1,7 +1,5 @@
 import pako from 'pako';
 
-import Form from '../../../lib/presenters/form';
-import FormAttachment from '../../../lib/presenters/form-attachment';
 import FormAttachmentList from '../../../lib/components/form-attachment/list.vue';
 import FormAttachmentNameMismatch from '../../../lib/components/form-attachment/name-mismatch.vue';
 import FormAttachmentUploadFiles from '../../../lib/components/form-attachment/upload-files.vue';
@@ -33,9 +31,8 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
       propsData: { projectId: '1' },
       requestData: {
         project: testData.extendedProjects.last(),
-        form: new Form(form),
+        form,
         attachments: testData.extendedFormAttachments.sorted()
-          .map(attachment => new FormAttachment(attachment))
       }
     });
 };

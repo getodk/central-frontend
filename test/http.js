@@ -7,6 +7,7 @@ import store from '../lib/store';
 import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
+import { setRequestData } from './util/store';
 import { trigger } from './util';
 
 
@@ -239,8 +240,7 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    for (const [key, value] of Object.entries(requestData))
-      store.commit('setData', { key, value });
+    setRequestData(requestData);
     return this._with({
       mount: () => mountAndMark(component, { ...avoriazOptions, store })
     });

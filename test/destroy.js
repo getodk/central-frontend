@@ -1,6 +1,7 @@
 import { mount } from 'avoriaz';
 
 import store from '../lib/store';
+import { setRequestData } from './util/store';
 
 let componentToDestroy = null;
 
@@ -20,8 +21,7 @@ export const destroyMarkedComponent = () => {
 
 export const mountAndMark = (component, options = {}) => {
   const { requestData = {}, ...mountOptions } = options;
-  for (const [key, value] of Object.entries(requestData))
-    store.commit('setData', { key, value });
+  setRequestData(requestData);
   const wrapper = mount(component, { ...mountOptions, store });
   markComponentForDestruction(wrapper);
   return wrapper;
