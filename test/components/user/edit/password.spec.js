@@ -1,23 +1,23 @@
-import AccountEditPassword from '../../../../lib/components/account/edit/password.vue';
+import UserEditPassword from '../../../../lib/components/user/edit/password.vue';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin } from '../../../session';
 import { mountAndMark } from '../../../destroy';
 import { submitForm } from '../../../event';
 
 const submitPasswords = (wrapper, { match }) =>
-  submitForm(wrapper, '#account-edit-password form', [
-    ['#account-edit-password-old-password', 'x'],
-    ['#account-edit-password-new-password', 'y'],
-    ['#account-edit-password-confirm', match ? 'y' : 'z']
+  submitForm(wrapper, '#user-edit-password form', [
+    ['#user-edit-password-old-password', 'x'],
+    ['#user-edit-password-new-password', 'y'],
+    ['#user-edit-password-confirm', match ? 'y' : 'z']
   ]);
 
-describe('AccountEditPassword', () => {
+describe('UserEditPassword', () => {
   beforeEach(mockLogin);
 
   it('standard button thinking things', () =>
     mockRoute('/account/edit')
       .request(app => submitPasswords(app, { match: true }))
-      .standardButton('#account-edit-password button'));
+      .standardButton('#user-edit-password button'));
 
   it('shows a success alert after a successful submit', () =>
     mockRoute('/account/edit')
@@ -32,7 +32,7 @@ describe('AccountEditPassword', () => {
         .then(app => app.should.alert('danger')));
 
     it('adds .has-error to the fields', () =>
-      submitPasswords(mountAndMark(AccountEditPassword), { match: false })
+      submitPasswords(mountAndMark(UserEditPassword), { match: false })
         .then(component => {
           const formGroups = component.find('.form-group');
           formGroups.length.should.equal(3);
@@ -42,7 +42,7 @@ describe('AccountEditPassword', () => {
 
     it('removes .has-error once the passwords match', () =>
       mockHttp()
-        .mount(AccountEditPassword)
+        .mount(UserEditPassword)
         .request(component => submitPasswords(component, { match: false })
           .then(() => submitPasswords(component, { match: true })))
         .beforeAnyResponse(component => {

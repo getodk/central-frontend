@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-edit-basic-details" class="panel panel-simple">
+  <div id="user-edit-basic-details" class="panel panel-simple">
     <div class="panel-heading"><h1 class="panel-title">Basic Details</h1></div>
     <div class="panel-body">
       <form @submit.prevent="submit">
@@ -38,7 +38,7 @@ import request from '../../../mixins/request';
 import { requestData } from '../../../store/modules/request';
 
 export default {
-  name: 'AccountEditBasicDetails',
+  name: 'UserEditBasicDetails',
   mixins: [request()],
   data() {
     const { email, displayName } = this.$store.state.request.data.currentUser;

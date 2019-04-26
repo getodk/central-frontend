@@ -10,26 +10,26 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-edit-password" class="panel panel-simple">
+  <div id="user-edit-password" class="panel panel-simple">
     <div class="panel-heading">
       <h1 class="panel-title">Change Password</h1>
     </div>
     <div class="panel-body">
       <form @submit.prevent="submit">
         <label class="form-group">
-          <input id="account-edit-password-old-password" v-model="oldPassword"
+          <input id="user-edit-password-old-password" v-model="oldPassword"
             type="password" class="form-control" placeholder="Old password *"
             required>
           <span class="form-label">Old password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="account-edit-password-new-password" v-model="newPassword"
+          <input id="user-edit-password-new-password" v-model="newPassword"
             type="password" class="form-control" placeholder="New password *"
             required>
           <span class="form-label">New password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="account-edit-password-confirm" v-model="confirm"
+          <input id="user-edit-password-confirm" v-model="confirm"
             type="password" class="form-control"
             placeholder="New password (confirm) *" required>
           <span class="form-label">New password (confirm) *</span>
@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 import request from '../../../mixins/request';
 
 export default {
-  name: 'AccountEditPassword',
+  name: 'UserEditPassword',
   mixins: [request()],
   data() {
     return {

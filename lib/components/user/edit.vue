@@ -17,10 +17,10 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <div class="row">
         <div class="col-xs-7">
-          <account-edit-basic-details/>
+          <user-edit-basic-details/>
         </div>
         <div class="col-xs-5">
-          <account-edit-password/>
+          <user-edit-password/>
         </div>
       </div>
     </page-body>
@@ -28,13 +28,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import AccountEditBasicDetails from './edit/basic-details.vue';
-import AccountEditPassword from './edit/password.vue';
-import { requestData } from '../../store/modules/request';
+import UserEditBasicDetails from './edit/basic-details.vue';
+import UserEditPassword from './edit/password.vue';
 
 export default {
-  name: 'AccountEdit',
-  components: { AccountEditBasicDetails, AccountEditPassword },
-  computed: requestData(['currentUser'])
+  name: 'UserEdit',
+  components: { UserEditBasicDetails, UserEditPassword }
 };
 </script>

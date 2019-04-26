@@ -2,7 +2,7 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../event';
 
-describe('AccountEdit', () => {
+describe('UserEdit', () => {
   describe('routing', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute('/account/edit')
@@ -22,7 +22,7 @@ describe('AccountEdit', () => {
     });
   });
 
-  it('navigates to AccountEdit after user clicks "Edit Profile" in navbar', () =>
+  it('navigates to /account/edit after user clicks link in navbar', () =>
     mockRouteThroughLogin('/system/backups', { attachToDocument: true })
       .respondWithProblem(404.1)
       .afterResponse(app => {
