@@ -53,12 +53,12 @@ component:
 
   mockLogin();
   mockHttp()
-    // Mounting AccountEdit does not send a request.
-    .mount(AccountEdit)
-    // Sends a PATCH request.
-    .request(component => submitForm(component, '#account-edit-basic-details', [
-      ['[type="email"]', 'example@opendatakit.org']
-    ]);
+    // Mounting AccountResetPassword does not send a request.
+    .mount(AccountResetPassword, { router })
+    // Sends a POST request.
+    .request(component => submitForm(component, 'form', [
+      ['input[type="email"]', 'example@opendatakit.org']
+    ]));
 
 If you already have a mounted component, you can skip mockHttp().mount():
 

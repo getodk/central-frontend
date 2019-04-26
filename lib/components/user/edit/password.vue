@@ -44,7 +44,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import noop from '../../../util/util';
 import request from '../../../mixins/request';
+import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditPassword',
@@ -58,6 +60,15 @@ export default {
       mismatch: false
     };
   },
+  computed: requestData(['user']),
+  watch: {
+    $route() {
+      this.oldPassword = '';
+      this.newPassword = '';
+      this.confirm = '';
+      this.mismatch = false;
+    }
+  },
   methods: {
     submit() {
       this.mismatch = this.newPassword !== this.confirm;
@@ -65,13 +76,12 @@ export default {
         this.$alert().danger('Please check that your new passwords match.');
         return;
       }
-      const { id } = this.$store.state.request.data.currentUser;
       const data = { old: this.oldPassword, new: this.newPassword };
-      this.put(`/users/${id}/password`, data)
+      this.put(`/users/${this.user.id}/password`, data)
         .then(() => {
           this.$alert().success('Success! Your password has been updated.');
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

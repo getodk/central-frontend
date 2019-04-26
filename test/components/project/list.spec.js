@@ -34,6 +34,7 @@ describe('ProjectList', () => {
       it(`navigates to the project list after a click on ${selector}`, () => {
         mockLogin();
         return mockRoute('/account/edit')
+          .respondWithData(() => testData.standardUsers.first())
           .complete()
           .request(app => trigger.click(app, selector))
           .respondWithData(() => testData.extendedProjects.createPast(1).sorted())

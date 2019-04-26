@@ -9,7 +9,9 @@ const verbsByRole = {
     'config.read',
     'project.create',
     'project.list',
-    'user.list'
+    'user.list',
+    'user.read',
+    'user.update'
   ],
   none: ['project.list']
 };

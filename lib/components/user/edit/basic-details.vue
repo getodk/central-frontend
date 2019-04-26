@@ -35,37 +35,39 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../../mixins/request';
+import noop from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditBasicDetails',
   mixins: [request()],
   data() {
-    const { email, displayName } = this.$store.state.request.data.currentUser;
+    const { email, displayName } = this.$store.state.request.data.user;
     return {
       awaitingResponse: false,
       email,
       displayName
     };
   },
-  computed: requestData(['currentUser']),
+  computed: requestData(['currentUser', 'user']),
   methods: {
     submit() {
       const patchData = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${this.currentUser.id}`, patchData)
+      this.patch(`/users/${this.user.id}`, patchData)
         .then(response => {
           this.$store.commit('setData', {
-            key: 'currentUser',
-            // We do not simply specify response.data, because it does not
-            // include extended metadata.
-            value: this.currentUser.with({
-              ...patchData,
-              updatedAt: response.data.updatedAt
-            })
+            key: 'user',
+            value: this.user.with(response.data)
           });
-          this.$alert().success('Success! Your user details have been updated.');
+          if (this.user.id === this.currentUser.id) {
+            this.$store.commit('setData', {
+              key: 'currentUser',
+              value: this.currentUser.with(response.data)
+            });
+          }
+          this.$alert().success('User details saved!');
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

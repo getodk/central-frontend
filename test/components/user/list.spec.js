@@ -26,9 +26,7 @@ describe('UserList', () => {
 
     it('redirects a user without a grant to assignment.list', () => {
       mockLogin({ verbs: ['project.list', 'user.list'] });
-      return mockRoute('/account/edit')
-        .complete()
-        .route('/users')
+      return mockRoute('/users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1).sorted())
         .respondWithData(() => testData.standardUsers.sorted())
@@ -39,9 +37,7 @@ describe('UserList', () => {
 
     it('redirects a user without a grant to user.list', () => {
       mockLogin({ verbs: ['project.list', 'assignment.list'] });
-      return mockRoute('/account/edit')
-        .complete()
-        .route('/users')
+      return mockRoute('/users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1).sorted())
         .afterResponse(app => {
@@ -52,6 +48,7 @@ describe('UserList', () => {
     it('navigates to /users after a click on the navbar link', () => {
       mockLogin();
       return mockRoute('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
         .complete()
         .request(app => trigger.click(app, '#navbar-users-link'))
         .respondWithData(() => testData.standardUsers.sorted())
