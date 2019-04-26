@@ -41,7 +41,13 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
           <li>
-            <a href="#" @click.prevent="$emit('reset-password', user)">
+            <router-link :to="`/users/${user.id}/edit`" class="edit-profile">
+              Edit profile
+            </router-link>
+          </li>
+          <li>
+            <a class="reset-password" href="#"
+              @click.prevent="$emit('reset-password', user)">
               Reset password
             </a>
           </li>

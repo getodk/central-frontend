@@ -98,6 +98,16 @@ describe('UserList', () => {
           link.text().trim().should.equal(user.displayName);
         }));
 
+    it('correctly renders the edit profile action', () =>
+      mockRoute('/users')
+        .respondWithData(() => testData.standardUsers.sorted())
+        .respondWithData(() =>
+          testData.standardUsers.sorted().map(testData.toActor))
+        .afterResponses(app => {
+          const link = app.first('#user-list-table .edit-profile');
+          link.getAttribute('href').should.equal('#/users/1/edit');
+        }));
+
     it('correctly renders the role selects', () =>
       mockRoute('/users')
         .respondWithData(() => testData.standardUsers

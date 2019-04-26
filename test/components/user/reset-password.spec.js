@@ -8,7 +8,7 @@ describe('UserResetPassword', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
@@ -17,13 +17,13 @@ describe('UserResetPassword', () => {
           app.first(UserResetPassword).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
+    it('shows the modal after the reset password action is clicked', () =>
       mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
         .afterResponses(app =>
-          trigger.click(app, '#user-list-table .dropdown-menu a'))
+          trigger.click(app, '#user-list-table .reset-password'))
         .then(app => {
           app.first(UserResetPassword).getProp('state').should.be.true();
         }));
@@ -47,7 +47,7 @@ describe('UserResetPassword', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => trigger.click(app, '#user-list-table .dropdown-menu a')
+      .request(() => trigger.click(app, '#user-list-table .reset-password')
         .then(() => trigger.click(app, '#user-reset-password-button')))
       .respondWithSuccess());
 
