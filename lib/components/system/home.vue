@@ -31,7 +31,7 @@ import tab from '../../mixins/tab';
 export default {
   name: 'SystemHome',
   mixins: [tab()],
-  methods: {
+  computed: {
     tabPathPrefix() {
       return '/system';
     }
