@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="user-home">
     <page-head>
-      <template slot="title">Users</template>
+      <template slot="title">User Settings</template>
       <template slot="tabs">
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Web Users</router-link>
