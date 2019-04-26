@@ -131,7 +131,7 @@ export default {
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
       const roleName = admin ? 'Administrator' : 'None';
-      this.$alert().success(`Success! ${user.displayName} has been given a Project Role of “${roleName}” on this Project.`);
+      this.$alert().success(`Success! “${user.displayName}” has been given a Sitewide Role of “${roleName}.”`);
 
       /*
       Here we update this.adminIds. If the current user has also refreshed the

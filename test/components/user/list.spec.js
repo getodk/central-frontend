@@ -206,10 +206,10 @@ describe('UserList', () => {
             loadUsersAndChangeRole({ rowIndex, selectValue, route: true })
               .respondWithSuccess()
               .afterResponse(app => {
-                app.should.alert(
-                  'success',
-                  `Success! Person ${rowIndex} has been given a Project Role of “${roleName}” on this Project.`
-                );
+                app.should.alert('success');
+                const message = app.first('#app-alert .alert-message').text();
+                message.should.containEql(`Person ${rowIndex}`);
+                message.should.containEql(roleName);
               }));
         });
       }
