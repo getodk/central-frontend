@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="{ success: user.id === highlighted }">
     <td>{{ user.email }}</td>
-    <td>
+    <td class="user-role">
       <form>
         <div class="form-group">
           <select ref="select" :value="selectedRole" :disabled="disabled"
@@ -106,20 +106,22 @@ export default {
 #user-list-table td {
   vertical-align: middle;
 
-  .form-group {
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
+  &.user-role {
+    .form-group {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
 
-  .form-control {
-    display: inline-block;
-    width: 150px;
-  }
+    .form-control {
+      display: inline-block;
+      width: 150px;
+    }
 
-  .spinner-container {
-    margin-left: 15px;
-    // Spinner is positioned absolutely.
-    position: relative;
+    .spinner-container {
+      margin-left: 15px;
+      // Spinner is positioned absolutely.
+      position: relative;
+    }
   }
 }
 </style>
