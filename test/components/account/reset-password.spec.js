@@ -54,6 +54,7 @@ describe('AccountResetPassword', () => {
   describe('navigation to /reset-password', () => {
     it('redirects to the root page after a login through the login page', () =>
       mockRouteThroughLogin('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
         .complete()
         .route('/reset-password')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())

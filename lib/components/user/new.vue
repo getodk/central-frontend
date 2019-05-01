@@ -20,10 +20,14 @@ except according to the terms contained in the LICENSE file.
       </p>
       <form @submit.prevent="submit">
         <label class="form-group">
-          <input ref="email" v-model.trim="email" :disabled="awaitingResponse"
-            type="email" class="form-control" placeholder="Email address *"
-            required>
+          <input ref="email" v-model.trim="email" type="email"
+            class="form-control" placeholder="Email address *" required>
           <span class="form-label">Email address *</span>
+        </label>
+        <label class="form-group">
+          <input v-model.trim="displayName" type="text" class="form-control"
+            placeholder="Display name">
+          <span class="form-label">Display name</span>
         </label>
         <div class="modal-actions">
           <button :disabled="awaitingResponse" type="submit"
@@ -41,6 +45,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import noop from '../../util/util';
 import request from '../../mixins/request';
 
 export default {
@@ -55,12 +60,15 @@ export default {
   data() {
     return {
       awaitingResponse: false,
-      email: ''
+      email: '',
+      displayName: ''
     };
   },
   watch: {
     state(state) {
-      if (!state) this.email = '';
+      if (state) return;
+      this.email = '';
+      this.displayName = '';
     }
   },
   methods: {
@@ -68,12 +76,13 @@ export default {
       this.$refs.email.focus();
     },
     submit() {
-      this
-        .post('/users', { email: this.email })
-        .then(({ data }) => {
-          this.$emit('success', data);
+      const postData = { email: this.email };
+      if (this.displayName !== '') postData.displayName = this.displayName;
+      this.post('/users', postData)
+        .then(response => {
+          this.$emit('success', response.data);
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

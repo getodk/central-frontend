@@ -64,10 +64,13 @@ describe('AccountLogin', () => {
 
   describe('after a login through the login page', () => {
     it("displays the user's display name in the navbar", () =>
-      mockRouteThroughLogin('/account/edit').then(app => {
-        const link = app.first('.navbar-right > li > a');
-        link.text().trim().should.equal(testData.extendedUsers.first().displayName);
-      }));
+      mockRouteThroughLogin('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
+        .afterResponse(app => {
+          const link = app.first('.navbar-right > li > a');
+          const user = testData.extendedUsers.first();
+          link.text().trim().should.equal(user.displayName);
+        }));
 
     describe("after clicking the user's display name", () => {
       let app;
@@ -79,7 +82,8 @@ describe('AccountLogin', () => {
           { attachToDocument: true },
           { role: 'none' }
         )
-          .then(component => {
+          .respondWithData(() => testData.standardUsers.first())
+          .afterResponse(component => {
             app = component;
             const toggle = app.first('.navbar-right .dropdown-toggle');
             // Using $(...).click() rather than `trigger`, because `trigger`
@@ -117,6 +121,7 @@ describe('AccountLogin', () => {
   describe('navigation to /login', () => {
     it('redirects to the root page after a login through the login page', () =>
       mockRouteThroughLogin('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
         .complete()
         .route('/login')
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
@@ -139,6 +144,7 @@ describe('AccountLogin', () => {
     it('does not redirect other pages to the login page', () =>
       mockRoute('/account/edit')
         .restoreSession(true)
+        .respondWithData(() => testData.standardUsers.first())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/account/edit');
         }));

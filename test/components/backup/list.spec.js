@@ -33,6 +33,7 @@ describe('BackupList', () => {
     it('navigates to /system/backups after a click on the navbar link', () => {
       mockLogin();
       return mockRoute('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
         .complete()
         .request(app => trigger.click(app, '#navbar-system-link'))
         .respondWithProblem(404.1)

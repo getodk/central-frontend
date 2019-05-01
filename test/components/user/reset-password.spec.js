@@ -1,4 +1,3 @@
-import UserList from '../../../lib/components/user/list.vue';
 import UserResetPassword from '../../../lib/components/user/reset-password.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
@@ -9,26 +8,24 @@ describe('UserResetPassword', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
-      mockHttp()
-        .mount(UserList)
+    it('does not show the modal initially', () =>
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component => {
-          component.first(UserResetPassword).getProp('state').should.be.false();
+        .afterResponses(app => {
+          app.first(UserResetPassword).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
-      mockHttp()
-        .mount(UserList)
+    it('shows the modal after the reset password action is clicked', () =>
+      mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
         .respondWithData(() =>
           testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(component =>
-          trigger.click(component, '#user-list-table .dropdown-menu a'))
-        .then(component => {
-          component.first(UserResetPassword).getProp('state').should.be.true();
+        .afterResponses(app =>
+          trigger.click(app, '#user-list-table .reset-password'))
+        .then(app => {
+          app.first(UserResetPassword).getProp('state').should.be.true();
         }));
   });
 
@@ -50,7 +47,7 @@ describe('UserResetPassword', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => trigger.click(app, '#user-list-table .dropdown-menu a')
+      .request(() => trigger.click(app, '#user-list-table .reset-password')
         .then(() => trigger.click(app, '#user-reset-password-button')))
       .respondWithSuccess());
 
@@ -60,6 +57,10 @@ describe('UserResetPassword', () => {
 
     it('success message is shown', () => {
       app.should.alert('success');
+      const message = app.first('#app-alert .alert-message').text();
+      const user = testData.extendedUsers.last();
+      message.should.containEql(user.displayName);
+      message.should.containEql(user.email);
     });
   });
 });

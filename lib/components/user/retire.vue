@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
 
@@ -10,24 +10,30 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!awaitingResponse" backdrop
+  <modal id="user-retire" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template slot="title">Reset Password</template>
+    <template slot="title">Retiring User</template>
     <template slot="body">
-      <p v-if="user != null" class="modal-introduction">
-        Once you click <strong>Reset Password</strong> below, the password for
-        the user “{{ user.displayName }}” &lt;{{ user.email }}&gt; will be
-        immediately invalidated. An email will be sent to {{ user.email }} with
-        instructions on how to proceed.
-      </p>
+      <div class="modal-introduction">
+        <p v-if="user != null">
+          You are about to retire the user account “{{ user.displayName }}”
+          &lt;{{ user.email }}&gt;. They will be immediately barred from
+          performing any actions and logged out.
+        </p>
+        <p>
+          <strong>This action cannot be undone</strong>, but a new account can
+          always be created for that person with the same email address.
+        </p>
+        <p>Are you sure you wish to proceed?</p>
+      </div>
       <div class="modal-actions">
-        <button id="user-reset-password-button" :disabled="awaitingResponse"
-          type="button" class="btn btn-primary" @click="resetPassword">
-          Reset password <spinner :state="awaitingResponse"/>
+        <button :disabled="awaitingResponse" type="button"
+          class="btn btn-danger" @click="retire">
+          Yes, I am sure <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
-          Close
+          No, cancel
         </button>
       </div>
     </template>
@@ -39,7 +45,7 @@ import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
 export default {
-  name: 'UserResetPassword',
+  name: 'UserRetire',
   mixins: [request()],
   props: {
     state: {
@@ -54,9 +60,8 @@ export default {
     };
   },
   methods: {
-    resetPassword() {
-      const data = { email: this.user.email };
-      this.post('/users/reset/initiate?invalidate=true', data)
+    retire() {
+      this.delete(`/users/${this.user.id}`)
         .then(() => {
           this.$emit('success', this.user);
         })

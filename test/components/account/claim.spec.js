@@ -10,6 +10,7 @@ describe('AccountClaim', () => {
   describe('navigation to /account/claim', () => {
     it('redirects to the root page after a login through the login page', () =>
       mockRouteThroughLogin('/account/edit')
+        .respondWithData(() => testData.standardUsers.first())
         .complete()
         .route(LOCATION)
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())

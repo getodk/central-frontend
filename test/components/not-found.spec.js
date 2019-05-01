@@ -1,3 +1,4 @@
+import testData from '../data';
 import { mockLogin } from '../session';
 import { mockRoute } from '../http';
 
@@ -17,6 +18,7 @@ describe('NotFound', () => {
   it('is accessible by a user who is logged in', () => {
     mockLogin();
     return mockRoute('/account/edit')
+      .respondWithData(() => testData.standardUsers.first())
       .complete()
       .route('/not-found')
       .respondWithData([/* no responses */]);

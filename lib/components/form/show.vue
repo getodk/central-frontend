@@ -96,6 +96,9 @@ export default {
     encodedFormId() {
       return encodeURIComponent(this.xmlFormId);
     },
+    tabPathPrefix() {
+      return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
+    },
     missingAttachments() {
       return this.attachments.filter(attachment => !attachment.exists).length;
     }
@@ -109,9 +112,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    tabPathPrefix() {
-      return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
-    },
     fetchData() {
       this.$store.dispatch('get', [
         {

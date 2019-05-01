@@ -1,4 +1,3 @@
-import Form from '../../../lib/presenters/form';
 import FormEdit from '../../../lib/components/form/edit.vue';
 import Spinner from '../../../lib/components/spinner.vue';
 import testData from '../../data';
@@ -27,9 +26,7 @@ describe('FormEdit', () => {
         .mount(FormEdit, {
           propsData: { projectId: '1' },
           requestData: {
-            form: new Form(testData.extendedForms
-              .createPast(1, { state: 'open' })
-              .last())
+            form: testData.extendedForms.createPast(1, { state: 'open' }).last()
           }
         })
         .request(component =>
@@ -50,9 +47,9 @@ describe('FormEdit', () => {
         .mount(FormEdit, {
           propsData: { projectId: '1' },
           requestData: {
-            form: new Form(testData.extendedForms
+            form: testData.extendedForms
               .createPast(1, { state: 'closing' })
-              .last())
+              .last()
           }
         })
         .request(component =>

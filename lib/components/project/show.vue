@@ -59,8 +59,8 @@ export default {
       required: true
     }
   },
-  computed: requestData(['project']),
-  methods: {
+  computed: {
+    ...requestData(['project']),
     tabPathPrefix() {
       return `/projects/${this.projectId}`;
     }

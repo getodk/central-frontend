@@ -10,9 +10,19 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="user-home">
     <page-head>
-      <template slot="title">Users</template>
+      <template slot="title">User Settings</template>
+      <template slot="tabs">
+        <li :class="tabClass('')" role="presentation">
+          <router-link :to="tabPath('')">Web Users</router-link>
+        </li>
+        <li class="disabled" role="presentation">
+          <a href="#" @click.prevent>
+            Role Settings <span class="coming-soon">(coming soon)</span>
+          </a>
+        </li>
+      </template>
     </page-head>
     <page-body>
       <router-view/>
@@ -21,7 +31,24 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import tab from '../../mixins/tab';
+
 export default {
-  name: 'UserHome'
+  name: 'UserHome',
+  mixins: [tab()],
+  computed: {
+    tabPathPrefix() {
+      return '/users';
+    }
+  }
 };
 </script>
+
+<style lang="sass">
+@import '../../../assets/scss/variables';
+
+#user-home .coming-soon {
+  color: $color-text;
+  font-size: 10px;
+}
+</style>

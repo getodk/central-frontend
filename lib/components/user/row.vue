@@ -11,12 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr :class="{ success: user.id === highlighted }">
-    <td>{{ user.email }}</td>
-    <td>
+    <td class="user-display-name">
+      <router-link :to="`/users/${user.id}/edit`">
+        {{ user.displayName }}
+      </router-link>
+    </td>
+    <td class="user-email">{{ user.email }}</td>
+    <td class="user-role">
       <form>
         <div class="form-group">
           <select ref="select" :value="selectedRole" :disabled="disabled"
-            :title="title" class="form-control" aria-label="Sitewide Role"
+            :title="selectTitle" class="form-control" aria-label="Sitewide Role"
             @change="assignRole">
             <option value="admin">Administrator</option>
             <option value="">None</option>
@@ -36,8 +41,19 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
           <li>
-            <a href="#" @click.prevent="$emit('reset-password', user)">
+            <router-link :to="`/users/${user.id}/edit`" class="edit-profile">
+              Edit profile
+            </router-link>
+          </li>
+          <li>
+            <a class="reset-password" href="#"
+              @click.prevent="$emit('reset-password', user)">
               Reset password
+            </a>
+          </li>
+          <li :class="{ disabled }" :title="retireTitle">
+            <a class="retire-user" href="#" @click.prevent="retire">
+              Retire user
             </a>
           </li>
         </ul>
@@ -76,12 +92,18 @@ export default {
     disabled() {
       return this.user.id === this.currentUser.id || this.awaitingResponse;
     },
-    title() {
-      if (this.user.id !== this.currentUser.id) return '';
-      return 'You may not edit your own Sitewide Role.';
+    selectTitle() {
+      return this.user.id === this.currentUser.id
+        ? 'You may not edit your own Sitewide Role.'
+        : '';
     },
     actionsButtonId() {
       return `user-row-actions-button${this.user.id}`;
+    },
+    retireTitle() {
+      return this.user.id === this.currentUser.id
+        ? 'You may not retire yourself.'
+        : '';
     }
   },
   methods: {
@@ -97,6 +119,9 @@ export default {
           this.$emit('assigned-role', this.user, this.selectedRole === 'admin');
         })
         .catch(noop);
+    },
+    retire() {
+      if (!this.disabled) this.$emit('retire', this.user);
     }
   }
 };
@@ -106,20 +131,28 @@ export default {
 #user-list-table td {
   vertical-align: middle;
 
-  .form-group {
-    margin-bottom: 0;
-    padding-bottom: 0;
+  &.user-display-name, &.user-email {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .form-control {
-    display: inline-block;
-    width: 150px;
-  }
+  &.user-role {
+    .form-group {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
 
-  .spinner-container {
-    margin-left: 15px;
-    // Spinner is positioned absolutely.
-    position: relative;
+    .form-control {
+      display: inline-block;
+      width: 150px;
+    }
+
+    .spinner-container {
+      margin-left: 15px;
+      // Spinner is positioned absolutely.
+      position: relative;
+    }
   }
 }
 </style>

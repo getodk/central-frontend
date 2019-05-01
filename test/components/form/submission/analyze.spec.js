@@ -1,4 +1,3 @@
-import Form from '../../../../lib/presenters/form';
 import FormSubmissionAnalyze from '../../../../lib/components/form/submission/analyze.vue';
 import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
 import testData from '../../../data';
@@ -30,7 +29,7 @@ describe('FormSubmissionAnalyze', () => {
           projectId: '1',
           xmlFormId: form.xmlFormId
         },
-        requestData: { form: new Form(form) }
+        requestData: { form }
       })
       .request(component => {
         // Normally the `activated` hook calls this method, but that hook is not
@@ -84,7 +83,7 @@ describe('FormSubmissionAnalyze', () => {
 
       modal = mountAndMark(FormSubmissionAnalyze, {
         propsData: { projectId: '1' },
-        requestData: { form: new Form(form) }
+        requestData: { form }
       });
     });
 

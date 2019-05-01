@@ -235,9 +235,5 @@ export default {
 
 #project-user-list table {
   table-layout: fixed;
-
-  th, td {
-    width: 50%;
-  }
 }
 </style>

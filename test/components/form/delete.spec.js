@@ -1,4 +1,3 @@
-import Form from '../../../lib/presenters/form';
 import FormDelete from '../../../lib/components/form/delete.vue';
 import FormSettings from '../../../lib/components/form/settings.vue';
 import testData from '../../data';
@@ -20,9 +19,7 @@ describe('FormDelete', () => {
   it('opens the modal upon button click', () => {
     const page = mountAndMark(FormSettings, {
       propsData: { projectId: '1' },
-      requestData: {
-        form: new Form(testData.extendedForms.createPast(1).last())
-      }
+      requestData: { form: testData.extendedForms.createPast(1).last() }
     });
     page.first(FormDelete).getProp('state').should.be.false();
     return clickDeleteButton(page)
@@ -33,9 +30,7 @@ describe('FormDelete', () => {
     mockHttp()
       .mount(FormDelete, {
         propsData: { projectId: '1' },
-        requestData: {
-          form: new Form(testData.extendedForms.createPast(1).last())
-        }
+        requestData: { form: testData.extendedForms.createPast(1).last() }
       })
       .request(confirmDelete)
       .standardButton('.btn-danger'));

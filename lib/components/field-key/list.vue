@@ -216,17 +216,13 @@ export default {
 <style lang="sass">
 @import '../../../assets/scss/variables';
 
-// 160px is the width of the .dropdown-menu.
-$actions-width: $padding-left-table-data + $padding-right-table-data + 160px;
-
 #field-key-list-table {
   table-layout: fixed;
 
   th, td {
-    width: calc(25% - #{$actions-width / 4});
-
     &.field-key-actions {
-      width: $actions-width;
+      // 160px is the width of the .dropdown-menu.
+      width: $padding-left-table-data + $padding-right-table-data + 160px;
     }
   }
 

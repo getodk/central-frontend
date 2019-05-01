@@ -265,9 +265,5 @@ export default {
 
 #project-list-table {
   table-layout: fixed;
-
-  th, td {
-    width: 33.33%;
-  }
 }
 </style>
