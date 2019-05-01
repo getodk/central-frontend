@@ -52,10 +52,7 @@ export default {
       type: Boolean,
       default: false
     },
-    user: {
-      type: Object,
-      required: true
-    }
+    user: Object // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {

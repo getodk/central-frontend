@@ -46,10 +46,7 @@ export default {
       type: Boolean,
       default: false
     },
-    user: {
-      type: Object,
-      required: true
-    }
+    user: Object // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {
@@ -59,8 +56,7 @@ export default {
   methods: {
     resetPassword() {
       const data = { email: this.user.email };
-      this
-        .post('/users/reset/initiate?invalidate=true', data)
+      this.post('/users/reset/initiate?invalidate=true', data)
         .then(() => {
           this.$emit('success', this.user);
         })
