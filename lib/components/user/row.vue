@@ -102,7 +102,7 @@ export default {
     },
     retireTitle() {
       return this.user.id === this.currentUser.id
-        ? 'You may not retire your own user.'
+        ? 'You may not retire yourself.'
         : '';
     }
   },
