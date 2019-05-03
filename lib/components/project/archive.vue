@@ -19,12 +19,17 @@ except according to the terms contained in the LICENSE file.
           You are about to archive the Project
           “{{ project != null ? project.name : '' }}”. It will still be viewable
           and its data will remain accessible for download and over OData, but
-          it will no longer be updatable, and it will be inaccessible to mobile
-          apps like Collect.
+          it will no longer be updatable.
         </p>
         <p>
           <strong>This action cannot be undone</strong>, but the ability to
           unarchive a Project is planned for a future release.
+        </p>
+        <p>
+          <strong>Warning</strong>: you will be unable to modify Project or Form
+          settings after it has been archived. You may want to update settings
+          before archival. For example, consider closing all Forms to prevent
+          new Submissions.
         </p>
         <p>Are you sure you wish to proceed?</p>
       </div>
