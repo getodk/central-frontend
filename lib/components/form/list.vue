@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <p v-if="forms.length === 0" id="form-list-empty-message">
-    To get started, add a Form.
+    There are no Forms to show.
   </p>
   <table v-else id="form-list-table" class="table">
     <thead>
