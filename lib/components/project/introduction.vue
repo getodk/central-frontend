@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <template slot="title">Introducing Projects</template>
     <template slot="body">
       <div class="modal-introduction">
-        <p>ODK Central Beta v0.4 introduces <strong>Projects</strong>.</p>
+        <p>ODK Central Beta v0.4 introduced <strong>Projects</strong>.</p>
         <p>
           Projects group <strong>Forms</strong> and <strong>App Users</strong>
           together to make them easier to organize and manage, both on this

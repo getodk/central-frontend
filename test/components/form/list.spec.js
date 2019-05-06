@@ -49,7 +49,7 @@ describe('FormList', () => {
       requestData: { forms: [] }
     });
     const text = component.first('#form-list-empty-message').text().trim();
-    text.should.equal('To get started, add a Form.');
+    text.should.be.ok();
   });
 
   it('encodes the URL to the form overview page', () =>
