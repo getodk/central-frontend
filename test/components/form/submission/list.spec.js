@@ -671,17 +671,68 @@ describe('FormSubmissionList', () => {
               component.find('#form-submission-list-message').should.be.empty();
             }));
 
-        it('scrolling elsewhere does nothing', () =>
-          loadSubmissions(5, {}, [2], false)
+        it('does nothing upon scroll if schema request results in error', () =>
+          mockHttp()
+            .mount(FormSubmissionList, {
+              propsData: {
+                projectId: '1',
+                xmlFormId: 'f',
+                chunkSizes: { small: 1, large: 1000 },
+                scrolledToBottom: () => true
+              },
+              requestData: {
+                form: testData.extendedForms
+                  .createPast(1, { xmlFormId: 'f', submissions: 2 })
+                  .last()
+              }
+            })
+            .request(component => {
+              component.vm.fetchSchemaAndFirstChunk();
+            })
+            .respondWithProblem()
+            .respondWithData(() => {
+              testData.extendedSubmissions.createPast(2);
+              return testData.submissionOData(1, 0);
+            })
             .complete()
-            // This test works by specifying a request callback without a
-            // response callback. If the request callback actually sends a
-            // request, then the mockHttp() object will throw an error, noting
-            // that the number of requests exceeds the number of responses. See
-            // mockHttp() for more details.
             .request(component => {
               component.vm.onScroll();
-            }));
+            })
+            .respondWithData([/* no responses */]));
+
+        it('does nothing upon scroll if submissions request results in error', () =>
+          mockHttp()
+            .mount(FormSubmissionList, {
+              propsData: {
+                projectId: '1',
+                xmlFormId: 'f',
+                chunkSizes: { small: 1, large: 1000 },
+                scrolledToBottom: () => true
+              },
+              requestData: {
+                form: testData.extendedForms
+                  .createPast(1, { xmlFormId: 'f', submissions: 2 })
+                  .last()
+              }
+            })
+            .request(component => {
+              component.vm.fetchSchemaAndFirstChunk();
+            })
+            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithProblem()
+            .complete()
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .respondWithData([/* no responses */]));
+
+        it('does nothing after user scrolls somewhere other than bottom of page', () =>
+          loadSubmissions(5, {}, [2], false)
+            .complete()
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .respondWithData([/* no responses */]));
 
         it('clicking refresh button loads first chunk, even after scrolling', () =>
           loadSubmissions(5, {}, [2])
