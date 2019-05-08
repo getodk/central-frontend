@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
     <p v-if="submissions != null && submissions.length === 0">
       There are no submissions yet for <strong>{{ form.nameOrId() }}</strong>.
     </p>
-    <template v-else-if="submissions != null">
+    <template v-else-if="schema != null && submissions != null">
       <!-- This table element contains the frozen columns of the submissions
       table, which contain metadata about each submission. -->
       <table id="form-submission-list-table1" class="table table-condensed">
@@ -347,12 +347,18 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
+      // Return if the request for the form is in progress or resulted in an
+      // error.
       if (this.form == null) return;
-      const skip = this.skip(this.chunkCount);
-      if (skip >= this.form.submissions ||
-        this.$store.getters.loading('submissionsChunk') ||
-        !this.scrolledToBottom())
+      if (this.schema == null) return;
+      // If the refresh button is clicked after the first chunk has been
+      // received, then `this.submissionsChunk == null` will be `false`, but
+      // this.$store.getters.loading('submissionsChunk') will be `true`.
+      if (this.submissionsChunk == null ||
+        this.$store.getters.loading('submissionsChunk'))
         return;
+      const skip = this.skip(this.chunkCount);
+      if (skip >= this.form.submissions || !this.scrolledToBottom()) return;
       const top = this.chunkCount < MAX_SMALL_CHUNKS
         ? this.chunkSizes.small
         : this.chunkSizes.large;
