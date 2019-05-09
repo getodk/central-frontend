@@ -28,6 +28,7 @@
     "vuex": "~3.1"
   },
   "devDependencies": {
+    "acorn": "~6.1",
     "avoriaz": "~6.3",
     "babel-core": "~6.26",
     "babel-plugin-transform-runtime": "~6.23",
@@ -45,7 +46,7 @@
     "eslint-plugin-vue": "~4",
     "faker": "~4.1",
     "jsqr": "~1.0",
-    "karma": "~3.0",
+    "karma": "~4.1",
     "karma-browserify": "~5.3",
     "karma-chrome-launcher": "~2.2",
     "karma-mocha": "~1.3",
