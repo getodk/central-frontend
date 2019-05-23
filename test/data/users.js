@@ -1,4 +1,4 @@
-import R from 'ramda';
+import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
@@ -42,7 +42,7 @@ export const extendedUsers = dataStore({
     administrator1.email.localeCompare(administrator2.email)
 });
 
-export const standardUsers = view(extendedUsers, R.omit(['verbs']));
+export const standardUsers = view(extendedUsers, omit(['verbs']));
 
 // Deprecated.
 export const administrators = standardUsers;

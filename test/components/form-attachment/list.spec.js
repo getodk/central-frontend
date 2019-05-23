@@ -1,11 +1,11 @@
 import pako from 'pako';
 
-import FormAttachmentList from '../../../lib/components/form-attachment/list.vue';
-import FormAttachmentNameMismatch from '../../../lib/components/form-attachment/name-mismatch.vue';
-import FormAttachmentUploadFiles from '../../../lib/components/form-attachment/upload-files.vue';
+import FormAttachmentList from '../../../src/components/form-attachment/list.vue';
+import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
+import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../event';
-import { formatDate } from '../../../lib/util/util';
+import { formatDate } from '../../../src/util/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 

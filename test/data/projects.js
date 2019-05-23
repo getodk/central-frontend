@@ -1,4 +1,4 @@
-import R from 'ramda';
+import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
@@ -41,5 +41,5 @@ export const extendedProjects = dataStore({
 
 export const standardProjects = view(
   extendedProjects,
-  R.omit(['forms', 'lastSubmission', 'appUsers'])
+  omit(['forms', 'lastSubmission', 'appUsers'])
 );

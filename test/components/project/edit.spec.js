@@ -1,4 +1,4 @@
-import ProjectSettings from '../../../lib/components/project/settings.vue';
+import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';

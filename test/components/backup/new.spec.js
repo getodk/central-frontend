@@ -1,6 +1,6 @@
-import App from '../../../lib/components/app.vue';
-import BackupList from '../../../lib/components/backup/list.vue';
-import BackupNew from '../../../lib/components/backup/new.vue';
+import App from '../../../src/components/app.vue';
+import BackupList from '../../../src/components/backup/list.vue';
+import BackupNew from '../../../src/components/backup/new.vue';
 import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';

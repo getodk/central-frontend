@@ -1,4 +1,4 @@
-import UserResetPassword from '../../../lib/components/user/reset-password.vue';
+import UserResetPassword from '../../../src/components/user/reset-password.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

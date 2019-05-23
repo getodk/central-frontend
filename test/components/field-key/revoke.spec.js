@@ -1,4 +1,4 @@
-import FieldKeyRevoke from '../../../lib/components/field-key/revoke.vue';
+import FieldKeyRevoke from '../../../src/components/field-key/revoke.vue';
 import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';

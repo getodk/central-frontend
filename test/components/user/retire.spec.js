@@ -1,4 +1,4 @@
-import UserRetire from '../../../lib/components/user/retire.vue';
+import UserRetire from '../../../src/components/user/retire.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

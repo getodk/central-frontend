@@ -1,9 +1,9 @@
 import Vue from 'vue';
 
-import App from '../lib/components/app.vue';
-import Spinner from '../lib/components/spinner.vue';
-import router from '../lib/router';
-import store from '../lib/store';
+import App from '../src/components/app.vue';
+import Spinner from '../src/components/spinner.vue';
+import router from '../src/router';
+import store from '../src/store';
 import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';

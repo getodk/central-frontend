@@ -1,5 +1,5 @@
-import R from 'ramda';
 import { DateTime } from 'luxon';
+import { comparator, lensPath, set, view } from 'ramda';
 
 import faker from '../faker';
 import { dataStore } from './data-store';
@@ -60,23 +60,23 @@ const oData = ({ form, instanceId, partial, exists }) => form._schema.reduce(
   (data, field) => {
     // Once we resolve issue #82 for Backend, we should implement repeat groups.
     if (field.type === 'repeat') return data;
-    const fieldLens = R.lensPath(field.path);
-    if (R.view(fieldLens, data) != null) {
+    const fieldLens = lensPath(field.path);
+    if (view(fieldLens, data) != null) {
       // `partial` has already specified a value for the field. Return without
       // overwriting the existing value.
       return data;
     }
     if (field.type == null)
-      return R.set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
+      return set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
     if (exists[field.type])
-      return R.set(fieldLens, oDataValue(field, instanceId), data);
+      return set(fieldLens, oDataValue(field, instanceId), data);
     // exists[field.type] is not truthy, so we do not set a value for the field.
     // However, if the field is an element of a group, we ensure that the data
     // includes an object for the group -- even though that object may end up
     // being empty.
     if (field.path.length === 1) return data;
-    const groupLens = R.lensPath(field.path.slice(0, field.path.length - 1));
-    return R.view(groupLens, data) != null ? data : R.set(groupLens, {}, data);
+    const groupLens = lensPath(field.path.slice(0, field.path.length - 1));
+    return view(groupLens, data) != null ? data : set(groupLens, {}, data);
   },
   partial
 );
@@ -144,7 +144,7 @@ export const extendedSubmissions = dataStore({
       })
     };
   },
-  sort: R.comparator((submission1, submission2) =>
+  sort: comparator((submission1, submission2) =>
     submission1.createdAt > submission2.createdAt)
 });
 

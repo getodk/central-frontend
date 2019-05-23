@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import BackupsConfig from '../../lib/presenters/backups-config';
+import BackupsConfig from '../../src/presenters/backups-config';
 import faker from '../faker';
 import { dataStore } from './data-store';
 

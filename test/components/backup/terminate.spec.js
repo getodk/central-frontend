@@ -1,5 +1,5 @@
-import BackupList from '../../../lib/components/backup/list.vue';
-import BackupTerminate from '../../../lib/components/backup/terminate.vue';
+import BackupList from '../../../src/components/backup/list.vue';
+import BackupTerminate from '../../../src/components/backup/terminate.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

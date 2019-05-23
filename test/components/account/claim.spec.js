@@ -1,4 +1,4 @@
-import Navbar from '../../../lib/components/navbar.vue';
+import Navbar from '../../../src/components/navbar.vue';
 import testData from '../../data';
 import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';

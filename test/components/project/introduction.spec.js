@@ -1,4 +1,4 @@
-import ProjectIntroduction from '../../../lib/components/project/introduction.vue';
+import ProjectIntroduction from '../../../src/components/project/introduction.vue';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';

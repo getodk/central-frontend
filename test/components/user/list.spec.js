@@ -1,5 +1,5 @@
-import Spinner from '../../../lib/components/spinner.vue';
-import UserRow from '../../../lib/components/user/row.vue';
+import Spinner from '../../../src/components/spinner.vue';
+import UserRow from '../../../src/components/user/row.vue';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';

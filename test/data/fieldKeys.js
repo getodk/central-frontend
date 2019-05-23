@@ -1,4 +1,4 @@
-import R from 'ramda';
+import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
@@ -37,16 +37,14 @@ export const extendedFieldKeys = dataStore({
       if (accessRevoked1) return 1;
       if (accessRevoked2) return -1;
     }
-    if (fieldKey1.createdAt < fieldKey2.createdAt)
-      return 1;
-    else if (fieldKey1.createdAt > fieldKey2.createdAt)
-      return -1;
+    if (fieldKey1.createdAt < fieldKey2.createdAt) return 1;
+    if (fieldKey1.createdAt > fieldKey2.createdAt) return -1;
     return 0;
   }
 });
 
 export const simpleFieldKeys = view(extendedFieldKeys, (extendedFieldKey) => {
-  const fieldKey = R.omit(['lastUsed'], extendedFieldKey);
+  const fieldKey = omit(['lastUsed'], extendedFieldKey);
   fieldKey.createdBy = fieldKey.createdBy.id;
   return fieldKey;
 });

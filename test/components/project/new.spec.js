@@ -1,4 +1,4 @@
-import ProjectNew from '../../../lib/components/project/new.vue';
+import ProjectNew from '../../../src/components/project/new.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

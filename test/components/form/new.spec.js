@@ -1,4 +1,4 @@
-import FormNew from '../../../lib/components/form/new.vue';
+import FormNew from '../../../src/components/form/new.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../event';
 import { mockHttp, mockRoute } from '../../http';

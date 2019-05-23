@@ -1,6 +1,6 @@
 import should from 'should';
 
-import Alert from '../lib/components/alert.vue';
+import Alert from '../src/components/alert.vue';
 
 // Returns the element for an object that may be an avoriaz wrapper.
 const unwrapElement = (elementOrWrapper) => {

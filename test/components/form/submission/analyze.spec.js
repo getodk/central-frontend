@@ -1,5 +1,5 @@
-import FormSubmissionAnalyze from '../../../../lib/components/form/submission/analyze.vue';
-import FormSubmissionList from '../../../../lib/components/form/submission/list.vue';
+import FormSubmissionAnalyze from '../../../../src/components/form/submission/analyze.vue';
+import FormSubmissionList from '../../../../src/components/form/submission/list.vue';
 import testData from '../../../data';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin } from '../../../session';
