@@ -1,4 +1,4 @@
-import UserNew from '../../../lib/components/user/new.vue';
+import UserNew from '../../../src/components/user/new.vue';
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../event';
 import { mockHttp, mockRoute } from '../../http';

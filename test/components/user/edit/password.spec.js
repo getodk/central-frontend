@@ -1,5 +1,5 @@
-import UserEdit from '../../../../lib/components/user/edit.vue';
-import UserEditPassword from '../../../../lib/components/user/edit/password.vue';
+import UserEdit from '../../../../src/components/user/edit.vue';
+import UserEditPassword from '../../../../src/components/user/edit/password.vue';
 import testData from '../../../data';
 import { fillForm, submitForm } from '../../../event';
 import { mockHttp, mockRoute } from '../../../http';

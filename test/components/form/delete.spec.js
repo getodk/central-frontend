@@ -1,5 +1,5 @@
-import FormDelete from '../../../lib/components/form/delete.vue';
-import FormSettings from '../../../lib/components/form/settings.vue';
+import FormDelete from '../../../src/components/form/delete.vue';
+import FormSettings from '../../../src/components/form/settings.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

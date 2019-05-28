@@ -1,5 +1,5 @@
-import FormEdit from '../../../lib/components/form/edit.vue';
-import Spinner from '../../../lib/components/spinner.vue';
+import FormEdit from '../../../src/components/form/edit.vue';
+import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

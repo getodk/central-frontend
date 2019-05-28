@@ -1,4 +1,4 @@
-import Loading from '../../../lib/components/loading.vue';
+import Loading from '../../../src/components/loading.vue';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';

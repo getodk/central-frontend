@@ -1,5 +1,5 @@
-import ProjectArchive from '../../../lib/components/project/archive.vue';
-import ProjectSettings from '../../../lib/components/project/settings.vue';
+import ProjectArchive from '../../../src/components/project/archive.vue';
+import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

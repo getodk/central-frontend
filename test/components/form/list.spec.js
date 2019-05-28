@@ -1,7 +1,7 @@
-import Form from '../../../lib/presenters/form';
-import FormList from '../../../lib/components/form/list.vue';
+import Form from '../../../src/presenters/form';
+import FormList from '../../../src/components/form/list.vue';
 import testData from '../../data';
-import { formatDate } from '../../../lib/util/util';
+import { formatDate } from '../../../src/util/util';
 import { mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';

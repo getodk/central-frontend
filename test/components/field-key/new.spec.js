@@ -1,4 +1,4 @@
-import FieldKeyNew from '../../../lib/components/field-key/new.vue';
+import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';

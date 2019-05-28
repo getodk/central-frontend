@@ -1,4 +1,4 @@
-import R from 'ramda';
+import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
@@ -95,7 +95,7 @@ export const extendedForms = dataStore({
 
 export const standardForms = view(
   extendedForms,
-  R.omit(['xml', 'submissions', 'lastSubmission', 'createdBy'])
+  omit(['xml', 'submissions', 'lastSubmission', 'createdBy'])
 );
 
 // Deprecated.

@@ -1,5 +1,5 @@
-import ProjectUserList from '../../../../lib/components/project/user/list.vue';
-import Spinner from '../../../../lib/components/spinner.vue';
+import ProjectUserList from '../../../../src/components/project/user/list.vue';
+import Spinner from '../../../../src/components/spinner.vue';
 import testData from '../../../data';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';

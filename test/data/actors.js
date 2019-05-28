@@ -1,4 +1,4 @@
-import R from 'ramda';
+import { pick } from 'ramda';
 
 // eslint-disable-next-line import/prefer-default-export
-export const toActor = R.pick(['id', 'displayName', 'createdAt', 'updatedAt']);
+export const toActor = pick(['id', 'displayName', 'createdAt', 'updatedAt']);
