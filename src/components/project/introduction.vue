@@ -20,12 +20,6 @@ except according to the terms contained in the LICENSE file.
           together to make them easier to organize and manage, both on this
           website and on your data collection device.
         </p>
-        <p v-show="migrated">
-          As part of this change, all your existing Forms have been transferred
-          to a new Project called “Forms you made before projects existed.” You
-          can find them, with all their existing data, by clicking on that
-          Project name.
-        </p>
         <p>
           For more information, please see
           <doc-link to="central-projects/">this help article</doc-link>.
@@ -44,10 +38,6 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'ProjectIntroduction',
   props: {
-    migrated: {
-      type: Boolean,
-      default: false
-    },
     state: {
       type: Boolean,
       default: false

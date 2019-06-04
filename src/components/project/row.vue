@@ -18,18 +18,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </router-link>
       </div>
-      <template v-if="projectCount === 1">
-        <div v-if="project.name === 'Default Project' && project.forms === 0">
-          <a href="#" @click.prevent="$emit('show-introduction', false)">
-            What are Projects?
-          </a>
-        </div>
-        <div v-else-if="project.name === 'Forms you made before projects existed'">
-          <a href="#" @click.prevent="$emit('show-introduction', true)">
-            What happened to my Forms?
-          </a>
-        </div>
-      </template>
+      <div v-if="showsIntroductionLink">
+        <a href="#" @click.prevent="$emit('show-introduction')">
+          What are Projects?
+        </a>
+      </div>
     </td>
     <td>{{ $pluralize('Form', project.forms, true) }}</td>
     <td>{{ latestSubmission }}</td>
@@ -52,6 +45,10 @@ export default {
     }
   },
   computed: {
+    showsIntroductionLink() {
+      return this.projectCount === 1 &&
+        this.project.name === 'Default Project' && this.project.forms === 0;
+    },
     latestSubmission() {
       return formatDate(this.project.lastSubmission, '(none)');
     }

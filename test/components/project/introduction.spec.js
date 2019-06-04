@@ -27,20 +27,8 @@ describe('ProjectIntroduction', () => {
     a[1].text().trim().should.equal('What are Projects?');
   });
 
-  describe('after the link is clicked', () => {
-    beforeEach(() =>
-      trigger.click(app.first('#project-list-table td').find('a')[1]));
-
-    it('shows the modal', () => {
+  it('shows the modal after the link is clicked', () =>
+    trigger.click(app.first('#project-list-table td').find('a')[1]).then(() => {
       app.first(ProjectIntroduction).getProp('state').should.be.true();
-    });
-
-    // Remove this test after removing the link for "What happened to my
-    // Forms?".
-    it('hides the third paragraph', () => {
-      const p = app.first(ProjectIntroduction).find('p');
-      const display = p.map(wrapper => wrapper.element.style.display);
-      display.should.eql(['', '', 'none', '']);
-    });
-  });
+    }));
 });
