@@ -106,7 +106,7 @@ except according to the terms contained in the LICENSE file.
           <tbody v-if="projects != null">
             <project-row v-for="project of projects" :key="project.id"
               :project-count="projects.length" :project="project"
-              @show-introduction="showIntroduction"/>
+              @show-introduction="showModal('introduction')"/>
           </tbody>
         </table>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
@@ -142,7 +142,6 @@ export default {
         state: false
       },
       introduction: {
-        migrated: false,
         state: false
       }
     };
@@ -179,10 +178,6 @@ export default {
       this.$router.push(`/projects/${project.id}`, () => {
         this.$alert().success('Your new Project has been successfully created.');
       });
-    },
-    showIntroduction(migrated) {
-      this.introduction.state = true;
-      this.introduction.migrated = migrated;
     }
   }
 };
