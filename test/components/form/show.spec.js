@@ -31,15 +31,27 @@ describe('FormShow', () => {
         text.should.equal('My Project (archived)');
       }));
 
-  it('shows a link to the project overview', () =>
+  it("renders the project's name as a link", () =>
     mockRoute('/projects/1/forms/f')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
       .afterResponses(app => {
-        const href = app.first('#page-head-context a').getAttribute('href');
-        href.should.equal('#/projects/1');
+        const a = app.first('#page-head-context span a');
+        a.getAttribute('href').should.equal('#/projects/1');
+      }));
+
+  it('shows a link back to the project overview', () =>
+    mockRoute('/projects/1/forms/f')
+      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() =>
+        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .afterResponses(app => {
+        const a = app.find('#page-head-context a');
+        a.length.should.equal(2);
+        a[1].getAttribute('href').should.equal('#/projects/1');
       }));
 
   it("shows the form's name", () =>

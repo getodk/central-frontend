@@ -59,7 +59,12 @@ export default {
 
   > span:first-child {
     font-weight: bold;
-    margin-right: 5px;
+    margin-right: 10px;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
   > a {
