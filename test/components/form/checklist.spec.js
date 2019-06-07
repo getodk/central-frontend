@@ -4,7 +4,7 @@ import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 import { trigger } from '../../util';
 
-describe('FormOverview', () => {
+describe('FormChecklist', () => {
   describe('anonymous users', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute('/projects/1/forms/f')
@@ -57,7 +57,7 @@ describe('FormOverview', () => {
     describe('submission count', () => {
       it('no submissions', () =>
         loadOverview({ hasSubmission: false }).afterResponses(app => {
-          const steps = app.find('.form-overview-step');
+          const steps = app.find('.form-checklist-step');
           const step3Text = steps[2].find('p')[1].text().trim();
           step3Text.should.containEql('Nobody has submitted any data to this Form yet.');
           const step4Text = steps[3].find('p')[1].text().trim();
@@ -68,9 +68,9 @@ describe('FormOverview', () => {
         loadOverview({ hasSubmission: true }).afterResponses(app => {
           const count = testData.extendedForms.last().submissions
             .toLocaleString();
-          app.find('.form-overview-step')[2].find('p')[1].text().trim()
+          app.find('.form-checklist-step')[2].find('p')[1].text().trim()
             .should.containEql(count);
-          app.find('.form-overview-step')[3].find('p')[1].text().trim()
+          app.find('.form-checklist-step')[3].find('p')[1].text().trim()
             .should.containEql(count);
         }));
     });
@@ -78,14 +78,14 @@ describe('FormOverview', () => {
     describe('app user count', () => {
       it('no app users', () =>
         loadOverview({ fieldKeyCount: 0 }).afterResponses(app => {
-          const step = app.find('.form-overview-step')[2];
+          const step = app.find('.form-checklist-step')[2];
           const text = step.find('p')[1].text().trim();
           text.should.containEql('You have not created any App Users for this Project yet');
         }));
 
       it('at least one app user', () =>
         loadOverview({ fieldKeyCount: 1 }).afterResponses(app => {
-          const step = app.find('.form-overview-step')[2];
+          const step = app.find('.form-checklist-step')[2];
           const text = step.find('p')[1].text().trim().iTrim();
           text.should.containEql('1 App User');
         }));
@@ -94,8 +94,8 @@ describe('FormOverview', () => {
     it('marks step 5 as complete if form state is changed from open', () =>
       loadOverview({ formIsOpen: true })
         .afterResponses(app => {
-          const step = app.find('.form-overview-step')[4];
-          step.hasClass('form-overview-step-complete').should.be.false();
+          const step = app.find('.form-checklist-step')[4];
+          step.hasClass('form-checklist-step-complete').should.be.false();
         })
         .route('/projects/1/forms/f/settings')
         .request(app => trigger.change(app, '#form-edit input[value="closed"]'))
@@ -108,8 +108,8 @@ describe('FormOverview', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const step = app.find('.form-overview-step')[4];
-          step.hasClass('form-overview-step-complete').should.be.true();
+          const step = app.find('.form-checklist-step')[4];
+          step.hasClass('form-checklist-step-complete').should.be.true();
         }));
 
     describe('step stages', () => {
@@ -173,18 +173,18 @@ describe('FormOverview', () => {
         }
       ];
 
-      // Tests the stages of the form overview steps for a single test case.
+      // Tests the stages of the checklist steps for a single test case.
       const testStepStages = ({ completedSteps, currentStep, ...loadOverviewArgs }) =>
         loadOverview(loadOverviewArgs).afterResponses(app => {
-          const steps = app.find('.form-overview-step');
+          const steps = app.find('.form-checklist-step');
           steps.length.should.equal(5);
           for (let i = 0; i < steps.length; i += 1) {
             if (completedSteps.includes(i)) {
-              steps[i].hasClass('form-overview-step-complete').should.be.true();
+              steps[i].hasClass('form-checklist-step-complete').should.be.true();
             } else if (i === currentStep) {
-              steps[i].hasClass('form-overview-step-current').should.be.true();
+              steps[i].hasClass('form-checklist-step-current').should.be.true();
             } else {
-              steps[i].hasClass('form-overview-step-later').should.be.true();
+              steps[i].hasClass('form-checklist-step-later').should.be.true();
             }
           }
         });
