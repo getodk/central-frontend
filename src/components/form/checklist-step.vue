@@ -49,10 +49,6 @@ export default {
 .form-checklist-step {
   margin-bottom: 20px;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-
   p {
     margin-left: 21px;
     line-height: 17px;

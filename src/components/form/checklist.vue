@@ -10,10 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="project != null && form != null && attachments != null"
-    class="panel panel-simple">
-    <div class="panel-heading"><h1 class="panel-title">Checklist</h1></div>
-    <div class="panel-body">
+  <page-section v-if="project != null && form != null && attachments != null">
+    <span slot="heading">Checklist</span>
+    <template slot="body">
       <form-checklist-step :stage="stepStage(0)">
         <template slot="title">Create and upload Form</template>
         <p>
@@ -114,8 +113,8 @@ except according to the terms contained in the LICENSE file.
           </doc-link>
         </p>
       </form-checklist-step>
-    </div>
-  </div>
+    </template>
+  </page-section>
 </template>
 
 <script>
