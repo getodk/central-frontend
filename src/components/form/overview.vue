@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="form-overview">
     <form-checklist/>
   </div>
 </template>
@@ -32,3 +32,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+#form-overview {
+  margin-top: 10px;
+}
+</style>
