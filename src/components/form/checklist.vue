@@ -99,7 +99,7 @@ except according to the terms contained in the LICENSE file.
           </doc-link>
         </p>
       </form-checklist-step>
-      <form-checklist-step :stage="stepStage(4)" last>
+      <form-checklist-step :stage="stepStage(4)">
         <template slot="title">Manage Form retirement</template>
         <p>
           As you come to the end of your data collection, you can use the Form

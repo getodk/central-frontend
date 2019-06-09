@@ -10,14 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <div :class="htmlClass">
-      <p class="form-checklist-step-heading">
-        <span class="icon-check-circle"></span><slot name="title"></slot>
-      </p>
-      <slot></slot>
-    </div>
-    <hr v-if="!last">
+  <div :class="htmlClass">
+    <p class="form-checklist-step-heading">
+      <span class="icon-check-circle"></span><slot name="title"></slot>
+    </p>
+    <slot></slot>
   </div>
 </template>
 
@@ -36,10 +33,6 @@ export default {
     stage: {
       type: String,
       default: 'later'
-    },
-    last: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
@@ -54,6 +47,12 @@ export default {
 @import '../../assets/scss/variables';
 
 .form-checklist-step {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   p {
     margin-left: 21px;
     line-height: 17px;
