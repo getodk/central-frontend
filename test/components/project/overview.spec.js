@@ -51,14 +51,14 @@ describe('ProjectOverview', () => {
             testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
           .respondWithData(() => testData.extendedForms.createPast(3).sorted())
           .afterResponses(app => {
-            const counts = app.find('.project-overview-right-now-count');
+            const counts = app.find('.summary-item-heading');
             counts.map(count => count.text().trim()).should.eql(['2', '3']);
           }));
 
       const targets = [
-        ['icon', '.project-overview-right-now-icon-container'],
-        ['count', '.project-overview-right-now-count a'],
-        ['description', '.project-overview-right-now-description a']
+        ['icon', '.summary-item-icon-container'],
+        ['count', '.summary-item-heading a'],
+        ['description', '.summary-item-body a']
       ];
       for (const [description, selector] of targets) {
         it(`navigates to app users page upon a click on app users ${description}`, () =>

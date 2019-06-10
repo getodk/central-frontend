@@ -14,8 +14,10 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <page-section id="project-overview-about">
-          <span slot="heading">About Projects</span>
-          <template slot="body">
+          <template #heading>
+            <span>About Projects</span>
+          </template>
+          <template #body>
             <p>
               Any Forms you create in this Project will only be visible on data
               collection devices to the App Users who are a part of this
@@ -38,54 +40,39 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-6">
         <page-section id="project-overview-right-now">
-          <span slot="heading">Right Now</span>
-          <template slot="body">
+          <template #heading>
+            <span>Right Now</span>
+          </template>
+          <template #body>
             <loading :state="$store.getters.initiallyLoading(['project', 'forms'])"/>
             <template v-if="project != null && forms != null">
-              <div>
-                <router-link :to="`/projects/${projectId}/app-users`"
-                  class="project-overview-right-now-icon-container">
-                  <span class="icon-user-circle"></span>
-                </router-link>
-                <div class="project-overview-right-now-count">
-                  <router-link :to="`/projects/${projectId}/app-users`">
-                    {{ project.appUsers }}
-                    <span class="icon-angle-right"></span>
-                  </router-link>
-                </div>
-                <div class="project-overview-right-now-description">
-                  <router-link :to="`/projects/${projectId}/app-users`">
-                    <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
-                    who can use a data collection client to download and submit
-                    Form data to this Project.
-                  </router-link>
-                </div>
-              </div>
-              <div>
-                <a href="#" class="project-overview-right-now-icon-container"
-                  @click.prevent="scrollToForms">
-                  <span class="icon-file-text"></span>
-                </a>
-                <div class="project-overview-right-now-count">
-                  <a href="#" @click.prevent="scrollToForms">
-                    {{ forms.length }} <span class="icon-angle-right"></span>
-                  </a>
-                </div>
-                <div class="project-overview-right-now-description">
-                  <a href="#" @click.prevent="scrollToForms">
-                    <strong>{{ $pluralize('Form', forms.length) }}</strong>
-                    which can be downloaded and given as surveys on mobile
-                    clients.
-                  </a>
-                </div>
-              </div>
+              <summary-item :route-to="`/projects/${projectId}/app-users`"
+                icon="user-circle">
+                <template #heading>
+                  {{ project.appUsers }} <span class="icon-angle-right"></span>
+                </template>
+                <template #body>
+                  <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
+                  who can use a data collection client to download and submit
+                  Form data to this Project.
+                </template>
+              </summary-item>
+              <summary-item clickable icon="file-text" @click="scrollToForms">
+                <template #heading>
+                  {{ forms.length }} <span class="icon-angle-right"></span>
+                </template>
+                <template #body>
+                  <strong>{{ $pluralize('Form', forms.length) }}</strong> which
+                  can be downloaded and given as surveys on mobile clients.
+                </template>
+              </summary-item>
             </template>
           </template>
         </page-section>
       </div>
     </div>
     <page-section id="project-overview-forms">
-      <template slot="heading">
+      <template #heading>
         <span>Forms</span>
         <button v-if="project != null && !project.archived"
           id="project-overview-new-form-button" type="button"
@@ -93,7 +80,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-plus-circle"></span>New
         </button>
       </template>
-      <template slot="body">
+      <template #body>
         <loading :state="$store.getters.initiallyLoading(['forms'])"/>
         <form-list v-if="forms != null" :project-id="projectId"/>
       </template>
@@ -106,12 +93,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
+import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
-  components: { FormList, FormNew },
+  components: { FormList, FormNew, SummaryItem },
   mixins: [modal()],
   props: {
     projectId: {
@@ -167,55 +155,19 @@ export default {
   margin-top: 10px;
 }
 
-#project-overview-right-now .page-section-body {
-  a {
-    color: inherit;
-    text-decoration: none;
+#project-overview-right-now {
+  .icon-angle-right {
+    color: $color-accent-primary;
+    font-size: 20px;
+    margin-right: 0;
+    vertical-align: 2px;
   }
 
-  .project-overview-right-now-icon-container {
-    float: left;
-    position: relative;
-
-    span {
-      color: #555;
-      font-size: 56px;
-      margin-right: 0;
-    }
-
-    .icon-file-text {
-      // .icon-file-text is a little more narrow than .icon-user-circle, so we
-      // use this to center it.
-      left: 4px;
-      position: relative;
-    }
-  }
-
-  .project-overview-right-now-count, .project-overview-right-now-description {
-    margin-left: 75px;
-  }
-
-  .project-overview-right-now-count {
-    font-size: 30px;
-    line-height: 1;
-    margin-bottom: 3px;
-
-    .icon-angle-right {
-      color: $color-accent-primary;
-      font-size: 20px;
-      margin-right: 0;
-      vertical-align: 2px;
-    }
-  }
-
-  .project-overview-right-now-description {
-    color: #666;
-    margin-bottom: 30px;
-
-    strong {
-      color: $color-text;
-      font-weight: normal;
-    }
+  .icon-file-text {
+    // .icon-file-text is a little more narrow than .icon-user-circle, so we use
+    // this to center it.
+    margin-left: 4px;
+    margin-right: 4px;
   }
 }
 

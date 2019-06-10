@@ -53,15 +53,15 @@ describe('ProjectList', () => {
         .respondWithData(() => testData.extendedProjects.createPast(2).sorted())
         .respondWithData(() => testData.standardUsers.sorted())
         .afterResponses(app => {
-          const counts = app.find('.project-list-right-now-count');
+          const counts = app.find('.summary-item-heading');
           counts.map(count => count.text().trim()).should.eql(['1', '2']);
         });
     });
 
     const targets = [
-      ['icon', '.project-list-right-now-icon-container'],
-      ['count', '.project-list-right-now-count a'],
-      ['description', '.project-list-right-now-description a']
+      ['icon', '.summary-item-icon-container'],
+      ['count', '.summary-item-heading a'],
+      ['description', '.summary-item-body a']
     ];
     for (const [description, selector] of targets) {
       it(`renders a link to /users for the users ${description}`, () => {
@@ -98,7 +98,7 @@ describe('ProjectList', () => {
       return mockRoute('/')
         .respondWithData(() => testData.extendedProjects.createPast(2).sorted())
         .afterResponses(app => {
-          const counts = app.find('.project-list-right-now-count');
+          const counts = app.find('.summary-item-heading');
           counts.length.should.equal(1);
           counts[0].text().trim().should.eql('2');
           counts[0].first('a').getAttribute('href').should.equal('#');

@@ -17,8 +17,10 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <page-section>
-          <span slot="heading">Getting Started</span>
-          <template slot="body">
+          <template #heading>
+            <span>Getting Started</span>
+          </template>
+          <template #body>
             <p>
               If you’re not sure where to begin, we have a getting started guide
               and user documentation available on the
@@ -33,60 +35,52 @@ except according to the terms contained in the LICENSE file.
           </template>
         </page-section>
         <page-section>
-          <span slot="heading">News</span>
-          <iframe id="project-list-news-iframe" slot="body"
-            src="https://opendatakit.github.io/central/news.html">
-          </iframe>
+          <template #heading>
+            <span>News</span>
+          </template>
+          <template #body>
+            <iframe id="project-list-news-iframe"
+              src="https://opendatakit.github.io/central/news.html">
+            </iframe>
+          </template>
         </page-section>
       </div>
       <div class="col-xs-6">
         <page-section id="project-list-right-now">
-          <span slot="heading">Right Now</span>
-          <template slot="body">
+          <template #heading>
+            <span>Right Now</span>
+          </template>
+          <template #body>
             <loading :state="loadingRightNow"/>
             <template v-if="showsRightNow">
-              <div v-if="currentUser.can('user.list')">
-                <router-link to="/users"
-                  class="project-list-right-now-icon-container">
-                  <span class="icon-user-circle"></span>
-                </router-link>
-                <div class="project-list-right-now-count">
-                  <router-link to="/users">
-                    {{ users.length }} <span class="icon-angle-right"></span>
-                  </router-link>
-                </div>
-                <div class="project-list-right-now-description">
-                  <router-link to="/users">
-                    <strong>{{ $pluralize('Web User', users.length) }}</strong>
-                    who can administer Projects through this website.
-                  </router-link>
-                </div>
-              </div>
-              <div>
-                <a href="#" class="project-list-right-now-icon-container"
-                  @click.prevent="scrollToProjects">
-                  <span class="icon-archive"></span>
-                </a>
-                <div class="project-list-right-now-count">
-                  <a href="#" @click.prevent="scrollToProjects">
-                    {{ projects.length }} <span class="icon-angle-right"></span>
-                  </a>
-                </div>
-                <div class="project-list-right-now-description">
-                  <a href="#" @click.prevent="scrollToProjects">
-                    <strong>{{ $pluralize('Project', projects.length) }}</strong>
-                    which can organize Forms and App Users for device
-                    deployment.
-                  </a>
-                </div>
-              </div>
+              <summary-item v-if="currentUser.can('user.list')"
+                route-to="/users" icon="user-circle">
+                <template #heading>
+                  {{ users.length.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
+                </template>
+                <template #body>
+                  <strong>{{ $pluralize('Web User', users.length) }}</strong>
+                  who can administer Projects through this website.
+                </template>
+              </summary-item>
+              <summary-item clickable icon="archive" @click="scrollToProjects">
+                <template #heading>
+                  {{ projects.length.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
+                </template>
+                <template #body>
+                  <strong>{{ $pluralize('Project', projects.length) }}</strong>
+                  which can organize Forms and App Users for device deployment.
+                </template>
+              </summary-item>
             </template>
           </template>
         </page-section>
       </div>
     </div>
     <page-section id="project-list-projects">
-      <template slot="heading">
+      <template #heading>
         <span>Projects</span>
         <button v-if="currentUser.can('project.create')"
           id="project-list-new-button" type="button" class="btn btn-primary"
@@ -94,7 +88,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-plus-circle"></span>New
         </button>
       </template>
-      <template slot="body">
+      <template #body>
         <table id="project-list-table" class="table">
           <thead>
             <tr>
@@ -128,13 +122,14 @@ except according to the terms contained in the LICENSE file.
 import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
+import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectList',
-  components: { ProjectIntroduction, ProjectNew, ProjectRow },
+  components: { ProjectIntroduction, ProjectNew, ProjectRow, SummaryItem },
   mixins: [modal()],
   data() {
     return {
@@ -210,48 +205,11 @@ export default {
   width: 100%;
 }
 
-#project-list-right-now .page-section-body {
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .project-list-right-now-icon-container {
-    float: left;
-
-    span {
-      color: #555;
-      font-size: 56px;
-      margin-right: 0;
-    }
-  }
-
-  .project-list-right-now-count, .project-list-right-now-description {
-    margin-left: 75px;
-  }
-
-  .project-list-right-now-count {
-    font-size: 30px;
-    line-height: 1;
-    margin-bottom: 3px;
-
-    .icon-angle-right {
-      color: $color-accent-primary;
-      font-size: 20px;
-      margin-right: 0;
-      vertical-align: 2px;
-    }
-  }
-
-  .project-list-right-now-description {
-    color: #666;
-    margin-bottom: 30px;
-
-    strong {
-      color: $color-text;
-      font-weight: normal;
-    }
-  }
+#project-list-right-now .icon-angle-right {
+  color: $color-accent-primary;
+  font-size: 20px;
+  margin-right: 0;
+  vertical-align: 2px;
 }
 
 #project-list-projects {
