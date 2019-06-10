@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="page-section">
     <div class="page-section-heading">
-      <!-- The first element of this slot should be a <span> element, which
-      should contain the title of the page section. -->
+      <!-- The first element of this slot should be a <span> element that
+      contains the title of the page section. -->
       <slot name="heading"></slot>
     </div>
     <div class="page-section-body">

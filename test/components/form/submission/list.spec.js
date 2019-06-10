@@ -817,10 +817,10 @@ describe('FormSubmissionList', () => {
             .request(() => {});
         };
 
-        it('updates the form overview', () =>
+        it('updates the form checklist', () =>
           loadFormOverview(10)
             .afterResponses(app => {
-              const p = app.find('.form-overview-step')[2].find('p')[1];
+              const p = app.find('.form-checklist-step')[2].find('p')[1];
               p.text().should.containEql('10\n');
               p.text().should.not.containEql('11\n');
             })
@@ -833,7 +833,7 @@ describe('FormSubmissionList', () => {
             .complete()
             .route(`/projects/1/forms/${encodedFormId()}`)
             .then(app => {
-              const p = app.find('.form-overview-step')[2].find('p')[1];
+              const p = app.find('.form-checklist-step')[2].find('p')[1];
               p.text().should.containEql('11\n');
               p.text().should.not.containEql('10\n');
             }));
