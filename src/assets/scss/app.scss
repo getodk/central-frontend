@@ -112,6 +112,10 @@ class. */
 
 .btn-secondary {
   @extend .btn-primary;
+
+  &, &:hover, &:focus {
+    color: #fff;
+  }
 }
 
 .btn-danger {

@@ -17,6 +17,7 @@ import './plugins';
 // Import the global styles before importing components.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
+import './assets/scss/app.scss';
 import GlobalComponents from './global-components';
 import { StoreAlert, uniqueSequence } from './util/util';
 // ./jquery must be imported before ./bootstrap, as Bootstrap's JavaScript
