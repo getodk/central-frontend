@@ -15,9 +15,17 @@ describe('FormOverviewRightNow', () => {
 
   it('shows the form version', () =>
     loadOverview({ version: 'v1' }).afterResponses(app => {
-      const span = app.first('#form-overview-right-now-version');
+      const span = app.first('#form-overview-right-now .form-version');
       span.text().trim().should.equal('v1');
       span.getAttribute('title').should.equal('v1');
+    }));
+
+  it('accounts for a blank form version', () =>
+    loadOverview({ version: '' }).afterResponses(app => {
+      const span = app.first('#form-overview-right-now .form-version');
+      span.text().trim().should.equal('(blank)');
+      span.getAttribute('title').should.equal('(blank)');
+      span.hasClass('blank-form-version').should.be.true();
     }));
 
   it('shows a button to view the XML', () =>

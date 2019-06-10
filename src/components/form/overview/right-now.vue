@@ -18,8 +18,8 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <summary-item icon="archive">
         <template #heading>
-          <span id="form-overview-right-now-version" :title="form.version">
-            {{ form.version }}
+          <span :class="versionClass" :title="versionOrBlank">
+            {{ versionOrBlank }}
           </span>
           <a :href="xmlPath" class="btn btn-primary" target="_blank">
             <span class="icon-arrow-circle-down"></span>View XML
@@ -56,6 +56,14 @@ export default {
   components: { SummaryItem },
   computed: {
     ...requestData(['project', 'form']),
+    versionClass() {
+      const htmlClass = ['form-version'];
+      if (this.form.version === '') htmlClass.push('blank-form-version');
+      return htmlClass;
+    },
+    versionOrBlank() {
+      return this.form.version !== '' ? this.form.version : '(blank)';
+    },
     xmlPath() {
       return `/v1/projects/${this.project.id}/forms/${this.form.encodedId()}.xml`;
     },
@@ -69,17 +77,28 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#form-overview-right-now .btn {
-  bottom: 10px;
-  position: relative;
-}
+#form-overview-right-now {
+  .form-version {
+    display: inline-block;
+    font-family: $font-family-monospace;
+    max-width: calc(100% - 102px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
-#form-overview-right-now-version {
-  display: inline-block;
-  font-family: $font-family-monospace;
-  max-width: calc(100% - 90px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    + .btn {
+      bottom: 10px;
+      margin-left: 12px;
+      position: relative;
+    }
+  }
+
+  .blank-form-version {
+    font-family: inherit;
+
+    + .btn {
+      bottom: 5px;
+    }
+  }
 }
 </style>
