@@ -11,25 +11,27 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <form-checklist/>
+    <div class="row">
+      <div class="col-xs-6">
+        <form-checklist/>
+      </div>
+      <div class="col-xs-6">
+        <form-overview-right-now/>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import FormChecklist from './checklist.vue';
+import FormOverviewRightNow from './overview/right-now.vue';
 
 export default {
   name: 'FormOverview',
-  components: { FormChecklist },
+  components: { FormChecklist, FormOverviewRightNow },
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
-  inheritAttrs: false,
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  }
+  inheritAttrs: false
 };
 </script>
 

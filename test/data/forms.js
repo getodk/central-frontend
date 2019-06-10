@@ -48,6 +48,7 @@ export const extendedForms = dataStore({
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
     name = faker.random.boolean() ? faker.name.findName() : null,
+    version = faker.random.boolean() ? faker.random.number().toString() : '',
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
@@ -58,7 +59,6 @@ export const extendedForms = dataStore({
     hasInstanceId = faker.random.boolean(),
     schema = defaultSchema(hasInstanceId)
   }) => {
-    const version = faker.random.boolean() ? faker.random.number().toString() : '';
     const createdBy = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
