@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <span>Right Now</span>
     </template>
     <template #body>
-      <summary-item icon="archive">
+      <summary-item icon="file-o">
         <template #heading>
           <span :class="versionClass" :title="versionOrBlank">
             {{ versionOrBlank }}
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
           <strong>Current version</strong> of this Form.
         </template>
       </summary-item>
-      <summary-item :route-to="submissionsPath" icon="archive">
+      <summary-item :route-to="submissionsPath" icon="inbox">
         <template #heading>
           {{ form.submissions.toLocaleString() }}
           <span class="icon-angle-right"></span>
