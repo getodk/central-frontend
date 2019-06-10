@@ -57,10 +57,10 @@ export default {
   computed: {
     ...requestData(['project', 'form']),
     xmlPath() {
-      return `/v1/projects/${this.project.id}/forms/${this.form.xmlFormId}.xml`;
+      return `/v1/projects/${this.project.id}/forms/${this.form.encodedId()}.xml`;
     },
     submissionsPath() {
-      return `/projects/${this.project.id}/forms/${this.form.xmlFormId}/submissions`;
+      return `/projects/${this.project.id}/forms/${this.form.encodedId()}/submissions`;
     }
   }
 };
