@@ -149,26 +149,15 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 #project-overview {
   margin-top: 10px;
 }
 
-#project-overview-right-now {
-  .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 20px;
-    margin-right: 0;
-    vertical-align: 2px;
-  }
-
-  .icon-file-text {
-    // .icon-file-text is a little more narrow than .icon-user-circle, so we use
-    // this to center it.
-    margin-left: 4px;
-    margin-right: 4px;
-  }
+#project-overview-right-now .icon-file-text {
+  // .icon-file-text is a little more narrow than .icon-user-circle, so we use
+  // this to center it.
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 #project-overview-forms {

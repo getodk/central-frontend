@@ -109,6 +109,16 @@ $icon-font-size: 56px;
 .summary-item-heading {
   font-size: 30px;
   line-height: 35px;
+
+  .icon-angle-right {
+    color: $color-accent-primary;
+    font-size: 20px;
+    vertical-align: 2px;
+  }
+
+  .summary-item-link .icon-angle-right {
+    margin-right: 0;
+  }
 }
 
 .summary-item-body {

@@ -69,18 +69,9 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#form-overview-right-now {
-  .btn {
-    bottom: 10px;
-    position: relative;
-  }
-
-  .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 20px;
-    margin-right: 0;
-    vertical-align: 2px;
-  }
+#form-overview-right-now .btn {
+  bottom: 10px;
+  position: relative;
 }
 
 #form-overview-right-now-version {

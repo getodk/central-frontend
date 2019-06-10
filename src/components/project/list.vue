@@ -179,8 +179,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 #project-list-heading {
   margin-bottom: 30px;
   margin-top: 25px;
@@ -203,13 +201,6 @@ export default {
   border-width: 0;
   height: 80px;
   width: 100%;
-}
-
-#project-list-right-now .icon-angle-right {
-  color: $color-accent-primary;
-  font-size: 20px;
-  margin-right: 0;
-  vertical-align: 2px;
 }
 
 #project-list-projects {
