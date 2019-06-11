@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head>
-      <template slot="title">System Settings</template>
-      <template slot="tabs">
+      <template #title>System Management</template>
+      <template #tabs>
         <li :class="tabClass('backups')" role="presentation">
           <router-link :to="tabPath('backups')">Backups</router-link>
         </li>
