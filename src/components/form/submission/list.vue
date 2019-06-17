@@ -323,7 +323,7 @@ export default {
       this.$store.dispatch('get', [
         {
           key: 'schema',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}.schema.json?flatten=true`
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}.schema.json?flatten=true&odata=true`
         },
         {
           key: 'submissionsChunk',
