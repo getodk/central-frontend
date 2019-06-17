@@ -38,7 +38,7 @@ describe('FormSubmissionList', () => {
         mockRoute('/projects/1/forms/f/submissions')
           .beforeEachResponse((app, request, index) => {
             if (index === 3)
-              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true');
+              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
           })
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms
@@ -59,7 +59,7 @@ describe('FormSubmissionList', () => {
           .route('/projects/1/forms/f/submissions')
           .beforeEachResponse((app, request, index) => {
             if (index === 0)
-              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true');
+              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
           })
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(testData.submissionOData));
@@ -68,7 +68,7 @@ describe('FormSubmissionList', () => {
         mockRoute('/projects/1/forms/f1/submissions')
           .beforeEachResponse((app, request, index) => {
             if (index === 3)
-              request.url.should.equal('/v1/projects/1/forms/f1.schema.json?flatten=true');
+              request.url.should.equal('/v1/projects/1/forms/f1.schema.json?flatten=true&odata=true');
           })
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms
@@ -90,7 +90,7 @@ describe('FormSubmissionList', () => {
           })
           .beforeEachResponse((app, request, index) => {
             if (index === 2)
-              request.url.should.equal('/v1/projects/1/forms/f2.schema.json?flatten=true');
+              request.url.should.equal('/v1/projects/1/forms/f2.schema.json?flatten=true&odata=true');
           })
           .respondWithData(() => testData.extendedForms
             .createPast(1, { xmlFormId: 'f2', submissions: 2 })
