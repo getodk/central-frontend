@@ -280,30 +280,29 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(responseOrResponses) {
-    if (Array.isArray(responseOrResponses)) {
-      return responseOrResponses
-        .reduce((acc, response) => acc.respondWithProblem(response), this);
+  respondWithProblem(problemOrProblems) {
+    if (Array.isArray(problemOrProblems)) {
+      return problemOrProblems
+        .reduce((acc, problem) => acc.respondWithProblem(problem), this);
     }
-    if (responseOrResponses == null)
-      return this.respondWithProblem(500);
-    if (typeof responseOrResponses === 'number') {
+    if (problemOrProblems == null) return this.respondWithProblem(500.1);
+    if (typeof problemOrProblems === 'number') {
       return this.respondWithProblem(() => ({
-        code: responseOrResponses,
+        code: problemOrProblems,
         message: 'There was a problem.'
       }));
     }
     return this._respond(() => {
       const error = new Error();
-      const data = responseOrResponses();
+      const data = problemOrProblems();
       error.request = {};
       error.response = { status: Math.floor(data.code), data };
       return error;
     });
   }
 
-  respondWithProblems(responseOrResponses) {
-    return this.respondWithProblem(responseOrResponses);
+  respondWithProblems(problemOrProblems) {
+    return this.respondWithProblem(problemOrProblems);
   }
 
   restoreSession(restore) {
