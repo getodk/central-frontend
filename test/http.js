@@ -274,9 +274,7 @@ class MockHttp {
   respondWithSuccess() {
     return this.respondWithData(() => ({
       status: 200,
-      data: {
-        success: true
-      }
+      data: { success: true }
     }));
   }
 
@@ -293,11 +291,8 @@ class MockHttp {
       }));
     }
     return this._respond(() => {
-      const error = new Error();
       const data = problemOrProblems();
-      error.request = {};
-      error.response = { status: Math.floor(data.code), data };
-      return error;
+      return { status: Math.floor(data.code), data };
     });
   }
 
@@ -532,22 +527,23 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          let result;
+          let response;
           try {
-            result = responseCallback();
+            response = responseCallback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
-          const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
           const responseWithConfig = { ...response, config };
           if (validateStatus(response.status)) {
             resolve(responseWithConfig);
           } else {
-            if (result instanceof Error) result.response = responseWithConfig;
-            reject(result);
+            const error = new Error();
+            error.request = {};
+            error.response = responseWithConfig;
+            reject(error);
           }
         }));
       return this._responsesPromise;
