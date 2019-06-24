@@ -17,6 +17,9 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('backups')" role="presentation">
           <router-link :to="tabPath('backups')">Backups</router-link>
         </li>
+        <li :class="tabClass('audits')" role="presentation">
+          <router-link :to="tabPath('audits')">Server Audit Logs</router-link>
+        </li>
       </template>
     </page-head>
     <page-body>

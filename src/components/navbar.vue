@@ -45,10 +45,10 @@ except according to the terms contained in the LICENSE file.
             </router-link>
           </li>
           <li v-if="canRoute('BackupList')"
-            :class="{ active: routePathStartsWith('/system/backups') }">
+            :class="{ active: routePathStartsWith('/system') }">
             <router-link id="navbar-system-link" to="/system/backups">
               System
-              <span v-show="routePathStartsWith('/system/backups')" class="sr-only">
+              <span v-show="routePathStartsWith('/system')" class="sr-only">
                 (current)
               </span>
             </router-link>

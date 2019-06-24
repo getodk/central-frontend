@@ -199,6 +199,10 @@ describe('Navbar', () => {
       mockRoute('/system/backups')
         .respondWithProblem(404.1)
         .afterResponse(assertActiveLink('#navbar-system-link')));
+
+    it('marks the System link as active for AuditList', () =>
+      mockRoute('/system/audits')
+        .afterResponse(assertActiveLink('#navbar-system-link')));
   });
 
   describe('menu', () => {
