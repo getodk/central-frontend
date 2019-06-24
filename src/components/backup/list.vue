@@ -15,6 +15,14 @@ except according to the terms contained in the LICENSE file.
     <template v-if="backupsConfig != null">
       <backup-status @create="showModal('newBackup')"
         @terminate="showModal('terminate')"/>
+      <page-section v-if="audits != null && audits.length !== 0">
+        <template #heading>
+          <span>Latest Backups</span>
+        </template>
+        <template #body>
+          <audit-table :audits="latestAudits"/>
+        </template>
+      </page-section>
     </template>
     <backup-new v-bind="newBackup" @hide="hideModal('newBackup')"
       @success="afterCreate"/>
@@ -24,6 +32,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import AuditTable from '../audit/table.vue';
 import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
@@ -34,7 +43,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupList',
-  components: { BackupNew, BackupStatus, BackupTerminate },
+  components: { AuditTable, BackupNew, BackupStatus, BackupTerminate },
   mixins: [modal()],
   data() {
     return {
@@ -46,18 +55,31 @@ export default {
       }
     };
   },
-  computed: requestData(['backupsConfig']),
+  computed: {
+    ...requestData(['backupsConfig', 'audits']),
+    latestAudits() {
+      return this.audits.slice(0, 10);
+    }
+  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'backupsConfig',
-        url: '/config/backups',
-        validateStatus: (status) =>
-          (status >= 200 && status < 300) || status === 404
-      }]).catch(noop);
+      this.$store.dispatch('get', [
+        {
+          key: 'backupsConfig',
+          url: '/config/backups',
+          validateStatus: (status) =>
+            (status >= 200 && status < 300) || status === 404
+        },
+        {
+          key: 'audits',
+          // A backup audit log entry does not have an actor or actee, so we do
+          // not need to request extended metadata.
+          url: '/audits?action=backup'
+        }
+      ]).catch(noop);
     },
     afterCreate() {
       this.fetchData();
