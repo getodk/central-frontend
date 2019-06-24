@@ -68,20 +68,6 @@ describe('UserList', () => {
           });
       });
     }
-
-    it('navigates to /users after a click on the navbar link', () => {
-      mockLogin();
-      return mockRoute('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .complete()
-        .request(app => trigger.click(app, '#navbar-users-link'))
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users');
-        });
-    });
   });
 
   describe('after login as an administrator', () => {

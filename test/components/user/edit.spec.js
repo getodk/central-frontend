@@ -1,7 +1,6 @@
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../event';
 
 describe('UserEdit', () => {
   describe('routing to /account/edit', () => {
@@ -27,21 +26,6 @@ describe('UserEdit', () => {
           app.vm.$route.path.should.equal('/account/edit');
         });
     });
-
-    it('navigates to /account/edit after a click on link in navbar', () =>
-      mockRouteThroughLogin('/system/backups', { attachToDocument: true })
-        .respondWithProblem(404.1)
-        .complete()
-        .request(app => {
-          const toggle = app.first('.navbar-right .dropdown-toggle');
-          $(toggle.element).click();
-          return app.vm.$nextTick()
-            .then(() => trigger.click(app, '#navbar-edit-profile-action'));
-        })
-        .respondWithData(() => testData.standardUsers.last())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/account/edit');
-        }));
   });
 
   describe('routing to /users/:id/edit', () => {

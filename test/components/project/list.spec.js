@@ -29,21 +29,6 @@ describe('ProjectList', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
-
-    for (const selector of ['.navbar-brand', '#navbar-projects-link']) {
-      it(`navigates to the project list after a click on ${selector}`, () => {
-        mockLogin();
-        return mockRoute('/account/edit')
-          .respondWithData(() => testData.standardUsers.first())
-          .complete()
-          .request(app => trigger.click(app, selector))
-          .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-    }
   });
 
   describe('Right Now', () => {

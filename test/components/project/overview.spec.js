@@ -34,16 +34,6 @@ describe('ProjectOverview', () => {
         .route('/projects/1')
         .respondWithData([/* no responses */]));
 
-    it('displays the navbar projects link as active', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          const $li = $(app.vm.$el).find('#navbar-projects-link').parent();
-          $li.length.should.equal(1);
-          $li.hasClass('active').should.be.true();
-        }));
-
     describe('Right Now', () => {
       it('shows counts', () =>
         mockRoute('/projects/1')

@@ -3,7 +3,6 @@ import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { trigger } from '../../event';
 
 describe('BackupList', () => {
   describe('routing', () => {
@@ -27,18 +26,6 @@ describe('BackupList', () => {
         .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
-        });
-    });
-
-    it('navigates to /system/backups after a click on the navbar link', () => {
-      mockLogin();
-      return mockRoute('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .complete()
-        .request(app => trigger.click(app, '#navbar-system-link'))
-        .respondWithProblem(404.1)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/system/backups');
         });
     });
   });
