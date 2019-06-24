@@ -18,12 +18,13 @@ const auditsWithCreatedAt = dataStore({
     actor = undefined,
     action = undefined,
     actee = undefined,
-    details = undefined
+    details = undefined,
+
+    loggedAt = undefined
   }) => {
     if (!inPast) throw new Error('inPast must be true');
     if (action == null) throw new Error('invalid action');
-    const createdAt = faker.date.pastSince(lastCreatedAt).toISOString();
-    const audit = { action, createdAt, loggedAt: createdAt };
+    const audit = { action };
     if (actor != null) {
       audit.actor = toActor(actor);
       audit.actorId = actor.id;
@@ -33,6 +34,13 @@ const auditsWithCreatedAt = dataStore({
       audit.acteeId = actee.id;
     }
     if (details != null) audit.details = details;
+    if (loggedAt != null) {
+      if (loggedAt < lastCreatedAt) throw new Error('invalid loggedAt');
+      audit.loggedAt = loggedAt;
+    } else {
+      audit.loggedAt = faker.date.pastSince(lastCreatedAt).toISOString();
+    }
+    audit.createdAt = audit.loggedAt;
     return audit;
   },
   sort: comparator((audit1, audit2) => audit1.loggedAt > audit2.loggedAt)

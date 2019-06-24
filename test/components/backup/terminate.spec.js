@@ -5,13 +5,6 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const openModal = (wrapper) =>
-  trigger.click(wrapper.first('#backup-list-terminate-button'))
-    .then(() => wrapper);
-const confirmTerminate = (wrapper) =>
-  trigger.click(wrapper.first('#backup-terminate .btn-danger'))
-    .then(() => wrapper);
-
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
@@ -28,16 +21,18 @@ describe('BackupTerminate', () => {
       mockHttp()
         .mount(BackupList)
         .respondWithData(() => testData.backups.createPast(1).last())
-        .afterResponse(openModal)
-        .then(page => {
-          page.first(BackupTerminate).getProp('state').should.be.true();
+        .afterResponse(component =>
+          trigger.click(component, '#backup-status button'))
+        .then(component => {
+          component.first(BackupTerminate).getProp('state').should.be.true();
         }));
   });
 
   it('standard button thinking things', () =>
     mockHttp()
       .mount(BackupTerminate)
-      .request(confirmTerminate)
+      .request(component =>
+        trigger.click(component, '#backup-terminate .btn-danger'))
       .standardButton('.btn-danger'));
 
   describe('after successful response', () => {
@@ -47,7 +42,8 @@ describe('BackupTerminate', () => {
       .afterResponse(component => {
         app = component;
       })
-      .request(() => openModal(app).then(confirmTerminate))
+      .request(() => trigger.click(app, '#backup-status button')
+        .then(() => trigger.click(app, '#backup-terminate .btn-danger')))
       .respondWithSuccess());
 
     it('modal is hidden', () => {

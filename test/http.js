@@ -73,7 +73,7 @@ After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(BackupList)
-    .respondWithData(() => testData.backups.createNew());
+    .respondWithData(() => testData.backups.createPast(1).last());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
