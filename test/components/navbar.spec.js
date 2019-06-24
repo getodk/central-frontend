@@ -202,6 +202,13 @@ describe('Navbar', () => {
 
     it('marks the System link as active for AuditList', () =>
       mockRoute('/system/audits')
+        .respondWithData(() => testData.extendedAudits
+          .createPast(1, {
+            actor: testData.extendedUsers.first(),
+            action: 'user.update',
+            actee: testData.toActor(testData.extendedUsers.first())
+          })
+          .sorted())
         .afterResponse(assertActiveLink('#navbar-system-link')));
   });
 

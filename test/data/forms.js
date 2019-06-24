@@ -44,7 +44,6 @@ export const extendedForms = dataStore({
     inPast,
     lastCreatedAt,
 
-    // eslint-disable-next-line no-unused-vars
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
     name = faker.random.boolean() ? faker.name.findName() : null,
@@ -65,6 +64,7 @@ export const extendedForms = dataStore({
       createdBy.createdAt
     ]);
     return {
+      projectId: project.id,
       xmlFormId,
       name,
       version,

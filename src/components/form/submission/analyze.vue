@@ -128,11 +128,10 @@ export default {
       this.tool = tool;
     },
     selectUrl() {
-      if (window.getSelection == null) return;
       const selection = window.getSelection();
-      // If the user has selected specific text, do not alter their selection.
-      if (!selection.isCollapsed) return;
-      selection.selectAllChildren(this.$refs.oDataUrl);
+      // Select the entire URL unless the user has selected specific text.
+      if (selection.isCollapsed)
+        selection.selectAllChildren(this.$refs.oDataUrl);
     }
   }
 };
