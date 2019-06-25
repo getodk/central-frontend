@@ -1,6 +1,7 @@
+import BackupList from '../../../src/components/backup/list.vue';
 import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../http';
 
 describe('BackupList', () => {
   describe('routing', () => {
@@ -27,5 +28,29 @@ describe('BackupList', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
+  });
+
+  describe('after login', () => {
+    beforeEach(mockLogin);
+
+    it('shows a table if there are audit log entries', () =>
+      mockHttp()
+        .mount(BackupList)
+        .respondWithProblem(404.1)
+        .respondWithData(() => testData.standardAudits
+          .createPast(1, { action: 'backup' })
+          .sorted())
+        .afterResponses(component => {
+          component.find('#audit-table').length.should.equal(1);
+        }));
+
+    it('does not show a table if there are no audit log entries', () =>
+      mockHttp()
+        .mount(BackupList)
+        .respondWithProblem(404.1)
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component => {
+          component.find('#audit-table').length.should.equal(0);
+        }));
   });
 });

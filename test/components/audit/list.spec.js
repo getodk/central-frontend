@@ -193,6 +193,16 @@ describe('AuditList', () => {
       }
     });
 
+    // AuditList does not request backup audit log entries, so this is probably
+    // not the right place for this test. Should these tests be moved to a
+    // separate file for AuditTable?
+    it('renders a backup audit correctly', () =>
+      mockRoute('/system/audits')
+        .respondWithData(() => testData.extendedAudits
+          .createPast(1, { action: 'backup' })
+          .sorted())
+        .afterResponse(assertTriple(['Backup'], null, null)));
+
     it('renders an audit with an unknown action correctly', () =>
       mockRoute('/system/audits')
         .respondWithData(() => testData.extendedAudits
