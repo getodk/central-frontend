@@ -62,6 +62,7 @@ describe('AuditList', () => {
       mockLogin();
       return mockRoute('/system/backups')
         .respondWithProblem(404.1)
+        .respondWithData(() => testData.standardAudits.sorted())
         .complete()
         .request(app =>
           trigger.click(app, '#page-head-tabs a[href="#/system/audits"]'))

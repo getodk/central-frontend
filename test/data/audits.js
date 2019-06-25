@@ -46,5 +46,8 @@ const auditsWithCreatedAt = dataStore({
   sort: comparator((audit1, audit2) => audit1.loggedAt > audit2.loggedAt)
 });
 
-// eslint-disable-next-line import/prefer-default-export
 export const extendedAudits = view(auditsWithCreatedAt, omit(['createdAt']));
+export const standardAudits = view(
+  auditsWithCreatedAt,
+  omit(['actor', 'actee', 'createdAt'])
+);

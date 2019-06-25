@@ -14,7 +14,8 @@ describe('BackupList', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/system/backups')
         .respondWithProblem(404.1)
-        .afterResponse(app => {
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(app => {
           app.vm.$route.path.should.equal('/system/backups');
         }));
 

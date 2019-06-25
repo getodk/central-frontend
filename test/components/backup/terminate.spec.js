@@ -9,19 +9,21 @@ describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithData(() => testData.backups.createPast(1).last())
-        .afterResponse(page => {
-          page.first(BackupTerminate).getProp('state').should.be.false();
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component => {
+          component.first(BackupTerminate).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
+    it('shows the modal after the terminate button is clicked', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithData(() => testData.backups.createPast(1).last())
-        .afterResponse(component =>
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component =>
           trigger.click(component, '#backup-status button'))
         .then(component => {
           component.first(BackupTerminate).getProp('state').should.be.true();
@@ -39,7 +41,8 @@ describe('BackupTerminate', () => {
     let app;
     beforeEach(() => mockRoute('/system/backups')
       .respondWithData(() => testData.backups.createPast(1).last())
-      .afterResponse(component => {
+      .respondWithData(() => testData.standardAudits.sorted())
+      .afterResponses(component => {
         app = component;
       })
       .request(() => trigger.click(app, '#backup-status button')

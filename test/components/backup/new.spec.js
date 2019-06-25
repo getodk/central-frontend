@@ -16,7 +16,8 @@ const moveToStep1 = (component) => {
     : mockHttp().mount(BackupList);
   return series
     .respondWithProblem(404.1)
-    .afterResponse(wrapper => trigger.click(wrapper, '#backup-status button'));
+    .respondWithData(() => testData.standardAudits.sorted())
+    .afterResponses(wrapper => trigger.click(wrapper, '#backup-status button'));
 };
 // For step 1, fills the form and clicks the Next button.
 const next1 = (wrapper) =>
@@ -42,26 +43,29 @@ const completeSetup = (component) => {
   return moveToStep3(component)
     .request(next3)
     .respondWithSuccess()
-    .respondWithData(() => testData.backups.createNew());
+    .respondWithData(() => testData.backups.createNew())
+    .respondWithData(() => testData.standardAudits.sorted());
 };
 
 describe('BackupNew', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithProblem(404.1)
-        .afterResponse(page => {
-          page.first(BackupNew).getProp('state').should.be.false();
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component => {
+          component.first(BackupNew).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
+    it('shows the modal after the "Set up now" button is clicked', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithProblem(404.1)
-        .afterResponse(component =>
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component =>
           trigger.click(component, '#backup-status button'))
         .then(page => {
           page.first(BackupNew).getProp('state').should.be.true();

@@ -81,13 +81,15 @@ describe('Navbar', () => {
         .complete()
         .request(app => trigger.click(app, '#navbar-system-link'))
         .respondWithProblem(404.1)
-        .afterResponse(app => {
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(app => {
           app.vm.$route.path.should.equal('/system/backups');
         }));
 
     it('navigates to AccountEdit after a click on "Edit profile"', () =>
       mockRoute('/system/backups', { attachToDocument: true })
         .respondWithProblem(404.1)
+        .respondWithData(() => testData.standardAudits.sorted())
         .complete()
         .request(app => {
           const toggle = app.first('.navbar-right .dropdown-toggle');
@@ -198,7 +200,8 @@ describe('Navbar', () => {
     it('marks the System link as active for BackupList', () =>
       mockRoute('/system/backups')
         .respondWithProblem(404.1)
-        .afterResponse(assertActiveLink('#navbar-system-link')));
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(assertActiveLink('#navbar-system-link')));
 
     it('marks the System link as active for AuditList', () =>
       mockRoute('/system/audits')
