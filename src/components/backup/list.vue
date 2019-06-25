@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           <span>Latest Backups</span>
         </template>
         <template #body>
-          <audit-table :audits="latestAudits"/>
+          <audit-table :audits="audits"/>
         </template>
       </page-section>
     </template>
@@ -55,12 +55,7 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(['backupsConfig', 'audits']),
-    latestAudits() {
-      return this.audits.slice(0, 10);
-    }
-  },
+  computed: requestData(['backupsConfig', 'audits']),
   created() {
     this.fetchData();
   },
@@ -77,7 +72,7 @@ export default {
           key: 'audits',
           // A backup audit log entry does not have an actor or actee, so we do
           // not need to request extended metadata.
-          url: '/audits?action=backup'
+          url: '/audits?action=backup&limit=10'
         }
       ]).catch(noop);
     },
