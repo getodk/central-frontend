@@ -2,8 +2,8 @@ import { DateTime } from 'luxon';
 
 import BackupsConfig from '../../src/presenters/backups-config';
 import faker from '../faker';
-import { extendedAudits } from './audits';
 import { dataStore } from './data-store';
+import { extendedAudits } from './audits';
 
 const fakeRecentAttemptsForCurrent = () => {
   const attempts = [];
@@ -56,7 +56,7 @@ const fakeRecent = ({
 }) => {
   const recent = [];
 
-  // Add attempts for a single previous config.
+  // Add backup attempts for a single previous config.
   if (recentAttemptsForPrevious.length !== 0) {
     const previousSetAt = faker.date.between(
       setAtFloor.toISOString(),
@@ -75,17 +75,19 @@ const fakeRecent = ({
     }
   }
 
-  // Add attempts for the current config.
-  let loggedAtFloor = recentlySetUp // eslint-disable-line no-nested-ternary
-    ? setAt.toISOString()
-    : (recent.length !== 0 ? recent[0].loggedAt : recentDate.toISOString());
-  for (const success of recentAttemptsForCurrent) {
-    recent.unshift(attempt({
-      success,
-      loggedAt: faker.date.pastSince(loggedAtFloor),
-      configSetAt: setAt
-    }));
-    loggedAtFloor = recent[0].loggedAt;
+  // Add backup attempts for the current config.
+  if (recentAttemptsForCurrent.length !== 0) {
+    let loggedAtFloor = recentlySetUp
+      ? setAt.toISOString()
+      : recentDate.toISOString();
+    for (const success of recentAttemptsForCurrent) {
+      recent.unshift(attempt({
+        success,
+        loggedAt: faker.date.pastSince(loggedAtFloor),
+        configSetAt: setAt
+      }));
+      loggedAtFloor = recent[0].loggedAt;
+    }
   }
 
   return recent;
@@ -97,15 +99,14 @@ export const backups = dataStore({
     inPast,
 
     recentlySetUp = !inPast || faker.random.boolean(),
-
     // An array with an element for each recent backup attempt for the current
-    // config. The element is boolean, indicating whether the attempt was
+    // config. Each element is boolean, indicating whether the attempt was
     // successful.
     recentAttemptsForCurrent = inPast ? fakeRecentAttemptsForCurrent() : [],
     recentAttemptsForPrevious = recentlySetUp && faker.random.boolean()
       // Specifying [true] rather than [faker.random.boolean()] for backward
       // compatibility, though it may be that no test actually assumes that this
-      // attempt was successful.
+      // backup attempt was successful.
       ? [true]
       : []
   }) => {
