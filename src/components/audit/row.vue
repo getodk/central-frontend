@@ -136,7 +136,6 @@ export default {
     }
   },
   methods: {
-    // TODO. Do more review of FormSubmissionAnalyze.
     selectDetails() {
       if (this.audit.details == null) return;
       const selection = window.getSelection();
@@ -170,7 +169,6 @@ export default {
   .details {
     font-family: $font-family-monospace;
     overflow-x: scroll;
-    // TODO. Am I using this correctly?
     white-space: nowrap;
   }
 }
