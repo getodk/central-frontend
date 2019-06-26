@@ -35,10 +35,11 @@ const auditsWithCreatedAt = dataStore({
     }
     if (details != null) audit.details = details;
     if (loggedAt != null) {
-      if (loggedAt < lastCreatedAt) throw new Error('invalid loggedAt');
+      if (lastCreatedAt != null && loggedAt < lastCreatedAt)
+        throw new Error('invalid loggedAt');
       audit.loggedAt = loggedAt;
     } else {
-      audit.loggedAt = faker.date.pastSince(lastCreatedAt).toISOString();
+      audit.loggedAt = faker.date.timestamps(inPast, [lastCreatedAt]).createdAt;
     }
     audit.createdAt = audit.loggedAt;
     return audit;
