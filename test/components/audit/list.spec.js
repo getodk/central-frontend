@@ -10,8 +10,12 @@ const assertTriple = (type, initiator, target) => (app) => {
   td[1].text().trim().iTrim().should.equal(type.join(' '));
 
   const icons = td[1].find('.icon-angle-right');
-  (type.length === 1 || type.length === 2).should.be.true();
-  (icons.length !== 0).should.equal(type.length !== 1);
+  if (type.length === 1)
+    icons.length.should.equal(0);
+  else if (type.length === 2)
+    icons.length.should.equal(1);
+  else
+    throw new Error();
 
   if (initiator != null) {
     td[2].hasClass('initiator').should.be.true();
@@ -208,6 +212,21 @@ describe('AuditList', () => {
           { text: 'User 1', href: '/users/1/edit' },
           null
         )));
+
+    it('renders details correctly', () =>
+      mockRoute('/system/audits')
+        .respondWithData(() => testData.extendedAudits
+          .createPast(1, {
+            actor: testData.extendedUsers.first(),
+            action: 'user.update',
+            actee: testData.toActor(testData.extendedUsers.first()),
+            details: { some: 'json' }
+          })
+          .sorted())
+        .afterResponse(app => {
+          const text = app.first('.audit-row .details').text();
+          text.should.equal('{"some":"json"}');
+        }));
 
     it('selects details after they are clicked', () =>
       mockRoute('/system/audits', { attachToDocument: true })
