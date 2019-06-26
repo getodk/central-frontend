@@ -113,9 +113,6 @@ export const extendedSubmissions = dataStore({
     ]);
     return {
       instanceId,
-      // We currently do not use the XML anywhere. If/when we do, we should
-      // consider whether to keep it in sync with the _oData property.
-      xml: '',
       submitter: toActor(submitter),
       createdAt,
       updatedAt,

@@ -11,9 +11,11 @@ const successfulResponse = (data) => ({
 export const setRequestData = (data) => {
   for (const [key, value] of Object.entries(data)) {
     const transform = transforms[key];
-    const transformed = transform != null
-      ? transform(successfulResponse(value))
-      : value;
+    const response = value.status != null ? value : successfulResponse(value);
+    const success = response.status >= 200 && response.status < 300;
+    if (transform == null && !success)
+      throw new Error('unexpected error response');
+    const transformed = transform != null ? transform(response) : response.data;
     store.commit('setData', { key, value: transformed });
   }
 };

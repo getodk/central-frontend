@@ -8,6 +8,7 @@ const verbsByRole = {
     'assignment.create',
     'assignment.list',
     'assignment.delete',
+    'audit.read',
     'config.read',
     'project.create',
     'project.list',

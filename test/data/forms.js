@@ -44,7 +44,6 @@ export const extendedForms = dataStore({
     inPast,
     lastCreatedAt,
 
-    // eslint-disable-next-line no-unused-vars
     project = extendedProjects.firstOrCreatePast(),
     xmlFormId = faker.central.xmlFormId(),
     name = faker.random.boolean() ? faker.name.findName() : null,
@@ -65,13 +64,10 @@ export const extendedForms = dataStore({
       createdBy.createdAt
     ]);
     return {
+      projectId: project.id,
       xmlFormId,
       name,
       version,
-      // We currently do not use the XML anywhere. If/when we do, we should
-      // consider whether to keep it in sync with the hash and _schema
-      // properties.
-      xml: '',
       hash: faker.random.hash(32),
       state,
       // The following two properties do not necessarily match
@@ -95,7 +91,7 @@ export const extendedForms = dataStore({
 
 export const standardForms = view(
   extendedForms,
-  omit(['xml', 'submissions', 'lastSubmission', 'createdBy'])
+  omit(['submissions', 'lastSubmission', 'createdBy'])
 );
 
 // Deprecated.

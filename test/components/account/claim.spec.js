@@ -1,4 +1,3 @@
-import Navbar from '../../../src/components/navbar.vue';
 import testData from '../../data';
 import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
@@ -7,8 +6,8 @@ import { submitForm } from '../../event';
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 
 describe('AccountClaim', () => {
-  describe('navigation to /account/claim', () => {
-    it('redirects to the root page after a login through the login page', () =>
+  describe('routing', () => {
+    it('redirects if the user logs in, then navigates to /account-claim', () =>
       mockRouteThroughLogin('/account/edit')
         .respondWithData(() => testData.standardUsers.first())
         .complete()
@@ -20,16 +19,11 @@ describe('AccountClaim', () => {
         }));
   });
 
-  it('navbar is visible', () =>
-    mockRoute(LOCATION).then(app => {
-      app.first(Navbar).vm.$el.style.display.should.equal('');
-    }));
-
-  it('field is focused', () =>
+  it('focuses the input', () =>
     mockRoute(LOCATION, { attachToDocument: true })
       .then(app => app.first('input[type="password"]').should.be.focused()));
 
-  it('standard button thinking things', () =>
+  it('implements some standard button things', () =>
     // We need mockRoute() and not just mockHttp(), because the token is taken
     // from the URL.
     mockRoute(LOCATION)
@@ -52,7 +46,7 @@ describe('AccountClaim', () => {
         app.should.alert('danger', 'AccountClaim problem. The link in your email may have expired, and a new email may have to be sent.');
       }));
 
-  describe('after successful response', () => {
+  describe('after a successful response', () => {
     let app;
     beforeEach(() => mockRoute(LOCATION)
       .complete()
@@ -64,11 +58,11 @@ describe('AccountClaim', () => {
       })
       .respondWithSuccess());
 
-    it('user is redirected to login', () => {
+    it('redirects to login', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('success message is shown', () => {
+    it('shows a success alert', () => {
       app.should.alert('success');
     });
   });

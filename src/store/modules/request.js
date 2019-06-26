@@ -13,6 +13,7 @@ import Vue from 'vue';
 import { DateTime } from 'luxon';
 import { mapState } from 'vuex';
 
+import Audit from '../../presenters/audit';
 import BackupsConfig from '../../presenters/backups-config';
 import FieldKey from '../../presenters/field-key';
 import Form from '../../presenters/form';
@@ -40,7 +41,8 @@ const allKeys = [
   'users',
   'user',
 
-  'backupsConfig'
+  'backupsConfig',
+  'audits'
 ];
 
 // Functions to transform responses (by key)
@@ -63,7 +65,8 @@ export const transforms = {
   users: ({ data }) => data.map(user => new User(user)),
   user: ({ data }) => new User(data),
 
-  backupsConfig: (response) => BackupsConfig.fromResponse(response)
+  backupsConfig: (response) => BackupsConfig.fromResponse(response),
+  audits: ({ data }) => data.map(audit => new Audit(audit))
 };
 
 export default {

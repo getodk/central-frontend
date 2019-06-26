@@ -15,6 +15,7 @@ import VueRouter from 'vue-router';
 import AccountClaim from './components/account/claim.vue';
 import AccountLogin from './components/account/login.vue';
 import AccountResetPassword from './components/account/reset-password.vue';
+import AuditList from './components/audit/list.vue';
 import BackupList from './components/backup/list.vue';
 import FieldKeyList from './components/field-key/list.vue';
 import FormAttachmentList from './components/form-attachment/list.vue';
@@ -185,6 +186,11 @@ const routes = [
         path: 'backups',
         component: BackupList,
         meta: { requireGrants: ['config.read'] }
+      },
+      {
+        path: 'audits',
+        component: AuditList,
+        meta: { requireGrants: ['audit.read'] }
       }
     ]
   },
