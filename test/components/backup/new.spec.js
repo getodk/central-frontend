@@ -7,18 +7,17 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { submitForm, trigger } from '../../event';
 
-const clickCreateButton = (wrapper) =>
-  trigger.click(wrapper.first('#backup-list-new-button')).then(() => wrapper);
 const moveToStep1 = (component) => {
   if (![App, BackupList, BackupNew].includes(component))
     throw new Error('invalid component');
   if (component === BackupNew) return mockHttp().mount(BackupNew);
-  const promise = component === App
+  const series = component === App
     ? mockRoute('/system/backups', { attachToDocument: true })
     : mockHttp().mount(BackupList);
-  return promise
+  return series
     .respondWithProblem(404.1)
-    .afterResponse(clickCreateButton);
+    .respondWithData(() => testData.standardAudits.sorted())
+    .afterResponses(wrapper => trigger.click(wrapper, '#backup-status button'));
 };
 // For step 1, fills the form and clicks the Next button.
 const next1 = (wrapper) =>
@@ -44,26 +43,30 @@ const completeSetup = (component) => {
   return moveToStep3(component)
     .request(next3)
     .respondWithSuccess()
-    .respondWithData(() => testData.backups.createPast(1).last());
+    .respondWithData(() => testData.backups.createNew())
+    .respondWithData(() => testData.standardAudits.sorted());
 };
 
 describe('BackupNew', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithProblem(404.1)
-        .afterResponse(page => {
-          page.first(BackupNew).getProp('state').should.be.false();
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component => {
+          component.first(BackupNew).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
+    it('shows the modal after the "Set up now" button is clicked', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithProblem(404.1)
-        .afterResponse(clickCreateButton)
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component =>
+          trigger.click(component, '#backup-status button'))
         .then(page => {
           page.first(BackupNew).getProp('state').should.be.true();
         }));

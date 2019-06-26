@@ -73,7 +73,7 @@ After specifying the request, specify the response as a callback:
 
   mockHttp()
     .mount(BackupList)
-    .respondWithData(() => testData.backups.createNew());
+    .respondWithData(() => testData.backups.createPast(1).last());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
@@ -274,36 +274,30 @@ class MockHttp {
   respondWithSuccess() {
     return this.respondWithData(() => ({
       status: 200,
-      data: {
-        success: true
-      }
+      data: { success: true }
     }));
   }
 
-  respondWithProblem(responseOrResponses) {
-    if (Array.isArray(responseOrResponses)) {
-      return responseOrResponses
-        .reduce((acc, response) => acc.respondWithProblem(response), this);
+  respondWithProblem(problemOrProblems) {
+    if (Array.isArray(problemOrProblems)) {
+      return problemOrProblems
+        .reduce((acc, problem) => acc.respondWithProblem(problem), this);
     }
-    if (responseOrResponses == null)
-      return this.respondWithProblem(500);
-    if (typeof responseOrResponses === 'number') {
+    if (problemOrProblems == null) return this.respondWithProblem(500.1);
+    if (typeof problemOrProblems === 'number') {
       return this.respondWithProblem(() => ({
-        code: responseOrResponses,
+        code: problemOrProblems,
         message: 'There was a problem.'
       }));
     }
     return this._respond(() => {
-      const error = new Error();
-      const data = responseOrResponses();
-      error.request = {};
-      error.response = { status: Math.floor(data.code), data };
-      return error;
+      const data = problemOrProblems();
+      return { status: Math.floor(data.code), data };
     });
   }
 
-  respondWithProblems(responseOrResponses) {
-    return this.respondWithProblem(responseOrResponses);
+  respondWithProblems(problemOrProblems) {
+    return this.respondWithProblem(problemOrProblems);
   }
 
   restoreSession(restore) {
@@ -533,22 +527,23 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          let result;
+          let response;
           try {
-            result = responseCallback();
+            response = responseCallback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
-          const response = result instanceof Error ? result.response : result;
           this._requestResponseLog.push(response);
           const responseWithConfig = { ...response, config };
           if (validateStatus(response.status)) {
             resolve(responseWithConfig);
           } else {
-            if (result instanceof Error) result.response = responseWithConfig;
-            reject(result);
+            const error = new Error();
+            error.request = {};
+            error.response = responseWithConfig;
+            reject(error);
           }
         }));
       return this._responsesPromise;

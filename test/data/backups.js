@@ -3,6 +3,15 @@ import { DateTime } from 'luxon';
 import BackupsConfig from '../../src/presenters/backups-config';
 import faker from '../faker';
 import { dataStore } from './data-store';
+import { extendedAudits } from './audits';
+
+const fakeRecentAttemptsForCurrent = () => {
+  const attempts = [];
+  const count = faker.random.number({ max: 2 });
+  for (let i = 0; i < count; i += 1)
+    attempts.push(faker.random.boolean());
+  return attempts;
+};
 
 // In the functions that follow, date parameters expect Date values, not
 // DateTime or String.
@@ -15,6 +24,7 @@ const fakeSetAt = ({ recentlySetUp, setAtFloor, recentDate }) => {
     DateTime.fromJSDate(recentDate).minus({ milliseconds: 1 }).toISO()
   );
 };
+
 // Returns a backup attempt (an audit log entry).
 const attempt = ({ success, loggedAt, configSetAt }) => {
   const details = { success };
@@ -24,62 +34,60 @@ const attempt = ({ success, loggedAt, configSetAt }) => {
     const error = new Error('error');
     Object.assign(details, { message: error.message, stack: error.stack });
   }
-  return {
-    actorId: null,
-    action: 'backup',
-    acteeId: null,
-    details,
-    loggedAt: loggedAt.toISOString()
-  };
+  return extendedAudits
+    .createPast(1, {
+      actor: null,
+      action: 'backup',
+      actee: null,
+      details,
+      loggedAt: loggedAt.toISOString()
+    })
+    .last();
 };
+
 // Returns a random array of recent backup attempts.
 const fakeRecent = ({
   recentlySetUp,
   setAtFloor,
   recentDate,
   setAt,
-  latestRecentAttempt,
-  latestRecentAttemptForPrevious
+  recentAttemptsForCurrent,
+  recentAttemptsForPrevious
 }) => {
   const recent = [];
 
-  if (latestRecentAttempt != null) {
-    const loggedAtFloor = recentlySetUp ? setAt : recentDate;
-    recent.push(attempt({
-      success: latestRecentAttempt.success,
-      loggedAt: faker.date.pastSince(loggedAtFloor),
-      configSetAt: setAt
-    }));
-    // 50% of the time, we add a second, earlier backup attempt for the current
-    // config.
-    if (faker.random.boolean()) {
-      recent.push(attempt({
-        success: faker.random.boolean(),
-        loggedAt: faker.date.between(
-          loggedAtFloor.toISOString(),
-          recent[0].loggedAt
-        ),
-        configSetAt: setAt
-      }));
-    }
-  }
-
-  if (latestRecentAttemptForPrevious != null) {
+  // Add backup attempts for a single previous config.
+  if (recentAttemptsForPrevious.length !== 0) {
     const previousSetAt = faker.date.between(
       setAtFloor.toISOString(),
       setAt.toISOString()
     );
-    const loggedAtFloor = previousSetAt >= recentDate
-      ? previousSetAt
-      : recentDate;
-    recent.push(attempt({
-      success: latestRecentAttemptForPrevious.success,
-      loggedAt: faker.date.between(
-        loggedAtFloor.toISOString(),
-        setAt.toISOString()
-      ),
-      configSetAt: previousSetAt
-    }));
+    let loggedAtFloor = previousSetAt >= recentDate
+      ? previousSetAt.toISOString()
+      : recentDate.toISOString();
+    for (const success of recentAttemptsForPrevious) {
+      recent.unshift(attempt({
+        success,
+        loggedAt: faker.date.between(loggedAtFloor, setAt.toISOString()),
+        configSetAt: previousSetAt
+      }));
+      loggedAtFloor = recent[0].loggedAt;
+    }
+  }
+
+  // Add backup attempts for the current config.
+  if (recentAttemptsForCurrent.length !== 0) {
+    let loggedAtFloor = recentlySetUp
+      ? setAt.toISOString()
+      : recentDate.toISOString();
+    for (const success of recentAttemptsForCurrent) {
+      recent.unshift(attempt({
+        success,
+        loggedAt: faker.date.pastSince(loggedAtFloor),
+        configSetAt: setAt
+      }));
+      loggedAtFloor = recent[0].loggedAt;
+    }
   }
 
   return recent;
@@ -87,25 +95,20 @@ const fakeRecent = ({
 
 // eslint-disable-next-line import/prefer-default-export
 export const backups = dataStore({
-  // The factory does not use createdAt, so createPast() and createNew() should
-  // return similar results.
   factory: ({
-    recentlySetUp = faker.random.boolean(),
-    // Indicates whether there has been a recent backup attempt for the current
-    // config and if so, whether the latest recent attempt was successful.
-    latestRecentAttempt = faker.random.arrayElement([
-      { success: true },
-      { success: false },
-      null
-    ]),
-    // Indicates whether there was a recent backup attempt for a previous config
-    // and if so, whether the latest such attempt was successful.
-    latestRecentAttemptForPrevious = recentlySetUp && faker.random.boolean()
-      // Specifying `true` rather than faker.random.boolean() for backward
-      // compatibility, though it may be that no test actually assumes that
-      // `success` cannot be `false`.
-      ? { success: true }
-      : null
+    inPast,
+
+    recentlySetUp = !inPast || faker.random.boolean(),
+    // An array with an element for each recent backup attempt for the current
+    // config. Each element is boolean, indicating whether the attempt was
+    // successful.
+    recentAttemptsForCurrent = inPast ? fakeRecentAttemptsForCurrent() : [],
+    recentAttemptsForPrevious = recentlySetUp && faker.random.boolean()
+      // Specifying [true] rather than [faker.random.boolean()] for backward
+      // compatibility, though it may be that no test actually assumes that this
+      // backup attempt was successful.
+      ? [true]
+      : []
   }) => {
     const recentDate = BackupsConfig.recentDateTime().toJSDate();
     // The earliest time, for testing purposes, for backups to have been
@@ -114,7 +117,9 @@ export const backups = dataStore({
       .local()
       .minus({ milliseconds: 10 * (Date.now() - recentDate.getTime()) })
       .toJSDate();
-    const setAt = fakeSetAt({ recentlySetUp, setAtFloor, recentDate });
+    const setAt = inPast
+      ? fakeSetAt({ recentlySetUp, setAtFloor, recentDate })
+      : new Date();
     return {
       type: 'google',
       setAt: setAt.toISOString(),
@@ -123,8 +128,8 @@ export const backups = dataStore({
         setAtFloor,
         recentDate,
         setAt,
-        latestRecentAttempt,
-        latestRecentAttemptForPrevious
+        recentAttemptsForCurrent,
+        recentAttemptsForPrevious
       })
     };
   }

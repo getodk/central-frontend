@@ -5,49 +5,48 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { trigger } from '../../util';
 
-const openModal = (wrapper) =>
-  trigger.click(wrapper.first('#backup-list-terminate-button'))
-    .then(() => wrapper);
-const confirmTerminate = (wrapper) =>
-  trigger.click(wrapper.first('#backup-terminate .btn-danger'))
-    .then(() => wrapper);
-
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
   describe('modal', () => {
-    it('is initially hidden', () =>
+    it('does not show the modal initially', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithData(() => testData.backups.createPast(1).last())
-        .afterResponse(page => {
-          page.first(BackupTerminate).getProp('state').should.be.false();
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component => {
+          component.first(BackupTerminate).getProp('state').should.be.false();
         }));
 
-    it('opens after button click', () =>
+    it('shows the modal after the terminate button is clicked', () =>
       mockHttp()
         .mount(BackupList)
         .respondWithData(() => testData.backups.createPast(1).last())
-        .afterResponse(openModal)
-        .then(page => {
-          page.first(BackupTerminate).getProp('state').should.be.true();
+        .respondWithData(() => testData.standardAudits.sorted())
+        .afterResponses(component =>
+          trigger.click(component, '#backup-status button'))
+        .then(component => {
+          component.first(BackupTerminate).getProp('state').should.be.true();
         }));
   });
 
   it('standard button thinking things', () =>
     mockHttp()
       .mount(BackupTerminate)
-      .request(confirmTerminate)
+      .request(component =>
+        trigger.click(component, '#backup-terminate .btn-danger'))
       .standardButton('.btn-danger'));
 
   describe('after successful response', () => {
     let app;
     beforeEach(() => mockRoute('/system/backups')
       .respondWithData(() => testData.backups.createPast(1).last())
-      .afterResponse(component => {
+      .respondWithData(() => testData.standardAudits.sorted())
+      .afterResponses(component => {
         app = component;
       })
-      .request(() => openModal(app).then(confirmTerminate))
+      .request(() => trigger.click(app, '#backup-status button')
+        .then(() => trigger.click(app, '#backup-terminate .btn-danger')))
       .respondWithSuccess());
 
     it('modal is hidden', () => {
