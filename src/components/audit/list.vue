@@ -15,26 +15,53 @@ except according to the terms contained in the LICENSE file.
       Here you will find a log of significant actions performed on this server.
       Changes made to user, Project, or Form settings can be found here.
     </p>
+    <audit-filters :initial="initialFilters" @filter="fetchData"/>
     <audit-table :audits="audits"/>
     <loading :state="$store.getters.initiallyLoading(['audits'])"/>
+    <p v-if="audits != null && audits.length === 0" class="empty-table-message">
+      There are no matching audit log entries.
+    </p>
   </div>
 </template>
 
 <script>
+import { DateTime } from 'luxon';
+
+import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'AuditList',
-  components: { AuditTable },
-  computed: requestData(['audits']),
+  components: { AuditFilters, AuditTable },
+  computed: {
+    ...requestData(['audits']),
+    initialFilters() {
+      const today = DateTime.local().startOf('day');
+      return {
+        action: 'nonverbose',
+        dateRange: [today, today]
+      };
+    }
+  },
   created() {
-    this.$store.dispatch('get', [{
-      key: 'audits',
-      url: '/audits?action=nonverbose',
-      extended: true
-    }]).catch(noop);
+    this.fetchData(this.initialFilters);
+  },
+  methods: {
+    dateParams(dateRange) {
+      if (dateRange.length === 0) return '';
+      const start = encodeURIComponent(dateRange[0].toISO());
+      const end = encodeURIComponent(dateRange[1].endOf('day').toISO());
+      return `&start=${start}&end=${end}`;
+    },
+    fetchData({ action, dateRange }) {
+      this.$store.dispatch('get', [{
+        key: 'audits',
+        url: `/audits?action=${action}${this.dateParams(dateRange)}`,
+        extended: true
+      }]).catch(noop);
+    }
   }
 };
 </script>

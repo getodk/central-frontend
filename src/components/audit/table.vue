@@ -10,8 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <!-- There is no .empty-table-message, but the table should also never be
-  empty. -->
   <table id="audit-table" class="table">
     <thead>
       <tr>

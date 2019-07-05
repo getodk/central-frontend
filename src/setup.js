@@ -14,10 +14,17 @@ import axios from 'axios';
 import pluralize from 'pluralize';
 
 import './plugins';
-// Import the global styles before importing components.
+
+// Import the global styles before importing components so that the CSS ends up
+// in the correct order.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
+// vue-flatpickr-component requires flatpickr, so I think ESLint is just
+// confused here?
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'flatpickr/dist/flatpickr.css';
 import './assets/scss/app.scss';
+
 import GlobalComponents from './global-components';
 import { StoreAlert, uniqueSequence } from './util/util';
 // ./jquery must be imported before ./bootstrap, as Bootstrap's JavaScript

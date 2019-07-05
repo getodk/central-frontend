@@ -1,0 +1,127 @@
+<!--
+Copyright 2019 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <form id="audit-filters" class="form-inline">
+    <span class="icon-filter"></span><span>Filter by</span>
+    <div class="form-group">
+      <select v-model="action" class="form-control" aria-label="Type">
+        <option v-for="option of actionOptions" :key="option.value"
+          :class="{ 'action-category': option.category }" :value="option.value">
+          <template v-if="!option.category">&nbsp;&nbsp;&nbsp;</template>{{ option.text }}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <flat-pickr :value="initialDates" :config="flatPickrConfig"
+        class="form-control" placeholder="Date range" aria-label="Date range"
+        @on-close="closeCalendar"/>
+    </div>
+  </form>
+</template>
+
+<script>
+import flatPickr from 'vue-flatpickr-component';
+import { DateTime } from 'luxon';
+
+export default {
+  name: 'AuditFilters',
+  components: { flatPickr },
+  props: {
+    initial: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      action: this.initial.action,
+      // Either an empty array or an array of exactly two DateTime objects
+      dateRange: this.initial.dateRange
+    };
+  },
+  computed: {
+    actionOptions() {
+      const categoryOption = (text, value) => ({ text, value, category: true });
+      const actionOption = (text, value) => ({ text, value, category: false });
+      return [
+        categoryOption('(All Actions)', 'nonverbose'),
+        categoryOption('Web User Actions', 'user'),
+        actionOption('Create', 'user.create'),
+        actionOption('Update Details', 'user.update'),
+        actionOption('Assign Role', 'assignment.create'),
+        actionOption('Revoke Role', 'assignment.delete'),
+        actionOption('Retire', 'user.delete'),
+        categoryOption('Project Actions', 'project'),
+        actionOption('Create', 'project.create'),
+        actionOption('Update Details', 'project.update'),
+        actionOption('Delete', 'project.delete'),
+        categoryOption('Form Actions', 'form'),
+        actionOption('Create', 'form.create'),
+        actionOption('Update Details', 'form.update'),
+        actionOption('Update Attachments', 'form.attachment.update'),
+        actionOption('Delete', 'form.delete')
+      ];
+    },
+    initialDates() {
+      return this.initial.dateRange.map(dateTime => dateTime.toJSDate());
+    },
+    flatPickrConfig() {
+      return {
+        mode: 'range',
+        dateFormat: 'Y/m/d'
+      };
+    }
+  },
+  watch: {
+    action: 'filter'
+  },
+  methods: {
+    filter() {
+      this.$emit('filter', { action: this.action, dateRange: this.dateRange });
+    },
+    closeCalendar(dates) {
+      this.dateRange = dates.map(date => DateTime.fromJSDate(date));
+      this.filter();
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#audit-filters {
+  .icon-filter {
+    color: #999;
+    margin-right: 6px;
+  }
+
+  .form-group {
+    margin-left: 12px;
+    // Align the .form-group elements with the text to their left.
+    vertical-align: baseline;
+  }
+
+  .form-group + .form-group {
+    margin-left: 21px;
+  }
+
+  .action-category {
+    // Not all browsers support styling an <option> element this way.
+    font-weight: bold;
+  }
+
+  .flatpickr-input {
+    width: $width-flatpickr-range-input;
+  }
+}
+</style>
