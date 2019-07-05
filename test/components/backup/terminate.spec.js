@@ -3,7 +3,7 @@ import BackupTerminate from '../../../src/components/backup/terminate.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);

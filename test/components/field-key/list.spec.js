@@ -6,7 +6,7 @@ import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 describe('FieldKeyList', () => {
   describe('routing', () => {

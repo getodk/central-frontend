@@ -2,7 +2,7 @@ import UserResetPassword from '../../../src/components/user/reset-password.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 describe('UserResetPassword', () => {
   beforeEach(mockLogin);

@@ -2,7 +2,7 @@ import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 describe('FormChecklist', () => {
   beforeEach(mockLogin);

@@ -4,7 +4,7 @@ import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 const clickDeleteButton = (wrapper) =>
   trigger.click(wrapper.first('#form-settings .panel-simple-danger .btn-danger'))

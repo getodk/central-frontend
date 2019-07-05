@@ -3,7 +3,7 @@ import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 // Returns the spinner associated with the currently selected radio.
 const spinnerOfSelectedState = (formEdit) => {
