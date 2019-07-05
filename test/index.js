@@ -10,7 +10,7 @@ import Blank from '../src/components/blank.vue';
 import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
-import { MockLogger } from './util';
+import { MockLogger } from './util/util';
 import { clearNavGuards, initNavGuards } from './router';
 import { clearUniqueFakerResults } from './faker';
 import { destroyMarkedComponent } from './destroy';
