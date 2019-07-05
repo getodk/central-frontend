@@ -1,5 +1,3 @@
-import { DateTime, Settings } from 'luxon';
-
 import FormShow from '../../../../src/components/form/show.vue';
 import FormSubmissionList from '../../../../src/components/form/submission/list.vue';
 import Spinner from '../../../../src/components/spinner.vue';
@@ -7,6 +5,7 @@ import testData from '../../../data';
 import { formatDate, uniqueSequence } from '../../../../src/util/util';
 import { mockHttp, mockRoute } from '../../../http';
 import { mockLogin, mockRouteThroughLogin } from '../../../session';
+import { setLuxon } from '../../../util/util';
 import { trigger } from '../../../event';
 
 describe('FormSubmissionList', () => {
@@ -340,15 +339,11 @@ describe('FormSubmissionList', () => {
             ['America/New_York', '2017-11-05', '01:30:00', '01:30:00'],
             ['America/New_York', '2017-11-05', '01:30:00Z', '01:30:00']
           ];
-          for (const [defaultZoneName, nowISO, testTime, formatted] of cases) {
+          for (const [defaultZoneName, now, testTime, formatted] of cases) {
             it(`correctly formats ${testTime}`, () => {
-              const originalDefaultZoneName = Settings.defaultZoneName;
-              Settings.defaultZoneName = defaultZoneName;
-              const originalNow = Settings.now;
-              if (nowISO != null) {
-                const nowMillis = DateTime.fromISO(nowISO).toMillis();
-                Settings.now = () => nowMillis;
-              }
+              const settings = { defaultZoneName };
+              if (now != null) settings.now = now;
+              const restoreLuxon = setLuxon(settings);
               return loadSubmissions(1, { testTime })
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
@@ -357,10 +352,7 @@ describe('FormSubmissionList', () => {
                   );
                   td.text().trim().should.equal(formatted);
                 })
-                .finally(() => {
-                  Settings.defaultZoneName = originalDefaultZoneName;
-                  if (nowISO != null) Settings.now = originalNow;
-                });
+                .finally(restoreLuxon);
             });
           }
         });
@@ -388,15 +380,11 @@ describe('FormSubmissionList', () => {
             ['America/New_York', '2017-11-05', '2017-11-05T01:30:00', '2017/11/05 01:30:00'],
             ['America/New_York', '2017-11-05', '2017-11-05T01:30:00Z', '2017/11/04 21:30:00']
           ];
-          for (const [defaultZoneName, nowISO, testDateTime, formatted] of cases) {
+          for (const [defaultZoneName, now, testDateTime, formatted] of cases) {
             it(`correctly formats ${testDateTime}`, () => {
-              const originalDefaultZoneName = Settings.defaultZoneName;
-              Settings.defaultZoneName = defaultZoneName;
-              const originalNow = Settings.now;
-              if (nowISO != null) {
-                const nowMillis = DateTime.fromISO(nowISO).toMillis();
-                Settings.now = () => nowMillis;
-              }
+              const settings = { defaultZoneName };
+              if (now != null) settings.now = now;
+              const restoreLuxon = setLuxon(settings);
               return loadSubmissions(1, { testDateTime })
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
@@ -405,10 +393,7 @@ describe('FormSubmissionList', () => {
                   );
                   td.text().trim().should.equal(formatted);
                 })
-                .finally(() => {
-                  Settings.defaultZoneName = originalDefaultZoneName;
-                  if (nowISO != null) Settings.now = originalNow;
-                });
+                .finally(restoreLuxon);
             });
           }
         });
