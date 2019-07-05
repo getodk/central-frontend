@@ -30,7 +30,7 @@ describe('FormEdit', () => {
           }
         })
         .request(component =>
-          trigger.change(component, 'input[value="closing"]'))
+          trigger.check(component, 'input[value="closing"]'))
         .beforeAnyResponse(component => {
           const disabled = component.first('fieldset').getAttribute('disabled');
           disabled.should.equal('disabled');
@@ -53,7 +53,7 @@ describe('FormEdit', () => {
           }
         })
         .request(component =>
-          trigger.change(component, 'input[value="closed"]'))
+          trigger.check(component, 'input[value="closed"]'))
         .beforeAnyResponse(component => {
           spinnerOfSelectedState(component).getProp('state').should.be.true();
         })
@@ -75,7 +75,7 @@ describe('FormEdit', () => {
           .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .complete()
-        .request(app => trigger.change(app, '#form-edit input[value="open"]'))
+        .request(app => trigger.check(app, '#form-edit input[value="open"]'))
         .respondWithData(() => {
           testData.extendedForms.update(testData.extendedForms.last(), {
             state: 'open'

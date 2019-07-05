@@ -32,21 +32,10 @@ const loadProjectUsers = ({ count, currentUser = false, route = false }) => {
     })
     .respondWithData(() => managers.map(testData.toActor));
 };
-// Changes the select of the first row of the table to a new value, triggering a
-// `change` event.
-const changeRole = (component, selectValue) => {
-  const select = component.first('#project-user-list select');
-  if (select.element.value === selectValue) throw new Error('no change');
-  select.element.value = selectValue;
-  return trigger.change(select).then(() => component);
-};
-// Changes the search term to a new value, triggering a `change` event.
-const changeQ = (component, q) => {
-  const input = component.first('#project-user-list-search-form input');
-  if (input.element.value === q) throw new Error('no change');
-  input.element.value = q;
-  return trigger.change(input).then(() => component);
-};
+const changeRole = (component, selectValue) =>
+  trigger.changeValue(component, '#project-user-list select', selectValue);
+const changeQ = (component, q) =>
+  trigger.changeValue(component, '#project-user-list-search-form input', q);
 
 describe('ProjectUserList', () => {
   describe('routing', () => {

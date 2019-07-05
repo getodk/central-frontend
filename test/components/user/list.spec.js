@@ -181,13 +181,10 @@ describe('UserList', () => {
             .respondWithData(() =>
               testData.toActor(testData.standardUsers.sorted().slice(0, 2)))
             .complete()
-            .request(app => {
-              const select = app.find('#user-list-table select')[rowIndex];
-              if (select.element.value === selectValue)
-                throw new Error('no change');
-              select.element.value = selectValue;
-              return trigger.change(select);
-            });
+            .request(app => trigger.changeValue(
+              app.find('#user-list-table select')[rowIndex],
+              selectValue
+            ));
 
       // Array of test cases, where each case is an array with the following
       // structure:

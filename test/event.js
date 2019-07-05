@@ -37,7 +37,7 @@ const dragEvent = (type, { target, files, ie = false }) => {
 
 export const trigger = {};
 
-const simpleEventNames = ['change', 'click', 'submit'];
+const simpleEventNames = ['click', 'submit'];
 for (const eventName of simpleEventNames) {
   // Triggers an event that does not bubble.
   trigger[eventName] = (wrapper, selector = undefined) => {
@@ -47,6 +47,28 @@ for (const eventName of simpleEventNames) {
     return selector == null ? nextTick : nextTick.then(() => wrapper);
   };
 }
+
+// Changes the value of an <input> or <select> element, triggering a change
+// event.
+trigger.changeValue = (wrapper, ...args) => {
+  if (args.length === 0) throw new Error('value required');
+  if (args.length === 1) return trigger.changeValue(wrapper, null, args[0]);
+  const [selector, value] = args;
+  const target = selector == null ? wrapper : wrapper.first(selector);
+  if (target.element.value === value) throw new Error('no change');
+  target.element.value = value;
+  target.trigger('change');
+  return Vue.nextTick().then(() => wrapper);
+};
+
+// Checks a checkbox or radio input, triggering a change event.
+trigger.check = (wrapper, selector = null) => {
+  const target = selector != null ? wrapper.first(selector) : wrapper;
+  if (target.element.checked) throw new Error('already checked');
+  target.element.checked = true;
+  target.trigger('change');
+  return Vue.nextTick().then(() => wrapper);
+};
 
 const normalizeTriggerDragEventArgs = (args) => {
   if (args.length === 0) throw new Error('files or event options required');
