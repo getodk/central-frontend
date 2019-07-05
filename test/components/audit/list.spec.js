@@ -17,9 +17,10 @@ const assertTriple = (type, initiator, target) => (app) => {
   else
     throw new Error();
 
+  td[2].hasClass('initiator').should.be.true();
   if (initiator != null) {
-    td[2].hasClass('initiator').should.be.true();
     td[2].text().trim().should.equal(initiator.text);
+
     const a = td[2].first('a');
     a.getAttribute('href').should.equal(`#${initiator.href}`);
     a.getAttribute('title').should.equal(initiator.text);
@@ -28,9 +29,10 @@ const assertTriple = (type, initiator, target) => (app) => {
     td[2].find('a').length.should.equal(0);
   }
 
+  td[3].hasClass('target').should.be.true();
   if (target != null) {
-    td[3].hasClass('target').should.be.true();
     td[3].text().trim().should.equal(target.text);
+
     const a = td[3].first('a');
     a.getAttribute('href').should.equal(`#${target.href}`);
     a.getAttribute('title').should.equal(target.text);
