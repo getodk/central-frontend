@@ -49,16 +49,12 @@ export default {
     this.fetchData(this.initialFilters);
   },
   methods: {
-    dateParams(dateRange) {
-      if (dateRange.length === 0) return '';
+    fetchData({ action, dateRange }) {
       const start = encodeURIComponent(dateRange[0].toISO());
       const end = encodeURIComponent(dateRange[1].endOf('day').toISO());
-      return `&start=${start}&end=${end}`;
-    },
-    fetchData({ action, dateRange }) {
       this.$store.dispatch('get', [{
         key: 'audits',
-        url: `/audits?action=${action}${this.dateParams(dateRange)}`,
+        url: `/audits?action=${action}&start=${start}&end=${end}`,
         extended: true
       }]).catch(noop);
     }

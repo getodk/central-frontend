@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       </select>
     </div>
     <div class="form-group">
-      <flat-pickr :value="initialDates" :config="flatPickrConfig"
+      <flat-pickr v-model="dateRangeString" :config="flatPickrConfig"
         class="form-control" placeholder="Date range" aria-label="Date range"
         @on-close="closeCalendar"/>
     </div>
@@ -44,8 +44,9 @@ export default {
   data() {
     return {
       action: this.initial.action,
-      // Either an empty array or an array of exactly two DateTime objects
-      dateRange: this.initial.dateRange
+      // An array of two DateTime objects
+      dateRange: this.initial.dateRange,
+      dateRangeString: this.dateRangeToString(this.initial.dateRange)
     };
   },
   computed: {
@@ -71,9 +72,6 @@ export default {
         actionOption('Delete', 'form.delete')
       ];
     },
-    initialDates() {
-      return this.initial.dateRange.map(dateTime => dateTime.toJSDate());
-    },
     flatPickrConfig() {
       return {
         mode: 'range',
@@ -85,11 +83,22 @@ export default {
     action: 'filter'
   },
   methods: {
+    dateRangeToString(dateRange) {
+      const start = dateRange[0].toFormat('yyyy/MM/dd');
+      const end = dateRange[1].toFormat('yyyy/MM/dd');
+      return `${start} to ${end}`;
+    },
     filter() {
       this.$emit('filter', { action: this.action, dateRange: this.dateRange });
     },
     closeCalendar(dates) {
-      this.dateRange = dates.map(date => DateTime.fromJSDate(date));
+      if (dates.length !== 0) {
+        this.dateRange = dates.map(date => DateTime.fromJSDate(date));
+      } else {
+        const today = DateTime.local().startOf('day');
+        this.dateRange = [today, today];
+        this.dateRangeString = this.dateRangeToString(this.dateRange);
+      }
       this.filter();
     }
   }
