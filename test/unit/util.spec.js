@@ -1,20 +1,8 @@
-import { DateTime, Settings } from 'luxon';
-
 import { formatDate } from '../../src/util/util';
+import { setLuxon } from '../util/util';
 
 describe('util', () => {
   describe('formatDate()', () => {
-    let originalDefaultZoneName;
-    let originalNow;
-    before(() => {
-      originalDefaultZoneName = Settings.defaultZoneName;
-      originalNow = Settings.now;
-    });
-    after(() => {
-      Settings.defaultZoneName = originalDefaultZoneName;
-      Settings.now = originalNow;
-    });
-
     it('formats null as an empty string by default', () => {
       formatDate(null).should.equal('');
     });
@@ -70,12 +58,11 @@ describe('util', () => {
       // within the default time zone, it is the same date.
       ['UTC-1', '2018-01-01T01:00:00Z', '2018-01-02T00:00:00Z', 'Today 23:00']
     ];
-    for (const [defaultZoneName, nowISO, rawValue, formatted] of cases) {
-      it(`formats '${rawValue}' when it is now ${nowISO} (${defaultZoneName})`, () => {
-        Settings.defaultZoneName = defaultZoneName;
-        const nowMillis = DateTime.fromISO(nowISO).toMillis();
-        Settings.now = () => nowMillis;
+    for (const [defaultZoneName, now, rawValue, formatted] of cases) {
+      it(`formats '${rawValue}' when it is now ${now} (${defaultZoneName})`, () => {
+        const restoreLuxon = setLuxon({ defaultZoneName, now });
         formatDate(rawValue).should.equal(formatted);
+        restoreLuxon();
       });
     }
   });

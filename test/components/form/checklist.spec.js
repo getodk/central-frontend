@@ -2,7 +2,7 @@ import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 describe('FormChecklist', () => {
   beforeEach(mockLogin);
@@ -77,7 +77,7 @@ describe('FormChecklist', () => {
         step.hasClass('form-checklist-step-complete').should.be.false();
       })
       .route('/projects/1/forms/f/settings')
-      .request(app => trigger.change(app, '#form-edit input[value="closed"]'))
+      .request(app => trigger.check(app, '#form-edit input[value="closed"]'))
       .respondWithData(() => {
         testData.extendedForms.update(testData.extendedForms.last(), {
           state: 'closed'

@@ -3,7 +3,7 @@ import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { trigger } from '../../util';
+import { trigger } from '../../event';
 
 // Returns the spinner associated with the currently selected radio.
 const spinnerOfSelectedState = (formEdit) => {
@@ -30,7 +30,7 @@ describe('FormEdit', () => {
           }
         })
         .request(component =>
-          trigger.change(component, 'input[value="closing"]'))
+          trigger.check(component, 'input[value="closing"]'))
         .beforeAnyResponse(component => {
           const disabled = component.first('fieldset').getAttribute('disabled');
           disabled.should.equal('disabled');
@@ -53,7 +53,7 @@ describe('FormEdit', () => {
           }
         })
         .request(component =>
-          trigger.change(component, 'input[value="closed"]'))
+          trigger.check(component, 'input[value="closed"]'))
         .beforeAnyResponse(component => {
           spinnerOfSelectedState(component).getProp('state').should.be.true();
         })
@@ -75,7 +75,7 @@ describe('FormEdit', () => {
           .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .complete()
-        .request(app => trigger.change(app, '#form-edit input[value="open"]'))
+        .request(app => trigger.check(app, '#form-edit input[value="open"]'))
         .respondWithData(() => {
           testData.extendedForms.update(testData.extendedForms.last(), {
             state: 'open'

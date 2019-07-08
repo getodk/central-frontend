@@ -8,7 +8,7 @@ import testData from './data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
 import { setRequestData } from './util/store';
-import { trigger } from './util';
+import { trigger } from './event';
 
 
 
