@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form id="audit-filters" class="form-inline">
+  <form id="audit-filters" class="form-inline" @submit.prevent>
     <span class="icon-filter"></span><span>Filter by</span>
     <div class="form-group">
       <select v-model="action" class="form-control" aria-label="Type">
