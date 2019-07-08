@@ -21,7 +21,8 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <label class="form-group">
           <input ref="email" v-model.trim="email" type="email"
-            class="form-control" placeholder="Email address *" required>
+            class="form-control" placeholder="Email address *" required
+            autocomplete="off">
           <span class="form-label">Email address *</span>
         </label>
         <label class="form-group">
