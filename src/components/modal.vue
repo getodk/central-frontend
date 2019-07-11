@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div :aria-labelledby="titleId" :data-backdrop="bsBackdrop" class="modal"
     tabindex="-1" role="dialog" data-keyboard="false" @keydown.esc="hideIfCan"
-    @mousedown="modalMousedown" @click="modalClick">
+    @mousedown="modalMousedown" @click="modalClick" @focusout="refocus">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -104,11 +104,6 @@ export default {
       });
     if (this.state) this.toggle(true);
   },
-  updated() {
-    // Wait a tick so that all child components are re-rendered:
-    // https://vuejs.org/v2/api/#updated.
-    this.$nextTick(this.refocus);
-  },
   beforeDestroy() {
     this.toggle(false);
     // TODO. Does this actually remove all modal-related event handlers?
@@ -142,13 +137,22 @@ export default {
     // Refocuses the modal if it has lost focus. This is needed so that the
     // escape key still hides the modal.
     refocus() {
-      // Do not focus the modal if it has lost focus because it is hidden.
-      if (!this.state) return;
-      // Do not focus the modal if it contains the active element.
-      if (document.activeElement != null &&
-        $(document.activeElement).closest('.modal')[0] === this.$el)
-        return;
-      this.$el.focus();
+      /* As the user moves from one element in the modal to another, there may
+      be the briefest moment when neither element is focused. We should not
+      refocus the modal in that moment, because the second element will soon
+      receive focus, and focusing the .modal element would prevent that. Thus,
+      we use setTimeout() to give the second element time to receive focus.
+      (Using this.$nextTick() instead of setTimeout() didn't work.) */
+      setTimeout(() => {
+        // Do not focus the modal if it has lost focus because it is hidden.
+        if (!this.state) return;
+        // Do not focus the .modal element if it is already focused or if it
+        // contains the active element.
+        if (document.activeElement != null &&
+          $(document.activeElement).closest('.modal')[0] === this.$el)
+          return;
+        this.$el.focus();
+      });
     }
   }
 };
