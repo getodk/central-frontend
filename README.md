@@ -19,7 +19,7 @@ ODK Central Frontend uses Vue.js to provide the frontend for [ODK Central](https
 
 ## Setting up your development environment
 
-First, install Node.js 8 (specifically 8.11.0+).
+First, install Node.js 12+.
 
 Next, install dependencies by running `npm install`.
 
