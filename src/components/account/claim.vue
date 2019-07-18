@@ -20,9 +20,13 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="panel-body">
           <app-form @submit="submit">
+            <!-- Chrome displays a message in the console indicating that there
+            should be a username input (even if it is hidden). However, we do
+            not know the user's email address on this page. -->
             <label class="form-group">
               <input v-model="password" type="password" class="form-control"
-                placeholder="New Password *" required>
+                placeholder="New Password *" required
+                autocomplete="new-password">
               <span class="form-label">New Password *</span>
             </label>
             <div class="panel-footer">

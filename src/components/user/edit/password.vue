@@ -17,22 +17,24 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-body">
       <form v-if="user != null && user.id === currentUser.id"
         @submit.prevent="submit">
+        <input :value="currentUser.email" autocomplete="username">
         <label class="form-group">
           <input id="user-edit-password-old-password" v-model="oldPassword"
             type="password" class="form-control" placeholder="Old password *"
-            required>
+            required autocomplete="current-password">
           <span class="form-label">Old password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
           <input id="user-edit-password-new-password" v-model="newPassword"
             type="password" class="form-control" placeholder="New password *"
-            required>
+            required autocomplete="new-password">
           <span class="form-label">New password *</span>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
           <input id="user-edit-password-confirm" v-model="confirm"
             type="password" class="form-control"
-            placeholder="New password (confirm) *" required>
+            placeholder="New password (confirm) *" required
+            autocomplete="new-password">
           <span class="form-label">New password (confirm) *</span>
         </label>
         <button :disabled="awaitingResponse" type="submit"
@@ -84,9 +86,18 @@ export default {
       this.put(`/users/${this.user.id}/password`, data)
         .then(() => {
           this.$alert().success('Success! Your password has been updated.');
+
+          // The Chrome password manager does not realize that the form was
+          // submitted. Should we navigate to a different page so that it does?
         })
         .catch(noop);
     }
   }
 };
 </script>
+
+<style lang="scss">
+#user-edit-password input[autocomplete="username"] {
+  display: none;
+}
+</style>
