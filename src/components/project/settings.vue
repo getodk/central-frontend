@@ -61,7 +61,7 @@ export default {
   methods: {
     afterArchive() {
       this.$router.push(`/projects/${this.project.id}`, () => {
-        this.$alert().success(`The Project “${this.project.name}” was archived.`);
+        this.$alert().success(`The Project "${this.project.name}" was archived.`);
       });
     }
   }
