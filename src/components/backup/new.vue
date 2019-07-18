@@ -81,7 +81,7 @@ except according to the terms contained in the LICENSE file.
           <label class="form-group">
             <input ref="confirmationText" v-model.trim="confirmationText"
               :disabled="awaitingResponse" class="form-control" required
-              placeholder="Confirmation text *">
+              placeholder="Confirmation text *" autocomplete="off">
             <span class="form-label">Confirmation text *</span>
           </label>
           <div class="modal-actions">
