@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else>
         <div class="modal-introduction">
           <div>
-            <span class="icon-check-circle"></span> <strong>Success!</strong>
+            <span class="icon-check-circle"></span><strong>Success!</strong>
             The App User “{{ created.displayName }}” has been created.
           </div>
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -154,6 +154,7 @@ export default {
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
+    margin-right: 6px;
     vertical-align: middle;
   }
 
