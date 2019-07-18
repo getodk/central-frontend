@@ -4,6 +4,7 @@ import * as Backups from './backups';
 import * as FieldKeys from './field-keys';
 import * as FormAttachments from './form-attachments';
 import * as Forms from './forms';
+import * as Keys from './keys';
 import * as Projects from './projects';
 import * as Sessions from './sessions';
 import * as Submissions from './submissions';
@@ -18,6 +19,7 @@ const testData = Object.assign(
   FieldKeys,
   FormAttachments,
   Forms,
+  Keys,
   Projects,
   Sessions,
   Submissions,

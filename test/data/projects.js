@@ -16,7 +16,8 @@ export const extendedProjects = dataStore({
     forms = inPast ? faker.random.number() : 0,
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
-    appUsers = inPast ? faker.random.number() : 0
+    appUsers = inPast ? faker.random.number() : 0,
+    key = null
   }) => {
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt
@@ -25,6 +26,7 @@ export const extendedProjects = dataStore({
       id,
       name,
       archived,
+      keyId: key != null ? key.id : null,
       createdAt,
       updatedAt,
       // Extended metadata

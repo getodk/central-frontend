@@ -69,6 +69,7 @@ export const extendedForms = dataStore({
       name,
       version,
       hash: faker.random.hash(32),
+      keyId: project.keyId,
       state,
       // The following two properties do not necessarily match
       // testData.extendedSubmissions.
