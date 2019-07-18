@@ -1,7 +1,7 @@
 import * as Actors from './actors';
 import * as Audits from './audits';
 import * as Backups from './backups';
-import * as FieldKeys from './fieldKeys';
+import * as FieldKeys from './field-keys';
 import * as FormAttachments from './form-attachments';
 import * as Forms from './forms';
 import * as Projects from './projects';
