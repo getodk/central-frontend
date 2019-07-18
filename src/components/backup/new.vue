@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         </p>
         <form @submit.prevent="initiate">
           <label class="form-group">
-            <input ref="passphrase" v-model.trim="passphrase"
+            <input ref="passphrase" v-model.trim="passphrase" type="password"
               :disabled="awaitingResponse" class="form-control"
               placeholder="Passphrase (optional)">
             <span class="form-label">Passphrase (optional)</span>
