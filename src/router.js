@@ -22,7 +22,6 @@ import FormAttachmentList from './components/form-attachment/list.vue';
 import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
-import FormSubmissionList from './components/form/submission/list.vue';
 import NotFound from './components/not-found.vue';
 import ProjectHome from './components/project/home.vue';
 import ProjectList from './components/project/list.vue';
@@ -30,6 +29,7 @@ import ProjectOverview from './components/project/overview.vue';
 import ProjectSettings from './components/project/settings.vue';
 import ProjectShow from './components/project/show.vue';
 import ProjectUserList from './components/project/user/list.vue';
+import SubmissionList from './components/submission/list.vue';
 import SystemHome from './components/system/home.vue';
 import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
@@ -143,7 +143,7 @@ const routes = [
         children: [
           { path: '', component: FormOverview },
           { path: 'media-files', component: FormAttachmentList },
-          { path: 'submissions', component: FormSubmissionList },
+          { path: 'submissions', component: SubmissionList },
           { path: 'settings', component: FormSettings }
         ]
       }
@@ -295,12 +295,7 @@ preserveDataForKey({
 });
 preserveDataForKey({
   key: '*',
-  to: [
-    'FormOverview',
-    'FormAttachmentList',
-    'FormSubmissionList',
-    'FormSettings'
-  ],
+  to: ['FormOverview', 'FormAttachmentList', 'SubmissionList', 'FormSettings'],
   params: ['projectId', 'xmlFormId']
 });
 
@@ -310,7 +305,7 @@ preserveDataForKey({
     // ProjectShow
     'ProjectOverview', 'ProjectUserList', 'FieldKeyList', 'ProjectSettings',
     // FormShow
-    'FormOverview', 'FormAttachmentList', 'FormSubmissionList', 'FormSettings'
+    'FormOverview', 'FormAttachmentList', 'SubmissionList', 'FormSettings'
   ],
   params: ['projectId']
 });

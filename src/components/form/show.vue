@@ -48,10 +48,10 @@ except according to the terms contained in the LICENSE file.
       <loading
         :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
       <div v-show="project != null && form != null && attachments != null">
-        <!-- We only include FormSubmissionList, because it is the only
-        component whose state we want to preserve when the user navigates to a
-        different tab. -->
-        <keep-alive include="FormSubmissionList">
+        <!-- We only include SubmissionList, because it is the only component
+        whose state we want to preserve when the user navigates to a different
+        tab. -->
+        <keep-alive include="SubmissionList">
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to the requests from
           ProjectHome and FormShow. -->
@@ -65,7 +65,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormSubmissionList from './submission/list.vue';
+import SubmissionList from '../submission/list.vue';
 import tab from '../../mixins/tab';
 import { requestData } from '../../store/modules/request';
 
@@ -84,10 +84,10 @@ export default {
   },
   data() {
     return {
-      // Passing these to FormSubmissionList in order to facilitate
-      // FormSubmissionList testing.
-      submissionChunkSizes: FormSubmissionList.props.chunkSizes.default(),
-      scrolledToBottom: FormSubmissionList.props.scrolledToBottom.default
+      // Passing these to SubmissionList in order to facilitate SubmissionList
+      // testing.
+      submissionChunkSizes: SubmissionList.props.chunkSizes.default(),
+      scrolledToBottom: SubmissionList.props.scrolledToBottom.default
     };
   },
   computed: {

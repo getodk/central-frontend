@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
-    <td class="form-submission-list-row-number">{{ rowNumber }}</td>
+    <td class="submission-list-row-number">{{ rowNumber }}</td>
     <td>{{ submission.__system.submitterName }}</td>
     <td>{{ submissionDate }}</td>
   </tr>
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       :title="hasTitle(column) ? fieldValue(column) : null">
       <template v-if="column.type === 'binary'">
         <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
-          class="form-submission-list-binary-link" target="_blank"
+          class="submission-list-binary-link" target="_blank"
           title="File was submitted. Click to download.">
           <span class="icon-check"></span> <span class="icon-download"></span>
         </a>
@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
 import { path } from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
-import { formatDate } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { formatDate } from '../../util/util';
+import { requestData } from '../../store/modules/request';
 
 const TITLE_FIELD_TYPES = [
   'string',
@@ -53,7 +53,7 @@ const TITLE_FIELD_TYPES = [
 ];
 
 export default {
-  name: 'FormSubmissionRow',
+  name: 'SubmissionRow',
   props: {
     projectId: {
       type: String,

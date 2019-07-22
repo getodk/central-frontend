@@ -17,12 +17,12 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-if="submissions != null && submissions.length !== 0"
         slot="right">
-        <a id="form-submission-list-download-button" :href="downloadHref"
+        <a id="submission-list-download-button" :href="downloadHref"
           class="btn btn-primary" target="_blank">
           <span class="icon-arrow-circle-down"></span>Download all
           {{ $pluralize('record', form.submissions, true) }}
         </a>
-        <button id="form-submission-list-analyze-button" type="button"
+        <button id="submission-list-analyze-button" type="button"
           class="btn btn-primary" @click="showModal('analyze')">
           <span class="icon-plug"></span>Analyze via OData
         </button>
@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
     <template v-else-if="schema != null && submissions != null">
       <!-- This table element contains the frozen columns of the submissions
       table, which contain metadata about each submission. -->
-      <table id="form-submission-list-table1" class="table table-condensed">
+      <table id="submission-list-table1" class="table table-condensed">
         <thead>
           <tr>
             <th><!-- Row number --></th>
@@ -43,15 +43,15 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody>
-          <form-submission-row v-for="(submission, index) in submissions"
+          <submission-row v-for="(submission, index) in submissions"
             :key="submission.__id" :project-id="projectId"
             :submission="submission" :row-number="originalCount - index"/>
         </tbody>
       </table>
       <!-- The next table element contains the form-field data and instance ID
       of each submission. -->
-      <div id="form-submission-list-table2-container">
-        <table id="form-submission-list-table2" :class="table2Class">
+      <div id="submission-list-table2-container">
+        <table id="submission-list-table2" :class="table2Class">
           <thead>
             <tr>
               <!-- Adding a title attribute in case the column header is so long
@@ -64,35 +64,35 @@ except according to the terms contained in the LICENSE file.
             </tr>
           </thead>
           <tbody>
-            <form-submission-row v-for="submission of submissions"
+            <submission-row v-for="submission of submissions"
               :key="submission.__id" :project-id="projectId" :form="form"
               :submission="submission" :field-columns="fieldColumns"/>
           </tbody>
         </table>
       </div>
     </template>
-    <div v-if="message != null" id="form-submission-list-message">
-      <div id="form-submission-list-spinner-container">
+    <div v-if="message != null" id="submission-list-message">
+      <div id="submission-list-spinner-container">
         <spinner :state="message.spinner"/>
       </div>
-      <div id="form-submission-list-message-text">{{ message.text }}</div>
+      <div id="submission-list-message-text">{{ message.text }}</div>
     </div>
-    <form-submission-analyze :project-id="projectId" :state="analyze.state"
+    <submission-analyze :project-id="projectId" :state="analyze.state"
       @hide="hideModal('analyze')"/>
   </div>
 </template>
 
 <script>
-import FormSubmissionAnalyze from './analyze.vue';
-import FormSubmissionRow from './row.vue';
-import modal from '../../../mixins/modal';
-import { requestData } from '../../../store/modules/request';
+import SubmissionAnalyze from './analyze.vue';
+import SubmissionRow from './row.vue';
+import modal from '../../mixins/modal';
+import { requestData } from '../../store/modules/request';
 
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
-  name: 'FormSubmissionList',
-  components: { FormSubmissionAnalyze, FormSubmissionRow },
+  name: 'SubmissionList',
+  components: { SubmissionAnalyze, SubmissionRow },
   mixins: [modal()],
   props: {
     projectId: {
@@ -172,9 +172,9 @@ export default {
           idFieldCount += 1;
         else if (type !== 'repeat' && columns.length < 10) {
           const header = path.join('-');
-          const htmlClass = ['form-submission-list-field'];
+          const htmlClass = ['submission-list-field'];
           if (type != null && /^\w+$/.test(type))
-            htmlClass.push(`form-submission-list-${type}-column`);
+            htmlClass.push(`submission-list-${type}-column`);
           const key = this.$uniqueId();
           columns.push({ type, path, header, htmlClass, key });
         }
@@ -188,7 +188,7 @@ export default {
       return {
         table: true,
         'table-condensed': true,
-        'form-submission-list-field-subset': this.schemaAnalysis.subsetShown
+        'submission-list-field-subset': this.schemaAnalysis.subsetShown
       };
     },
     fieldColumns() {
@@ -213,8 +213,8 @@ export default {
       this.chunkCount = 0;
       this.message = null;
 
-      if (oldRoute.name === 'FormSubmissionList' &&
-        newRoute.name === 'FormSubmissionList') {
+      if (oldRoute.name === 'SubmissionList' &&
+        newRoute.name === 'SubmissionList') {
         // The route has changed, but the component's `activated` hook will not
         // be called. Because of that, we call this.fetchSchemaAndFirstChunk()
         // here instead.
@@ -227,10 +227,10 @@ export default {
     // tab, we do not send a new request.
     if (this.schema == null && !this.$store.getters.loading('schema'))
       this.fetchSchemaAndFirstChunk();
-    $(window).on('scroll.form-submission-list', this.onScroll);
+    $(window).on('scroll.submission-list', this.onScroll);
   },
   deactivated() {
-    $(window).off('.form-submission-list');
+    $(window).off('.submission-list');
   },
   methods: {
     loadingMessageText({ top, skip = 0 }) {
@@ -384,7 +384,7 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#form-submission-list-table1 {
+#submission-list-table1 {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
   position: relative;
   // Adding z-index so that the background color of the other table's thead does
@@ -405,7 +405,7 @@ export default {
       border-right: $border-top-table-data;
     }
 
-    &.form-submission-list-row-number {
+    &.submission-list-row-number {
       color: #999;
       font-size: 11px;
       // Adding min-width so that the table's width does not increase as the row
@@ -418,18 +418,18 @@ export default {
   }
 }
 
-#form-submission-list-table2-container {
+#submission-list-table2-container {
   // Placing the margin here rather than on the table so that the horizontal
   // scrollbar appears immediately below the table, above the margin.
   margin-bottom: $margin-bottom-table;
   overflow-x: scroll;
 }
 
-#form-submission-list-table2 {
+#submission-list-table2 {
   margin-bottom: 0;
 
   thead > tr > th, tbody > tr > td {
-    &.form-submission-list-field {
+    &.submission-list-field {
       max-width: 250px;
     }
 
@@ -439,17 +439,17 @@ export default {
   }
 
   tbody > tr > td {
-    &.form-submission-list-int-column,
-    &.form-submission-list-decimal-column {
+    &.submission-list-int-column,
+    &.submission-list-decimal-column {
       text-align: right;
     }
 
-    &.form-submission-list-binary-column {
+    &.submission-list-binary-column {
       text-align: center;
     }
   }
 
-  .form-submission-list-binary-link {
+  .submission-list-binary-link {
     background-color: $color-subpanel-background;
     border-radius: 99px;
     padding: 4px 7px;
@@ -472,7 +472,7 @@ export default {
   }
 
 
-  &.form-submission-list-field-subset {
+  &.submission-list-field-subset {
     $subset-padding-left: 30px;
 
     thead th:last-child {
@@ -531,12 +531,12 @@ export default {
   }
 }
 
-#form-submission-list-message {
+#submission-list-message {
   margin-left: 28px;
   padding-bottom: 38px;
   position: relative;
 
-  #form-submission-list-spinner-container {
+  #submission-list-spinner-container {
     float: left;
     margin-right: 8px;
     position: absolute;
@@ -544,7 +544,7 @@ export default {
     width: 16px; // TODO: eventually probably better not to default spinner to center.
   }
 
-  #form-submission-list-message-text {
+  #submission-list-message-text {
     color: #555;
     font-size: 12px;
     padding-left: 24px;
