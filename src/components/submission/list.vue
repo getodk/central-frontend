@@ -29,8 +29,9 @@ except according to the terms contained in the LICENSE file.
       </template>
     </float-row>
 
-    <p v-if="submissions != null && submissions.length === 0">
-      There are no submissions yet for <strong>{{ form.nameOrId() }}</strong>.
+    <p v-if="submissions != null && submissions.length === 0"
+      class="empty-table-message">
+      There are no Submissions yet for <strong>{{ form.nameOrId() }}</strong>.
     </p>
     <submission-table v-else-if="schema != null && submissions != null"
       :project-id="projectId" :submissions="submissions"

@@ -925,8 +925,7 @@ describe('SubmissionList', () => {
       it('shows a message', () =>
         loadSubmissions(0)
           .afterResponses(component => {
-            const text = component.first('p').text().trim();
-            text.should.startWith('There are no submissions yet');
+            component.find('.empty-table-message').length.should.equal(1);
           }));
 
       it('does not show the download button', () =>
