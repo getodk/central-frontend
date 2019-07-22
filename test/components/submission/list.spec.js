@@ -171,7 +171,7 @@ describe('SubmissionList', () => {
     describe('table data', () => {
       it('contains the correct data for the left half of the table', () =>
         loadSubmissions(2).afterResponses(page => {
-          const tr = page.find('#submission-list-table1 tbody tr');
+          const tr = page.find('#submission-table1 tbody tr');
           const submissions = testData.extendedSubmissions.sorted();
           tr.length.should.equal(submissions.length);
           for (let i = 0; i < tr.length; i += 1) {
@@ -212,14 +212,14 @@ describe('SubmissionList', () => {
           testData.extendedForms
             .createPast(1, { hasInstanceId: true, submissions: 1 });
           return loadSubmissions(1).afterResponses(component => {
-            const th = component.find('#submission-list-table2 th');
+            const th = component.find('#submission-table2 th');
             th.map(wrapper => wrapper.text().trim()).should.eql(headers);
           });
         });
 
         it('contains the correct instance IDs', () =>
           loadSubmissions(2).afterResponses(component => {
-            const tr = component.find('#submission-list-table2 tbody tr');
+            const tr = component.find('#submission-table2 tbody tr');
             const submissions = testData.extendedSubmissions.sorted();
             tr.length.should.equal(submissions.length);
             for (let i = 0; i < tr.length; i += 1) {
@@ -231,13 +231,13 @@ describe('SubmissionList', () => {
         it('correctly formats int values', () =>
           loadSubmissions(1, { hasInt: true }).afterResponses(component => {
             const td = tdByRowAndColumn(
-              component.first('#submission-list-table2 tbody tr'),
+              component.first('#submission-table2 tbody tr'),
               'testInt'
             );
             const submission = testData.extendedSubmissions.last();
             const localeString = submission._oData.testInt.toLocaleString();
             td.text().trim().should.equal(localeString);
-            td.hasClass('submission-list-int-column').should.be.true();
+            td.hasClass('submission-row-int-column').should.be.true();
           }));
 
         describe('decimal values', () => {
@@ -245,10 +245,10 @@ describe('SubmissionList', () => {
             loadSubmissions(1, { hasDecimal: true })
               .afterResponses(component => {
                 const td = tdByRowAndColumn(
-                  component.first('#submission-list-table2 tbody tr'),
+                  component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
-                td.hasClass('submission-list-decimal-column').should.be.true();
+                td.hasClass('submission-row-decimal-column').should.be.true();
               }));
 
           // Array of test cases, where each case is an array with the following
@@ -271,7 +271,7 @@ describe('SubmissionList', () => {
             it(`correctly formats ${testDecimal}`, () =>
               loadSubmissions(1, { testDecimal }).afterResponses(component => {
                 const td = tdByRowAndColumn(
-                  component.first('#submission-list-table2 tbody tr'),
+                  component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
                 td.text().trim().should.equal(localeString);
@@ -282,7 +282,7 @@ describe('SubmissionList', () => {
         it('correctly formats string values', () =>
           loadSubmissions(1, { hasStrings: true }).afterResponses(component => {
             const td = tdByRowAndColumn(
-              component.first('#submission-list-table2 tbody tr'),
+              component.first('#submission-table2 tbody tr'),
               'testString1'
             );
             const { testString1 } = testData.extendedSubmissions.last()._oData;
@@ -306,7 +306,7 @@ describe('SubmissionList', () => {
             it(`correctly formats ${testDate}`, () =>
               loadSubmissions(1, { testDate }).afterResponses(component => {
                 const td = tdByRowAndColumn(
-                  component.first('#submission-list-table2 tbody tr'),
+                  component.first('#submission-table2 tbody tr'),
                   'testDate'
                 );
                 td.text().trim().should.equal(formatted);
@@ -345,7 +345,7 @@ describe('SubmissionList', () => {
               return loadSubmissions(1, { testTime })
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
-                    component.first('#submission-list-table2 tbody tr'),
+                    component.first('#submission-table2 tbody tr'),
                     'testTime'
                   );
                   td.text().trim().should.equal(formatted);
@@ -386,7 +386,7 @@ describe('SubmissionList', () => {
               return loadSubmissions(1, { testDateTime })
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
-                    component.first('#submission-list-table2 tbody tr'),
+                    component.first('#submission-table2 tbody tr'),
                     'testDateTime'
                   );
                   td.text().trim().should.equal(formatted);
@@ -412,7 +412,7 @@ describe('SubmissionList', () => {
             it(`correctly formats ${testGeopoint.coordinates.join(' ')}`, () =>
               loadSubmissions(1, { testGeopoint }).afterResponses(component => {
                 const td = tdByRowAndColumn(
-                  component.first('#submission-list-table2 tbody tr'),
+                  component.first('#submission-table2 tbody tr'),
                   'testGeopoint'
                 );
                 td.text().trim().should.equal(formatted);
@@ -424,10 +424,10 @@ describe('SubmissionList', () => {
           loadSubmissions(1, { instanceId: 'abc 123', testGroup: { testBinary: 'def 456.jpg' } })
             .afterResponses(component => {
               const td = tdByRowAndColumn(
-                component.first('#submission-list-table2 tbody tr'),
+                component.first('#submission-table2 tbody tr'),
                 'testGroup-testBinary'
               );
-              td.hasClass('submission-list-binary-column').should.be.true();
+              td.hasClass('submission-row-binary-column').should.be.true();
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
               $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions/abc%20123/attachments/def%20456.jpg`);
@@ -479,8 +479,8 @@ describe('SubmissionList', () => {
               testData.extendedProjects.createPast(1);
               testData.extendedForms.createPast(1, { schema, submissions: 1 });
               return loadSubmissions(1).afterResponses(component => {
-                const table2 = component.first('#submission-list-table2');
-                table2.hasClass('submission-list-field-subset').should.equal(hasClass);
+                const table2 = component.first('#submission-table2');
+                table2.hasClass('field-subset').should.equal(hasClass);
               });
             });
           }
@@ -501,7 +501,7 @@ describe('SubmissionList', () => {
             .testRefreshButton({
               collection: testData.extendedSubmissions,
               respondWithData: testData.submissionOData,
-              tableSelector: `#submission-list-table${i}`
+              tableSelector: `#submission-table${i}`
             });
         });
       }
@@ -513,7 +513,7 @@ describe('SubmissionList', () => {
         request.url.should.match(new RegExp(`%24skip=${skip}(&|$)`));
       };
       const checkIds = (component, count, offset = 0) => {
-        const rows = component.find('#submission-list-table2 tbody tr');
+        const rows = component.find('#submission-table2 tbody tr');
         rows.length.should.equal(count);
         const submissions = testData.extendedSubmissions.sorted();
         submissions.length.should.be.aboveOrEqual(count + offset);

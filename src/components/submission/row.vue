@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
-    <td class="submission-list-row-number">{{ rowNumber }}</td>
+    <td class="row-number">{{ rowNumber }}</td>
     <td>{{ submission.__system.submitterName }}</td>
     <td>{{ submissionDate }}</td>
   </tr>
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       :title="hasTitle(column) ? fieldValue(column) : null">
       <template v-if="column.type === 'binary'">
         <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
-          class="submission-list-binary-link" target="_blank"
+          class="binary-link" target="_blank"
           title="File was submitted. Click to download.">
           <span class="icon-check"></span> <span class="icon-download"></span>
         </a>
@@ -165,3 +165,53 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#submission-table1 td {
+  &.row-number {
+    color: #999;
+    font-size: 11px;
+    // Adding min-width so that the table's width does not increase as the row
+    // numbers increase.
+    min-width: 42px;
+    padding-top: 11px;
+    text-align: right;
+    vertical-align: middle;
+  }
+}
+
+#submission-table2 td {
+  &.submission-row-int-column,
+  &.submission-row-decimal-column {
+    text-align: right;
+  }
+
+  &.submission-row-binary-column {
+    text-align: center;
+  }
+
+  .binary-link {
+    background-color: $color-subpanel-background;
+    border-radius: 99px;
+    padding: 4px 7px;
+    text-decoration: none;
+
+    .icon-check {
+      color: $color-success;
+      margin-right: 0;
+    }
+
+    .icon-download {
+      border-left: 1px dotted #ccc;
+      color: #bbb;
+      padding-left: 5px;
+    }
+
+    &:hover .icon-download {
+      color: $color-action-foreground;
+    }
+  }
+}
+</style>
