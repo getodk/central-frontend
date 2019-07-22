@@ -5,6 +5,7 @@ import { dataStore } from './data-store';
 export const sessions = dataStore({
   factory: ({ inPast, lastCreatedAt }) => ({
     token: faker.central.token(),
+    csrf: faker.central.token(),
     expiresAt: faker.date.future().toISOString(),
     createdAt: faker.date.timestamps(inPast, [lastCreatedAt]).createdAt
   })

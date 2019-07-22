@@ -11,45 +11,55 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="form != null">
-    <float-row class="table-actions">
-      <template slot="left">
-        <refresh-button :configs="configsForRefresh"/>
-      </template>
-      <template v-if="submissions != null && submissions.length !== 0"
-        slot="right">
-        <a id="submission-list-download-button" :href="downloadHref"
-          class="btn btn-primary" target="_blank">
-          <span class="icon-arrow-circle-down"></span>Download all
-          {{ $pluralize('record', form.submissions, true) }}
-        </a>
-        <button id="submission-list-analyze-button" type="button"
-          class="btn btn-primary" @click="showModal('analyze')">
-          <span class="icon-plug"></span>Analyze via OData
-        </button>
-      </template>
-    </float-row>
+    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
+    <div v-if="keys != null">
+      <float-row class="table-actions">
+        <template #left>
+          <refresh-button :configs="configsForRefresh"/>
+        </template>
+        <template #right>
+          <a v-if="managedKey == null" id="submission-list-download-button"
+            :href="downloadPath" class="btn btn-primary" target="_blank">
+            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}
+          </a>
+          <button v-else id="submission-list-download-button" type="button"
+            class="btn btn-primary" @click="showModal('decrypt')">
+            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}
+          </button>
 
-    <p v-if="submissions != null && submissions.length === 0"
-      class="empty-table-message">
-      There are no Submissions yet for <strong>{{ form.nameOrId() }}</strong>.
-    </p>
-    <submission-table v-else-if="schema != null && submissions != null"
-      :project-id="projectId" :submissions="submissions"
-      :original-count="originalCount"/>
+          <button id="submission-list-analyze-button" type="button"
+            class="btn btn-primary" @click="showModal('analyze')">
+            <span class="icon-plug"></span>Analyze via OData
+          </button>
+        </template>
+      </float-row>
 
-    <div v-if="message != null" id="submission-list-message">
-      <div id="submission-list-spinner-container">
-        <spinner :state="message.spinner"/>
+      <p v-if="submissions != null && submissions.length === 0"
+        class="empty-table-message">
+        There are no Submissions yet for <strong>{{ form.nameOrId() }}</strong>.
+      </p>
+      <submission-table v-else-if="schema != null && submissions != null"
+        :project-id="projectId" :submissions="submissions"
+        :original-count="originalCount"/>
+
+      <div v-if="message != null" id="submission-list-message">
+        <div id="submission-list-spinner-container">
+          <spinner :state="message.spinner"/>
+        </div>
+        <div id="submission-list-message-text">{{ message.text }}</div>
       </div>
-      <div id="submission-list-message-text">{{ message.text }}</div>
+
+      <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
+        :form-action="downloadPath" @hide="hideModal('decrypt')"/>
+      <submission-analyze :state="analyze.state" :project-id="projectId"
+        @hide="hideModal('analyze')"/>
     </div>
-    <submission-analyze :project-id="projectId" :state="analyze.state"
-      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
 <script>
 import SubmissionAnalyze from './analyze.vue';
+import SubmissionDecrypt from './decrypt.vue';
 import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
@@ -58,7 +68,7 @@ const MAX_SMALL_CHUNKS = 4;
 
 export default {
   name: 'SubmissionList',
-  components: { SubmissionAnalyze, SubmissionTable },
+  components: { SubmissionAnalyze, SubmissionDecrypt, SubmissionTable },
   mixins: [modal()],
   props: {
     projectId: {
@@ -94,13 +104,22 @@ export default {
       // last refresh
       chunkCount: 0,
       message: null,
+      decrypt: {
+        state: false
+      },
       analyze: {
         state: false
       }
     };
   },
   computed: {
-    ...requestData(['form', 'schema', 'submissionsChunk']),
+    ...requestData(['form', 'keys', 'schema', 'submissionsChunk']),
+    // Returns the same value as this.form.encodedId(), but unlike
+    // this.form.encodedId(), can be called before the response for the form has
+    // been received.
+    encodedFormId() {
+      return encodeURIComponent(this.xmlFormId);
+    },
     configsForRefresh() {
       return [{
         key: 'submissionsChunk',
@@ -110,11 +129,16 @@ export default {
         }
       }];
     },
-    encodedFormId() {
-      return encodeURIComponent(this.xmlFormId);
+    managedKey() {
+      return this.keys.find(key => key.managed);
     },
-    downloadHref() {
-      return `/v1/projects/${this.projectId}/forms/${this.encodedFormId}/submissions.csv.zip`;
+    downloadPath() {
+      return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
+    },
+    downloadButtonText() {
+      return this.form.submissions <= 1
+        ? 'Download all records'
+        : `Download all ${this.form.submissions.toLocaleString()} records`;
     }
   },
   watch: {
@@ -138,17 +162,20 @@ export default {
       if (oldRoute.name === 'SubmissionList' &&
         newRoute.name === 'SubmissionList') {
         // The route has changed, but the component's `activated` hook will not
-        // be called. Because of that, we call this.fetchSchemaAndFirstChunk()
-        // here instead.
-        this.fetchSchemaAndFirstChunk();
+        // be called. Because of that, we call this.fetchInitialData() here
+        // instead.
+        this.fetchInitialData();
       }
     }
   },
   activated() {
     // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new request.
-    if (this.schema == null && !this.$store.getters.loading('schema'))
-      this.fetchSchemaAndFirstChunk();
+    // tab, we do not send a new set of requests (unless there was a response
+    // error).
+    if ((this.keys == null && !this.$store.getters.loading('keys')) ||
+      (this.schema == null && !this.$store.getters.loading('schema')) ||
+      (this.submissions == null && !this.$store.getters.loading('submissionsChunk')))
+      this.fetchInitialData();
     $(window).on('scroll.submission-list', this.onScroll);
   },
   deactivated() {
@@ -237,12 +264,18 @@ export default {
         };
       }
     },
-    fetchSchemaAndFirstChunk() {
+    fetchInitialData() {
       this.message = {
         text: this.loadingMessageText({ top: this.chunkSizes.small }),
         spinner: true
       };
       this.$store.dispatch('get', [
+        {
+          // We do not keep this.keys in sync with the keyId property of the
+          // project.
+          key: 'keys',
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/submissions/keys`
+        },
         {
           key: 'schema',
           url: `/projects/${this.projectId}/forms/${this.encodedFormId}.schema.json?flatten=true&odata=true`
@@ -269,15 +302,14 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
-      // Return if the request for the form is in progress or resulted in an
-      // error.
-      if (this.form == null) return;
-      if (this.schema == null) return;
-      // If the refresh button is clicked after the first chunk has been
-      // received, then `this.submissionsChunk == null` will be `false`, but
-      // this.$store.getters.loading('submissionsChunk') will be `true`.
-      if (this.submissionsChunk == null ||
-        this.$store.getters.loading('submissionsChunk'))
+      // Return if the request for the form or any of the requests sent by
+      // fetchInitialData() is in progress or resulted in an error.
+      if (this.form == null || this.keys == null || this.schema == null ||
+        this.submissionsChunk == null)
+        return;
+      // Return if the refresh button is clicked after the first chunk is
+      // received.
+      if (this.$store.getters.loading('submissionsChunk'))
         return;
       const skip = this.skip(this.chunkCount);
       if (skip >= this.form.submissions || !this.scrolledToBottom()) return;
@@ -305,6 +337,10 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
+
+#submission-list-download-button {
+  margin-right: 5px;
+}
 
 #submission-list-message {
   margin-left: 28px;

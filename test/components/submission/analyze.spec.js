@@ -34,8 +34,9 @@ describe('SubmissionAnalyze', () => {
       .request(component => {
         // Normally the `activated` hook calls this method, but that hook is not
         // called here, so we call the method ourselves instead.
-        component.vm.fetchSchemaAndFirstChunk();
+        component.vm.fetchInitialData();
       })
+      .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponses(component => {
@@ -60,6 +61,7 @@ describe('SubmissionAnalyze', () => {
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponses(app =>
