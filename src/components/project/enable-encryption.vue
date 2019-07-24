@@ -233,15 +233,11 @@ export default {
     }
 
     p {
-      font-size: 12px;
       margin-bottom: 6px;
       margin-left: 21px;
 
-      &:first-of-type {
-        font-size: 1em;
-      }
-
       + p {
+        font-size: 12px;
         margin-top: -3px;
       }
 
