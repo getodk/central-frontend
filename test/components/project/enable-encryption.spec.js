@@ -112,10 +112,10 @@ describe('ProjectEnableEncryption', () => {
         .request(modal => trigger.click(modal, '.btn-primary')
           .then(() => submitForm(modal, 'form', [
             ['input[placeholder="Passphrase *"]', 'passphrase'],
-            ['input[placeholder="Passphrase hint (optional)"]', 'helpful hint']
+            ['input[placeholder="Passphrase hint (optional)"]', 'some hint']
           ])))
         .beforeEachResponse((modal, config) => {
-          config.data.hint.should.equal('helpful hint');
+          config.data.hint.should.equal('some hint');
         })
         .respondWithSuccess());
   });
