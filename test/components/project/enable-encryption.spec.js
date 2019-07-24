@@ -62,7 +62,7 @@ describe('ProjectEnableEncryption', () => {
           return trigger.click(modal, '.btn-primary');
         })
         .then(modal => {
-          modal.first('input[type="password"]').should.be.focused();
+          modal.first('input').should.be.focused();
         });
     });
 
@@ -73,7 +73,9 @@ describe('ProjectEnableEncryption', () => {
       const modal = component.first(ProjectEnableEncryption);
       return trigger.click(component, '#enable-encryption-button')
         .then(() => trigger.click(modal, '.btn-primary'))
-        .then(() => fillForm(modal, [['input[type="password"]', 'passphrase']]))
+        .then(() => fillForm(modal, [
+          ['input[placeholder="Passphrase *"]', 'passphrase']
+        ]))
         .then(() => trigger.click(modal, '.btn-link'))
         .then(() => trigger.click(component, '#enable-encryption-button'))
         .then(() => {
@@ -93,7 +95,7 @@ describe('ProjectEnableEncryption', () => {
         })
         .request(modal => trigger.click(modal, '.btn-primary')
           .then(() => submitForm(modal, 'form', [
-            ['input[type="password"]', 'passphrase']
+            ['input[placeholder="Passphrase *"]', 'passphrase']
           ])))
         .standardButton());
 
@@ -109,8 +111,8 @@ describe('ProjectEnableEncryption', () => {
         })
         .request(modal => trigger.click(modal, '.btn-primary')
           .then(() => submitForm(modal, 'form', [
-            ['input[type="password"]', 'passphrase'],
-            ['input[type="text"]', 'helpful hint']
+            ['input[placeholder="Passphrase *"]', 'passphrase'],
+            ['input[placeholder="Passphrase hint (optional)"]', 'helpful hint']
           ])))
         .beforeEachResponse((modal, config) => {
           config.data.hint.should.equal('helpful hint');
@@ -131,7 +133,7 @@ describe('ProjectEnableEncryption', () => {
         })
         .request(modal => trigger.click(modal, '.btn-primary')
           .then(() => submitForm(modal, 'form', [
-            ['input[type="password"]', 'passphrase']
+            ['input[placeholder="Passphrase *"]', 'passphrase']
           ])))
         .respondWithSuccess()
         .afterResponse(modal => {
@@ -152,7 +154,7 @@ describe('ProjectEnableEncryption', () => {
               return trigger.click(modal, '.btn-primary');
             })
             .then(modal => submitForm(modal, 'form', [
-              ['input[type="password"]', 'passphrase']
+              ['input[placeholder="Passphrase *"]', 'passphrase']
             ])))
         .respondWithSuccess()
         .afterResponse(component =>

@@ -107,13 +107,12 @@ except according to the terms contained in the LICENSE file.
         </div>
         <form @submit.prevent="submit">
           <label class="form-group">
-            <input ref="passphrase" v-model="passphrase" type="password"
-              class="form-control" placeholder="Passphrase *" required
-              autocomplete="off">
+            <input ref="passphrase" v-model="passphrase" class="form-control"
+              placeholder="Passphrase *" required autocomplete="off">
             <span class="form-label">Passphrase *</span>
           </label>
           <label class="form-group">
-            <input v-model.trim="hint" type="text" class="form-control"
+            <input v-model.trim="hint" class="form-control"
               placeholder="Passphrase hint (optional)" autocomplete="off">
             <span class="form-label">Passphrase hint (optional)</span>
           </label>
