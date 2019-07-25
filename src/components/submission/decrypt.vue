@@ -138,13 +138,16 @@ export default {
     scheduleProblemCheck() {
       this.timeoutId = setTimeout(
         () => {
-          // If there is a Problem, it seems to be wrapped in a <pre> element.
-          const pre = this.$refs.iframe.contentWindow.document
-            .querySelector('pre');
-          if (pre != null) {
+          const doc = this.$refs.iframe.contentWindow.document;
+          // If Backend returns a Problem, the iframe changes pages. However, if
+          // the form submission is successful, it seems that the iframe does
+          // not change pages, and the form remains on the page.
+          if (doc.querySelector('form') == null && doc.body != null) {
             let problem;
             try {
-              problem = JSON.parse(pre.textContent);
+              // Note that the Problem may be wrapped in another element, for
+              // example, a <pre> element.
+              problem = JSON.parse(doc.body.textContent);
             } catch (e) {
               this.$logger.error('cannot parse Problem');
             }

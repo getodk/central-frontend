@@ -37,6 +37,9 @@ const loadSubmissionList = (attachToDocument = false) => {
     .respondWithData(() => testData.extendedForms.last()._schema)
     .respondWithData(testData.submissionOData);
 };
+const wait = (delay) => new Promise(resolve => {
+  setTimeout(resolve, delay);
+});
 const submitDecryptForm = (formAction) => {
   const modal = mountAndMark(SubmissionDecrypt, {
     propsData: {
@@ -47,11 +50,10 @@ const submitDecryptForm = (formAction) => {
     },
     attachToDocument: true
   });
-  return submitForm(modal, 'form', [['input', 'passphrase']]);
+  // Wait for the iframe to load.
+  return wait(200)
+    .then(() => submitForm(modal, 'form', [['input', 'passphrase']]));
 };
-const wait = (delay) => new Promise(resolve => {
-  setTimeout(resolve, delay);
-});
 
 describe('SubmissionDecrypt', () => {
   beforeEach(mockLogin);
@@ -105,11 +107,21 @@ describe('SubmissionDecrypt', () => {
     introductions[1].text().trim().should.equal('Hint: some hint');
   });
 
-  // Normally, the iframe form is submitted immediately after it is created,
-  // after which the iframe may change pages. However, that means that it is
-  // challenging to test things about the iframe form. Here, we do not submit
-  // any form, but simply call the replaceIframeBody() method, then test the
-  // result.
+  /*
+  Normally, the iframe form is submitted immediately after it is created, after
+  which, at least within our tests, the iframe changes pages. However, that
+  means that it is challenging to test things about the iframe form.
+
+  Outside Karma, it seems that the iframe changes pages if a Problem is
+  returned after the form submission, but it does not change pages if the
+  submission is successful. That means that submitting a form successfully might
+  give us a way to test things about the form. However, I'm not sure how to set
+  that up in Karma: in these tests, the iframe always changes pages after the
+  form is submitted, whether successfully or not.
+
+  Instead, here, we do not submit any form, but simply call the
+  replaceIframeBody() method, then test the result.
+  */
   it('appends a form to the iframe with an input whose name equals key id', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     const modal = mountAndMark(SubmissionDecrypt, {
@@ -120,15 +132,20 @@ describe('SubmissionDecrypt', () => {
       },
       attachToDocument: true
     });
-    modal.vm.replaceIframeBody();
-    const { iframe } = modal.vm.$refs;
-    const input = iframe.contentWindow.document.querySelector('input');
-    input.getAttribute('name').should.equal(key.id.toString());
+    // Wait for the iframe to load.
+    return wait(200)
+      .then(() => {
+        modal.vm.replaceIframeBody();
+        const { iframe } = modal.vm.$refs;
+        const input = iframe.contentWindow.document.querySelector('input');
+        input.getAttribute('name').should.equal(key.id.toString());
+      });
   });
 
   describe('after the iframe form is submitted', () => {
     it('shows a danger alert if a Problem is returned', () =>
       submitDecryptForm('/test/files/problem.html')
+        // Wait for a Problem check.
         .then(modal => wait(200)
           .then(() => {
             modal.should.alert(
@@ -137,18 +154,43 @@ describe('SubmissionDecrypt', () => {
             );
           })));
 
-    it('continually checks for a Problem even if a non-Problem is returned', () =>
-      submitDecryptForm('/blank.html')
-        .then(modal => wait(200)
-          .then(() => {
-            const checks = modal.data().problemChecks;
-            checks.should.be.within(2, 299);
-            return wait(200).then(() => {
-              modal.data().problemChecks.should.be.within(1, checks - 1);
-              clearTimeout(modal.data().timeoutId);
+    // We do not actually submit the iframe form here, because that would cause
+    // the iframe to change pages. Instead, we simply create and fill the form,
+    // then call the scheduleProblemCheck() method.
+    it('continually checks for a Problem even if form submission is successful', () => {
+      const key = testData.standardKeys.createPast(1, { managed: true }).last();
+      const modal = mountAndMark(SubmissionDecrypt, {
+        propsData: {
+          state: true,
+          managedKey: key,
+          formAction: '/projects/1/forms/f/submissions.csv.zip',
+          delayBetweenChecks: 1
+        },
+        attachToDocument: true
+      });
+      // Wait for the iframe to load.
+      return wait(200)
+        .then(() => {
+          modal.vm.replaceIframeBody();
+          modal.setData({ problemChecks: 300 });
+          modal.vm.scheduleProblemCheck();
+          // Wait for a Problem check.
+          return wait(200)
+            .then(() => {
+              const checks = modal.data().problemChecks;
+              checks.should.be.within(2, 299);
+              // Wait for another Problem check.
+              return wait(200).then(() => {
+                modal.data().problemChecks.should.be.within(1, checks - 1);
+                clearTimeout(modal.data().timeoutId);
+              });
             });
-          })));
+        });
+    });
 
+    // Here we actually submit the iframe form, which causes the iframe to
+    // change pages. To detect the info alert, we return /blank.html instead of
+    // a Problem.
     it('shows an info alert', () =>
       submitDecryptForm('/blank.html').then(modal => {
         modal.should.alert('info');
