@@ -197,7 +197,7 @@ export default {
 
       .modal-introduction {
         font-size: 14px;
-        line-height: 1.2em;
+        line-height: 1.2;
         margin-bottom: 18px;
       }
 

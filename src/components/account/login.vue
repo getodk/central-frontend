@@ -23,7 +23,8 @@ except according to the terms contained in the LICENSE file.
             </label>
             <label class="form-group">
               <input v-model="password" type="password" class="form-control"
-                placeholder="Password *" required>
+                placeholder="Password *" required
+                autocomplete="current-password">
               <span class="form-label">Password *</span>
             </label>
             <div class="panel-footer">

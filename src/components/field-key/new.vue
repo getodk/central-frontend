@@ -46,17 +46,18 @@ except according to the terms contained in the LICENSE file.
       <template v-else>
         <div class="modal-introduction">
           <div>
-            <span class="icon-check-circle"></span> <strong>Success!</strong>
-            The App User “{{ created.displayName }}” has been created.
+            <span class="icon-check-circle"></span><strong>Success!</strong>
+            The App User &ldquo;{{ created.displayName }}&rdquo; has been
+            created.
           </div>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="created.qrCodeHtml()"></div>
           <div>
-            You can configure a mobile device for “{{ created.displayName }}”
-            right now by
+            You can configure a mobile device for
+            &ldquo;{{ created.displayName }}&rdquo; right now by
             <doc-link to="collect-import-export/">scanning the code above</doc-link>
             into their app. Or you can do it later from the App Users table by
-            clicking “See code.”
+            clicking &ldquo;See code.&rdquo;
           </div>
         </div>
         <div class="modal-actions">
@@ -154,6 +155,7 @@ export default {
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
+    margin-right: 6px;
     vertical-align: middle;
   }
 
