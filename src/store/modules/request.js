@@ -36,6 +36,7 @@ const allKeys = [
   'attachments',
   // A single chunk of submissions OData
   'submissionsChunk',
+  'keys',
   'fieldKeys',
 
   'users',

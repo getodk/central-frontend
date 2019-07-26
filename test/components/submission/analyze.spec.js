@@ -1,20 +1,20 @@
-import FormSubmissionAnalyze from '../../../../src/components/form/submission/analyze.vue';
-import FormSubmissionList from '../../../../src/components/form/submission/list.vue';
-import testData from '../../../data';
-import { mockHttp, mockRoute } from '../../../http';
-import { mockLogin } from '../../../session';
-import { mountAndMark } from '../../../destroy';
-import { trigger } from '../../../event';
+import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
+import SubmissionList from '../../../src/components/submission/list.vue';
+import testData from '../../data';
+import { mockHttp, mockRoute } from '../../http';
+import { mockLogin } from '../../session';
+import { mountAndMark } from '../../destroy';
+import { trigger } from '../../event';
 
 const clickTab = (wrapper, tabText) => {
-  for (const a of wrapper.find('#form-submission-analyze .nav-tabs a')) {
+  for (const a of wrapper.find('#submission-analyze .nav-tabs a')) {
     if (a.text().trim() === tabText)
       return trigger.click(a).then(() => wrapper);
   }
   throw new Error('tab not found');
 };
 
-describe('FormSubmissionAnalyze', () => {
+describe('SubmissionAnalyze', () => {
   beforeEach(mockLogin);
 
   it('opens the modal upon button click', () => {
@@ -24,7 +24,7 @@ describe('FormSubmissionAnalyze', () => {
     testData.extendedSubmissions.createPast(1);
 
     return mockHttp()
-      .mount(FormSubmissionList, {
+      .mount(SubmissionList, {
         propsData: {
           projectId: '1',
           xmlFormId: form.xmlFormId
@@ -34,18 +34,19 @@ describe('FormSubmissionAnalyze', () => {
       .request(component => {
         // Normally the `activated` hook calls this method, but that hook is not
         // called here, so we call the method ourselves instead.
-        component.vm.fetchSchemaAndFirstChunk();
+        component.vm.fetchInitialData();
       })
+      .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponses(component => {
-        component.first(FormSubmissionAnalyze).getProp('state').should.be.false();
+        component.first(SubmissionAnalyze).getProp('state').should.be.false();
         return component;
       })
       .then(component =>
-        trigger.click(component, '#form-submission-list-analyze-button'))
+        trigger.click(component, '#submission-list-analyze-button'))
       .then(component => {
-        component.first(FormSubmissionAnalyze).getProp('state').should.be.true();
+        component.first(SubmissionAnalyze).getProp('state').should.be.true();
       });
   });
 
@@ -60,14 +61,15 @@ describe('FormSubmissionAnalyze', () => {
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
       .afterResponses(app =>
-        trigger.click(app, '#form-submission-list-analyze-button'))
-      .then(app => trigger.click(app, '#form-submission-analyze-odata-url'))
+        trigger.click(app, '#submission-list-analyze-button'))
+      .then(app => trigger.click(app, '#submission-analyze-odata-url'))
       .then(() => {
         const selection = window.getSelection();
-        const url = $('#form-submission-analyze-odata-url')[0];
+        const url = $('#submission-analyze-odata-url')[0];
         selection.anchorNode.should.equal(url);
         selection.focusNode.should.equal(url);
       });
@@ -81,7 +83,7 @@ describe('FormSubmissionAnalyze', () => {
         .last();
       testData.extendedSubmissions.createPast(1);
 
-      modal = mountAndMark(FormSubmissionAnalyze, {
+      modal = mountAndMark(SubmissionAnalyze, {
         propsData: { projectId: '1' },
         requestData: { form }
       });
@@ -95,9 +97,9 @@ describe('FormSubmissionAnalyze', () => {
       const { xmlFormId } = testData.extendedForms.last();
       const baseUrl = `${window.location.origin}/v1/projects/1/forms/${xmlFormId}.svc`;
       const url = `${baseUrl}${urlSuffix}`;
-      modal.first('#form-submission-analyze-odata-url').text().trim().should.equal(url);
+      modal.first('#submission-analyze-odata-url').text().trim().should.equal(url);
       // Test the presence of help text.
-      const help = modal.first('#form-submission-analyze-tool-help');
+      const help = modal.first('#submission-analyze-tool-help');
       ($(help.element).children().length !== 0).should.equal(hasHelp);
     };
 

@@ -16,10 +16,14 @@ module.exports = function(config) {
     frameworks: ['mocha'],
     files: [
       'test/index.js',
-      { pattern: 'public/fonts/icomoon.ttf', included: false, served: true }
+      { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
+      { pattern: 'public/blank.html', served: true, included: false },
+      { pattern: 'test/files/*', served: true, included: false }
     ],
     proxies: {
-      '/fonts/': '/base/public/fonts/'
+      '/fonts/': '/base/public/fonts/',
+      '/blank.html': '/base/public/blank.html',
+      '/test/files/': '/base/test/files/'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
