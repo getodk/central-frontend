@@ -1,10 +1,10 @@
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
+import { fillForm, submitForm, trigger } from '../../event';
 import { mockHttp } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
-import { submitForm, trigger } from '../../event';
 
 const loadSubmissionList = (attachToDocument = false) => {
   // Create test data.
@@ -122,7 +122,7 @@ describe('SubmissionDecrypt', () => {
   Instead, here, we do not submit any form, but simply call the
   replaceIframeBody() method, then test the result.
   */
-  it('appends a form to the iframe with an input whose name equals key id', () => {
+  it('appends a form to the iframe body and fills it', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     const modal = mountAndMark(SubmissionDecrypt, {
       propsData: {
@@ -134,11 +134,19 @@ describe('SubmissionDecrypt', () => {
     });
     // Wait for the iframe to load.
     return wait(200)
+      .then(() => fillForm(modal, [['input', 'secret passphrase']]))
       .then(() => {
         modal.vm.replaceIframeBody();
-        const { iframe } = modal.vm.$refs;
-        const input = iframe.contentWindow.document.querySelector('input');
-        input.getAttribute('name').should.equal(key.id.toString());
+
+        const form = modal.vm.$refs.iframe.contentWindow.document
+          .querySelector('form');
+        form.getAttribute('action').should.equal('/projects/1/forms/f/submissions.csv.zip');
+
+        const inputs = form.querySelectorAll('input');
+        inputs.length.should.equal(2);
+        inputs[0].getAttribute('name').should.equal(key.id.toString());
+        inputs[0].value.should.equal('secret passphrase');
+        inputs[1].value.should.equal(modal.vm.session.csrf);
       });
   });
 

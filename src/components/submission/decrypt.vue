@@ -130,8 +130,6 @@ export default {
 
       passphraseInput.value = this.passphrase;
       csrf.value = this.session.csrf;
-
-      return form;
     },
     // scheduleProblemCheck() checks the iframe for a Problem after waiting. We
     // check for a Problem in this way, because when the iframe form is
