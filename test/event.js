@@ -109,6 +109,25 @@ trigger.dragAndDrop = (...args) => trigger.dragenter(...args)
 ////////////////////////////////////////////////////////////////////////////////
 // TRIGGERING A SERIES OF EVENTS
 
+/*
+fillForm(wrapper, selectorsAndValues) fills a form (whether an actual <form>
+element or something else). It sets the `value` property of one or more fields,
+triggering an input event for each.
+
+`wrapper` is an Avoriaz wrapper that wraps the form or a DOM node or Vue
+component that contains the form. selectorsAndValues is an array of
+[selector, value] arrays that specify how to select each field, as well as the
+field's value.
+
+fillForm() returns a promise that resolves to the wrapper.
+
+For example:
+
+  fillForm(component, [
+    ['input[type="email"]', 'email@opendatakit.org'],
+    ['input[type="password"]', 'password']
+  ]);
+*/
 export const fillForm = (wrapper, selectorsAndValues) => {
   const promise = selectorsAndValues.reduce(
     (acc, [selector, value]) => acc.then(() => {
@@ -123,6 +142,9 @@ export const fillForm = (wrapper, selectorsAndValues) => {
   return promise.then(() => wrapper);
 };
 
+// submitForm(wrapper, formSelector, fieldSelectorsAndValues) fills a form using
+// fillForm(), then submits the form. `wrapper` is an Avoriaz wrapper that
+// contains the form. submitForm() returns a promise that resolves to `wrapper`.
 export const submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
   const form = wrapper.first(formSelector);
   return fillForm(form, fieldSelectorsAndValues)
