@@ -133,7 +133,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-check-circle"></span>
         </p>
         <p class="modal-introduction">
-          <strong>Success!</strong> Encryption has been configured for the
+          <strong>Success!</strong> Encryption has been configured for this
           Project. Any mobile devices will have to fetch or refetch the latest
           Forms for encryption to take place.
         </p>
