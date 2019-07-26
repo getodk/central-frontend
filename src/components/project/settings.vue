@@ -124,7 +124,6 @@ export default {
 
 <style lang="scss">
 #project-settings .panel-simple-danger p {
-  margin-bottom: 15px;
-  margin-top: 10px;
+  margin-bottom: 5px;
 }
 </style>
