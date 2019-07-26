@@ -81,8 +81,10 @@ export default {
       if (this.state) return;
       this.passphrase = '';
       this.problemChecks = 0;
-      if (this.timeoutId != null) clearTimeout(this.timeoutId);
-      this.timeoutId = null;
+      if (this.timeoutId != null) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
     }
   },
   methods: {
@@ -157,9 +159,13 @@ export default {
                 this.$alert().danger(problem.message);
             }
             this.problemChecks = 0;
+            this.timeoutId = null;
           } else {
             this.problemChecks -= 1;
-            if (this.problemChecks !== 0) this.scheduleProblemCheck();
+            if (this.problemChecks > 0)
+              this.scheduleProblemCheck();
+            else
+              this.timeoutId = null;
           }
         },
         this.delayBetweenChecks
@@ -187,9 +193,8 @@ export default {
       // successful, the iframe seems not to change.
       this.$alert().info('Your data download should begin soon. If you have been waiting and it has not started, please try again.');
 
-      if (this.timeoutId != null) clearTimeout(this.timeoutId);
       this.problemChecks = 300;
-      this.scheduleProblemCheck();
+      if (this.timeoutId == null) this.scheduleProblemCheck();
     }
   }
 };
