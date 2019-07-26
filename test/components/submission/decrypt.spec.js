@@ -107,6 +107,23 @@ describe('SubmissionDecrypt', () => {
     introductions[1].text().trim().should.equal('Hint: some hint');
   });
 
+  it('resets the modal after it is hidden', () =>
+    loadSubmissionList()
+      .afterResponses(component =>
+        trigger.click(component, '#submission-list-download-button'))
+      .then(component => {
+        const modal = component.first(SubmissionDecrypt);
+        return fillForm(modal, [['input', 'passphrase']])
+          .then(() => trigger.click(modal, '.btn-link'))
+          .then(() => component);
+      })
+      .then(component =>
+        trigger.click(component, '#submission-list-download-button'))
+      .then(component => {
+        const input = component.first(SubmissionDecrypt).first('input');
+        input.element.value.should.equal('');
+      }));
+
   /*
   Normally, the iframe form is submitted immediately after it is created, after
   which, at least within our tests, the iframe changes pages. However, that
