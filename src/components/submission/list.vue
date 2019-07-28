@@ -311,14 +311,12 @@ export default {
     // This method may need to change once we support submission deletion.
     onScroll() {
       // Return if the request for the form or any of the requests sent by
-      // fetchInitialData() is in progress or resulted in an error.
+      // this.fetchInitialData() is in progress or resulted in an error.
       if (this.form == null || this.keys == null || this.schema == null ||
         this.submissionsChunk == null)
         return;
-      // Return if the refresh button is clicked after the first chunk is
-      // received.
-      if (this.$store.getters.loading('submissionsChunk'))
-        return;
+      // Return if the next chunk of submissions is already loading.
+      if (this.$store.getters.loading('submissionsChunk')) return;
       const skip = this.skip(this.chunkCount);
       if (skip >= this.form.submissions || !this.scrolledToBottom()) return;
       const top = this.chunkCount < MAX_SMALL_CHUNKS
