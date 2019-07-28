@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="form != null">
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <div v-if="keys != null">
+    <template v-if="keys != null">
       <float-row class="table-actions">
         <template #left>
           <refresh-button :configs="configsForRefresh"/>
@@ -34,27 +34,26 @@ except according to the terms contained in the LICENSE file.
           </button>
         </template>
       </float-row>
-
-      <p v-if="submissions != null && submissions.length === 0"
-        class="empty-table-message">
-        There are no Submissions yet for <strong>{{ form.nameOrId() }}</strong>.
-      </p>
-      <submission-table v-else-if="schema != null && submissions != null"
-        :project-id="projectId" :submissions="submissions"
-        :original-count="originalCount"/>
-
+      <template v-if="submissions != null">
+        <p v-if="submissions.length === 0" class="empty-table-message">
+          There are no Submissions yet for
+          <strong>{{ form.nameOrId() }}</strong>.
+        </p>
+        <submission-table v-else-if="schema != null" :project-id="projectId"
+          :submissions="submissions" :original-count="originalCount"/>
+      </template>
       <div v-if="message != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
           <spinner :state="message.spinner"/>
         </div>
         <div id="submission-list-message-text">{{ message.text }}</div>
       </div>
+    </template>
 
-      <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
-        :form-action="downloadPath" @hide="hideModal('decrypt')"/>
-      <submission-analyze :state="analyze.state" :project-id="projectId"
-        @hide="hideModal('analyze')"/>
-    </div>
+    <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
+      :form-action="downloadPath" @hide="hideModal('decrypt')"/>
+    <submission-analyze :state="analyze.state" :project-id="projectId"
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -130,8 +129,11 @@ export default {
         }
       }];
     },
+    // Returns a managed key if there is one among this.keys. Returns null if
+    // there is no managed key or if this.keys is null (because this.keys is
+    // still loading, for example).
     managedKey() {
-      return this.keys.find(key => key.managed);
+      return this.keys != null ? this.keys.find(key => key.managed) : null;
     },
     downloadPath() {
       return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
