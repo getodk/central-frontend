@@ -17,23 +17,48 @@ const clickTab = (wrapper, tabText) => {
 describe('SubmissionAnalyze', () => {
   beforeEach(mockLogin);
 
-  it('opens the modal upon button click', () => {
-    const form = testData.extendedForms
-      .createPast(1, { submissions: 1 })
-      .last();
-    testData.extendedSubmissions.createPast(1);
-
-    return mockHttp()
+  it('disables the button if a Key is returned', () =>
+    mockHttp()
       .mount(SubmissionList, {
-        propsData: {
-          projectId: '1',
-          xmlFormId: form.xmlFormId
-        },
-        requestData: { form }
+        propsData: { projectId: '1', xmlFormId: 'f' },
+        requestData: {
+          project: testData.extendedProjects.createPast(1).last(),
+          form: testData.extendedForms
+            .createPast(1, { xmlFormId: 'f', submissions: 1 })
+            .last(),
+          attachments: testData.extendedFormAttachments.sorted()
+        }
       })
       .request(component => {
         // Normally the `activated` hook calls this method, but that hook is not
         // called here, so we call the method ourselves instead.
+        component.vm.fetchInitialData();
+      })
+      .respondWithData(() =>
+        // The button should be disabled even if the key is not managed.
+        testData.standardKeys.createPast(1, { managed: false }).sorted())
+      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(() => {
+        testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
+        return testData.submissionOData();
+      })
+      .afterResponses(component => {
+        const button = component.first('#submission-list-analyze-button');
+        button.should.be.disabled();
+        button.getAttribute('title').length.should.not.equal(0);
+      }));
+
+  it('shows the modal after the button is clicked', () =>
+    mockHttp()
+      .mount(SubmissionList, {
+        propsData: { projectId: '1', xmlFormId: 'f' },
+        requestData: {
+          project: testData.extendedProjects.createPast(1).last(),
+          form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last(),
+          attachments: testData.extendedFormAttachments.sorted()
+        }
+      })
+      .request(component => {
         component.vm.fetchInitialData();
       })
       .respondWithData(() => testData.standardKeys.sorted())
@@ -47,8 +72,7 @@ describe('SubmissionAnalyze', () => {
         trigger.click(component, '#submission-list-analyze-button'))
       .then(component => {
         component.first(SubmissionAnalyze).getProp('state').should.be.true();
-      });
-  });
+      }));
 
   it('selects the OData URL upon click', () => {
     const form = testData.extendedForms

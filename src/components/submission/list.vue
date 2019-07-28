@@ -28,7 +28,8 @@ except according to the terms contained in the LICENSE file.
           </button>
 
           <button id="submission-list-analyze-button" type="button"
-            class="btn btn-primary" @click="showModal('analyze')">
+            class="btn btn-primary" :disabled="keys.length !== 0"
+            :title="analyzeButtonTitle" @click="showModal('analyze')">
             <span class="icon-plug"></span>Analyze via OData
           </button>
         </template>
@@ -139,6 +140,11 @@ export default {
       return this.form.submissions <= 1
         ? 'Download all records'
         : `Download all ${this.form.submissions.toLocaleString()} records`;
+    },
+    analyzeButtonTitle() {
+      return this.keys.length !== 0
+        ? 'OData access is unavailable due to Form encryption'
+        : '';
     }
   },
   watch: {
