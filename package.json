@@ -9,7 +9,7 @@
     "test": "karma start"
   },
   "dependencies": {
-    "axios": "~0.17",
+    "axios": "~0.18",
     "bootstrap": "~3",
     "core-js": "~2.6",
     "jquery": "~3",
