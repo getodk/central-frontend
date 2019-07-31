@@ -155,7 +155,7 @@ describe('FormNew', () => {
             }));
       });
 
-      it('shows a custom alert message for a 400.5 problem', () =>
+      it('shows a custom alert message for a projectId,xmlFormId,version duplicate', () =>
         mockHttp()
           .mount(FormNew, {
             propsData: { state: true, projectId: '1' }
@@ -164,16 +164,16 @@ describe('FormNew', () => {
             .then(waitForRead)
             .then(() => trigger.click(modal, '#form-new-create-button')))
           .respondWithProblem(() => ({
-            code: 400.5,
-            message: 'Error',
+            code: 409.3,
+            message: 'Some message',
             details: {
               table: 'forms',
-              fields: ['xmlFormId', 'version'],
-              values: ['f', '1']
+              fields: ['projectId', 'xmlFormId', 'version'],
+              values: ['1', 'f', '1']
             }
           }))
           .afterResponse(modal => {
-            modal.should.alert('danger', 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
+            modal.should.alert('danger', 'A Form previously existed in this Project with the same Form ID and version as the Form you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
           }));
     });
   }

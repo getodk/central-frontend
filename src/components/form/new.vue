@@ -156,10 +156,11 @@ export default {
         headers: { 'Content-Type': 'application/xml' },
         data: this.xml,
         problemToAlert: ({ code, details }) => {
-          if (code === 400.5 && details.table === 'forms' &&
-            details.fields.length === 2 && details.fields[0] === 'xmlFormId' &&
-            details.fields[1] === 'version')
-            return 'A Form previously existed which had the same formId and version as the one you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
+          if (code === 409.3 && details.table === 'forms' &&
+            details.fields.length === 3 && details.fields[0] === 'projectId' &&
+            details.fields[1] === 'xmlFormId' &&
+            details.fields[2] === 'version')
+            return 'A Form previously existed in this Project with the same Form ID and version as the Form you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
           return null;
         }
       })
