@@ -8,19 +8,6 @@ import { mountAndMark } from '../../destroy';
 const XML_FILENAME = 'test.xml';
 const XML = '<a><b/></a>';
 
-const findModal = (wrapper) => wrapper.first(FormNew);
-const openModal = (wrapper) => trigger
-  .click(wrapper, '#project-overview-new-form-button')
-  .then(() => findModal(wrapper));
-const propsData = () => ({
-  propsData: {
-    projectId: '1'
-  }
-});
-const createForm = (modal) => {
-  testData.extendedForms.createNew();
-  return modal;
-};
 const file = () => new File([XML], XML_FILENAME);
 const selectFileByInput = (modal) => {
   const input = modal.first('input[type="file"]');
@@ -34,11 +21,12 @@ const dragAndDrop = (modal) =>
 const waitForRead = (modal) => {
   if (modal.data().filename != null)
     return modal.vm.$nextTick().then(() => modal);
-  return new Promise(resolve =>
-    setTimeout(() => resolve(waitForRead(modal)), 0));
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(waitForRead(modal));
+    });
+  });
 };
-const clickCreateButtonInModal = (modal) =>
-  trigger.click(modal.first('#form-new-create-button')).then(() => modal);
 
 const FILE_SELECTION_METHODS = [
   [selectFileByInput, 'file input'],
@@ -67,141 +55,121 @@ describe('FormNew', () => {
         }));
   });
 
-  describe('modal', () => {
-    it('is initially hidden', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .then(findModal)
-        .then(modal => {
-          modal.getProp('state').should.be.false();
-        }));
+  it('shows the modal after the New button is clicked', () =>
+    mockRoute('/projects/1')
+      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedForms.createPast(1).sorted())
+      .afterResponses(app => {
+        app.first(FormNew).getProp('state').should.be.false();
+        return app;
+      })
+      .then(app => trigger.click(app, '#project-overview-new-form-button'))
+      .then(app => {
+        app.first(FormNew).getProp('state').should.be.true();
+      }));
 
-    it('is shown after button click', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .then(openModal)
-        .then(modal => {
-          modal.getProp('state').should.be.true();
-        }));
-  });
-
-  describe('no file selection', () => {
-    let modal;
-    beforeEach(() => {
-      modal = mountAndMark(FormNew, propsData());
+  it('shows an info alert if no file is selected', () => {
+    const modal = mountAndMark(FormNew, {
+      propsData: { state: true, projectId: '1' }
     });
-
-    it('initially shows no alert', () => {
-      modal.should.not.alert();
-    });
-
-    it('shows info message upon button click', () =>
-      clickCreateButtonInModal(modal).then(() => modal.should.alert('info')));
+    modal.should.not.alert();
+    return trigger.click(modal, '#form-new-create-button')
+      .then(() => {
+        modal.should.alert('info');
+      });
   });
 
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
-      it('disables the create button during file read', () =>
-        Promise.resolve(mountAndMark(FormNew, propsData()))
-          .then(createForm)
-          .then(selectFile)
-          .then(modal => {
+      it('disables the Create button while reading the file', () => {
+        const modal = mountAndMark(FormNew, {
+          propsData: { state: true, projectId: '1' }
+        });
+        return selectFile(modal)
+          .then(() => {
             modal.data().reading.should.be.true();
-            const button = modal.first('#form-new-create-button');
-            button.getAttribute('disabled').should.be.ok();
-            return modal;
+            modal.first('#form-new-create-button').should.be.disabled();
           })
-          .then(waitForRead));
+          .then(() => waitForRead(modal));
+      });
 
-      it('modal is updated after file read', () =>
-        Promise.resolve(mountAndMark(FormNew, propsData()))
-          .then(createForm)
-          .then(selectFile)
+      it('updates the modal after reading the file', () => {
+        const modal = mountAndMark(FormNew, {
+          propsData: { state: true, projectId: '1' }
+        });
+        return selectFile(modal)
           .then(waitForRead)
-          .then(modal => {
+          .then(() => {
             modal.data().reading.should.be.false();
             modal.data().filename.should.equal(XML_FILENAME);
             modal.data().xml.should.equal(XML);
-            const button = modal.first('#form-new-create-button');
-            button.element.disabled.should.be.false();
-          }));
+            modal.first('#form-new-create-button').should.not.be.disabled();
+          });
+      });
 
-      it('standard button thinking things', () =>
+      it('implements some standard button things', () =>
         mockHttp()
-          .mount(FormNew, propsData())
-          .request(modal => Promise.resolve(modal)
-            .then(createForm)
-            .then(selectFile)
+          .mount(FormNew, {
+            propsData: { state: true, projectId: '1' }
+          })
+          .request(modal => selectFile(modal)
             .then(waitForRead)
-            .then(clickCreateButtonInModal))
+            .then(() => trigger.click(modal, '#form-new-create-button')))
           .standardButton('#form-new-create-button'));
 
-      describe('after successful submit', () => {
+      describe('after a successful submit', () => {
         let app;
         beforeEach(() => mockRoute('/projects/1')
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() => testData.extendedForms.createPast(1).sorted())
           .afterResponse(component => {
             app = component;
-            testData.extendedForms.createNew({ name: 'xyz', submissions: 0 });
           })
-          .request(() => openModal(app)
-            .then(selectFile)
+          .request(() => trigger.click(app, '#project-overview-new-form-button')
+            .then(() => selectFile(app.first(FormNew)))
             .then(waitForRead)
-            .then(clickCreateButtonInModal))
-          .respondWithData(() => testData.simpleForms.last()) // FormNew
+            .then(() => trigger.click(app, '#form-new-create-button')))
+          .respondWithData(() => testData.simpleForms
+            .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
           .respondWithData(() => testData.extendedFormAttachments.sorted()));
 
         it('redirects to the form overview', () => {
-          const form = testData.extendedForms.last();
-          const encodedFormId = encodeURIComponent(form.xmlFormId);
-          app.vm.$route.path.should.equal(`/projects/1/forms/${encodedFormId}`);
+          app.vm.$route.path.should.equal('/projects/1/forms/f');
         });
 
-        it('shows form name', () => {
-          const form = testData.extendedForms.last();
-          app.first('#page-head-title').text().trim().should.equal(form.name);
+        it('shows the form name', () => {
+          app.first('#page-head-title').text().trim().should.equal('My Form');
         });
 
-        it('shows success message', () => {
+        it('shows a success alert', () => {
           app.should.alert('success');
         });
 
-        describe('after navigating back to the project overview', () => {
-          beforeEach(() => mockHttp()
+        it('renders the correct number of rows in the forms table', () =>
+          mockHttp()
             .route('/projects/1')
-            .respondWithData(() => testData.extendedForms.sorted()));
-
-          it('table has the correct number of rows', () => {
-            app.find('#form-list-table tbody tr').length.should.equal(2);
-          });
-        });
+            .respondWithData(() => testData.extendedForms.sorted())
+            .afterResponse(() => {
+              app.find('#form-list-table tbody tr').length.should.equal(2);
+            }));
       });
 
-      it('shows a custom error message for a 400.5 problem', () =>
+      it('shows a custom alert message for a 400.5 problem', () =>
         mockHttp()
-          .mount(FormNew, propsData())
-          .request(modal => Promise.resolve(modal)
-            .then(createForm)
-            .then(selectFile)
+          .mount(FormNew, {
+            propsData: { state: true, projectId: '1' }
+          })
+          .request(modal => selectFile(modal)
             .then(waitForRead)
-            .then(clickCreateButtonInModal))
+            .then(() => trigger.click(modal, '#form-new-create-button')))
           .respondWithProblem(() => ({
             code: 400.5,
             message: 'Error',
             details: {
               table: 'forms',
-              fields: [
-                'xmlFormId',
-                'version'
-              ],
-              values: [
-                testData.extendedForms.last().xmlFormId,
-                testData.extendedForms.last().version
-              ]
+              fields: ['xmlFormId', 'version'],
+              values: ['f', '1']
             }
           }))
           .afterResponse(modal => {
