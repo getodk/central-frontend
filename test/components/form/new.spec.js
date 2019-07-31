@@ -155,26 +155,49 @@ describe('FormNew', () => {
             }));
       });
 
-      it('shows a custom alert message for a projectId,xmlFormId,version duplicate', () =>
-        mockHttp()
-          .mount(FormNew, {
-            propsData: { state: true, projectId: '1' }
-          })
-          .request(modal => selectFile(modal)
-            .then(waitForRead)
-            .then(() => trigger.click(modal, '#form-new-create-button')))
-          .respondWithProblem(() => ({
-            code: 409.3,
-            message: 'Some message',
-            details: {
-              table: 'forms',
-              fields: ['projectId', 'xmlFormId', 'version'],
-              values: ['1', 'f', '1']
-            }
-          }))
-          .afterResponse(modal => {
-            modal.should.alert('danger', 'A Form previously existed in this Project with the same Form ID and version as the Form you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
-          }));
+      describe('custom alert messages', () => {
+        it('shows a message for a projectId,xmlFormId duplicate', () =>
+          mockHttp()
+            .mount(FormNew, {
+              propsData: { state: true, projectId: '1' }
+            })
+            .request(modal => selectFile(modal)
+              .then(waitForRead)
+              .then(() => trigger.click(modal, '#form-new-create-button')))
+            .respondWithProblem(() => ({
+              code: 409.3,
+              message: 'Some message',
+              details: {
+                table: 'forms',
+                fields: ['projectId', 'xmlFormId'],
+                values: ['1', 'f']
+              }
+            }))
+            .afterResponse(modal => {
+              modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of "f".');
+            }));
+
+        it('shows a message for a projectId,xmlFormId,version duplicate', () =>
+          mockHttp()
+            .mount(FormNew, {
+              propsData: { state: true, projectId: '1' }
+            })
+            .request(modal => selectFile(modal)
+              .then(waitForRead)
+              .then(() => trigger.click(modal, '#form-new-create-button')))
+            .respondWithProblem(() => ({
+              code: 409.3,
+              message: 'Some message',
+              details: {
+                table: 'forms',
+                fields: ['projectId', 'xmlFormId', 'version'],
+                values: ['1', 'f', '1']
+              }
+            }))
+            .afterResponse(modal => {
+              modal.should.alert('danger', 'A Form previously existed in this Project with the same Form ID and version as the Form you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.');
+            }));
+      });
     });
   }
 });
