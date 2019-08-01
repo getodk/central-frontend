@@ -470,6 +470,26 @@ describe('SubmissionList', () => {
       });
     });
 
+    it('indicates whether a submission is encrypted', () => {
+      const key = testData.standardKeys.createPast(1).last();
+      testData.extendedProjects.createPast(1, { key });
+      testData.extendedForms.createPast(1, { submissions: 2 });
+      testData.extendedSubmissions
+        .createPast(1, { status: null })
+        .createPast(1, { status: 'NotDecrypted' });
+      return loadSubmissionList().afterResponses(component => {
+        const tr = component.find('#submission-table2 tbody tr');
+        tr.length.should.equal(2);
+
+        tr[1].hasClass('encrypted-submission').should.be.false();
+        tr[1].find('td').length.should.equal(11);
+
+        tr[0].hasClass('encrypted-submission').should.be.true();
+        tr[0].find('td').length.should.equal(2);
+        tr[0].first('td').getAttribute('colspan').should.equal('10');
+      });
+    });
+
     describe('field subset indicator', () => {
       const id = uniqueSequence();
       const fields = (type, count) => new Array(count).fill(null)

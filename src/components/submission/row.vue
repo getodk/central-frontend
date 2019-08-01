@@ -17,21 +17,33 @@ except according to the terms contained in the LICENSE file.
     <td>{{ submissionDate }}</td>
   </tr>
   <!-- The rest of the table -->
-  <tr v-else>
-    <td v-for="column of fieldColumns" :key="column.key"
-      :class="column.htmlClass"
-      :title="hasTitle(column) ? fieldValue(column) : null">
-      <template v-if="column.type === 'binary'">
-        <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
-          class="binary-link" target="_blank"
-          title="File was submitted. Click to download.">
-          <span class="icon-check"></span> <span class="icon-download"></span>
-        </a>
-      </template>
-      <template v-else>
-        {{ fieldValue(column) }}
-      </template>
-    </td>
+  <tr v-else
+    :class="{ 'encrypted-submission': submission.__system.status != null }">
+    <template v-if="submission.__system.status == null">
+      <td v-for="column of fieldColumns" :key="column.key"
+        :class="column.htmlClass"
+        :title="hasTitle(column) ? fieldValue(column) : null">
+        <template v-if="column.type === 'binary'">
+          <a v-if="fieldValue(column) !== ''" :href="fieldValue(column)"
+            class="binary-link" target="_blank"
+            title="File was submitted. Click to download.">
+            <span class="icon-check"></span> <span class="icon-download"></span>
+          </a>
+        </template>
+        <template v-else>
+          {{ fieldValue(column) }}
+        </template>
+      </td>
+    </template>
+    <template v-else>
+      <td :colspan="fieldColumns.length">
+        <span class="icon-lock"></span>
+        <span class="encryption-message">
+          Data preview is not available due to encryption.
+        </span>
+        <span class="encryption-overlay"></span>
+      </td>
+    </template>
     <td>{{ submission.__id.replace(/^uuid:/, '') }}</td>
   </tr>
 </template>
@@ -169,6 +181,8 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
+$icon-lock-margin-right: 12px;
+
 #submission-table1 td {
   &.row-number {
     color: #999;
@@ -179,6 +193,44 @@ export default {
     padding-top: 11px;
     text-align: right;
     vertical-align: middle;
+  }
+}
+
+#submission-table2 .encrypted-submission {
+  .icon-lock {
+    font-size: 16px;
+    color: #666;
+    margin-right: $icon-lock-margin-right;
+    vertical-align: -2px;
+  }
+
+  .encryption-message {
+    font-style: italic;
+  }
+
+  ~ .encrypted-submission {
+    td:first-child {
+      position: relative;
+    }
+
+    .encryption-message {
+      display: none;
+    }
+
+    .encryption-overlay {
+      background-color: #ddd;
+      display: inline-block;
+      height: 12px;
+      position: absolute;
+      // Adding 4px in order to vertically center the overlay.
+      top: $padding-top-table-data + 4px;
+      // 12px is the width of the .icon-lock (plus a pixel or two for good
+      // measure).
+      width: calc(
+        100% -
+        #{$padding-left-table-data + 12px + $icon-lock-margin-right + $padding-right-table-data}
+      );
+    }
   }
 }
 
