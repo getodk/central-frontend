@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <submission-row v-for="submission of submissions"
-            :key="submission.__id" :project-id="projectId" :form="form"
+            :key="submission.__id" :project-id="projectId"
             :submission="submission" :field-columns="fieldColumns"/>
         </tbody>
       </table>
@@ -74,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...requestData(['form', 'schema']),
+    ...requestData(['schema']),
     // Returns information about the schema after processing it.
     schemaAnalysis() {
       // `columns` holds the columns of the table that correspond to a form
