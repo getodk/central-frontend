@@ -118,7 +118,9 @@ describe('SubmissionAnalyze', () => {
         true
       )));
 
-    it('Other', () => clickTab(modal, 'Other')
-      .then(() => assertContent('Other', '', false)));
+    it('renders the Other tab correctly', () =>
+      clickTab(modal, 'Other').then(() => {
+        assertContent('Other', '', true);
+      }));
   });
 });

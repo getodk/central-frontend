@@ -69,6 +69,12 @@ except according to the terms contained in the LICENSE file.
             target="_blank" rel="noopener">
             this page</a>.
         </p>
+        <p v-else-if="tool === 'other'">
+          For a full description of our OData support, please see
+          <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
+            target="_blank" rel="noopener">
+            this article</a>.
+        </p>
       </div>
       <div id="submission-analyze-actions-container">
         <div class="modal-actions">
