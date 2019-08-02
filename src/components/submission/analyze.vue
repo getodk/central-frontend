@@ -164,6 +164,7 @@ export default {
     margin-bottom: 10px;
     overflow-x: scroll;
     padding: 12px $padding-modal-body;
+    white-space: nowrap;
   }
 
   #submission-analyze-tool-help {
