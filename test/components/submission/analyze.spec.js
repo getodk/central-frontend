@@ -118,6 +118,11 @@ describe('SubmissionAnalyze', () => {
         true
       )));
 
+    it('renders the R tab correctly', () =>
+      clickTab(modal, 'R').then(() => {
+        assertContent('R', '', true);
+      }));
+
     it('renders the Other tab correctly', () =>
       clickTab(modal, 'Other').then(() => {
         assertContent('Other', '', true);

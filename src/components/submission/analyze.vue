@@ -45,6 +45,9 @@ except according to the terms contained in the LICENSE file.
           <li :class="tabClass('tableau')" role="presentation">
             <a href="#" @click.prevent="setTool('tableau')">Tableau</a>
           </li>
+          <li :class="tabClass('r')" role="presentation">
+            <a href="#" @click.prevent="setTool('r')">R</a>
+          </li>
           <li :class="tabClass('other')" role="presentation">
             <a href="#" @click.prevent="setTool('other')">Other</a>
           </li>
@@ -69,6 +72,28 @@ except according to the terms contained in the LICENSE file.
             target="_blank" rel="noopener">
             this page</a>.
         </p>
+        <template v-else-if="tool === 'r'">
+          <p>
+            To access Central data from the free and popular
+            <a href="https://www.r-project.org" target="_blank" rel="noopener">
+              R statistics and analysis tool</a>,
+            we recommend you use
+            <a href="https://dbca-wa.github.io/ruODK/" target="_blank"
+              rel="noopener">
+              ruODK</a>.
+            A guide for getting started with it can be found
+            <a href="https://dbca-wa.github.io/ruODK/articles/odata.html"
+              target="_blank" rel="noopener">
+              here</a>.
+          </p>
+          <p>
+            Just like ODK itself, ruODK is developed and supported by community
+            members. If you wish to help improve it, you can find information
+            <a href="https://github.com/dbca-wa/ruODK/blob/master/CONTRIBUTING.md"
+              target="_blank" rel="noopener">
+              here.</a>
+          </p>
+        </template>
         <p v-else-if="tool === 'other'">
           For a full description of our OData support, please see
           <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
