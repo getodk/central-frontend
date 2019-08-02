@@ -19,9 +19,11 @@ except according to the terms contained in the LICENSE file.
           <p>
             OData is a new standard for transferring data between tools and
             services. Free and powerful analysis tools like Excel,
-            <a :href="links.powerBi.home" target="_blank" rel="noopener">Microsoft Power BI</a>,
+            <a href="https://powerbi.microsoft.com/en-us/" target="_blank"
+              rel="noopener">
+              Microsoft Power BI</a>,
             and
-            <a :href="links.tableau.home" target="_blank" rel="noopener">
+            <a href="https://www.tableau.com/" target="_blank" rel="noopener">
               Tableau
             </a>
             can fetch data over OData for analysis.
@@ -53,13 +55,19 @@ except according to the terms contained in the LICENSE file.
       <div id="submission-analyze-tool-help" class="modal-introduction">
         <p v-if="tool === 'microsoft'">
           For help using OData with Excel, see
-          <a :href="links.excel.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500"
+            target="_blank" rel="noopener">
+            this page</a>.
           For help with Power BI, see
-          <a :href="links.powerBi.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata"
+            target="_blank" rel="noopener">
+            this page</a>.
         </p>
         <p v-else-if="tool === 'tableau'">
           For help using OData with Tableau, see
-          <a :href="links.tableau.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://onlinehelp.tableau.com/current/pro/desktop/en-us/examples_odata.html"
+            target="_blank" rel="noopener">
+            this page</a>.
         </p>
       </div>
       <div id="submission-analyze-actions-container">
@@ -95,21 +103,6 @@ export default {
   },
   computed: {
     ...requestData(['form']),
-    links() {
-      return {
-        excel: {
-          help: 'https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500'
-        },
-        powerBi: {
-          home: 'https://powerbi.microsoft.com/en-us/',
-          help: 'https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata'
-        },
-        tableau: {
-          home: 'https://www.tableau.com/',
-          help: 'https://onlinehelp.tableau.com/current/pro/desktop/en-us/examples_odata.html'
-        }
-      };
-    },
     oDataUrl() {
       const base = `${window.location.origin}/v1/projects/${this.projectId}/forms/${this.form.encodedId()}.svc`;
       return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
