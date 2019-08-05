@@ -78,54 +78,55 @@ describe('SubmissionAnalyze', () => {
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
-      const form = testData.extendedForms
-        .createPast(1, { submissions: 1 })
-        .last();
-      testData.extendedSubmissions.createPast(1);
-
       modal = mountAndMark(SubmissionAnalyze, {
         propsData: { projectId: '1' },
-        requestData: { form }
+        requestData: {
+          form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last()
+        }
       });
     });
 
-    const assertContent = (tabText, urlSuffix, hasHelp) => {
+    const assertContent = (tabText, urlSuffix, helpSubstring) => {
       // Test the text of the active tab.
       const activeTab = modal.first('.nav-tabs li.active');
       activeTab.first('a').text().trim().should.equal(tabText);
       // Test the OData URL.
-      const { xmlFormId } = testData.extendedForms.last();
-      const baseUrl = `${window.location.origin}/v1/projects/1/forms/${xmlFormId}.svc`;
-      const url = `${baseUrl}${urlSuffix}`;
-      modal.first('#submission-analyze-odata-url').text().trim().should.equal(url);
-      // Test the presence of help text.
+      const actualURL = modal.first('#submission-analyze-odata-url').text();
+      const baseURL = `${window.location.origin}/v1/projects/1/forms/f.svc`;
+      actualURL.should.equal(`${baseURL}${urlSuffix}`);
+      // Test the help text.
       const help = modal.first('#submission-analyze-tool-help');
-      ($(help.element).children().length !== 0).should.equal(hasHelp);
+      help.text().should.containEql(helpSubstring);
     };
 
-    it('defaults to Excel/Power BI', () => {
-      assertContent('Excel/Power BI', '', true);
+    it('defaults to the Excel/Power BI tab', () => {
+      assertContent('Excel/Power BI', '', 'For help using OData with Excel,');
     });
 
-    it('Excel/Power BI', () => clickTab(modal, 'Tableau')
-      .then(() => clickTab(modal, 'Excel/Power BI'))
-      .then(() => assertContent('Excel/Power BI', '', true)));
+    it('renders the Excel/Power BI tab correctly', () =>
+      clickTab(modal, 'Tableau')
+        .then(() => clickTab(modal, 'Excel/Power BI'))
+        .then(() => {
+          assertContent('Excel/Power BI', '', 'For help using OData with Excel,');
+        }));
 
-    it('Tableau', () =>
-      clickTab(modal, 'Tableau').then(() => assertContent(
-        'Tableau',
-        `/Submissions?${encodeURIComponent('$')}wkt=true`,
-        true
-      )));
+    it('renders the Tableau tab correctly', () =>
+      clickTab(modal, 'Tableau').then(() => {
+        assertContent(
+          'Tableau',
+          '/Submissions?%24wkt=true',
+          'For help using OData with Tableau,'
+        );
+      }));
 
     it('renders the R tab correctly', () =>
       clickTab(modal, 'R').then(() => {
-        assertContent('R', '', true);
+        assertContent('R', '', 'R statistics and analysis tool');
       }));
 
     it('renders the Other tab correctly', () =>
       clickTab(modal, 'Other').then(() => {
-        assertContent('Other', '', true);
+        assertContent('Other', '', 'For a full description of our OData support,');
       }));
   });
 });
