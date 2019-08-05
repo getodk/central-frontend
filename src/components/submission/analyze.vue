@@ -19,11 +19,14 @@ except according to the terms contained in the LICENSE file.
           <p>
             OData is a new standard for transferring data between tools and
             services. Free and powerful analysis tools like Excel,
-            <a :href="links.powerBi.home" target="_blank" rel="noopener">Microsoft Power BI</a>,
+            <a href="https://powerbi.microsoft.com/en-us/" target="_blank"
+              rel="noopener">
+              Microsoft Power BI</a>,
+            <a href="https://www.tableau.com/" target="_blank" rel="noopener">
+              Tableau</a>,
             and
-            <a :href="links.tableau.home" target="_blank" rel="noopener">
-              Tableau
-            </a>
+            <a href="https://www.r-project.org" target="_blank" rel="noopener">
+              R</a>
             can fetch data over OData for analysis.
           </p>
           <p>
@@ -43,6 +46,9 @@ except according to the terms contained in the LICENSE file.
           <li :class="tabClass('tableau')" role="presentation">
             <a href="#" @click.prevent="setTool('tableau')">Tableau</a>
           </li>
+          <li :class="tabClass('r')" role="presentation">
+            <a href="#" @click.prevent="setTool('r')">R</a>
+          </li>
           <li :class="tabClass('other')" role="presentation">
             <a href="#" @click.prevent="setTool('other')">Other</a>
           </li>
@@ -53,13 +59,47 @@ except according to the terms contained in the LICENSE file.
       <div id="submission-analyze-tool-help" class="modal-introduction">
         <p v-if="tool === 'microsoft'">
           For help using OData with Excel, see
-          <a :href="links.excel.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500"
+            target="_blank" rel="noopener">
+            this page</a>.
           For help with Power BI, see
-          <a :href="links.powerBi.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata"
+            target="_blank" rel="noopener">
+            this page</a>.
         </p>
         <p v-else-if="tool === 'tableau'">
           For help using OData with Tableau, see
-          <a :href="links.tableau.help" target="_blank" rel="noopener">this page</a>.
+          <a href="https://onlinehelp.tableau.com/current/pro/desktop/en-us/examples_odata.html"
+            target="_blank" rel="noopener">
+            this page</a>.
+        </p>
+        <template v-else-if="tool === 'r'">
+          <p>
+            To access Central data from the free and popular
+            <a href="https://www.r-project.org" target="_blank" rel="noopener">
+              R statistics and analysis tool</a>,
+            we recommend you use
+            <a href="https://dbca-wa.github.io/ruODK/" target="_blank"
+              rel="noopener">
+              ruODK</a>.
+            A guide for getting started with it can be found
+            <a href="https://dbca-wa.github.io/ruODK/articles/odata.html"
+              target="_blank" rel="noopener">
+              here</a>.
+          </p>
+          <p>
+            Just like ODK itself, ruODK is developed and supported by community
+            members. If you wish to help improve it, you can find information
+            <a href="https://github.com/dbca-wa/ruODK/blob/master/CONTRIBUTING.md"
+              target="_blank" rel="noopener">
+              here</a>.
+          </p>
+        </template>
+        <p v-else-if="tool === 'other'">
+          For a full description of our OData support, please see
+          <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
+            target="_blank" rel="noopener">
+            this article</a>.
         </p>
       </div>
       <div id="submission-analyze-actions-container">
@@ -95,21 +135,6 @@ export default {
   },
   computed: {
     ...requestData(['form']),
-    links() {
-      return {
-        excel: {
-          help: 'https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500'
-        },
-        powerBi: {
-          home: 'https://powerbi.microsoft.com/en-us/',
-          help: 'https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata'
-        },
-        tableau: {
-          home: 'https://www.tableau.com/',
-          help: 'https://onlinehelp.tableau.com/current/pro/desktop/en-us/examples_odata.html'
-        }
-      };
-    },
     oDataUrl() {
       const base = `${window.location.origin}/v1/projects/${this.projectId}/forms/${this.form.encodedId()}.svc`;
       return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
@@ -164,6 +189,7 @@ export default {
     margin-bottom: 10px;
     overflow-x: scroll;
     padding: 12px $padding-modal-body;
+    white-space: nowrap;
   }
 
   #submission-analyze-tool-help {
