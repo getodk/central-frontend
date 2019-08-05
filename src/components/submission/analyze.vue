@@ -22,9 +22,11 @@ except according to the terms contained in the LICENSE file.
             <a href="https://powerbi.microsoft.com/en-us/" target="_blank"
               rel="noopener">
               Microsoft Power BI</a>,
-            and
             <a href="https://www.tableau.com/" target="_blank" rel="noopener">
-              Tableau</a>
+              Tableau</a>,
+            and
+            <a href="https://www.r-project.org" target="_blank" rel="noopener">
+              R</a>
             can fetch data over OData for analysis.
           </p>
           <p>
