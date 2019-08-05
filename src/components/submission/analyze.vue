@@ -24,8 +24,7 @@ except according to the terms contained in the LICENSE file.
               Microsoft Power BI</a>,
             and
             <a href="https://www.tableau.com/" target="_blank" rel="noopener">
-              Tableau
-            </a>
+              Tableau</a>
             can fetch data over OData for analysis.
           </p>
           <p>
