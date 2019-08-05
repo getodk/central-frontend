@@ -91,7 +91,7 @@ except according to the terms contained in the LICENSE file.
             members. If you wish to help improve it, you can find information
             <a href="https://github.com/dbca-wa/ruODK/blob/master/CONTRIBUTING.md"
               target="_blank" rel="noopener">
-              here.</a>
+              here</a>.
           </p>
         </template>
         <p v-else-if="tool === 'other'">
