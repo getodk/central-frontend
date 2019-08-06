@@ -181,6 +181,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
+$icon-lock-margin-left: 3px;
 $icon-lock-margin-right: 12px;
 
 #submission-table1 td {
@@ -200,6 +201,7 @@ $icon-lock-margin-right: 12px;
   .icon-lock {
     font-size: 16px;
     color: #666;
+    margin-left: $icon-lock-margin-left;
     margin-right: $icon-lock-margin-right;
     vertical-align: -2px;
   }
@@ -226,10 +228,8 @@ $icon-lock-margin-right: 12px;
       top: $padding-top-table-data + 4px;
       // 12px is the width of the .icon-lock (plus a pixel or two for good
       // measure).
-      width: calc(
-        100% -
-        #{$padding-left-table-data + 12px + $icon-lock-margin-right + $padding-right-table-data}
-      );
+      width: calc(100% - #{$padding-left-table-data + $icon-lock-margin-left} -
+        12px - #{$icon-lock-margin-right + $padding-right-table-data});
     }
   }
 }
