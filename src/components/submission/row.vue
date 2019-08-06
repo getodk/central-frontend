@@ -38,9 +38,8 @@ except according to the terms contained in the LICENSE file.
     <template v-else>
       <td :colspan="fieldColumns.length">
         <span class="icon-lock"></span>
-        <span class="encryption-message">
-          Data preview is not available due to encryption.
-        </span>
+        <span class="encryption-message">Data preview is not available due to
+          encryption.</span>
         <span class="encryption-overlay"></span>
       </td>
     </template>
