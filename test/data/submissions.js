@@ -89,6 +89,7 @@ export const extendedSubmissions = dataStore({
 
     form = extendedForms.randomOrCreatePast(),
     instanceId = faker.random.uuid(),
+    status = null,
 
     hasInt = faker.random.boolean(),
     hasDecimal = faker.random.boolean(),
@@ -123,6 +124,7 @@ export const extendedSubmissions = dataStore({
           ...partialOData,
           __id: instanceId,
           __system: {
+            status,
             submissionDate: createdAt,
             submitterId: submitter.id.toString(),
             submitterName: submitter.displayName
@@ -145,6 +147,8 @@ export const extendedSubmissions = dataStore({
     submission1.createdAt > submission2.createdAt)
 });
 
+// Converts submission response objects to OData. Returns all data even for
+// encrypted submissions.
 export const submissionOData = (top = 250, skip = 0) => {
   const result = { '@odata.count': extendedSubmissions.size };
   if (extendedSubmissions.size !== 0) {

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="form != null">
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <div v-if="keys != null">
+    <template v-if="keys != null">
       <float-row class="table-actions">
         <template #left>
           <refresh-button :configs="configsForRefresh"/>
@@ -28,32 +28,32 @@ except according to the terms contained in the LICENSE file.
           </button>
 
           <button id="submission-list-analyze-button" type="button"
-            class="btn btn-primary" @click="showModal('analyze')">
+            class="btn btn-primary" :disabled="keys.length !== 0"
+            :title="analyzeButtonTitle" @click="showModal('analyze')">
             <span class="icon-plug"></span>Analyze via OData
           </button>
         </template>
       </float-row>
-
-      <p v-if="submissions != null && submissions.length === 0"
-        class="empty-table-message">
-        There are no Submissions yet for <strong>{{ form.nameOrId() }}</strong>.
-      </p>
-      <submission-table v-else-if="schema != null && submissions != null"
-        :project-id="projectId" :submissions="submissions"
-        :original-count="originalCount"/>
-
+      <template v-if="submissions != null">
+        <p v-if="submissions.length === 0" class="empty-table-message">
+          There are no Submissions yet for
+          <strong>{{ form.nameOrId() }}</strong>.
+        </p>
+        <submission-table v-else-if="schema != null" :project-id="projectId"
+          :submissions="submissions" :original-count="originalCount"/>
+      </template>
       <div v-if="message != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
           <spinner :state="message.spinner"/>
         </div>
         <div id="submission-list-message-text">{{ message.text }}</div>
       </div>
+    </template>
 
-      <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
-        :form-action="downloadPath" @hide="hideModal('decrypt')"/>
-      <submission-analyze :state="analyze.state" :project-id="projectId"
-        @hide="hideModal('analyze')"/>
-    </div>
+    <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
+      :form-action="downloadPath" @hide="hideModal('decrypt')"/>
+    <submission-analyze :state="analyze.state" :project-id="projectId"
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -129,8 +129,11 @@ export default {
         }
       }];
     },
+    // Returns a managed key if there is one among this.keys. Returns null if
+    // there is no managed key or if this.keys is null (because this.keys is
+    // still loading, for example).
     managedKey() {
-      return this.keys.find(key => key.managed);
+      return this.keys != null ? this.keys.find(key => key.managed) : null;
     },
     downloadPath() {
       return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
@@ -139,6 +142,11 @@ export default {
       return this.form.submissions <= 1
         ? 'Download all records'
         : `Download all ${this.form.submissions.toLocaleString()} records`;
+    },
+    analyzeButtonTitle() {
+      return this.keys.length !== 0
+        ? 'OData access is unavailable due to Form encryption'
+        : '';
     }
   },
   watch: {
@@ -303,14 +311,12 @@ export default {
     // This method may need to change once we support submission deletion.
     onScroll() {
       // Return if the request for the form or any of the requests sent by
-      // fetchInitialData() is in progress or resulted in an error.
+      // this.fetchInitialData() is in progress or resulted in an error.
       if (this.form == null || this.keys == null || this.schema == null ||
         this.submissionsChunk == null)
         return;
-      // Return if the refresh button is clicked after the first chunk is
-      // received.
-      if (this.$store.getters.loading('submissionsChunk'))
-        return;
+      // Return if the next chunk of submissions is already loading.
+      if (this.$store.getters.loading('submissionsChunk')) return;
       const skip = this.skip(this.chunkCount);
       if (skip >= this.form.submissions || !this.scrolledToBottom()) return;
       const top = this.chunkCount < MAX_SMALL_CHUNKS

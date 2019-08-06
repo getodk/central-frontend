@@ -119,24 +119,22 @@ describe('SubmissionList', () => {
       return testData.extendedForms.last();
     };
     const encodedFormId = () => encodeURIComponent(form().xmlFormId);
-    const loadSubmissions = (
-      count,
-      factoryOptions = {},
-      chunkSizes = [],
-      scrolledToBottom = true
-    ) => {
-      // Create test data.
-      if (testData.extendedForms.size === 0) {
-        if (testData.extendedProjects.size === 0)
-          testData.extendedProjects.createPast(1);
-        testData.extendedForms.createPast(1, { submissions: count });
-      }
+    // Create submissions along with the associated project and form.
+    const createSubmissions = (count, factoryOptions = {}) => {
+      testData.extendedProjects.size.should.equal(0);
+      testData.extendedForms.size.should.equal(0);
+      testData.extendedSubmissions.size.should.equal(0);
+
+      testData.extendedProjects.createPast(1);
+      testData.extendedForms.createPast(1, { submissions: count });
+      testData.extendedSubmissions.createPast(count, factoryOptions);
+    };
+    const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
+      // Check test data.
       testData.extendedProjects.size.should.equal(1);
       testData.extendedForms.size.should.equal(1);
-      testData.extendedSubmissions.size.should.equal(0);
-      if (testData.extendedForms.last().submissions !== count)
-        throw new Error('submission count inconsistency');
-      testData.extendedSubmissions.createPast(count, factoryOptions);
+      const formSubmissionCount = testData.extendedForms.last().submissions;
+      formSubmissionCount.should.equal(testData.extendedSubmissions.size);
 
       const [small = 250, large = 1000] = chunkSizes;
       return mockHttp()
@@ -176,8 +174,9 @@ describe('SubmissionList', () => {
         .respondWithData([/* no responses */]));
 
     describe('table data', () => {
-      it('contains the correct data for the left half of the table', () =>
-        loadSubmissions(2).afterResponses(page => {
+      it('contains the correct data for the left half of the table', () => {
+        createSubmissions(2);
+        return loadSubmissionList().afterResponses(page => {
           const tr = page.find('#submission-table1 tbody tr');
           const submissions = testData.extendedSubmissions.sorted();
           tr.length.should.equal(submissions.length);
@@ -192,7 +191,8 @@ describe('SubmissionList', () => {
               : '');
             td[2].text().trim().should.equal(formatDate(submission.createdAt));
           }
-        }));
+        });
+      });
 
       describe('right half of the table', () => {
         const headers = [
@@ -218,14 +218,16 @@ describe('SubmissionList', () => {
           testData.extendedProjects.createPast(1);
           testData.extendedForms
             .createPast(1, { hasInstanceId: true, submissions: 1 });
-          return loadSubmissions(1).afterResponses(component => {
+          testData.extendedSubmissions.createPast(1);
+          return loadSubmissionList().afterResponses(component => {
             const th = component.find('#submission-table2 th');
             th.map(wrapper => wrapper.text().trim()).should.eql(headers);
           });
         });
 
-        it('contains the correct instance IDs', () =>
-          loadSubmissions(2).afterResponses(component => {
+        it('contains the correct instance IDs', () => {
+          createSubmissions(2);
+          return loadSubmissionList().afterResponses(component => {
             const tr = component.find('#submission-table2 tbody tr');
             const submissions = testData.extendedSubmissions.sorted();
             tr.length.should.equal(submissions.length);
@@ -233,10 +235,12 @@ describe('SubmissionList', () => {
               const td = tdByRowAndColumn(tr[i], 'Instance ID');
               td.text().trim().should.equal(submissions[i].instanceId);
             }
-          }));
+          });
+        });
 
-        it('correctly formats int values', () =>
-          loadSubmissions(1, { hasInt: true }).afterResponses(component => {
+        it('correctly formats int values', () => {
+          createSubmissions(1, { hasInt: true });
+          return loadSubmissionList().afterResponses(component => {
             const td = tdByRowAndColumn(
               component.first('#submission-table2 tbody tr'),
               'testInt'
@@ -245,18 +249,21 @@ describe('SubmissionList', () => {
             const localeString = submission._oData.testInt.toLocaleString();
             td.text().trim().should.equal(localeString);
             td.hasClass('submission-row-int-column').should.be.true();
-          }));
+          });
+        });
 
         describe('decimal values', () => {
-          it('adds the correct class', () =>
-            loadSubmissions(1, { hasDecimal: true })
+          it('adds the correct class', () => {
+            createSubmissions(1, { hasDecimal: true });
+            return loadSubmissionList()
               .afterResponses(component => {
                 const td = tdByRowAndColumn(
                   component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
                 td.hasClass('submission-row-decimal-column').should.be.true();
-              }));
+              });
+          });
 
           // Array of test cases, where each case is an array with the following
           // structure:
@@ -275,19 +282,22 @@ describe('SubmissionList', () => {
             [-0.0000000000001, '-0']
           ];
           for (const [testDecimal, localeString] of cases) {
-            it(`correctly formats ${testDecimal}`, () =>
-              loadSubmissions(1, { testDecimal }).afterResponses(component => {
+            it(`correctly formats ${testDecimal}`, () => {
+              createSubmissions(1, { testDecimal });
+              return loadSubmissionList().afterResponses(component => {
                 const td = tdByRowAndColumn(
                   component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
                 td.text().trim().should.equal(localeString);
-              }));
+              });
+            });
           }
         });
 
-        it('correctly formats string values', () =>
-          loadSubmissions(1, { hasStrings: true }).afterResponses(component => {
+        it('correctly formats string values', () => {
+          createSubmissions(1, { hasStrings: true });
+          return loadSubmissionList().afterResponses(component => {
             const td = tdByRowAndColumn(
               component.first('#submission-table2 tbody tr'),
               'testString1'
@@ -295,7 +305,8 @@ describe('SubmissionList', () => {
             const { testString1 } = testData.extendedSubmissions.last()._oData;
             td.text().trim().should.equal(testString1.trim());
             td.getAttribute('title').should.equal(testString1);
-          }));
+          });
+        });
 
         describe('date values', () => {
           // Each test case is an array with the following structure:
@@ -310,14 +321,16 @@ describe('SubmissionList', () => {
             ['2018/01/01', 'Invalid DateTime']
           ];
           for (const [testDate, formatted] of cases) {
-            it(`correctly formats ${testDate}`, () =>
-              loadSubmissions(1, { testDate }).afterResponses(component => {
+            it(`correctly formats ${testDate}`, () => {
+              createSubmissions(1, { testDate });
+              return loadSubmissionList().afterResponses(component => {
                 const td = tdByRowAndColumn(
                   component.first('#submission-table2 tbody tr'),
                   'testDate'
                 );
                 td.text().trim().should.equal(formatted);
-              }));
+              });
+            });
           }
         });
 
@@ -346,10 +359,13 @@ describe('SubmissionList', () => {
           ];
           for (const [defaultZoneName, now, testTime, formatted] of cases) {
             it(`correctly formats ${testTime}`, () => {
+              createSubmissions(1, { testTime });
+
               const settings = { defaultZoneName };
               if (now != null) settings.now = now;
               const restoreLuxon = setLuxon(settings);
-              return loadSubmissions(1, { testTime })
+
+              return loadSubmissionList()
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
                     component.first('#submission-table2 tbody tr'),
@@ -387,10 +403,13 @@ describe('SubmissionList', () => {
           ];
           for (const [defaultZoneName, now, testDateTime, formatted] of cases) {
             it(`correctly formats ${testDateTime}`, () => {
+              createSubmissions(1, { testDateTime });
+
               const settings = { defaultZoneName };
               if (now != null) settings.now = now;
               const restoreLuxon = setLuxon(settings);
-              return loadSubmissions(1, { testDateTime })
+
+              return loadSubmissionList()
                 .afterResponses(component => {
                   const td = tdByRowAndColumn(
                     component.first('#submission-table2 tbody tr'),
@@ -416,19 +435,25 @@ describe('SubmissionList', () => {
             [geopoint(0.1234567, 0.1234567, 0.15), '0.1234567 0.1234567 0.2']
           ];
           for (const [testGeopoint, formatted] of cases) {
-            it(`correctly formats ${testGeopoint.coordinates.join(' ')}`, () =>
-              loadSubmissions(1, { testGeopoint }).afterResponses(component => {
+            it(`correctly formats ${testGeopoint.coordinates.join(' ')}`, () => {
+              createSubmissions(1, { testGeopoint });
+              return loadSubmissionList().afterResponses(component => {
                 const td = tdByRowAndColumn(
                   component.first('#submission-table2 tbody tr'),
                   'testGeopoint'
                 );
                 td.text().trim().should.equal(formatted);
-              }));
+              });
+            });
           }
         });
 
-        it('correctly formats binary values', () =>
-          loadSubmissions(1, { instanceId: 'abc 123', testGroup: { testBinary: 'def 456.jpg' } })
+        it('correctly formats binary values', () => {
+          createSubmissions(1, {
+            instanceId: 'abc 123',
+            testGroup: { testBinary: 'def 456.jpg' }
+          });
+          return loadSubmissionList()
             .afterResponses(component => {
               const td = tdByRowAndColumn(
                 component.first('#submission-table2 tbody tr'),
@@ -440,7 +465,28 @@ describe('SubmissionList', () => {
               $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions/abc%20123/attachments/def%20456.jpg`);
               $a.find('.icon-check').length.should.equal(1);
               $a.find('.icon-download').length.should.equal(1);
-            }));
+            });
+        });
+      });
+    });
+
+    it('indicates whether a submission is encrypted', () => {
+      const key = testData.standardKeys.createPast(1).last();
+      testData.extendedProjects.createPast(1, { key });
+      testData.extendedForms.createPast(1, { submissions: 2 });
+      testData.extendedSubmissions
+        .createPast(1, { status: null })
+        .createPast(1, { status: 'NotDecrypted' });
+      return loadSubmissionList().afterResponses(component => {
+        const tr = component.find('#submission-table2 tbody tr');
+        tr.length.should.equal(2);
+
+        tr[1].hasClass('encrypted-submission').should.be.false();
+        tr[1].find('td').length.should.equal(11);
+
+        tr[0].hasClass('encrypted-submission').should.be.true();
+        tr[0].find('td').length.should.equal(2);
+        tr[0].first('td').getAttribute('colspan').should.equal('10');
       });
     });
 
@@ -485,7 +531,8 @@ describe('SubmissionList', () => {
             it(description, () => {
               testData.extendedProjects.createPast(1);
               testData.extendedForms.createPast(1, { schema, submissions: 1 });
-              return loadSubmissions(1).afterResponses(component => {
+              testData.extendedSubmissions.createPast(1);
+              return loadSubmissionList().afterResponses(component => {
                 const table2 = component.first('#submission-table2');
                 table2.hasClass('field-subset').should.equal(hasClass);
               });
@@ -495,11 +542,12 @@ describe('SubmissionList', () => {
       }
     });
 
-    it('shows a message if there are no submissions', () =>
-      loadSubmissions(0)
-        .afterResponses(component => {
-          component.find('.empty-table-message').length.should.equal(1);
-        }));
+    it('shows a message if there are no submissions', () => {
+      testData.extendedForms.createPast(1, { submissions: 0 });
+      return loadSubmissionList().afterResponses(component => {
+        component.find('.empty-table-message').length.should.equal(1);
+      });
+    });
 
     describe('refresh button', () => {
       for (let i = 1; i <= 2; i += 1) {
@@ -522,23 +570,27 @@ describe('SubmissionList', () => {
     });
 
     describe('download button', () => {
-      it('shows the number of submissions', () =>
-        loadSubmissions(2)
+      it('shows the number of submissions', () => {
+        createSubmissions(2);
+        return loadSubmissionList()
           .afterResponses(page => {
             const button = page.first('#submission-list-download-button');
             const text = button.text().trim().replace(/\s+/g, ' ');
             const count = testData.extendedSubmissions.size;
             text.should.equal(`Download all ${count} records`);
-          }));
+          });
+      });
 
-      it('has the correct href', () =>
-        loadSubmissions(1)
+      it('has the correct href', () => {
+        createSubmissions(1);
+        return loadSubmissionList()
           .afterResponses(page => {
             const button = page.first('#submission-list-download-button');
             const $button = $(button.element);
             $button.prop('tagName').should.equal('A');
             $button.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions.csv.zip`);
-          }));
+          });
+      });
     });
 
     describe('load by chunk', () => {
@@ -569,7 +621,8 @@ describe('SubmissionList', () => {
 
       it('loads a single submission', () => {
         let tested = false;
-        return loadSubmissions(1)
+        createSubmissions(1);
+        return loadSubmissionList()
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
             checkMessage(component, true, 'Loading 1 submission…');
@@ -582,7 +635,8 @@ describe('SubmissionList', () => {
 
       it('loads all submissions if there are few of them', () => {
         let tested = false;
-        return loadSubmissions(2)
+        createSubmissions(2);
+        return loadSubmissionList()
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
             checkMessage(component, true, 'Loading 2 submissions…');
@@ -595,7 +649,8 @@ describe('SubmissionList', () => {
 
       it('initially loads only the first chunk if there are many submissions', () => {
         let tested = false;
-        return loadSubmissions(3, {}, [2])
+        createSubmissions(3);
+        return loadSubmissionList([2])
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
             checkMessage(component, true, 'Loading the first 2 of 3 submissions…');
@@ -608,14 +663,17 @@ describe('SubmissionList', () => {
           });
       });
 
-      it('shows the total in the download button even if there are multiple chunks', () =>
-        loadSubmissions(10, {}, [2]).afterResponses(component => {
+      it('shows the total in the download button even if there are multiple chunks', () => {
+        createSubmissions(10);
+        return loadSubmissionList([2]).afterResponses(component => {
           const button = component.first('#submission-list-download-button');
           button.text().trim().iTrim().should.equal('Download all 10 records');
-        }));
+        });
+      });
 
-      it('clicking the refresh button loads only the first chunk of submissions', () =>
-        loadSubmissions(3, {}, [2])
+      it('clicking refresh button loads only first chunk of submissions', () => {
+        createSubmissions(3);
+        return loadSubmissionList([2])
           .complete()
           .request(component => trigger.click(component, '.btn-refresh'))
           .beforeEachResponse((component, request) => {
@@ -624,13 +682,15 @@ describe('SubmissionList', () => {
           .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
             checkIds(component, 2);
-          }));
+          });
+      });
 
       describe('scrolling', () => {
         it('scrolling to the bottom loads the next chunk of submissions', () => {
           let tested = false;
+          createSubmissions(12);
           // Chunk 1
-          return loadSubmissions(12, {}, [2, 3])
+          return loadSubmissionList([2, 3])
             .beforeEachResponse((component, request) => {
               if (!request.url.includes('.svc/Submissions')) return;
               checkMessage(component, true, 'Loading the first 2 of 12 submissions…');
@@ -794,16 +854,19 @@ describe('SubmissionList', () => {
             })
             .respondWithData([/* no responses */]));
 
-        it('does nothing after user scrolls somewhere other than bottom of page', () =>
-          loadSubmissions(5, {}, [2], false)
+        it('does nothing after user scrolls somewhere other than bottom of page', () => {
+          createSubmissions(5);
+          return loadSubmissionList([2], false)
             .complete()
             .request(component => {
               component.vm.onScroll();
             })
-            .respondWithData([/* no responses */]));
+            .respondWithData([/* no responses */]);
+        });
 
-        it('clicking refresh button loads first chunk, even after scrolling', () =>
-          loadSubmissions(5, {}, [2])
+        it('clicking refresh button loads first chunk, even after scrolling', () => {
+          createSubmissions(5);
+          return loadSubmissionList([2])
             .complete()
             .request(component => {
               component.vm.onScroll();
@@ -824,10 +887,12 @@ describe('SubmissionList', () => {
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 2);
             })
-            .respondWithData(() => testData.submissionOData(2, 2)));
+            .respondWithData(() => testData.submissionOData(2, 2));
+        });
 
-        it('scrolling to the bottom has no effect if awaiting response', () =>
-          loadSubmissions(5, {}, [2])
+        it('scrolling to the bottom has no effect if awaiting response', () => {
+          createSubmissions(5);
+          return loadSubmissionList([2])
             .complete()
             .request(component => {
               // Sends a request.
@@ -846,24 +911,22 @@ describe('SubmissionList', () => {
               // Should not send a request.
               component.vm.onScroll();
             })
-            .respondWithData(() => testData.submissionOData(2, 0)));
+            .respondWithData(() => testData.submissionOData(2, 0));
+        });
 
-        it('scrolling has no effect after all submissions have been loaded', () =>
-          loadSubmissions(2, {}, [2])
+        it('scrolling has no effect after all submissions have been loaded', () => {
+          createSubmissions(2);
+          return loadSubmissionList([2])
             .complete()
             .request(component => {
               component.vm.onScroll();
-            }));
+            });
+        });
       });
 
       describe('count update', () => {
         const loadFormOverview = (submissionCount, chunkSizes = []) => {
-          testData.extendedProjects.size.should.equal(0);
-          testData.extendedProjects.createPast(1);
-          testData.extendedForms.size.should.equal(0);
-          testData.extendedForms
-            .createPast(1, { submissions: submissionCount });
-          testData.extendedSubmissions.createPast(submissionCount);
+          createSubmissions(submissionCount);
           const [small = 250, large = 1000] = chunkSizes;
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
             .respondWithData(() => testData.extendedProjects.last())
