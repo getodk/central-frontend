@@ -128,20 +128,11 @@ describe('SubmissionAnalyze', () => {
     });
 
     it('renders the Excel/Power BI tab correctly', () =>
-      clickTab(modal, 'Tableau')
+      clickTab(modal, 'R')
         .then(() => clickTab(modal, 'Excel/Power BI'))
         .then(() => {
           assertContent('Excel/Power BI', '', 'For help using OData with Excel,');
         }));
-
-    it('renders the Tableau tab correctly', () =>
-      clickTab(modal, 'Tableau').then(() => {
-        assertContent(
-          'Tableau',
-          '/Submissions?%24wkt=true',
-          'For help using OData with Tableau,'
-        );
-      }));
 
     it('renders the R tab correctly', () =>
       clickTab(modal, 'R').then(() => {
