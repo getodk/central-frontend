@@ -103,9 +103,11 @@ class. */
 
   &:hover, &:focus {
     background-color: $color-action-background-hover;
+  }
 
-    &[disabled] {
-      background-color: $color-action-background;
+  &[disabled] {
+    &, &:hover, &:focus {
+      background-color: $color-action-background-disabled;
     }
   }
 }
