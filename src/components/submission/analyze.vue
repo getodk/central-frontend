@@ -22,8 +22,6 @@ except according to the terms contained in the LICENSE file.
             <a href="https://powerbi.microsoft.com/en-us/" target="_blank"
               rel="noopener">
               Microsoft Power BI</a>,
-            <a href="https://www.tableau.com/" target="_blank" rel="noopener">
-              Tableau</a>,
             and
             <a href="https://www.r-project.org" target="_blank" rel="noopener">
               R</a>
@@ -43,9 +41,6 @@ except according to the terms contained in the LICENSE file.
           <li :class="tabClass('microsoft')" role="presentation">
             <a href="#" @click.prevent="setTool('microsoft')">Excel/Power BI</a>
           </li>
-          <li :class="tabClass('tableau')" role="presentation">
-            <a href="#" @click.prevent="setTool('tableau')">Tableau</a>
-          </li>
           <li :class="tabClass('r')" role="presentation">
             <a href="#" @click.prevent="setTool('r')">R</a>
           </li>
@@ -64,12 +59,6 @@ except according to the terms contained in the LICENSE file.
             this page</a>.
           For help with Power BI, see
           <a href="https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata"
-            target="_blank" rel="noopener">
-            this page</a>.
-        </p>
-        <p v-else-if="tool === 'tableau'">
-          For help using OData with Tableau, see
-          <a href="https://onlinehelp.tableau.com/current/pro/desktop/en-us/examples_odata.html"
             target="_blank" rel="noopener">
             this page</a>.
         </p>
@@ -136,8 +125,7 @@ export default {
   computed: {
     ...requestData(['form']),
     oDataUrl() {
-      const base = `${window.location.origin}/v1/projects/${this.projectId}/forms/${this.form.encodedId()}.svc`;
-      return this.tool !== 'tableau' ? base : `${base}/Submissions?%24wkt=true`;
+      return `${window.location.origin}/v1/projects/${this.projectId}/forms/${this.form.encodedId()}.svc`;
     }
   },
   watch: {
