@@ -168,7 +168,7 @@ export default {
 
   .details {
     font-family: $font-family-monospace;
-    overflow-x: scroll;
+    overflow-x: auto;
     white-space: nowrap;
   }
 }

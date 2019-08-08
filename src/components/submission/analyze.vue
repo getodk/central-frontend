@@ -187,7 +187,7 @@ export default {
     background-color: $color-subpanel-background;
     font-family: $font-family-monospace;
     margin-bottom: 10px;
-    overflow-x: scroll;
+    overflow-x: auto;
     padding: 12px $padding-modal-body;
     white-space: nowrap;
   }
