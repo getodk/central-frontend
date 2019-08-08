@@ -149,7 +149,7 @@ export default {
   // Placing the margin here rather than on the table so that the horizontal
   // scrollbar appears immediately below the table, above the margin.
   margin-bottom: $margin-bottom-table;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 #submission-table2 {
