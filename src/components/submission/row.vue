@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </td>
     </template>
-    <template v-else>
+    <template v-else-if="fieldColumns.length !== 0">
       <td :colspan="fieldColumns.length">
         <span class="icon-lock"></span>
         <span class="encryption-message">Data preview is not available due to
@@ -210,7 +210,7 @@ $icon-lock-margin-right: 12px;
   }
 
   ~ .encrypted-submission {
-    td:first-child {
+    td[colspan] {
       position: relative;
     }
 
