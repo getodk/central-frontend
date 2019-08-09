@@ -204,10 +204,10 @@ describe('AuditTable', () => {
           details: { some: 'json' }
         })
         .sorted())
-      .afterResponse(app => trigger.click(app, '.audit-row .details'))
+      .afterResponse(app => trigger.click(app, '.audit-row .details div'))
       .then(() => {
         const selection = window.getSelection();
-        const details = document.querySelector('.audit-row .details');
+        const details = document.querySelector('.audit-row .details div');
         selection.anchorNode.should.equal(details);
         selection.focusNode.should.equal(details);
       }));

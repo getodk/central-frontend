@@ -35,7 +35,11 @@ except according to the terms contained in the LICENSE file.
         {{ targetTitle }}
       </router-link>
     </td>
-    <td ref="details" class="details" @click="selectDetails">{{ details }}</td>
+    <td class="details">
+      <!-- Adding a <div> to work around a Firefox bug: see
+      https://bugzilla.mozilla.org/show_bug.cgi?id=386970. -->
+      <div ref="details" @click="selectDetails">{{ details }}</div>
+    </td>
   </tr>
 </template>
 
@@ -166,7 +170,7 @@ export default {
     white-space: nowrap;
   }
 
-  .details {
+  .details div {
     font-family: $font-family-monospace;
     overflow-x: auto;
     white-space: nowrap;
