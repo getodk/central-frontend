@@ -91,15 +91,26 @@ export default {
     filter() {
       this.$emit('filter', { action: this.action, dateRange: this.dateRange });
     },
+    sameDateRange(range1, range2) {
+      return range1[0].valueOf() === range2[0].valueOf() &&
+        range1[1].valueOf() === range2[1].valueOf();
+    },
     closeCalendar(dates) {
       if (dates.length !== 0) {
-        this.dateRange = dates.map(date => DateTime.fromJSDate(date));
+        const dateRange = dates.map(date => DateTime.fromJSDate(date));
+        if (!this.sameDateRange(dateRange, this.dateRange)) {
+          this.dateRange = dateRange;
+          this.filter();
+        }
       } else {
         const today = DateTime.local().startOf('day');
-        this.dateRange = [today, today];
-        this.dateRangeString = this.dateRangeToString(this.dateRange);
+        const dateRange = [today, today];
+        if (!this.sameDateRange(dateRange, this.dateRange)) {
+          this.dateRange = dateRange;
+          this.dateRangeString = this.dateRangeToString(dateRange);
+          this.filter();
+        }
       }
-      this.filter();
     }
   }
 };

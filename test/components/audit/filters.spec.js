@@ -128,4 +128,21 @@ describe('AuditFilters', () => {
       .respondWithData(() => testData.extendedAudits.sorted())
       .finally(restoreLuxon);
   });
+
+  it('does not send a request if the same date range is selected', () => {
+    const restoreLuxon = setLuxon({
+      defaultZoneName: 'utc',
+      now: '1970-01-01T12:00:00Z'
+    });
+    return mockHttp()
+      .mount(AuditList)
+      .respondWithData(() => testData.extendedAudits.sorted())
+      .complete()
+      .request(component => {
+        const date = DateTime.fromISO('1970-01-01').toJSDate();
+        component.first(AuditFilters).vm.closeCalendar([date, date]);
+      })
+      .respondWithData([/* no responses */])
+      .finally(restoreLuxon);
+  });
 });
