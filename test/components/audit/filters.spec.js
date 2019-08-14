@@ -128,4 +128,44 @@ describe('AuditFilters', () => {
       .respondWithData(() => testData.extendedAudits.sorted())
       .finally(restoreLuxon);
   });
+
+  it('does not send a request if the same date range is selected', () => {
+    const restoreLuxon = setLuxon({
+      defaultZoneName: 'utc',
+      now: '1970-01-01T12:00:00Z'
+    });
+    let called = false;
+    return mockHttp()
+      .mount(AuditList)
+      .respondWithData(() => testData.extendedAudits.sorted())
+      .complete()
+      // Select the same date range.
+      .request(component => {
+        const date = DateTime.fromISO('1970-01-01').toJSDate();
+        component.first(AuditFilters).vm.closeCalendar([date, date]);
+      })
+      .respondWithData([/* no responses */])
+      .complete()
+      // Clear the date range (defaulting to the same date range).
+      .request(component => {
+        const auditFilters = component.first(AuditFilters);
+        const { dateRangeToString } = auditFilters.vm;
+        auditFilters.setMethods({
+          dateRangeToString: (dateRange) => {
+            called = true;
+            return dateRangeToString(dateRange);
+          }
+        });
+        return auditFilters.vm.$nextTick().then(() => {
+          auditFilters.vm.closeCalendar([]);
+        });
+      })
+      .respondWithData([/* no responses */])
+      .then(() => {
+        // The date range has not changed, but the dateRangeString property
+        // still should have been reset.
+        called.should.be.true();
+      })
+      .finally(restoreLuxon);
+  });
 });

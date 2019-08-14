@@ -91,15 +91,24 @@ export default {
     filter() {
       this.$emit('filter', { action: this.action, dateRange: this.dateRange });
     },
+    todayToToday() {
+      const today = DateTime.local().startOf('day');
+      return [today, today];
+    },
     closeCalendar(dates) {
-      if (dates.length !== 0) {
-        this.dateRange = dates.map(date => DateTime.fromJSDate(date));
-      } else {
-        const today = DateTime.local().startOf('day');
-        this.dateRange = [today, today];
-        this.dateRangeString = this.dateRangeToString(this.dateRange);
+      const dateRange = dates.length !== 0
+        ? dates.map(date => DateTime.fromJSDate(date))
+        : this.todayToToday();
+      if (dateRange[0].valueOf() !== this.dateRange[0].valueOf() ||
+        dateRange[1].valueOf() !== this.dateRange[1].valueOf()) {
+        this.dateRange = dateRange;
+        this.filter();
       }
-      this.filter();
+      // If the date range is cleared, this.dateRangeString will be empty, and
+      // we will need to reset it (regardless of whether this.dateRange
+      // changed).
+      if (dates.length === 0)
+        this.dateRangeString = this.dateRangeToString(dateRange);
     }
   }
 };
