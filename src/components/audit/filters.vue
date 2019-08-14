@@ -91,26 +91,24 @@ export default {
     filter() {
       this.$emit('filter', { action: this.action, dateRange: this.dateRange });
     },
-    sameDateRange(range1, range2) {
-      return range1[0].valueOf() === range2[0].valueOf() &&
-        range1[1].valueOf() === range2[1].valueOf();
+    todayToToday() {
+      const today = DateTime.local().startOf('day');
+      return [today, today];
     },
     closeCalendar(dates) {
-      if (dates.length !== 0) {
-        const dateRange = dates.map(date => DateTime.fromJSDate(date));
-        if (!this.sameDateRange(dateRange, this.dateRange)) {
-          this.dateRange = dateRange;
-          this.filter();
-        }
-      } else {
-        const today = DateTime.local().startOf('day');
-        const dateRange = [today, today];
-        if (!this.sameDateRange(dateRange, this.dateRange)) {
-          this.dateRange = dateRange;
-          this.dateRangeString = this.dateRangeToString(dateRange);
-          this.filter();
-        }
+      const dateRange = dates.length !== 0
+        ? dates.map(date => DateTime.fromJSDate(date))
+        : this.todayToToday();
+      if (dateRange[0].valueOf() !== this.dateRange[0].valueOf() ||
+        dateRange[1].valueOf() !== this.dateRange[1].valueOf()) {
+        this.dateRange = dateRange;
+        this.filter();
       }
+      // If the date range is cleared, this.dateRangeString will be empty, and
+      // we will need to reset it (regardless of whether this.dateRange
+      // changed).
+      if (dates.length === 0)
+        this.dateRangeString = this.dateRangeToString(dateRange);
     }
   }
 };
