@@ -69,7 +69,7 @@ except according to the terms contained in the LICENSE file.
               R</a>,
             we recommend you use
             <a href="https://dbca-wa.github.io/ruODK/" target="_blank" rel="noopener">
-              ruODK</a>. 
+              ruODK</a>.
             See ruODK&rsquo;s vignettes for examples of using both the
             <a href="https://dbca-wa.github.io/ruODK/articles/odata.html"
               target="_blank" rel="noopener">
