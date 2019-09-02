@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-edit" class="panel panel-simple">
-    <div class="panel-heading"><h1 class="panel-title">Form Stage</h1></div>
+    <div class="panel-heading"><h1 class="panel-title">Form State</h1></div>
     <div class="panel-body">
       <form>
         <fieldset :disabled="awaitingResponse">
