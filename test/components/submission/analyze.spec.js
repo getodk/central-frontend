@@ -120,7 +120,7 @@ describe('SubmissionAnalyze', () => {
       actualURL.should.equal(`${baseURL}${urlSuffix}`);
       // Test the help text.
       const help = modal.first('#submission-analyze-tool-help');
-      help.text().should.containEql(helpSubstring);
+      help.text().iTrim().should.containEql(helpSubstring);
     };
 
     it('defaults to the Excel/Power BI tab', () => {
@@ -136,7 +136,7 @@ describe('SubmissionAnalyze', () => {
 
     it('renders the R tab correctly', () =>
       clickTab(modal, 'R').then(() => {
-        assertContent('R', '', 'R statistics and analysis tool');
+        assertContent('R', '', 'from R,');
       }));
 
     it('renders the Other tab correctly', () =>

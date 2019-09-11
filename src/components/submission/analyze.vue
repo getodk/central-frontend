@@ -64,17 +64,21 @@ except according to the terms contained in the LICENSE file.
         </p>
         <template v-else-if="tool === 'r'">
           <p>
-            To access Central data from the free and popular
+            To access Central data from
             <a href="https://www.r-project.org" target="_blank" rel="noopener">
-              R statistics and analysis tool</a>,
+              R</a>,
             we recommend you use
-            <a href="https://dbca-wa.github.io/ruODK/" target="_blank"
-              rel="noopener">
+            <a href="https://dbca-wa.github.io/ruODK/" target="_blank" rel="noopener">
               ruODK</a>.
-            A guide for getting started with it can be found
+            See ruODK&rsquo;s vignettes for examples of using both the
             <a href="https://dbca-wa.github.io/ruODK/articles/odata.html"
               target="_blank" rel="noopener">
-              here</a>.
+              OData</a>
+            and the
+            <a href="https://dbca-wa.github.io/ruODK/articles/api.html"
+              target="_blank" rel="noopener">
+              RESTful</a>
+            API.
           </p>
           <p>
             Just like ODK itself, ruODK is developed and supported by community
