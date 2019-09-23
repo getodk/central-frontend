@@ -16,6 +16,7 @@ const props = [
   'name',
   'version',
   'hash',
+  'keyId',
   'state',
   'createdAt',
   'updatedAt',
