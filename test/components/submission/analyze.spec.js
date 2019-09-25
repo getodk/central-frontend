@@ -17,6 +17,34 @@ const clickTab = (wrapper, tabText) => {
 describe('SubmissionAnalyze', () => {
   beforeEach(mockLogin);
 
+  it('disables the button for an encrypted form without submissions', () => {
+    const key = testData.standardKeys.createPast(1, { managed: false }).last();
+    // The button should be disabled even if just the form, not the project, has
+    // encryption enabled.
+    const form = testData.extendedForms
+      .createPast(1, { key, submissions: 0 })
+      .last();
+
+    return mockHttp()
+      .mount(SubmissionList, {
+        propsData: { projectId: '1', xmlFormId: form.xmlFormId },
+        requestData: { form }
+      })
+      .request(component => {
+        // Normally the `activated` hook calls this method, but that hook is not
+        // called here, so we call the method ourselves instead.
+        component.vm.fetchInitialData();
+      })
+      .respondWithData(() => []) // keys
+      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(testData.submissionOData)
+      .afterResponses(component => {
+        const button = component.first('#submission-list-analyze-button');
+        button.should.be.disabled();
+        button.getAttribute('title').length.should.not.equal(0);
+      });
+  });
+
   it('disables the button if a Key is returned', () =>
     mockHttp()
       .mount(SubmissionList, {
@@ -30,8 +58,6 @@ describe('SubmissionAnalyze', () => {
         }
       })
       .request(component => {
-        // Normally the `activated` hook calls this method, but that hook is not
-        // called here, so we call the method ourselves instead.
         component.vm.fetchInitialData();
       })
       .respondWithData(() =>

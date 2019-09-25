@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           </button>
 
           <button id="submission-list-analyze-button" type="button"
-            class="btn btn-primary" :disabled="keys.length !== 0"
+            class="btn btn-primary" :disabled="analyzeDisabled"
             :title="analyzeButtonTitle" @click="showModal('analyze')">
             <span class="icon-plug"></span>Analyze via OData
           </button>
@@ -143,8 +143,15 @@ export default {
         ? 'Download all records'
         : `Download all ${this.form.submissions.toLocaleString()} records`;
     },
+    analyzeDisabled() {
+      // If an encrypted form has no submissions, then OData will never be
+      // available for any of the form's submissions (so long as the form
+      // remains encrypted).
+      return (this.form.keyId != null && this.form.submissions === 0) ||
+        this.keys.length !== 0;
+    },
     analyzeButtonTitle() {
-      return this.keys.length !== 0
+      return this.analyzeDisabled
         ? 'OData access is unavailable due to Form encryption'
         : '';
     }
