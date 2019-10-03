@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null">
-      <template v-if="project != null" slot="title">
+      <template v-if="project != null" #title>
         {{ project.name }} {{ project.archived ? '(archived)' : '' }}
       </template>
-      <template slot="tabs">
+      <template #tabs>
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
@@ -24,6 +24,9 @@ except according to the terms contained in the LICENSE file.
         </li>
         <li :class="tabClass('app-users')" role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
+        </li>
+        <li :class="tabClass('form-workflow')" role="presentation">
+          <router-link :to="tabPath('form-workflow')">Form Workflow</router-link>
         </li>
         <li v-if="project != null && !project.archived"
           :class="tabClass('settings')" role="presentation">

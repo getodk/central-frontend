@@ -23,6 +23,7 @@ import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
 import NotFound from './components/not-found.vue';
+import ProjectFormWorkflow from './components/project/form-workflow.vue';
 import ProjectHome from './components/project/home.vue';
 import ProjectList from './components/project/list.vue';
 import ProjectOverview from './components/project/overview.vue';
@@ -133,6 +134,7 @@ const routes = [
           { path: '', component: ProjectOverview, props: true },
           { path: 'users', component: ProjectUserList, props: true },
           { path: 'app-users', component: FieldKeyList, props: true },
+          { path: 'form-workflow', component: ProjectFormWorkflow, props: true },
           { path: 'settings', component: ProjectSettings }
         ]
       },
@@ -290,7 +292,13 @@ for (const key of ['session', 'currentUser', 'roles']) {
 // Tabs
 preserveDataForKey({
   key: '*',
-  to: ['ProjectOverview', 'ProjectUserList', 'FieldKeyList', 'ProjectSettings'],
+  to: [
+    'ProjectOverview',
+    'ProjectUserList',
+    'FieldKeyList',
+    'ProjectFormWorkflow',
+    'ProjectSettings'
+  ],
   params: ['projectId']
 });
 preserveDataForKey({

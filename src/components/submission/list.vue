@@ -64,6 +64,7 @@ import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
+const REQUEST_KEYS = ['form', 'keys', 'schema', 'submissionsChunk'];
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
@@ -113,7 +114,10 @@ export default {
     };
   },
   computed: {
-    ...requestData(['form', 'keys', 'schema', 'submissionsChunk']),
+    ...requestData(REQUEST_KEYS),
+    dataExists() {
+      return this.$store.getters.dataExists(REQUEST_KEYS);
+    },
     // Returns the same value as this.form.encodedId(), but unlike
     // this.form.encodedId(), can be called before the response for the form has
     // been received.
@@ -317,11 +321,7 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
-      // Return if the request for the form or any of the requests sent by
-      // this.fetchInitialData() is in progress or resulted in an error.
-      if (this.form == null || this.keys == null || this.schema == null ||
-        this.submissionsChunk == null)
-        return;
+      if (!this.dataExists) return;
       // Return if the next chunk of submissions is already loading.
       if (this.$store.getters.loading('submissionsChunk')) return;
       const skip = this.skip(this.chunkCount);

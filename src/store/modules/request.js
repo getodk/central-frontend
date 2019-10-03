@@ -42,6 +42,7 @@ const allKeys = [
   'submissionsChunk',
   'keys',
   'fieldKeys',
+  'formAssignments',
 
   'backupsConfig',
   'audits'
@@ -133,6 +134,12 @@ export default {
         if (state === 'loading' && data[key] == null) any = true;
       }
       return any;
+    },
+    dataExists: ({ data }) => (keys) => {
+      for (const key of keys) {
+        if (data[key] == null) return false;
+      }
+      return true;
     },
     loggedIn: ({ data }) => data.session != null && data.session.token != null,
     loggedOut: (_, getters) => !getters.loggedIn
