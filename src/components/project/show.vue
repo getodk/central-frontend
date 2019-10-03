@@ -69,18 +69,20 @@ export default {
   },
   methods: {
     // Note that we do not keep project.forms and forms.length in sync.
-    fetchForms() {
+    fetchForms(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'forms',
         url: `/projects/${this.projectId}/forms`,
-        extended: true
+        extended: true,
+        resend
       }]).catch(noop);
     },
-    fetchFieldKeys() {
+    fetchFieldKeys(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'fieldKeys',
         url: `/projects/${this.projectId}/app-users`,
         extended: true,
+        resend,
         success: ({ project, fieldKeys }) => {
           if (project == null || project.appUsers === fieldKeys.length) return;
           this.$store.commit('setData', {

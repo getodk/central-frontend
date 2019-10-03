@@ -216,8 +216,25 @@ export default {
         return a different message. If the function returns `null` or
         `undefined`, the default message is used.
 
-      Other
-      -----
+      Existing Data
+      -------------
+
+      - resend (default: true)
+
+        By default, get() sends a request for every config object specified,
+        even if there is existing data for the corresponding key. However, if
+        `resend` is specified as `false`, a request will not be sent if there is
+        existing data for the key or if another request is in progress for the
+        same key. Note that the entire request process will be short-circuited,
+        so any existing data will not be cleared even if `clear` is specified as
+        `true`.
+
+        One common example of specifying `false` for `resend` arises with tabbed
+        navigation. Say a component associated with one tab sends a request for
+        a particular key. In most cases, navigating from that tab to another
+        tab, then back to the original tab will destroy and recreate the
+        component. However, in that case, we usually do not need to send a new
+        request for the data that the component needs.
 
       - clear (default: true). Specify `true` if any existing data for the key
         should be cleared before the request is sent. Specify `false` for a
@@ -268,7 +285,8 @@ export default {
           success,
           problemToAlert = undefined,
 
-          // Other
+          // Existing data
+          resend = true,
           clear = true
         } = config;
 
@@ -284,15 +302,20 @@ export default {
 
           2. There is no data, but we are waiting on a request for it.
 
-             We will cancel the last request and send a new request.
+             We will return immediately if `resend` is `false`. Otherwise, we
+             will cancel the last request and send a new request.
 
           3. There is data.
 
-             We will refresh the data, canceling the last request if it is still
-             in progress.
+             We will return immediately if `resend` is `false`. Otherwise, we
+             will refresh the data, canceling the last request if it is still in
+             progress.
         */
         const requestsForKey = state.requests[key];
         const lastRequest = requestsForKey.last;
+        if (!resend && (state.data[key] != null ||
+          lastRequest.state === 'loading'))
+          return Promise.resolve();
         if ((state.data[key] == null && lastRequest.state === 'loading') ||
           state.data[key] != null) {
           if (lastRequest.state === 'loading') commit('cancelRequest', key);

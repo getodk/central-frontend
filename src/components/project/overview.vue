@@ -121,10 +121,7 @@ export default {
     }
   },
   created() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new request.
-    if (this.forms == null && !this.$store.getters.loading('forms'))
-      this.$emit('fetch-forms');
+    this.$emit('fetch-forms', false);
   },
   methods: {
     scrollToForms() {
