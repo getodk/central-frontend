@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <!-- This table element contains the frozen columns of the submissions
     table, which contain metadata about each submission. -->
-    <table id="submission-table1" class="table table-condensed table-frozen">
+    <table id="submission-table1" class="table table-frozen">
       <thead>
         <tr>
           <th><!-- Row number --></th>
@@ -110,11 +110,7 @@ export default {
       };
     },
     table2Class() {
-      return {
-        table: true,
-        'table-condensed': true,
-        'field-subset': this.schemaAnalysis.subsetShown
-      };
+      return { table: true, 'field-subset': this.schemaAnalysis.subsetShown };
     },
     fieldColumns() {
       return this.schemaAnalysis.columns;
