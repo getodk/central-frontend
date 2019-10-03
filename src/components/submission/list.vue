@@ -287,7 +287,7 @@ export default {
       this.$store.dispatch('get', [
         {
           // We do not keep this.keys in sync with the keyId property of the
-          // project.
+          // project or the form.
           key: 'keys',
           url: `/projects/${this.projectId}/forms/${this.encodedFormId}/submissions/keys`
         },
