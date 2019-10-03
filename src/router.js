@@ -407,6 +407,37 @@ export const canRoute = (routeName) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// UNSAVED CHANGES
+
+window.addEventListener('beforeunload', (event) => {
+  if (!store.state.router.unsavedChanges) return;
+  event.preventDefault();
+  // Needed for Chrome.
+  event.returnValue = ''; // eslint-disable-line no-param-reassign
+});
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.router.unsavedChanges) {
+    next();
+    return;
+  }
+
+  // eslint-disable-next-line no-alert
+  const result = window.confirm('Are you sure you want to leave this page? Your changes might not be saved.');
+  if (result)
+    next();
+  else
+    next(false);
+});
+
+router.afterEach(() => {
+  if (store.state.router.unsavedChanges)
+    store.commit('setUnsavedChanges', false);
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // OTHER NAVIGATION GUARDS
 
 // Set router state.

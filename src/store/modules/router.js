@@ -33,7 +33,8 @@ export default {
         // ultimately aborted.
         confirmed: false
       }
-    }
+    },
+    unsavedChanges: false
   },
   mutations: {
     /* eslint-disable no-param-reassign */
@@ -54,6 +55,9 @@ export default {
       navigations.first.confirmed = false;
       navigations.last.triggered = false;
       navigations.last.confirmed = false;
+    },
+    setUnsavedChanges(state, unsavedChanges) {
+      state.unsavedChanges = unsavedChanges;
     }
     /* eslint-enable no-param-reassign */
   }
