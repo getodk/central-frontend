@@ -279,7 +279,7 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 };
 
 // Data that does not change with navigation
-for (const key of ['session', 'currentUser']) {
+for (const key of ['session', 'currentUser', 'roles']) {
   preserveDataForKey({
     key,
     to: namedRoutes.map(route => route.name),
