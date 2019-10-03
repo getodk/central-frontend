@@ -116,24 +116,17 @@ export default {
   },
   computed: requestData(['project', 'forms']),
   watch: {
-    projectId: 'fetchData'
+    projectId() {
+      this.$emit('fetch-forms');
+    }
   },
   created() {
     // If the user navigates from this tab to another tab, then back to this
     // tab, we do not send a new request.
     if (this.forms == null && !this.$store.getters.loading('forms'))
-      this.fetchData();
+      this.$emit('fetch-forms');
   },
   methods: {
-    fetchData() {
-      // Note that we do not keep this.project.forms and this.forms.length in
-      // sync.
-      this.$store.dispatch('get', [{
-        key: 'forms',
-        url: `/projects/${this.projectId}/forms`,
-        extended: true
-      }]).catch(() => {});
-    },
     scrollToForms() {
       const scrollTop = Math.round($('#project-overview-forms').offset().top);
       $('html, body').animate({ scrollTop });

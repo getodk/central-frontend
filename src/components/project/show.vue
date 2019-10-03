@@ -40,7 +40,8 @@ except according to the terms contained in the LICENSE file.
         <!-- <router-view> is immediately created and can send its own requests
         even before the server has responded to ProjectHome's request for the
         project. -->
-        <router-view @fetch-field-keys="fetchFieldKeys"/>
+        <router-view @fetch-forms="fetchForms"
+          @fetch-field-keys="fetchFieldKeys"/>
       </div>
     </page-body>
   </div>
@@ -67,6 +68,14 @@ export default {
     }
   },
   methods: {
+    // Note that we do not keep project.forms and forms.length in sync.
+    fetchForms() {
+      this.$store.dispatch('get', [{
+        key: 'forms',
+        url: `/projects/${this.projectId}/forms`,
+        extended: true
+      }]).catch(noop);
+    },
     fetchFieldKeys() {
       this.$store.dispatch('get', [{
         key: 'fieldKeys',
