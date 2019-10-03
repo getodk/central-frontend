@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
         <!-- <router-view> is immediately created and can send its own requests
         even before the server has responded to ProjectHome's request for the
         project. -->
-        <router-view @fetch-forms="fetchForms"
-          @fetch-field-keys="fetchFieldKeys"/>
+        <router-view @fetch-project="$emit('fetch-project')"
+          @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
       </div>
     </page-body>
   </div>

@@ -157,9 +157,14 @@ describe('ProjectEnableEncryption', () => {
               ['input[placeholder="Passphrase *"]', 'passphrase']
             ])))
         .respondWithSuccess()
-        .afterResponse(component =>
+        .complete()
+        .request(component =>
           trigger.click(component, '#project-enable-encryption .btn-primary'))
-        .then(component => {
+        .respondWithData(() => testData.projects.update(
+          testData.projects.last(),
+          { keyId: testData.standardKeys.createNew({ managed: true }).id }
+        ))
+        .afterResponse(component => {
           component.find('#enable-encryption-button').length.should.equal(0);
         }));
   });

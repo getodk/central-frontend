@@ -99,19 +99,7 @@ export default {
   methods: {
     afterEnableEncryption() {
       this.hideModal('enableEncryption');
-      this.$store.commit('setData', {
-        key: 'project',
-        value: {
-          ...this.project,
-          // Frontend does not use project.keyId other than to check whether it
-          // is null. Instead of sending another request for the project, we
-          // simply set keyId to a value that is not null.
-          keyId: -1,
-          // This may differ a little from updatedAt on the server, but that
-          // should be OK.
-          updatedAt: new Date().toISOString()
-        }
-      });
+      this.$emit('fetch-project');
     },
     afterArchive() {
       this.$router.push(`/projects/${this.project.id}`, () => {
