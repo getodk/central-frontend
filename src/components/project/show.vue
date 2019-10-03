@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         <!-- <router-view> is immediately created and can send its own requests
         even before the server has responded to ProjectHome's request for the
         project. -->
-        <router-view/>
+        <router-view @fetch-field-keys="fetchFieldKeys"/>
       </div>
     </page-body>
   </div>
@@ -48,6 +48,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import tab from '../../mixins/tab';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -63,6 +64,22 @@ export default {
     ...requestData(['project']),
     tabPathPrefix() {
       return `/projects/${this.projectId}`;
+    }
+  },
+  methods: {
+    fetchFieldKeys() {
+      this.$store.dispatch('get', [{
+        key: 'fieldKeys',
+        url: `/projects/${this.projectId}/app-users`,
+        extended: true,
+        success: ({ project, fieldKeys }) => {
+          if (project == null || project.appUsers === fieldKeys.length) return;
+          this.$store.commit('setData', {
+            key: 'project',
+            value: { ...project, appUsers: fieldKeys.length }
+          });
+        }
+      }]).catch(noop);
     }
   }
 };

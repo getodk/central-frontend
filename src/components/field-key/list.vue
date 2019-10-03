@@ -110,7 +110,7 @@ export default {
   computed: requestData(['project', 'fieldKeys']),
   watch: {
     projectId() {
-      this.fetchData();
+      this.$emit('fetch-field-keys');
       this.highlighted = null;
       this.hidePopover();
     },
@@ -124,7 +124,7 @@ export default {
     // If the user navigates from this tab to another tab, then back to this
     // tab, we do not send a new request.
     if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys'))
-      this.fetchData();
+      this.$emit('fetch-field-keys');
   },
   mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -134,20 +134,6 @@ export default {
     $('body').off('.field-key-list');
   },
   methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'fieldKeys',
-        url: `/projects/${this.projectId}/app-users`,
-        extended: true,
-        success: ({ project, fieldKeys }) => {
-          if (project == null || project.appUsers === fieldKeys.length) return;
-          this.$store.commit('setData', {
-            key: 'project',
-            value: { ...project, appUsers: fieldKeys.length }
-          });
-        }
-      }]).catch(() => {});
-    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -199,13 +185,13 @@ export default {
       this.revoke.state = true;
     },
     afterCreate(fieldKey) {
-      this.fetchData();
+      this.$emit('fetch-field-keys');
       this.hideModal('newFieldKey');
       this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
       this.highlighted = fieldKey.id;
     },
     afterRevoke() {
-      this.fetchData();
+      this.$emit('fetch-field-keys');
       this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
       this.highlighted = null;
     }
