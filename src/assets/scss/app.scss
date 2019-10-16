@@ -318,7 +318,7 @@ a {
 
 .table-frozen {
   float: left;
-  width: unset;
+  width: auto;
 }
 
 .table-container {
@@ -327,7 +327,7 @@ a {
   margin-bottom: $margin-bottom-table;
   overflow-x: auto;
 
-  table {
+  .table {
     margin-bottom: 0;
   }
 }
