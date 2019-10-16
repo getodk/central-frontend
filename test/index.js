@@ -115,6 +115,39 @@ afterEach(() => {
 ////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
 
+// Seed the test data.
+beforeEach(() => {
+  // This is missing roles that we don't currently use in Frontend.
+  testData.standardRoles
+    .createPast(1, {
+      name: 'Administrator',
+      system: 'admin',
+      verbs: [
+        'assignment.create',
+        'assignment.list',
+        'assignment.delete',
+        'audit.read',
+        'config.read',
+        'project.create',
+        'project.list',
+        'user.create',
+        'user.list',
+        'user.read',
+        'user.update',
+        'user.delete',
+        'user.password.invalidate'
+      ]
+    })
+    .createPast(1, {
+      name: 'App User',
+      system: 'app-user',
+      verbs: [
+        'form.read',
+        'submission.create'
+      ]
+    });
+});
+
 afterEach(testData.reset);
 
 
