@@ -311,9 +311,16 @@ preserveDataForKey({
   key: 'project',
   to: [
     // ProjectShow
-    'ProjectOverview', 'ProjectUserList', 'FieldKeyList', 'ProjectSettings',
+    'ProjectOverview',
+    'ProjectUserList',
+    'FieldKeyList',
+    'ProjectFormWorkflow',
+    'ProjectSettings',
     // FormShow
-    'FormOverview', 'FormAttachmentList', 'SubmissionList', 'FormSettings'
+    'FormOverview',
+    'FormAttachmentList',
+    'SubmissionList',
+    'FormSettings'
   ],
   params: ['projectId']
 });
