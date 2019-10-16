@@ -134,7 +134,7 @@ export default {
   },
   watch: {
     projectId() {
-      this.fetchData();
+      this.fetchData(false);
       this.changesByForm = null;
       this.changeCount = 0;
     },
@@ -146,12 +146,12 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    this.fetchData(false);
   },
   methods: {
-    fetchData() {
-      this.$emit('fetch-forms', false);
-      this.$emit('fetch-field-keys', false);
+    fetchData(resend) {
+      this.$emit('fetch-forms', resend);
+      this.$emit('fetch-field-keys', resend);
       this.$store.dispatch('get', [
         {
           key: 'roles',
@@ -161,7 +161,7 @@ export default {
         {
           key: 'formAssignments',
           url: `/projects/${this.projectId}/assignments/forms/app-user`,
-          resend: false
+          resend
         }
       ]).catch(noop);
     },
@@ -212,55 +212,6 @@ export default {
         this.checkForUnsavedChanges();
       }
     },
-    updateRequestData() {
-      let assignmentsChanged = false;
-      for (let i = 0; i < this.forms.length; i += 1) {
-        const form = this.forms[i];
-        const changes = this.changesByForm[form.xmlFormId];
-
-        // Update this.forms if the form's state has changed.
-        if (changes.current.state !== changes.previous.state) {
-          this.$store.commit('setDataProp', {
-            key: 'forms',
-            prop: i,
-            value: form.with({
-              state: changes.current.state,
-              // This may differ slightly from the value of updatedAt on the
-              // server.
-              updatedAt: new Date().toISOString()
-            })
-          });
-        }
-
-        // Check whether the form's assignments have changed.
-        if (!assignmentsChanged) {
-          for (const fieldKey of this.fieldKeys) {
-            if (changes.current.access[fieldKey.id] !==
-              changes.previous.access[fieldKey.id]) {
-              assignmentsChanged = true;
-              break;
-            }
-          }
-        }
-      }
-
-      if (assignmentsChanged) {
-        const assignments = [];
-        const roleId = this.roles['app-user'].id;
-        for (const form of this.forms) {
-          const { xmlFormId } = form;
-          const changes = this.changesByForm[xmlFormId];
-          for (const fieldKey of this.fieldKeys) {
-            if (changes.current.access[fieldKey.id])
-              assignments.push({ actorId: fieldKey.id, xmlFormId, roleId });
-          }
-        }
-        this.$store.commit('setData', {
-          key: 'formAssignments',
-          value: assignments
-        });
-      }
-    },
     save() {
       if (this.roles['app-user'] == null) {
         this.$alert().danger('Information is missing about the App User role.');
@@ -269,10 +220,10 @@ export default {
 
       this.put(`/projects/${this.projectId}`, this.projectToSave)
         .then(() => {
+          this.fetchData(true);
           this.$alert().success('Your changes have been saved!');
-          this.updateRequestData();
           this.$store.commit('setUnsavedChanges', false);
-          this.initChangesByForm();
+          this.changesByForm = null;
           this.changeCount = 0;
         })
         .catch(noop);
