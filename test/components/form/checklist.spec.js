@@ -2,7 +2,6 @@ import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../event';
 
 describe('FormChecklist', () => {
   beforeEach(mockLogin);
@@ -69,27 +68,6 @@ describe('FormChecklist', () => {
         text.should.containEql('1 App User');
       }));
   });
-
-  it('marks step 5 as complete if form state is changed from open', () =>
-    loadOverview({ formIsOpen: true })
-      .afterResponses(app => {
-        const step = app.find('.form-checklist-step')[4];
-        step.hasClass('form-checklist-step-complete').should.be.false();
-      })
-      .route('/projects/1/forms/f/settings')
-      .request(app => trigger.check(app, '#form-edit input[value="closed"]'))
-      .respondWithData(() => {
-        testData.extendedForms.update(testData.extendedForms.last(), {
-          state: 'closed'
-        });
-        return testData.standardForms.last();
-      })
-      .complete()
-      .route('/projects/1/forms/f')
-      .then(app => {
-        const step = app.find('.form-checklist-step')[4];
-        step.hasClass('form-checklist-step-complete').should.be.true();
-      }));
 
   describe('step stages', () => {
     // Array of test cases
