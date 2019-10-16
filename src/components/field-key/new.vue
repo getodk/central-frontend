@@ -104,7 +104,7 @@ export default {
   computed: requestData(['project']),
   watch: {
     state(state) {
-      if (!state) return;
+      if (state) return;
       this.step = 1;
       this.nickname = '';
       this.created = null;
