@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
     <td class="row-number">{{ rowNumber }}</td>
-    <td>{{ submission.__system.submitterName }}</td>
+    <td class="submitter-name">{{ submission.__system.submitterName }}</td>
     <td>{{ submissionDate }}</td>
   </tr>
   <!-- The rest of the table -->
@@ -193,6 +193,14 @@ $icon-lock-margin-right: 12px;
     padding-top: 11px;
     text-align: right;
     vertical-align: middle;
+  }
+
+  &.submitter-name {
+    max-width: 250px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
