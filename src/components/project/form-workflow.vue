@@ -26,9 +26,14 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <loading :state="initiallyLoading"/>
-    <project-form-workflow-table v-if="dataExists"
-      :changes-by-form="changesByForm" @update:state="updateState"
-      @update:access="updateAccess" @show-states="showModal('statesModal')"/>
+    <template v-if="dataExists">
+      <project-form-workflow-table :changes-by-form="changesByForm"
+        @update:state="updateState" @update:access="updateAccess"
+        @show-states="showModal('statesModal')"/>
+      <p v-if="forms.length === 0" class="empty-table-message">
+        There are no Forms to show.
+      </p>
+    </template>
 
     <project-form-workflow-states v-bind="statesModal"
       @hide="hideModal('statesModal')"/>

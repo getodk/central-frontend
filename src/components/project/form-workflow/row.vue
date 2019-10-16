@@ -11,26 +11,28 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-form-workflow-row">
-    <td class="text-ellipsis">
-      <router-link :to="formOverviewPath" :title="form.nameOrId()">
-        {{ form.nameOrId() }}
-      </router-link>
-    </td>
-    <td>
-      <form>
-        <div class="form-group">
-          <select class="form-control"
-            :class="{ 'uncommitted-change': stateChanged }"
-            :value="changes.current.state" aria-label="State"
-            @change="updateState($event.target.value)">
-            <option value="open">Open</option>
-            <option value="closing">Closing</option>
-            <option value="closed">Closed</option>
-          </select>
-        </div>
-      </form>
-    </td>
-    <template v-if="fieldKeys.length !== 0">
+    <template v-if="frozen">
+      <td class="text-ellipsis">
+        <router-link :to="formOverviewPath" :title="form.nameOrId()">
+          {{ form.nameOrId() }}
+        </router-link>
+      </td>
+      <td>
+        <form>
+          <div class="form-group">
+            <select class="form-control"
+              :class="{ 'uncommitted-change': stateChanged }"
+              :value="changes.current.state" aria-label="State"
+              @change="updateState($event.target.value)">
+              <option value="open">Open</option>
+              <option value="closing">Closing</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </form>
+      </td>
+    </template>
+    <template v-else>
       <td></td>
       <td v-for="fieldKey of fieldKeys" :key="fieldKey.id">
         <form>
@@ -45,6 +47,7 @@ except according to the terms contained in the LICENSE file.
           </div>
         </form>
       </td>
+      <td></td>
     </template>
   </tr>
 </template>
@@ -63,6 +66,10 @@ export default {
     changes: {
       type: Object,
       required: true
+    },
+    frozen: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -90,7 +97,20 @@ export default {
 </script>
 
 <style lang="scss">
-.project-form-workflow-row select {
-  width: 120px;
+.project-form-workflow-row {
+  .form-group {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  select {
+    width: 120px;
+  }
+
+  .checkbox {
+    margin-bottom: 0;
+    margin-left: 6px;
+    margin-top: 5px;
+  }
 }
 </style>
