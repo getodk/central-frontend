@@ -72,7 +72,7 @@ export default {
   computed: {
     ...requestData(['fieldKeys']),
     formOverviewPath() {
-      return `/projects/${this.form.projectId}/${this.form.encodedId()}`;
+      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
     },
     stateChanged() {
       return this.changes.current.state !== this.changes.previous.state;
