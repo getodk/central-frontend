@@ -100,6 +100,9 @@ export default {
 
       return byForm;
     },
+    appUserRole() {
+      return this.roles.find(role => role.system === 'app-user');
+    },
     // This may need to change whenever we add a property to the Project or Form
     // class in Backend.
     projectToSave() {
@@ -114,7 +117,7 @@ export default {
 
           const assignments = [];
           const { xmlFormId } = form;
-          const roleId = this.roles['app-user'].id;
+          const roleId = this.appUserRole.id;
           for (const fieldKey of this.fieldKeys) {
             if (changes.current.access[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, xmlFormId, roleId });
@@ -213,7 +216,7 @@ export default {
       }
     },
     save() {
-      if (this.roles['app-user'] == null) {
+      if (this.appUserRole == null) {
         this.$alert().danger('Information is missing about the App User role.');
         return;
       }

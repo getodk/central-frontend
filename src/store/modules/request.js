@@ -59,15 +59,6 @@ export const transforms = {
   users: ({ data }) => data.map(user => new User(user)),
   user: ({ data }) => new User(data),
 
-  roles: ({ data }) => {
-    // Using Object.create(null) in case there is a role whose `system` property
-    // is '__proto__'.
-    const bySystem = Object.create(null);
-    for (const role of data)
-      Vue.set(bySystem, role.system, role);
-    return bySystem;
-  },
-
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
   attachments: ({ data }) =>
