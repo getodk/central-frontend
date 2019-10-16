@@ -28,9 +28,10 @@ except according to the terms contained in the LICENSE file.
     <loading :state="initiallyLoading"/>
     <project-form-workflow-table v-if="dataExists"
       :changes-by-form="changesByForm" @update:state="updateState"
-      @update:access="updateAccess" @show-states="showModal('states')"/>
+      @update:access="updateAccess" @show-states="showModal('statesModal')"/>
 
-    <project-form-workflow-states v-bind="states" @hide="hideModal('states')"/>
+    <project-form-workflow-states v-bind="statesModal"
+      @hide="hideModal('statesModal')"/>
   </div>
 </template>
 
@@ -59,8 +60,7 @@ export default {
       awaitingResponse: false,
       changesByForm: null,
       changeCount: 0,
-      // The Form States modal
-      states: {
+      statesModal: {
         state: false
       }
     };
@@ -168,6 +168,11 @@ export default {
         }
       ]).catch(noop);
     },
+    // initChangesByForm() initializes this.changesByForm. Contrary to what its
+    // name may suggest, this.changesByForm does not store only changes. Rather,
+    // it stores two snapshots for each form: one from before the user made any
+    // changes, and one that includes any changes. Each snapshot includes the
+    // form's state, as well as app user access to the form.
     initChangesByForm() {
       // Using Object.create(null) in case there is a form whose xmlFormId is
       // '__proto__'.
@@ -186,7 +191,7 @@ export default {
         });
       }
     },
-    checkForUnsavedChanges() {
+    setUnsavedChanges() {
       if (this.changeCount === 0) {
         if (this.$store.state.router.unsavedChanges)
           this.$store.commit('setUnsavedChanges', false);
@@ -201,7 +206,7 @@ export default {
       const changedAfterUpdate = changes.current.state !== changes.previous.state;
       if (changedAfterUpdate !== changedBeforeUpdate) {
         this.changeCount += changedAfterUpdate ? 1 : -1;
-        this.checkForUnsavedChanges();
+        this.setUnsavedChanges();
       }
     },
     updateAccess(form, fieldKey, accessible) {
@@ -212,7 +217,7 @@ export default {
       const changedAfterUpdate = accessible !== changes.previous.access[fieldKey.id];
       if (changedAfterUpdate !== changedBeforeUpdate) {
         this.changeCount += changedAfterUpdate ? 1 : -1;
-        this.checkForUnsavedChanges();
+        this.setUnsavedChanges();
       }
     },
     save() {
