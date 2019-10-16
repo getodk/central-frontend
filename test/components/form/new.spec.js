@@ -132,7 +132,8 @@ describe('FormNew', () => {
           .respondWithData(() => testData.simpleForms
             .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
-          .respondWithData(() => testData.extendedFormAttachments.sorted()));
+          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => [])); // assignmentActors
 
         it('redirects to the form overview', () => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');

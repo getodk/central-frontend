@@ -3,7 +3,7 @@ import { mockRoute } from '../../http';
 import { mockRouteThroughLogin } from '../../session';
 
 describe('FormOverview', () => {
-  describe('anonymous users', () => {
+  describe('routing', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute('/projects/1/forms/f')
         .restoreSession(false)
@@ -18,6 +18,7 @@ describe('FormOverview', () => {
           .createPast(1, { xmlFormId: 'f' })
           .last())
         .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');
         }));

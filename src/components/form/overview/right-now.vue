@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section v-if="project != null && form != null"
-    id="form-overview-right-now">
+  <page-section id="form-overview-right-now">
     <template #heading>
       <span>Right Now</span>
     </template>
@@ -43,6 +42,20 @@ except according to the terms contained in the LICENSE file.
           </template>
         </template>
       </summary-item>
+      <summary-item :route-to="`/projects/${project.id}/form-workflow`"
+        icon="user-circle">
+        <template #heading>
+          {{ assignmentActors.length }} <span class="icon-angle-right"></span>
+        </template>
+        <template #body>
+          <template v-if="assignmentActors.length === 1">
+            <strong>App User</strong> in this Project has access to this Form.
+          </template>
+          <template v-else>
+            <strong>App Users</strong> in this Project have access to this Form.
+          </template>
+        </template>
+      </summary-item>
     </template>
   </page-section>
 </template>
@@ -55,7 +68,7 @@ export default {
   name: 'FormOverviewRightNow',
   components: { SummaryItem },
   computed: {
-    ...requestData(['project', 'form']),
+    ...requestData(['project', 'form', 'assignmentActors']),
     versionClass() {
       const htmlClass = ['form-version'];
       if (this.form.version === '') htmlClass.push('blank-form-version');

@@ -61,7 +61,7 @@ describe('FieldKeyNew', () => {
       requestData: { project }
     });
     const text = modal.first('option').text().trim().iTrim();
-    text.should.equal(`${project.name} Forms`);
+    text.should.equal(`All ${project.name} Forms`);
   });
 
   it('standard button thinking things', () =>

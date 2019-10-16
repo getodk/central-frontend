@@ -18,9 +18,14 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <label class="form-group">
             <select :disabled="awaitingResponse" class="form-control">
-              <option>{{ project != null ? project.name : '' }} Forms</option>
+              <option>
+                All {{ project != null ? project.name : '' }} Forms
+              </option>
               <option disabled>
-                More options available soon (to choose particular Forms)
+                Soon you will be able to control access here
+              </option>
+              <option disabled>
+                For now you can use the Form Workflow tab
               </option>
             </select>
             <span class="form-label">Access *</span>
@@ -45,20 +50,25 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else>
         <div class="modal-introduction">
-          <div>
+          <p>
             <span class="icon-check-circle"></span><strong>Success!</strong>
             The App User &ldquo;{{ created.displayName }}&rdquo; has been
             created.
-          </div>
+          </p>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="created.qrCodeHtml()"></div>
-          <div>
+          <p v-html="created.qrCodeHtml()"></p>
+          <p>
             You can configure a mobile device for
             &ldquo;{{ created.displayName }}&rdquo; right now by
             <doc-link to="collect-import-export/">scanning the code above</doc-link>
             into their app. Or you can do it later from the App Users table by
             clicking &ldquo;See code.&rdquo;
-          </div>
+          </p>
+          <p>
+            You may wish to visit this Project&rsquo;s
+            <router-link :to="formWorkflowPath">Form Workflow settings</router-link>
+            to give this user access to Forms.
+          </p>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="complete">
@@ -76,6 +86,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -101,7 +112,12 @@ export default {
       created: null
     };
   },
-  computed: requestData(['project']),
+  computed: {
+    ...requestData(['project']),
+    formWorkflowPath() {
+      return `/projects/${this.projectId}/form-workflow`;
+    }
+  },
   watch: {
     state(state) {
       if (state) return;
@@ -125,7 +141,7 @@ export default {
           this.step = 2;
           this.created = new FieldKey(this.projectId, data);
         })
-        .catch(() => {});
+        .catch(noop);
     },
     complete() {
       this.$emit('success', this.created);
@@ -160,7 +176,7 @@ export default {
   }
 
   img {
-    margin-top: 5px;
+    margin-top: -5px;
     margin-bottom: 20px;
   }
 }

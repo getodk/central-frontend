@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section v-if="project != null && form != null && attachments != null">
+  <page-section>
     <span slot="heading">Checklist</span>
     <template slot="body">
       <form-checklist-step :stage="stepStage(0)">
@@ -65,15 +65,20 @@ except according to the terms contained in the LICENSE file.
               App Users tab of the Project page</router-link>.
           </template>
           <template v-else>
-            Right now, this Project has
+            Right now,
+            <strong>
+              <router-link :to="`/projects/${project.id}/form-workflow`">
+                <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+                {{ $pluralize('App User', assignmentActors.length, true) }}</router-link>
+            </strong>
+            in this Project {{ $pluralize('has', assignmentActors.length) }}
+            access to this Form, but you can always
             <router-link :to="`/projects/${project.id}/app-users`">
               <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-              <strong>{{ $pluralize('App User', project.appUsers, true) }}</strong></router-link>,
-            but you can always add more.
+              add more.</router-link>
           </template>
-          <doc-link to="central-submissions/">
-            Click here to find out more.
-          </doc-link>
+          For more information about this,
+          <doc-link to="central-submissions/">click here</doc-link>.
         </p>
       </form-checklist-step>
       <form-checklist-step :stage="stepStage(3)">
@@ -125,7 +130,7 @@ export default {
   name: 'FormChecklist',
   components: { FormChecklistStep },
   computed: {
-    ...requestData(['project', 'form', 'attachments']),
+    ...requestData(['project', 'form', 'attachments', 'assignmentActors']),
     // Returns true if all form attachments exist and false if not. Returns true
     // if there are no form attachments.
     allAttachmentsExist() {

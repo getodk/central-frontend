@@ -26,10 +26,13 @@ describe('FormChecklist', () => {
         { exists: allAttachmentsExist }
       );
     }
+    testData.extendedFieldKeys.createPast(fieldKeyCount);
     return mockRoute('/projects/1/forms/f')
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted());
+      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() =>
+        testData.extendedFieldKeys.sorted().map(testData.toActor));
   };
 
   describe('submission count', () => {
@@ -61,7 +64,7 @@ describe('FormChecklist', () => {
         text.should.containEql('You have not created any App Users for this Project yet');
       }));
 
-    it('at least one app user', () =>
+    it('one app user', () =>
       loadOverview({ fieldKeyCount: 1 }).afterResponses(app => {
         const step = app.find('.form-checklist-step')[2];
         const text = step.find('p')[1].text().trim().iTrim();
