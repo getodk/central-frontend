@@ -255,6 +255,8 @@ a {
   }
 }
 
+// In Safari, the effect of this class is not visible on input and select
+// elements.
 .uncommitted-change {
   // Adding `.form-group &` for specificity reasons, in order to override the
   // styles on .form-group .form-control.

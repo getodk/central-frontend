@@ -19,8 +19,6 @@ except according to the terms contained in the LICENSE file.
     <td>
       <form>
         <div class="form-group">
-          <!-- In Safari, the effect of the uncommitted-change class is not
-          visible here. -->
           <select class="form-control"
             :class="{ 'uncommitted-change': stateChanged }"
             :value="changes.current.state" aria-label="State"
@@ -38,8 +36,6 @@ except according to the terms contained in the LICENSE file.
         <form>
           <div class="checkbox">
             <label>
-              <!-- In Safari, the effect of the uncommitted-change class is not
-              visible here. -->
               <input type="checkbox"
                 :class="{ 'uncommitted-change': accessChanged(fieldKey) }"
                 :checked="changes.current.access[fieldKey.id]"
