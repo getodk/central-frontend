@@ -18,34 +18,30 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </td>
       <td>
-        <form>
-          <div class="form-group">
-            <select class="form-control"
-              :class="{ 'uncommitted-change': stateChanged }"
-              :value="changes.current.state" aria-label="State"
-              @change="updateState($event.target.value)">
-              <option value="open">Open</option>
-              <option value="closing">Closing</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-        </form>
+        <div class="form-group">
+          <select class="form-control"
+            :class="{ 'uncommitted-change': stateChanged }"
+            :value="changes.current.state" aria-label="State"
+            @change="updateState($event.target.value)">
+            <option value="open">Open</option>
+            <option value="closing">Closing</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
       </td>
     </template>
     <template v-else>
       <td></td>
       <td v-for="fieldKey of fieldKeys" :key="fieldKey.id">
-        <form>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"
-                :class="{ 'uncommitted-change': accessChanged(fieldKey) }"
-                :checked="changes.current.access[fieldKey.id]"
-                aria-label="App User Access"
-                @change="updateAccess(fieldKey, $event.target.checked)">
-            </label>
-          </div>
-        </form>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"
+              :class="{ 'uncommitted-change': accessChanged(fieldKey) }"
+              :checked="changes.current.access[fieldKey.id]"
+              aria-label="App User Access"
+              @change="updateAccess(fieldKey, $event.target.checked)">
+          </label>
+        </div>
       </td>
       <td></td>
     </template>
