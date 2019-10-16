@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="project-form-workflow-row">
     <template v-if="frozen">
-      <td class="text-ellipsis">
+      <td class="form-name">
         <router-link :to="formOverviewPath" :title="form.nameOrId()">
           {{ form.nameOrId() }}
         </router-link>
@@ -98,6 +98,12 @@ export default {
 
 <style lang="scss">
 .project-form-workflow-row {
+  .form-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .form-group {
     margin-bottom: 0;
     padding-bottom: 0;
