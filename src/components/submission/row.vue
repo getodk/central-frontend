@@ -13,7 +13,9 @@ except according to the terms contained in the LICENSE file.
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
     <td class="row-number">{{ rowNumber }}</td>
-    <td class="submitter-name">{{ submission.__system.submitterName }}</td>
+    <td class="submitter-name" :title="submission.__system.submitterName">
+      {{ submission.__system.submitterName }}
+    </td>
     <td>{{ submissionDate }}</td>
   </tr>
   <!-- The rest of the table -->
