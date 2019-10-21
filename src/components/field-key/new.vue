@@ -93,10 +93,6 @@ export default {
   name: 'FieldKeyNew',
   mixins: [request()],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     state: {
       type: Boolean,
       default: false
@@ -115,7 +111,7 @@ export default {
   computed: {
     ...requestData(['project']),
     formWorkflowPath() {
-      return `/projects/${this.projectId}/form-workflow`;
+      return `/projects/${this.project.id}/form-workflow`;
     }
   },
   watch: {
@@ -131,7 +127,7 @@ export default {
       this.$refs.nickname.focus();
     },
     submit() {
-      const path = `/projects/${this.projectId}/app-users`;
+      const path = `/projects/${this.project.id}/app-users`;
       this.post(path, { displayName: this.nickname })
         .then(({ data }) => {
           // Reset the form.
@@ -139,7 +135,7 @@ export default {
           this.nickname = '';
 
           this.step = 2;
-          this.created = new FieldKey(this.projectId, data);
+          this.created = new FieldKey(this.project.id, data);
         })
         .catch(noop);
     },

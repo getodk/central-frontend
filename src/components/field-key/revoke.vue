@@ -42,6 +42,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'FieldKeyRevoke',
@@ -63,11 +64,9 @@ export default {
       // Backend ensures that the token is URL-safe.
       this.delete(`/sessions/${this.fieldKey.token}`)
         .then(() => {
-          this.$emit('hide');
-          this.$alert().blank();
-          this.$emit('success');
+          this.$emit('success', this.fieldKey);
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

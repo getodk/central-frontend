@@ -57,8 +57,8 @@ except according to the terms contained in the LICENSE file.
       </template>
     </p>
 
-    <field-key-new :project-id="projectId" :state="newFieldKey.state"
-      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
+    <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
+      @success="afterCreate"/>
     <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
       @success="afterRevoke"/>
   </div>
@@ -179,17 +179,18 @@ export default {
     },
     showRevoke(fieldKey) {
       this.revoke.fieldKey = fieldKey;
-      this.revoke.state = true;
+      this.showModal('revoke');
     },
     afterCreate(fieldKey) {
       this.$emit('fetch-field-keys');
       this.hideModal('newFieldKey');
-      this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
+      this.$alert().success(`The App User "${fieldKey.displayName}" was created successfully.`);
       this.highlighted = fieldKey.id;
     },
-    afterRevoke() {
+    afterRevoke(fieldKey) {
       this.$emit('fetch-field-keys');
-      this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
+      this.hideModal('revoke');
+      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}."`);
       this.highlighted = null;
     }
   }
