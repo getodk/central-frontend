@@ -70,6 +70,15 @@ trigger.check = (wrapper, selector = null) => {
   return Vue.nextTick().then(() => wrapper);
 };
 
+// Unchecks a checkbox or radio input, triggering a change event.
+trigger.uncheck = (wrapper, selector = null) => {
+  const target = selector != null ? wrapper.first(selector) : wrapper;
+  if (!target.element.checked) throw new Error('already unchecked');
+  target.element.checked = false;
+  target.trigger('change');
+  return Vue.nextTick().then(() => wrapper);
+};
+
 const normalizeTriggerDragEventArgs = (args) => {
   if (args.length === 0) throw new Error('files or event options required');
   if (args.length === 1)

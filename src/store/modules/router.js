@@ -55,6 +55,7 @@ export default {
       navigations.first.confirmed = false;
       navigations.last.triggered = false;
       navigations.last.confirmed = false;
+      state.unsavedChanges = false;
     },
     setUnsavedChanges(state, unsavedChanges) {
       state.unsavedChanges = unsavedChanges;

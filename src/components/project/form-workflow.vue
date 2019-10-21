@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button type="button" class="btn btn-primary"
+      <button id="project-form-workflow-save-button" type="button"
+        class="btn btn-primary"
         :class="{ 'uncommitted-change': changeCount !== 0 }"
         :disabled="saveDisabled" @click="save">
         <span class="icon-floppy-o"></span>Save

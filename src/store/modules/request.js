@@ -63,8 +63,12 @@ export const transforms = {
   form: ({ data }) => new Form(data),
   attachments: ({ data }) =>
     data.map(attachment => new FormAttachment(attachment)),
-  fieldKeys: ({ config, data }) => {
-    const projectId = config.url.split('/')[3];
+  fieldKeys: (response) => {
+    const { data } = response;
+    // Adding this check so that we access response.config only if necessary.
+    // (This facilitates testing.)
+    if (data.length === 0) return [];
+    const projectId = response.config.url.split('/')[3];
     return data.map(fieldKey => new FieldKey(projectId, fieldKey));
   },
 
