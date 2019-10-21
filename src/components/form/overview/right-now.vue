@@ -45,7 +45,8 @@ except according to the terms contained in the LICENSE file.
       <summary-item :route-to="`/projects/${project.id}/form-workflow`"
         icon="user-circle">
         <template #heading>
-          {{ assignmentActors.length }} <span class="icon-angle-right"></span>
+          {{ assignmentActors.length.toLocaleString() }}
+          <span class="icon-angle-right"></span>
         </template>
         <template #body>
           <template v-if="assignmentActors.length === 1">
