@@ -1,11 +1,12 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?359rdc') format('truetype'),
-    url('/fonts/icomoon.woff?359rdc') format('woff'),
-    url('/fonts/icomoon.svg?359rdc#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?uoc5u9') format('truetype'),
+    url('/fonts/icomoon.woff?uoc5u9') format('woff'),
+    url('/fonts/icomoon.svg?uoc5u9#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="icon-"], [class*=" icon-"] {
@@ -118,4 +119,10 @@
 }
 .icon-circle-o:before {
   content: "\f10c";
+}
+.icon-floppy-o:before {
+  content: "\f0c7";
+}
+.icon-save:before {
+  content: "\f0c7";
 }
