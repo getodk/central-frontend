@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
         :class="{ 'uncommitted-change': changeCount !== 0 }"
         :disabled="saveDisabled" @click="save">
         <span class="icon-floppy-o"></span>Save
+        <spinner :state="awaitingResponse"/>
       </button>
       <p>
         Here you can set Form States, which control whether Forms are available
