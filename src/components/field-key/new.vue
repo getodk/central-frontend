@@ -66,7 +66,7 @@ except according to the terms contained in the LICENSE file.
           </p>
           <p>
             You may wish to visit this Project&rsquo;s
-            <router-link :to="formWorkflowPath">Form Workflow settings</router-link>
+            <a href="#" @click="navigateToFormWorkflow">Form Workflow settings</a>
             to give this user access to Forms.
           </p>
         </div>
@@ -108,12 +108,7 @@ export default {
       created: null
     };
   },
-  computed: {
-    ...requestData(['project']),
-    formWorkflowPath() {
-      return `/projects/${this.project.id}/form-workflow`;
-    }
-  },
+  computed: requestData(['project']),
   watch: {
     state(state) {
       if (state) return;
@@ -147,6 +142,11 @@ export default {
         this.$emit('hide');
       else
         this.complete();
+    },
+    navigateToFormWorkflow() {
+      // Clear fieldKeys so that the Form Workflow tab will fetch it again.
+      this.$store.commit('clearData', 'fieldKeys');
+      this.$router.push(`/projects/${this.project.id}/form-workflow`);
     },
     createAnother() {
       this.step = 1;
