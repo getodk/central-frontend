@@ -122,15 +122,14 @@ export default {
           const changes = this.changesByForm[form.xmlFormId];
 
           const assignments = [];
-          const { xmlFormId } = form;
           const roleId = this.appUserRole.id;
           for (const fieldKey of this.fieldKeys) {
             if (changes.current.access[fieldKey.id])
-              assignments.push({ actorId: fieldKey.id, xmlFormId, roleId });
+              assignments.push({ actorId: fieldKey.id, roleId });
           }
 
           return {
-            xmlFormId,
+            xmlFormId: form.xmlFormId,
             name: form.name,
             state: changes.current.state,
             // If there is an assignment on Backend whose app user is not in
