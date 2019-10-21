@@ -14,12 +14,13 @@ describe('FormChecklist', () => {
     fieldKeyCount = 0
   }) => {
     testData.extendedProjects.createPast(1, { appUsers: fieldKeyCount });
-    const state = formIsOpen
-      ? 'open'
-      : faker.random.arrayElement(['closing', 'closed']);
-    const submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-    testData.extendedForms
-      .createPast(1, { xmlFormId: 'f', state, submissions });
+    testData.extendedForms.createPast(1, {
+      xmlFormId: 'f',
+      state: formIsOpen
+        ? 'open'
+        : faker.random.arrayElement(['closing', 'closed']),
+      submissions: hasSubmission ? 12345 : 0
+    });
     if (attachmentCount !== 0) {
       testData.extendedFormAttachments.createPast(
         attachmentCount,
@@ -47,12 +48,11 @@ describe('FormChecklist', () => {
 
     it('at least one submission', () =>
       loadOverview({ hasSubmission: true }).afterResponses(app => {
-        const count = testData.extendedForms.last().submissions
-          .toLocaleString();
-        app.find('.form-checklist-step')[2].find('p')[1].text().trim()
-          .should.containEql(count);
-        app.find('.form-checklist-step')[3].find('p')[1].text().trim()
-          .should.containEql(count);
+        const steps = app.find('.form-checklist-step');
+        const step3Text = steps[2].find('p')[1].text().trim();
+        step3Text.should.containEql('12,345');
+        const step4Text = steps[3].find('p')[1].text().trim();
+        step4Text.should.containEql('12,345');
       }));
   });
 

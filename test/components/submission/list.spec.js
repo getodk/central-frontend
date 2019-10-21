@@ -970,8 +970,8 @@ describe('SubmissionList', () => {
           loadFormOverview(10)
             .afterResponses(app => {
               const p = app.find('.form-checklist-step')[2].find('p')[1];
-              p.text().should.containEql('10\n');
-              p.text().should.not.containEql('11\n');
+              p.text().should.containEql('10 ');
+              p.text().should.not.containEql('11 ');
             })
             .route(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => testData.standardKeys.sorted())
@@ -984,8 +984,8 @@ describe('SubmissionList', () => {
             .route(`/projects/1/forms/${encodedFormId()}`)
             .then(app => {
               const p = app.find('.form-checklist-step')[2].find('p')[1];
-              p.text().should.containEql('11\n');
-              p.text().should.not.containEql('10\n');
+              p.text().should.containEql('11 ');
+              p.text().should.not.containEql('10 ');
             }));
 
         it('updates the count in the download button', () =>
