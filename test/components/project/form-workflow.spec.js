@@ -340,6 +340,24 @@ describe('ProjectFormWorkflow', () => {
           app.first('#project-form-workflow-save-button').should.be.disabled();
         }));
 
+      it('updates the table', () =>
+        saveWithSuccess().afterResponses(app => {
+          const table = app.first('#project-form-workflow-table');
+          const th = table.find('th');
+          th.length.should.equal(6);
+          const td = table.find('td');
+          td.length.should.equal(th.length);
+
+          // State column
+          td[1].first('select').element.value.should.equal('open');
+
+          // App User Access columns
+          th[3].text().should.equal('App User 2');
+          td[3].first('input').element.checked.should.be.false();
+          th[4].text().should.equal('App User 1');
+          td[4].first('input').element.checked.should.be.true();
+        }));
+
       it('does not show a prompt if the user navigates elsewhere', () => {
         let prompted = false;
         const originalConfirm = window.confirm;
