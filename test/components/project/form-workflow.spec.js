@@ -24,14 +24,27 @@ const loadFormWorkflow = () => mockRoute('/projects/1/form-workflow')
     // Create an assignment for "App User 2", which will be the first app user
     // in the table.
     .createPast(1, {
-      actor: testData.extendedFieldKeys.get(1),
+      actorId: testData.extendedFieldKeys.get(1).id,
       role: 'app-user',
-      form: testData.extendedForms.last()
+      xmlFormId: 'f'
     })
     .createPast(1, {
-      actor: testData.extendedFieldKeys.last(),
+      actorId: testData.extendedFieldKeys.last().id,
       role: 'app-user',
-      form: testData.extendedForms.last()
+      xmlFormId: 'f'
+    })
+    // Frontend should effectively ignore the following two assignments.
+    // This assignment has a valid actorId but an invalid xmlFormId.
+    .createPast(1, {
+      actorId: testData.extendedFieldKeys.get(1).id,
+      role: 'app-user',
+      xmlFormId: 'does_not_exist'
+    })
+    // This assignment has a valid xmlFormId but an invalid actorId.
+    .createPast(1, {
+      actorId: 1000,
+      role: 'app-user',
+      xmlFormId: 'f'
     })
     .sorted());
 
@@ -291,12 +304,12 @@ describe('ProjectFormWorkflow', () => {
         })
         .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => {
-          testData.standardFormSummaryAssignments.splice(0, 2);
+          testData.standardFormSummaryAssignments.splice(0, 4);
           return testData.standardFormSummaryAssignments
             .createPast(1, {
-              actor: testData.extendedFieldKeys.first(),
+              actorId: testData.extendedFieldKeys.first().id,
               role: 'app-user',
-              form: testData.extendedForms.last()
+              xmlFormId: 'f'
             })
             .sorted();
         });
