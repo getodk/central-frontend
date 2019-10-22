@@ -114,5 +114,12 @@ export default {
       bottom: 5px;
     }
   }
+
+  .icon-file-o, .icon-inbox {
+    // These icons are a little more narrow than .icon-user-circle, so we use
+    // this to center them.
+    margin-left: 4px;
+    margin-right: 4px;
+  }
 }
 </style>
