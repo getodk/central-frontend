@@ -15,12 +15,19 @@ const loadFormWorkflow = () => mockRoute('/projects/1/form-workflow')
     .createPast(1, { xmlFormId: 'f', name: 'My Form', state: 'closing' })
     .sorted())
   .respondWithData(() => testData.extendedFieldKeys
-    // Specifying a token, because that affects the sort order of the app users.
     .createPast(1, { displayName: 'App User 1', token: faker.central.token() })
     .createPast(1, { displayName: 'App User 2', token: faker.central.token() })
+    .createPast(1, { displayName: 'App User 3', token: null })
     .sorted())
   .respondWithData(() => testData.standardRoles.sorted())
   .respondWithData(() => testData.standardFormSummaryAssignments
+    // Create an assignment for "App User 2", which will be the first app user
+    // in the table.
+    .createPast(1, {
+      actor: testData.extendedFieldKeys.get(1),
+      role: 'app-user',
+      form: testData.extendedForms.last()
+    })
     .createPast(1, {
       actor: testData.extendedFieldKeys.last(),
       role: 'app-user',
@@ -67,6 +74,7 @@ describe('ProjectFormWorkflow', () => {
           'App User 2',
           'App User 1',
           ''
+          // There is no column for "App User 3".
         ]);
         th[3].getAttribute('title').should.equal('App User 2');
         th[4].getAttribute('title').should.equal('App User 1');
@@ -89,6 +97,7 @@ describe('ProjectFormWorkflow', () => {
         // App User Access columns
         td[3].first('input').element.checked.should.be.true();
         td[4].first('input').element.checked.should.be.false();
+        // There is no column for "App User 3".
       }));
 
     it('shows a message if there are no forms', () => {
@@ -282,7 +291,7 @@ describe('ProjectFormWorkflow', () => {
         })
         .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => {
-          testData.standardFormSummaryAssignments.splice(0, 1);
+          testData.standardFormSummaryAssignments.splice(0, 2);
           return testData.standardFormSummaryAssignments
             .createPast(1, {
               actor: testData.extendedFieldKeys.first(),
@@ -309,6 +318,7 @@ describe('ProjectFormWorkflow', () => {
                 xmlFormId: 'f',
                 name: 'My Form',
                 state: 'open',
+                // The assignment for "App User 3" is not included.
                 assignments: [{ actorId: 1, roleId }]
               }
             ]

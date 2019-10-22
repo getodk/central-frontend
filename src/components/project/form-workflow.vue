@@ -43,6 +43,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import ProjectFormWorkflowStates from './form-workflow/states.vue';
 import ProjectFormWorkflowTable from './form-workflow/table.vue';
 import modal from '../../mixins/modal';
@@ -74,6 +76,7 @@ export default {
   },
   computed: {
     ...requestData(REQUEST_KEYS),
+    ...mapGetters(['fieldKeysWithToken']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
@@ -86,11 +89,11 @@ export default {
     },
     // Returns an object that maps each form's xmlFormId to an "access object"
     // for the form. The access object indicates whether each app user has an
-    // assignment to the form. It has a property for every app user, even those
-    // without an assignment to the form.
+    // assignment to the form. It has a property for every app user with a
+    // token, even those without an assignment to the form.
     accessByForm() {
       const byFieldKey = {};
-      for (const fieldKey of this.fieldKeys)
+      for (const fieldKey of this.fieldKeysWithToken)
         byFieldKey[fieldKey.id] = false;
 
       const byForm = Object.create(null);
@@ -100,7 +103,7 @@ export default {
       for (const assignment of this.formAssignments) {
         const forForm = byForm[assignment.xmlFormId];
         // Skip any assignment whose form is not in this.forms or whose app user
-        // is not in this.fieldKeys.
+        // is not in this.fieldKeysWithToken.
         if (forForm != null && forForm[assignment.actorId] != null)
           forForm[assignment.actorId] = true;
       }
@@ -124,7 +127,7 @@ export default {
 
           const assignments = [];
           const roleId = this.appUserRole.id;
-          for (const fieldKey of this.fieldKeys) {
+          for (const fieldKey of this.fieldKeysWithToken) {
             if (changes.current.access[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, roleId });
           }
@@ -134,7 +137,7 @@ export default {
             name: form.name,
             state: changes.current.state,
             // If there is an assignment on Backend whose app user is not in
-            // this.fieldKeys, then Backend will delete the assignment.
+            // this.fieldKeysWithToken, then Backend will delete the assignment.
             assignments
           };
         })

@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <td></td>
-      <td v-for="fieldKey of fieldKeys" :key="fieldKey.id">
+      <td v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id">
         <div class="checkbox">
           <label>
             <input type="checkbox"
@@ -49,8 +49,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import Form from '../../../presenters/form';
-import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectFormWorkflowRow',
@@ -69,7 +70,7 @@ export default {
     }
   },
   computed: {
-    ...requestData(['fieldKeys']),
+    ...mapGetters(['fieldKeysWithToken']),
     formOverviewPath() {
       return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
     },

@@ -136,8 +136,13 @@ export default {
       }
       return true;
     },
+
     loggedIn: ({ data }) => data.session != null && data.session.token != null,
-    loggedOut: (_, getters) => !getters.loggedIn
+    loggedOut: (_, getters) => !getters.loggedIn,
+
+    fieldKeysWithToken: ({ data }) => (data.fieldKeys != null
+      ? data.fieldKeys.filter(fieldKey => fieldKey.token != null)
+      : null)
   },
   mutations: {
     /* eslint-disable no-param-reassign */

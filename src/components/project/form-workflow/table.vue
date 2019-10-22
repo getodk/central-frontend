@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-form-workflow-table" class="clearfix">
     <table class="table table-frozen"
-      :class="{ 'no-access-columns': fieldKeys.length === 0 }">
+      :class="{ 'no-access-columns': fieldKeysWithToken.length === 0 }">
       <thead>
         <tr>
           <th>Form</th>
@@ -31,12 +31,12 @@ except according to the terms contained in the LICENSE file.
           @update:state="updateState"/>
       </tbody>
     </table>
-    <div v-if="fieldKeys.length !== 0" class="table-container">
+    <div v-if="fieldKeysWithToken.length !== 0" class="table-container">
       <table class="table">
         <thead>
           <tr>
             <th><div>App User Access</div></th>
-            <th v-for="fieldKey of fieldKeys" :key="fieldKey.id"
+            <th v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
               :title="fieldKey.displayName">
               <div>{{ fieldKey.displayName }}</div>
             </th>
@@ -54,6 +54,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import ProjectFormWorkflowRow from './row.vue';
 import { requestData } from '../../../store/modules/request';
 
@@ -66,7 +68,10 @@ export default {
       required: true
     }
   },
-  computed: requestData(['forms', 'fieldKeys']),
+  computed: {
+    ...requestData(['forms']),
+    ...mapGetters(['fieldKeysWithToken'])
+  },
   methods: {
     updateState(form, state) {
       this.$emit('update:state', form, state);
