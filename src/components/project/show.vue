@@ -36,16 +36,12 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="$store.getters.initiallyLoading(['project'])"/>
-      <!-- It might be possible to remove this <div> element and move the v-show
-      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
-      supports that use case. -->
-      <div v-show="project != null">
-        <!-- <router-view> is immediately created and can send its own requests
-        even before the server has responded to ProjectHome's request for the
-        project. -->
-        <router-view @fetch-project="$emit('fetch-project')"
-          @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
-      </div>
+      <!-- <router-view> is immediately created and can send its own requests
+      even before the server has responded to ProjectHome's request for the
+      project. -->
+      <router-view v-show="project != null"
+        @fetch-project="$emit('fetch-project')" @fetch-forms="fetchForms"
+        @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
 </template>
