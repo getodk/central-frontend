@@ -16,12 +16,13 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
       </button>
-      <!-- TODO. Update this text to account for archived projects? -->
       <p>
-        App Users in this Project will be able to download and use all Forms
-        within this Project. A future update will allow you to customize which
-        App Users may access which Forms. Multiple devices can use the same App
-        User profile without problem. For more information,
+        App Users in this Project only will be able to download and use Forms
+        within this Project. When you create a new App User, it will not have
+        access to any Forms at first. To set the Forms each App User may access,
+        use the <router-link :to="formWorkflowPath">Form Workflow</router-link>
+        tab. Multiple devices can use the same App User profile without problem.
+        For more information,
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
@@ -107,7 +108,12 @@ export default {
       }
     };
   },
-  computed: requestData(['project', 'fieldKeys']),
+  computed: {
+    ...requestData(['project', 'fieldKeys']),
+    formWorkflowPath() {
+      return `/projects/${this.projectId}/form-workflow`;
+    }
+  },
   watch: {
     projectId() {
       this.$emit('fetch-field-keys');
