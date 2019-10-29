@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal :state="state" :hideable="!disabled" backdrop @hide="$emit('hide')">
-    <template slot="title">Create Form</template>
-    <template slot="body">
+    <template #title>Create Form</template>
+    <template #body>
       <div class="modal-introduction">
         <p>
           To create a Form, upload an XForms XML file. If you don’t already have
@@ -56,6 +56,7 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -172,7 +173,7 @@ export default {
           // The `forms` property of the project is now likely out-of-date.
           this.$emit('success', new Form(data));
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };
