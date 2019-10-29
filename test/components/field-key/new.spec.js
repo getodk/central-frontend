@@ -8,17 +8,6 @@ import { submitForm, trigger } from '../../event';
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
 
-  it('does not render the create button if the project is archived', () =>
-    mockRoute('/projects/1/app-users')
-      .respondWithData(() => testData.extendedProjects
-        .createPast(1, { archived: true, appUsers: 1 })
-        .last())
-      .respondWithData(() =>
-        testData.extendedFieldKeys.createPast(1).sorted())
-      .afterResponses(app => {
-        app.find('.heading-with-button button').length.should.equal(0);
-      }));
-
   describe('modal', () => {
     it('shows the modal after the create button is clicked', () =>
       mockRoute('/projects/1/app-users')

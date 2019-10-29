@@ -364,22 +364,5 @@ describe('ProjectUserList', () => {
           }));
       });
     });
-
-    describe('archived project', () => {
-      beforeEach(() => {
-        testData.extendedProjects.createPast(1, { archived: true });
-      });
-
-      it('does not render the search input', () =>
-        loadProjectUsers({ count: 1 }).then(component => {
-          const form = component.find('#project-user-list-search-form');
-          form.length.should.equal(0);
-        }));
-
-      it('disables the select', () =>
-        loadProjectUsers({ count: 1 }).then(component => {
-          component.first('select').should.be.disabled();
-        }));
-    });
   });
 });

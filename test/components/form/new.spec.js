@@ -36,25 +36,6 @@ const FILE_SELECTION_METHODS = [
 describe('FormNew', () => {
   beforeEach(mockLogin);
 
-  describe('New button', () => {
-    it('shows the button for a project that is not archived', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.find('#project-overview-new-form-button').length.should.equal(1);
-        }));
-
-    it('does not show the button for an archived project', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { archived: true }).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.find('#project-overview-new-form-button').length.should.equal(0);
-        }));
-  });
-
   it('shows the modal after the New button is clicked', () =>
     mockRoute('/projects/1')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())

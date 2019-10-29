@@ -52,12 +52,22 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">Danger Zone</h1>
           </div>
           <div class="panel-body">
-            <p>
-              <button id="project-settings-archive-button" type="button"
-                class="btn btn-danger" @click="showModal('archive')">
-                Archive this Project
-              </button>
-            </p>
+            <template v-if="!project.archived">
+              <p>
+                <button id="project-settings-archive-button" type="button"
+                  class="btn btn-danger" @click="showModal('archive')">
+                  Archive this Project
+                </button>
+              </p>
+            </template>
+            <template v-else>
+              <p>This Project has been archived.</p>
+              <p>
+                In this version of ODK Central, you may not unarchive a Project.
+                However, the ability to unarchive a Project is planned for a
+                future release.
+              </p>
+            </template>
           </div>
         </div>
       </div>
@@ -74,17 +84,13 @@ except according to the terms contained in the LICENSE file.
 import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
-import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
   components: { ProjectArchive, ProjectEdit, ProjectEnableEncryption },
-  mixins: [
-    conditionalRoute({ project: (project) => !project.archived }),
-    modal()
-  ],
+  mixins: [modal()],
   data() {
     return {
       enableEncryption: {
