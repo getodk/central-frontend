@@ -80,7 +80,7 @@ describe('FieldKeyNew', () => {
           .then(() => submitForm(app, '#field-key-new form', [
             ['input', testData.extendedFieldKeys.createNew().displayName]
           ])))
-        .respondWithData(() => testData.simpleFieldKeys.last());
+        .respondWithData(() => testData.standardFieldKeys.last());
 
     describe('after the Done button is clicked', () => {
       it('hides the modal', () =>
