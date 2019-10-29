@@ -30,7 +30,8 @@ describe('ProjectSettings', () => {
             app.find('#page-head .nav-tabs a').map(a => a.text()).should.eql([
               'Overview',
               'Project Managers',
-              'App Users'
+              'App Users',
+              'Form Workflow'
             ]);
           }));
 

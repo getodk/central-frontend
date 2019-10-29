@@ -2,7 +2,6 @@ import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';
-import { trigger } from '../../event';
 
 describe('FormChecklist', () => {
   beforeEach(mockLogin);
@@ -15,22 +14,26 @@ describe('FormChecklist', () => {
     fieldKeyCount = 0
   }) => {
     testData.extendedProjects.createPast(1, { appUsers: fieldKeyCount });
-    const state = formIsOpen
-      ? 'open'
-      : faker.random.arrayElement(['closing', 'closed']);
-    const submissions = hasSubmission ? faker.random.number({ min: 1 }) : 0;
-    testData.extendedForms
-      .createPast(1, { xmlFormId: 'f', state, submissions });
+    testData.extendedForms.createPast(1, {
+      xmlFormId: 'f',
+      state: formIsOpen
+        ? 'open'
+        : faker.random.arrayElement(['closing', 'closed']),
+      submissions: hasSubmission ? 12345 : 0
+    });
     if (attachmentCount !== 0) {
       testData.extendedFormAttachments.createPast(
         attachmentCount,
         { exists: allAttachmentsExist }
       );
     }
+    testData.extendedFieldKeys.createPast(fieldKeyCount);
     return mockRoute('/projects/1/forms/f')
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted());
+      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() =>
+        testData.extendedFieldKeys.sorted().map(testData.toActor));
   };
 
   describe('submission count', () => {
@@ -45,12 +48,11 @@ describe('FormChecklist', () => {
 
     it('at least one submission', () =>
       loadOverview({ hasSubmission: true }).afterResponses(app => {
-        const count = testData.extendedForms.last().submissions
-          .toLocaleString();
-        app.find('.form-checklist-step')[2].find('p')[1].text().trim()
-          .should.containEql(count);
-        app.find('.form-checklist-step')[3].find('p')[1].text().trim()
-          .should.containEql(count);
+        const steps = app.find('.form-checklist-step');
+        const step3Text = steps[2].find('p')[1].text().trim();
+        step3Text.should.containEql('12,345');
+        const step4Text = steps[3].find('p')[1].text().trim();
+        step4Text.should.containEql('12,345');
       }));
   });
 
@@ -62,34 +64,13 @@ describe('FormChecklist', () => {
         text.should.containEql('You have not created any App Users for this Project yet');
       }));
 
-    it('at least one app user', () =>
+    it('one app user', () =>
       loadOverview({ fieldKeyCount: 1 }).afterResponses(app => {
         const step = app.find('.form-checklist-step')[2];
         const text = step.find('p')[1].text().trim().iTrim();
         text.should.containEql('1 App User');
       }));
   });
-
-  it('marks step 5 as complete if form state is changed from open', () =>
-    loadOverview({ formIsOpen: true })
-      .afterResponses(app => {
-        const step = app.find('.form-checklist-step')[4];
-        step.hasClass('form-checklist-step-complete').should.be.false();
-      })
-      .route('/projects/1/forms/f/settings')
-      .request(app => trigger.check(app, '#form-edit input[value="closed"]'))
-      .respondWithData(() => {
-        testData.extendedForms.update(testData.extendedForms.last(), {
-          state: 'closed'
-        });
-        return testData.standardForms.last();
-      })
-      .complete()
-      .route('/projects/1/forms/f')
-      .then(app => {
-        const step = app.find('.form-checklist-step')[4];
-        step.hasClass('form-checklist-step-complete').should.be.true();
-      }));
 
   describe('step stages', () => {
     // Array of test cases

@@ -11,6 +11,7 @@ export const extendedFieldKeys = dataStore({
     id,
     lastCreatedAt,
 
+    displayName = faker.name.findName(),
     token = !inPast || faker.random.boolean() ? faker.central.token() : null
   }) => {
     const createdBy = extendedUsers.randomOrCreatePast();
@@ -20,7 +21,7 @@ export const extendedFieldKeys = dataStore({
     ]);
     return {
       id,
-      displayName: faker.name.findName(),
+      displayName,
       token,
       lastUsed: inPast && faker.random.boolean()
         ? faker.date.pastSince(createdAt).toISOString()

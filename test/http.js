@@ -484,6 +484,7 @@ class MockHttp {
         // aborted. Here, we navigate to a location that we also know will not
         // send a request.
         return new Promise((resolve, reject) => {
+          store.commit('setUnsavedChanges', false);
           router.push(
             `/_initialPromise${Vue.prototype.$uniqueId()}`,
             () => {

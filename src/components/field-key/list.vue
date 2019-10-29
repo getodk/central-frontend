@@ -16,12 +16,13 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
       </button>
-      <!-- TODO. Update this text to account for archived projects? -->
       <p>
-        App Users in this Project will be able to download and use all Forms
-        within this Project. A future update will allow you to customize which
-        App Users may access which Forms. Multiple devices can use the same App
-        User profile without problem. For more information,
+        App Users in this Project only will be able to download and use Forms
+        within this Project. When you create a new App User, it will not have
+        access to any Forms at first. To set the Forms each App User may access,
+        use the <router-link :to="formWorkflowPath">Form Workflow</router-link>
+        tab. Multiple devices can use the same App User profile without problem.
+        For more information,
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
@@ -57,8 +58,8 @@ except according to the terms contained in the LICENSE file.
       </template>
     </p>
 
-    <field-key-new :project-id="projectId" :state="newFieldKey.state"
-      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
+    <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
+      @success="afterCreate"/>
     <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
       @success="afterRevoke"/>
   </div>
@@ -107,10 +108,15 @@ export default {
       }
     };
   },
-  computed: requestData(['project', 'fieldKeys']),
+  computed: {
+    ...requestData(['project', 'fieldKeys']),
+    formWorkflowPath() {
+      return `/projects/${this.projectId}/form-workflow`;
+    }
+  },
   watch: {
     projectId() {
-      this.fetchData();
+      this.$emit('fetch-field-keys');
       this.highlighted = null;
       this.hidePopover();
     },
@@ -121,10 +127,7 @@ export default {
     }
   },
   created() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new request.
-    if (this.fieldKeys == null && !this.$store.getters.loading('fieldKeys'))
-      this.fetchData();
+    this.$emit('fetch-field-keys', false);
   },
   mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -134,20 +137,6 @@ export default {
     $('body').off('.field-key-list');
   },
   methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'fieldKeys',
-        url: `/projects/${this.projectId}/app-users`,
-        extended: true,
-        success: ({ project, fieldKeys }) => {
-          if (project == null || project.appUsers === fieldKeys.length) return;
-          this.$store.commit('setData', {
-            key: 'project',
-            value: { ...project, appUsers: fieldKeys.length }
-          });
-        }
-      }]).catch(() => {});
-    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -196,17 +185,18 @@ export default {
     },
     showRevoke(fieldKey) {
       this.revoke.fieldKey = fieldKey;
-      this.revoke.state = true;
+      this.showModal('revoke');
     },
     afterCreate(fieldKey) {
-      this.fetchData();
+      this.$emit('fetch-field-keys');
       this.hideModal('newFieldKey');
-      this.$alert().success(`The App User “${fieldKey.displayName}” was created successfully.`);
+      this.$alert().success(`The App User "${fieldKey.displayName}" was created successfully.`);
       this.highlighted = fieldKey.id;
     },
-    afterRevoke() {
-      this.fetchData();
-      this.$alert().success(`Access was revoked for the App User “${this.revoke.fieldKey.displayName}.”`);
+    afterRevoke(fieldKey) {
+      this.$emit('fetch-field-keys');
+      this.hideModal('revoke');
+      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}."`);
       this.highlighted = null;
     }
   }

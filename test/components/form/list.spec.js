@@ -67,6 +67,7 @@ describe('FormList', () => {
       })
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         app.vm.$route.params.xmlFormId.should.equal('a b');
       }));

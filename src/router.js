@@ -23,6 +23,7 @@ import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
 import NotFound from './components/not-found.vue';
+import ProjectFormWorkflow from './components/project/form-workflow.vue';
 import ProjectHome from './components/project/home.vue';
 import ProjectList from './components/project/list.vue';
 import ProjectOverview from './components/project/overview.vue';
@@ -133,6 +134,7 @@ const routes = [
           { path: '', component: ProjectOverview, props: true },
           { path: 'users', component: ProjectUserList, props: true },
           { path: 'app-users', component: FieldKeyList, props: true },
+          { path: 'form-workflow', component: ProjectFormWorkflow, props: true },
           { path: 'settings', component: ProjectSettings }
         ]
       },
@@ -279,7 +281,7 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 };
 
 // Data that does not change with navigation
-for (const key of ['session', 'currentUser']) {
+for (const key of ['session', 'currentUser', 'roles']) {
   preserveDataForKey({
     key,
     to: namedRoutes.map(route => route.name),
@@ -290,7 +292,13 @@ for (const key of ['session', 'currentUser']) {
 // Tabs
 preserveDataForKey({
   key: '*',
-  to: ['ProjectOverview', 'ProjectUserList', 'FieldKeyList', 'ProjectSettings'],
+  to: [
+    'ProjectOverview',
+    'ProjectUserList',
+    'FieldKeyList',
+    'ProjectFormWorkflow',
+    'ProjectSettings'
+  ],
   params: ['projectId']
 });
 preserveDataForKey({
@@ -303,9 +311,16 @@ preserveDataForKey({
   key: 'project',
   to: [
     // ProjectShow
-    'ProjectOverview', 'ProjectUserList', 'FieldKeyList', 'ProjectSettings',
+    'ProjectOverview',
+    'ProjectUserList',
+    'FieldKeyList',
+    'ProjectFormWorkflow',
+    'ProjectSettings',
     // FormShow
-    'FormOverview', 'FormAttachmentList', 'SubmissionList', 'FormSettings'
+    'FormOverview',
+    'FormAttachmentList',
+    'SubmissionList',
+    'FormSettings'
   ],
   params: ['projectId']
 });
@@ -403,6 +418,37 @@ export const canRoute = (routeName) => {
   }
   return true;
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UNSAVED CHANGES
+
+window.addEventListener('beforeunload', (event) => {
+  if (!store.state.router.unsavedChanges) return;
+  event.preventDefault();
+  // Needed for Chrome.
+  event.returnValue = ''; // eslint-disable-line no-param-reassign
+});
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.router.unsavedChanges) {
+    next();
+    return;
+  }
+
+  // eslint-disable-next-line no-alert
+  const result = window.confirm('Are you sure you want to leave this page? Your changes might not be saved.');
+  if (result)
+    next();
+  else
+    next(false);
+});
+
+router.afterEach(() => {
+  if (store.state.router.unsavedChanges)
+    store.commit('setUnsavedChanges', false);
+});
 
 
 

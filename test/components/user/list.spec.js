@@ -179,7 +179,7 @@ describe('UserList', () => {
               })
               .sorted())
             .respondWithData(() =>
-              testData.toActor(testData.standardUsers.sorted().slice(0, 2)))
+              testData.standardUsers.sorted().slice(0, 2).map(testData.toActor))
             .complete()
             .request(app => trigger.changeValue(
               app.find('#user-list-table select')[rowIndex],

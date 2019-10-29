@@ -26,6 +26,10 @@ const allKeys = [
   'session',
   'currentUser',
 
+  'users',
+  'user',
+
+  'roles',
   'assignmentActors',
 
   'projects',
@@ -38,9 +42,7 @@ const allKeys = [
   'submissionsChunk',
   'keys',
   'fieldKeys',
-
-  'users',
-  'user',
+  'formAssignments',
 
   'backupsConfig',
   'audits'
@@ -54,17 +56,21 @@ export const transforms = {
   }),
   currentUser: ({ data }) => new User(data),
 
+  users: ({ data }) => data.map(user => new User(user)),
+  user: ({ data }) => new User(data),
+
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
   attachments: ({ data }) =>
     data.map(attachment => new FormAttachment(attachment)),
-  fieldKeys: ({ config, data }) => {
-    const projectId = config.url.split('/')[3];
+  fieldKeys: (response) => {
+    const { data } = response;
+    // Adding this check so that we access response.config only if necessary.
+    // (This facilitates testing.)
+    if (data.length === 0) return [];
+    const projectId = response.config.url.split('/')[3];
     return data.map(fieldKey => new FieldKey(projectId, fieldKey));
   },
-
-  users: ({ data }) => data.map(user => new User(user)),
-  user: ({ data }) => new User(data),
 
   backupsConfig: (response) => BackupsConfig.fromResponse(response),
   audits: ({ data }) => data.map(audit => new Audit(audit))
@@ -124,8 +130,19 @@ export default {
       }
       return any;
     },
+    dataExists: ({ data }) => (keys) => {
+      for (const key of keys) {
+        if (data[key] == null) return false;
+      }
+      return true;
+    },
+
     loggedIn: ({ data }) => data.session != null && data.session.token != null,
-    loggedOut: (_, getters) => !getters.loggedIn
+    loggedOut: (_, getters) => !getters.loggedIn,
+
+    fieldKeysWithToken: ({ data }) => (data.fieldKeys != null
+      ? data.fieldKeys.filter(fieldKey => fieldKey.token != null)
+      : null)
   },
   mutations: {
     /* eslint-disable no-param-reassign */
@@ -216,8 +233,25 @@ export default {
         return a different message. If the function returns `null` or
         `undefined`, the default message is used.
 
-      Other
-      -----
+      Existing Data
+      -------------
+
+      - resend (default: true)
+
+        By default, get() sends a request for every config object specified,
+        even if there is existing data for the corresponding key. However, if
+        `resend` is specified as `false`, a request will not be sent if there is
+        existing data for the key or if another request is in progress for the
+        same key. Note that the entire request process will be short-circuited,
+        so any existing data will not be cleared even if `clear` is specified as
+        `true`.
+
+        One common example of specifying `false` for `resend` arises with tabbed
+        navigation. Say a component associated with one tab sends a request for
+        a particular key. In most cases, navigating from that tab to another
+        tab, then back to the original tab will destroy and recreate the
+        component. However, in that case, we usually do not need to send a new
+        request for the data that the component needs.
 
       - clear (default: true). Specify `true` if any existing data for the key
         should be cleared before the request is sent. Specify `false` for a
@@ -268,7 +302,8 @@ export default {
           success,
           problemToAlert = undefined,
 
-          // Other
+          // Existing data
+          resend = true,
           clear = true
         } = config;
 
@@ -284,15 +319,20 @@ export default {
 
           2. There is no data, but we are waiting on a request for it.
 
-             We will cancel the last request and send a new request.
+             We will return immediately if `resend` is `false`. Otherwise, we
+             will cancel the last request and send a new request.
 
           3. There is data.
 
-             We will refresh the data, canceling the last request if it is still
-             in progress.
+             We will return immediately if `resend` is `false`. Otherwise, we
+             will refresh the data, canceling the last request if it is still in
+             progress.
         */
         const requestsForKey = state.requests[key];
         const lastRequest = requestsForKey.last;
+        if (!resend && (state.data[key] != null ||
+          lastRequest.state === 'loading'))
+          return Promise.resolve();
         if ((state.data[key] == null && lastRequest.state === 'loading') ||
           state.data[key] != null) {
           if (lastRequest.state === 'loading') commit('cancelRequest', key);

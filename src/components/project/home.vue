@@ -10,10 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view/>
+  <router-view @fetch-project="fetchData"/>
 </template>
 
 <script>
+import { noop } from '../../util/util';
+
 export default {
   name: 'ProjectHome',
   props: {
@@ -29,6 +31,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    // Fetches or refreshes the project, keeping project.appUsers in sync with
+    // fieldKeys.length. fetchData() does not refresh or clear fieldKeys, so if
+    // fieldKeys is set, project.appUsers will not be updated even after a
+    // refresh of the project.
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'project',
@@ -42,7 +48,7 @@ export default {
             value: { ...project, appUsers: fieldKeys.length }
           });
         }
-      }]).catch(() => {});
+      }]).catch(noop);
     }
   }
 };

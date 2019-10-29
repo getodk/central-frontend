@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <!-- This table element contains the frozen columns of the submissions
     table, which contain metadata about each submission. -->
-    <table id="submission-table1" class="table table-condensed">
+    <table id="submission-table1" class="table table-frozen">
       <thead>
         <tr>
           <th><!-- Row number --></th>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
     </table>
     <!-- The next table element contains the form-field data and instance ID of
     each submission. -->
-    <div id="submission-table2-container">
+    <div class="table-container">
       <table id="submission-table2" :class="table2Class">
         <thead>
           <tr>
@@ -110,11 +110,7 @@ export default {
       };
     },
     table2Class() {
-      return {
-        table: true,
-        'table-condensed': true,
-        'field-subset': this.schemaAnalysis.subsetShown
-      };
+      return { table: true, 'field-subset': this.schemaAnalysis.subsetShown };
     },
     fieldColumns() {
       return this.schemaAnalysis.columns;
@@ -133,9 +129,6 @@ export default {
   // not overlay the box shadow.
   z-index: 1;
 
-  float: left;
-  width: unset;
-
   th:last-child {
     border-right: $border-bottom-table-heading;
   }
@@ -145,16 +138,7 @@ export default {
   }
 }
 
-#submission-table2-container {
-  // Placing the margin here rather than on the table so that the horizontal
-  // scrollbar appears immediately below the table, above the margin.
-  margin-bottom: $margin-bottom-table;
-  overflow-x: auto;
-}
-
 #submission-table2 {
-  margin-bottom: 0;
-
   th, td {
     &.submission-field {
       max-width: 250px;

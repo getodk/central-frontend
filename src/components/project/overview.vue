@@ -20,8 +20,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <p>
               Any Forms you create in this Project will only be visible on data
-              collection devices to the App Users who are a part of this
-              Project.
+              collection devices to App Users who are a part of this Project.
             </p>
             <p>
               Future releases of ODK Central will add more Project-centric
@@ -116,24 +115,14 @@ export default {
   },
   computed: requestData(['project', 'forms']),
   watch: {
-    projectId: 'fetchData'
+    projectId() {
+      this.$emit('fetch-forms');
+    }
   },
   created() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new request.
-    if (this.forms == null && !this.$store.getters.loading('forms'))
-      this.fetchData();
+    this.$emit('fetch-forms', false);
   },
   methods: {
-    fetchData() {
-      // Note that we do not keep this.project.forms and this.forms.length in
-      // sync.
-      this.$store.dispatch('get', [{
-        key: 'forms',
-        url: `/projects/${this.projectId}/forms`,
-        extended: true
-      }]).catch(() => {});
-    },
     scrollToForms() {
       const scrollTop = Math.round($('#project-overview-forms').offset().top);
       $('html, body').animate({ scrollTop });

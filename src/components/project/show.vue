@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="project != null">
-      <template v-if="project != null" slot="title">
+      <template v-if="project != null" #title>
         {{ project.name }} {{ project.archived ? '(archived)' : '' }}
       </template>
-      <template slot="tabs">
+      <template #tabs>
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
@@ -25,6 +25,9 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('app-users')" role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
         </li>
+        <li :class="tabClass('form-workflow')" role="presentation">
+          <router-link :to="tabPath('form-workflow')">Form Workflow</router-link>
+        </li>
         <li v-if="project != null && !project.archived"
           :class="tabClass('settings')" role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
@@ -33,21 +36,19 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="$store.getters.initiallyLoading(['project'])"/>
-      <!-- It might be possible to remove this <div> element and move the v-show
-      to <keep-alive> or <router-view>. However, I'm not sure that <keep-alive>
-      supports that use case. -->
-      <div v-show="project != null">
-        <!-- <router-view> is immediately created and can send its own requests
-        even before the server has responded to ProjectHome's request for the
-        project. -->
-        <router-view/>
-      </div>
+      <!-- <router-view> is immediately created and can send its own requests
+      even before the server has responded to ProjectHome's request for the
+      project. -->
+      <router-view v-show="project != null"
+        @fetch-project="$emit('fetch-project')" @fetch-forms="fetchForms"
+        @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
 </template>
 
 <script>
 import tab from '../../mixins/tab';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -63,6 +64,32 @@ export default {
     ...requestData(['project']),
     tabPathPrefix() {
       return `/projects/${this.projectId}`;
+    }
+  },
+  methods: {
+    // Note that we do not keep project.forms and forms.length in sync.
+    fetchForms(resend = undefined) {
+      this.$store.dispatch('get', [{
+        key: 'forms',
+        url: `/projects/${this.projectId}/forms`,
+        extended: true,
+        resend
+      }]).catch(noop);
+    },
+    fetchFieldKeys(resend = undefined) {
+      this.$store.dispatch('get', [{
+        key: 'fieldKeys',
+        url: `/projects/${this.projectId}/app-users`,
+        extended: true,
+        resend,
+        success: ({ project, fieldKeys }) => {
+          if (project == null || project.appUsers === fieldKeys.length) return;
+          this.$store.commit('setData', {
+            key: 'project',
+            value: { ...project, appUsers: fieldKeys.length }
+          });
+        }
+      }]).catch(noop);
     }
   }
 };

@@ -1,30 +1,25 @@
 import FormDelete from '../../../src/components/form/delete.vue';
-import FormSettings from '../../../src/components/form/settings.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
 import { trigger } from '../../event';
-
-const clickDeleteButton = (wrapper) =>
-  trigger.click(wrapper.first('#form-settings .panel-simple-danger .btn-danger'))
-    .then(() => wrapper);
-const confirmDelete = (wrapper) =>
-  trigger.click(wrapper.first('#form-delete .btn-danger'))
-    .then(() => wrapper);
 
 describe('FormDelete', () => {
   beforeEach(mockLogin);
 
-  it('opens the modal upon button click', () => {
-    const page = mountAndMark(FormSettings, {
-      propsData: { projectId: '1' },
-      requestData: { form: testData.extendedForms.createPast(1).last() }
-    });
-    page.first(FormDelete).getProp('state').should.be.false();
-    return clickDeleteButton(page)
-      .then(() => page.first(FormDelete).getProp('state').should.be.true());
-  });
+  it('shows the modal after the button is clicked', () =>
+    mockRoute('/projects/1/forms/f/settings')
+      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() =>
+        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .afterResponses(app => {
+        app.first(FormDelete).getProp('state').should.be.false();
+        return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
+      })
+      .then(app => {
+        app.first(FormDelete).getProp('state').should.be.true();
+      }));
 
   it('standard button thinking things', () =>
     mockHttp()
@@ -32,7 +27,7 @@ describe('FormDelete', () => {
         propsData: { projectId: '1' },
         requestData: { form: testData.extendedForms.createPast(1).last() }
       })
-      .request(confirmDelete)
+      .request(modal => trigger.click(modal, '#form-delete .btn-danger'))
       .standardButton('.btn-danger'));
 
   describe('after successful response', () => {
@@ -47,11 +42,11 @@ describe('FormDelete', () => {
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .afterResponses(component => {
           app = component;
-          return clickDeleteButton(app);
+          return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
         })
         .request(() => {
           testData.extendedForms.splice(0, 1);
-          return confirmDelete(app);
+          return trigger.click(app, '#form-delete .btn-danger');
         })
         .respondWithSuccess()
         .respondWithData(() => testData.extendedForms.sorted());

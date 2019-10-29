@@ -12,10 +12,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="form != null" id="form-settings">
     <div class="row">
-      <div class="col-xs-8">
-        <form-edit :project-id="projectId"/>
+      <div class="col-xs-6">
+        <div class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title">Form State</h1>
+          </div>
+          <div class="panel-body">
+            <p>
+              To set this Form&rsquo;s state, please visit the Project
+              <router-link :to="`/projects/${projectId}/form-workflow`">
+                <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+                Form Workflow settings</router-link>.
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="col-xs-4">
+      <div class="col-xs-6">
         <div class="panel panel-simple-danger">
           <div class="panel-heading">
             <h1 class="panel-title">Danger Zone</h1>
@@ -38,14 +50,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormDelete from './delete.vue';
-import FormEdit from './edit.vue';
 import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSettings',
-  components: { FormEdit, FormDelete },
+  components: { FormDelete },
   mixins: [
     conditionalRoute({
       project: (project) => !project.archived

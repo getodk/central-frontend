@@ -2,7 +2,7 @@ import ProjectEnableEncryption from '../../../src/components/project/enable-encr
 import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../event';
-import { mockHttp } from '../../http';
+import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
 
@@ -141,26 +141,27 @@ describe('ProjectEnableEncryption', () => {
         }));
 
     it('does not show the button after the modal is closed', () =>
-      mockHttp()
-        .mount(ProjectSettings, {
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(component =>
-          trigger.click(component, '#enable-encryption-button')
-            .then(() => {
-              const modal = component.first('#project-enable-encryption');
-              return trigger.click(modal, '.btn-primary');
-            })
-            .then(modal => submitForm(modal, 'form', [
-              ['input[placeholder="Passphrase *"]', 'passphrase']
-            ])))
+      mockRoute('/projects/1/settings')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .complete()
+        .request(app => trigger.click(app, '#enable-encryption-button')
+          .then(() => {
+            const modal = app.first('#project-enable-encryption');
+            return trigger.click(modal, '.btn-primary');
+          })
+          .then(modal => submitForm(modal, 'form', [
+            ['input[placeholder="Passphrase *"]', 'passphrase']
+          ])))
         .respondWithSuccess()
-        .afterResponse(component =>
-          trigger.click(component, '#project-enable-encryption .btn-primary'))
-        .then(component => {
-          component.find('#enable-encryption-button').length.should.equal(0);
+        .complete()
+        .request(app =>
+          trigger.click(app, '#project-enable-encryption .btn-primary'))
+        .respondWithData(() => testData.extendedProjects.update(
+          testData.extendedProjects.last(),
+          { keyId: testData.standardKeys.createNew({ managed: true }).id }
+        ))
+        .afterResponse(app => {
+          app.find('#enable-encryption-button').length.should.equal(0);
         }));
   });
 });

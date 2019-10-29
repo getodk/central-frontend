@@ -2,24 +2,13 @@ import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { standardRoles } from './roles';
 
-const verbsByRole = {
-  admin: [
-    'assignment.create',
-    'assignment.list',
-    'assignment.delete',
-    'audit.read',
-    'config.read',
-    'project.create',
-    'project.list',
-    'user.create',
-    'user.list',
-    'user.read',
-    'user.update',
-    'user.delete',
-    'user.password.invalidate'
-  ],
-  none: ['project.list']
+const verbsByRole = (system) => {
+  if (system === 'none') return ['project.list'];
+  const role = standardRoles.sorted().find(r => r.system === system);
+  if (role == null) throw new Error('role not found');
+  return role.verbs;
 };
 
 export const extendedUsers = dataStore({
@@ -31,7 +20,7 @@ export const extendedUsers = dataStore({
     displayName = faker.name.findName(),
     email = faker.internet.uniqueEmail(),
     role = 'admin',
-    verbs = verbsByRole[role]
+    verbs = verbsByRole(role)
   }) => ({
     id,
     displayName,
