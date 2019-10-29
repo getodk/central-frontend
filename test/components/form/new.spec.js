@@ -70,7 +70,8 @@ describe('FormNew', () => {
 
   it('shows an info alert if no file is selected', () => {
     const modal = mountAndMark(FormNew, {
-      propsData: { state: true, projectId: '1' }
+      propsData: { state: true },
+      requestData: { project: testData.extendedProjects.createPast(1).last() }
     });
     modal.should.not.alert();
     return trigger.click(modal, '#form-new-create-button')
@@ -83,7 +84,10 @@ describe('FormNew', () => {
     describe(title, () => {
       it('disables the Create button while reading the file', () => {
         const modal = mountAndMark(FormNew, {
-          propsData: { state: true, projectId: '1' }
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
         });
         return selectFile(modal)
           .then(() => {
@@ -95,7 +99,10 @@ describe('FormNew', () => {
 
       it('updates the modal after reading the file', () => {
         const modal = mountAndMark(FormNew, {
-          propsData: { state: true, projectId: '1' }
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
         });
         return selectFile(modal)
           .then(waitForRead)
@@ -110,7 +117,10 @@ describe('FormNew', () => {
       it('implements some standard button things', () =>
         mockHttp()
           .mount(FormNew, {
-            propsData: { state: true, projectId: '1' }
+            propsData: { state: true },
+            requestData: {
+              project: testData.extendedProjects.createPast(1).last()
+            }
           })
           .request(modal => selectFile(modal)
             .then(waitForRead)
@@ -160,7 +170,10 @@ describe('FormNew', () => {
         it('shows a message for a projectId,xmlFormId duplicate', () =>
           mockHttp()
             .mount(FormNew, {
-              propsData: { state: true, projectId: '1' }
+              propsData: { state: true },
+              requestData: {
+                project: testData.extendedProjects.createPast(1).last()
+              }
             })
             .request(modal => selectFile(modal)
               .then(waitForRead)
@@ -181,7 +194,10 @@ describe('FormNew', () => {
         it('shows a message for a projectId,xmlFormId,version duplicate', () =>
           mockHttp()
             .mount(FormNew, {
-              propsData: { state: true, projectId: '1' }
+              propsData: { state: true },
+              requestData: {
+                project: testData.extendedProjects.createPast(1).last()
+              }
             })
             .request(modal => selectFile(modal)
               .then(waitForRead)

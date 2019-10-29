@@ -84,11 +84,11 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <loading :state="$store.getters.initiallyLoading(['forms'])"/>
-        <form-list v-if="forms != null" :project-id="projectId"/>
+        <form-list v-if="forms != null"/>
       </template>
     </page-section>
-    <form-new :project-id="projectId" :state="newForm.state"
-      @hide="hideModal('newForm')" @success="afterCreate"/>
+    <form-new v-bind="newForm" @hide="hideModal('newForm')"
+      @success="afterCreate"/>
   </div>
 </template>
 

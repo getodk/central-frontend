@@ -45,11 +45,9 @@ describe('FormList', () => {
 
   it('shows a message if there are no forms', () => {
     const component = mountAndMark(FormList, {
-      propsData: { projectId: '1' },
       requestData: { forms: [] }
     });
-    const text = component.first('#form-list-empty-message').text().trim();
-    text.should.be.ok();
+    component.first('#form-list-empty-message').should.be.visible();
   });
 
   it('encodes the URL to the form overview page', () =>

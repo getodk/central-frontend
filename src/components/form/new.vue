@@ -56,6 +56,7 @@ except according to the terms contained in the LICENSE file.
 import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormNew',
@@ -64,10 +65,6 @@ export default {
     request()
   ],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     state: {
       type: Boolean,
       default: false
@@ -83,6 +80,7 @@ export default {
     };
   },
   computed: {
+    ...requestData(['project']),
     // Returns true if modal actions (selecting a file, submitting the XML, or
     // hiding the modal) are disabled and false if not.
     disabled() {
@@ -152,7 +150,7 @@ export default {
       }
       this.request({
         method: 'POST',
-        url: `/projects/${this.projectId}/forms`,
+        url: `/projects/${this.project.id}/forms`,
         headers: { 'Content-Type': 'application/xml' },
         data: this.xml,
         problemToAlert: ({ code, details }) => {

@@ -38,10 +38,6 @@ import { formatDate } from '../../util/util';
 export default {
   name: 'FormRow',
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     form: {
       type: Form,
       required: true
@@ -49,7 +45,7 @@ export default {
   },
   computed: {
     overviewPath() {
-      return `/projects/${this.projectId}/forms/${this.form.encodedId()}`;
+      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
     },
     updatedOrCreatedAt() {
       return formatDate(this.form.updatedOrCreatedAt());
