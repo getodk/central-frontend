@@ -11,18 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="project != null && form != null && attachments != null">
-      <template v-if="project != null" slot="context">
+    <page-head v-show="dataExists">
+      <template v-if="project != null" #context>
         <span>
           <router-link :to="`/projects/${projectId}`">
             {{ project.name }}{{ project.archived ? ' (archived)' : '' }}</router-link>
         </span>
         <router-link :to="`/projects/${projectId}`">Back to Project Overview</router-link>
       </template>
-      <template v-if="form != null" slot="title">
+      <template v-if="form != null" #title>
         {{ form.nameOrId() }}
       </template>
-      <template slot="tabs">
+      <template #tabs>
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
@@ -45,9 +45,8 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading
-        :state="$store.getters.initiallyLoading(['project', 'form', 'attachments'])"/>
-      <div v-show="project != null && form != null && attachments != null">
+      <loading :state="initiallyLoading"/>
+      <div v-show="dataExists">
         <!-- We only include SubmissionList, because it is the only component
         whose state we want to preserve when the user navigates to a different
         tab. -->
@@ -67,7 +66,10 @@ except according to the terms contained in the LICENSE file.
 <script>
 import SubmissionList from '../submission/list.vue';
 import tab from '../../mixins/tab';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+const REQUEST_KEYS = ['project', 'form', 'attachments'];
 
 export default {
   name: 'FormShow',
@@ -91,7 +93,13 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'form', 'attachments']),
+    ...requestData(REQUEST_KEYS),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(REQUEST_KEYS);
+    },
     encodedFormId() {
       return encodeURIComponent(this.xmlFormId);
     },
@@ -134,7 +142,7 @@ export default {
           url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
           extended: true
         }
-      ]).catch(() => {});
+      ]).catch(noop);
     }
   }
 };
