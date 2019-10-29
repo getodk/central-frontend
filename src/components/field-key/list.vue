@@ -196,7 +196,7 @@ export default {
     afterRevoke(fieldKey) {
       this.$emit('fetch-field-keys');
       this.hideModal('revoke');
-      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}."`);
+      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}".`);
       this.highlighted = null;
     }
   }
