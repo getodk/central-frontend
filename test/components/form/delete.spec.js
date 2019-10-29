@@ -21,16 +21,15 @@ describe('FormDelete', () => {
         app.first(FormDelete).getProp('state').should.be.true();
       }));
 
-  it('standard button thinking things', () =>
+  it('implements some standard button things', () =>
     mockHttp()
       .mount(FormDelete, {
-        propsData: { projectId: '1' },
         requestData: { form: testData.extendedForms.createPast(1).last() }
       })
       .request(modal => trigger.click(modal, '#form-delete .btn-danger'))
       .standardButton('.btn-danger'));
 
-  describe('after successful response', () => {
+  describe('after a successful response', () => {
     let app;
     beforeEach(() => {
       testData.extendedProjects.createPast(1);

@@ -43,8 +43,8 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete :project-id="projectId" :state="deleteForm.state"
-      @hide="hideModal('deleteForm')" @success="afterDelete"/>
+    <form-delete v-bind="deleteForm" @hide="hideModal('deleteForm')"
+      @success="afterDelete"/>
   </div>
 </template>
 
@@ -82,8 +82,8 @@ export default {
   computed: requestData(['form']),
   methods: {
     afterDelete(form) {
-      this.$router.push(`/projects/${this.projectId}`, () => {
-        this.$alert().success(`The Form “${form.nameOrId()}” was deleted.`);
+      this.$router.push(`/projects/${form.projectId}`, () => {
+        this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
       });
     }
   }
