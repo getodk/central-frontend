@@ -39,10 +39,6 @@ export default {
   name: 'ProjectUserRow',
   mixins: [request()],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     assignment: {
       type: Object,
       required: true
@@ -76,7 +72,7 @@ export default {
       const manager = newRole === 'manager';
       const method = manager ? 'POST' : 'DELETE';
       const { actor } = this.assignment;
-      const url = `/projects/${this.projectId}/assignments/manager/${actor.id}`;
+      const url = `/projects/${this.project.id}/assignments/manager/${actor.id}`;
       const { currentRoute } = this.$store.state.router;
       this.request({ method, url })
         .then(() => {

@@ -46,9 +46,9 @@ either is a Project Manager or has no role. -->
       </thead>
       <tbody v-if="tableAssignments != null">
         <project-user-row v-for="assignment of tableAssignments"
-          :key="assignment.actor.id" :project-id="projectId"
-          :assignment="assignment" @increment-count="incrementCount"
-          @decrement-count="decrementCount" @success="afterAssign"/>
+          :key="assignment.actor.id" :assignment="assignment"
+          @increment-count="incrementCount" @decrement-count="decrementCount"
+          @success="afterAssign"/>
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['assignmentActors', 'users'])"/>
