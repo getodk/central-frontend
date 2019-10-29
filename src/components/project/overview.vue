@@ -49,7 +49,8 @@ except according to the terms contained in the LICENSE file.
               <summary-item :route-to="`/projects/${projectId}/app-users`"
                 icon="user-circle">
                 <template #heading>
-                  {{ project.appUsers }} <span class="icon-angle-right"></span>
+                  {{ project.appUsers.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
                   <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
@@ -59,7 +60,8 @@ except according to the terms contained in the LICENSE file.
               </summary-item>
               <summary-item clickable icon="file-text" @click="scrollToForms">
                 <template #heading>
-                  {{ forms.length }} <span class="icon-angle-right"></span>
+                  {{ forms.length.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
                   <strong>{{ $pluralize('Form', forms.length) }}</strong> which
