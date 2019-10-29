@@ -139,7 +139,7 @@ describe('FormNew', () => {
             .then(() => selectFile(app.first(FormNew)))
             .then(waitForRead)
             .then(() => trigger.click(app, '#form-new-create-button')))
-          .respondWithData(() => testData.simpleForms
+          .respondWithData(() => testData.standardForms
             .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
           .respondWithData(() => testData.extendedFormAttachments.sorted())
