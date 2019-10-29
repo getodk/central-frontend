@@ -20,8 +20,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <p>
               Any Forms you create in this Project will only be visible on data
-              collection devices to the App Users who are a part of this
-              Project.
+              collection devices to App Users who are a part of this Project.
             </p>
             <p>
               Future releases of ODK Central will add more Project-centric
