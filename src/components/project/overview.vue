@@ -131,9 +131,9 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(form) {
-      const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
+      const path = `/projects/${form.projectId}/forms/${form.encodedId()}`;
       this.$router.push(path, () => {
-        this.$alert().success(`The Form “${form.nameOrId()}” was created successfully.`);
+        this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
       });
     }
   }
