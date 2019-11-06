@@ -44,30 +44,9 @@ describe('FieldKeyRevoke', () => {
         .then(app => {
           app.first(FieldKeyRevoke).getProp('state').should.be.false();
         }));
-
-    it('is not shown after a click if the project is archived', () =>
-      mockRoute('/projects/1/app-users')
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { archived: true, appUsers: 1 })
-          .last())
-        .respondWithData(() => testData.extendedFieldKeys
-          .createPast(1, { token: faker.central.token() })
-          .sorted())
-        .afterResponses(app => {
-          app.first(FieldKeyRevoke).getProp('state').should.be.false();
-          return app;
-        })
-        .then(app => {
-          const li = app.first('#field-key-list-table .dropdown-menu li');
-          li.should.be.disabled();
-          return trigger.click(app, '#field-key-list-table .dropdown-menu a');
-        })
-        .then(app => {
-          app.first(FieldKeyRevoke).getProp('state').should.be.false();
-        }));
   });
 
-  it('standard button thinking things', () => {
+  it('implements some standard button things', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     const token = faker.central.token();
     const fieldKey = testData.extendedFieldKeys.createPast(1, { token }).last();
@@ -79,7 +58,7 @@ describe('FieldKeyRevoke', () => {
       .standardButton('.btn-danger');
   });
 
-  describe('after successful response', () => {
+  describe('after a successful response', () => {
     let app;
     beforeEach(() => mockRoute('/projects/1/app-users')
       .respondWithData(() =>

@@ -23,8 +23,7 @@ except according to the terms contained in the LICENSE file.
       </tr>
     </thead>
     <tbody>
-      <form-row v-for="form of forms" :key="form.xmlFormId"
-        :project-id="projectId" :form="form"/>
+      <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
     </tbody>
   </table>
 </template>
@@ -36,12 +35,6 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormList',
   components: { FormRow },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   computed: requestData(['forms'])
 };
 </script>

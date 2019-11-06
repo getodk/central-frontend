@@ -36,25 +36,6 @@ const FILE_SELECTION_METHODS = [
 describe('FormNew', () => {
   beforeEach(mockLogin);
 
-  describe('New button', () => {
-    it('shows the button for a project that is not archived', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.find('#project-overview-new-form-button').length.should.equal(1);
-        }));
-
-    it('does not show the button for an archived project', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { archived: true }).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.find('#project-overview-new-form-button').length.should.equal(0);
-        }));
-  });
-
   it('shows the modal after the New button is clicked', () =>
     mockRoute('/projects/1')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
@@ -70,7 +51,8 @@ describe('FormNew', () => {
 
   it('shows an info alert if no file is selected', () => {
     const modal = mountAndMark(FormNew, {
-      propsData: { state: true, projectId: '1' }
+      propsData: { state: true },
+      requestData: { project: testData.extendedProjects.createPast(1).last() }
     });
     modal.should.not.alert();
     return trigger.click(modal, '#form-new-create-button')
@@ -83,7 +65,10 @@ describe('FormNew', () => {
     describe(title, () => {
       it('disables the Create button while reading the file', () => {
         const modal = mountAndMark(FormNew, {
-          propsData: { state: true, projectId: '1' }
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
         });
         return selectFile(modal)
           .then(() => {
@@ -95,7 +80,10 @@ describe('FormNew', () => {
 
       it('updates the modal after reading the file', () => {
         const modal = mountAndMark(FormNew, {
-          propsData: { state: true, projectId: '1' }
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
         });
         return selectFile(modal)
           .then(waitForRead)
@@ -110,7 +98,10 @@ describe('FormNew', () => {
       it('implements some standard button things', () =>
         mockHttp()
           .mount(FormNew, {
-            propsData: { state: true, projectId: '1' }
+            propsData: { state: true },
+            requestData: {
+              project: testData.extendedProjects.createPast(1).last()
+            }
           })
           .request(modal => selectFile(modal)
             .then(waitForRead)
@@ -129,7 +120,7 @@ describe('FormNew', () => {
             .then(() => selectFile(app.first(FormNew)))
             .then(waitForRead)
             .then(() => trigger.click(app, '#form-new-create-button')))
-          .respondWithData(() => testData.simpleForms
+          .respondWithData(() => testData.standardForms
             .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
           .respondWithData(() => testData.extendedForms.last()) // FormShow
           .respondWithData(() => testData.extendedFormAttachments.sorted())
@@ -160,7 +151,10 @@ describe('FormNew', () => {
         it('shows a message for a projectId,xmlFormId duplicate', () =>
           mockHttp()
             .mount(FormNew, {
-              propsData: { state: true, projectId: '1' }
+              propsData: { state: true },
+              requestData: {
+                project: testData.extendedProjects.createPast(1).last()
+              }
             })
             .request(modal => selectFile(modal)
               .then(waitForRead)
@@ -181,7 +175,10 @@ describe('FormNew', () => {
         it('shows a message for a projectId,xmlFormId,version duplicate', () =>
           mockHttp()
             .mount(FormNew, {
-              propsData: { state: true, projectId: '1' }
+              propsData: { state: true },
+              requestData: {
+                project: testData.extendedProjects.createPast(1).last()
+              }
             })
             .request(modal => selectFile(modal)
               .then(waitForRead)

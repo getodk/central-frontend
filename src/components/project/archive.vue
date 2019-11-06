@@ -12,32 +12,26 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="project-archive" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template slot="title">Archiving Project</template>
-    <template slot="body">
+    <template #title>Archiving Project</template>
+    <template #body>
       <div class="modal-introduction">
         <p>
           You are about to archive the Project &ldquo;{{ project.name }}&rdquo;.
-          It will still be viewable and its data will remain accessible for
-          download and over OData, but it will no longer be updatable.
+          It will still work as it does now, but it will be sorted to the bottom
+          of the Project List on the Central homepage.
         </p>
         <p>
           <strong>This action cannot be undone</strong>, but the ability to
           unarchive a Project is planned for a future release.
         </p>
-        <p>
-          <strong>Warning</strong>: you will be unable to modify Project or Form
-          settings after it has been archived. You may want to update settings
-          before archival. For example, consider closing all Forms to prevent
-          new Submissions.
-        </p>
         <p>Are you sure you wish to proceed?</p>
       </div>
       <div class="modal-actions">
-        <button :disabled="awaitingResponse" type="button"
-          class="btn btn-danger" @click="archive">
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="archive">
           Yes, I am sure <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           No, cancel
         </button>

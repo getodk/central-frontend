@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button v-if="project != null && !project.archived" type="button"
-        class="btn btn-primary" @click="showModal('newFieldKey')">
+      <button type="button" class="btn btn-primary"
+        @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>Create App User
       </button>
       <p>
@@ -49,13 +49,8 @@ except according to the terms contained in the LICENSE file.
     <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
     <p v-if="fieldKeys != null && fieldKeys.length === 0"
       class="empty-table-message">
-      <template v-if="project != null && !project.archived">
-        There are no App Users yet. You will need to create some to download
-        Forms and submit data from your device.
-      </template>
-      <template v-else>
-        There are no App Users to show.
-      </template>
+      There are no App Users yet. You will need to create some to download Forms
+      and submit data from your device.
     </p>
 
     <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
@@ -109,7 +104,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'fieldKeys']),
+    ...requestData(['fieldKeys']),
     formWorkflowPath() {
       return `/projects/${this.projectId}/form-workflow`;
     }
@@ -196,7 +191,7 @@ export default {
     afterRevoke(fieldKey) {
       this.$emit('fetch-field-keys');
       this.hideModal('revoke');
-      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}."`);
+      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}".`);
       this.highlighted = null;
     }
   }

@@ -9,23 +9,27 @@ import { trigger } from '../../event';
 describe('ProjectArchive', () => {
   beforeEach(mockLogin);
 
-  describe('modal', () => {
-    it('does not show the modal initially', () => {
-      const component = mountAndMark(ProjectSettings, {
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      });
-      component.first(ProjectArchive).getProp('state').should.be.false();
+  it('does not show the button for an archived project', () => {
+    const component = mountAndMark(ProjectSettings, {
+      requestData: {
+        project: testData.extendedProjects
+          .createPast(1, { archived: true })
+          .last()
+      }
     });
+    component.find('#project-settings-archive-button').length.should.equal(0);
+  });
 
-    it('shows the modal after the archive button is clicked', () => {
-      const component = mountAndMark(ProjectSettings, {
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      });
-      return trigger.click(component, '#project-settings-archive-button')
-        .then(() => {
-          component.first(ProjectArchive).getProp('state').should.be.true();
-        });
+  it('shows the modal after the button is clicked', () => {
+    const component = mountAndMark(ProjectSettings, {
+      requestData: { project: testData.extendedProjects.createPast(1).last() }
     });
+    const modal = component.first(ProjectArchive);
+    modal.getProp('state').should.be.false();
+    return trigger.click(component, '#project-settings-archive-button')
+      .then(() => {
+        modal.getProp('state').should.be.true();
+      });
   });
 
   it('implements some standard button things', () =>
@@ -37,7 +41,7 @@ describe('ProjectArchive', () => {
       .request(modal => trigger.click(modal, '.btn-danger'))
       .standardButton('.btn-danger'));
 
-  describe('after a successful PATCH request', () => {
+  describe('after a successful response', () => {
     let app;
     beforeEach(() => mockRoute('/projects/1/settings')
       .respondWithData(() =>

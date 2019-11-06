@@ -14,15 +14,15 @@ except according to the terms contained in the LICENSE file.
   from the first render. -->
   <div v-show="attachments != null" id="form-attachment-list" ref="dropZone">
     <div class="heading-with-button">
-      <button v-if="project != null && !project.archived" type="button"
-        class="btn btn-primary" @click="showModal('uploadFilesModal')">
+      <button type="button" class="btn btn-primary"
+        @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span>Upload files
       </button>
       <div>
         Based on the form you uploaded, the following files are expected. You
         can see which ones have been uploaded or are still missing.
       </div>
-      <div v-if="project != null && !project.archived">
+      <div>
         To upload files, drag and drop one or more files onto the page.
       </div>
     </div>
@@ -69,6 +69,7 @@ import conditionalRoute from '../../mixins/conditional-route';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -158,8 +159,7 @@ export default {
   computed: {
     ...requestData(['project', 'form', 'attachments']),
     disabled() {
-      return this.project == null || this.project.archived ||
-        this.uploadStatus.total !== 0;
+      return this.uploadStatus.total !== 0;
     }
   },
   watch: {
@@ -288,7 +288,7 @@ export default {
           resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
         };
         reader.onerror = () => {
-          this.$alert().danger(`Something went wrong while reading “${file.name}”.`);
+          this.$alert().danger(`Something went wrong while reading "${file.name}".`);
           reject(new Error());
         };
         reader.readAsText(file);
@@ -357,7 +357,7 @@ export default {
         promise = promise.then(() => this.uploadFile(upload, updated));
       }
       promise
-        .catch(() => {})
+        .catch(noop)
         .finally(() => {
           if (updated.length === this.uploadStatus.total) {
             this.$alert().success(updated.length === 1

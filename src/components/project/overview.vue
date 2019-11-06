@@ -48,7 +48,8 @@ except according to the terms contained in the LICENSE file.
               <summary-item :route-to="`/projects/${projectId}/app-users`"
                 icon="user-circle">
                 <template #heading>
-                  {{ project.appUsers }} <span class="icon-angle-right"></span>
+                  {{ project.appUsers.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
                   <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
@@ -58,7 +59,8 @@ except according to the terms contained in the LICENSE file.
               </summary-item>
               <summary-item clickable icon="file-text" @click="scrollToForms">
                 <template #heading>
-                  {{ forms.length }} <span class="icon-angle-right"></span>
+                  {{ forms.length.toLocaleString() }}
+                  <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
                   <strong>{{ $pluralize('Form', forms.length) }}</strong> which
@@ -73,19 +75,18 @@ except according to the terms contained in the LICENSE file.
     <page-section id="project-overview-forms">
       <template #heading>
         <span>Forms</span>
-        <button v-if="project != null && !project.archived"
-          id="project-overview-new-form-button" type="button"
+        <button id="project-overview-new-form-button" type="button"
           class="btn btn-primary" @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>New
         </button>
       </template>
       <template #body>
         <loading :state="$store.getters.initiallyLoading(['forms'])"/>
-        <form-list v-if="forms != null" :project-id="projectId"/>
+        <form-list v-if="forms != null"/>
       </template>
     </page-section>
-    <form-new :project-id="projectId" :state="newForm.state"
-      @hide="hideModal('newForm')" @success="afterCreate"/>
+    <form-new v-bind="newForm" @hide="hideModal('newForm')"
+      @success="afterCreate"/>
   </div>
 </template>
 
@@ -128,9 +129,9 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(form) {
-      const path = `/projects/${this.projectId}/forms/${form.encodedId()}`;
+      const path = `/projects/${form.projectId}/forms/${form.encodedId()}`;
       this.$router.push(path, () => {
-        this.$alert().success(`The Form “${form.nameOrId()}” was created successfully.`);
+        this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
       });
     }
   }

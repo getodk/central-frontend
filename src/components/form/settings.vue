@@ -43,26 +43,20 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete :project-id="projectId" :state="deleteForm.state"
-      @hide="hideModal('deleteForm')" @success="afterDelete"/>
+    <form-delete v-bind="deleteForm" @hide="hideModal('deleteForm')"
+      @success="afterDelete"/>
   </div>
 </template>
 
 <script>
 import FormDelete from './delete.vue';
-import conditionalRoute from '../../mixins/conditional-route';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
-  mixins: [
-    conditionalRoute({
-      project: (project) => !project.archived
-    }),
-    modal()
-  ],
+  mixins: [modal()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
@@ -82,8 +76,8 @@ export default {
   computed: requestData(['form']),
   methods: {
     afterDelete(form) {
-      this.$router.push(`/projects/${this.projectId}`, () => {
-        this.$alert().success(`The Form “${form.nameOrId()}” was deleted.`);
+      this.$router.push(`/projects/${form.projectId}`, () => {
+        this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
       });
     }
   }

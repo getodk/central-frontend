@@ -95,6 +95,3 @@ export const standardForms = view(
   extendedForms,
   omit(['submissions', 'lastSubmission', 'createdBy'])
 );
-
-// Deprecated.
-export const simpleForms = standardForms;

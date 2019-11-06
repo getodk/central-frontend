@@ -28,8 +28,7 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('form-workflow')" role="presentation">
           <router-link :to="tabPath('form-workflow')">Form Workflow</router-link>
         </li>
-        <li v-if="project != null && !project.archived"
-          :class="tabClass('settings')" role="presentation">
+        <li :class="tabClass('settings')" role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>

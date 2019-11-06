@@ -44,7 +44,7 @@ export const extendedFieldKeys = dataStore({
   }
 });
 
-export const simpleFieldKeys = view(extendedFieldKeys, (extendedFieldKey) => {
+export const standardFieldKeys = view(extendedFieldKeys, (extendedFieldKey) => {
   const fieldKey = omit(['lastUsed'], extendedFieldKey);
   fieldKey.createdBy = fieldKey.createdBy.id;
   return fieldKey;

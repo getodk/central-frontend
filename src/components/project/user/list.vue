@@ -22,8 +22,7 @@ either is a Project Manager or has no role. -->
       learn more about Projects and Managers, please see
       <doc-link to="central-projects/#project-managers">this article</doc-link>.
     </p>
-    <form v-if="project != null && !project.archived"
-      id="project-user-list-search-form" @submit.prevent>
+    <form id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
       <button v-show="q != '' && !searchDisabled" type="button" class="close"
@@ -46,9 +45,9 @@ either is a Project Manager or has no role. -->
       </thead>
       <tbody v-if="tableAssignments != null">
         <project-user-row v-for="assignment of tableAssignments"
-          :key="assignment.actor.id" :project-id="projectId"
-          :assignment="assignment" @increment-count="incrementCount"
-          @decrement-count="decrementCount" @success="afterAssign"/>
+          :key="assignment.actor.id" :assignment="assignment"
+          @increment-count="incrementCount" @decrement-count="decrementCount"
+          @success="afterAssign"/>
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['assignmentActors', 'users'])"/>
@@ -88,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'assignmentActors']),
+    ...requestData(['assignmentActors']),
     /*
     We disable search while a request for project managers is in progress,
     because we match up search results with the project managers.
@@ -114,9 +113,7 @@ export default {
       if (this.searchAssignments == null) {
         if (this.managerAssignments != null &&
           this.managerAssignments.length === 0)
-          return !this.project.archived
-            ? 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.'
-            : 'There are no Project Managers assigned to this Project.';
+          return 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.';
       } else if (this.searchAssignments.length === 0) {
         return 'No results';
       }
@@ -193,7 +190,7 @@ export default {
       this.$store.commit('clearData', 'assignmentActors');
       const { displayName } = assignment.actor;
       const roleName = manager ? 'Manager' : 'None';
-      this.$alert().success(`Success! ${displayName} has been given a Project Role of “${roleName}” on this Project.`);
+      this.$alert().success(`Success! ${displayName} has been given a Project Role of "${roleName}" on this Project.`);
       this.$set(assignment, 'manager', manager);
     }
   }
