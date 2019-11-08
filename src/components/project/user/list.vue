@@ -112,12 +112,13 @@ export default {
       return this.managerAssignments;
     },
     emptyMessage() {
-      if (this.searchAssignments == null) {
-        if (this.managerAssignments != null &&
-          this.managerAssignments.length === 0)
-          return 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.';
-      } else if (this.searchAssignments.length === 0) {
-        return 'No results';
+      if (this.$store.getters.loading('users')) return null;
+      if (this.searchAssignments != null)
+        return this.searchAssignments.length === 0 ? 'No results' : null;
+      if (this.managerAssignments != null) {
+        return this.managerAssignments.length === 0
+          ? 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.'
+          : null;
       }
       return null;
     }
