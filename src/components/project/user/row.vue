@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <td>
       <form>
         <div class="form-group">
-          <select ref="select" :value="selectedRole" :disabled="disabled"
-            :title="title" class="form-control" aria-label="Project Role"
-            @change="assignRole">
+          <select class="form-control" :value="selectedRole"
+            :disabled="disabled" :title="title" aria-label="Project Role"
+            @change="assignRole($event.target.value)">
             <option value="manager">Manager</option>
             <option value="">None</option>
           </select>
@@ -62,13 +62,9 @@ export default {
     }
   },
   methods: {
-    assignRole() {
-      // Using this.$refs rather than passing $event.target.value to the method
-      // in order to facilitate testing.
-      const newRole = this.$refs.select.value;
-
+    assignRole(role) {
       this.$emit('increment-count');
-      const manager = newRole === 'manager';
+      const manager = role === 'manager';
       const method = manager ? 'POST' : 'DELETE';
       const { actor } = this.assignment;
       const url = `/projects/${this.project.id}/assignments/manager/${actor.id}`;
@@ -83,7 +79,7 @@ export default {
             this.$emit('decrement-count');
         });
 
-      this.selectedRole = newRole;
+      this.selectedRole = role;
     }
   }
 };

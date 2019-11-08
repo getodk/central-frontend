@@ -20,9 +20,9 @@ except according to the terms contained in the LICENSE file.
     <td class="user-role">
       <form>
         <div class="form-group">
-          <select ref="select" :value="selectedRole" :disabled="disabled"
-            :title="selectTitle" class="form-control" aria-label="Sitewide Role"
-            @change="assignRole">
+          <select class="form-control" :value="selectedRole"
+            :disabled="disabled" :title="selectTitle" aria-label="Sitewide Role"
+            @change="assignRole($event.target.value)">
             <option value="admin">Administrator</option>
             <option value="">None</option>
           </select>
@@ -107,10 +107,8 @@ export default {
     }
   },
   methods: {
-    assignRole() {
-      // Using this.$refs rather than passing $event.target.value to the method
-      // in order to facilitate testing.
-      this.selectedRole = this.$refs.select.value;
+    assignRole(role) {
+      this.selectedRole = role;
       this.request({
         method: this.selectedRole === 'admin' ? 'POST' : 'DELETE',
         url: `/assignments/admin/${this.user.id}`

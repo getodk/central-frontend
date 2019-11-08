@@ -30,9 +30,8 @@ either is a Project Manager or has no role. -->
         <span aria-hidden="true">&times;</span>
       </button>
       <label class="form-group">
-        <input ref="input" :value="q" :disabled="searchDisabled"
-          class="form-control" placeholder="Search for a user…"
-          @change="search">
+        <input class="form-control" :value="q" placeholder="Search for a user…"
+          :disabled="searchDisabled" @change="search($event.target.value)">
         <span class="form-label">Search for a user…</span>
       </label>
     </form>
@@ -159,10 +158,8 @@ export default {
       this.q = '';
       this.searchAssignments = null;
     },
-    search() {
-      // Using this.$refs rather than passing $event.target.value to the method
-      // in order to facilitate testing.
-      this.q = this.$refs.input.value;
+    search(q) {
+      this.q = q;
       if (this.q === '') {
         this.clearSearch();
         return;
