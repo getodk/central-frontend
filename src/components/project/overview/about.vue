@@ -35,7 +35,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../../doc-link.vue';
+
 export default {
-  name: 'ProjectOverviewAbout'
+  name: 'ProjectOverviewAbout',
+  components: { DocLink }
 };
 </script>

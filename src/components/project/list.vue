@@ -119,6 +119,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
@@ -129,7 +130,13 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectList',
-  components: { ProjectIntroduction, ProjectNew, ProjectRow, SummaryItem },
+  components: {
+    DocLink,
+    ProjectIntroduction,
+    ProjectNew,
+    ProjectRow,
+    SummaryItem
+  },
   mixins: [modal()],
   data() {
     return {

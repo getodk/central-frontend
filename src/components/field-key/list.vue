@@ -61,6 +61,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
@@ -81,7 +82,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 
 export default {
   name: 'FieldKeyList',
-  components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
+  components: { DocLink, FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
   mixins: [modal(), validateData()],
   props: {
     projectId: {

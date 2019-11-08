@@ -45,6 +45,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
+import DocLink from '../doc-link.vue';
 import ProjectFormWorkflowStates from './form-workflow/states.vue';
 import ProjectFormWorkflowTable from './form-workflow/table.vue';
 import modal from '../../mixins/modal';
@@ -57,7 +58,7 @@ const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formAssignments
 
 export default {
   name: 'ProjectFormWorkflow',
-  components: { ProjectFormWorkflowStates, ProjectFormWorkflowTable },
+  components: { DocLink, ProjectFormWorkflowStates, ProjectFormWorkflowTable },
   mixins: [modal(), request(), validateData()],
   props: {
     projectId: {

@@ -61,6 +61,7 @@ are Project Manager and Project Viewer. -->
 </template>
 
 <script>
+import DocLink from '../../doc-link.vue';
 import ProjectUserRow from './row.vue';
 import validateData from '../../../mixins/validate-data';
 import { noop } from '../../../util/util';
@@ -68,7 +69,7 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
-  components: { ProjectUserRow },
+  components: { DocLink, ProjectUserRow },
   mixins: [validateData()],
   props: {
     projectId: {
