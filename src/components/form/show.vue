@@ -23,22 +23,26 @@ except according to the terms contained in the LICENSE file.
         {{ form.nameOrId() }}
       </template>
       <template #tabs>
-        <li :class="tabClass('')" role="presentation">
+        <li v-if="canRoute(tabPath(''))" :class="tabClass('')"
+          role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="attachments != null && attachments.length !== 0"
-          :class="tabClass('media-files')" role="presentation">
+        <li v-if="rendersMediaFilesTab" :class="tabClass('media-files')"
+          role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
-            <span v-show="missingAttachments !== 0" class="badge">
-              {{ missingAttachments.toLocaleString() }}
+            <span v-show="missingAttachmentCount !== 0" class="badge">
+              {{ missingAttachmentCount.toLocaleString() }}
             </span>
           </router-link>
         </li>
+        <!-- Everyone with access to the project should be able to navigate to
+        SubmissionList. -->
         <li :class="tabClass('submissions')" role="presentation">
           <router-link :to="tabPath('submissions')">Submissions</router-link>
         </li>
-        <li :class="tabClass('settings')" role="presentation">
+        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
+          role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>
@@ -64,6 +68,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SubmissionList from '../submission/list.vue';
+import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -72,7 +77,7 @@ const REQUEST_KEYS = ['project', 'form', 'attachments'];
 
 export default {
   name: 'FormShow',
-  mixins: [tab()],
+  mixins: [canRoute(), tab()],
   props: {
     projectId: {
       type: String,
@@ -105,7 +110,11 @@ export default {
     tabPathPrefix() {
       return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
     },
-    missingAttachments() {
+    rendersMediaFilesTab() {
+      return this.canRoute(this.tabPath('media-files')) &&
+        this.attachments != null && this.attachments.length !== 0;
+    },
+    missingAttachmentCount() {
       return this.attachments.filter(attachment => !attachment.exists).length;
     }
   },
