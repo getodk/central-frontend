@@ -49,7 +49,26 @@ export default {
   },
   computed: requestData(['user']),
   watch: {
-    id: 'fetchData'
+    /*
+    There are three cases to consider:
+
+      1. The user navigates to /account/edit.
+      2. The user navigates to /users/:id/edit for their own user.
+      3. The user navigates to /users/:id/edit for a different user.
+
+    When navigating between (1) and (2), this.id will not change, but
+    this.$route will. The validateData beforeRouteEnter navigation guard will
+    also be called.
+
+    When navigating between (1) and (3), this.id will change, as will
+    this.$route. The validateData beforeRouteEnter navigation guard will be
+    called.
+
+    When navigating between (2) and (3), this.id will change, as will
+    this.$route. The validateData beforeRouteUpdate navigation guard will be
+    called.
+    */
+    $route: 'fetchData'
   },
   created() {
     this.fetchData();

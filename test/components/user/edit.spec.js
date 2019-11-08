@@ -65,5 +65,17 @@ describe('UserEdit', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
+
+    it('does not redirect an administrator', () => {
+      mockLogin({ role: 'admin' });
+      return mockRoute('/account/edit')
+        .respondWithData(() => testData.standardUsers.last())
+        .complete()
+        .route('/users/1/edit')
+        .respondWithData(() => testData.standardUsers.last())
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/users/1/edit');
+        });
+    });
   });
 });
