@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
-          <router-link :to="tabPath('users')">Project Managers</router-link>
+          <router-link :to="tabPath('users')">Project Roles</router-link>
         </li>
         <li v-if="canRoute(tabPath('app-users'))" :class="tabClass('app-users')"
           role="presentation">

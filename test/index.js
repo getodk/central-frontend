@@ -160,6 +160,25 @@ beforeEach(() => {
       ]
     })
     .createPast(1, {
+      name: 'Project Manager',
+      system: 'manager',
+      verbs: [
+        'assignment.create',
+        'assignment.list',
+        'assignment.delete',
+        'field_key.create',
+        'field_key.list',
+        'form.create',
+        'form.list',
+        'form.read',
+        'form.update',
+        'form.delete',
+        'project.update',
+        'submission.list',
+        'submission.read'
+      ]
+    })
+    .createPast(1, {
       name: 'Project Viewer',
       system: 'viewer',
       verbs: [

@@ -11,17 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <!-- Although Backend supports more complex use cases, we assume in this
-component that each user is assigned only one role and that further, each user
-either is a Project Manager or has no role. -->
+component that each user is assigned at most one role and that the only roles
+are Project Manager and Project Viewer. -->
 <template>
   <div id="project-user-list">
     <p id="project-user-list-heading">
       The assigned Project Managers for this Project will be able to perform any
       administrative or auditing task related to this Project. Sitewide
-      Administrators are automatically considered Managers of every Project. To
-      learn more about Projects and Managers, please see
+      Administrators are automatically considered Managers of every Project.
+      Project Viewers can access and download all form data in this Project, but
+      cannot make any changes to settings or data. To learn more about Project,
+      Managers, and Viewers, please see
       <doc-link to="central-projects/#project-managers">this article</doc-link>.
     </p>
+
     <form id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
@@ -31,10 +34,11 @@ either is a Project Manager or has no role. -->
       </button>
       <label class="form-group">
         <input class="form-control" :value="q" placeholder="Search for a user…"
-          :disabled="searchDisabled" @change="search($event.target.value)">
+          :disabled="searchDisabled" @change="changeQ($event.target.value)">
         <span class="form-label">Search for a user…</span>
       </label>
     </form>
+
     <table class="table">
       <thead>
         <tr>
@@ -42,15 +46,15 @@ either is a Project Manager or has no role. -->
           <th>Project Role</th>
         </tr>
       </thead>
-      <tbody v-if="tableAssignments != null">
+      <tbody v-if="roles != null && tableAssignments != null">
         <project-user-row v-for="assignment of tableAssignments"
           :key="assignment.actor.id" :assignment="assignment"
           @increment-count="incrementCount" @decrement-count="decrementCount"
-          @success="afterAssign"/>
+          @change="afterAssignmentChange"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['assignmentActors', 'users'])"/>
-    <p v-show="emptyMessage != null" class="empty-table-message">
+    <loading :state="initiallyLoading || $store.getters.loading('users')"/>
+    <p v-show="emptyMessage !== ''" class="empty-table-message">
       {{ emptyMessage }}
     </p>
   </div>
@@ -74,109 +78,106 @@ export default {
   },
   data() {
     return {
-      // An array of assignment-like objects for the users that were returned by
-      // /projects/:projectId/assignments/manager. (We use a different schema
-      // for these objects compared to a Backend Assignment object.)
-      managerAssignments: null,
       // User search term
       q: '',
       // An array of assignment-like objects for the users that were returned
-      // for the most recent search
+      // for the most recent search. roleId may be `null` for one or more of
+      // these objects.
       searchAssignments: null,
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
   },
   computed: {
-    ...requestData(['assignmentActors']),
+    ...requestData(['roles', 'projectAssignments']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['roles', 'projectAssignments']);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(['roles', 'projectAssignments']);
+    },
     /*
-    We disable search while a request for project managers is in progress,
-    because we match up search results with the project managers.
+    We disable search while a request for the assignments is in progress,
+    because we match up search results to the existing assignments.
 
     Further, we disable search while a POST or DELETE request is in progress. If
-    the user were able to clear the search while a POST or DELETE was in
-    progress, it could trigger a refresh of the project managers. In that case,
-    once the POST/DELETE was successful, we would have to find the element of
-    this.managerAssignments to update -- and it might even be unclear whether we
+    the user cleared the search while a POST or DELETE was in progress, a new
+    request for the project assignments would be sent. In that case, once the
+    POST/DELETE was successful, we would have to find the element of
+    this.projectAssignments to update -- and it might even be unclear whether we
     should update that element.
     */
     searchDisabled() {
-      return this.$store.getters.loading('assignmentActors') ||
-        this.assignRequestCount !== 0;
+      return !this.dataExists || this.assignRequestCount !== 0;
     },
     // The assignments to show in the table
     tableAssignments() {
       if (this.$store.getters.loading('users')) return null;
       if (this.searchAssignments != null) return this.searchAssignments;
-      return this.managerAssignments;
+      return this.projectAssignments;
     },
     emptyMessage() {
-      if (this.$store.getters.loading('users')) return null;
+      if (!this.dataExists || this.$store.getters.loading('users')) return '';
       if (this.searchAssignments != null)
-        return this.searchAssignments.length === 0 ? 'No results' : null;
-      if (this.managerAssignments != null) {
-        return this.managerAssignments.length === 0
-          ? 'There are no Project Managers assigned to this Project yet. To add one, search for a user above.'
-          : null;
-      }
-      return null;
+        return this.searchAssignments.length === 0 ? 'No results' : '';
+      return this.projectAssignments.length === 0
+        ? 'There are no users assigned to this Project yet. To add one, search for a user above.'
+        : '';
     }
   },
   watch: {
     projectId() {
-      this.fetchData();
+      this.fetchData(true);
       this.q = '';
       this.searchAssignments = null;
       this.assignRequestCount = 0;
     }
   },
   created() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new request.
-    if (this.assignmentActors == null &&
-      !this.$store.getters.loading('assignmentActors')) {
-      this.fetchData();
-    } else {
-      this.setManagerAssignments();
-    }
+    this.fetchData(false);
   },
   methods: {
-    setManagerAssignments() {
-      this.managerAssignments = this.assignmentActors
-        .map(actor => ({ actor, manager: true }));
-    },
-    fetchData() {
-      this.managerAssignments = null;
-      this.$store.dispatch('get', [{
-        key: 'assignmentActors',
-        url: `/projects/${this.projectId}/assignments/manager`,
-        success: this.setManagerAssignments
-      }]).catch(noop);
+    fetchData(resend) {
+      this.$store.dispatch('get', [
+        {
+          key: 'roles',
+          url: '/roles',
+          resend: false
+        },
+        {
+          key: 'projectAssignments',
+          url: `/projects/${this.projectId}/assignments`,
+          extended: true,
+          resend
+        }
+      ]).catch(noop);
     },
     clearSearch() {
-      this.fetchData();
+      this.fetchData(true);
       this.q = '';
       this.searchAssignments = null;
     },
-    search(q) {
-      this.q = q;
-      if (this.q === '') {
-        this.clearSearch();
-        return;
-      }
-
+    search() {
       this.$store.dispatch('get', [{
         key: 'users',
         url: `/users?q=${encodeURIComponent(this.q)}`,
         success: ({ users }) => {
           this.searchAssignments = users.map(user => {
-            const assignment = this.managerAssignments
+            const assignment = this.projectAssignments
               .find(a => a.actor.id === user.id);
-            if (assignment != null) return assignment;
-            return { actor: user, manager: false };
+            return assignment != null
+              ? assignment
+              : { actor: user, roleId: null };
           });
         }
       }]).catch(noop);
+    },
+    changeQ(q) {
+      this.q = q;
+      if (this.q === '')
+        this.clearSearch();
+      else
+        this.search();
     },
     incrementCount() {
       this.assignRequestCount += 1;
@@ -184,14 +185,25 @@ export default {
     decrementCount() {
       this.assignRequestCount -= 1;
     },
-    // Run after a user is assigned a new role (including None).
-    afterAssign(assignment, manager) {
-      // This data is now out-of-date.
-      this.$store.commit('clearData', 'assignmentActors');
+    afterAssignmentChange(assignment, role, deleteWithoutPost) {
+      // If `role` is `null`, then we set the assignment's roleId to `null`
+      // rather than remove the assignment from projectAssignments. That way,
+      // the user will remain in the table until projectAssignments is
+      // refreshed.
+      this.$store.commit('setDataProp', {
+        key: 'projectAssignments',
+        prop: this.projectAssignments.findIndex(a => a === assignment),
+        value: { ...assignment, roleId: role != null ? role.id : null }
+      });
+
       const { displayName } = assignment.actor;
-      const roleName = manager ? 'Manager' : 'None';
-      this.$alert().success(`Success! ${displayName} has been given a Project Role of "${roleName}" on this Project.`);
-      this.$set(assignment, 'manager', manager);
+      if (deleteWithoutPost) {
+        this.$alert().danger(`Something went wrong. "${displayName}" has been removed from the Project.`);
+      } else {
+        this.$alert().success(role != null
+          ? `Success! "${displayName}" has been given a Role of "${role.name}" on this Project.`
+          : `Success! "${displayName}" has been removed from this Project.`);
+      }
     }
   }
 };

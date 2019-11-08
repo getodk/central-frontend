@@ -35,6 +35,7 @@ const allKeys = [
 
   'projects',
   'project',
+  'projectAssignments',
   'forms',
   'form',
   'schema',
@@ -141,7 +142,16 @@ export default {
     },
 
     loggedIn: ({ data }) => data.session != null && data.session.token != null,
-    loggedOut: (_, getters) => !getters.loggedIn,
+    loggedOut: (state, { loggedIn }) => !loggedIn,
+
+    projectRoles: ({ data }) => {
+      const { roles } = data;
+      if (roles == null) return null;
+      return [
+        roles.find(role => role.system === 'manager'),
+        roles.find(role => role.system === 'viewer')
+      ];
+    },
 
     fieldKeysWithToken: ({ data }) => (data.fieldKeys != null
       ? data.fieldKeys.filter(fieldKey => fieldKey.token != null)

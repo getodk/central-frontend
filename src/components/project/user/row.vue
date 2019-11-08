@@ -15,10 +15,13 @@ except according to the terms contained in the LICENSE file.
     <td>
       <form>
         <div class="form-group">
-          <select class="form-control" :value="selectedRole"
+          <select class="form-control" :value="selectedRoleId"
             :disabled="disabled" :title="title" aria-label="Project Role"
-            @change="assignRole($event.target.value)">
-            <option value="manager">Manager</option>
+            @change="change($event.target.value)">
+            <option v-for="role of $store.getters.projectRoles" :key="role.id"
+              :value="role.id">
+              {{ role.name }}
+            </option>
             <option value="">None</option>
           </select>
           <span class="spinner-container">
@@ -46,40 +49,60 @@ export default {
   },
   data() {
     return {
+      // If two requests are sent, there may be a moment between them when
+      // awaitingResponse is `false`.
       awaitingResponse: false,
-      selectedRole: this.assignment.manager ? 'manager' : ''
+      selectedRoleId: this.assignment.roleId != null
+        ? this.assignment.roleId.toString()
+        : ''
     };
   },
   computed: {
-    ...requestData(['currentUser', 'project']),
+    ...requestData(['currentUser', 'roles', 'project']),
     disabled() {
       return this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;
     },
     title() {
-      if (this.assignment.actor.id !== this.currentUser.id) return '';
-      return 'You may not edit your own Project Role.';
+      return this.assignment.actor.id === this.currentUser.id
+        ? 'You may not edit your own Project Role.'
+        : '';
     }
   },
   methods: {
-    assignRole(role) {
+    requestChange(method, roleIdString) {
+      if (roleIdString === '') return Promise.resolve();
+      const url = `/projects/${this.project.id}/assignments/${roleIdString}/${this.assignment.actor.id}`;
+      return this.request({ method, url });
+    },
+    change(roleIdString) {
       this.$emit('increment-count');
-      const manager = role === 'manager';
-      const method = manager ? 'POST' : 'DELETE';
-      const { actor } = this.assignment;
-      const url = `/projects/${this.project.id}/assignments/manager/${actor.id}`;
+      const previousRoleId = this.selectedRoleId;
+      this.selectedRoleId = roleIdString;
       const { currentRoute } = this.$store.state.router;
-      this.request({ method, url })
+      // At some point we will likely implement something transactional so that
+      // we don't send two requests.
+      this.requestChange('DELETE', previousRoleId)
+        .then(() => this.requestChange('POST', roleIdString)
+          .catch(e => {
+            if (previousRoleId !== '' && roleIdString !== '' &&
+              this.$store.state.router.currentRoute === currentRoute) {
+              this.$emit('change', this.assignment, null, true);
+              this.selectedRoleId = '';
+            }
+            throw e;
+          }))
         .then(() => {
-          this.$emit('success', this.assignment, manager);
+          const role = roleIdString !== ''
+            ? this.roles.find(r => r.id.toString() === roleIdString)
+            : null;
+          this.$emit('change', this.assignment, role, false);
         })
         .catch(noop)
         .finally(() => {
           if (this.$store.state.router.currentRoute === currentRoute)
             this.$emit('decrement-count');
         });
-
-      this.selectedRole = role;
     }
   }
 };
