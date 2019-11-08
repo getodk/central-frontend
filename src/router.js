@@ -213,30 +213,48 @@ const routes = [
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ROUTE NAMES
+// FLATTEN ROUTES
 
-// For every bottom-level route without a name, give the route the same name as
-// the route's component.
-const namedRoutes = [];
-const stack = [...routes];
-while (stack.length !== 0) {
-  const route = stack.pop();
-  if (route.children == null) {
-    if (route.name == null) route.name = route.component.name;
-    namedRoutes.push(route);
-  }
-  if (route.children != null) {
-    if (route.name != null)
-      throw new Error('a route with children cannot be named');
-    for (const child of route.children)
-      stack.push(child);
+const flattenedRoutes = [];
+{
+  const stack = [...routes];
+  while (stack.length !== 0) {
+    const route = stack.pop();
+    flattenedRoutes.push(route);
+    if (route.children != null) {
+      for (const child of route.children)
+        stack.push(child);
+    }
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ROUTE NAMES
+
+// All bottom-level routes (and only bottom-level routes) have a name. If a name
+// is not specified for a bottom-level route above, the route is given the same
+// name as its component.
+const namedRoutes = [];
 const routesByName = {};
-for (const route of namedRoutes) {
-  if (routesByName[route.name] != null) throw new Error('duplicate route name');
-  routesByName[route.name] = route;
+for (const route of flattenedRoutes) {
+  if (route.children != null) {
+    if (route.name != null)
+      throw new Error('only bottom-level routes can be named');
+  } else {
+    if (route.name == null) {
+      if (route.component.name == null)
+        throw new Error('component without a name');
+      route.name = route.component.name;
+    }
+
+    namedRoutes.push(route);
+
+    if (routesByName[route.name] != null)
+      throw new Error('duplicate route name');
+    routesByName[route.name] = route;
+  }
 }
 
 
@@ -244,16 +262,22 @@ for (const route of namedRoutes) {
 ////////////////////////////////////////////////////////////////////////////////
 // META FIELD DEFAULTS
 
-// Set the `meta` property of every named route.
-for (const route of namedRoutes) {
-  route.meta = {
-    restoreSession: true,
-    requireLogin: true,
-    requireAnonymity: false,
-    requireGrants: [],
-    preserveData: {},
-    ...route.meta
-  };
+// All bottom-level routes (and only bottom-level routes) have meta fields. Here
+// we set those fields' defaults. We also normalize the values of meta fields.
+for (const route of flattenedRoutes) {
+  if (route.children != null) {
+    if (route.meta != null)
+      throw new Error('only bottom-level routes can have meta fields');
+  } else {
+    route.meta = {
+      restoreSession: true,
+      requireLogin: true,
+      requireAnonymity: false,
+      requireGrants: [],
+      preserveData: {},
+      ...route.meta
+    };
+  }
 }
 
 
