@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="project-overview">
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
-      <div class="row">
+      <div v-if="rendersTopRow" class="row">
         <div class="col-xs-6">
           <project-overview-about/>
         </div>
@@ -24,7 +24,8 @@ except according to the terms contained in the LICENSE file.
       <page-section id="project-overview-forms">
         <template #heading>
           <span>Forms</span>
-          <button id="project-overview-new-form-button" type="button"
+          <button v-if="project.permits('form.create')"
+            id="project-overview-new-form-button" type="button"
             class="btn btn-primary" @click="showModal('newForm')">
             <span class="icon-plus-circle"></span>New
           </button>
@@ -44,6 +45,7 @@ import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
+import canRoute from '../../mixins/can-route';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
@@ -58,7 +60,7 @@ export default {
     ProjectOverviewAbout,
     ProjectOverviewRightNow
   },
-  mixins: [modal(), validateData()],
+  mixins: [canRoute(), modal(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -79,6 +81,12 @@ export default {
     },
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
+    },
+    rendersTopRow() {
+      // The text of ProjectOverviewAbout implies that the user can form.create.
+      if (!this.project.permits('form.create')) return false;
+      // ProjectOverviewRightNow links to FieldKeyList.
+      return this.canRoute(`/projects/${this.projectId}/app-users`);
     }
   },
   watch: {

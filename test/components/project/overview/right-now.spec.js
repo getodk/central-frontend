@@ -1,3 +1,4 @@
+import ProjectOverviewRightNow from '../../../../src/components/project/overview/right-now.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
 import testData from '../../../data';
 import { mockLogin } from '../../../session';
@@ -5,6 +6,18 @@ import { mockRoute } from '../../../http';
 import { trigger } from '../../../event';
 
 describe('ProjectOverviewRightNow', () => {
+  it('is not shown to a project viewer', () => {
+    mockLogin({ role: 'none' });
+    return mockRoute('/projects/1')
+      .respondWithData(() => testData.extendedProjects
+        .createPast({ role: 'viewer', forms: 0 })
+        .last())
+      .respondWithData(() => testData.extendedForms.sorted())
+      .afterResponses(app => {
+        app.find(ProjectOverviewRightNow).length.should.equal(0);
+      });
+  });
+
   describe('app users', () => {
     beforeEach(mockLogin);
 

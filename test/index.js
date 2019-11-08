@@ -134,6 +134,7 @@ beforeEach(() => {
         'config.read',
         'field_key.create',
         'field_key.list',
+        'form.create',
         'form.list',
         'form.read',
         'form.update',

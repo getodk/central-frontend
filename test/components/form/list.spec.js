@@ -2,14 +2,13 @@ import Form from '../../../src/presenters/form';
 import FormList from '../../../src/components/form/list.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
-import { mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { mockRoute } from '../../http';
 import { mountAndMark } from '../../destroy';
 
 describe('FormList', () => {
-  beforeEach(mockLogin);
-
-  it('table contains the correct data', () => {
+  it('correctly renders the table', () => {
+    mockLogin();
     testData.extendedProjects.createPast(1);
     const forms = testData.extendedForms.createPast(2).sorted();
     return mockRoute('/projects/1')
@@ -43,6 +42,7 @@ describe('FormList', () => {
   });
 
   it('shows a message if there are no forms', () => {
+    mockLogin();
     const component = mountAndMark(FormList, {
       requestData: { forms: [] }
     });
@@ -50,6 +50,7 @@ describe('FormList', () => {
   });
 
   it('encodes the URL to the form overview page', () => {
+    mockLogin();
     const { project, form } = testData.createProjectAndFormWithoutSubmissions({
       form: { xmlFormId: 'a b' }
     });
@@ -59,6 +60,21 @@ describe('FormList', () => {
       .afterResponses(app => {
         const href = app.first('.form-list-form-name').getAttribute('href');
         href.should.equal('#/projects/1/forms/a%20b');
+      });
+  });
+
+  it('links to the submissions page for a project viewer', () => {
+    mockLogin({ role: 'none' });
+    const { project, form } = testData.createProjectAndFormWithoutSubmissions({
+      project: { role: 'viewer' },
+      form: { xmlFormId: 'f' }
+    });
+    return mockRoute('/projects/1')
+      .respondWithData(() => project)
+      .respondWithData(() => [form])
+      .afterResponses(app => {
+        const href = app.first('.form-list-form-name').getAttribute('href');
+        href.should.equal('#/projects/1/forms/f/submissions');
       });
   });
 });
