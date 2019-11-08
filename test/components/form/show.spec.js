@@ -7,11 +7,30 @@ import { mockRoute } from '../../http';
 describe('FormShow', () => {
   beforeEach(mockLogin);
 
-  it('requires projectId route param to be integer', () =>
-    mockRoute('/projects/p/forms/f')
-      .then(app => {
-        app.find(NotFound).length.should.equal(1);
-      }));
+  describe('route params', () => {
+    it('requires projectId param to be integer', () =>
+      mockRoute('/projects/p/forms/f')
+        .then(app => {
+          app.find(NotFound).length.should.equal(1);
+        }));
+
+    it('handles encoded xmlFormId correctly', () => {
+      const { project, form } = testData.createProjectAndFormWithoutSubmissions({
+        form: { xmlFormId: 'a b' }
+      });
+      return mockRoute('/projects/1/forms/a%20b')
+        .beforeEachResponse((app, request, index) => {
+          if (index === 1) request.url.should.equal('/v1/projects/1/forms/a%20b');
+        })
+        .respondWithData(() => project)
+        .respondWithData(() => form)
+        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => []) // assignmentActors
+        .afterResponses(app => {
+          app.vm.$route.params.xmlFormId.should.equal('a b');
+        });
+    });
+  });
 
   it("shows the project's name", () =>
     mockRoute('/projects/1/forms/f')

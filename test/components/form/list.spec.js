@@ -5,7 +5,6 @@ import { formatDate } from '../../../src/util/util';
 import { mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
-import { trigger } from '../../event';
 
 describe('FormList', () => {
   beforeEach(mockLogin);
@@ -50,23 +49,16 @@ describe('FormList', () => {
     component.first('#form-list-empty-message').should.be.visible();
   });
 
-  it('encodes the URL to the form overview page', () =>
-    mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
-      .afterResponse(app => {
+  it('encodes the URL to the form overview page', () => {
+    const { project, form } = testData.createProjectAndFormWithoutSubmissions({
+      form: { xmlFormId: 'a b' }
+    });
+    return mockRoute('/projects/1')
+      .respondWithData(() => project)
+      .respondWithData(() => [form])
+      .afterResponses(app => {
         const href = app.first('.form-list-form-name').getAttribute('href');
         href.should.equal('#/projects/1/forms/a%20b');
-      })
-      .request(app => trigger.click(app, '.form-list-form-name'))
-      .beforeEachResponse((app, request, index) => {
-        if (index === 0) request.url.should.equal('/v1/projects/1/forms/a%20b');
-      })
-      .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
-      .afterResponses(app => {
-        app.vm.$route.params.xmlFormId.should.equal('a b');
-      }));
+      });
+  });
 });
