@@ -13,22 +13,25 @@ import Base from './base';
 
 const props = [
   'id',
-  'displayName',
-  'email',
+  'name',
+  'archived',
+  'keyId',
   'createdAt',
   'updatedAt',
   // Extended metadata
+  'forms',
+  'lastSubmission',
+  'appUsers',
   'verbs'
 ];
 
-export default class User extends Base(props) {
+export default class Project extends Base(props) {
   constructor(data) {
     super(data);
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
   }
 
-  // Sitewide grants
-  can(verbOrVerbs) {
+  permits(verbOrVerbs) {
     return !Array.isArray(verbOrVerbs)
       ? this._verbSet.has(verbOrVerbs)
       : verbOrVerbs.every(verb => this._verbSet.has(verb));

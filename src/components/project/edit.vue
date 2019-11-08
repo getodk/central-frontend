@@ -52,11 +52,10 @@ export default {
             key: 'project',
             // We do not simply specify response.data, because it does not
             // include extended metadata.
-            value: {
-              ...this.project,
+            value: this.project.with({
               name,
               updatedAt: response.data.updatedAt
-            }
+            })
           });
           this.$alert().success('Project settings saved!');
         })

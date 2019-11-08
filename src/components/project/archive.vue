@@ -68,11 +68,10 @@ export default {
             key: 'project',
             // We do not simply specify response.data, because it does not
             // include extended metadata.
-            value: {
-              ...this.project,
+            value: this.project.with({
               archived: true,
               updatedAt: response.data.updatedAt
-            }
+            })
           });
           this.$emit('success');
         })

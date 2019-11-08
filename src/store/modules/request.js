@@ -18,6 +18,7 @@ import BackupsConfig from '../../presenters/backups-config';
 import FieldKey from '../../presenters/field-key';
 import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
+import Project from '../../presenters/project';
 import User from '../../presenters/user';
 import { configForPossibleBackendRequest, logAxiosError, requestAlertMessage } from '../../util/request';
 
@@ -59,6 +60,8 @@ export const transforms = {
   users: ({ data }) => data.map(user => new User(user)),
   user: ({ data }) => new User(data),
 
+  projects: ({ data }) => data.map(project => new Project(project)),
+  project: ({ data }) => new Project(data),
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
   attachments: ({ data }) =>

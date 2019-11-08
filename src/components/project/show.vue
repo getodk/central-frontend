@@ -85,7 +85,7 @@ export default {
           if (project == null || project.appUsers === fieldKeys.length) return;
           this.$store.commit('setData', {
             key: 'project',
-            value: { ...project, appUsers: fieldKeys.length }
+            value: project.with({ appUsers: fieldKeys.length })
           });
         }
       }]).catch(noop);
