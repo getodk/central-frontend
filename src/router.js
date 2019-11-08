@@ -218,7 +218,7 @@ const routes = [
     ]
   },
   {
-    path: '/users/:id/edit',
+    path: '/users/:id([1-9]\\d*)/edit',
     component: UserEdit,
     props: true,
     meta: {

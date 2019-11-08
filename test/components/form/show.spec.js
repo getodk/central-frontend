@@ -1,10 +1,17 @@
 import Loading from '../../../src/components/loading.vue';
+import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
 import { mockLogin } from '../../session';
 import { mockRoute } from '../../http';
 
 describe('FormShow', () => {
   beforeEach(mockLogin);
+
+  it('requires projectId route param to be integer', () =>
+    mockRoute('/projects/p/forms/f')
+      .then(app => {
+        app.find(NotFound).length.should.equal(1);
+      }));
 
   it("shows the project's name", () =>
     mockRoute('/projects/1/forms/f')

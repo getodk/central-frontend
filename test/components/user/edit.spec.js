@@ -1,3 +1,4 @@
+import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
@@ -51,6 +52,12 @@ describe('UserEdit', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
+
+    it('requires id route param to be integer', () =>
+      mockRoute('/users/x/edit')
+        .then(app => {
+          app.find(NotFound).length.should.equal(1);
+        }));
   });
 
   describe('navigating from /account/edit to /users/:id/edit', () => {
