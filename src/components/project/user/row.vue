@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr>
-    <td>{{ assignment.actor.displayName }}</td>
+    <td class="display-name">{{ assignment.actor.displayName }}</td>
     <td>
       <form>
         <div class="form-group">
@@ -92,6 +92,12 @@ export default {
 <style lang="scss">
 #project-user-list td {
   vertical-align: middle;
+
+  &.display-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .form-group {
     margin-bottom: 0;
