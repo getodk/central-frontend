@@ -36,7 +36,8 @@ import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
 import UserList from './components/user/list.vue';
 import store from './store';
-import { keys } from './store/modules/request';
+import { keys as requestKeys } from './store/modules/request';
+import { noop } from './util/util';
 import { preservesData } from './util/router';
 
 
@@ -113,12 +114,6 @@ const routes = [
     component: AccountClaim,
     meta: { restoreSession: false, requireLogin: false, requireAnonymity: true }
   },
-  {
-    path: '/account/edit',
-    name: 'AccountEdit',
-    component: UserEdit,
-    props: () => ({ id: store.state.request.data.currentUser.id.toString() })
-  },
 
   { path: '/', component: ProjectList },
   {
@@ -178,6 +173,12 @@ const routes = [
     component: UserEdit,
     props: true,
     meta: { requireGrants: ['user.read', 'user.update'] }
+  },
+  {
+    path: '/account/edit',
+    name: 'AccountEdit',
+    component: UserEdit,
+    props: () => ({ id: store.state.request.data.currentUser.id.toString() })
   },
 
   {
@@ -352,11 +353,10 @@ const nextByLoginStatus = (to, next) => {
       next({ path: '/login', query });
     }
   } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
-    if (store.getters.loggedIn) {
+    if (store.getters.loggedIn)
       next('/');
-    } else {
+    else
       next();
-    }
   } else {
     next();
   }
@@ -367,6 +367,7 @@ router.beforeEach((to, from, next) => {
   const isFirstNavigation = !store.state.router.navigations.first.triggered;
   if (isFirstNavigation) store.commit('triggerNavigation', 'first');
   store.commit('triggerNavigation', 'last');
+
   const { restoreSession } = to.matched[to.matched.length - 1].meta;
   // In production, the last condition is not strictly needed: if this is the
   // first navigation triggered, the user is necessarily logged out. However,
@@ -383,7 +384,7 @@ router.beforeEach((to, from, next) => {
           store.commit('setData', { key: 'session', value: data });
         }
       }]))
-      .catch(() => {})
+      .catch(noop)
       .finally(() => {
         nextByLoginStatus(to, next);
       });
@@ -474,7 +475,7 @@ router.afterEach(() => {
 // Clear data.
 router.afterEach((to, from) => {
   if (preservesData('*', to, from)) return;
-  for (const key of keys) {
+  for (const key of requestKeys) {
     if (!preservesData(key, to, from)) {
       if (store.state.request.data[key] != null) store.commit('clearData', key);
       if (store.state.request.requests[key].last.state === 'loading')
