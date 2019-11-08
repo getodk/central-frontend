@@ -153,6 +153,39 @@ describe('ProjectUserList', () => {
         }));
     });
 
+    describe('search label', () => {
+      it('shows a particular label if the user can user.list', () => {
+        mockLogin();
+        return mockRoute('/projects/1/users')
+          .respondWithData(() => testData.extendedProjects.createPast(1).last())
+          .respondWithData(() => testData.standardRoles.sorted())
+          .respondWithData(() => testData.extendedProjectAssignments.sorted())
+          .afterResponses(app => {
+            const form = app.first('#project-user-list-search-form');
+            const placeholder = form.first('input').getAttribute('placeholder');
+            placeholder.should.equal('Search for a user…');
+            const label = form.first('.form-label').text();
+            label.should.equal('Search for a user…');
+          });
+      });
+
+      it('shows a particular label if the user cannot user.list', () => {
+        mockLogin({ role: 'none' });
+        return mockRoute('/projects/1/users')
+          .respondWithData(() =>
+            testData.extendedProjects.createPast(1, { role: 'manager' }).last())
+          .respondWithData(() => testData.standardRoles.sorted())
+          .respondWithData(() => testData.extendedProjectAssignments.sorted())
+          .afterResponses(app => {
+            const form = app.first('#project-user-list-search-form');
+            const placeholder = form.first('input').getAttribute('placeholder');
+            placeholder.should.equal('Enter exact user email address…');
+            const label = form.first('.form-label').text();
+            label.should.equal('Enter exact user email address…');
+          });
+      });
+    });
+
     it('shows the table data', () =>
       load({ roles: ['none', 'viewer', 'manager'] })
         .afterResponses(component => {

@@ -33,9 +33,9 @@ are Project Manager and Project Viewer. -->
         <span aria-hidden="true">&times;</span>
       </button>
       <label class="form-group">
-        <input class="form-control" :value="q" placeholder="Search for a user…"
+        <input class="form-control" :value="q" :placeholder="searchLabel"
           :disabled="searchDisabled" @change="changeQ($event.target.value)">
-        <span class="form-label">Search for a user…</span>
+        <span class="form-label">{{ searchLabel }}</span>
       </label>
     </form>
 
@@ -89,7 +89,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['roles', 'projectAssignments']),
+    ...requestData(['currentUser', 'roles', 'projectAssignments']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(['roles', 'projectAssignments']);
     },
@@ -109,6 +109,11 @@ export default {
     */
     searchDisabled() {
       return !this.dataExists || this.assignRequestCount !== 0;
+    },
+    searchLabel() {
+      return this.currentUser.can('user.list')
+        ? 'Search for a user…'
+        : 'Enter exact user email address…';
     },
     // The assignments to show in the table
     tableAssignments() {
