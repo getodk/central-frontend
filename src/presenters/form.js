@@ -22,7 +22,6 @@ const props = [
   'createdAt',
   'updatedAt',
   // Extended metadata
-  'xml',
   'submissions',
   'lastSubmission',
   'createdBy'
