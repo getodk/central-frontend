@@ -51,12 +51,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormDelete from './delete.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
-  mixins: [modal()],
+  mixins: [modal(), validateData()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,

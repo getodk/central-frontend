@@ -2,6 +2,21 @@ import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { extendedUsers } from './users';
+import { standardRoles } from './roles';
+
+const verbsForUserAndRole = (extendedUser, roleSystem) => {
+  const verbs = new Set(extendedUser.verbs);
+
+  if (roleSystem !== 'none') {
+    const role = standardRoles.sorted().find(r => r.system === roleSystem);
+    if (role == null) throw new Error('role not found');
+    for (const verb of role.verbs)
+      verbs.add(verb);
+  }
+
+  return Array.from(verbs);
+};
 
 export const extendedProjects = dataStore({
   factory: ({
@@ -17,12 +32,19 @@ export const extendedProjects = dataStore({
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = inPast ? faker.random.number() : 0,
-    key = null
+    lastSubmission = undefined,
+    key = null,
+    // The current user's role on the project
+    role = 'none'
   }) => {
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt
     ]);
-    return {
+
+    if (extendedUsers.size === 0) throw new Error('user not found');
+    const verbs = verbsForUserAndRole(extendedUsers.first(), role);
+
+    const project = {
       id,
       name,
       archived,
@@ -31,12 +53,20 @@ export const extendedProjects = dataStore({
       updatedAt,
       // Extended metadata
       forms,
-      // This property does not necessarily match testData.extendedSubmissions.
-      lastSubmission: forms !== 0 && faker.random.boolean()
-        ? faker.date.pastSince(createdAt).toISOString()
-        : null,
-      appUsers
+      appUsers,
+      verbs
     };
+
+    if (lastSubmission !== undefined) {
+      project.lastSubmission = lastSubmission;
+    } else {
+      // This property does not necessarily match testData.extendedSubmissions.
+      project.lastSubmission = forms !== 0 && faker.random.boolean()
+        ? faker.date.pastSince(createdAt).toISOString()
+        : null;
+    }
+
+    return project;
   },
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });

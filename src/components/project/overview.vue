@@ -95,12 +95,13 @@ import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
 import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, FormNew, SummaryItem },
-  mixins: [modal()],
+  mixins: [modal(), validateData()],
   props: {
     projectId: {
       type: String,

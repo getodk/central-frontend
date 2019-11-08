@@ -62,6 +62,7 @@ import SubmissionAnalyze from './analyze.vue';
 import SubmissionDecrypt from './decrypt.vue';
 import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['form', 'keys', 'schema', 'submissionsChunk'];
@@ -70,7 +71,7 @@ const MAX_SMALL_CHUNKS = 4;
 export default {
   name: 'SubmissionList',
   components: { SubmissionAnalyze, SubmissionDecrypt, SubmissionTable },
-  mixins: [modal()],
+  mixins: [modal(), validateData()],
   props: {
     projectId: {
       type: String,

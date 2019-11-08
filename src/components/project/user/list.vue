@@ -59,12 +59,14 @@ either is a Project Manager or has no role. -->
 
 <script>
 import ProjectUserRow from './row.vue';
+import validateData from '../../../mixins/validate-data';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
   components: { ProjectUserRow },
+  mixins: [validateData()],
   props: {
     projectId: {
       type: String,

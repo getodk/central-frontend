@@ -23,18 +23,8 @@ describe('UserList', () => {
           app.vm.$route.path.should.equal('/users');
         }));
 
-    it('redirects a user without a grant to user.list', () => {
-      mockLogin({
-        verbs: [
-          'project.list',
-          'assignment.list',
-          'user.create',
-          'assignment.create',
-          'assignment.delete',
-          'user.password.invalidate',
-          'user.delete'
-        ]
-      });
+    it('redirects a user with no sitewide role', () => {
+      mockLogin({ role: 'none' });
       return mockRoute('/users')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1).sorted())
@@ -42,32 +32,6 @@ describe('UserList', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
-
-    const verbs = [
-      'assignment.list',
-      'user.create',
-      'assignment.create',
-      'assignment.delete',
-      'user.password.invalidate',
-      'user.delete'
-    ];
-    for (const verb of verbs) {
-      it(`redirects a user without a grant to ${verb}`, () => {
-        const currentUserVerbs = [
-          'project.list',
-          'user.list',
-          ...verbs.filter(v => v !== verb)
-        ];
-        mockLogin({ verbs: currentUserVerbs });
-        return mockRoute('/users')
-          .respondWithData(() =>
-            testData.extendedProjects.createPast(1).sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-    }
   });
 
   describe('after login as an administrator', () => {

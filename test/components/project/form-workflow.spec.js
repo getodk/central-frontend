@@ -67,6 +67,36 @@ describe('ProjectFormWorkflow', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/form-workflow');
         }));
+
+    describe('project viewer', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
+      });
+
+      it('redirects a project viewer whose first navigation is to the tab', () =>
+        mockRoute('/projects/1/form-workflow')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithProblem(403.1) // forms
+          .respondWithProblem(403.1) // fieldKeys
+          .respondWithData(() => testData.standardRoles.sorted())
+          .respondWithProblem(403.1) // formAssignments
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a project viewer navigating from another tab', () =>
+        mockRoute('/projects/1')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithData(() => testData.extendedForms.sorted())
+          .complete()
+          .route('/projects/1/form-workflow')
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponse(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
   });
 
   describe('after login', () => {

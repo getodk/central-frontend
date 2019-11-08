@@ -65,6 +65,7 @@ import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 const POPOVER_CONTENT_TEMPLATE = `
@@ -81,7 +82,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { FieldKeyRow, FieldKeyNew, FieldKeyRevoke },
-  mixins: [modal()],
+  mixins: [modal(), validateData()],
   props: {
     projectId: {
       type: String,

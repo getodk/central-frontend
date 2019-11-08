@@ -117,19 +117,31 @@ afterEach(() => {
 
 // Seed the test data.
 beforeEach(() => {
-  // This is missing roles that we don't currently use in Frontend.
+  // Only creating roles that we currently use in Frontend.
   testData.standardRoles
     .createPast(1, {
       name: 'Administrator',
       system: 'admin',
+      // This is not the full list of verbs used in Backend, but it should be
+      // the full list used in Frontend.
       verbs: [
         'assignment.create',
         'assignment.list',
         'assignment.delete',
         'audit.read',
+        'backup.create',
+        'backup.terminate',
         'config.read',
+        'field_key.create',
+        'field_key.list',
+        'form.list',
+        'form.read',
+        'form.update',
+        'form.delete',
         'project.create',
-        'project.list',
+        'project.update',
+        'submission.list',
+        'submission.read',
         'user.create',
         'user.list',
         'user.read',
@@ -144,6 +156,17 @@ beforeEach(() => {
       verbs: [
         'form.read',
         'submission.create'
+      ]
+    })
+    .createPast(1, {
+      name: 'Project Viewer',
+      system: 'viewer',
+      verbs: [
+        'form.list',
+        'form.read',
+        'project.read',
+        'submission.list',
+        'submission.read'
       ]
     });
 });

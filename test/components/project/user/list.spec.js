@@ -53,6 +53,33 @@ describe('ProjectUserList', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/users');
         }));
+
+    describe('project viewer', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
+      });
+
+      it('redirects a project viewer whose first navigation is to the tab', () =>
+        mockRoute('/projects/1/users')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithProblem(403.1)
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a project viewer navigating from another tab', () =>
+        mockRoute('/projects/1')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithData(() => testData.extendedForms.sorted())
+          .complete()
+          .route('/projects/1/users')
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponse(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
   });
 
   describe('after login', () => {

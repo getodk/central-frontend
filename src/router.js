@@ -165,11 +165,79 @@ const routes = [
         component: ProjectShow,
         props: true,
         children: [
-          { path: '', component: ProjectOverview, props: true },
-          { path: 'users', component: ProjectUserList, props: true },
-          { path: 'app-users', component: FieldKeyList, props: true },
-          { path: 'form-workflow', component: ProjectFormWorkflow, props: true },
-          { path: 'settings', component: ProjectSettings }
+          {
+            path: '',
+            component: ProjectOverview,
+            props: true,
+            meta: {
+              validateData: {
+                // Including submission.list and submission.read, because
+                // ProjectOverview will show links to SubmissionLink if the user
+                // cannot navigate to FormOverview. Including form.read, because
+                // both FormOverview and SubmissionList require it.
+                project: (project) => project.permits([
+                  'form.list',
+                  'form.read',
+                  'submission.list',
+                  'submission.read'
+                ])
+              }
+            }
+          },
+          {
+            path: 'users',
+            component: ProjectUserList,
+            props: true,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'assignment.list',
+                  'assignment.create',
+                  'assignment.delete'
+                ])
+              }
+            }
+          },
+          {
+            path: 'app-users',
+            component: FieldKeyList,
+            props: true,
+            meta: {
+              validateData: {
+                // We do not check whether the user can revoke the app user's
+                // access, since the actee of that assignment is the app user,
+                // not the project.
+                project: (project) =>
+                  project.permits(['field_key.list', 'field_key.create'])
+              }
+            }
+          },
+          {
+            path: 'form-workflow',
+            component: ProjectFormWorkflow,
+            props: true,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'form.list',
+                  'field_key.list',
+                  'project.update',
+                  'form.update',
+                  'assignment.create',
+                  'assignment.delete'
+                ])
+              }
+            }
+          },
+          {
+            path: 'settings',
+            component: ProjectSettings,
+            meta: {
+              validateData: {
+                project: (project) => project.permits(['project.update'])
+              }
+            }
+          }
         ]
       },
       {
@@ -177,18 +245,51 @@ const routes = [
         component: FormShow,
         props: true,
         children: [
-          { path: '', component: FormOverview },
+          {
+            path: '',
+            component: FormOverview,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'assignment.list'])
+              }
+            }
+          },
           {
             path: 'media-files',
             component: FormAttachmentList,
             meta: {
               validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update']),
                 attachments: (attachments) => attachments.length !== 0
               }
             }
           },
-          { path: 'submissions', component: SubmissionList },
-          { path: 'settings', component: FormSettings }
+          {
+            path: 'submissions',
+            component: SubmissionList,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'form.read',
+                  'submission.list',
+                  // Needed to request `keys`.
+                  'submission.read'
+                ])
+              }
+            }
+          },
+          {
+            path: 'settings',
+            component: FormSettings,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update', 'form.delete'])
+              }
+            }
+          }
         ]
       }
     ]
@@ -210,7 +311,10 @@ const routes = [
               'assignment.create',
               'assignment.delete',
               'user.password.invalidate',
-              'user.delete'
+              'user.delete',
+              // Including these, because UserList links to UserEdit.
+              'user.read',
+              'user.update'
             ])
           }
         }
@@ -244,7 +348,12 @@ const routes = [
         component: BackupList,
         meta: {
           validateData: {
-            currentUser: (currentUser) => currentUser.can('config.read')
+            currentUser: (currentUser) => currentUser.can([
+              'config.read',
+              'backup.create',
+              'backup.terminate',
+              'audit.read'
+            ])
           }
         }
       },
@@ -253,6 +362,9 @@ const routes = [
         component: AuditList,
         meta: {
           validateData: {
+            // AuditList links to other pages, and we could consider adding the
+            // verbs from those pages here. However, presumably anyone who can
+            // audit.read can also visit those pages.
             currentUser: (currentUser) => currentUser.can('audit.read')
           }
         }
