@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :project-id="projectId" :attachment="attachment"
+          :key="attachment.key" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -91,12 +91,6 @@ export default {
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       /*
@@ -157,7 +151,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'form', 'attachments']),
+    ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -178,7 +172,7 @@ export default {
     // FILE INPUT
 
     afterFileInputSelection(files) {
-      this.uploadFilesModal.state = false;
+      this.hideModal('uploadFilesModal');
       if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
       this.matchFilesToAttachments(files);
     },
@@ -284,11 +278,16 @@ export default {
         return Promise.resolve({ data: file, encoding: 'identity' });
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
+        const { currentRoute } = this.$store.state.router;
         reader.onload = () => {
-          resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
+          if (this.$store.state.router.currentRoute === currentRoute)
+            resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
+          else
+            reject(new Error());
         };
         reader.onerror = () => {
-          this.$alert().danger(`Something went wrong while reading "${file.name}".`);
+          if (this.$store.state.router.currentRoute === currentRoute)
+            this.$alert().danger(`Something went wrong while reading "${file.name}".`);
           reject(new Error());
         };
         reader.readAsText(file);
@@ -304,7 +303,7 @@ export default {
       this.uploadStatus.progress = null;
       return this.maybeGzip(file)
         .then(({ data, encoding }) => {
-          const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
+          const path = `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
           return this.post(path, data, {
             headers: {
               'Content-Type': file.type,
