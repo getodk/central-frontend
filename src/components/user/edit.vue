@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="user != null">
-      <template v-if="user != null" slot="title">
+      <template v-if="user != null" #title>
         {{ user.displayName }}
       </template>
     </page-head>
@@ -33,12 +33,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserEdit',
   components: { UserEditBasicDetails, UserEditPassword },
+  mixins: [validateData()],
   props: {
     id: {
       type: String,

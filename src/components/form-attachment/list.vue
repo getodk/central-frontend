@@ -65,10 +65,10 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import conditionalRoute from '../../mixins/conditional-route';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -81,12 +81,10 @@ export default {
     FormAttachmentUploadFiles
   },
   mixins: [
-    conditionalRoute({
-      attachments: (attachments) => attachments.length !== 0
-    }),
     dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
     modal(),
-    request()
+    request(),
+    validateData()
   ],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.

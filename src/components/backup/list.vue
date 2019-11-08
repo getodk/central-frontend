@@ -38,13 +38,14 @@ import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
 import BackupsConfig from '../../presenters/backups-config';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupList',
   components: { AuditTable, BackupNew, BackupStatus, BackupTerminate },
-  mixins: [modal()],
+  mixins: [modal(), validateData({ update: false })],
   data() {
     return {
       newBackup: {

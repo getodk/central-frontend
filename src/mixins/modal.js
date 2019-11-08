@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-A component that contains one or more mixins may use this mixin, which includes
+A component that contains one or more modals may use this mixin, which includes
 methods for toggling a modal.
 
 The component using this mixin must define a data property for each modal. Each

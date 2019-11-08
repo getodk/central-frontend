@@ -29,12 +29,14 @@ import { DateTime } from 'luxon';
 
 import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable },
+  mixins: [validateData({ update: false })],
   computed: {
     ...requestData(['audits']),
     initialFilters() {

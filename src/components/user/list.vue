@@ -67,13 +67,14 @@ import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserList',
   components: { UserNew, UserResetPassword, UserRetire, UserRow },
-  mixins: [modal()],
+  mixins: [modal(), validateData({ update: false })],
   data() {
     return {
       // The ids of the users who are administrators

@@ -48,6 +48,9 @@ import { preservesData } from './util/router';
 /*
 The following meta fields are supported for bottom-level routes:
 
+  Login
+  -----
+
   - restoreSession (default: true). The router looks to restoreSession right
     after the user has navigated to Frontend, when the router is navigating to
     the first route. If restoreSession is `true` for the first route, the router
@@ -70,9 +73,9 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  - requireGrants (optional). Specifies the verbs for the sitewide grants that
-    the user must have in order to navigate to the route. `requireGrants` should
-    only be specified for a route for which `requireLogin` is `true`.
+  Request data
+  ------------
+
   - preserveData (optional)
 
     By default, whenever the route changes, data is cleared for all request
@@ -97,6 +100,42 @@ The following meta fields are supported for bottom-level routes:
     }
 
     Do not set preserveData directly: use preserveDataForKey() instead.
+
+  - validateData (optional)
+
+    Note: You must use a mixin in combination with this meta field.
+
+    Some routes can be navigated to only if certain conditions are met. For
+    example, the user may have to be able to perform certain verbs sitewide.
+
+    validateData checks that conditions about the request data are met. (Perhaps
+    more precisely, it checks that conditions are not violated.) Here is an
+    example value:
+
+    {
+      // Specifies a condition for currentUser: the user must be able to
+      // user.list sitewide.
+      currentUser: (currentUser) => currentUser.can('user.list'),
+      // Specifies a condition for `project`: the user must be able to
+      // assignment.list for the project.
+      project: (project) => project.permits('assignment.list')
+    }
+
+    Before the user navigates to a route, any data that will be preserved after
+    the route change is checked for whether it meets the specified conditions.
+    If any condition is violated, the user is redirected to /.
+
+    There may be data that will be cleared after the route change or that has
+    never been requested, but will be requested after the component is created.
+    That data can't be checked in a navigation guard, so a watcher is added to
+    the component for each condition: the watcher will check the associated data
+    as soon as it exists. The watcher will also continue watching the data,
+    checking that it continues to meet the condition.
+
+    The component must use the validateData mixin: this is what actually defines
+    the navigation guards and the watchers. The router only defines the
+    validateData conditions; the mixin is what implements them. The mixin does
+    by using the validateData meta field of this.$route.
 */
 const routes = [
   {
@@ -139,7 +178,15 @@ const routes = [
         props: true,
         children: [
           { path: '', component: FormOverview },
-          { path: 'media-files', component: FormAttachmentList },
+          {
+            path: 'media-files',
+            component: FormAttachmentList,
+            meta: {
+              validateData: {
+                attachments: (attachments) => attachments.length !== 0
+              }
+            }
+          },
           { path: 'submissions', component: SubmissionList },
           { path: 'settings', component: FormSettings }
         ]
@@ -155,15 +202,17 @@ const routes = [
         path: '',
         component: UserList,
         meta: {
-          requireGrants: [
-            'user.list',
-            'assignment.list',
-            'user.create',
-            'assignment.create',
-            'assignment.delete',
-            'user.password.invalidate',
-            'user.delete'
-          ]
+          validateData: {
+            currentUser: (currentUser) => currentUser.can([
+              'user.list',
+              'assignment.list',
+              'user.create',
+              'assignment.create',
+              'assignment.delete',
+              'user.password.invalidate',
+              'user.delete'
+            ])
+          }
         }
       }
     ]
@@ -172,7 +221,12 @@ const routes = [
     path: '/users/:id/edit',
     component: UserEdit,
     props: true,
-    meta: { requireGrants: ['user.read', 'user.update'] }
+    meta: {
+      validateData: {
+        currentUser: (currentUser) =>
+          currentUser.can(['user.read', 'user.update'])
+      }
+    }
   },
   {
     path: '/account/edit',
@@ -188,12 +242,20 @@ const routes = [
       {
         path: 'backups',
         component: BackupList,
-        meta: { requireGrants: ['config.read'] }
+        meta: {
+          validateData: {
+            currentUser: (currentUser) => currentUser.can('config.read')
+          }
+        }
       },
       {
         path: 'audits',
         component: AuditList,
-        meta: { requireGrants: ['audit.read'] }
+        meta: {
+          validateData: {
+            currentUser: (currentUser) => currentUser.can('audit.read')
+          }
+        }
       }
     ]
   },
@@ -277,6 +339,10 @@ for (const route of flattenedRoutes) {
       preserveData: {},
       ...route.meta
     };
+    const { meta } = route;
+    meta.validateData = meta.validateData != null
+      ? Object.entries(meta.validateData)
+      : [];
   }
 }
 
@@ -361,7 +427,7 @@ export default router;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// PERMISSIONS: LOGIN AND GRANTS
+// LOGIN
 
 // nextByLoginStatus() implements the requireLogin and requireAnonymity meta
 // fields. It navigates based on whether the user is logged in and whether the
@@ -416,33 +482,6 @@ router.beforeEach((to, from, next) => {
     nextByLoginStatus(to, next);
   }
 });
-
-// Implements the requireGrants meta field.
-router.beforeEach((to, from, next) => {
-  const { meta } = to.matched[to.matched.length - 1];
-  if (!meta.requireLogin) {
-    next();
-    return;
-  }
-  const { currentUser } = store.state.request.data;
-  for (const verb of meta.requireGrants) {
-    if (!currentUser.can(verb)) {
-      next('/');
-      return;
-    }
-  }
-  next();
-});
-
-export const canRoute = (routeName) => {
-  const route = routesByName[routeName];
-  if (route == null) throw new Error('invalid route name');
-  const { currentUser } = store.state.request.data;
-  for (const verb of route.meta.requireGrants) {
-    if (!currentUser.can(verb)) return false;
-  }
-  return true;
-};
 
 
 
