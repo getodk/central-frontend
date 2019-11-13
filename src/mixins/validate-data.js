@@ -38,10 +38,10 @@ export default ({ update = true } = {}) => {
       if (this.$route == null) return;
       const { matched } = this.$route;
       const { validateData } = matched[matched.length - 1].meta;
-      for (const [key, callback] of validateData) {
+      for (const [key, validator] of validateData) {
         // eslint-disable-next-line func-names
         this.$watch(`$store.state.request.data.${key}`, function(value) {
-          if (value != null && !callback(value)) this.$router.push('/');
+          if (value != null && !validator(value)) this.$router.push('/');
         });
       }
     }

@@ -44,12 +44,12 @@ specified for the route. Returns `true` otherwise.
 */
 export const canRoute = (to, from, store) => {
   const { validateData } = to.matched[to.matched.length - 1].meta;
-  for (const [key, callback] of validateData) {
+  for (const [key, validator] of validateData) {
     // If the data for the request key will be cleared after the navigation is
     // confirmed, we do not need to validate it.
     if (preservesData('*', to, from) || preservesData(key, to, from)) {
       const value = store.state.request.data[key];
-      if (value != null && !callback(value)) return false;
+      if (value != null && !validator(value)) return false;
     }
   }
   return true;
