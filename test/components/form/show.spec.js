@@ -15,18 +15,18 @@ describe('FormShow', () => {
     it('handles encoded xmlFormId correctly', () => {
       mockLogin();
       const { project, form } = testData.createProjectAndFormWithoutSubmissions({
-        form: { xmlFormId: 'a b' }
+        form: { xmlFormId: 'i ı' }
       });
-      return mockRoute('/projects/1/forms/a%20b')
+      return mockRoute('/projects/1/forms/i%20%C4%B1')
         .beforeEachResponse((app, request, index) => {
-          if (index === 1) request.url.should.equal('/v1/projects/1/forms/a%20b');
+          if (index === 1) request.url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
         })
         .respondWithData(() => project)
         .respondWithData(() => form)
         .respondWithData(() => testData.extendedFormAttachments.sorted())
         .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
-          app.vm.$route.params.xmlFormId.should.equal('a b');
+          app.vm.$route.params.xmlFormId.should.equal('i ı');
         });
     });
   });

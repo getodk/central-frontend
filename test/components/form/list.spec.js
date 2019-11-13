@@ -52,14 +52,14 @@ describe('FormList', () => {
   it('encodes the URL to the form overview page', () => {
     mockLogin();
     const { project, form } = testData.createProjectAndFormWithoutSubmissions({
-      form: { xmlFormId: 'a b' }
+      form: { xmlFormId: 'i ı' }
     });
     return mockRoute('/projects/1')
       .respondWithData(() => project)
       .respondWithData(() => [form])
       .afterResponses(app => {
         const href = app.first('.form-list-form-name').getAttribute('href');
-        href.should.equal('#/projects/1/forms/a%20b');
+        href.should.equal('#/projects/1/forms/i%20%C4%B1');
       });
   });
 
