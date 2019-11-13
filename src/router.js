@@ -171,16 +171,7 @@ const routes = [
             props: true,
             meta: {
               validateData: {
-                // Including submission.list and submission.read, because
-                // ProjectOverview will show links to SubmissionLink if the user
-                // cannot navigate to FormOverview. Including form.read, because
-                // both FormOverview and SubmissionList require it.
-                project: (project) => project.permits([
-                  'form.list',
-                  'form.read',
-                  'submission.list',
-                  'submission.read'
-                ])
+                project: (project) => project.permits('form.list')
               }
             }
           },
@@ -311,10 +302,7 @@ const routes = [
               'assignment.create',
               'assignment.delete',
               'user.password.invalidate',
-              'user.delete',
-              // Including these, because UserList links to UserEdit.
-              'user.read',
-              'user.update'
+              'user.delete'
             ])
           }
         }
