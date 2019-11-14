@@ -278,10 +278,7 @@ export default {
         const reader = new FileReader();
         const { currentRoute } = this.$store.state.router;
         reader.onload = () => {
-          if (this.$store.state.router.currentRoute === currentRoute)
-            resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
-          else
-            reject(new Error());
+          resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
         };
         reader.onerror = () => {
           if (this.$store.state.router.currentRoute === currentRoute)
@@ -299,8 +296,11 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
+      const { currentRoute } = this.$store.state.router;
       return this.maybeGzip(file)
         .then(({ data, encoding }) => {
+          if (this.$store.state.router.currentRoute !== currentRoute)
+            throw new Error();
           const path = `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
           return this.post(path, data, {
             headers: {
@@ -353,9 +353,11 @@ export default {
         const upload = this.plannedUploads[i];
         promise = promise.then(() => this.uploadFile(upload, updated));
       }
+      const { currentRoute } = this.$store.state.router;
       promise
         .catch(noop)
         .finally(() => {
+          if (this.$store.state.router.currentRoute !== currentRoute) return;
           if (updated.length === this.uploadStatus.total) {
             this.$alert().success(updated.length === 1
               ? '1 file has been successfully uploaded.'
