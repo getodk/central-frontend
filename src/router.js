@@ -435,7 +435,6 @@ for (const route of flattenedRoutes) {
       restoreSession: true,
       requireLogin: true,
       requireAnonymity: false,
-      requireGrants: [],
       preserveData: {},
       ...route.meta
     };
