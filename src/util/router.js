@@ -36,11 +36,12 @@ export const preservesData = (key, to, from) => {
 };
 
 /*
-canRoute() returns `false` if request data exists that violates a condition
-specified for the route. Returns `true` otherwise.
+canRoute() returns `false` if request data exists that violates a validateData
+condition specified for the `to` route. Otherwise it returns `true`.
 
   - to. A Route object.
   - from. A Route object.
+  - store. The Vuex store.
 */
 export const canRoute = (to, from, store) => {
   const { validateData } = to.matched[to.matched.length - 1].meta;

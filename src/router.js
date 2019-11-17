@@ -109,8 +109,8 @@ The following meta fields are supported for bottom-level routes:
     example, the user may have to be able to perform certain verbs sitewide.
 
     validateData checks that conditions about the request data are met. (Perhaps
-    more precisely, it checks that conditions are not violated.) Here is an
-    example value:
+    more precisely, it checks that no condition is violated.) Here is an example
+    value:
 
     {
       // Specifies a condition for currentUser: the user must be able to
@@ -121,9 +121,9 @@ The following meta fields are supported for bottom-level routes:
       project: (project) => project.permits('assignment.list')
     }
 
-    Before the user navigates to a route, any data that will be preserved after
-    the route change is checked for whether it meets the specified conditions.
-    If any condition is violated, the user is redirected to /.
+    Before the user navigates to the route, any data that will be preserved
+    after the route change is checked for whether it meets the specified
+    conditions. If any condition is violated, the user is redirected to /.
 
     There may be data that will be cleared after the route change or that has
     never been requested, but will be requested after the component is created.
@@ -135,7 +135,7 @@ The following meta fields are supported for bottom-level routes:
     The component must use the validateData mixin: this is what actually defines
     the navigation guards and the watchers. The router only defines the
     validateData conditions; the mixin is what implements them. The mixin does
-    by using the validateData meta field of this.$route.
+    so by using the validateData meta field of this.$route.
 */
 const routes = [
   {
