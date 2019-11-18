@@ -73,5 +73,5 @@ export const extendedProjects = dataStore({
 
 export const standardProjects = view(
   extendedProjects,
-  omit(['forms', 'lastSubmission', 'appUsers'])
+  omit(['forms', 'lastSubmission', 'appUsers', 'verbs'])
 );

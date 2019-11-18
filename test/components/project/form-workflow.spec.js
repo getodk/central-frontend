@@ -77,7 +77,7 @@ describe('ProjectFormWorkflow', () => {
       it('redirects a project viewer whose first navigation is to the tab', () =>
         mockRoute('/projects/1/form-workflow')
           .respondWithData(() => testData.extendedProjects.last())
-          .respondWithProblem(403.1) // forms
+          .respondWithData(() => testData.extendedForms.sorted())
           .respondWithProblem(403.1) // fieldKeys
           .respondWithData(() => testData.standardRoles.sorted())
           .respondWithProblem(403.1) // formAssignments

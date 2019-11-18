@@ -184,7 +184,6 @@ beforeEach(() => {
       verbs: [
         'form.list',
         'form.read',
-        'project.read',
         'submission.list',
         'submission.read'
       ]

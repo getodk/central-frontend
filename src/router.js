@@ -212,6 +212,7 @@ const routes = [
                 project: (project) => project.permits([
                   'form.list',
                   'field_key.list',
+                  'assignment.list',
                   'project.update',
                   'form.update',
                   'assignment.create',
@@ -265,7 +266,6 @@ const routes = [
                 project: (project) => project.permits([
                   'form.read',
                   'submission.list',
-                  // Needed to request `keys`.
                   'submission.read'
                 ])
               }
@@ -350,9 +350,6 @@ const routes = [
         component: AuditList,
         meta: {
           validateData: {
-            // AuditList links to other pages, and we could consider adding the
-            // verbs from those pages here. However, presumably anyone who can
-            // audit.read can also visit those pages.
             currentUser: (currentUser) => currentUser.can('audit.read')
           }
         }
