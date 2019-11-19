@@ -142,7 +142,7 @@ export default {
     },
 
     loggedIn: ({ data }) => data.session != null && data.session.token != null,
-    loggedOut: (state, { loggedIn }) => !loggedIn,
+    loggedOut: (state, getters) => !getters.loggedIn,
 
     projectRoles: ({ data }) => {
       const { roles } = data;

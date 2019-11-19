@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             :disabled="disabled" :title="title" aria-label="Project Role"
             @change="change($event.target.value)">
             <option v-for="role of $store.getters.projectRoles" :key="role.id"
-              :value="role.id">
+              :value="role.id.toString()">
               {{ role.name }}
             </option>
             <option value="">None</option>
@@ -87,8 +87,8 @@ export default {
           .catch(e => {
             if (previousRoleId !== '' && roleIdString !== '' &&
               this.$store.state.router.currentRoute === currentRoute) {
-              this.$emit('change', this.assignment.actor, null, true);
               this.selectedRoleId = '';
+              this.$emit('change', this.assignment.actor, null, true);
             }
             throw e;
           }))

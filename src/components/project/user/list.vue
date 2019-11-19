@@ -19,9 +19,9 @@ are Project Manager and Project Viewer. -->
       The assigned Project Managers for this Project will be able to perform any
       administrative or auditing task related to this Project. Sitewide
       Administrators are automatically considered Managers of every Project.
-      Project Viewers can access and download all form data in this Project, but
-      cannot make any changes to settings or data. To learn more about Project,
-      Managers, and Viewers, please see
+      Project Viewers can access and download all Form data in this Project, but
+      cannot make any changes to settings or data. To learn more about Projects,
+      Managers and Viewers, please see
       <doc-link to="central-projects/#project-managers">this article</doc-link>.
     </p>
 
@@ -79,7 +79,7 @@ export default {
   },
   data() {
     return {
-      // User search term
+      // Search term
       q: '',
       // searchAssignments is an array that contains an assignment-like object
       // for each user returned for the most recent search. roleId may be `null`
@@ -99,19 +99,17 @@ export default {
     dataExists() {
       return this.$store.getters.dataExists(['roles', 'projectAssignments']);
     },
-    /*
-    We disable search while a request for the assignments is in progress,
-    because we match up search results to the existing assignments.
-
-    Further, we disable search while a POST or DELETE request is in progress. If
-    the user cleared the search while a POST or DELETE was in progress, a new
-    request for the project assignments would be sent. In that case, once the
-    POST/DELETE was successful, we would have to find the element of
-    this.projectAssignments to update -- and it might even be unclear whether we
-    should update that element.
-    */
     searchDisabled() {
-      return !this.dataExists || this.assignRequestCount !== 0;
+      if (!this.dataExists) return true;
+      /*
+      We disable search while a POST or DELETE request is in progress. If the
+      user cleared the search while a POST or DELETE was in progress, a new
+      request for the project assignments would be sent. In that case, once the
+      POST/DELETE was successful, we would have to find the element of
+      this.projectAssignments to update -- and it might even be unclear whether
+      we should update that element.
+      */
+      return this.assignRequestCount !== 0;
     },
     searchLabel() {
       return this.currentUser.can('user.list')

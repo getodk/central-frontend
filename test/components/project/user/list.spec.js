@@ -16,6 +16,7 @@ const load = ({ roles, route = false }) => {
     testData.extendedUsers.createPast(1, { displayName: `User ${i + 1}` });
 
   // Create the project.
+  testData.extendedProjects.size.should.equal(0);
   testData.extendedProjects.createPast(1, { role: roles[0] });
 
   // Create the assignments.
@@ -37,10 +38,7 @@ const load = ({ roles, route = false }) => {
   return mockHttp()
     .mount(ProjectUserList, {
       propsData: { projectId: '1' },
-      requestData: {
-        currentUser: testData.extendedUsers.first(),
-        project: testData.extendedProjects.last()
-      }
+      requestData: { project: testData.extendedProjects.last() }
     })
     .respondWithData(() => testData.standardRoles.sorted())
     .respondWithData(() => testData.extendedProjectAssignments.sorted());
@@ -57,7 +55,7 @@ const changeRole = (component, systemOrNone) => {
   return trigger.changeValue(
     component,
     '#project-user-list select',
-    role !== null ? role.id.toString() : ''
+    role != null ? role.id.toString() : ''
   );
 };
 // Loads two assignments, then submits a search that returns four users, one of
@@ -126,7 +124,7 @@ describe('ProjectUserList', () => {
     });
   });
 
-  describe('behavior of component before any role change', () => {
+  describe('behavior of the component before any role change', () => {
     it('does not send a new request if user navigates back to tab', () => {
       mockLogin();
       return mockRoute('/projects/1/users')
@@ -218,7 +216,7 @@ describe('ProjectUserList', () => {
         selects[1].element.title.should.equal('');
       }));
 
-    describe('no users', () => {
+    describe('no assignments', () => {
       it('shows the table headers and a message', () =>
         load({ roles: ['none'] }).afterResponses(component => {
           component.find('thead tr').length.should.equal(1);
