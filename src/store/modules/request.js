@@ -20,7 +20,7 @@ import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
 import Project from '../../presenters/project';
 import User from '../../presenters/user';
-import { configForPossibleBackendRequest, logAxiosError, requestAlertMessage } from '../../util/request';
+import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 
 // Each type of response data that this module manages is associated with a key.
 const allKeys = [
@@ -220,7 +220,12 @@ export default {
       Response Handling
       -----------------
 
-      - validateStatus (optional). Passed to axios.
+      - validateProblem (optional). Usually, an error response means that the
+        request was invalid or that something went wrong. However, in some
+        cases, an error response should be treated as if it is successful. Use
+        validateProblem to identify such responses. validateProblem is passed
+        the Backend Problem. It should return `true` if the response should be
+        considered successful and `false` if not.
       - success (optional)
 
         Callback to run if the request is successful and is not canceled. get()
@@ -311,7 +316,7 @@ export default {
           extended = false,
 
           // Response handling
-          validateStatus = undefined,
+          validateProblem = undefined,
           success,
           problemToAlert = undefined,
 
@@ -357,7 +362,6 @@ export default {
         baseConfig.headers = extended
           ? { ...headers, 'X-Extended-Metadata': 'true' }
           : headers;
-        if (validateStatus != null) baseConfig.validateStatus = validateStatus;
         const token = getters.loggedIn ? state.data.session.token : null;
         const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
 
@@ -365,6 +369,11 @@ export default {
           .catch(error => { // eslint-disable-line no-loop-func
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
+
+            if (validateProblem != null && error.response != null &&
+              isProblem(error.response.data) &&
+              validateProblem(error.response.data))
+              return error.response;
 
             logAxiosError(error);
             if (firstError) {

@@ -27,6 +27,9 @@ export const configForPossibleBackendRequest = (config, token) => {
   };
 };
 
+export const isProblem = (data) => data != null && typeof data === 'object' &&
+  data.code != null && data.message != null;
+
 export const logAxiosError = (error) => {
   if (error.response)
     Vue.prototype.$logger.log(error.response.data);
@@ -41,9 +44,9 @@ export const requestAlertMessage = (error, problemToAlert) => {
     return 'Something went wrong: there was no request.';
   if (error.response == null)
     return 'Something went wrong: there was no response to your request.';
-  const problem = error.response.data;
-  if (problem == null || problem.code == null || problem.message == null)
+  if (!isProblem(error.response.data))
     return 'Something went wrong: the server returned an invalid error.';
+  const problem = error.response.data;
   if (problemToAlert == null) return problem.message;
   const message = problemToAlert(problem);
   return message != null ? message : problem.message;

@@ -28,12 +28,18 @@ property:
     directly mutate this property after defining it.
 */
 
-import { configForPossibleBackendRequest, logAxiosError, requestAlertMessage } from '../util/request';
+import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../util/request';
 
 /*
 request() accepts all the options that axios.request() does. It also accepts the
-following option:
+following options:
 
+  - validateProblem. Usually, an error response means that the request was
+    invalid or that something went wrong. However, in some cases, an error
+    response should be treated as if it is successful. Use validateProblem to
+    identify such responses. validateProblem is passed the Backend Problem. It
+    should return `true` if the response should be considered successful and
+    `false` if not.
   - problemToAlert. If the request results in an error, request() shows an
     alert. By default, the alert message is the same as that of the Backend
     Problem. However, if a function is specified for problemToAlert, request()
@@ -55,7 +61,14 @@ request resulted in an error. Before the then() or catch() callback is run, Vue
 will react to the change in `awaitingResponse` from `true` to `false`, running
 watchers and updating the DOM.
 */
-function request({ problemToAlert = undefined, ...axiosConfig }) {
+function request({
+  validateProblem = undefined,
+  problemToAlert = undefined,
+  ...axiosConfig
+}) {
+  if (axiosConfig.validateStatus != null)
+    throw new Error('validateStatus is not supported. Use validateProblem instead.');
+
   if (this.awaitingResponse != null) this.awaitingResponse = true;
   const token = this.$store.getters.loggedIn
     ? this.$store.state.request.data.session.token
@@ -66,6 +79,11 @@ function request({ problemToAlert = undefined, ...axiosConfig }) {
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
+
+      if (validateProblem != null && error.response != null &&
+        isProblem(error.response.data) && validateProblem(error.response.data))
+        return error.response;
+
       logAxiosError(error);
       const message = requestAlertMessage(error, problemToAlert);
       this.$store.commit('setAlert', { type: 'danger', message });
@@ -75,6 +93,7 @@ function request({ problemToAlert = undefined, ...axiosConfig }) {
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
+
       return response;
     });
 }

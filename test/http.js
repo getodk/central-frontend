@@ -169,7 +169,6 @@ the comments above each method below.
 */
 
 let inProgress = false;
-const statusIs2xx = (status) => status >= 200 && status < 300;
 
 class MockHttp {
   constructor({
@@ -505,7 +504,6 @@ class MockHttp {
     // The number of requests sent so far
     let count = 0;
     return (config) => {
-      const { validateStatus = statusIs2xx } = config;
       this._requestResponseLog.push(config);
       if (count === this._responses.length - 1)
         this._responseWithoutRequest = false;
@@ -538,7 +536,7 @@ class MockHttp {
           }
           this._requestResponseLog.push(response);
           const responseWithConfig = { ...response, config };
-          if (validateStatus(response.status)) {
+          if (response.status >= 200 && response.status < 300) {
             resolve(responseWithConfig);
           } else {
             const error = new Error();

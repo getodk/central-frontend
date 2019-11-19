@@ -13,11 +13,32 @@ except according to the terms contained in the LICENSE file.
   <modal :state="state" :hideable="!disabled" backdrop @hide="$emit('hide')">
     <template #title>Create Form</template>
     <template #body>
+      <div v-show="warnings != null" id="form-new-warnings">
+        <p>
+          This XLSForm file can be used, but it has the following possible
+          problems (conversion warnings):
+        </p>
+        <ul if="warnings != null">
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
+          <li v-for="warning of warnings">{{ warning.trim() }}</li>
+        </ul>
+        <p>
+          Please correct the problems and try again. If you are sure these
+          problems can be ignored, click the button to create the Form anyway:
+        </p>
+        <p>
+          <button type="button" class="btn btn-primary" :disabled="disabled"
+            @click="create(true)">
+            Create anyway <spinner :state="awaitingResponse"/>
+          </button>
+        </p>
+      </div>
       <div class="modal-introduction">
         <p>
-          To create a Form, upload an XForms XML file. If you don’t already have
-          one, there are <doc-link to="form-tools/">tools available</doc-link>
-          to help you design your Form.
+          To create a Form, upload an XForms XML file or an XLSForm Excel file.
+          If you don&rsquo;t already have one, there are
+          <doc-link to="form-tools/">tools available</doc-link> to help you
+          design your Form.
         </p>
         <p>
           If you have media, you will be able to upload that on the next page,
@@ -28,22 +49,22 @@ except according to the terms contained in the LICENSE file.
         <div>
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
-          <button :disabled="disabled" type="button" class="btn btn-primary"
+          <button type="button" class="btn btn-primary" :disabled="disabled"
             @click="clickFileInput">
             <span class="icon-folder-open"></span>choose one
           </button>
           to upload.
         </div>
-        <div v-show="filename != null" id="form-new-filename">
-          {{ filename }}
+        <div v-show="file != null" id="form-new-filename">
+          {{ file != null ? file.name : '' }}
         </div>
       </div>
       <div class="modal-actions">
-        <button id="form-new-create-button" :disabled="disabled" type="button"
-          class="btn btn-primary" @click="create">
+        <button id="form-new-create-button" type="button"
+          class="btn btn-primary" :disabled="disabled" @click="create(false)">
           Create <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="disabled" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="disabled"
           @click="$emit('hide')">
           Cancel
         </button>
@@ -57,8 +78,13 @@ import DocLink from '../doc-link.vue';
 import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
-import { noop } from '../../util/util';
+import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
+
+const EXCEL_TYPES = [
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel'
+];
 
 export default {
   name: 'FormNew',
@@ -77,9 +103,10 @@ export default {
     return {
       fileIsOverDropZone: false,
       awaitingResponse: false,
+      file: null,
       reading: false,
-      filename: null,
-      xml: null
+      xml: null,
+      warnings: null
     };
   },
   computed: {
@@ -99,64 +126,92 @@ export default {
   watch: {
     state(state) {
       if (state) return;
+      this.file = null;
       this.reading = false;
-      this.filename = null;
       this.xml = null;
+      this.warnings = null;
       this.$refs.input.value = '';
     }
   },
   mounted() {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
-    $(this.$refs.input)
-      .on('change.form-new', (event) => this.readFile(event.target.files));
+    $(this.$refs.input).on('change.form-new', (event) => {
+      this.processFile(event.target.files[0]);
+    });
   },
   beforeDestroy() {
     $(this.$refs.input).off('.form-new');
   },
   methods: {
-    readFile(files) {
-      if (files.length === 0) return;
+    processXLSForm(file) {
+      this.$alert().blank();
+      this.file = file;
+      this.xml = null;
+      this.warnings = null;
+    },
+    processXForm(file) {
       this.reading = true;
-      const { currentRoute } = this.$store.state.router;
-      const file = files[0];
       const reader = new FileReader();
+      const { currentRoute } = this.$store.state.router;
       reader.onload = (event) => {
         if (this.$store.state.router.currentRoute !== currentRoute) return;
         this.$alert().blank();
-        this.filename = file.name;
+        this.file = file;
         this.xml = event.target.result;
       };
       reader.onerror = () => {
         if (this.$store.state.router.currentRoute !== currentRoute) return;
-        this.$alert().danger('Something went wrong while reading the file.');
-        this.filename = null;
+        this.$alert().danger('Something went wrong while reading the XForm XML file.');
+        this.file = null;
         this.xml = null;
       };
       reader.onloadend = () => {
         if (this.$store.state.router.currentRoute !== currentRoute) return;
-        this.$refs.input.value = '';
         this.reading = false;
+        this.warnings = null;
+        this.$refs.input.value = '';
       };
       reader.readAsText(file);
+    },
+    processFile(file) {
+      if (EXCEL_TYPES.includes(file.type))
+        this.processXLSForm(file);
+      else
+        this.processXForm(file);
     },
     clickFileInput() {
       this.$refs.input.click();
     },
     ondrop(jQueryEvent) {
-      this.readFile(jQueryEvent.originalEvent.dataTransfer.files);
+      this.processFile(jQueryEvent.originalEvent.dataTransfer.files[0]);
     },
-    create() {
-      if (this.xml == null) {
+    create(ignoreWarnings) {
+      if (this.file == null) {
         this.$alert().info('Please choose a file.');
         return;
       }
+
+      const queryString = ignoreWarnings ? '?ignoreWarnings=true' : '';
+      const url = `/projects/${this.project.id}/forms${queryString}`;
+
+      const headers = {};
+      if (this.xml != null) {
+        headers['Content-Type'] = 'application/xml';
+      } else {
+        headers['Content-Type'] = this.file.type;
+        headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
+      }
+
+      const { currentRoute } = this.$store.state.router;
       this.request({
         method: 'POST',
-        url: `/projects/${this.project.id}/forms`,
-        headers: { 'Content-Type': 'application/xml' },
-        data: this.xml,
+        url,
+        headers,
+        data: this.xml != null ? this.xml : this.file,
+        validateProblem: ({ code }) => code === 400.16,
         problemToAlert: ({ code, details }) => {
+          if (code === 400.15) return details.error;
           if (code === 409.3 && details.table === 'forms') {
             const { fields } = details;
             if (fields.length === 2 && fields[0] === 'projectId' &&
@@ -172,10 +227,18 @@ export default {
         }
       })
         .then(({ data }) => {
-          // The `forms` property of the project is now likely out-of-date.
-          this.$emit('success', new Form(data));
+          if (isProblem(data)) {
+            this.$alert().blank();
+            this.warnings = data.details.warnings;
+          } else {
+            // The `forms` property of the project is now likely out-of-date.
+            this.$emit('success', new Form(data));
+          }
         })
-        .catch(noop);
+        .catch(() => {
+          if (this.$store.state.router.currentRoute === currentRoute)
+            this.warnings = null;
+        });
     }
   }
 };
@@ -185,6 +248,22 @@ export default {
 @import '../../assets/scss/variables';
 
 $drop-zone-vpadding: 15px;
+
+#form-new-warnings {
+  background-color: $color-warning;
+  margin-bottom: 15px;
+  padding: 15px;
+
+  ul {
+    margin-left: -5px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
 
 #form-new-drop-zone {
   background-color: $color-panel-input-background;

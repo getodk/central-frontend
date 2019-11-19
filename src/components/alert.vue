@@ -78,5 +78,10 @@ export default {
     border-top-color: $color-danger;
     color: $color-danger;
   }
+
+  .alert-message {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
 }
 </style>
