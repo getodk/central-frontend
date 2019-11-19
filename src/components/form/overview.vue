@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormChecklist from './checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['project', 'form', 'attachments', 'assignmentActors'];
@@ -33,6 +34,7 @@ const REQUEST_KEYS = ['project', 'form', 'attachments', 'assignmentActors'];
 export default {
   name: 'FormOverview',
   components: { FormChecklist, FormOverviewRightNow },
+  mixins: [validateData()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,

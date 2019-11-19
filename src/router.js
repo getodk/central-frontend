@@ -36,7 +36,8 @@ import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
 import UserList from './components/user/list.vue';
 import store from './store';
-import { keys } from './store/modules/request';
+import { keys as requestKeys } from './store/modules/request';
+import { noop } from './util/util';
 import { preservesData } from './util/router';
 
 
@@ -46,6 +47,9 @@ import { preservesData } from './util/router';
 
 /*
 The following meta fields are supported for bottom-level routes:
+
+  Login
+  -----
 
   - restoreSession (default: true). The router looks to restoreSession right
     after the user has navigated to Frontend, when the router is navigating to
@@ -69,9 +73,9 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  - requireGrants (optional). Specifies the verbs for the sitewide grants that
-    the user must have in order to navigate to the route. `requireGrants` should
-    only be specified for a route for which `requireLogin` is `true`.
+  Request data
+  ------------
+
   - preserveData (optional)
 
     By default, whenever the route changes, data is cleared for all request
@@ -96,6 +100,42 @@ The following meta fields are supported for bottom-level routes:
     }
 
     Do not set preserveData directly: use preserveDataForKey() instead.
+
+  - validateData (optional)
+
+    Note: You must use a mixin in combination with this meta field.
+
+    Some routes can be navigated to only if certain conditions are met. For
+    example, the user may have to be able to perform certain verbs sitewide.
+
+    validateData checks that conditions about the request data are met. (Perhaps
+    more precisely, it checks that no condition is violated.) Here is an example
+    value:
+
+    {
+      // Specifies a condition for currentUser: the user must be able to
+      // user.list sitewide.
+      currentUser: (currentUser) => currentUser.can('user.list'),
+      // Specifies a condition for `project`: the user must be able to
+      // assignment.list for the project.
+      project: (project) => project.permits('assignment.list')
+    }
+
+    Before the user navigates to the route, any data that will be preserved
+    after the route change is checked for whether it meets the specified
+    conditions. If any condition is violated, the user is redirected to /.
+
+    There may be data that will be cleared after the route change or that has
+    never been requested, but will be requested after the component is created.
+    That data can't be checked in a navigation guard, so a watcher is added to
+    the component for each condition: the watcher will check the associated data
+    as soon as it exists. The watcher will also continue watching the data,
+    checking that it continues to meet the condition.
+
+    The component must use the validateData mixin: this is what actually defines
+    the navigation guards and the watchers. The router only defines the
+    validateData conditions; the mixin is what implements them. The mixin does
+    so by using the validateData meta field of this.$route.
 */
 const routes = [
   {
@@ -113,12 +153,6 @@ const routes = [
     component: AccountClaim,
     meta: { restoreSession: false, requireLogin: false, requireAnonymity: true }
   },
-  {
-    path: '/account/edit',
-    name: 'AccountEdit',
-    component: UserEdit,
-    props: () => ({ id: store.state.request.data.currentUser.id.toString() })
-  },
 
   { path: '/', component: ProjectList },
   {
@@ -131,11 +165,71 @@ const routes = [
         component: ProjectShow,
         props: true,
         children: [
-          { path: '', component: ProjectOverview, props: true },
-          { path: 'users', component: ProjectUserList, props: true },
-          { path: 'app-users', component: FieldKeyList, props: true },
-          { path: 'form-workflow', component: ProjectFormWorkflow, props: true },
-          { path: 'settings', component: ProjectSettings }
+          {
+            path: '',
+            component: ProjectOverview,
+            props: true,
+            meta: {
+              validateData: {
+                project: (project) => project.permits('form.list')
+              }
+            }
+          },
+          {
+            path: 'users',
+            component: ProjectUserList,
+            props: true,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'assignment.list',
+                  'assignment.create',
+                  'assignment.delete'
+                ])
+              }
+            }
+          },
+          {
+            path: 'app-users',
+            component: FieldKeyList,
+            props: true,
+            meta: {
+              validateData: {
+                // We do not check whether the user can revoke the app user's
+                // access, since the actee of that assignment is the app user,
+                // not the project.
+                project: (project) =>
+                  project.permits(['field_key.list', 'field_key.create'])
+              }
+            }
+          },
+          {
+            path: 'form-workflow',
+            component: ProjectFormWorkflow,
+            props: true,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'form.list',
+                  'field_key.list',
+                  'assignment.list',
+                  'project.update',
+                  'form.update',
+                  'assignment.create',
+                  'assignment.delete'
+                ])
+              }
+            }
+          },
+          {
+            path: 'settings',
+            component: ProjectSettings,
+            meta: {
+              validateData: {
+                project: (project) => project.permits(['project.update'])
+              }
+            }
+          }
         ]
       },
       {
@@ -143,10 +237,50 @@ const routes = [
         component: FormShow,
         props: true,
         children: [
-          { path: '', component: FormOverview },
-          { path: 'media-files', component: FormAttachmentList },
-          { path: 'submissions', component: SubmissionList },
-          { path: 'settings', component: FormSettings }
+          {
+            path: '',
+            component: FormOverview,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'assignment.list'])
+              }
+            }
+          },
+          {
+            path: 'media-files',
+            component: FormAttachmentList,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update']),
+                attachments: (attachments) => attachments.length !== 0
+              }
+            }
+          },
+          {
+            path: 'submissions',
+            component: SubmissionList,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'form.read',
+                  'submission.list',
+                  'submission.read'
+                ])
+              }
+            }
+          },
+          {
+            path: 'settings',
+            component: FormSettings,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update', 'form.delete'])
+              }
+            }
+          }
         ]
       }
     ]
@@ -160,24 +294,37 @@ const routes = [
         path: '',
         component: UserList,
         meta: {
-          requireGrants: [
-            'user.list',
-            'assignment.list',
-            'user.create',
-            'assignment.create',
-            'assignment.delete',
-            'user.password.invalidate',
-            'user.delete'
-          ]
+          validateData: {
+            currentUser: (currentUser) => currentUser.can([
+              'user.list',
+              'assignment.list',
+              'user.create',
+              'assignment.create',
+              'assignment.delete',
+              'user.password.invalidate',
+              'user.delete'
+            ])
+          }
         }
       }
     ]
   },
   {
-    path: '/users/:id/edit',
+    path: '/users/:id([1-9]\\d*)/edit',
     component: UserEdit,
     props: true,
-    meta: { requireGrants: ['user.read', 'user.update'] }
+    meta: {
+      validateData: {
+        currentUser: (currentUser) =>
+          currentUser.can(['user.read', 'user.update'])
+      }
+    }
+  },
+  {
+    path: '/account/edit',
+    name: 'AccountEdit',
+    component: UserEdit,
+    props: () => ({ id: store.state.request.data.currentUser.id.toString() })
   },
 
   {
@@ -187,12 +334,25 @@ const routes = [
       {
         path: 'backups',
         component: BackupList,
-        meta: { requireGrants: ['config.read'] }
+        meta: {
+          validateData: {
+            currentUser: (currentUser) => currentUser.can([
+              'config.read',
+              'backup.create',
+              'backup.terminate',
+              'audit.read'
+            ])
+          }
+        }
       },
       {
         path: 'audits',
         component: AuditList,
-        meta: { requireGrants: ['audit.read'] }
+        meta: {
+          validateData: {
+            currentUser: (currentUser) => currentUser.can('audit.read')
+          }
+        }
       }
     ]
   },
@@ -212,30 +372,48 @@ const routes = [
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ROUTE NAMES
+// FLATTEN ROUTES
 
-// For every bottom-level route without a name, give the route the same name as
-// the route's component.
-const namedRoutes = [];
-const stack = [...routes];
-while (stack.length !== 0) {
-  const route = stack.pop();
-  if (route.children == null) {
-    if (route.name == null) route.name = route.component.name;
-    namedRoutes.push(route);
-  }
-  if (route.children != null) {
-    if (route.name != null)
-      throw new Error('a route with children cannot be named');
-    for (const child of route.children)
-      stack.push(child);
+const flattenedRoutes = [];
+{
+  const stack = [...routes];
+  while (stack.length !== 0) {
+    const route = stack.pop();
+    flattenedRoutes.push(route);
+    if (route.children != null) {
+      for (const child of route.children)
+        stack.push(child);
+    }
   }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ROUTE NAMES
+
+// All bottom-level routes (and only bottom-level routes) have a name. If a name
+// is not specified for a bottom-level route above, the route is given the same
+// name as its component.
+const namedRoutes = [];
 const routesByName = {};
-for (const route of namedRoutes) {
-  if (routesByName[route.name] != null) throw new Error('duplicate route name');
-  routesByName[route.name] = route;
+for (const route of flattenedRoutes) {
+  if (route.children != null) {
+    if (route.name != null)
+      throw new Error('only bottom-level routes can be named');
+  } else {
+    if (route.name == null) {
+      if (route.component.name == null)
+        throw new Error('component without a name');
+      route.name = route.component.name;
+    }
+
+    namedRoutes.push(route);
+
+    if (routesByName[route.name] != null)
+      throw new Error('duplicate route name');
+    routesByName[route.name] = route;
+  }
 }
 
 
@@ -243,16 +421,25 @@ for (const route of namedRoutes) {
 ////////////////////////////////////////////////////////////////////////////////
 // META FIELD DEFAULTS
 
-// Set the `meta` property of every named route.
-for (const route of namedRoutes) {
-  route.meta = {
-    restoreSession: true,
-    requireLogin: true,
-    requireAnonymity: false,
-    requireGrants: [],
-    preserveData: {},
-    ...route.meta
-  };
+// All bottom-level routes (and only bottom-level routes) have meta fields. Here
+// we set those fields' defaults. We also normalize the values of meta fields.
+for (const route of flattenedRoutes) {
+  if (route.children != null) {
+    if (route.meta != null)
+      throw new Error('only bottom-level routes can have meta fields');
+  } else {
+    route.meta = {
+      restoreSession: true,
+      requireLogin: true,
+      requireAnonymity: false,
+      preserveData: {},
+      ...route.meta
+    };
+    const { meta } = route;
+    meta.validateData = meta.validateData != null
+      ? Object.entries(meta.validateData)
+      : [];
+  }
 }
 
 
@@ -336,7 +523,7 @@ export default router;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// PERMISSIONS: LOGIN AND GRANTS
+// LOGIN
 
 // nextByLoginStatus() implements the requireLogin and requireAnonymity meta
 // fields. It navigates based on whether the user is logged in and whether the
@@ -352,11 +539,10 @@ const nextByLoginStatus = (to, next) => {
       next({ path: '/login', query });
     }
   } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
-    if (store.getters.loggedIn) {
+    if (store.getters.loggedIn)
       next('/');
-    } else {
+    else
       next();
-    }
   } else {
     next();
   }
@@ -367,6 +553,7 @@ router.beforeEach((to, from, next) => {
   const isFirstNavigation = !store.state.router.navigations.first.triggered;
   if (isFirstNavigation) store.commit('triggerNavigation', 'first');
   store.commit('triggerNavigation', 'last');
+
   const { restoreSession } = to.matched[to.matched.length - 1].meta;
   // In production, the last condition is not strictly needed: if this is the
   // first navigation triggered, the user is necessarily logged out. However,
@@ -383,7 +570,7 @@ router.beforeEach((to, from, next) => {
           store.commit('setData', { key: 'session', value: data });
         }
       }]))
-      .catch(() => {})
+      .catch(noop)
       .finally(() => {
         nextByLoginStatus(to, next);
       });
@@ -391,33 +578,6 @@ router.beforeEach((to, from, next) => {
     nextByLoginStatus(to, next);
   }
 });
-
-// Implements the requireGrants meta field.
-router.beforeEach((to, from, next) => {
-  const { meta } = to.matched[to.matched.length - 1];
-  if (!meta.requireLogin) {
-    next();
-    return;
-  }
-  const { currentUser } = store.state.request.data;
-  for (const verb of meta.requireGrants) {
-    if (!currentUser.can(verb)) {
-      next('/');
-      return;
-    }
-  }
-  next();
-});
-
-export const canRoute = (routeName) => {
-  const route = routesByName[routeName];
-  if (route == null) throw new Error('invalid route name');
-  const { currentUser } = store.state.request.data;
-  for (const verb of route.meta.requireGrants) {
-    if (!currentUser.can(verb)) return false;
-  }
-  return true;
-};
 
 
 
@@ -474,7 +634,7 @@ router.afterEach(() => {
 // Clear data.
 router.afterEach((to, from) => {
   if (preservesData('*', to, from)) return;
-  for (const key of keys) {
+  for (const key of requestKeys) {
     if (!preservesData(key, to, from)) {
       if (store.state.request.data[key] != null) store.commit('clearData', key);
       if (store.state.request.requests[key].last.state === 'loading')

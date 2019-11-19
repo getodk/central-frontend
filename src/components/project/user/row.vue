@@ -11,14 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr>
-    <td>{{ assignment.actor.displayName }}</td>
+    <td class="display-name">{{ assignment.actor.displayName }}</td>
     <td>
       <form>
         <div class="form-group">
-          <select ref="select" :value="selectedRole" :disabled="disabled"
-            :title="title" class="form-control" aria-label="Project Role"
-            @change="assignRole">
-            <option value="manager">Manager</option>
+          <select class="form-control" :value="selectedRoleId"
+            :disabled="disabled" :title="title" aria-label="Project Role"
+            @change="change($event.target.value)">
+            <option v-for="role of $store.getters.projectRoles" :key="role.id"
+              :value="role.id.toString()">
+              {{ role.name }}
+            </option>
             <option value="">None</option>
           </select>
           <span class="spinner-container">
@@ -46,44 +49,60 @@ export default {
   },
   data() {
     return {
+      // If two requests are sent, there may be a moment between them when
+      // awaitingResponse is `false`.
       awaitingResponse: false,
-      selectedRole: this.assignment.manager ? 'manager' : ''
+      selectedRoleId: this.assignment.roleId != null
+        ? this.assignment.roleId.toString()
+        : ''
     };
   },
   computed: {
-    ...requestData(['currentUser', 'project']),
+    ...requestData(['currentUser', 'roles', 'project']),
     disabled() {
       return this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;
     },
     title() {
-      if (this.assignment.actor.id !== this.currentUser.id) return '';
-      return 'You may not edit your own Project Role.';
+      return this.assignment.actor.id === this.currentUser.id
+        ? 'You may not edit your own Project Role.'
+        : '';
     }
   },
   methods: {
-    assignRole() {
-      // Using this.$refs rather than passing $event.target.value to the method
-      // in order to facilitate testing.
-      const newRole = this.$refs.select.value;
-
+    requestChange(method, roleIdString) {
+      if (roleIdString === '') return Promise.resolve();
+      const url = `/projects/${this.project.id}/assignments/${roleIdString}/${this.assignment.actor.id}`;
+      return this.request({ method, url });
+    },
+    change(roleIdString) {
       this.$emit('increment-count');
-      const manager = newRole === 'manager';
-      const method = manager ? 'POST' : 'DELETE';
-      const { actor } = this.assignment;
-      const url = `/projects/${this.project.id}/assignments/manager/${actor.id}`;
+      const previousRoleId = this.selectedRoleId;
+      this.selectedRoleId = roleIdString;
       const { currentRoute } = this.$store.state.router;
-      this.request({ method, url })
+      // At some point we will likely implement something transactional so that
+      // we don't send two requests.
+      this.requestChange('DELETE', previousRoleId)
+        .then(() => this.requestChange('POST', roleIdString)
+          .catch(e => {
+            if (previousRoleId !== '' && roleIdString !== '' &&
+              this.$store.state.router.currentRoute === currentRoute) {
+              this.selectedRoleId = '';
+              this.$emit('change', this.assignment.actor, null, true);
+            }
+            throw e;
+          }))
         .then(() => {
-          this.$emit('success', this.assignment, manager);
+          const role = roleIdString !== ''
+            ? this.roles.find(r => r.id.toString() === roleIdString)
+            : null;
+          this.$emit('change', this.assignment.actor, role, false);
         })
         .catch(noop)
         .finally(() => {
           if (this.$store.state.router.currentRoute === currentRoute)
             this.$emit('decrement-count');
         });
-
-      this.selectedRole = newRole;
     }
   }
 };
@@ -92,6 +111,12 @@ export default {
 <style lang="scss">
 #project-user-list td {
   vertical-align: middle;
+
+  &.display-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .form-group {
     margin-bottom: 0;

@@ -98,6 +98,38 @@ describe('FormAttachmentList', () => {
         });
     });
 
+    describe('project viewer', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+        testData.createProjectAndFormWithoutSubmissions({
+          project: { role: 'viewer' },
+          form: { xmlFormId: 'f' }
+        });
+      });
+
+      it('redirects a project viewer whose first navigation is to the tab', () =>
+        mockRoute('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() =>
+            testData.extendedFormAttachments.createPast(1).sorted())
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a project viewer navigating from project overview', () =>
+        mockRoute('/projects/1')
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondWithData(() => testData.extendedForms.sorted())
+          .complete()
+          .route('/projects/1/forms/f/media-files')
+          .respondWithData(() => testData.extendedProjects.sorted())
+          .afterResponse(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
+
     describe('no form attachments', () => {
       beforeEach(mockLogin);
 

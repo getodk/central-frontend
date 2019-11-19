@@ -51,10 +51,6 @@ const TYPES = {
 export default {
   name: 'FormAttachmentRow',
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     attachment: {
       type: Object,
       required: true
@@ -102,7 +98,7 @@ export default {
       return displayName != null ? displayName : type;
     },
     href() {
-      return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
+      return `/v1/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
     },
     updatedAt() {
       return formatDate(this.attachment.updatedAt);

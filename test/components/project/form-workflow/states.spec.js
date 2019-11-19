@@ -1,10 +1,13 @@
 import ProjectFormWorkflow from '../../../../src/components/project/form-workflow.vue';
 import ProjectFormWorkflowStates from '../../../../src/components/project/form-workflow/states.vue';
 import testData from '../../../data';
+import { mockLogin } from '../../../session';
 import { mountAndMark } from '../../../destroy';
 import { trigger } from '../../../event';
 
 describe('ProjectFormWorkflowStates', () => {
+  beforeEach(mockLogin);
+
   it('shows the modal after the icon is clicked', () => {
     const component = mountAndMark(ProjectFormWorkflow, {
       propsData: {

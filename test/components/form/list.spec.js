@@ -2,15 +2,13 @@ import Form from '../../../src/presenters/form';
 import FormList from '../../../src/components/form/list.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
-import { mockRoute } from '../../http';
 import { mockLogin } from '../../session';
+import { mockRoute } from '../../http';
 import { mountAndMark } from '../../destroy';
-import { trigger } from '../../event';
 
 describe('FormList', () => {
-  beforeEach(mockLogin);
-
-  it('table contains the correct data', () => {
+  it('correctly renders the table', () => {
+    mockLogin();
     testData.extendedProjects.createPast(1);
     const forms = testData.extendedForms.createPast(2).sorted();
     return mockRoute('/projects/1')
@@ -44,29 +42,39 @@ describe('FormList', () => {
   });
 
   it('shows a message if there are no forms', () => {
+    mockLogin();
     const component = mountAndMark(FormList, {
       requestData: { forms: [] }
     });
     component.first('#form-list-empty-message').should.be.visible();
   });
 
-  it('encodes the URL to the form overview page', () =>
-    mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' }).sorted())
-      .afterResponse(app => {
-        const href = app.first('.form-list-form-name').getAttribute('href');
-        href.should.equal('#/projects/1/forms/a%20b');
-      })
-      .request(app => trigger.click(app, '.form-list-form-name'))
-      .beforeEachResponse((app, request, index) => {
-        if (index === 0) request.url.should.equal('/v1/projects/1/forms/a%20b');
-      })
-      .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+  it('encodes the URL to the form overview page', () => {
+    mockLogin();
+    const { project, form } = testData.createProjectAndFormWithoutSubmissions({
+      form: { xmlFormId: 'i ı' }
+    });
+    return mockRoute('/projects/1')
+      .respondWithData(() => project)
+      .respondWithData(() => [form])
       .afterResponses(app => {
-        app.vm.$route.params.xmlFormId.should.equal('a b');
-      }));
+        const href = app.first('.form-list-form-name').getAttribute('href');
+        href.should.equal('#/projects/1/forms/i%20%C4%B1');
+      });
+  });
+
+  it('links to the submissions page for a project viewer', () => {
+    mockLogin({ role: 'none' });
+    const { project, form } = testData.createProjectAndFormWithoutSubmissions({
+      project: { role: 'viewer' },
+      form: { xmlFormId: 'f' }
+    });
+    return mockRoute('/projects/1')
+      .respondWithData(() => project)
+      .respondWithData(() => [form])
+      .afterResponses(app => {
+        const href = app.first('.form-list-form-name').getAttribute('href');
+        href.should.equal('#/projects/1/forms/f/submissions');
+      });
+  });
 });

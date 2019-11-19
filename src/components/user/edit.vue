@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="user != null">
-      <template v-if="user != null" slot="title">
+      <template v-if="user != null" #title>
         {{ user.displayName }}
       </template>
     </page-head>
@@ -33,12 +33,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserEdit',
   components: { UserEditBasicDetails, UserEditPassword },
+  mixins: [validateData()],
   props: {
     id: {
       type: String,
@@ -47,7 +49,26 @@ export default {
   },
   computed: requestData(['user']),
   watch: {
-    id: 'fetchData'
+    /*
+    There are three cases to consider:
+
+      1. The user navigates to /account/edit.
+      2. The user navigates to /users/:id/edit for their own user.
+      3. The user navigates to /users/:id/edit for a different user.
+
+    When navigating between (1) and (2), this.id will not change, but
+    this.$route will. The validateData beforeRouteEnter navigation guard will
+    also be called.
+
+    When navigating between (1) and (3), this.id will change, as will
+    this.$route. The validateData beforeRouteEnter navigation guard will be
+    called.
+
+    When navigating between (2) and (3), this.id will change, as will
+    this.$route. The validateData beforeRouteUpdate navigation guard will be
+    called.
+    */
+    $route: 'fetchData'
   },
   created() {
     this.fetchData();

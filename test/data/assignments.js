@@ -1,7 +1,15 @@
 import { dataStore } from './data-store';
 import { standardRoles } from './roles';
+import { toActor } from './actors';
 
-// eslint-disable-next-line import/prefer-default-export
+export const extendedProjectAssignments = dataStore({
+  factory: ({ actor, role }) => {
+    const roleObj = standardRoles.sorted().find(r => r.system === role);
+    if (roleObj == null) throw new Error('role not found');
+    return { actor: toActor(actor), roleId: roleObj.id };
+  }
+});
+
 export const standardFormSummaryAssignments = dataStore({
   factory: ({ actorId, role, xmlFormId }) => {
     const roleObj = standardRoles.sorted().find(r => r.system === role);

@@ -53,6 +53,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import Form from '../../presenters/form';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
@@ -61,6 +62,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormNew',
+  components: { DocLink },
   mixins: [
     dropZone({ keepAlive: false, eventNamespace: 'form-new' }),
     request()

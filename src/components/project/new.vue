@@ -47,10 +47,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import request from '../../mixins/request';
 
 export default {
   name: 'ProjectNew',
+  components: { DocLink },
   mixins: [request()],
   props: {
     state: {

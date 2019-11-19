@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
               </span>
             </router-link>
           </li>
-          <li v-if="canRoute('UserList')"
+          <li v-if="canRoute('/users')"
             :class="{ active: routePathStartsWith('/users') }">
             <router-link id="navbar-users-link" to="/users">
               Users
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
               </span>
             </router-link>
           </li>
-          <li v-if="canRoute('BackupList')"
+          <li v-if="canRoute('/system/backups')"
             :class="{ active: routePathStartsWith('/system') }">
             <router-link id="navbar-system-link" to="/system/backups">
               System
@@ -86,13 +86,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import canRoute from '../mixins/can-route';
 import request from '../mixins/request';
-import { canRoute } from '../router';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  mixins: [request()],
+  mixins: [canRoute(), request()],
   computed: {
     ...requestData(['session', 'currentUser']),
     projectsLinkIsActive() {
@@ -104,9 +104,6 @@ export default {
       if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
       return this.$route.path === path ||
         this.$route.path.startsWith(`${path}/`);
-    },
-    canRoute(routeName) {
-      return canRoute(routeName);
     },
     logOut() {
       // Backend ensures that the token is URL-safe.

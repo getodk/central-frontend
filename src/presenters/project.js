@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
 
@@ -12,26 +12,28 @@ except according to the terms contained in the LICENSE file.
 import Base from './base';
 
 const props = [
-  'projectId',
-  'xmlFormId',
+  'id',
   'name',
-  'version',
-  'hash',
+  'archived',
   'keyId',
-  'state',
   'createdAt',
   'updatedAt',
   // Extended metadata
-  'submissions',
+  'forms',
   'lastSubmission',
-  'createdBy'
+  'appUsers',
+  'verbs'
 ];
 
-export default class Form extends Base(props) {
-  encodedId() { return encodeURIComponent(this.xmlFormId); }
-  nameOrId() { return this.name != null ? this.name : this.xmlFormId; }
+export default class Project extends Base(props) {
+  constructor(data) {
+    super(data);
+    this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
+  }
 
-  updatedOrCreatedAt() {
-    return this.updatedAt != null ? this.updatedAt : this.createdAt;
+  permits(verbOrVerbs) {
+    return !Array.isArray(verbOrVerbs)
+      ? this._verbSet.has(verbOrVerbs)
+      : verbOrVerbs.every(verb => this._verbSet.has(verb));
   }
 }

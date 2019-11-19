@@ -21,7 +21,7 @@ describe('ProjectList', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
-    it('does not redirect a user with minimal grants', () => {
+    it('does not redirect a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/')
         .respondWithData(() => testData.extendedProjects.sorted())

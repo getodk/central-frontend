@@ -1,9 +1,10 @@
+import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
 import { mockRoute } from '../../http';
 
 describe('UserEdit', () => {
-  describe('routing to /account/edit', () => {
+  describe('navigating to /account/edit', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute('/account/edit')
         .restoreSession(false)
@@ -14,11 +15,11 @@ describe('UserEdit', () => {
     it('redirects the user back after login', () =>
       mockRouteThroughLogin('/account/edit')
         .respondWithData(() => testData.standardUsers.last())
-        .afterResponse(app => {
+        .afterResponses(app => {
           app.vm.$route.path.should.equal('/account/edit');
         }));
 
-    it('does not redirect a user with minimal grants', () => {
+    it('does not redirect a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/account/edit')
         .respondWithData(() => testData.standardUsers.last())
@@ -28,7 +29,7 @@ describe('UserEdit', () => {
     });
   });
 
-  describe('routing to /users/:id/edit', () => {
+  describe('navigating to /users/:id/edit', () => {
     it('redirects an anonymous user to login', () =>
       mockRoute('/users/2/edit')
         .restoreSession(false)
@@ -43,23 +44,44 @@ describe('UserEdit', () => {
           app.vm.$route.path.should.equal('/users/2/edit');
         }));
 
-    it('redirects a user without a grant to user.read', () => {
-      mockLogin({ verbs: ['project.list', 'user.update'] });
+    it('redirects a user with no sitewide role', () => {
+      mockLogin({ role: 'none' });
       return mockRoute('/users/2/edit')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1).sorted())
-        .afterResponses(app => {
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
         });
     });
 
-    it('redirects a user without a grant to user.update', () => {
-      mockLogin({ verbs: ['project.list', 'user.read'] });
-      return mockRoute('/users/2/edit')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1).sorted())
-        .afterResponses(app => {
+    it('requires id route param to be integer', () =>
+      mockRoute('/users/x/edit')
+        .then(app => {
+          app.find(NotFound).length.should.equal(1);
+        }));
+  });
+
+  describe('navigating from /account/edit to /users/:id/edit', () => {
+    it('redirects a user with no sitewide role', () => {
+      mockLogin({ role: 'none' });
+      return mockRoute('/account/edit')
+        .respondWithData(() => testData.standardUsers.last())
+        .complete()
+        .route('/users/1/edit')
+        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
+        .afterResponse(app => {
           app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it('does not redirect an administrator', () => {
+      mockLogin({ role: 'admin' });
+      return mockRoute('/account/edit')
+        .respondWithData(() => testData.standardUsers.last())
+        .complete()
+        .route('/users/1/edit')
+        .respondWithData(() => testData.standardUsers.last())
+        .afterResponse(app => {
+          app.vm.$route.path.should.equal('/users/1/edit');
         });
     });
   });

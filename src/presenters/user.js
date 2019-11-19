@@ -28,5 +28,9 @@ export default class User extends Base(props) {
   }
 
   // Sitewide grants
-  can(verb) { return this._verbSet.has(verb); }
+  can(verbOrVerbs) {
+    return !Array.isArray(verbOrVerbs)
+      ? this._verbSet.has(verbOrVerbs)
+      : verbOrVerbs.every(verb => this._verbSet.has(verb));
+  }
 }

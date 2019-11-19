@@ -16,19 +16,25 @@ except according to the terms contained in the LICENSE file.
         {{ project.name }} {{ project.archived ? '(archived)' : '' }}
       </template>
       <template #tabs>
+        <!-- Everyone with access to the project should be able to navigate to
+        ProjectOverview. -->
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li :class="tabClass('users')" role="presentation">
-          <router-link :to="tabPath('users')">Project Managers</router-link>
+        <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
+          role="presentation">
+          <router-link :to="tabPath('users')">Project Roles</router-link>
         </li>
-        <li :class="tabClass('app-users')" role="presentation">
+        <li v-if="canRoute(tabPath('app-users'))" :class="tabClass('app-users')"
+          role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
         </li>
-        <li :class="tabClass('form-workflow')" role="presentation">
+        <li v-if="canRoute(tabPath('form-workflow'))"
+          :class="tabClass('form-workflow')" role="presentation">
           <router-link :to="tabPath('form-workflow')">Form Workflow</router-link>
         </li>
-        <li :class="tabClass('settings')" role="presentation">
+        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
+          role="presentation">
           <router-link :to="tabPath('settings')">Settings</router-link>
         </li>
       </template>
@@ -46,13 +52,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectShow',
-  mixins: [tab()],
+  mixins: [canRoute(), tab()],
   props: {
     projectId: {
       type: String,
@@ -85,7 +92,7 @@ export default {
           if (project == null || project.appUsers === fieldKeys.length) return;
           this.$store.commit('setData', {
             key: 'project',
-            value: { ...project, appUsers: fieldKeys.length }
+            value: project.with({ appUsers: fieldKeys.length })
           });
         }
       }]).catch(noop);

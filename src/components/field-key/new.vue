@@ -84,6 +84,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
@@ -91,6 +92,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
+  components: { DocLink },
   mixins: [request()],
   props: {
     state: {

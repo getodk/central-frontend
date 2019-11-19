@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="highlight(fieldKey, 'id')">
+  <tr :class="{ success: fieldKey.id === highlighted }">
     <td>{{ fieldKey.displayName }}</td>
     <td>{{ created }}</td>
     <td>{{ lastUsed }}</td>
@@ -42,12 +42,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import highlight from '../../mixins/highlight';
 import { formatDate } from '../../util/util';
 
 export default {
   name: 'FieldKeyRow',
-  mixins: [highlight()],
   props: {
     fieldKey: {
       type: Object,

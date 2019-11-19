@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr>
     <td>
       <div>
-        <router-link :to="overviewPath" class="form-list-form-name">
+        <router-link :to="formPath" class="form-list-form-name">
           {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>
       </div>
@@ -33,10 +33,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Form from '../../presenters/form';
+import canRoute from '../../mixins/can-route';
 import { formatDate } from '../../util/util';
 
 export default {
   name: 'FormRow',
+  mixins: [canRoute()],
   props: {
     form: {
       type: Form,
@@ -44,8 +46,11 @@ export default {
     }
   },
   computed: {
-    overviewPath() {
-      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
+    formPath() {
+      const base = `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
+      // Project Viewers can't navigate to FormOverview, but everyone should be
+      // able to navigate to SubmissionList.
+      return this.canRoute(base) ? base : `${base}/submissions`;
     },
     updatedOrCreatedAt() {
       return formatDate(this.form.updatedOrCreatedAt());

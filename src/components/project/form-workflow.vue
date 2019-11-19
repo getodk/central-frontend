@@ -45,10 +45,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
+import DocLink from '../doc-link.vue';
 import ProjectFormWorkflowStates from './form-workflow/states.vue';
 import ProjectFormWorkflowTable from './form-workflow/table.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -56,8 +58,8 @@ const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formAssignments
 
 export default {
   name: 'ProjectFormWorkflow',
-  components: { ProjectFormWorkflowStates, ProjectFormWorkflowTable },
-  mixins: [modal(), request()],
+  components: { DocLink, ProjectFormWorkflowStates, ProjectFormWorkflowTable },
+  mixins: [modal(), request(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -110,9 +112,6 @@ export default {
 
       return byForm;
     },
-    appUserRole() {
-      return this.roles.find(role => role.system === 'app-user');
-    },
     // This may need to change whenever we add a property to the Project or Form
     // class in Backend.
     projectToSave() {
@@ -126,7 +125,7 @@ export default {
           const changes = this.changesByForm[form.xmlFormId];
 
           const assignments = [];
-          const roleId = this.appUserRole.id;
+          const roleId = this.roles.find(role => role.system === 'app-user').id;
           for (const fieldKey of this.fieldKeysWithToken) {
             if (changes.current.access[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, roleId });
@@ -230,11 +229,6 @@ export default {
       }
     },
     save() {
-      if (this.appUserRole == null) {
-        this.$alert().danger('Information is missing about the App User role.');
-        return;
-      }
-
       this.put(`/projects/${this.projectId}`, this.projectToSave)
         .then(() => {
           this.fetchData(true);

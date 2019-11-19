@@ -95,3 +95,13 @@ export const standardForms = view(
   extendedForms,
   omit(['submissions', 'lastSubmission', 'createdBy'])
 );
+
+export const createProjectAndFormWithoutSubmissions = (options) => {
+  const project = extendedProjects
+    .createPast(1, { forms: 1, lastSubmission: null, ...options.project })
+    .last();
+  const form = extendedForms
+    .createPast(1, { submissions: 0, ...options.form })
+    .last();
+  return { project, form };
+};

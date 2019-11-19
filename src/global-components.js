@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 
 import AppForm from './components/app-form.vue';
-import DocLink from './components/doc-link.vue';
 import FloatRow from './components/float-row.vue';
 import Loading from './components/loading.vue';
 import Modal from './components/modal.vue';
@@ -28,7 +27,6 @@ import Spinner from './components/spinner.vue';
 // https://vuejs.org/v2/guide/components.html#Component-Naming-Conventions
 const globalComponents = [
   AppForm,
-  DocLink,
   FloatRow,
   Loading,
   Modal,

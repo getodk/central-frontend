@@ -45,7 +45,7 @@ export default {
             return;
           this.$store.commit('setData', {
             key: 'project',
-            value: { ...project, appUsers: fieldKeys.length }
+            value: project.with({ appUsers: fieldKeys.length })
           });
         }
       }]).catch(noop);

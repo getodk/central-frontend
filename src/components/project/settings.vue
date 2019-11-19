@@ -81,16 +81,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
-  components: { ProjectArchive, ProjectEdit, ProjectEnableEncryption },
-  mixins: [modal()],
+  components: { DocLink, ProjectArchive, ProjectEdit, ProjectEnableEncryption },
+  mixins: [modal(), validateData()],
   data() {
     return {
       enableEncryption: {

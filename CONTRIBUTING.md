@@ -13,6 +13,20 @@ except according to the terms contained in the LICENSE file.
 
 ## Contributing Code
 
+### HTTP Requests
+
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vue store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
+
+### Component Names
+
+We specify a name for every component, which facilitates the use of the Vue devtools.
+
+If no name is specified for a bottom-level route, it is given the same name as its component. See [`router.js`](/src/router.js) for details.
+
+### Mixins
+
+Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin.)
+
 ### Standard Actions
 
 Certain actions are standardized across Frontend.

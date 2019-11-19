@@ -10,6 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+// These functions are defined here rather than in src/router.js in order to
+// avoid dependency cycles.
+
 /*
 preservesData() returns `true` if the data for `key` should not be cleared when
 the route changes from `from` to `to`. Otherwise it returns `false`.
@@ -17,11 +20,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
   - key. A request key or '*'.
   - to. A Route object.
   - from. A Route object.
-
-This function is defined in this file rather than src/router.js in order to
-avoid dependency cycles.
 */
-// eslint-disable-next-line import/prefer-default-export
 export const preservesData = (key, to, from) => {
   // First navigation
   if (from.matched.length === 0) return true;
@@ -32,6 +31,27 @@ export const preservesData = (key, to, from) => {
   if (params == null) return false;
   for (const param of params) {
     if (to.params[param] !== from.params[param]) return false;
+  }
+  return true;
+};
+
+/*
+canRoute() returns `false` if request data exists that violates a validateData
+condition specified for the `to` route. Otherwise it returns `true`.
+
+  - to. A Route object.
+  - from. A Route object.
+  - store. The Vuex store.
+*/
+export const canRoute = (to, from, store) => {
+  const { validateData } = to.matched[to.matched.length - 1].meta;
+  for (const [key, validator] of validateData) {
+    // If the data for the request key will be cleared after the navigation is
+    // confirmed, we do not need to validate it.
+    if (preservesData('*', to, from) || preservesData(key, to, from)) {
+      const value = store.state.request.data[key];
+      if (value != null && !validator(value)) return false;
+    }
   }
   return true;
 };

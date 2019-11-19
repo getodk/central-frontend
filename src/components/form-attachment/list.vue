@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :project-id="projectId" :attachment="attachment"
+          :key="attachment.key" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -65,10 +65,10 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import conditionalRoute from '../../mixins/conditional-route';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
+import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -81,22 +81,14 @@ export default {
     FormAttachmentUploadFiles
   },
   mixins: [
-    conditionalRoute({
-      attachments: (attachments) => attachments.length !== 0
-    }),
     dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
     modal(),
-    request()
+    request(),
+    validateData()
   ],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       /*
@@ -157,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'form', 'attachments']),
+    ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -178,7 +170,7 @@ export default {
     // FILE INPUT
 
     afterFileInputSelection(files) {
-      this.uploadFilesModal.state = false;
+      this.hideModal('uploadFilesModal');
       if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
       this.matchFilesToAttachments(files);
     },
@@ -284,11 +276,13 @@ export default {
         return Promise.resolve({ data: file, encoding: 'identity' });
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
+        const { currentRoute } = this.$store.state.router;
         reader.onload = () => {
           resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
         };
         reader.onerror = () => {
-          this.$alert().danger(`Something went wrong while reading "${file.name}".`);
+          if (this.$store.state.router.currentRoute === currentRoute)
+            this.$alert().danger(`Something went wrong while reading "${file.name}".`);
           reject(new Error());
         };
         reader.readAsText(file);
@@ -302,9 +296,12 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
+      const { currentRoute } = this.$store.state.router;
       return this.maybeGzip(file)
         .then(({ data, encoding }) => {
-          const path = `/projects/${this.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
+          if (this.$store.state.router.currentRoute !== currentRoute)
+            throw new Error();
+          const path = `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
           return this.post(path, data, {
             headers: {
               'Content-Type': file.type,
@@ -356,9 +353,11 @@ export default {
         const upload = this.plannedUploads[i];
         promise = promise.then(() => this.uploadFile(upload, updated));
       }
+      const { currentRoute } = this.$store.state.router;
       promise
         .catch(noop)
         .finally(() => {
+          if (this.$store.state.router.currentRoute !== currentRoute) return;
           if (updated.length === this.uploadStatus.total) {
             this.$alert().success(updated.length === 1
               ? '1 file has been successfully uploaded.'

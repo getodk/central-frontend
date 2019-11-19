@@ -11,80 +11,30 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-overview">
-    <div class="row">
-      <div class="col-xs-6">
-        <page-section id="project-overview-about">
-          <template #heading>
-            <span>About Projects</span>
-          </template>
-          <template #body>
-            <p>
-              Any Forms you create in this Project will only be visible on data
-              collection devices to App Users who are a part of this Project.
-            </p>
-            <p>
-              Future releases of ODK Central will add more Project-centric
-              features, including improvements to Form states and workflow,
-              device state updates, Collect settings management, and more
-              granular permissioning.
-            </p>
-            <p>
-              For more information, please see
-              <doc-link to="central-projects/">this help article</doc-link>, and
-              if you have any feedback please visit
-              <a href="https://forum.opendatakit.org/t/16857" target="_blank">this forum thread</a>.
-            </p>
-          </template>
-        </page-section>
+    <loading :state="initiallyLoading"/>
+    <template v-if="dataExists">
+      <div v-if="rendersTopRow" class="row">
+        <div class="col-xs-6">
+          <project-overview-about/>
+        </div>
+        <div class="col-xs-6">
+          <project-overview-right-now @scroll-to-forms="scrollToForms"/>
+        </div>
       </div>
-      <div class="col-xs-6">
-        <page-section id="project-overview-right-now">
-          <template #heading>
-            <span>Right Now</span>
-          </template>
-          <template #body>
-            <loading :state="$store.getters.initiallyLoading(['project', 'forms'])"/>
-            <template v-if="project != null && forms != null">
-              <summary-item :route-to="`/projects/${projectId}/app-users`"
-                icon="user-circle">
-                <template #heading>
-                  {{ project.appUsers.toLocaleString() }}
-                  <span class="icon-angle-right"></span>
-                </template>
-                <template #body>
-                  <strong>{{ $pluralize('App User', project.appUsers) }}</strong>
-                  who can use a data collection client to download and submit
-                  Form data to this Project.
-                </template>
-              </summary-item>
-              <summary-item clickable icon="file-text" @click="scrollToForms">
-                <template #heading>
-                  {{ forms.length.toLocaleString() }}
-                  <span class="icon-angle-right"></span>
-                </template>
-                <template #body>
-                  <strong>{{ $pluralize('Form', forms.length) }}</strong> which
-                  can be downloaded and given as surveys on mobile clients.
-                </template>
-              </summary-item>
-            </template>
-          </template>
-        </page-section>
-      </div>
-    </div>
-    <page-section id="project-overview-forms">
-      <template #heading>
-        <span>Forms</span>
-        <button id="project-overview-new-form-button" type="button"
-          class="btn btn-primary" @click="showModal('newForm')">
-          <span class="icon-plus-circle"></span>New
-        </button>
-      </template>
-      <template #body>
-        <loading :state="$store.getters.initiallyLoading(['forms'])"/>
-        <form-list v-if="forms != null"/>
-      </template>
-    </page-section>
+      <page-section id="project-overview-forms">
+        <template #heading>
+          <span>Forms</span>
+          <button v-if="project.permits('form.create')"
+            id="project-overview-new-form-button" type="button"
+            class="btn btn-primary" @click="showModal('newForm')">
+            <span class="icon-plus-circle"></span>New
+          </button>
+        </template>
+        <template #body>
+          <form-list v-if="forms != null"/>
+        </template>
+      </page-section>
+    </template>
     <form-new v-bind="newForm" @hide="hideModal('newForm')"
       @success="afterCreate"/>
   </div>
@@ -93,14 +43,24 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
-import SummaryItem from '../summary-item.vue';
+import ProjectOverviewAbout from './overview/about.vue';
+import ProjectOverviewRightNow from './overview/right-now.vue';
+import canRoute from '../../mixins/can-route';
 import modal from '../../mixins/modal';
+import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
+
+const REQUEST_KEYS = ['project', 'forms'];
 
 export default {
   name: 'ProjectOverview',
-  components: { FormList, FormNew, SummaryItem },
-  mixins: [modal()],
+  components: {
+    FormList,
+    FormNew,
+    ProjectOverviewAbout,
+    ProjectOverviewRightNow
+  },
+  mixins: [canRoute(), modal(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -114,7 +74,21 @@ export default {
       }
     };
   },
-  computed: requestData(['project', 'forms']),
+  computed: {
+    ...requestData(REQUEST_KEYS),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(REQUEST_KEYS);
+    },
+    rendersTopRow() {
+      // The text of ProjectOverviewAbout implies that the user can form.create.
+      if (!this.project.permits('form.create')) return false;
+      // ProjectOverviewRightNow links to FieldKeyList.
+      return this.canRoute(`/projects/${this.projectId}/app-users`);
+    }
+  },
   watch: {
     projectId() {
       this.$emit('fetch-forms');
@@ -139,18 +113,7 @@ export default {
 </script>
 
 <style lang="scss">
-#project-overview {
-  margin-top: 10px;
-}
-
-#project-overview-right-now .icon-file-text {
-  // .icon-file-text is a little more narrow than .icon-user-circle, so we use
-  // this to center it.
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-#project-overview-forms {
+#project-overview .row, #project-overview-forms {
   margin-top: 10px;
 }
 </style>

@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
 
@@ -9,21 +9,15 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { canRoute } from '../util/router';
 
-/*
-This mixin is used to highlight a row of a table. The component using the mixin
-must have the following property:
-
-  - highlighted. Used to determine which row to highlight.
-*/
-export default () => { // eslint-disable-line arrow-body-style
-  // @vue/component
-  return {
-    methods: {
-      // Returns an HTML class object for a row of the table.
-      highlight(record, idProp) {
-        return { success: record[idProp] === this.highlighted };
-      }
+const mixin = {
+  methods: {
+    canRoute(location) {
+      const to = this.$router.resolve(location).route;
+      return canRoute(to, this.$route, this.$store);
     }
-  };
+  }
 };
+
+export default () => mixin;

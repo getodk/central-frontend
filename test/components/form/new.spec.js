@@ -34,10 +34,21 @@ const FILE_SELECTION_METHODS = [
 ];
 
 describe('FormNew', () => {
-  beforeEach(mockLogin);
+  it('does not show the button to a project viewer', () => {
+    mockLogin({ role: 'none' });
+    return mockRoute('/projects/1')
+      .respondWithData(() => testData.extendedProjects
+        .createPast(1, { role: 'viewer', forms: 0 })
+        .last())
+      .respondWithData(() => testData.extendedForms.sorted())
+      .afterResponses(app => {
+        app.find('#project-overview-new-form-button').length.should.equal(0);
+      });
+  });
 
-  it('shows the modal after the New button is clicked', () =>
-    mockRoute('/projects/1')
+  it('shows the modal after the button is clicked', () => {
+    mockLogin();
+    return mockRoute('/projects/1')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponses(app => {
@@ -47,9 +58,11 @@ describe('FormNew', () => {
       .then(app => trigger.click(app, '#project-overview-new-form-button'))
       .then(app => {
         app.first(FormNew).getProp('state').should.be.true();
-      }));
+      });
+  });
 
   it('shows an info alert if no file is selected', () => {
+    mockLogin();
     const modal = mountAndMark(FormNew, {
       propsData: { state: true },
       requestData: { project: testData.extendedProjects.createPast(1).last() }
@@ -63,6 +76,8 @@ describe('FormNew', () => {
 
   for (const [selectFile, title] of FILE_SELECTION_METHODS) {
     describe(title, () => {
+      beforeEach(mockLogin);
+
       it('disables the Create button while reading the file', () => {
         const modal = mountAndMark(FormNew, {
           propsData: { state: true },
