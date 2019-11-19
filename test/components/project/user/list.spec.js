@@ -344,6 +344,23 @@ describe('ProjectUserList', () => {
               standardRoles.find(role => role.system === 'viewer').id.toString()
             );
           }));
+
+      it('remembers change from Manager to Viewer if user navigates away', () =>
+        load({ roles: ['none', 'manager'], route: true })
+          .complete()
+          .request(app => changeRole(app, 'viewer'))
+          .respondWithSuccess()
+          .respondWithSuccess()
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .route('/projects/1/users')
+          .then(app => {
+            const standardRoles = testData.standardRoles.sorted();
+            app.first('#project-user-list select').element.value.should.equal(
+              standardRoles.find(role => role.system === 'viewer').id.toString()
+            );
+          }));
     });
 
     describe('after the second request fails', () => {
@@ -464,6 +481,19 @@ describe('ProjectUserList', () => {
           })
           .respondWithSuccess());
     });
+
+    it('remembers change from None to Manager if user navigates away', () =>
+      search(true)
+        .complete()
+        .request(app => changeRole(app, 'manager'))
+        .respondWithSuccess()
+        .complete()
+        .route('/projects/1/settings')
+        .complete()
+        .route('/projects/1/users')
+        .then(app => {
+          app.find('#project-user-list tbody tr').length.should.equal(3);
+        }));
   });
 
   describe('clearing the search', () => {

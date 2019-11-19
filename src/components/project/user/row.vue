@@ -87,7 +87,7 @@ export default {
           .catch(e => {
             if (previousRoleId !== '' && roleIdString !== '' &&
               this.$store.state.router.currentRoute === currentRoute) {
-              this.$emit('change', this.assignment, null, true);
+              this.$emit('change', this.assignment.actor, null, true);
               this.selectedRoleId = '';
             }
             throw e;
@@ -96,7 +96,7 @@ export default {
           const role = roleIdString !== ''
             ? this.roles.find(r => r.id.toString() === roleIdString)
             : null;
-          this.$emit('change', this.assignment, role, false);
+          this.$emit('change', this.assignment.actor, role, false);
         })
         .catch(noop)
         .finally(() => {

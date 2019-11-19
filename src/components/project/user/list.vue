@@ -81,9 +81,11 @@ export default {
     return {
       // User search term
       q: '',
-      // An array of assignment-like objects for the users that were returned
-      // for the most recent search. roleId may be `null` for one or more of
-      // these objects.
+      // searchAssignments is an array that contains an assignment-like object
+      // for each user returned for the most recent search. roleId may be `null`
+      // for one or more of these objects. searchAssignments is not updated
+      // after an assignment change: it is a snapshot of assignments at the time
+      // of the search.
       searchAssignments: null,
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
@@ -191,24 +193,42 @@ export default {
     decrementCount() {
       this.assignRequestCount -= 1;
     },
-    afterAssignmentChange(assignment, role, deleteWithoutPost) {
-      // If `role` is `null`, then we set the assignment's roleId to `null`
-      // rather than remove the assignment from projectAssignments. That way,
-      // the user will remain in the table until projectAssignments is
-      // refreshed.
-      this.$store.commit('setDataProp', {
-        key: 'projectAssignments',
-        prop: this.projectAssignments.findIndex(a => a === assignment),
-        value: { ...assignment, roleId: role != null ? role.id : null }
-      });
+    /*
+    afterAssignmentChange() completes two tasks after an assignment change:
 
-      const { displayName } = assignment.actor;
+      1. Shows an alert about the change.
+      2. Updates this.projectAssignments to reflect the change.
+        - Note that this.searchAssignments is not similarly updated.
+    */
+    afterAssignmentChange(actor, role, deleteWithoutPost) {
+      // Update this.projectAssignments.
+      const index = this.projectAssignments
+        .findIndex(assignment => assignment.actor.id === actor.id);
+      // If `role` is `null`, then rather than remove the assignment from
+      // projectAssignments, we set its roleId to `null`. That way, the user
+      // will remain in the table until a new request is sent for
+      // projectAssignments.
+      const assignment = { actor, roleId: role != null ? role.id : null };
+      if (index !== -1) {
+        this.$store.commit('setDataProp', {
+          key: 'projectAssignments',
+          prop: index,
+          value: assignment
+        });
+      } else {
+        this.$store.commit('setData', {
+          key: 'projectAssignments',
+          value: [...this.projectAssignments, assignment]
+        });
+      }
+
+      // Show the alert.
       if (deleteWithoutPost) {
-        this.$alert().danger(`Something went wrong. "${displayName}" has been removed from the Project.`);
+        this.$alert().danger(`Something went wrong. "${actor.displayName}" has been removed from the Project.`);
       } else {
         this.$alert().success(role != null
-          ? `Success! "${displayName}" has been given a Role of "${role.name}" on this Project.`
-          : `Success! "${displayName}" has been removed from this Project.`);
+          ? `Success! "${actor.displayName}" has been given a Role of "${role.name}" on this Project.`
+          : `Success! "${actor.displayName}" has been removed from this Project.`);
       }
     }
   }
