@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button id="project-form-workflow-save-button" type="button"
+      <button id="project-form-access-save-button" type="button"
         class="btn btn-primary"
         :class="{ 'uncommitted-change': changeCount !== 0 }"
         :disabled="saveDisabled" @click="save">
@@ -23,21 +23,22 @@ except according to the terms contained in the LICENSE file.
         Here you can set Form States, which control whether Forms are available
         for download and open for submission. You can also separately control
         which App Users may see each Form at all. For more information,
-        <doc-link to="central-projects/#managing-form-workflow">click here</doc-link>.
+        <doc-link to="central-projects/#managing-form-access">click here</doc-link>.
       </p>
     </div>
 
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
-      <project-form-workflow-table :changes-by-form="changesByForm"
-        @update:state="updateState" @update:access="updateAccess"
+      <project-form-access-table :changes-by-form="changesByForm"
+        @update:state="updateState"
+        @update:field-key-access="updateFieldKeyAccess"
         @show-states="showModal('statesModal')"/>
       <p v-if="forms.length === 0" class="empty-table-message">
         There are no Forms to show.
       </p>
     </template>
 
-    <project-form-workflow-states v-bind="statesModal"
+    <project-form-access-states v-bind="statesModal"
       @hide="hideModal('statesModal')"/>
   </div>
 </template>
@@ -46,8 +47,8 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import DocLink from '../doc-link.vue';
-import ProjectFormWorkflowStates from './form-workflow/states.vue';
-import ProjectFormWorkflowTable from './form-workflow/table.vue';
+import ProjectFormAccessStates from './form-access/states.vue';
+import ProjectFormAccessTable from './form-access/table.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import validateData from '../../mixins/validate-data';
@@ -57,8 +58,8 @@ import { requestData } from '../../store/modules/request';
 const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formAssignments'];
 
 export default {
-  name: 'ProjectFormWorkflow',
-  components: { DocLink, ProjectFormWorkflowStates, ProjectFormWorkflowTable },
+  name: 'ProjectFormAccess',
+  components: { DocLink, ProjectFormAccessStates, ProjectFormAccessTable },
   mixins: [modal(), request(), validateData()],
   props: {
     projectId: {
@@ -89,11 +90,11 @@ export default {
       return !this.dataExists || this.changeCount === 0 ||
         this.awaitingResponse;
     },
-    // Returns an object that maps each form's xmlFormId to an "access object"
-    // for the form. The access object indicates whether each app user has an
+    // Returns an object that maps each form's xmlFormId to a "field key access
+    // object" for the form. The object indicates whether each app user has an
     // assignment to the form. It has a property for every app user with a
     // token, even those without an assignment to the form.
-    accessByForm() {
+    fieldKeyAccessByForm() {
       const byFieldKey = {};
       for (const fieldKey of this.fieldKeysWithToken)
         byFieldKey[fieldKey.id] = false;
@@ -127,7 +128,7 @@ export default {
           const assignments = [];
           const roleId = this.roles.find(role => role.system === 'app-user').id;
           for (const fieldKey of this.fieldKeysWithToken) {
-            if (changes.current.access[fieldKey.id])
+            if (changes.current.fieldKeyAccess[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, roleId });
           }
 
@@ -186,15 +187,15 @@ export default {
       // '__proto__'.
       this.changesByForm = Object.create(null);
       for (const form of this.forms) {
-        const access = this.accessByForm[form.xmlFormId];
+        const fieldKeyAccess = this.fieldKeyAccessByForm[form.xmlFormId];
         this.$set(this.changesByForm, form.xmlFormId, {
           previous: {
             state: form.state,
-            access
+            fieldKeyAccess
           },
           current: {
             state: form.state,
-            access: { ...access }
+            fieldKeyAccess: { ...fieldKeyAccess }
           }
         });
       }
@@ -217,12 +218,13 @@ export default {
         this.setUnsavedChanges();
       }
     },
-    updateAccess(form, fieldKey, accessible) {
+    updateFieldKeyAccess(form, fieldKey, accessible) {
       const changes = this.changesByForm[form.xmlFormId];
-      const changedBeforeUpdate = changes.current.access[fieldKey.id] !==
-        changes.previous.access[fieldKey.id];
-      changes.current.access[fieldKey.id] = accessible;
-      const changedAfterUpdate = accessible !== changes.previous.access[fieldKey.id];
+      const changedBeforeUpdate = changes.current.fieldKeyAccess[fieldKey.id] !==
+        changes.previous.fieldKeyAccess[fieldKey.id];
+      changes.current.fieldKeyAccess[fieldKey.id] = accessible;
+      const changedAfterUpdate = accessible !==
+        changes.previous.fieldKeyAccess[fieldKey.id];
       if (changedAfterUpdate !== changedBeforeUpdate) {
         this.changeCount += changedAfterUpdate ? 1 : -1;
         this.setUnsavedChanges();

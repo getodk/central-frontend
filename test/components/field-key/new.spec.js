@@ -155,7 +155,7 @@ describe('FieldKeyNew', () => {
           }));
     });
 
-    it('fetches app users after link to Form Workflow tab is clicked', () =>
+    it('fetches app users after link to Form Access tab is clicked', () =>
       submit()
         .complete()
         .request(app => trigger.click(app, '#field-key-new a[href="#"]'))

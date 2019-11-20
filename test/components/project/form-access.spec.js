@@ -1,4 +1,4 @@
-import ProjectFormWorkflow from '../../../src/components/project/form-workflow.vue';
+import ProjectFormAccess from '../../../src/components/project/form-access.vue';
 import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../session';
@@ -6,8 +6,8 @@ import { mockRoute } from '../../http';
 import { mountAndMark } from '../../destroy';
 import { trigger } from '../../event';
 
-// Loads ProjectFormWorkflow, rendering one row for the table.
-const loadFormWorkflow = () => mockRoute('/projects/1/form-workflow')
+// Loads ProjectFormAccess, rendering one row for the table.
+const loadFormAccess = () => mockRoute('/projects/1/form-access')
   .respondWithData(() => testData.extendedProjects
     .createPast(1, { name: 'My Project', archived: false })
     .last())
@@ -48,24 +48,24 @@ const loadFormWorkflow = () => mockRoute('/projects/1/form-workflow')
     })
     .sorted());
 
-describe('ProjectFormWorkflow', () => {
+describe('ProjectFormAccess', () => {
   describe('routing', () => {
     it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/form-workflow')
+      mockRoute('/projects/1/form-access')
         .restoreSession(false)
         .afterResponse(app => {
           app.vm.$route.path.should.equal('/login');
         }));
 
     it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/form-workflow')
+      mockRouteThroughLogin('/projects/1/form-access')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.sorted())
         .respondWithData(() => testData.extendedFieldKeys.sorted())
         .respondWithData(() => testData.standardRoles.sorted())
         .respondWithData(() => testData.standardFormSummaryAssignments.sorted())
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/form-workflow');
+          app.vm.$route.path.should.equal('/projects/1/form-access');
         }));
 
     describe('project viewer', () => {
@@ -75,7 +75,7 @@ describe('ProjectFormWorkflow', () => {
       });
 
       it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/form-workflow')
+        mockRoute('/projects/1/form-access')
           .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.sorted())
           .respondWithProblem(403.1) // fieldKeys
@@ -91,7 +91,7 @@ describe('ProjectFormWorkflow', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.sorted())
           .complete()
-          .route('/projects/1/form-workflow')
+          .route('/projects/1/form-access')
           .respondWithData(() => testData.extendedProjects.sorted())
           .afterResponse(app => {
             app.vm.$route.path.should.equal('/');
@@ -103,13 +103,13 @@ describe('ProjectFormWorkflow', () => {
     beforeEach(mockLogin);
 
     it('initially disables the Save button', () =>
-      loadFormWorkflow().afterResponses(app => {
-        app.first('#project-form-workflow-save-button').should.be.disabled();
+      loadFormAccess().afterResponses(app => {
+        app.first('#project-form-access-save-button').should.be.disabled();
       }));
 
     it('correctly renders the column headers of the table', () =>
-      loadFormWorkflow().afterResponses(app => {
-        const th = app.first('#project-form-workflow-table').find('th');
+      loadFormAccess().afterResponses(app => {
+        const th = app.first('#project-form-access-table').find('th');
         th.map(wrapper => wrapper.text().trim().iTrim()).should.eql([
           'Form',
           'State',
@@ -124,8 +124,8 @@ describe('ProjectFormWorkflow', () => {
       }));
 
     it('correctly renders a row of the table', () =>
-      loadFormWorkflow().afterResponses(app => {
-        const td = app.first('#project-form-workflow-table').find('td');
+      loadFormAccess().afterResponses(app => {
+        const td = app.first('#project-form-access-table').find('td');
         td.length.should.equal(6);
 
         // Form column
@@ -144,7 +144,7 @@ describe('ProjectFormWorkflow', () => {
       }));
 
     it('shows a message if there are no forms', () => {
-      const component = mountAndMark(ProjectFormWorkflow, {
+      const component = mountAndMark(ProjectFormAccess, {
         propsData: {
           projectId: '1'
         },
@@ -161,9 +161,9 @@ describe('ProjectFormWorkflow', () => {
 
     describe("changing a form's state", () => {
       it('highlights the select', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => {
-            const select = app.first('#project-form-workflow-table select');
+            const select = app.first('#project-form-access-table select');
             return trigger.changeValue(select, 'open');
           })
           .then(select => {
@@ -171,28 +171,28 @@ describe('ProjectFormWorkflow', () => {
           }));
 
       it('updates the Save button', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => trigger
-            .changeValue(app, '#project-form-workflow-table select', 'open'))
+            .changeValue(app, '#project-form-access-table select', 'open'))
           .then(app => {
-            const button = app.first('#project-form-workflow-save-button');
+            const button = app.first('#project-form-access-save-button');
             button.hasClass('uncommitted-change').should.be.true();
             button.should.not.be.disabled();
           }));
 
       it("undoes these if the form's state is changed back", () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => trigger
-            .changeValue(app, '#project-form-workflow-table select', 'open'))
+            .changeValue(app, '#project-form-access-table select', 'open'))
           .then(app => trigger
-            .changeValue(app, '#project-form-workflow-table select', 'closing'))
+            .changeValue(app, '#project-form-access-table select', 'closing'))
           .then(app => {
             // Select
-            const select = app.first('#project-form-workflow-table select');
+            const select = app.first('#project-form-access-table select');
             select.hasClass('uncommitted-change').should.be.false();
 
             // Save button
-            const button = app.first('#project-form-workflow-save-button');
+            const button = app.first('#project-form-access-save-button');
             button.hasClass('uncommitted-change').should.be.false();
             button.should.be.disabled();
           }));
@@ -207,9 +207,9 @@ describe('ProjectFormWorkflow', () => {
           return true;
         };
 
-        return loadFormWorkflow()
+        return loadFormAccess()
           .afterResponses(app => trigger
-            .changeValue(app, '#project-form-workflow-table select', 'open'))
+            .changeValue(app, '#project-form-access-table select', 'open'))
           .route('/projects/1')
           .then(() => {
             prompted.should.be.true();
@@ -222,9 +222,9 @@ describe('ProjectFormWorkflow', () => {
 
     describe('unchecking an App User Access checkbox', () => {
       it('highlights the checkbox', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => {
-            const table = app.first('#project-form-workflow-table');
+            const table = app.first('#project-form-access-table');
             const input = table.first('input[type="checkbox"]');
             return trigger.uncheck(input);
           })
@@ -233,29 +233,29 @@ describe('ProjectFormWorkflow', () => {
           }));
 
       it('updates the Save button', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => trigger
-            .uncheck(app, '#project-form-workflow-table input[type="checkbox"]'))
+            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
           .then(app => {
-            const button = app.first('#project-form-workflow-save-button');
+            const button = app.first('#project-form-access-save-button');
             button.hasClass('uncommitted-change').should.be.true();
             button.should.not.be.disabled();
           }));
 
       it('undoes these if the checkbox is checked again', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => trigger
-            .uncheck(app, '#project-form-workflow-table input[type="checkbox"]'))
+            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
           .then(app => trigger
-            .check(app, '#project-form-workflow-table input[type="checkbox"]'))
+            .check(app, '#project-form-access-table input[type="checkbox"]'))
           .then(app => {
             // Input
-            const table = app.first('#project-form-workflow-table');
+            const table = app.first('#project-form-access-table');
             const input = table.first('input[type="checkbox"]');
             input.hasClass('uncommitted-change').should.be.false();
 
             // Save button
-            const button = app.first('#project-form-workflow-save-button');
+            const button = app.first('#project-form-access-save-button');
             button.hasClass('uncommitted-change').should.be.false();
             button.should.be.disabled();
           }));
@@ -268,9 +268,9 @@ describe('ProjectFormWorkflow', () => {
           return true;
         };
 
-        return loadFormWorkflow()
+        return loadFormAccess()
           .afterResponses(app => trigger
-            .uncheck(app, '#project-form-workflow-table input[type="checkbox"]'))
+            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
           .route('/projects/1')
           .then(() => {
             prompted.should.be.true();
@@ -283,9 +283,9 @@ describe('ProjectFormWorkflow', () => {
 
     describe('checking an App User Access checkbox', () => {
       it('highlights the checkbox', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => {
-            const table = app.first('#project-form-workflow-table');
+            const table = app.first('#project-form-access-table');
             const inputs = table.find('input[type="checkbox"]');
             inputs.length.should.equal(2);
             return trigger.check(inputs[1]);
@@ -295,13 +295,13 @@ describe('ProjectFormWorkflow', () => {
           }));
 
       it('updates the Save button', () =>
-        loadFormWorkflow()
+        loadFormAccess()
           .afterResponses(app => {
-            const table = app.first('#project-form-workflow-table');
+            const table = app.first('#project-form-access-table');
             const inputs = table.find('input[type="checkbox"]');
             return trigger.check(inputs[1])
               .then(() => {
-                const button = app.first('#project-form-workflow-save-button');
+                const button = app.first('#project-form-access-save-button');
                 button.hasClass('uncommitted-change').should.be.true();
                 button.should.not.be.disabled();
               });
@@ -310,11 +310,11 @@ describe('ProjectFormWorkflow', () => {
 
     describe('saving changes', () => {
       // Makes changes, then clicks the Save button.
-      const save = () => loadFormWorkflow()
+      const save = () => loadFormAccess()
         .complete()
         .request(app => {
-          const button = app.first('#project-form-workflow-save-button');
-          const table = app.first('#project-form-workflow-table');
+          const button = app.first('#project-form-access-save-button');
+          const table = app.first('#project-form-access-table');
           const select = table.first('select');
           const inputs = table.find('input[type="checkbox"]');
           return trigger.changeValue(select, 'open')
@@ -345,7 +345,7 @@ describe('ProjectFormWorkflow', () => {
         });
 
       it('implements some standard button things', () =>
-        save().standardButton('#project-form-workflow-save-button'));
+        save().standardButton('#project-form-access-save-button'));
 
       it('sends the correct data', () =>
         saveWithSuccess().beforeEachResponse((app, config, index) => {
@@ -380,12 +380,12 @@ describe('ProjectFormWorkflow', () => {
 
       it('disables the Save button', () =>
         saveWithSuccess().afterResponses(app => {
-          app.first('#project-form-workflow-save-button').should.be.disabled();
+          app.first('#project-form-access-save-button').should.be.disabled();
         }));
 
       it('updates the table', () =>
         saveWithSuccess().afterResponses(app => {
-          const table = app.first('#project-form-workflow-table');
+          const table = app.first('#project-form-access-table');
           const th = table.find('th');
           th.length.should.equal(6);
           const td = table.find('td');

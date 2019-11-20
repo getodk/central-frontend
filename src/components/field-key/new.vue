@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
                 Soon you will be able to control access here
               </option>
               <option disabled>
-                For now you can use the Form Workflow tab
+                For now you can use the Form Access tab
               </option>
             </select>
             <span class="form-label">Access *</span>
@@ -66,7 +66,7 @@ except according to the terms contained in the LICENSE file.
           </p>
           <p>
             You may wish to visit this Project&rsquo;s
-            <a href="#" @click="navigateToFormWorkflow">Form Workflow settings</a>
+            <a href="#" @click="navigateToFormAccess">Form Access settings</a>
             to give this user access to Forms.
           </p>
         </div>
@@ -145,10 +145,10 @@ export default {
       else
         this.complete();
     },
-    navigateToFormWorkflow() {
-      // Clear fieldKeys so that the Form Workflow tab will fetch it again.
+    navigateToFormAccess() {
+      // Clear fieldKeys so that the Form Access tab will fetch it again.
       this.$store.commit('clearData', 'fieldKeys');
-      this.$router.push(`/projects/${this.project.id}/form-workflow`);
+      this.$router.push(`/projects/${this.project.id}/form-access`);
     },
     createAnother() {
       this.step = 1;

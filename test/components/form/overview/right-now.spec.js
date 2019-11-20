@@ -84,7 +84,7 @@ describe('FormOverviewRightNow', () => {
           const items = app.find('.summary-item');
           items.length.should.equal(3);
           const href = items[2].first(selector).getAttribute('href');
-          href.should.equal('#/projects/1/form-workflow');
+          href.should.equal('#/projects/1/form-access');
         }));
     }
   });

@@ -23,7 +23,7 @@ import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
 import NotFound from './components/not-found.vue';
-import ProjectFormWorkflow from './components/project/form-workflow.vue';
+import ProjectFormAccess from './components/project/form-access.vue';
 import ProjectHome from './components/project/home.vue';
 import ProjectList from './components/project/list.vue';
 import ProjectOverview from './components/project/overview.vue';
@@ -204,8 +204,8 @@ const routes = [
             }
           },
           {
-            path: 'form-workflow',
-            component: ProjectFormWorkflow,
+            path: 'form-access',
+            component: ProjectFormAccess,
             props: true,
             meta: {
               validateData: {
@@ -483,7 +483,7 @@ preserveDataForKey({
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
-    'ProjectFormWorkflow',
+    'ProjectFormAccess',
     'ProjectSettings'
   ],
   params: ['projectId']
@@ -501,7 +501,7 @@ preserveDataForKey({
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
-    'ProjectFormWorkflow',
+    'ProjectFormAccess',
     'ProjectSettings',
     // FormShow
     'FormOverview',

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="project-form-workflow-states" :state="state" hideable backdrop
+  <modal id="project-form-access-states" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>Form States</template>
     <template #body>
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'ProjectFormWorkflowStates',
+  name: 'ProjectFormAccessStates',
   props: {
     state: {
       type: Boolean,
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss">
-#project-form-workflow-states {
+#project-form-access-states {
   .modal-introduction p:first-child {
     margin-bottom: 20px;
   }

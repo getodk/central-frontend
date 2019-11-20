@@ -29,9 +29,9 @@ except according to the terms contained in the LICENSE file.
           role="presentation">
           <router-link :to="tabPath('app-users')">App Users</router-link>
         </li>
-        <li v-if="canRoute(tabPath('form-workflow'))"
-          :class="tabClass('form-workflow')" role="presentation">
-          <router-link :to="tabPath('form-workflow')">Form Workflow</router-link>
+        <li v-if="canRoute(tabPath('form-access'))"
+          :class="tabClass('form-access')" role="presentation">
+          <router-link :to="tabPath('form-access')">Form Access</router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
           role="presentation">

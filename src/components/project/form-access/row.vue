@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="project-form-workflow-row">
+  <tr class="project-form-access-row">
     <template v-if="frozen">
       <td class="form-name">
         <router-link :to="formOverviewPath" :title="form.nameOrId()">
@@ -36,10 +36,10 @@ except according to the terms contained in the LICENSE file.
         <div class="checkbox">
           <label>
             <input type="checkbox"
-              :class="{ 'uncommitted-change': accessChanged(fieldKey) }"
-              :checked="changes.current.access[fieldKey.id]"
+              :class="{ 'uncommitted-change': fieldKeyAccessChanged(fieldKey) }"
+              :checked="changes.current.fieldKeyAccess[fieldKey.id]"
               aria-label="App User Access"
-              @change="updateAccess(fieldKey, $event.target.checked)">
+              @change="updateFieldKeyAccess(fieldKey, $event.target.checked)">
           </label>
         </div>
       </td>
@@ -54,7 +54,7 @@ import { mapGetters } from 'vuex';
 import Form from '../../../presenters/form';
 
 export default {
-  name: 'ProjectFormWorkflowRow',
+  name: 'ProjectFormAccessRow',
   props: {
     form: {
       type: Form,
@@ -79,22 +79,22 @@ export default {
     }
   },
   methods: {
-    accessChanged(fieldKey) {
-      return this.changes.current.access[fieldKey.id] !==
-        this.changes.previous.access[fieldKey.id];
+    fieldKeyAccessChanged(fieldKey) {
+      return this.changes.current.fieldKeyAccess[fieldKey.id] !==
+        this.changes.previous.fieldKeyAccess[fieldKey.id];
     },
     updateState(state) {
       this.$emit('update:state', this.form, state);
     },
-    updateAccess(fieldKey, accessible) {
-      this.$emit('update:access', this.form, fieldKey, accessible);
+    updateFieldKeyAccess(fieldKey, accessible) {
+      this.$emit('update:field-key-access', this.form, fieldKey, accessible);
     }
   }
 };
 </script>
 
 <style lang="scss">
-.project-form-workflow-row {
+.project-form-access-row {
   .form-name {
     overflow: hidden;
     text-overflow: ellipsis;
