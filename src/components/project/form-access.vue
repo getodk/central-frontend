@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         Here you can set Form States, which control whether Forms are available
         for download and open for submission. You can also separately control
         which App Users may see each Form at all. For more information,
-        <doc-link to="central-projects/#central-projects-form-access">click here</doc-link>.
+        <doc-link to="central-projects/#managing-form-access">click here</doc-link>.
       </p>
     </div>
 
