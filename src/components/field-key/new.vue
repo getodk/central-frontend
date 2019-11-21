@@ -12,24 +12,14 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
-    <template slot="title">Create App User</template>
-    <template slot="body">
+    <template #title>Create App User</template>
+    <template #body>
       <template v-if="step === 1">
+        <p class="modal-introduction">
+          This user will not have access to any Forms at first. You will be able
+          to assign Forms after the user is created.
+        </p>
         <form @submit.prevent="submit">
-          <label class="form-group">
-            <select :disabled="awaitingResponse" class="form-control">
-              <option>
-                All {{ project != null ? project.name : '' }} Forms
-              </option>
-              <option disabled>
-                Soon you will be able to control access here
-              </option>
-              <option disabled>
-                For now you can use the Form Access tab
-              </option>
-            </select>
-            <span class="form-label">Access *</span>
-          </label>
           <label class="form-group">
             <input ref="nickname" v-model.trim="nickname"
               :disabled="awaitingResponse" class="form-control"
@@ -49,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div class="modal-introduction">
+        <div class="modal-introduction step-2">
           <p>
             <span class="icon-check-circle"></span><strong>Success!</strong>
             The App User &ldquo;{{ created.displayName }}&rdquo; has been
@@ -163,7 +153,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#field-key-new .modal-introduction {
+#field-key-new .modal-introduction.step-2 {
   text-align: center;
 
   .icon-check-circle {
