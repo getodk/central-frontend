@@ -12,24 +12,14 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
-    <template slot="title">Create App User</template>
-    <template slot="body">
+    <template #title>Create App User</template>
+    <template #body>
       <template v-if="step === 1">
+        <p class="modal-introduction">
+          This user will not have access to any Forms at first. You will be able
+          to assign Forms after the user is created.
+        </p>
         <form @submit.prevent="submit">
-          <label class="form-group">
-            <select :disabled="awaitingResponse" class="form-control">
-              <option>
-                All {{ project != null ? project.name : '' }} Forms
-              </option>
-              <option disabled>
-                Soon you will be able to control access here
-              </option>
-              <option disabled>
-                For now you can use the Form Workflow tab
-              </option>
-            </select>
-            <span class="form-label">Access *</span>
-          </label>
           <label class="form-group">
             <input ref="nickname" v-model.trim="nickname"
               :disabled="awaitingResponse" class="form-control"
@@ -49,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div class="modal-introduction">
+        <div class="modal-introduction step-2">
           <p>
             <span class="icon-check-circle"></span><strong>Success!</strong>
             The App User &ldquo;{{ created.displayName }}&rdquo; has been
@@ -66,7 +56,7 @@ except according to the terms contained in the LICENSE file.
           </p>
           <p>
             You may wish to visit this Project&rsquo;s
-            <a href="#" @click="navigateToFormWorkflow">Form Workflow settings</a>
+            <a href="#" @click="navigateToFormAccess">Form Access settings</a>
             to give this user access to Forms.
           </p>
         </div>
@@ -145,10 +135,10 @@ export default {
       else
         this.complete();
     },
-    navigateToFormWorkflow() {
-      // Clear fieldKeys so that the Form Workflow tab will fetch it again.
+    navigateToFormAccess() {
+      // Clear fieldKeys so that the Form Access tab will fetch it again.
       this.$store.commit('clearData', 'fieldKeys');
-      this.$router.push(`/projects/${this.project.id}/form-workflow`);
+      this.$router.push(`/projects/${this.project.id}/form-access`);
     },
     createAnother() {
       this.step = 1;
@@ -163,7 +153,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#field-key-new .modal-introduction {
+#field-key-new .modal-introduction.step-2 {
   text-align: center;
 
   .icon-check-circle {

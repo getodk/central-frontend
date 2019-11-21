@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
           <template v-else>
             Right now,
             <strong>
-              <router-link :to="`/projects/${project.id}/form-workflow`">
+              <router-link :to="`/projects/${project.id}/form-access`">
                 <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
                 {{ $pluralize('App User', assignmentActors.length, true) }}</router-link>
             </strong>

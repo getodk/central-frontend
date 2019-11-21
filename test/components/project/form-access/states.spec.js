@@ -1,15 +1,15 @@
-import ProjectFormWorkflow from '../../../../src/components/project/form-workflow.vue';
-import ProjectFormWorkflowStates from '../../../../src/components/project/form-workflow/states.vue';
+import ProjectFormAccess from '../../../../src/components/project/form-access.vue';
+import ProjectFormAccessStates from '../../../../src/components/project/form-access/states.vue';
 import testData from '../../../data';
 import { mockLogin } from '../../../session';
 import { mountAndMark } from '../../../destroy';
 import { trigger } from '../../../event';
 
-describe('ProjectFormWorkflowStates', () => {
+describe('ProjectFormAccessStates', () => {
   beforeEach(mockLogin);
 
   it('shows the modal after the icon is clicked', () => {
-    const component = mountAndMark(ProjectFormWorkflow, {
+    const component = mountAndMark(ProjectFormAccess, {
       propsData: {
         projectId: '1'
       },
@@ -21,9 +21,9 @@ describe('ProjectFormWorkflowStates', () => {
         formAssignments: []
       }
     });
-    const modal = component.first(ProjectFormWorkflowStates);
+    const modal = component.first(ProjectFormAccessStates);
     modal.getProp('state').should.be.false();
-    return trigger.click(component, '#project-form-workflow-table th .btn-link')
+    return trigger.click(component, '#project-form-access-table th .btn-link')
       .then(() => {
         modal.getProp('state').should.be.true();
       });

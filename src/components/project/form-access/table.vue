@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="project-form-workflow-table" class="clearfix">
+  <div id="project-form-access-table" class="clearfix">
     <table class="table table-frozen"
-      :class="{ 'no-access-columns': fieldKeysWithToken.length === 0 }">
+      :class="{ 'no-field-keys': fieldKeysWithToken.length === 0 }">
       <thead>
         <tr>
           <th>Form</th>
@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody v-if="forms.length !== 0">
-        <project-form-workflow-row v-for="form of forms" :key="form.xmlFormId"
+        <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
           :form="form" :changes="changesByForm[form.xmlFormId]" frozen
           @update:state="updateState"/>
       </tbody>
@@ -44,9 +44,9 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody v-if="forms.length !== 0">
-          <project-form-workflow-row v-for="form of forms" :key="form.xmlFormId"
+          <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
             :form="form" :changes="changesByForm[form.xmlFormId]"
-            @update:access="updateAccess"/>
+            @update:field-key-access="updateFieldKeyAccess"/>
         </tbody>
       </table>
     </div>
@@ -56,12 +56,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
-import ProjectFormWorkflowRow from './row.vue';
+import ProjectFormAccessRow from './row.vue';
 import { requestData } from '../../../store/modules/request';
 
 export default {
-  name: 'ProjectFormWorkflowTable',
-  components: { ProjectFormWorkflowRow },
+  name: 'ProjectFormAccessTable',
+  components: { ProjectFormAccessRow },
   props: {
     changesByForm: {
       type: Object,
@@ -76,8 +76,8 @@ export default {
     updateState(form, state) {
       this.$emit('update:state', form, state);
     },
-    updateAccess(form, fieldKey, accessible) {
-      this.$emit('update:access', form, fieldKey, accessible);
+    updateFieldKeyAccess(form, fieldKey, accessible) {
+      this.$emit('update:field-key-access', form, fieldKey, accessible);
     }
   }
 };
@@ -86,12 +86,12 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#project-form-workflow-table {
+#project-form-access-table {
   // Space above the tables
   .table-frozen {
     margin-top: 70px;
 
-    &.no-access-columns {
+    &.no-field-keys {
       margin-top: 0;
     }
   }

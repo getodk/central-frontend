@@ -20,9 +20,9 @@ except according to the terms contained in the LICENSE file.
           <div class="panel-body">
             <p>
               To set this Form&rsquo;s state, please visit the Project
-              <router-link :to="`/projects/${projectId}/form-workflow`">
+              <router-link :to="`/projects/${projectId}/form-access`">
                 <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-                Form Workflow settings</router-link>.
+                Form Access settings</router-link>.
             </p>
           </div>
         </div>

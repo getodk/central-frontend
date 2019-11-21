@@ -2,7 +2,6 @@ import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
 import { submitForm, trigger } from '../../event';
 
 describe('FieldKeyNew', () => {
@@ -34,16 +33,6 @@ describe('FieldKeyNew', () => {
         .then(app => {
           app.first('#field-key-new input').should.be.focused();
         }));
-  });
-
-  it('includes the project name in the first option of the access field', () => {
-    const project = testData.extendedProjects.createPast(1).last();
-    const modal = mountAndMark(FieldKeyNew, {
-      propsData: { projectId: '1', state: false },
-      requestData: { project }
-    });
-    const text = modal.first('option').text().trim().iTrim();
-    text.should.equal(`All ${project.name} Forms`);
   });
 
   it('implements some standard button things', () =>
@@ -155,7 +144,7 @@ describe('FieldKeyNew', () => {
           }));
     });
 
-    it('fetches app users after link to Form Workflow tab is clicked', () =>
+    it('fetches app users after link to Form Access tab is clicked', () =>
       submit()
         .complete()
         .request(app => trigger.click(app, '#field-key-new a[href="#"]'))

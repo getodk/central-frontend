@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </template>
       </summary-item>
-      <summary-item :route-to="`/projects/${project.id}/form-workflow`"
+      <summary-item :route-to="`/projects/${project.id}/form-access`"
         icon="user-circle">
         <template #heading>
           {{ assignmentActors.length.toLocaleString() }}

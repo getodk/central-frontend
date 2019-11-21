@@ -20,9 +20,9 @@ except according to the terms contained in the LICENSE file.
         App Users in this Project only will be able to download and use Forms
         within this Project. When you create a new App User, it will not have
         access to any Forms at first. To set the Forms each App User may access,
-        use the <router-link :to="formWorkflowPath">Form Workflow</router-link>
-        tab. Multiple devices can use the same App User profile without problem.
-        For more information,
+        use the <router-link :to="formAccessPath">Form Access</router-link> tab.
+        Multiple devices can use the same App User profile without problem. For
+        more information,
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
@@ -107,8 +107,8 @@ export default {
   },
   computed: {
     ...requestData(['fieldKeys']),
-    formWorkflowPath() {
-      return `/projects/${this.projectId}/form-workflow`;
+    formAccessPath() {
+      return `/projects/${this.projectId}/form-access`;
     }
   },
   watch: {
