@@ -149,11 +149,8 @@ export const extendedSubmissions = dataStore({
 
 // Converts submission response objects to OData. Returns all data even for
 // encrypted submissions.
-export const submissionOData = (top = 250, skip = 0) => {
-  const result = { '@odata.count': extendedSubmissions.size };
-  if (extendedSubmissions.size !== 0) {
-    result.value = extendedSubmissions.sorted().slice(skip, skip + top)
-      .map(submission => submission._oData);
-  }
-  return result;
-};
+export const submissionOData = (top = 250, skip = 0) => ({
+  '@odata.count': extendedSubmissions.size,
+  value: extendedSubmissions.sorted().slice(skip, skip + top)
+    .map(submission => submission._oData)
+});
