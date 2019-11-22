@@ -5,30 +5,17 @@ import { mockHttp, mockRoute } from '../../http';
 import { mockLogin } from '../../session';
 import { mountAndMark } from '../../destroy';
 
-const xmlFile = () => new File(['<a><b/></a>'], 'my_form.xml');
-const xlsxFile = () => new File(
+const xlsForm = () => new File(
   [''],
   'my_form.xlsx',
   { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
 );
-
 const selectFileByInput = (modal, file) => {
   const input = modal.first('input[type="file"]');
   const target = { files: dataTransfer([file]).files };
   const event = $.Event('change', { target });
   $(input.element).trigger(event);
   return modal.vm.$nextTick().then(() => modal);
-};
-const dragAndDrop = (modal) =>
-  trigger.dragAndDrop(modal, '#form-new-drop-zone', [xmlFile()]);
-
-const waitForRead = (modal) => {
-  if (modal.data().file != null) return modal.vm.$nextTick().then(() => modal);
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(waitForRead(modal));
-    });
-  });
 };
 
 describe('FormNew', () => {
@@ -59,82 +46,46 @@ describe('FormNew', () => {
       });
   });
 
-  it('shows an info alert if no file is selected', () => {
-    mockLogin();
-    const modal = mountAndMark(FormNew, {
-      propsData: { state: true },
-      requestData: { project: testData.extendedProjects.createPast(1).last() }
-    });
-    modal.should.not.alert();
-    return trigger.click(modal, '#form-new-create-button')
-      .then(() => {
-        modal.should.alert('info');
+  describe('file selection', () => {
+    beforeEach(mockLogin);
+
+    it('shows an info alert if no file is selected', () => {
+      const modal = mountAndMark(FormNew, {
+        propsData: { state: true },
+        requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
-  });
-
-  const xmlFileSelectionMethods = [
-    [
-      'selecting an XML file using the file input',
-      (modal) => selectFileByInput(modal, xmlFile())
-    ],
-    [
-      'dragging and dropping an XML file',
-      dragAndDrop
-    ]
-  ];
-  for (const [description, selectFile] of xmlFileSelectionMethods) {
-    describe(description, () => {
-      beforeEach(mockLogin);
-
-      it('disables the Create button while reading an XML file', () => {
-        const modal = mountAndMark(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
+      modal.should.not.alert();
+      return trigger.click(modal, '#form-new-create-button')
+        .then(() => {
+          modal.should.alert('info');
         });
-        return selectFile(modal)
-          .then(() => {
-            modal.data().reading.should.be.true();
-            modal.first('#form-new-create-button').should.be.disabled();
-          })
-          .then(() => waitForRead(modal));
-      });
+    });
 
-      it('updates the modal after reading an XML file', () => {
-        const modal = mountAndMark(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
+    it('saves the file after it is selected using the file input', () => {
+      const modal = mountAndMark(FormNew, {
+        propsData: { state: true },
+        requestData: {
+          project: testData.extendedProjects.createPast(1).last()
+        }
+      });
+      return selectFileByInput(modal, xlsForm())
+        .then(() => {
+          modal.data().file.name.should.equal('my_form.xlsx');
         });
-        return selectFile(modal)
-          .then(waitForRead)
-          .then(() => {
-            modal.data().file.name.should.equal('my_form.xml');
-            modal.data().reading.should.be.false();
-            modal.data().xml.should.equal('<a><b/></a>');
-            modal.first('#form-new-create-button').should.not.be.disabled();
-          });
-      });
     });
-  }
 
-  it('updates the modal after processing an .xlsx file', () => {
-    mockLogin();
-    const modal = mountAndMark(FormNew, {
-      propsData: { state: true },
-      requestData: {
-        project: testData.extendedProjects.createPast(1).last()
-      }
-    });
-    return selectFileByInput(modal, xlsxFile())
-      .then(() => {
-        modal.data().file.name.should.equal('my_form.xlsx');
-        modal.data().reading.should.be.false();
-        should.not.exist(modal.data().xml);
-        modal.first('#form-new-create-button').should.not.be.disabled();
+    it('saves the file after it is dragged and dropped', () => {
+      const modal = mountAndMark(FormNew, {
+        propsData: { state: true },
+        requestData: {
+          project: testData.extendedProjects.createPast(1).last()
+        }
       });
+      return trigger.dragAndDrop(modal, '#form-new-drop-zone', [xlsForm()])
+        .then(() => {
+          modal.data().file.name.should.equal('my_form.xlsx');
+        });
+    });
   });
 
   describe('request headers', () => {
@@ -148,9 +99,9 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => selectFileByInput(modal, xmlFile())
-          .then(waitForRead)
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .request(modal =>
+          selectFileByInput(modal, new File(['<a><b/></a>'], 'my_form.xml'))
+            .then(() => trigger.click(modal, '#form-new-create-button')))
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/xml');
         })
@@ -163,7 +114,7 @@ describe('FormNew', () => {
           propsData: { state: true },
           requestData: { project: testData.extendedProjects.createPast(1).last() }
         })
-        .request(modal => selectFileByInput(modal, xlsxFile())
+        .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -179,8 +130,7 @@ describe('FormNew', () => {
         propsData: { state: true },
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       })
-      .request(modal => selectFileByInput(modal, xmlFile())
-        .then(waitForRead)
+      .request(modal => selectFileByInput(modal, xlsForm())
         .then(() => trigger.click(modal, '#form-new-create-button')))
       .standardButton('#form-new-create-button');
   });
@@ -196,8 +146,7 @@ describe('FormNew', () => {
         app = component;
       })
       .request(() => trigger.click(app, '#project-overview-new-form-button')
-        .then(() => selectFileByInput(app.first(FormNew), xmlFile()))
-        .then(waitForRead)
+        .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
         .then(() => trigger.click(app, '#form-new-create-button')))
       .respondWithData(() => testData.standardForms
         .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
@@ -237,7 +186,7 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => selectFileByInput(modal, xlsxFile())
+        .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(() => ({
           code: 400.15,
@@ -260,8 +209,7 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => selectFileByInput(modal, xmlFile())
-          .then(waitForRead)
+        .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(() => ({
           code: 409.3,
@@ -284,8 +232,7 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => selectFileByInput(modal, xmlFile())
-          .then(waitForRead)
+        .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(() => ({
           code: 409.3,
@@ -311,7 +258,7 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedForms.sorted())
         .complete()
         .request(app => trigger.click(app, '#project-overview-new-form-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsxFile()))
+          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
           .then(() => trigger.click(app, '#form-new-create-button')))
         .respondWithProblem(() => ({
           code: 400.16,

@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!disabled" backdrop @hide="$emit('hide')">
+  <modal :state="state" :hideable="!awaitingResponse" backdrop
+    @hide="$emit('hide')">
     <template #title>Create Form</template>
     <template #body>
       <div v-show="warnings != null" id="form-new-warnings">
@@ -27,8 +28,8 @@ except according to the terms contained in the LICENSE file.
           problems can be ignored, click the button to create the Form anyway:
         </p>
         <p>
-          <button type="button" class="btn btn-primary" :disabled="disabled"
-            @click="create(true)">
+          <button type="button" class="btn btn-primary"
+            :disabled="awaitingResponse" @click="create(true)">
             Create anyway <spinner :state="awaitingResponse"/>
           </button>
         </p>
@@ -49,8 +50,8 @@ except according to the terms contained in the LICENSE file.
         <div>
           Drop a file here, or
           <input ref="input" type="file" class="hidden">
-          <button type="button" class="btn btn-primary" :disabled="disabled"
-            @click="clickFileInput">
+          <button type="button" class="btn btn-primary"
+            :disabled="awaitingResponse" @click="$refs.input.click()">
             <span class="icon-folder-open"></span>choose one
           </button>
           to upload.
@@ -61,10 +62,11 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="modal-actions">
         <button id="form-new-create-button" type="button"
-          class="btn btn-primary" :disabled="disabled" @click="create(false)">
+          class="btn btn-primary" :disabled="awaitingResponse"
+          @click="create(false)">
           Create <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="disabled"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           Cancel
         </button>
@@ -80,11 +82,6 @@ import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
-
-const EXCEL_TYPES = [
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-excel'
-];
 
 export default {
   name: 'FormNew',
@@ -104,21 +101,17 @@ export default {
       fileIsOverDropZone: false,
       awaitingResponse: false,
       file: null,
-      reading: false,
-      xml: null,
       warnings: null
     };
   },
   computed: {
     ...requestData(['project']),
-    // Returns true if modal actions (selecting a file, submitting the XML, or
-    // hiding the modal) are disabled and false if not.
     disabled() {
-      return this.reading || this.awaitingResponse;
+      return this.awaitingResponse;
     },
     dropZoneClass() {
       return {
-        'form-new-disabled': this.disabled,
+        'form-new-disabled': this.awaitingResponse,
         'form-new-dragover': this.fileIsOverDropZone
       };
     }
@@ -127,8 +120,6 @@ export default {
     state(state) {
       if (state) return;
       this.file = null;
-      this.reading = false;
-      this.xml = null;
       this.warnings = null;
       this.$refs.input.value = '';
     }
@@ -137,54 +128,20 @@ export default {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
     $(this.$refs.input).on('change.form-new', (event) => {
-      this.processFile(event.target.files[0]);
+      this.afterFileSelection(event.target.files[0]);
     });
   },
   beforeDestroy() {
     $(this.$refs.input).off('.form-new');
   },
   methods: {
-    processXLSForm(file) {
+    afterFileSelection(file) {
       this.$alert().blank();
       this.file = file;
-      this.xml = null;
       this.warnings = null;
     },
-    processXForm(file) {
-      this.reading = true;
-      const reader = new FileReader();
-      const { currentRoute } = this.$store.state.router;
-      reader.onload = (event) => {
-        if (this.$store.state.router.currentRoute !== currentRoute) return;
-        this.$alert().blank();
-        this.file = file;
-        this.xml = event.target.result;
-      };
-      reader.onerror = () => {
-        if (this.$store.state.router.currentRoute !== currentRoute) return;
-        this.$alert().danger('Something went wrong while reading the XForm XML file.');
-        this.file = null;
-        this.xml = null;
-      };
-      reader.onloadend = () => {
-        if (this.$store.state.router.currentRoute !== currentRoute) return;
-        this.reading = false;
-        this.warnings = null;
-        this.$refs.input.value = '';
-      };
-      reader.readAsText(file);
-    },
-    processFile(file) {
-      if (EXCEL_TYPES.includes(file.type))
-        this.processXLSForm(file);
-      else
-        this.processXForm(file);
-    },
-    clickFileInput() {
-      this.$refs.input.click();
-    },
     ondrop(jQueryEvent) {
-      this.processFile(jQueryEvent.originalEvent.dataTransfer.files[0]);
+      this.afterFileSelection(jQueryEvent.originalEvent.dataTransfer.files[0]);
     },
     create(ignoreWarnings) {
       if (this.file == null) {
@@ -196,11 +153,14 @@ export default {
       const url = `/projects/${this.project.id}/forms${queryString}`;
 
       const headers = {};
-      if (this.xml != null) {
-        headers['Content-Type'] = 'application/xml';
-      } else {
+      const isExcel = this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        this.file.type === 'application/vnd.ms-excel';
+      if (isExcel) {
         headers['Content-Type'] = this.file.type;
         headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
+      // We assume that the file is XML if it is not an Excel file.
+      } else {
+        headers['Content-Type'] = 'application/xml';
       }
 
       const { currentRoute } = this.$store.state.router;
@@ -208,7 +168,7 @@ export default {
         method: 'POST',
         url,
         headers,
-        data: this.xml != null ? this.xml : this.file,
+        data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
         problemToAlert: ({ code, details }) => {
           if (code === 400.15) return `The XLSForm could not be converted: ${details.error}`;
