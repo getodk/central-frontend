@@ -61,6 +61,21 @@ describe('FormNew', () => {
         });
     });
 
+    it('hides the alert after a file is selected', () => {
+      const modal = mountAndMark(FormNew, {
+        propsData: { state: true },
+        requestData: { project: testData.extendedProjects.createPast(1).last() }
+      });
+      return trigger.click(modal, '#form-new-create-button')
+        .then(() => {
+          modal.should.alert('info');
+        })
+        .then(() => selectFileByInput(modal, xlsForm()))
+        .then(() => {
+          modal.should.not.alert();
+        });
+    });
+
     it('saves the file after it is selected using the file input', () => {
       const modal = mountAndMark(FormNew, {
         propsData: { state: true },
@@ -249,9 +264,125 @@ describe('FormNew', () => {
   });
 
   describe('XLSForm warnings', () => {
-    const uploadXLSFormWithWarnings = () => {
-      mockLogin();
-      return mockRoute('/projects/1')
+    beforeEach(mockLogin);
+
+    const xlsFormWarning = () => ({
+      code: 400.16,
+      message: 'The XLSForm is valid, but with warnings.',
+      details: {
+        error: null,
+        result: '<a><b/></a>',
+        warnings: ['warning 1', 'warning 2']
+      }
+    });
+
+    it('shows the warnings', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => selectFileByInput(modal, xlsForm())
+          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(modal => {
+          const warnings = modal.first('#form-new-warnings');
+          warnings.should.be.visible();
+          warnings.find('li').map(li => li.text()).should.eql(
+            ['warning 1', 'warning 2']
+          );
+        }));
+
+    it('hides the warnings after a new file is selected', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => selectFileByInput(modal, xlsForm())
+          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(modal => {
+          modal.first('#form-new-warnings').should.be.visible();
+          return modal;
+        })
+        .then(modal => selectFileByInput(modal, xlsForm()))
+        .then(modal => {
+          modal.first('#form-new-warnings').should.not.be.visible();
+        }));
+
+    it('hides the warnings after an alert is received', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => selectFileByInput(modal, xlsForm())
+          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(modal => {
+          modal.first('#form-new-warnings').should.be.visible();
+          modal.should.not.alert();
+        })
+        .request(modal =>
+          trigger.click(modal, '#form-new-warnings .btn-primary'))
+        .respondWithProblem()
+        .afterResponse(modal => {
+          modal.first('#form-new-warnings').should.not.be.visible();
+          modal.should.alert('danger');
+        }));
+
+    it('hides an alert after warnings are received', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => selectFileByInput(modal, xlsForm())
+          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .respondWithProblem()
+        .afterResponse(modal => {
+          modal.should.alert('danger');
+          modal.first('#form-new-warnings').should.not.be.visible();
+        })
+        .request(modal => trigger.click(modal, '#form-new-create-button'))
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(modal => {
+          modal.should.not.alert();
+          modal.first('#form-new-warnings').should.be.visible();
+        }));
+
+    it('sends ?ignoreWarnings=true if "Create anyway" is clicked', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => selectFileByInput(modal, xlsForm())
+          .then(() => trigger.click(modal, '#form-new-create-button')))
+        .beforeEachResponse((modal, config) => {
+          config.url.should.equal('/v1/projects/1/forms');
+        })
+        .respondWithProblem(xlsFormWarning)
+        .complete()
+        .request(modal => trigger.click(modal, '#form-new-warnings .btn-primary'))
+        .beforeEachResponse((modal, config) => {
+          config.url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
+        })
+        .respondWithProblem());
+
+    it('redirects to the form overview if "Create anyway" is clicked', () =>
+      mockRoute('/projects/1')
         .respondWithData(() => testData.extendedProjects
           .createPast(1, { forms: 0 })
           .last())
@@ -260,40 +391,7 @@ describe('FormNew', () => {
         .request(app => trigger.click(app, '#project-overview-new-form-button')
           .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
           .then(() => trigger.click(app, '#form-new-create-button')))
-        .respondWithProblem(() => ({
-          code: 400.16,
-          message: 'The XLSForm is valid, but with warnings.',
-          details: {
-            error: null,
-            result: '<a><b/></a>',
-            warnings: ['warning 1', 'warning 2']
-          }
-        }));
-    };
-
-    it('shows the warnings', () =>
-      uploadXLSFormWithWarnings().afterResponse(app => {
-        const warnings = app.first('#form-new-warnings');
-        warnings.should.be.visible();
-        warnings.find('li').map(li => li.text()).should.eql(
-          ['warning 1', 'warning 2']
-        );
-      }));
-
-    it('sends ?ignoreWarnings=true if "Create anyway" is clicked', () =>
-      uploadXLSFormWithWarnings()
-        .beforeEachResponse((app, config) => {
-          config.url.should.equal('/v1/projects/1/forms');
-        })
-        .complete()
-        .request(app => trigger.click(app, '#form-new-warnings .btn-primary'))
-        .beforeEachResponse((app, config) => {
-          config.url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
-        })
-        .respondWithProblem());
-
-    it('redirects to the form overview if "Create anyway" is clicked', () =>
-      uploadXLSFormWithWarnings()
+        .respondWithProblem(xlsFormWarning)
         .complete()
         .request(app => trigger.click(app, '#form-new-warnings .btn-primary'))
         .respondWithData(() => testData.standardForms
