@@ -211,7 +211,7 @@ export default {
         data: this.xml != null ? this.xml : this.file,
         fulfillProblem: ({ code }) => code === 400.16,
         problemToAlert: ({ code, details }) => {
-          if (code === 400.15) return details.error;
+          if (code === 400.15) return `The XLSForm could not be converted: ${details.error}`;
           if (code === 409.3 && details.table === 'forms') {
             const { fields } = details;
             if (fields.length === 2 && fields[0] === 'projectId' &&

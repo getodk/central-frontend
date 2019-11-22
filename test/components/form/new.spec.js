@@ -249,7 +249,7 @@ describe('FormNew', () => {
           }
         }))
         .afterResponse(modal => {
-          modal.should.alert('danger', 'Some XLSForm error');
+          modal.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
         }));
 
     it('shows a message for a projectId,xmlFormId duplicate', () =>
