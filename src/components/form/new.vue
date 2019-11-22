@@ -209,7 +209,7 @@ export default {
         url,
         headers,
         data: this.xml != null ? this.xml : this.file,
-        validateProblem: ({ code }) => code === 400.16,
+        fulfillProblem: ({ code }) => code === 400.16,
         problemToAlert: ({ code, details }) => {
           if (code === 400.15) return details.error;
           if (code === 409.3 && details.table === 'forms') {

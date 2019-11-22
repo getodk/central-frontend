@@ -34,10 +34,12 @@ import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlert
 request() accepts all the options that axios.request() does. It also accepts the
 following options:
 
-  - validateProblem. Usually, an error response means that the request was
+  - fulfillProblem. Usually, an error response means that the request was
     invalid or that something went wrong. However, in some cases, an error
-    response should be treated as if it is successful. Use validateProblem to
-    identify such responses. validateProblem is passed the Backend Problem. It
+    response should be treated as if it is successful, resulting in a fulfilled,
+    not a rejected, promise. Use fulfillProblem to identify such responses.
+    fulfillProblem is passed the Backend Problem. (Any error response that is
+    not a Problem is automatically considered unsuccessful.) fulfillProblem
     should return `true` if the response should be considered successful and
     `false` if not.
   - problemToAlert. If the request results in an error, request() shows an
@@ -62,12 +64,12 @@ will react to the change in `awaitingResponse` from `true` to `false`, running
 watchers and updating the DOM.
 */
 function request({
-  validateProblem = undefined,
+  fulfillProblem = undefined,
   problemToAlert = undefined,
   ...axiosConfig
 }) {
   if (axiosConfig.validateStatus != null)
-    throw new Error('validateStatus is not supported. Use validateProblem instead.');
+    throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
 
   if (this.awaitingResponse != null) this.awaitingResponse = true;
   const token = this.$store.getters.loggedIn
@@ -80,8 +82,8 @@ function request({
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
-      if (validateProblem != null && error.response != null &&
-        isProblem(error.response.data) && validateProblem(error.response.data))
+      if (fulfillProblem != null && error.response != null &&
+        isProblem(error.response.data) && fulfillProblem(error.response.data))
         return error.response;
 
       logAxiosError(error);

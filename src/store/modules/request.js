@@ -220,12 +220,14 @@ export default {
       Response Handling
       -----------------
 
-      - validateProblem (optional). Usually, an error response means that the
+      - fulfillProblem (optional). Usually, an error response means that the
         request was invalid or that something went wrong. However, in some
-        cases, an error response should be treated as if it is successful. Use
-        validateProblem to identify such responses. validateProblem is passed
-        the Backend Problem. It should return `true` if the response should be
-        considered successful and `false` if not.
+        cases, an error response should be treated as if it is successful
+        (resulting in a fulfilled, not a rejected, promise). Use fulfillProblem
+        to identify such responses. fulfillProblem is passed the Backend
+        Problem. (Any error response that is not a Problem is automatically
+        considered unsuccessful.) fulfillProblem should return `true` if the
+        response should be considered successful and `false` if not.
       - success (optional)
 
         Callback to run if the request is successful and is not canceled. get()
@@ -316,7 +318,7 @@ export default {
           extended = false,
 
           // Response handling
-          validateProblem = undefined,
+          fulfillProblem = undefined,
           success,
           problemToAlert = undefined,
 
@@ -370,9 +372,9 @@ export default {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
 
-            if (validateProblem != null && error.response != null &&
+            if (fulfillProblem != null && error.response != null &&
               isProblem(error.response.data) &&
-              validateProblem(error.response.data))
+              fulfillProblem(error.response.data))
               return error.response;
 
             logAxiosError(error);

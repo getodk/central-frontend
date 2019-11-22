@@ -66,7 +66,7 @@ export default {
         {
           key: 'backupsConfig',
           url: '/config/backups',
-          validateProblem: ({ code }) => code === 404.1
+          fulfillProblem: ({ code }) => code === 404.1
         },
         {
           key: 'audits',
