@@ -20,8 +20,8 @@ concurrent requests, for example, by disabling a submit button while a request
 is in progress. Separate components can send concurrent requests, but any single
 component can only send one request at a time.
 
-The component using this mixin may optionally define the following data
-property:
+The mixin factory does not take any options. However, the component using this
+mixin may optionally define the following data property:
 
   - awaitingResponse. `true` if a request is in progress and `false` if not.
     Initialize the property as `false`. The component using the mixin should not
@@ -31,8 +31,8 @@ property:
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../util/request';
 
 /*
-request() accepts all the options that axios.request() does. It also accepts the
-following options:
+request() accepts all the options that axios.request() does (with the exception
+of validateStatus). It also accepts the following options:
 
   - fulfillProblem. Usually, an error response means that the request was
     invalid or that something went wrong. However, in some cases, an error
@@ -47,7 +47,7 @@ following options:
     Problem. However, if a function is specified for problemToAlert, request()
     first passes the Problem to the function, which has the option to return a
     different message. If the function returns `null` or `undefined`, the
-    default message is used.
+    Problem's message is used.
 
 Return Value
 ------------
@@ -68,6 +68,9 @@ function request({
   problemToAlert = undefined,
   ...axiosConfig
 }) {
+  // We don't allow validateStatus, because it is so similar to
+  // fulfillProblem, and it might not be clear how the two would work
+  // together.
   if (axiosConfig.validateStatus != null)
     throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
 
@@ -100,28 +103,28 @@ function request({
     });
 }
 
-export default () => { // eslint-disable-line arrow-body-style
-  // @vue/component
-  return {
-    watch: {
-      $route() {
-        this.awaitingResponse = false;
-      }
-    },
-    methods: {
-      request,
-      post(url, data, config) {
-        return this.request({ ...config, method: 'POST', url, data });
-      },
-      put(url, data, config) {
-        return this.request({ ...config, method: 'PUT', url, data });
-      },
-      patch(url, data, config) {
-        return this.request({ ...config, method: 'PATCH', url, data });
-      },
-      delete: function del(url, config) {
-        return this.request({ ...config, method: 'DELETE', url });
-      }
+// @vue/component
+const mixin = {
+  watch: {
+    $route() {
+      this.awaitingResponse = false;
     }
-  };
+  },
+  methods: {
+    request,
+    post(url, data, config) {
+      return this.request({ ...config, method: 'POST', url, data });
+    },
+    put(url, data, config) {
+      return this.request({ ...config, method: 'PUT', url, data });
+    },
+    patch(url, data, config) {
+      return this.request({ ...config, method: 'PATCH', url, data });
+    },
+    delete: function del(url, config) {
+      return this.request({ ...config, method: 'DELETE', url });
+    }
+  }
 };
+
+export default () => mixin;

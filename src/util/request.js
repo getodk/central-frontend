@@ -27,6 +27,7 @@ export const configForPossibleBackendRequest = (config, token) => {
   };
 };
 
+// Returns `true` if `data` looks like a Backend Problem and `false` if not.
 export const isProblem = (data) => data != null && typeof data === 'object' &&
   data.code != null && data.message != null;
 

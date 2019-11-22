@@ -251,7 +251,7 @@ export default {
         Backend Problem. However, if a function is specified for problemToAlert,
         get() first passes the Problem to the function, which has the option to
         return a different message. If the function returns `null` or
-        `undefined`, the default message is used.
+        `undefined`, the Problem's message is used.
 
       Existing Data
       -------------
