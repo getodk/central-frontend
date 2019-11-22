@@ -66,8 +66,7 @@ export default {
         {
           key: 'backupsConfig',
           url: '/config/backups',
-          validateStatus: (status) =>
-            (status >= 200 && status < 300) || status === 404
+          fulfillProblem: ({ code }) => code === 404.1
         },
         {
           key: 'audits',

@@ -20,26 +20,34 @@ concurrent requests, for example, by disabling a submit button while a request
 is in progress. Separate components can send concurrent requests, but any single
 component can only send one request at a time.
 
-The component using this mixin may optionally define the following data
-property:
+The mixin factory does not take any options. However, the component using this
+mixin may optionally define the following data property:
 
   - awaitingResponse. `true` if a request is in progress and `false` if not.
     Initialize the property as `false`. The component using the mixin should not
     directly mutate this property after defining it.
 */
 
-import { configForPossibleBackendRequest, logAxiosError, requestAlertMessage } from '../util/request';
+import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../util/request';
 
 /*
-request() accepts all the options that axios.request() does. It also accepts the
-following option:
+request() accepts all the options that axios.request() does (with the exception
+of validateStatus). It also accepts the following options:
 
+  - fulfillProblem. Usually, an error response means that the request was
+    invalid or that something went wrong. However, in some cases, an error
+    response should be treated as if it is successful, resulting in a fulfilled,
+    not a rejected, promise. Use fulfillProblem to identify such responses.
+    fulfillProblem is passed the Backend Problem. (Any error response that is
+    not a Problem is automatically considered unsuccessful.) fulfillProblem
+    should return `true` if the response should be considered successful and
+    `false` if not.
   - problemToAlert. If the request results in an error, request() shows an
     alert. By default, the alert message is the same as that of the Backend
     Problem. However, if a function is specified for problemToAlert, request()
     first passes the Problem to the function, which has the option to return a
     different message. If the function returns `null` or `undefined`, the
-    default message is used.
+    Problem's message is used.
 
 Return Value
 ------------
@@ -55,7 +63,17 @@ request resulted in an error. Before the then() or catch() callback is run, Vue
 will react to the change in `awaitingResponse` from `true` to `false`, running
 watchers and updating the DOM.
 */
-function request({ problemToAlert = undefined, ...axiosConfig }) {
+function request({
+  fulfillProblem = undefined,
+  problemToAlert = undefined,
+  ...axiosConfig
+}) {
+  // We don't allow validateStatus, because it is so similar to
+  // fulfillProblem, and it might not be clear how the two would work
+  // together.
+  if (axiosConfig.validateStatus != null)
+    throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
+
   if (this.awaitingResponse != null) this.awaitingResponse = true;
   const token = this.$store.getters.loggedIn
     ? this.$store.state.request.data.session.token
@@ -66,6 +84,11 @@ function request({ problemToAlert = undefined, ...axiosConfig }) {
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
+
+      if (fulfillProblem != null && error.response != null &&
+        isProblem(error.response.data) && fulfillProblem(error.response.data))
+        return error.response;
+
       logAxiosError(error);
       const message = requestAlertMessage(error, problemToAlert);
       this.$store.commit('setAlert', { type: 'danger', message });
@@ -75,32 +98,33 @@ function request({ problemToAlert = undefined, ...axiosConfig }) {
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
+
       return response;
     });
 }
 
-export default () => { // eslint-disable-line arrow-body-style
-  // @vue/component
-  return {
-    watch: {
-      $route() {
-        this.awaitingResponse = false;
-      }
-    },
-    methods: {
-      request,
-      post(url, data, config) {
-        return this.request({ ...config, method: 'POST', url, data });
-      },
-      put(url, data, config) {
-        return this.request({ ...config, method: 'PUT', url, data });
-      },
-      patch(url, data, config) {
-        return this.request({ ...config, method: 'PATCH', url, data });
-      },
-      delete: function del(url, config) {
-        return this.request({ ...config, method: 'DELETE', url });
-      }
+// @vue/component
+const mixin = {
+  watch: {
+    $route() {
+      this.awaitingResponse = false;
     }
-  };
+  },
+  methods: {
+    request,
+    post(url, data, config) {
+      return this.request({ ...config, method: 'POST', url, data });
+    },
+    put(url, data, config) {
+      return this.request({ ...config, method: 'PUT', url, data });
+    },
+    patch(url, data, config) {
+      return this.request({ ...config, method: 'PATCH', url, data });
+    },
+    delete: function del(url, config) {
+      return this.request({ ...config, method: 'DELETE', url });
+    }
+  }
 };
+
+export default () => mixin;

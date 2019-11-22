@@ -252,7 +252,7 @@ $popup-width: 300px;
     #form-attachment-popups-unmatched {
       $padding: 10px;
 
-      background-color: #f5c93b;
+      background-color: $color-warning;
       font-size: 12px;
       line-height: 14px;
       margin-bottom: 17px;

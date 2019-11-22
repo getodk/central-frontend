@@ -20,7 +20,7 @@ import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
 import Project from '../../presenters/project';
 import User from '../../presenters/user';
-import { configForPossibleBackendRequest, logAxiosError, requestAlertMessage } from '../../util/request';
+import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 
 // Each type of response data that this module manages is associated with a key.
 const allKeys = [
@@ -220,7 +220,14 @@ export default {
       Response Handling
       -----------------
 
-      - validateStatus (optional). Passed to axios.
+      - fulfillProblem (optional). Usually, an error response means that the
+        request was invalid or that something went wrong. However, in some
+        cases, an error response should be treated as if it is successful
+        (resulting in a fulfilled, not a rejected, promise). Use fulfillProblem
+        to identify such responses. fulfillProblem is passed the Backend
+        Problem. (Any error response that is not a Problem is automatically
+        considered unsuccessful.) fulfillProblem should return `true` if the
+        response should be considered successful and `false` if not.
       - success (optional)
 
         Callback to run if the request is successful and is not canceled. get()
@@ -244,7 +251,7 @@ export default {
         Backend Problem. However, if a function is specified for problemToAlert,
         get() first passes the Problem to the function, which has the option to
         return a different message. If the function returns `null` or
-        `undefined`, the default message is used.
+        `undefined`, the Problem's message is used.
 
       Existing Data
       -------------
@@ -311,7 +318,7 @@ export default {
           extended = false,
 
           // Response handling
-          validateStatus = undefined,
+          fulfillProblem = undefined,
           success,
           problemToAlert = undefined,
 
@@ -357,7 +364,6 @@ export default {
         baseConfig.headers = extended
           ? { ...headers, 'X-Extended-Metadata': 'true' }
           : headers;
-        if (validateStatus != null) baseConfig.validateStatus = validateStatus;
         const token = getters.loggedIn ? state.data.session.token : null;
         const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
 
@@ -365,6 +371,11 @@ export default {
           .catch(error => { // eslint-disable-line no-loop-func
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
+
+            if (fulfillProblem != null && error.response != null &&
+              isProblem(error.response.data) &&
+              fulfillProblem(error.response.data))
+              return error.response;
 
             logAxiosError(error);
             if (firstError) {

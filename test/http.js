@@ -169,7 +169,6 @@ the comments above each method below.
 */
 
 let inProgress = false;
-const statusIs2xx = (status) => status >= 200 && status < 300;
 
 class MockHttp {
   constructor({
@@ -452,7 +451,7 @@ class MockHttp {
         MockHttp uses two promises:
 
           1. The first promise is chained on this._previousPromise and returned
-             by the after responses hooks. Usually it is ultimately returned to
+             by an after responses hook. Usually it is ultimately returned to
              Mocha.
           2. The second promise, stored in this._responseChain, holds the
              responses, chained in order of request. this._responseChain is not
@@ -467,7 +466,8 @@ class MockHttp {
         that _tryBeforeEachNav(), _tryBeforeAnyResponse(), and
         _tryBeforeEachResponse() catch any error even though they are called
         within a promise chain. Those methods catch and store any error so that
-        the after responses hook is able to reject the first promise.
+        the after responses hook is able to reject the first promise if
+        something unexpected happens in the second promise.
         */
         this._responsesPromise = Promise.resolve();
         this._errorFromBeforeAnyResponse = null;
@@ -505,7 +505,6 @@ class MockHttp {
     // The number of requests sent so far
     let count = 0;
     return (config) => {
-      const { validateStatus = statusIs2xx } = config;
       this._requestResponseLog.push(config);
       if (count === this._responses.length - 1)
         this._responseWithoutRequest = false;
@@ -518,8 +517,15 @@ class MockHttp {
       const index = count;
       count += 1;
       this._responsesPromise = this._responsesPromise
-        // Run Vue.nextTick() so that Vue has a chance to react after the
-        // initial requests or the previous response.
+        // If this is not the first response, and the previous response was an
+        // error, then this._responsesPromise will be rejected. However, we need
+        // this part of the promise chain to be fulfilled, because this response
+        // will not necessarily be an error even if the prevous one was.
+        .catch(() => {})
+        // Either the initial requests have just been sent, in which case this
+        // is the first response, or a previous response has been returned
+        // (perhaps just now). Either way, run Vue.nextTick() so that Vue has a
+        // chance to react.
         .then(() => Vue.nextTick())
         .then(() => (index === 0 && this._beforeAnyResponse != null
           ? this._tryBeforeAnyResponse()
@@ -538,7 +544,7 @@ class MockHttp {
           }
           this._requestResponseLog.push(response);
           const responseWithConfig = { ...response, config };
-          if (validateStatus(response.status)) {
+          if (response.status >= 200 && response.status < 300) {
             resolve(responseWithConfig);
           } else {
             const error = new Error();
