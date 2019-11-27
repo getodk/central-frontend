@@ -16,9 +16,10 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>
-          You are about to archive the Project &ldquo;{{ project.name }}&rdquo;.
-          It will still work as it does now, but it will be sorted to the bottom
-          of the Project List on the Central homepage.
+          You are about to archive the Project
+          &ldquo;{{ project != null ? project.name : '' }}&rdquo;. It will still
+          work as it does now, but it will be sorted to the bottom of the
+          Project List on the Central homepage.
         </p>
         <p>
           <strong>This action cannot be undone</strong>, but the ability to

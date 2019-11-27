@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="project != null" id="project-settings">
-    <div class="row">
+  <div id="project-settings">
+    <div v-if="project != null" class="row">
       <div class="col-xs-8">
         <project-edit/>
       </div>
