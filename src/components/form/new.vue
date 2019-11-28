@@ -114,6 +114,17 @@ export default {
         'form-new-disabled': this.awaitingResponse,
         'form-new-dragover': this.fileIsOverDropZone
       };
+    },
+    // Returns the inferred content type of the file based on its extension. (We
+    // first tried using this.file.type rather than inferring the content type,
+    // but that didn't work in Edge.)
+    contentType() {
+      const { name } = this.file;
+      if (name.length >= 5 && name.slice(-5) === '.xlsx')
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      if (name.length >= 4 && name.slice(-4) === '.xls')
+        return 'application/vnd.ms-excel';
+      return 'application/xml';
     }
   },
   watch: {
@@ -151,18 +162,9 @@ export default {
 
       const queryString = ignoreWarnings ? '?ignoreWarnings=true' : '';
       const url = `/projects/${this.project.id}/forms${queryString}`;
-
-      const headers = {};
-      const isExcel = this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-        this.file.type === 'application/vnd.ms-excel';
-      if (isExcel) {
-        headers['Content-Type'] = this.file.type;
+      const headers = { 'Content-Type': this.contentType };
+      if (this.contentType !== 'application/xml')
         headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
-      // We assume that the file is XML if it is not an Excel file.
-      } else {
-        headers['Content-Type'] = 'application/xml';
-      }
-
       const { currentRoute } = this.$store.state.router;
       this.request({
         method: 'POST',

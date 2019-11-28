@@ -127,13 +127,53 @@ describe('FormNew', () => {
       mockHttp()
         .mount(FormNew, {
           propsData: { state: true },
-          requestData: { project: testData.extendedProjects.createPast(1).last() }
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           config.headers['X-XlsForm-FormId-Fallback'].should.equal('my_form');
+        })
+        .respondWithProblem());
+
+    it('sends the correct headers for an .xls file', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => {
+          const type = 'application/vnd.ms-excel';
+          const file = new File([''], 'my_form.xls', { type });
+          return selectFileByInput(modal, file)
+            .then(() => trigger.click(modal, '#form-new-create-button'));
+        })
+        .beforeEachResponse((modal, config) => {
+          config.headers['Content-Type'].should.equal('application/vnd.ms-excel');
+          config.headers['X-XlsForm-FormId-Fallback'].should.equal('my_form');
+        })
+        .respondWithProblem());
+
+    it('determines the content type based on the file extension', () =>
+      mockHttp()
+        .mount(FormNew, {
+          propsData: { state: true },
+          requestData: {
+            project: testData.extendedProjects.createPast(1).last()
+          }
+        })
+        .request(modal => {
+          const file = new File([''], 'my_form.xlsx', { type: 'application/xml' });
+          return selectFileByInput(modal, file)
+            .then(() => trigger.click(modal, '#form-new-create-button'));
+        })
+        .beforeEachResponse((modal, config) => {
+          config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         })
         .respondWithProblem());
   });
