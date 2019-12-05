@@ -1,10 +1,10 @@
 import UserEdit from '../../../../src/components/user/edit.vue';
 import UserEditPassword from '../../../../src/components/user/edit/password.vue';
 import testData from '../../../data';
-import { fillForm, submitForm } from '../../../event';
-import { mockHttp, mockRoute } from '../../../http';
-import { mockLogin } from '../../../session';
-import { mountAndMark } from '../../../destroy';
+import { fillForm, submitForm } from '../../../util/event';
+import { mockHttp, mockRoute } from '../../../util/http';
+import { mockLogin } from '../../../util/session';
+import { mountAndMark } from '../../../util/destroy';
 
 const submitPasswords = (wrapper, { match }) =>
   submitForm(wrapper, '#user-edit-password form', [

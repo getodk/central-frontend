@@ -1,4 +1,4 @@
-import router from '../src/router';
+import router from '../../src/router';
 
 // All guards must be synchronous.
 const guards = {

@@ -1,10 +1,10 @@
 import ProjectFormAccess from '../../../src/components/project/form-access.vue';
 import faker from '../../faker';
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../http';
-import { mountAndMark } from '../../destroy';
-import { trigger } from '../../event';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
+import { mountAndMark } from '../../util/destroy';
+import { trigger } from '../../util/event';
 
 // Loads ProjectFormAccess, rendering one row for the table.
 const loadFormAccess = () => mockRoute('/projects/1/form-access')

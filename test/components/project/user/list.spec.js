@@ -1,9 +1,9 @@
 import ProjectUserList from '../../../../src/components/project/user/list.vue';
 import Spinner from '../../../../src/components/spinner.vue';
 import testData from '../../../data';
-import { mockHttp, mockRoute } from '../../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../../session';
-import { trigger } from '../../../event';
+import { mockHttp, mockRoute } from '../../../util/http';
+import { mockLogin, mockRouteThroughLogin } from '../../../util/session';
+import { trigger } from '../../../util/event';
 
 // Creates a project, users, and project assignments, then loads the component.
 // Use `roles` to specify a role for every user; a user will be created for each

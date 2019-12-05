@@ -1,7 +1,7 @@
 import testData from '../../data';
-import { mockRoute } from '../../http';
-import { mockRouteThroughLogin } from '../../session';
-import { submitForm } from '../../event';
+import { mockRoute } from '../../util/http';
+import { mockRouteThroughLogin } from '../../util/session';
+import { submitForm } from '../../util/event';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 

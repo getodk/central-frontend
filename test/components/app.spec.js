@@ -1,4 +1,4 @@
-import { mockRoute } from '../http';
+import { mockRoute } from '../util/http';
 
 describe('App', () => {
   it('clicking an a.disabled element prevents default', () =>

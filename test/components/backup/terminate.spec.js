@@ -1,9 +1,9 @@
 import BackupList from '../../../src/components/backup/list.vue';
 import BackupTerminate from '../../../src/components/backup/terminate.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { trigger } from '../../util/event';
 
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);

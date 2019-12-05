@@ -1,8 +1,8 @@
 import ProjectNew from '../../../src/components/project/new.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { submitForm, trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { submitForm, trigger } from '../../util/event';
 
 describe('ProjectNew', () => {
   it('does not show New button if user does not have a grant to project.create', () => {

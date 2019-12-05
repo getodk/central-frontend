@@ -3,9 +3,9 @@ import BackupList from '../../../src/components/backup/list.vue';
 import BackupNew from '../../../src/components/backup/new.vue';
 import faker from '../../faker';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { submitForm, trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { submitForm, trigger } from '../../util/event';
 
 const moveToStep1 = (component) => {
   if (![App, BackupList, BackupNew].includes(component))

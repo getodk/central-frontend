@@ -1,7 +1,7 @@
 import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../http';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
 
 describe('UserEdit', () => {
   describe('navigating to /account/edit', () => {

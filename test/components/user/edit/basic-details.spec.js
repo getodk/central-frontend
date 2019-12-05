@@ -1,7 +1,7 @@
 import testData from '../../../data';
-import { fillForm, submitForm } from '../../../event';
-import { mockLogin } from '../../../session';
-import { mockRoute } from '../../../http';
+import { fillForm, submitForm } from '../../../util/event';
+import { mockLogin } from '../../../util/session';
+import { mockRoute } from '../../../util/http';
 
 describe('UserEditBasicDetails', () => {
   beforeEach(() => {

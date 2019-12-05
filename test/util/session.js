@@ -1,6 +1,6 @@
-import User from '../src/presenters/user';
-import store from '../src/store';
-import testData from './data';
+import User from '../../src/presenters/user';
+import store from '../../src/store';
+import testData from '../data';
 import { mockRoute } from './http';
 import { submitForm } from './event';
 

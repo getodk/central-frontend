@@ -1,7 +1,7 @@
 import testData from '../../data';
-import { mockRoute } from '../../http';
-import { mockRouteThroughLogin, submitLoginForm } from '../../session';
-import { trigger } from '../../event';
+import { mockRoute } from '../../util/http';
+import { mockRouteThroughLogin, submitLoginForm } from '../../util/session';
+import { trigger } from '../../util/event';
 
 describe('AccountLogin', () => {
   describe('routing', () => {

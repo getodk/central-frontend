@@ -1,9 +1,9 @@
 import ProjectFormAccess from '../../../../src/components/project/form-access.vue';
 import ProjectFormAccessStates from '../../../../src/components/project/form-access/states.vue';
 import testData from '../../../data';
-import { mockLogin } from '../../../session';
-import { mountAndMark } from '../../../destroy';
-import { trigger } from '../../../event';
+import { mockLogin } from '../../../util/session';
+import { mountAndMark } from '../../../util/destroy';
+import { trigger } from '../../../util/event';
 
 describe('ProjectFormAccessStates', () => {
   beforeEach(mockLogin);

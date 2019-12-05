@@ -1,7 +1,7 @@
 import testData from '../../data';
-import { mockRoute } from '../../http';
-import { mockRouteThroughLogin } from '../../session';
-import { submitForm, trigger } from '../../event';
+import { mockRoute } from '../../util/http';
+import { mockRouteThroughLogin } from '../../util/session';
+import { submitForm, trigger } from '../../util/event';
 
 describe('AccountResetPassword', () => {
   describe('routing', () => {

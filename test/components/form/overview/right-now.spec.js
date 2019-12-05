@@ -1,6 +1,6 @@
 import testData from '../../../data';
-import { mockLogin } from '../../../session';
-import { mockRoute } from '../../../http';
+import { mockLogin } from '../../../util/session';
+import { mockRoute } from '../../../util/http';
 
 const loadOverview = (formOptions = {}) => {
   testData.extendedProjects.createPast(1, { appUsers: 1 });

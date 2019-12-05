@@ -1,9 +1,9 @@
 import ProjectOverviewRightNow from '../../../../src/components/project/overview/right-now.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
 import testData from '../../../data';
-import { mockLogin } from '../../../session';
-import { mockRoute } from '../../../http';
-import { trigger } from '../../../event';
+import { mockLogin } from '../../../util/session';
+import { mockRoute } from '../../../util/http';
+import { trigger } from '../../../util/event';
 
 describe('ProjectOverviewRightNow', () => {
   it('is not shown to a project viewer', () => {

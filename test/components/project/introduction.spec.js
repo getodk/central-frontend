@@ -1,8 +1,8 @@
 import ProjectIntroduction from '../../../src/components/project/introduction.vue';
 import testData from '../../data';
-import { mockLogin } from '../../session';
-import { mockRoute } from '../../http';
-import { trigger } from '../../event';
+import { mockLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
+import { trigger } from '../../util/event';
 
 describe('ProjectIntroduction', () => {
   beforeEach(mockLogin);
