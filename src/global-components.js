@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import AppForm from './components/app-form.vue';
 import FloatRow from './components/float-row.vue';
 import Loading from './components/loading.vue';
 import Modal from './components/modal.vue';
@@ -26,7 +25,6 @@ import Spinner from './components/spinner.vue';
 // A global component must have a `name` property whose value is PascalCase:
 // https://vuejs.org/v2/guide/components.html#Component-Naming-Conventions
 const globalComponents = [
-  AppForm,
   FloatRow,
   Loading,
   Modal,

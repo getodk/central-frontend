@@ -15,10 +15,11 @@ except according to the terms contained in the LICENSE file.
       <div class="panel panel-default panel-main">
         <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
         <div class="panel-body">
-          <app-form @submit="submit">
+          <form @submit.prevent="submit">
             <label class="form-group">
-              <input v-model.trim="email" type="email" class="form-control"
-                placeholder="Email address *" required autocomplete="off">
+              <input ref="email" v-model.trim="email" type="email"
+                class="form-control" placeholder="Email address *" required
+                autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <label class="form-group">
@@ -37,7 +38,7 @@ except according to the terms contained in the LICENSE file.
                 Reset password
               </router-link>
             </div>
-          </app-form>
+          </form>
         </div>
       </div>
     </div>
@@ -46,6 +47,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'AccountLogin',
@@ -64,6 +66,9 @@ export default {
         query: Object.assign({}, this.$route.query)
       };
     }
+  },
+  mounted() {
+    this.$refs.email.focus();
   },
   beforeRouteLeave(to, from, next) {
     if (this.disabled) {
@@ -110,7 +115,7 @@ export default {
         .then(() => {
           this.routeToNext();
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

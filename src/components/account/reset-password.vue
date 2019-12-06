@@ -19,10 +19,11 @@ except according to the terms contained in the LICENSE file.
           </h1>
         </div>
         <div class="panel-body">
-          <app-form @submit="submit">
+          <form @submit.prevent="submit">
             <label class="form-group">
-              <input v-model.trim="email" type="email" class="form-control"
-                placeholder="Email address *" required autocomplete="off">
+              <input ref="email" v-model.trim="email" type="email"
+                class="form-control" placeholder="Email address *" required
+                autocomplete="off">
               <span class="form-label">Email address *</span>
             </label>
             <div class="panel-footer">
@@ -35,7 +36,7 @@ except according to the terms contained in the LICENSE file.
                 Cancel
               </router-link>
             </div>
-          </app-form>
+          </form>
         </div>
       </div>
     </div>
@@ -44,6 +45,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'AccountResetPassword',
@@ -62,6 +64,9 @@ export default {
       };
     }
   },
+  mounted() {
+    this.$refs.email.focus();
+  },
   methods: {
     submit() {
       this
@@ -69,7 +74,7 @@ export default {
         .then(() => this.$router.push(this.loginLocation, () => {
           this.$alert().success(`An email has been sent to ${this.email} with further instructions.`);
         }))
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };
