@@ -48,11 +48,14 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectNew',
-  components: { DocLink },
+  components: { DocLink, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -80,7 +83,7 @@ export default {
         .then(({ data }) => {
           this.$emit('success', data);
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

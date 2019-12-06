@@ -128,11 +128,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import FormChecklistStep from './checklist-step.vue';
+import PageSection from '../page/section.vue';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormChecklist',
-  components: { DocLink, FormChecklistStep },
+  components: { DocLink, FormChecklistStep, PageSection },
   computed: {
     ...requestData(['project', 'form', 'attachments', 'assignmentActors']),
     // Returns true if all form attachments exist and false if not. Returns true

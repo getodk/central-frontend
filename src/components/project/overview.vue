@@ -43,6 +43,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
+import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import canRoute from '../../mixins/can-route';
@@ -57,6 +59,8 @@ export default {
   components: {
     FormList,
     FormNew,
+    Loading,
+    PageSection,
     ProjectOverviewAbout,
     ProjectOverviewRightNow
   },

@@ -37,6 +37,8 @@ import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
 import BackupsConfig from '../../presenters/backups-config';
+import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
 import { noop } from '../../util/util';
@@ -44,7 +46,14 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupList',
-  components: { AuditTable, BackupNew, BackupStatus, BackupTerminate },
+  components: {
+    AuditTable,
+    BackupNew,
+    BackupStatus,
+    BackupTerminate,
+    Loading,
+    PageSection
+  },
   mixins: [modal(), validateData({ update: false })],
   data() {
     return {
@@ -82,6 +91,7 @@ export default {
       this.$alert().success('Success! Automatic backups are now configured.');
     },
     afterTerminate() {
+      this.hideModal('terminate');
       this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
       this.$store.commit('setData', {
         key: 'backupsConfig',

@@ -63,6 +63,8 @@ either is an Administrator or has no role. -->
 
 <script>
 import DocLink from '../doc-link.vue';
+import Loading from '../loading.vue';
+import RefreshButton from '../refresh-button.vue';
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
@@ -74,7 +76,15 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserList',
-  components: { DocLink, UserNew, UserResetPassword, UserRetire, UserRow },
+  components: {
+    DocLink,
+    Loading,
+    RefreshButton,
+    UserNew,
+    UserResetPassword,
+    UserRetire,
+    UserRow
+  },
   mixins: [modal(), validateData({ update: false })],
   data() {
     return {

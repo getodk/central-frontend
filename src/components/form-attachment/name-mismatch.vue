@@ -40,8 +40,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Modal from '../modal.vue';
+
 export default {
   name: 'FormAttachmentNameMismatch',
+  components: { Modal },
   props: {
     state: {
       type: Boolean,

@@ -47,10 +47,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Modal from '../modal.vue';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDecrypt',
+  components: { Modal },
   props: {
     state: {
       type: Boolean,

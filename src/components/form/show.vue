@@ -67,6 +67,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Loading from '../loading.vue';
+import PageBody from '../page/body.vue';
+import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
 import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
@@ -77,6 +80,7 @@ const REQUEST_KEYS = ['project', 'form', 'attachments'];
 
 export default {
   name: 'FormShow',
+  components: { Loading, PageBody, PageHead },
   mixins: [canRoute(), tab()],
   props: {
     projectId: {

@@ -31,6 +31,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Loading from '../loading.vue';
+import PageBody from '../page/body.vue';
+import PageHead from '../page/head.vue';
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
 import validateData from '../../mixins/validate-data';
@@ -39,7 +42,13 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'UserEdit',
-  components: { UserEditBasicDetails, UserEditPassword },
+  components: {
+    Loading,
+    PageBody,
+    PageHead,
+    UserEditBasicDetails,
+    UserEditPassword
+  },
   mixins: [validateData()],
   props: {
     id: {

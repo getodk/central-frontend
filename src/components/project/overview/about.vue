@@ -36,9 +36,10 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../../doc-link.vue';
+import PageSection from '../../page/section.vue';
 
 export default {
   name: 'ProjectOverviewAbout',
-  components: { DocLink }
+  components: { DocLink, PageSection }
 };
 </script>

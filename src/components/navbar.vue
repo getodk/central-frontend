@@ -88,6 +88,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import canRoute from '../mixins/can-route';
 import request from '../mixins/request';
+import { noop } from '../util/util';
 import { requestData } from '../store/modules/request';
 
 export default {
@@ -107,7 +108,7 @@ export default {
     },
     logOut() {
       // Backend ensures that the token is URL-safe.
-      this.delete(`/sessions/${this.session.token}`).catch(() => {});
+      this.delete(`/sessions/${this.session.token}`).catch(noop);
       this.$store.commit('clearData');
       this.$router.push('/login', () => {
         this.$alert().success('You have logged out successfully.');

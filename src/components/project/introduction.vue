@@ -36,10 +36,11 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import Modal from '../modal.vue';
 
 export default {
   name: 'ProjectIntroduction',
-  components: { DocLink },
+  components: { DocLink, Modal },
   props: {
     state: {
       type: Boolean,

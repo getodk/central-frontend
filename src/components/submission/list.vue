@@ -58,6 +58,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FloatRow from '../float-row.vue';
+import Loading from '../loading.vue';
+import RefreshButton from '../refresh-button.vue';
+import Spinner from '../spinner.vue';
 import SubmissionAnalyze from './analyze.vue';
 import SubmissionDecrypt from './decrypt.vue';
 import SubmissionTable from './table.vue';
@@ -70,7 +74,15 @@ const MAX_SMALL_CHUNKS = 4;
 
 export default {
   name: 'SubmissionList',
-  components: { SubmissionAnalyze, SubmissionDecrypt, SubmissionTable },
+  components: {
+    FloatRow,
+    Loading,
+    RefreshButton,
+    Spinner,
+    SubmissionAnalyze,
+    SubmissionDecrypt,
+    SubmissionTable
+  },
   mixins: [modal(), validateData()],
   props: {
     projectId: {

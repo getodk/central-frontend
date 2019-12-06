@@ -34,12 +34,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditBasicDetails',
+  components: { Spinner },
   mixins: [request()],
   data() {
     const { email, displayName } = this.$store.state.request.data.user;
