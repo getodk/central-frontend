@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-uploaded">Uploaded</th>
         </tr>
       </thead>
-      <tbody v-if="attachments != null">
+      <tbody v-if="form != null && attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
           :key="attachment.key" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
@@ -149,6 +149,7 @@ export default {
     };
   },
   computed: {
+    // The component does not assume that this data exists.
     ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
