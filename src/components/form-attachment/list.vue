@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-cloud-upload"></span>Upload files
       </button>
       <div>
-        Based on the form you uploaded, the following files are expected. You
+        Based on the Form you uploaded, the following files are expected. You
         can see which ones have been uploaded or are still missing.
       </div>
       <div>
