@@ -20,7 +20,9 @@ except according to the terms contained in the LICENSE file.
           <span :class="versionClass" :title="versionOrBlank">
             {{ versionOrBlank }}
           </span>
-          <a :href="xmlPath" class="btn btn-primary" target="_blank">
+          <form-preview-button :preview-path="previewPath"/>
+          <a id="form-view-xml-button" class="btn btn-primary" :href="xmlPath"
+            target="_blank">
             <span class="icon-arrow-circle-down"></span>View XML
           </a>
         </template>
@@ -63,11 +65,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SummaryItem from '../../summary-item.vue';
+import FormPreviewButton from './right-now/preview-button.vue';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
-  components: { SummaryItem },
+  components: { SummaryItem, FormPreviewButton },
   computed: {
     ...requestData(['project', 'form', 'assignmentActors']),
     versionClass() {
@@ -83,6 +86,9 @@ export default {
     },
     submissionsPath() {
       return `/projects/${this.project.id}/forms/${this.form.encodedId()}/submissions`;
+    },
+    previewPath() {
+      return `/projects/${this.project.id}/forms/${this.form.encodedId()}/preview`;
     }
   }
 };
@@ -100,7 +106,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    + .btn {
+    ~ .btn {
       bottom: 10px;
       margin-left: 12px;
       position: relative;
@@ -110,7 +116,7 @@ export default {
   .blank-form-version {
     font-family: inherit;
 
-    + .btn {
+    ~ .btn {
       bottom: 5px;
     }
   }
