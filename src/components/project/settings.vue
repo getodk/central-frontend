@@ -27,8 +27,8 @@ except according to the terms contained in the LICENSE file.
                 <doc-link to="central-encryption/">Learn more</doc-link>.
               </p>
               <p>
-                <button id="enable-encryption-button" type="button"
-                  class="btn btn-primary"
+                <button id="project-settings-enable-encryption-button"
+                  type="button" class="btn btn-primary"
                   @click="showModal('enableEncryption')">
                   Enable encryption
                 </button>
