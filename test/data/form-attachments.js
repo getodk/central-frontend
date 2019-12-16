@@ -9,7 +9,7 @@ const TYPES = {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const extendedFormAttachments = dataStore({
+export const standardFormAttachments = dataStore({
   factory: ({
     inPast,
     type = faker.random.arrayElement(Object.keys(TYPES)),

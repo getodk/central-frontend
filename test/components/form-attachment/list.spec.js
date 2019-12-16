@@ -14,7 +14,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   // called.
   testData.extendedProjects.size.should.equal(1);
   testData.extendedForms.size.should.equal(1);
-  testData.extendedFormAttachments.size.should.not.equal(0);
+  testData.standardFormAttachments.size.should.not.equal(0);
 
   const form = testData.extendedForms.last();
   if (route) {
@@ -23,7 +23,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
     return mockRoute(path, { attachToDocument })
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => form)
-      .respondWithData(() => testData.extendedFormAttachments.sorted());
+      .respondWithData(() => testData.standardFormAttachments.sorted());
   }
   if (attachToDocument) throw new Error('invalid options');
   return mockHttp()
@@ -32,7 +32,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
       requestData: {
         project: testData.extendedProjects.last(),
         form,
-        attachments: testData.extendedFormAttachments.sorted()
+        attachments: testData.standardFormAttachments.sorted()
       }
     });
 };
@@ -65,7 +65,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
         .respondWithData(() =>
-          testData.extendedFormAttachments.createPast(1).sorted())
+          testData.standardFormAttachments.createPast(1).sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/media-files');
         }));
@@ -77,7 +77,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
         .respondWithData(() =>
-          testData.extendedFormAttachments.createPast(1).sorted())
+          testData.standardFormAttachments.createPast(1).sorted())
         .afterResponses(app => {
           const files = blankFiles(['a']);
           return trigger.dragAndDrop(app, FormAttachmentList, { files })
@@ -89,7 +89,7 @@ describe('FormAttachmentList', () => {
         .route('/projects/1/forms/f2/media-files')
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
-        .respondWithData(() => testData.extendedFormAttachments
+        .respondWithData(() => testData.standardFormAttachments
           .createPast(1, { hasUpdatedAt: false })
           .sorted())
         .afterResponses(app => {
@@ -112,7 +112,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() =>
-            testData.extendedFormAttachments.createPast(1).sorted())
+            testData.standardFormAttachments.createPast(1).sorted())
           .respondWithData(() => testData.extendedProjects.sorted())
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -138,7 +138,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() =>
             testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => testData.extendedProjects.sorted())
           .respondWithData(() => testData.standardUsers.sorted())
           .afterResponses(app => {
@@ -150,7 +150,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.createPast(1).last())
           .respondWithData(() =>
             testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => []) // assignmentActors
           .complete()
           .route('/projects/1/forms/f/media-files')
@@ -166,7 +166,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() =>
             testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
           .respondWithData(() =>
-            testData.extendedFormAttachments.createPast(1).sorted())
+            testData.standardFormAttachments.createPast(1).sorted())
           .complete()
           .route('/projects/1/forms/f2/media-files')
           .respondWithData(() =>
@@ -188,7 +188,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
@@ -201,7 +201,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
-        .respondWithData(() => testData.extendedFormAttachments
+        .respondWithData(() => testData.standardFormAttachments
           .createPast(1, { exists: false })
           .sorted())
         .respondWithData(() => []) // assignmentActors
@@ -213,7 +213,7 @@ describe('FormAttachmentList', () => {
 
     describe('badge', () => {
       it('is correct when all files are missing', () => {
-        testData.extendedFormAttachments.createPast(2, { exists: false });
+        testData.standardFormAttachments.createPast(2, { exists: false });
         return loadAttachments({ route: true }).then(app => {
           const badge = app.first('#page-head .nav-tabs .badge');
           badge.text().trim().should.equal('2');
@@ -221,7 +221,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('is correct when some files are missing', () => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(2, { exists: true })
           .createPast(1, { exists: false });
         return loadAttachments({ route: true }).then(app => {
@@ -231,7 +231,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('is not shown when all files exist', () => {
-        testData.extendedFormAttachments.createPast(2, { exists: true });
+        testData.standardFormAttachments.createPast(2, { exists: true });
         return loadAttachments({ route: true }).then(app => {
           app.first('#page-head .nav-tabs .badge').should.be.hidden();
         });
@@ -243,7 +243,7 @@ describe('FormAttachmentList', () => {
     beforeEach(mockLogin);
 
     it('correctly sorts the table', () => {
-      const attachments = testData.extendedFormAttachments
+      const attachments = testData.standardFormAttachments
         .createPast(1, { exists: true })
         .createPast(1, { exists: false })
         .sorted();
@@ -268,7 +268,7 @@ describe('FormAttachmentList', () => {
       ];
       for (const [type, displayName] of cases) {
         it(`is correct for ${type}`, () => {
-          testData.extendedFormAttachments.createPast(1, { type });
+          testData.standardFormAttachments.createPast(1, { type });
           return loadAttachments().then(component => {
             const td = component.first('#form-attachment-list-table tbody td');
             td.text().trim().should.equal(displayName);
@@ -278,16 +278,16 @@ describe('FormAttachmentList', () => {
     });
 
     it('adds a title attribute for the attachment name', () => {
-      testData.extendedFormAttachments.createPast(1);
+      testData.standardFormAttachments.createPast(1);
       return loadAttachments().then(component => component
         .first('#form-attachment-list-table tbody tr')
         .find('td')[1]
         .getAttribute('title')
-        .should.equal(testData.extendedFormAttachments.last().name));
+        .should.equal(testData.standardFormAttachments.last().name));
     });
 
     it('shows a download link if the attachment exists', () => {
-      testData.extendedFormAttachments.createPast(1, { exists: true });
+      testData.standardFormAttachments.createPast(1, { exists: true });
       return loadAttachments().then(component => {
         const $a = $(component.vm.$el)
           .find('#form-attachment-list-table tbody td')
@@ -296,7 +296,7 @@ describe('FormAttachmentList', () => {
         $a.prop('tagName').should.equal('A');
         const form = testData.extendedForms.last();
         const encodedFormId = encodeURIComponent(form.xmlFormId);
-        const { name } = testData.extendedFormAttachments.last();
+        const { name } = testData.standardFormAttachments.last();
         const encodedName = encodeURIComponent(name);
         $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId}/attachments/${encodedName}`);
       });
@@ -304,11 +304,11 @@ describe('FormAttachmentList', () => {
 
     describe('updatedAt', () => {
       it('formats updatedAt for an existing attachments', () => {
-        testData.extendedFormAttachments.createPast(1, { exists: true });
+        testData.standardFormAttachments.createPast(1, { exists: true });
         return loadAttachments().then(component => {
           const td = component.find('#form-attachment-list-table tbody td')[2];
           const text = td.text().trim().iTrim();
-          const { updatedAt } = testData.extendedFormAttachments.last();
+          const { updatedAt } = testData.standardFormAttachments.last();
           text.should.equal(`${formatDate(updatedAt)} Replace`);
           // Check that "Replace" is hidden.
           td.first('span').should.be.hidden();
@@ -316,7 +316,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('correctly renders an attachment that has never been uploaded', () => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { exists: false, hasUpdatedAt: false });
         return loadAttachments().then(component => {
           const span = component
@@ -330,7 +330,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('correctly renders a deleted attachment', () => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { exists: false, hasUpdatedAt: true });
         return loadAttachments().then(component => {
           const span = component
@@ -367,7 +367,7 @@ describe('FormAttachmentList', () => {
     describe('table', () => {
       let app;
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
           .createPast(1, { name: 'c' });
@@ -397,7 +397,7 @@ describe('FormAttachmentList', () => {
     describe('after the uploads are canceled', () => {
       let app;
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
           .createPast(1, { name: 'c' });
@@ -421,7 +421,7 @@ describe('FormAttachmentList', () => {
 
     describe('unmatched files', () => {
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' })
           .createPast(1, { name: 'c' });
@@ -528,7 +528,7 @@ describe('FormAttachmentList', () => {
 
     describe('after a selection', () => {
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
           .createPast(1, { name: 'c', exists: true })
@@ -591,7 +591,7 @@ describe('FormAttachmentList', () => {
 
     describe('unmatched file after a selection', () => {
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' });
       });
@@ -649,7 +649,7 @@ describe('FormAttachmentList', () => {
   */
   const testSingleFileUpload = (upload) => {
     beforeEach(() => {
-      testData.extendedFormAttachments
+      testData.standardFormAttachments
         .createPast(1, { name: 'a', exists: true })
         .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
         // Deleted attachment
@@ -680,7 +680,7 @@ describe('FormAttachmentList', () => {
           upload('a')
             .respondWithSuccess()
             .afterResponse(app => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -693,7 +693,7 @@ describe('FormAttachmentList', () => {
           upload('b')
             .respondWithSuccess()
             .afterResponse(app => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -706,7 +706,7 @@ describe('FormAttachmentList', () => {
           upload('c')
             .respondWithSuccess()
             .afterResponse(app => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -764,7 +764,7 @@ describe('FormAttachmentList', () => {
         }));
 
       it('does not update the table', () => {
-        const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+        const oldUpdatedAt = testData.standardFormAttachments.sorted()
           .map(attachment => attachment.updatedAt);
         const newUpdatedAt = app.vm.$store.state.request.data.attachments
           .map(attachment => attachment.updatedAt);
@@ -796,7 +796,7 @@ describe('FormAttachmentList', () => {
         describe('drag', () => {
           let app;
           beforeEach(() => {
-            testData.extendedFormAttachments.createPast(2);
+            testData.standardFormAttachments.createPast(2);
             // Specifying `route: true` in order to trigger the Vue activated
             // hook, which attaches the jQuery event handlers.
             return loadAttachments({ route: true }).then(component => {
@@ -831,7 +831,7 @@ describe('FormAttachmentList', () => {
 
         describe('confirming the uploads', () => {
           beforeEach(() => {
-            testData.extendedFormAttachments
+            testData.standardFormAttachments
               .createPast(1, { name: 'a', exists: true })
               .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
               // Deleted attachment
@@ -886,7 +886,7 @@ describe('FormAttachmentList', () => {
               }));
 
             it('updates the table', () => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -934,7 +934,7 @@ describe('FormAttachmentList', () => {
               }));
 
             it('updates the table', () => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -967,7 +967,7 @@ describe('FormAttachmentList', () => {
               }));
 
             it('updates the table', () => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -999,7 +999,7 @@ describe('FormAttachmentList', () => {
               }));
 
             it('does not update the table', () => {
-              const oldUpdatedAt = testData.extendedFormAttachments.sorted()
+              const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const newUpdatedAt = app.vm.$store.state.request.data.attachments
                 .map(attachment => attachment.updatedAt);
@@ -1027,7 +1027,7 @@ describe('FormAttachmentList', () => {
         describe('drag', () => {
           let app;
           beforeEach(() => {
-            testData.extendedFormAttachments.createPast(2);
+            testData.standardFormAttachments.createPast(2);
             return loadAttachments({ route: true }).then(component => {
               app = component;
               return trigger.dragenter(
@@ -1075,7 +1075,7 @@ describe('FormAttachmentList', () => {
 
     describe('state', () => {
       beforeEach(() => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' });
       });
@@ -1110,7 +1110,7 @@ describe('FormAttachmentList', () => {
 
     describe('drag over a row of the table', () => {
       it('highlights only the target row', () => {
-        testData.extendedFormAttachments.createPast(2);
+        testData.standardFormAttachments.createPast(2);
         return loadAttachments({ route: true })
           .then(app => trigger.dragenter(
             app,
@@ -1126,7 +1126,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows a Replace label if the attachment exists', () => {
-        testData.extendedFormAttachments.createPast(2, { exists: true });
+        testData.standardFormAttachments.createPast(2, { exists: true });
         return loadAttachments({ route: true })
           .then(app => trigger.dragenter(
             app,
@@ -1142,7 +1142,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('does not show a Replace label if the attachment does not exist', () => {
-        testData.extendedFormAttachments.createPast(2, { exists: false });
+        testData.standardFormAttachments.createPast(2, { exists: false });
         return loadAttachments({ route: true })
           .then(app => trigger.dragenter(
             app,
@@ -1155,7 +1155,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows the popup with the correct text', () => {
-        testData.extendedFormAttachments
+        testData.standardFormAttachments
           .createPast(1, { name: 'first_attachment' })
           .createPast(1, { name: 'second_attachment' });
         return loadAttachments({ route: true })
@@ -1175,7 +1175,7 @@ describe('FormAttachmentList', () => {
 
     const dragAndDropOntoRow = (app, attachmentName, filename) => {
       const tr = app.find('#form-attachment-list-table tbody tr');
-      const attachments = testData.extendedFormAttachments.sorted();
+      const attachments = testData.standardFormAttachments.sorted();
       tr.length.should.equal(attachments.length);
       for (let i = 0; i < tr.length; i += 1) {
         if (attachments[i].name === attachmentName) {
@@ -1200,7 +1200,7 @@ describe('FormAttachmentList', () => {
 
       describe('name mismatch modal', () => {
         beforeEach(() => {
-          testData.extendedFormAttachments
+          testData.standardFormAttachments
             .createPast(1, { name: 'a', exists: true })
             .createPast(1, { name: 'b', exists: false });
         });
@@ -1277,7 +1277,7 @@ describe('FormAttachmentList', () => {
 
     for (const { name, contents, gzip } of cases) {
       it(`${gzip ? 'gzips' : 'does not gzip'} ${name}`, () => {
-        testData.extendedFormAttachments.createPast(1, { name });
+        testData.standardFormAttachments.createPast(1, { name });
         const file = new File([contents], name);
         return loadAttachments({ route: true })
           .complete()

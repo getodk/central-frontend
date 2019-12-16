@@ -16,7 +16,7 @@ describe('FormSettings', () => {
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/settings');
         }));
@@ -34,7 +34,7 @@ describe('FormSettings', () => {
         mockRoute('/projects/1/forms/f/settings')
           .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => testData.extendedProjects.sorted())
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');

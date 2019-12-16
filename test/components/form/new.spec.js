@@ -206,7 +206,7 @@ describe('FormNew', () => {
       .respondWithData(() => testData.standardForms
         .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
       .respondWithData(() => testData.extendedForms.last()) // FormShow
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => [])); // assignmentActors
 
     it('redirects to the form overview', () => {
@@ -437,7 +437,7 @@ describe('FormNew', () => {
         .respondWithData(() => testData.standardForms
           .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
         .respondWithData(() => testData.extendedForms.last()) // FormShow
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');

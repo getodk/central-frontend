@@ -54,7 +54,7 @@ describe('SubmissionAnalyze', () => {
           form: testData.extendedForms
             .createPast(1, { xmlFormId: 'f', submissions: 1 })
             .last(),
-          attachments: testData.extendedFormAttachments.sorted()
+          attachments: testData.standardFormAttachments.sorted()
         }
       })
       .request(component => {
@@ -81,7 +81,7 @@ describe('SubmissionAnalyze', () => {
         requestData: {
           project: testData.extendedProjects.createPast(1).last(),
           form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last(),
-          attachments: testData.extendedFormAttachments.sorted()
+          attachments: testData.standardFormAttachments.sorted()
         }
       })
       .request(component => {
@@ -110,7 +110,7 @@ describe('SubmissionAnalyze', () => {
     return mockRoute(path, { attachToDocument: true })
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)

@@ -8,7 +8,7 @@ const loadOverview = (formOptions = {}) => {
   return mockRoute(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`)
     .respondWithData(() => testData.extendedProjects.last())
     .respondWithData(() => form)
-    .respondWithData(() => testData.extendedFormAttachments.sorted())
+    .respondWithData(() => testData.standardFormAttachments.sorted())
     .respondWithData(() =>
       testData.extendedFieldKeys.createPast(1).sorted().map(testData.toActor));
 };
