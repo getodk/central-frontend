@@ -35,11 +35,11 @@ some point. -->
             <template v-else-if="countOfFilesOverDropZone > 1">
               Drop now to prepare
               <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
-              files</strong> for upload to this form.
+              files</strong> for upload to this Form.
             </template>
             <!-- countOfFilesOverDropZone === -1 -->
             <template v-else>
-              Drop now to upload to this form.
+              Drop now to upload to this Form.
             </template>
           </p>
         </template>

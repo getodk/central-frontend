@@ -819,8 +819,8 @@ describe('FormAttachmentList', () => {
             popup.should.be.visible();
             const text = popup.first('p').text().trim().iTrim();
             text.should.equal(!ie
-              ? 'Drop now to prepare 2 files for upload to this form.'
-              : 'Drop now to upload to this form.');
+              ? 'Drop now to prepare 2 files for upload to this Form.'
+              : 'Drop now to upload to this Form.');
           });
         });
 
@@ -1049,7 +1049,7 @@ describe('FormAttachmentList', () => {
             const text = popup.first('p').text().trim().iTrim();
             text.should.containEql(!ie
               ? 'Drag over the file entry you wish to replace'
-              : 'Drop now to upload to this form.');
+              : 'Drop now to upload to this Form.');
           });
         });
 
