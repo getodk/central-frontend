@@ -36,10 +36,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'BackupTerminate',
+  components: { Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -54,14 +58,11 @@ export default {
   },
   methods: {
     terminate() {
-      this
-        .delete('/config/backups')
+      this.delete('/config/backups')
         .then(() => {
-          this.$emit('hide');
-          this.$alert().blank();
           this.$emit('success');
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

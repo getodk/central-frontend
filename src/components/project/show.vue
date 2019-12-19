@@ -52,6 +52,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Loading from '../loading.vue';
+import PageBody from '../page/body.vue';
+import PageHead from '../page/head.vue';
 import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
 import { noop } from '../../util/util';
@@ -59,6 +62,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectShow',
+  components: { Loading, PageBody, PageHead },
   mixins: [canRoute(), tab()],
   props: {
     projectId: {

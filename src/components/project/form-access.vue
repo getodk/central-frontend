@@ -47,8 +47,10 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import DocLink from '../doc-link.vue';
+import Loading from '../loading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
 import ProjectFormAccessTable from './form-access/table.vue';
+import Spinner from '../spinner.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import validateData from '../../mixins/validate-data';
@@ -59,7 +61,13 @@ const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formAssignments
 
 export default {
   name: 'ProjectFormAccess',
-  components: { DocLink, ProjectFormAccessStates, ProjectFormAccessTable },
+  components: {
+    DocLink,
+    Loading,
+    ProjectFormAccessStates,
+    ProjectFormAccessTable,
+    Spinner
+  },
   mixins: [modal(), request(), validateData()],
   props: {
     projectId: {

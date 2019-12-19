@@ -62,12 +62,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
-  components: { SummaryItem },
+  components: { PageSection, SummaryItem },
   computed: {
     ...requestData(['project', 'form', 'assignmentActors']),
     versionClass() {

@@ -25,7 +25,6 @@ import './assets/css/icomoon.css';
 import 'flatpickr/dist/flatpickr.css';
 import './assets/scss/app.scss';
 
-import GlobalComponents from './global-components';
 import { StoreAlert, uniqueSequence } from './util/util';
 // ./jquery must be imported before ./bootstrap, as Bootstrap's JavaScript
 // requires jQuery.
@@ -33,7 +32,6 @@ import './jquery';
 import './bootstrap';
 
 Vue.config.productionTip = false;
-GlobalComponents.register();
 
 // Utilities
 // https://vuejs.org/v2/cookbook/adding-instance-properties.html

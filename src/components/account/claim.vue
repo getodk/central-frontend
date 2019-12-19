@@ -19,13 +19,13 @@ except according to the terms contained in the LICENSE file.
           </h1>
         </div>
         <div class="panel-body">
-          <app-form @submit="submit">
+          <form @submit.prevent="submit">
             <!-- Chrome displays a message in the console indicating that there
             should be a username input (even if it is hidden). However, we do
             not know the user's email address on this page. -->
             <label class="form-group">
-              <input v-model="password" type="password" class="form-control"
-                placeholder="New Password *" required
+              <input ref="password" v-model="password" type="password"
+                class="form-control" placeholder="New Password *" required
                 autocomplete="new-password">
               <span class="form-label">New Password *</span>
             </label>
@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
                 Set password <spinner :state="awaitingResponse"/>
               </button>
             </div>
-          </app-form>
+          </form>
         </div>
       </div>
     </div>
@@ -43,16 +43,22 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'AccountClaim',
+  components: { Spinner },
   mixins: [request()],
   data() {
     return {
       awaitingResponse: false,
       password: ''
     };
+  },
+  mounted() {
+    this.$refs.password.focus();
   },
   methods: {
     submit() {
@@ -73,7 +79,7 @@ export default {
             this.$alert().success('The password was reset successfully.');
           });
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };

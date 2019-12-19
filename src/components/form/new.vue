@@ -78,6 +78,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import Form from '../../presenters/form';
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 import { isProblem } from '../../util/request';
@@ -85,7 +87,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormNew',
-  components: { DocLink },
+  components: { DocLink, Modal, Spinner },
   mixins: [
     dropZone({ keepAlive: false, eventNamespace: 'form-new' }),
     request()

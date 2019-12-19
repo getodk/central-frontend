@@ -18,8 +18,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Spinner from './spinner.vue';
+import { noop } from '../util/util';
+
 export default {
   name: 'RefreshButton',
+  components: { Spinner },
   props: {
     // Configs for this.$store.dispatch('get')
     configs: {
@@ -43,7 +47,7 @@ export default {
         clear: false,
         ...config
       })))
-        .catch(() => {})
+        .catch(noop)
         .finally(() => {
           this.refreshing = false;
         });

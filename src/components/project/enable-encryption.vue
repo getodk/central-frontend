@@ -150,13 +150,15 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink },
+  components: { DocLink, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {

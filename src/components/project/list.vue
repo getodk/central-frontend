@@ -120,6 +120,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
@@ -132,6 +134,8 @@ export default {
   name: 'ProjectList',
   components: {
     DocLink,
+    Loading,
+    PageSection,
     ProjectIntroduction,
     ProjectNew,
     ProjectRow,

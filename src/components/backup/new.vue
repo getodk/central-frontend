@@ -101,12 +101,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { noop } from '../../util/util';
 
 const GOOGLE_BREAKPOINT = 601;
 
 export default {
   name: 'BackupNew',
+  components: { Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -140,14 +144,13 @@ export default {
       this.$refs.passphrase.focus();
     },
     initiate() {
-      this
-        .post('/config/backups/initiate', { passphrase: this.passphrase })
+      this.post('/config/backups/initiate', { passphrase: this.passphrase })
         .then(({ data }) => {
           this.step += 1;
           this.googleUrl = data.url;
           this.authToken = data.token;
         })
-        .catch(() => {});
+        .catch(noop);
     },
     cancel() {
       this.$emit('hide');
@@ -179,7 +182,7 @@ export default {
         .then(() => {
           this.$emit('success');
         })
-        .catch(() => {});
+        .catch(noop);
     }
   }
 };
