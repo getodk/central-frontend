@@ -129,7 +129,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <p id="success-icon-container">
+        <p id="project-enable-encryption-success-icon-container">
           <span class="icon-check-circle"></span>
         </p>
         <p class="modal-introduction">
@@ -252,12 +252,12 @@ export default {
       }
     }
   }
+}
 
-  #success-icon-container {
-    color: $color-success;
-    font-size: 84px;
-    line-height: 1;
-    text-align: center;
-  }
+#project-enable-encryption-success-icon-container {
+  color: $color-success;
+  font-size: 84px;
+  line-height: 1;
+  text-align: center;
 }
 </style>

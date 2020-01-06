@@ -14,7 +14,7 @@ describe('ProjectEnableEncryption', () => {
       const component = mountAndMark(ProjectSettings, {
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
-      component.find('#enable-encryption-button').length.should.equal(1);
+      component.find('#project-settings-enable-encryption-button').length.should.equal(1);
     });
 
     it('does not render the button if managed encryption is enabled', () => {
@@ -23,7 +23,7 @@ describe('ProjectEnableEncryption', () => {
       const component = mountAndMark(ProjectSettings, {
         requestData: { project }
       });
-      component.find('#enable-encryption-button').length.should.equal(0);
+      component.find('#project-settings-enable-encryption-button').length.should.equal(0);
     });
   });
 
@@ -33,9 +33,10 @@ describe('ProjectEnableEncryption', () => {
     });
     const modal = component.first(ProjectEnableEncryption);
     modal.getProp('state').should.be.false();
-    return trigger.click(component, '#enable-encryption-button').then(() => {
-      modal.getProp('state').should.be.true();
-    });
+    return trigger.click(component, '#project-settings-enable-encryption-button')
+      .then(() => {
+        modal.getProp('state').should.be.true();
+      });
   });
 
   it('first shows information in the modal', () => {
@@ -56,7 +57,7 @@ describe('ProjectEnableEncryption', () => {
         },
         attachToDocument: true
       });
-      return trigger.click(component, '#enable-encryption-button')
+      return trigger.click(component, '#project-settings-enable-encryption-button')
         .then(() => {
           const modal = component.first(ProjectEnableEncryption);
           return trigger.click(modal, '.btn-primary');
@@ -71,13 +72,14 @@ describe('ProjectEnableEncryption', () => {
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
       const modal = component.first(ProjectEnableEncryption);
-      return trigger.click(component, '#enable-encryption-button')
+      return trigger.click(component, '#project-settings-enable-encryption-button')
         .then(() => trigger.click(modal, '.btn-primary'))
         .then(() => fillForm(modal, [
           ['input[placeholder="Passphrase *"]', 'passphrase']
         ]))
         .then(() => trigger.click(modal, '.btn-link'))
-        .then(() => trigger.click(component, '#enable-encryption-button'))
+        .then(() =>
+          trigger.click(component, '#project-settings-enable-encryption-button'))
         .then(() => {
           modal.find('.info-item').length.should.not.equal(0);
         });
@@ -144,7 +146,7 @@ describe('ProjectEnableEncryption', () => {
       mockRoute('/projects/1/settings')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .complete()
-        .request(app => trigger.click(app, '#enable-encryption-button')
+        .request(app => trigger.click(app, '#project-settings-enable-encryption-button')
           .then(() => {
             const modal = app.first('#project-enable-encryption');
             return trigger.click(modal, '.btn-primary');
@@ -161,7 +163,7 @@ describe('ProjectEnableEncryption', () => {
           { keyId: testData.standardKeys.createNew({ managed: true }).id }
         ))
         .afterResponse(app => {
-          app.find('#enable-encryption-button').length.should.equal(0);
+          app.find('#project-settings-enable-encryption-button').length.should.equal(0);
         }));
   });
 });

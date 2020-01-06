@@ -39,7 +39,7 @@ export const trigger = {};
 
 const simpleEventNames = ['click', 'submit'];
 for (const eventName of simpleEventNames) {
-  // Triggers an event that does not bubble.
+  // Triggers an event.
   trigger[eventName] = (wrapper, selector = undefined) => {
     const target = selector == null ? wrapper : wrapper.first(selector);
     target.trigger(eventName);
