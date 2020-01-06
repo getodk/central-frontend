@@ -151,8 +151,7 @@ export default {
         },
         {
           key: 'attachments',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`,
-          extended: true
+          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`
         }
       ]).catch(noop);
     }

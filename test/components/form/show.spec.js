@@ -23,7 +23,7 @@ describe('FormShow', () => {
         })
         .respondWithData(() => project)
         .respondWithData(() => form)
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
@@ -38,7 +38,7 @@ describe('FormShow', () => {
         testData.extendedProjects.createPast(1, { name: 'My Project' }).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
@@ -54,7 +54,7 @@ describe('FormShow', () => {
         .last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
@@ -68,7 +68,7 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         const a = app.first('#page-head-context span a');
@@ -82,7 +82,7 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         const a = app.find('#page-head-context a');
@@ -97,7 +97,7 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => []) // assignmentActors
       .afterResponses(app => {
         const title = app.first('#page-head-title').text().trim();
@@ -118,7 +118,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() =>
-        testData.extendedFormAttachments.createPast(1).sorted())
+        testData.standardFormAttachments.createPast(1).sorted())
       .afterResponses(app => {
         const loading = app.find(Loading);
         loading.length.should.equal(1);
@@ -135,7 +135,7 @@ describe('FormShow', () => {
     return mockRoute('/projects/1/forms/f/submissions')
       .respondWithData(() => project)
       .respondWithData(() => form)
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => form._schema)
       .respondWithData(testData.submissionOData)

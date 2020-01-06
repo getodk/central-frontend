@@ -23,7 +23,7 @@ describe('SubmissionList', () => {
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f', submissions: 0 })
           .last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => testData.standardKeys.sorted())
         .respondWithData(() => testData.extendedForms.last()._schema)
         .respondWithData(testData.submissionOData)
@@ -44,7 +44,7 @@ describe('SubmissionList', () => {
           .respondWithData(() => testData.extendedForms
             .createPast(1, { xmlFormId: 'f', submissions: 0 })
             .last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => testData.standardKeys.sorted())
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(testData.submissionOData));
@@ -55,7 +55,7 @@ describe('SubmissionList', () => {
           .respondWithData(() => testData.extendedForms
             .createPast(1, { xmlFormId: 'f', submissions: 0 })
             .last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => []) // assignmentActors
           .complete()
           .route('/projects/1/forms/f/submissions')
@@ -77,7 +77,7 @@ describe('SubmissionList', () => {
           .respondWithData(() => testData.extendedForms
             .createPast(1, { xmlFormId: 'f1', submissions: 1 })
             .last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => testData.standardKeys.sorted())
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(() => {
@@ -98,7 +98,7 @@ describe('SubmissionList', () => {
           .respondWithData(() => testData.extendedForms
             .createPast(1, { xmlFormId: 'f2', submissions: 2 })
             .last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithData(() => testData.standardKeys.sorted())
           .respondWithData(() => testData.extendedForms.last()._schema)
           .respondWithData(() => {
@@ -164,7 +164,7 @@ describe('SubmissionList', () => {
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f', submissions: 0 })
           .last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => testData.standardKeys.sorted())
         .respondWithData(() => testData.extendedForms.last()._schema)
         .respondWithData(testData.submissionOData)
@@ -574,7 +574,7 @@ describe('SubmissionList', () => {
           return mockRoute(`/projects/1/forms/${encodedFormId()}/submissions`)
             .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
-            .respondWithData(() => testData.extendedFormAttachments.sorted())
+            .respondWithData(() => testData.standardFormAttachments.sorted())
             .respondWithData(() => testData.standardKeys.sorted())
             .respondWithData(() => form()._schema)
             .testRefreshButton({
@@ -948,7 +948,7 @@ describe('SubmissionList', () => {
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
             .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
-            .respondWithData(() => testData.extendedFormAttachments.sorted())
+            .respondWithData(() => testData.standardFormAttachments.sorted())
             .respondWithData(() => []) // assignmentActors
             .afterResponses(app => {
               const formShow = app.first(FormShow);

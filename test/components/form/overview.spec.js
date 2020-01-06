@@ -17,7 +17,7 @@ describe('FormOverview', () => {
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f' })
           .last())
-        .respondWithData(() => testData.extendedFormAttachments.sorted())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => []) // assignmentActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');
@@ -36,7 +36,7 @@ describe('FormOverview', () => {
         mockRoute('/projects/1/forms/f')
           .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.extendedFormAttachments.sorted())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondWithProblem(403.1)
           .respondWithData(() => testData.extendedProjects.sorted())
           .afterResponses(app => {

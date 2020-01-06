@@ -22,7 +22,7 @@ describe('FormChecklist', () => {
       submissions: hasSubmission ? 12345 : 0
     });
     if (attachmentCount !== 0) {
-      testData.extendedFormAttachments.createPast(
+      testData.standardFormAttachments.createPast(
         attachmentCount,
         { exists: allAttachmentsExist }
       );
@@ -31,7 +31,7 @@ describe('FormChecklist', () => {
     return mockRoute('/projects/1/forms/f')
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormAttachments.sorted())
+      .respondWithData(() => testData.standardFormAttachments.sorted())
       .respondWithData(() =>
         testData.extendedFieldKeys.sorted().map(testData.toActor));
   };
