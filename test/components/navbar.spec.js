@@ -1,8 +1,8 @@
 import Navbar from '../../src/components/navbar.vue';
 import testData from '../data';
-import { mockRoute } from '../http';
-import { mockRouteThroughLogin, mockLogin } from '../session';
-import { trigger } from '../event';
+import { mockRoute } from '../util/http';
+import { mockRouteThroughLogin, mockLogin } from '../util/session';
+import { trigger } from '../util/event';
 
 const loadThenOpenMenu = () =>
   mockRouteThroughLogin(

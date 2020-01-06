@@ -1,9 +1,9 @@
 import FormNew from '../../../src/components/form/new.vue';
 import testData from '../../data';
-import { dataTransfer, trigger } from '../../event';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
+import { dataTransfer, trigger } from '../../util/event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mountAndMark } from '../../util/destroy';
 
 const xlsForm = () => new File(
   [''],

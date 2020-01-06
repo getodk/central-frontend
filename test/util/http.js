@@ -1,13 +1,13 @@
 import Vue from 'vue';
 
-import App from '../src/components/app.vue';
-import Spinner from '../src/components/spinner.vue';
-import router from '../src/router';
-import store from '../src/store';
-import testData from './data';
+import App from '../../src/components/app.vue';
+import Spinner from '../../src/components/spinner.vue';
+import router from '../../src/router';
+import store from '../../src/store';
+import testData from '../data';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
-import { setRequestData } from './util/store';
+import { setRequestData } from './store';
 import { trigger } from './event';
 
 

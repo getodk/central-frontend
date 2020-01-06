@@ -1,6 +1,6 @@
 import testData from '../data';
-import { mockLogin } from '../session';
-import { mockRoute } from '../http';
+import { mockLogin } from '../util/session';
+import { mockRoute } from '../util/http';
 
 describe('NotFound', () => {
   it('does not send a request, including to restore the session', () =>

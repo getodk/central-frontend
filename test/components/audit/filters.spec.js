@@ -3,10 +3,10 @@ import { DateTime } from 'luxon';
 import AuditFilters from '../../../src/components/audit/filters.vue';
 import AuditList from '../../../src/components/audit/list.vue';
 import testData from '../../data';
-import { mockHttp } from '../../http';
-import { mockLogin } from '../../session';
+import { mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/util';
-import { trigger } from '../../event';
+import { trigger } from '../../util/event';
 
 describe('AuditFilters', () => {
   beforeEach(mockLogin);

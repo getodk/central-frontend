@@ -1,7 +1,7 @@
 import BackupList from '../../../src/components/backup/list.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 
 describe('BackupList', () => {
   describe('routing', () => {

@@ -1,8 +1,8 @@
 import UserNew from '../../../src/components/user/new.vue';
 import testData from '../../data';
-import { fillForm, submitForm, trigger } from '../../event';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
+import { fillForm, submitForm, trigger } from '../../util/event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
 
 describe('UserNew', () => {
   beforeEach(() => {

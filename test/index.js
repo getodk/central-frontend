@@ -11,10 +11,10 @@ import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
 import { MockLogger } from './util/util';
-import { clearNavGuards, initNavGuards } from './router';
+import { clearNavGuards, initNavGuards } from './util/router';
 import { clearUniqueFakerResults } from './faker';
-import { destroyMarkedComponent } from './destroy';
-import { setHttp } from './http';
+import { destroyMarkedComponent } from './util/destroy';
+import { setHttp } from './util/http';
 import './assertions';
 
 

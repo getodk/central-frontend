@@ -1,10 +1,10 @@
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
-import { fillForm, submitForm, trigger } from '../../event';
-import { mockHttp } from '../../http';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
+import { fillForm, submitForm, trigger } from '../../util/event';
+import { mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mountAndMark } from '../../util/destroy';
 
 const loadSubmissionList = (attachToDocument = false) => {
   // Create test data.

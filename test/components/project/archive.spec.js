@@ -1,10 +1,10 @@
 import ProjectArchive from '../../../src/components/project/archive.vue';
 import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
-import { trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mountAndMark } from '../../util/destroy';
+import { trigger } from '../../util/event';
 
 describe('ProjectArchive', () => {
   beforeEach(mockLogin);

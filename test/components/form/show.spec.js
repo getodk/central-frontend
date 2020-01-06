@@ -1,8 +1,8 @@
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
-import { mockLogin } from '../../session';
-import { mockRoute } from '../../http';
+import { mockLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
 
 describe('FormShow', () => {
   describe('route params', () => {

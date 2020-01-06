@@ -1,9 +1,9 @@
 import FieldKeyRevoke from '../../../src/components/field-key/revoke.vue';
 import faker from '../../faker';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { trigger } from '../../util/event';
 
 describe('FieldKeyRevoke', () => {
   beforeEach(mockLogin);

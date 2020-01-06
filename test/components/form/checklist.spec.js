@@ -1,7 +1,7 @@
 import faker from '../../faker';
 import testData from '../../data';
-import { mockLogin } from '../../session';
-import { mockRoute } from '../../http';
+import { mockLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
 
 describe('FormChecklist', () => {
   beforeEach(mockLogin);

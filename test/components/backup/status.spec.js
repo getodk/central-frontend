@@ -1,8 +1,8 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
+import { mockLogin } from '../../util/session';
+import { mountAndMark } from '../../util/destroy';
 
 const assertContent = (component, iconClass, title, buttonText) => {
   const icon = component.first('#backup-status-icon');

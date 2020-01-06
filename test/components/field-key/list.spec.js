@@ -4,9 +4,9 @@ import pako from 'pako';
 import faker from '../../faker';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/util';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../http';
-import { trigger } from '../../event';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
+import { trigger } from '../../util/event';
 
 describe('FieldKeyList', () => {
   describe('routing', () => {

@@ -1,7 +1,7 @@
 import { mount } from 'avoriaz';
 
-import store from '../src/store';
-import { setRequestData } from './util/store';
+import store from '../../src/store';
+import { setRequestData } from './store';
 
 let componentToDestroy = null;
 

@@ -4,10 +4,10 @@ import FormAttachmentList from '../../../src/components/form-attachment/list.vue
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 import testData from '../../data';
-import { dataTransfer, trigger } from '../../event';
+import { dataTransfer, trigger } from '../../util/event';
 import { formatDate } from '../../../src/util/util';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   // It is expected that test data is created before loadAttachments() is

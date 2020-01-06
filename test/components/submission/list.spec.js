@@ -3,10 +3,10 @@ import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate, uniqueSequence } from '../../../src/util/util';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 import { setLuxon } from '../../util/util';
-import { trigger } from '../../event';
+import { trigger } from '../../util/event';
 
 describe('SubmissionList', () => {
   describe('routing', () => {

@@ -1,6 +1,6 @@
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../session';
-import { mockRoute } from '../../http';
+import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
 
 describe('FormOverview', () => {
   describe('routing', () => {

@@ -1,10 +1,10 @@
 import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../http';
-import { mockLogin } from '../../session';
-import { mountAndMark } from '../../destroy';
-import { trigger } from '../../event';
+import { mockHttp, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mountAndMark } from '../../util/destroy';
+import { trigger } from '../../util/event';
 
 const clickTab = (wrapper, tabText) => {
   for (const a of wrapper.find('#submission-analyze .nav-tabs a')) {

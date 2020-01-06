@@ -1,9 +1,9 @@
 import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
-import { mockLogin } from '../../session';
-import { mockRoute } from '../../http';
-import { mountAndMark } from '../../destroy';
-import { submitForm } from '../../event';
+import { mockLogin } from '../../util/session';
+import { mockRoute } from '../../util/http';
+import { mountAndMark } from '../../util/destroy';
+import { submitForm } from '../../util/event';
 
 describe('ProjectEdit', () => {
   beforeEach(mockLogin);
