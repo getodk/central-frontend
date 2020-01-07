@@ -70,7 +70,8 @@ export default {
     }
   },
   computed: {
-    // The component assumes that this data exists.
+    // The component assumes that this data will exist when the component is
+    // created.
     ...requestData(['form']),
     targeted() {
       const targetedByDragover = this.dragoverAttachment != null &&

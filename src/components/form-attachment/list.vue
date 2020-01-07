@@ -149,7 +149,8 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data exists.
+    // The component does not assume that this data will exist when the
+    // component is created.
     ...requestData(['form', 'attachments']),
     disabled() {
       return this.uploadStatus.total !== 0;
