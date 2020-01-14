@@ -53,6 +53,7 @@ except according to the terms contained in the LICENSE file.
 import { path } from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
+import { apiPaths } from '../../util/request';
 import { formatDate } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -68,10 +69,6 @@ const TITLE_FIELD_TYPES = [
 export default {
   name: 'SubmissionRow',
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     submission: {
       type: Object,
       required: true
@@ -160,11 +157,13 @@ export default {
             })
             .join(' ');
 
-        case 'binary': {
-          const encodedInstanceId = encodeURIComponent(this.submission.__id);
-          const encodedAttachmentName = encodeURIComponent(rawValue);
-          return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions/${encodedInstanceId}/attachments/${encodedAttachmentName}`;
-        }
+        case 'binary':
+          return apiPaths.submissionAttachment(
+            this.form.projectId,
+            this.form.xmlFormId,
+            this.submission.__id,
+            rawValue
+          );
 
         default:
           return rawValue;

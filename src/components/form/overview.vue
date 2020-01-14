@@ -28,6 +28,7 @@ import FormChecklist from './checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import Loading from '../loading.vue';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['project', 'form', 'attachments', 'assignmentActors'];
@@ -66,10 +67,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const encodedFormId = encodeURIComponent(this.xmlFormId);
       this.$store.dispatch('get', [{
         key: 'assignmentActors',
-        url: `/projects/${this.projectId}/forms/${encodedFormId}/assignments/app-user`,
+        url: apiPaths.formActors(this.projectId, this.xmlFormId, 'app-user'),
         resend: false
       }]);
     }

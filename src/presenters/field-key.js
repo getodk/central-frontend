@@ -43,6 +43,7 @@ export default class FieldKey extends Base(props) {
   qrCodeHtml() {
     if (this._qrCodeHtml != null) return this._qrCodeHtml;
     const code = qrcode(QR_CODE_TYPE_NUMBER, QR_CODE_ERROR_CORRECTION_LEVEL);
+    // Backend generates tokens that are URL-safe.
     const url = `${window.location.origin}/v1/key/${this.token}/projects/${this._projectId}`;
     // Collect requires the JSON to have 'general' and 'admin' keys, even if the
     // associated values are empty objects.

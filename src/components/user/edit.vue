@@ -37,6 +37,7 @@ import PageHead from '../page/head.vue';
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -86,7 +87,7 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'user',
-        url: `/users/${this.id}`,
+        url: apiPaths.user(this.id),
         success: ({ currentUser }) => {
           if (this.user.id !== currentUser.id) return;
           this.$store.commit('setData', {

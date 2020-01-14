@@ -41,6 +41,7 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -81,7 +82,7 @@ export default {
           key: 'audits',
           // A backup audit log entry does not have an actor or actee, so we do
           // not need to request extended metadata.
-          url: '/audits?action=backup&limit=10'
+          url: apiPaths.audits({ action: 'backup', limit: 10 })
         }
       ]).catch(noop);
     },

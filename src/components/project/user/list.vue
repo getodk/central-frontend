@@ -65,6 +65,7 @@ import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
 import validateData from '../../../mixins/validate-data';
+import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
@@ -153,7 +154,7 @@ export default {
         },
         {
           key: 'projectAssignments',
-          url: `/projects/${this.projectId}/assignments`,
+          url: apiPaths.projectAssignments(this.projectId),
           extended: true,
           resend
         }
@@ -167,7 +168,7 @@ export default {
     search() {
       this.$store.dispatch('get', [{
         key: 'users',
-        url: `/users?q=${encodeURIComponent(this.q)}`,
+        url: apiPaths.users({ q: this.q }),
         success: ({ users }) => {
           this.searchAssignments = users.map(user => {
             const assignment = this.projectAssignments

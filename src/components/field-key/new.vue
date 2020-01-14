@@ -79,6 +79,7 @@ import FieldKey from '../../presenters/field-key';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -116,8 +117,11 @@ export default {
       this.$refs.nickname.focus();
     },
     submit() {
-      const path = `/projects/${this.project.id}/app-users`;
-      this.post(path, { displayName: this.nickname })
+      this.request({
+        method: 'POST',
+        url: apiPaths.fieldKeys(this.project.id),
+        data: { displayName: this.nickname }
+      })
         .then(({ data }) => {
           // Reset the form.
           this.$alert().blank();

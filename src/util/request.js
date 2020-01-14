@@ -1,30 +1,82 @@
-/*
-This file used to import ../store, but it resulted in an error, I think because
-of the order in which files are imported. Frontend imports requestData() from
-../store/modules/request.js before it imports ../store. However, because
-../store/modules/request.js imports this file, and ../store imports
-../store/modules/request.js, if this file imports ../store, then I think
-../store will not be able to import ../store/modules/request.js, which it needs
-to use immediately. The import order in that case would be:
-
-  1. ../store/modules/request.js
-  2. this file
-  3. ../store
-  4. ../store/modules/request.js -> error
-*/
-
 import Vue from 'vue';
 
+const projectPath = (suffix) => (id) => `/v1/projects/${id}${suffix}`;
+const formPath = (suffix) => (projectId, xmlFormId) =>
+  `/v1/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}${suffix}`;
+export const apiPaths = {
+  // Backend generates session tokens that are URL-safe.
+  session: (token) => `/v1/sessions/${token}`,
+  users: (query = undefined) => {
+    const queryString = query != null && query.q != null
+      ? `?q=${encodeURIComponent(query.q)}`
+      : '';
+    return `/v1/users${queryString}`;
+  },
+  user: (id) => `/v1/users/${id}`,
+  password: (id) => `/v1/users/${id}/password`,
+  assignment: (role, actorId) => `/v1/assignments/${role}/${actorId}`,
+  project: projectPath(''),
+  projectAssignments: projectPath('/assignments'),
+  projectAssignment: (projectId, role, actorId) =>
+    `/v1/projects/${projectId}/assignments/${role}/${actorId}`,
+  projectKey: projectPath('/key'),
+  forms: (id, query = undefined) => {
+    const queryString = query != null && query.ignoreWarnings === true
+      ? '?ignoreWarnings=true'
+      : '';
+    return `/v1/projects/${id}/forms${queryString}`;
+  },
+  formSummaryAssignments: (projectId, role) =>
+    `/v1/projects/${projectId}/assignments/forms/${role}`,
+  form: formPath(''),
+  formXml: formPath('.xml'),
+  schema: formPath('.schema.json?flatten=true&odata=true'),
+  oDataSvc: formPath('.svc'),
+  formActors: (projectId, xmlFormId, role) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
+  },
+  formKeys: formPath('/submissions/keys'),
+  formAttachments: formPath('/attachments'),
+  formAttachment: (projectId, xmlFormId, attachmentName) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedName = encodeURIComponent(attachmentName);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/attachments/${encodedName}`;
+  },
+  submissionsZip: formPath('/submissions.csv.zip'),
+  submissionsOData: (projectId, xmlFormId, { top, skip = 0 }) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
+    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions?${queryString}`;
+  },
+  submissionAttachment: (projectId, xmlFormId, instanceId, attachmentName) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    const encodedName = encodeURIComponent(attachmentName);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+  },
+  fieldKeys: (id) => `/v1/projects/${id}/app-users`,
+  audits: ({ action, start = undefined, end = undefined, limit = undefined }) => {
+    const startParam = start != null ? `&start=${encodeURIComponent(start)}` : '';
+    const endParam = end != null ? `&end=${encodeURIComponent(end)}` : '';
+    const limitParam = limit != null ? `&limit=${limit}` : '';
+    return `/v1/audits?action=${action}${startParam}${endParam}${limitParam}`;
+  }
+};
+
 export const configForPossibleBackendRequest = (config, token) => {
-  if (!config.url.startsWith('/')) return config;
-  const { url, headers } = config;
-  return {
+  const { url } = config;
+  // If it is not a Backend request, do nothing.
+  if (!url.startsWith('/')) return config;
+  const result = {
     ...config,
-    url: `/v1${url}`,
-    headers: token == null || (headers != null && headers.Authorization != null)
-      ? headers
-      : { ...headers, Authorization: `Bearer ${token}` }
+    // Prepend /v1 to the path if necessary.
+    url: url.startsWith('/v1/') ? url : `/v1${url}`
   };
+  const { headers } = config;
+  if (token != null && (headers == null || headers.Authorization == null))
+    result.headers = { ...headers, Authorization: `Bearer ${token}` };
+  return result;
 };
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.
@@ -32,12 +84,13 @@ export const isProblem = (data) => data != null && typeof data === 'object' &&
   data.code != null && data.message != null;
 
 export const logAxiosError = (error) => {
-  if (error.response)
-    Vue.prototype.$logger.log(error.response.data);
-  else if (error.request)
-    Vue.prototype.$logger.log(error.request);
+  const { $logger } = Vue.prototype;
+  if (error.response != null)
+    $logger.log(error.response.data);
+  else if (error.request != null)
+    $logger.log(error.request);
   else
-    Vue.prototype.$logger.log('Error', error.message);
+    $logger.log('Error', error.message);
 };
 
 export const requestAlertMessage = (error, problemToAlert) => {

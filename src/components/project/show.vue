@@ -57,6 +57,7 @@ import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -81,7 +82,7 @@ export default {
     fetchForms(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'forms',
-        url: `/projects/${this.projectId}/forms`,
+        url: apiPaths.forms(this.projectId),
         extended: true,
         resend
       }]).catch(noop);
@@ -89,7 +90,7 @@ export default {
     fetchFieldKeys(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'fieldKeys',
-        url: `/projects/${this.projectId}/app-users`,
+        url: apiPaths.fieldKeys(this.projectId),
         extended: true,
         resend,
         success: ({ project, fieldKeys }) => {

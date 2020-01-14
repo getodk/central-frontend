@@ -52,6 +52,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
+import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
@@ -85,7 +86,7 @@ export default {
         return;
       }
       const data = { old: this.oldPassword, new: this.newPassword };
-      this.put(`/users/${this.user.id}/password`, data)
+      this.put(apiPaths.password(this.user.id), data)
         .then(() => {
           this.$alert().success('Success! Your password has been updated.');
 

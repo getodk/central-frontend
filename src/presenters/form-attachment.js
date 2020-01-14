@@ -19,6 +19,4 @@ const props = [
   'updatedAt'
 ];
 
-export default class FormAttachment extends Base(props) {
-  encodedName() { return encodeURIComponent(this.name); }
-}
+export default class FormAttachment extends Base(props) {}

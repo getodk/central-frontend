@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </template>
       </summary-item>
-      <summary-item :route-to="`/projects/${project.id}/form-access`"
+      <summary-item :route-to="`/projects/${form.projectId}/form-access`"
         icon="user-circle">
         <template #heading>
           {{ assignmentActors.length.toLocaleString() }}
@@ -64,13 +64,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+import { apiPaths } from '../../../util/request';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
   components: { PageSection, SummaryItem },
   computed: {
-    ...requestData(['project', 'form', 'assignmentActors']),
+    ...requestData(['form', 'assignmentActors']),
     versionClass() {
       const htmlClass = ['form-version'];
       if (this.form.version === '') htmlClass.push('blank-form-version');
@@ -80,10 +81,10 @@ export default {
       return this.form.version !== '' ? this.form.version : '(blank)';
     },
     xmlPath() {
-      return `/v1/projects/${this.project.id}/forms/${this.form.encodedId()}.xml`;
+      return apiPaths.formXml(this.form.projectId, this.form.xmlFormId);
     },
     submissionsPath() {
-      return `/projects/${this.project.id}/forms/${this.form.encodedId()}/submissions`;
+      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/submissions`;
     }
   }
 };

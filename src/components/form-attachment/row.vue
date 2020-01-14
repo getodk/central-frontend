@@ -38,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { apiPaths } from '../../util/request';
 import { formatDate } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -100,7 +101,11 @@ export default {
       return displayName != null ? displayName : type;
     },
     href() {
-      return `/v1/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${this.attachment.encodedName()}`;
+      return apiPaths.formAttachment(
+        this.form.projectId,
+        this.form.xmlFormId,
+        this.attachment.name
+      );
     },
     updatedAt() {
       return formatDate(this.attachment.updatedAt);

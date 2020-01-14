@@ -73,6 +73,7 @@ import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
 import canRoute from '../../mixins/can-route';
 import tab from '../../mixins/tab';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -108,11 +109,9 @@ export default {
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     },
-    encodedFormId() {
-      return encodeURIComponent(this.xmlFormId);
-    },
     tabPathPrefix() {
-      return `/projects/${this.projectId}/forms/${this.encodedFormId}`;
+      const encodedFormId = encodeURIComponent(this.xmlFormId);
+      return `/projects/${this.projectId}/forms/${encodedFormId}`;
     },
     rendersMediaFilesTab() {
       return this.canRoute(this.tabPath('media-files')) &&
@@ -135,7 +134,7 @@ export default {
       this.$store.dispatch('get', [
         {
           key: 'form',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}`,
+          url: apiPaths.form(this.projectId, this.xmlFormId),
           extended: true,
           success: ({ submissionsChunk }) => {
             if (submissionsChunk == null) return;
@@ -151,7 +150,7 @@ export default {
         },
         {
           key: 'attachments',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/attachments`
+          url: apiPaths.formAttachments(this.projectId, this.xmlFormId)
         }
       ]).catch(noop);
     }

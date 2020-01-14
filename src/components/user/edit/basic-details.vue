@@ -36,6 +36,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
+import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
@@ -54,8 +55,11 @@ export default {
   computed: requestData(['currentUser', 'user']),
   methods: {
     submit() {
-      const patchData = { email: this.email, displayName: this.displayName };
-      this.patch(`/users/${this.user.id}`, patchData)
+      this.request({
+        method: 'PATCH',
+        url: apiPaths.user(this.user.id),
+        data: { email: this.email, displayName: this.displayName }
+      })
         .then(response => {
           this.$store.commit('setData', {
             key: 'user',

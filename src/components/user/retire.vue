@@ -44,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
@@ -64,7 +65,7 @@ export default {
   },
   methods: {
     retire() {
-      this.delete(`/users/${this.user.id}`)
+      this.delete(apiPaths.user(this.user.id))
         .then(() => {
           this.$emit('success', this.user);
         })

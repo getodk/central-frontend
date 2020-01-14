@@ -82,7 +82,7 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
-import { isProblem } from '../../util/request';
+import { apiPaths, isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -162,15 +162,13 @@ export default {
         return;
       }
 
-      const queryString = ignoreWarnings ? '?ignoreWarnings=true' : '';
-      const url = `/projects/${this.project.id}/forms${queryString}`;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml')
         headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
       const { currentRoute } = this.$store.state.router;
       this.request({
         method: 'POST',
-        url,
+        url: apiPaths.forms(this.project.id, { ignoreWarnings }),
         headers,
         data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
