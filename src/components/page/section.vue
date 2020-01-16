@@ -29,6 +29,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 .page-section {
   border-top: 1px solid #777;
   margin-bottom: 35px;
@@ -40,7 +42,7 @@ export default {
   margin-top: 10px;
 
   > span:first-child {
-    color: #555;
+    color: $color-accent-primary;
     font-weight: bold;
 
     + button {

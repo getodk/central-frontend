@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div id="project-list-heading">
-      <span>Welcome to Central.</span><span>Let’s get some things done.</span>
+      <span>Welcome to Central.</span>
+      <span>Let&rsquo;s get some things done.</span>
     </div>
     <div class="row">
       <div class="col-xs-6">
@@ -22,8 +23,8 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #body>
             <p>
-              If you’re not sure where to begin, we have a getting started guide
-              and user documentation available on the
+              If you&rsquo;re not sure where to begin, we have a getting started
+              guide and user documentation available on the
               <doc-link to="central-intro/">Open Data Kit Docs website</doc-link>.
             </p>
             <p>
