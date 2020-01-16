@@ -44,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
@@ -64,8 +65,7 @@ export default {
   },
   methods: {
     revoke() {
-      // Backend ensures that the token is URL-safe.
-      this.delete(`/sessions/${this.fieldKey.token}`)
+      this.delete(apiPaths.session(this.fieldKey.token))
         .then(() => {
           this.$emit('success', this.fieldKey);
         })

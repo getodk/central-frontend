@@ -153,6 +153,7 @@ import DocLink from '../doc-link.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -196,7 +197,7 @@ export default {
     submit() {
       const data = { passphrase: this.passphrase };
       if (this.hint !== '') data.hint = this.hint;
-      this.post(`/projects/${this.project.id}/key`, data)
+      this.post(apiPaths.projectKey(this.project.id), data)
         .then(() => {
           this.step += 1;
           this.success = true;

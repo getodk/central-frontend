@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
@@ -38,7 +39,7 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'project',
-        url: `/projects/${this.projectId}`,
+        url: apiPaths.project(this.projectId),
         extended: true,
         success: ({ project, fieldKeys }) => {
           if (fieldKeys == null || fieldKeys.length === project.appUsers)

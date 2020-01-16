@@ -54,6 +54,7 @@ import Spinner from '../spinner.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -180,7 +181,7 @@ export default {
         },
         {
           key: 'formAssignments',
-          url: `/projects/${this.projectId}/assignments/forms/app-user`,
+          url: apiPaths.formSummaryAssignments(this.projectId, 'app-user'),
           resend
         }
       ]).catch(noop);
@@ -239,7 +240,7 @@ export default {
       }
     },
     save() {
-      this.put(`/projects/${this.projectId}`, this.projectToSave)
+      this.put(apiPaths.project(this.projectId), this.projectToSave)
         .then(() => {
           this.fetchData(true);
           this.$alert().success('Your changes have been saved!');

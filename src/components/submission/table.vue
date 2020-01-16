@@ -23,8 +23,8 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody>
         <submission-row v-for="(submission, index) in submissions"
-          :key="submission.__id" :project-id="projectId"
-          :submission="submission" :row-number="originalCount - index"/>
+          :key="submission.__id" :submission="submission"
+          :row-number="originalCount - index"/>
       </tbody>
     </table>
     <!-- The next table element contains the form-field data and instance ID of
@@ -44,8 +44,8 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <submission-row v-for="submission of submissions"
-            :key="submission.__id" :project-id="projectId"
-            :submission="submission" :field-columns="fieldColumns"/>
+            :key="submission.__id" :submission="submission"
+            :field-columns="fieldColumns"/>
         </tbody>
       </table>
     </div>
@@ -60,10 +60,6 @@ export default {
   name: 'SubmissionTable',
   components: { SubmissionRow },
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
     submissions: {
       type: Array,
       required: true

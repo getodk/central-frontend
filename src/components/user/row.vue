@@ -65,6 +65,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -113,7 +114,7 @@ export default {
       this.selectedRole = role;
       this.request({
         method: this.selectedRole === 'admin' ? 'POST' : 'DELETE',
-        url: `/assignments/admin/${this.user.id}`
+        url: apiPaths.assignment('admin', this.user.id)
       })
         .then(() => {
           this.$emit('assigned-role', this.user, this.selectedRole === 'admin');

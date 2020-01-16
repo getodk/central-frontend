@@ -45,6 +45,7 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -66,7 +67,7 @@ export default {
   computed: requestData(['project']),
   methods: {
     archive() {
-      this.patch(`/projects/${this.project.id}`, { archived: true })
+      this.patch(apiPaths.project(this.project.id), { archived: true })
         .then(response => {
           this.$store.commit('setData', {
             key: 'project',

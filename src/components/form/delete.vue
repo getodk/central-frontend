@@ -39,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -60,7 +61,7 @@ export default {
   computed: requestData(['form']),
   methods: {
     del() {
-      this.delete(`/projects/${this.form.projectId}/forms/${this.form.encodedId()}`)
+      this.delete(apiPaths.form(this.form.projectId, this.form.xmlFormId))
         .then(() => {
           this.$emit('success', this.form);
         })

@@ -39,12 +39,12 @@ const allKeys = [
   'forms',
   'form',
   'schema',
+  'formAssignments',
+  'keys',
   'attachments',
   // A single chunk of submissions OData
   'submissionsChunk',
-  'keys',
   'fieldKeys',
-  'formAssignments',
 
   'backupsConfig',
   'audits'

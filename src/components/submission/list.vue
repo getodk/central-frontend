@@ -39,8 +39,8 @@ except according to the terms contained in the LICENSE file.
           There are no Submissions yet for
           <strong>{{ form.nameOrId() }}</strong>.
         </p>
-        <submission-table v-else-if="schema != null" :project-id="projectId"
-          :submissions="submissions" :original-count="originalCount"/>
+        <submission-table v-else-if="schema != null" :submissions="submissions"
+          :original-count="originalCount"/>
       </template>
       <div v-if="message != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
@@ -52,8 +52,7 @@ except according to the terms contained in the LICENSE file.
 
     <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
       :form-action="downloadPath" @hide="hideModal('decrypt')"/>
-    <submission-analyze :state="analyze.state" :project-id="projectId"
-      @hide="hideModal('analyze')"/>
+    <submission-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -67,6 +66,7 @@ import SubmissionDecrypt from './decrypt.vue';
 import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['form', 'keys', 'schema', 'submissionsChunk'];
@@ -118,6 +118,7 @@ export default {
       // last refresh
       chunkCount: 0,
       message: null,
+      // Modals
       decrypt: {
         state: false
       },
@@ -131,16 +132,14 @@ export default {
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     },
-    // Returns the same value as this.form.encodedId(), but unlike
-    // this.form.encodedId(), can be called before the response for the form has
-    // been received.
-    encodedFormId() {
-      return encodeURIComponent(this.xmlFormId);
-    },
     configsForRefresh() {
       return [{
         key: 'submissionsChunk',
-        url: this.chunkURL({ top: this.chunkSizes.small }),
+        url: apiPaths.submissionsOData(
+          this.projectId,
+          this.xmlFormId,
+          { top: this.chunkSizes.small }
+        ),
         success: () => {
           this.processChunk();
         }
@@ -153,7 +152,7 @@ export default {
       return this.keys != null ? this.keys.find(key => key.managed) : null;
     },
     downloadPath() {
-      return `/v1/projects/${this.projectId}/forms/${this.form.encodedId()}/submissions.csv.zip`;
+      return apiPaths.submissionsZip(this.projectId, this.xmlFormId);
     },
     downloadButtonText() {
       return this.form.submissions <= 1
@@ -234,10 +233,6 @@ export default {
         ? 'Loading the last submission…'
         : `Loading the last ${remaining.toLocaleString()} submissions…`;
     },
-    chunkURL({ top, skip = 0 }) {
-      const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
-      return `/projects/${this.projectId}/forms/${this.encodedFormId}.svc/Submissions?${queryString}`;
-    },
     // Sets this.form.submissions to this.submissionsChunk['@odata.count'].
     updateFormSubmissionCount() {
       if (this.form == null) return;
@@ -302,15 +297,19 @@ export default {
           // We do not keep this.keys in sync with the keyId property of the
           // project or the form.
           key: 'keys',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}/submissions/keys`
+          url: apiPaths.formKeys(this.projectId, this.xmlFormId)
         },
         {
           key: 'schema',
-          url: `/projects/${this.projectId}/forms/${this.encodedFormId}.schema.json?flatten=true&odata=true`
+          url: apiPaths.schema(this.projectId, this.xmlFormId)
         },
         {
           key: 'submissionsChunk',
-          url: this.chunkURL({ top: this.chunkSizes.small }),
+          url: apiPaths.submissionsOData(
+            this.projectId,
+            this.xmlFormId,
+            { top: this.chunkSizes.small }
+          ),
           success: () => {
             this.processChunk();
           }
@@ -344,7 +343,11 @@ export default {
       };
       this.$store.dispatch('get', [{
         key: 'submissionsChunk',
-        url: this.chunkURL({ top, skip }),
+        url: apiPaths.submissionsOData(
+          this.projectId,
+          this.xmlFormId,
+          { top, skip }
+        ),
         success: () => {
           this.processChunk(false);
         }

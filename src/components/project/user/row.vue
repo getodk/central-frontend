@@ -36,6 +36,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
+import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
@@ -74,8 +75,14 @@ export default {
   methods: {
     requestChange(method, roleIdString) {
       if (roleIdString === '') return Promise.resolve();
-      const url = `/projects/${this.project.id}/assignments/${roleIdString}/${this.assignment.actor.id}`;
-      return this.request({ method, url });
+      return this.request({
+        method,
+        url: apiPaths.projectAssignment(
+          this.project.id,
+          roleIdString,
+          this.assignment.actor.id
+        )
+      });
     },
     change(roleIdString) {
       this.$emit('increment-count');

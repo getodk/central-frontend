@@ -31,6 +31,7 @@ import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import Loading from '../loading.vue';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -53,11 +54,13 @@ export default {
   },
   methods: {
     fetchData({ action, dateRange }) {
-      const start = encodeURIComponent(dateRange[0].toISO());
-      const end = encodeURIComponent(dateRange[1].endOf('day').toISO());
       this.$store.dispatch('get', [{
         key: 'audits',
-        url: `/audits?action=${action}&start=${start}&end=${end}`,
+        url: apiPaths.audits({
+          action,
+          start: dateRange[0].toISO(),
+          end: dateRange[1].endOf('day').toISO()
+        }),
         extended: true
       }]).catch(noop);
     }

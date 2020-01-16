@@ -31,6 +31,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -48,7 +49,7 @@ export default {
   methods: {
     submit() {
       const { name } = this;
-      this.patch(`/projects/${this.project.id}`, { name })
+      this.patch(apiPaths.project(this.project.id), { name })
         .then(response => {
           this.$store.commit('setData', {
             key: 'project',

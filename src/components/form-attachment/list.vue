@@ -69,6 +69,7 @@ import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -303,12 +304,18 @@ export default {
         .then(({ data, encoding }) => {
           if (this.$store.state.router.currentRoute !== currentRoute)
             throw new Error();
-          const path = `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/attachments/${attachment.encodedName()}`;
-          return this.post(path, data, {
+          return this.request({
+            method: 'POST',
+            url: apiPaths.formAttachment(
+              this.form.projectId,
+              this.form.xmlFormId,
+              attachment.name
+            ),
             headers: {
               'Content-Type': file.type,
               'Content-Encoding': encoding
             },
+            data,
             onUploadProgress: (progressEvent) => {
               this.uploadStatus.progress = progressEvent;
             },
