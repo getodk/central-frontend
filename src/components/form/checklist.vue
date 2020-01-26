@@ -73,10 +73,10 @@ except according to the terms contained in the LICENSE file.
             <strong>
               <router-link :to="`/projects/${project.id}/form-access`">
                 <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-                {{ $pluralize('App User', assignmentActors.length, true) }}</router-link>
+                {{ $pluralize('App User', formActors.length, true) }}</router-link>
             </strong>
-            in this Project {{ $pluralize('has', assignmentActors.length) }}
-            access to this Form, but you can always
+            in this Project {{ $pluralize('has', formActors.length) }} access to
+            this Form, but you can always
             <router-link :to="`/projects/${project.id}/app-users`">
               <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
               add more.</router-link>
@@ -135,7 +135,9 @@ export default {
   name: 'FormChecklist',
   components: { DocLink, FormChecklistStep, PageSection },
   computed: {
-    ...requestData(['project', 'form', 'attachments', 'assignmentActors']),
+    // The component assumes that this data will exist when the component is
+    // created.
+    ...requestData(['project', 'form', 'attachments', 'formActors']),
     // Returns true if all form attachments exist and false if not. Returns true
     // if there are no form attachments.
     allAttachmentsExist() {

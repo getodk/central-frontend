@@ -8,7 +8,7 @@ const loadOverview = (formOptions = {}) => {
     .respondWithData(() => testData.extendedProjects.last())
     .respondWithData(() => form)
     .respondWithData(() => testData.standardFormAttachments.sorted())
-    .respondWithData(() => []); // assignmentActors
+    .respondWithData(() => []); // formActors
 };
 
 describe('FormOverviewRightNow', () => {

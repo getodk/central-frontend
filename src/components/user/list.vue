@@ -50,7 +50,7 @@ either is an Administrator or has no role. -->
           @retire="showRetire"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['users', 'assignmentActors'])"/>
+    <loading :state="$store.getters.initiallyLoading(['users', 'actors'])"/>
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
@@ -129,12 +129,12 @@ export default {
           }
         },
         {
-          key: 'assignmentActors',
+          key: 'actors',
           url: '/assignments/admin',
-          success: ({ assignmentActors }) => {
+          success: ({ actors }) => {
             // eslint-disable-next-line vue/no-side-effects-in-computed-properties
             this.adminIds = new Set();
-            for (const actor of assignmentActors)
+            for (const actor of actors)
               this.adminIds.add(actor.id);
           }
         }
