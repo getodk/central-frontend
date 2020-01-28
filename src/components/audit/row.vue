@@ -58,7 +58,7 @@ const TARGETS = {
   form: {
     titleProp: 'name',
     path: ({ projectId, xmlFormId }) =>
-      `/projects/${projectId}/forms/${xmlFormId}`
+      `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`
   }
 };
 const ACTIONS = {
