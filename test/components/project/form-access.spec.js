@@ -80,7 +80,7 @@ describe('ProjectFormAccess', () => {
           .respondWithData(() => testData.extendedForms.sorted())
           .respondWithProblem(403.1) // fieldKeys
           .respondWithData(() => testData.standardRoles.sorted())
-          .respondWithProblem(403.1) // formAssignments
+          .respondWithProblem(403.1) // formSummaryAssignments
           .respondWithData(() => testData.extendedProjects.sorted())
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -153,7 +153,7 @@ describe('ProjectFormAccess', () => {
           forms: [],
           fieldKeys: [],
           roles: testData.standardRoles.sorted(),
-          formAssignments: []
+          formSummaryAssignments: []
         }
       });
       component.find('.empty-table-message').length.should.equal(1);

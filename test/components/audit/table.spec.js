@@ -150,6 +150,22 @@ describe('AuditTable', () => {
             { text: 'My Form', href: '/projects/1/forms/f' }
           )));
     }
+
+    it('encodes the xmlFormId in the form URL', () =>
+      mockRoute('/system/audits')
+        .respondWithData(() => testData.extendedAudits
+          .createPast(1, {
+            actor: testData.extendedUsers.first(),
+            action: 'form.create',
+            actee: testData.standardForms
+              .createPast(1, { xmlFormId: 'i ı' })
+              .last()
+          })
+          .sorted())
+        .afterResponse(app => {
+          const a = app.find('.audit-row td')[3].first('a');
+          a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
+        }));
   });
 
   it('renders a backup audit correctly', () =>

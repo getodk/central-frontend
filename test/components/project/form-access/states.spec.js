@@ -18,7 +18,7 @@ describe('ProjectFormAccessStates', () => {
         forms: [],
         fieldKeys: [],
         roles: testData.standardRoles.sorted(),
-        formAssignments: []
+        formSummaryAssignments: []
       }
     });
     const modal = component.first(ProjectFormAccessStates);

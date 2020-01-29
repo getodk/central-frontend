@@ -18,7 +18,7 @@ describe('FormOverview', () => {
           .createPast(1, { xmlFormId: 'f' })
           .last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');
         }));

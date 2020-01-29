@@ -151,7 +151,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() =>
             testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
           .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => []) // assignmentActors
+          .respondWithData(() => []) // formActors
           .complete()
           .route('/projects/1/forms/f/media-files')
           .respondWithData(() => testData.extendedProjects.sorted())
@@ -189,7 +189,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() =>
           testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text());
@@ -204,7 +204,7 @@ describe('FormAttachmentList', () => {
         .respondWithData(() => testData.standardFormAttachments
           .createPast(1, { exists: false })
           .sorted())
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           const tabs = app.find('#page-head .nav-tabs li a')
             .map(a => a.text().trim().iTrim());

@@ -3,14 +3,12 @@ import { mockLogin } from '../../../util/session';
 import { mockRoute } from '../../../util/http';
 
 const loadOverview = (formOptions = {}) => {
-  testData.extendedProjects.createPast(1, { appUsers: 1 });
   const form = testData.extendedForms.createPast(1, formOptions).last();
   return mockRoute(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`)
     .respondWithData(() => testData.extendedProjects.last())
     .respondWithData(() => form)
     .respondWithData(() => testData.standardFormAttachments.sorted())
-    .respondWithData(() =>
-      testData.extendedFieldKeys.createPast(1).sorted().map(testData.toActor));
+    .respondWithData(() => []); // formActors
 };
 
 describe('FormOverviewRightNow', () => {
@@ -41,7 +39,7 @@ describe('FormOverviewRightNow', () => {
     it('shows the count', () =>
       loadOverview({ submissions: 123 }).afterResponses(app => {
         const items = app.find('.summary-item');
-        items.length.should.equal(3);
+        items.length.should.equal(2);
         const item = items[1];
         item.first('.summary-item-heading').text().trim().should.equal('123');
         item.first('.summary-item-body').text().should.containEql('Submissions have');
@@ -56,35 +54,9 @@ describe('FormOverviewRightNow', () => {
       it(`renders a link for the ${description}`, () =>
         loadOverview({ xmlFormId: 'f' }).afterResponses(app => {
           const items = app.find('.summary-item');
-          items.length.should.equal(3);
+          items.length.should.equal(2);
           const href = items[1].first(selector).getAttribute('href');
           href.should.equal('#/projects/1/forms/f/submissions');
-        }));
-    }
-  });
-
-  describe('app users', () => {
-    it('shows the count', () =>
-      loadOverview().afterResponses(app => {
-        const items = app.find('.summary-item');
-        items.length.should.equal(3);
-        const item = items[2];
-        item.first('.summary-item-heading').text().trim().should.equal('1');
-        item.first('.summary-item-body').text().should.containEql('App User in this Project has');
-      }));
-
-    const targets = [
-      ['icon', '.summary-item-icon-container'],
-      ['count', '.summary-item-heading a'],
-      ['caption', '.summary-item-body a']
-    ];
-    for (const [description, selector] of targets) {
-      it(`renders a link for the ${description}`, () =>
-        loadOverview({ xmlFormId: 'f' }).afterResponses(app => {
-          const items = app.find('.summary-item');
-          items.length.should.equal(3);
-          const href = items[2].first(selector).getAttribute('href');
-          href.should.equal('#/projects/1/form-access');
         }));
     }
   });

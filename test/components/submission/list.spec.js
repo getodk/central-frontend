@@ -56,7 +56,7 @@ describe('SubmissionList', () => {
             .createPast(1, { xmlFormId: 'f', submissions: 0 })
             .last())
           .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => []) // assignmentActors
+          .respondWithData(() => []) // formActors
           .complete()
           .route('/projects/1/forms/f/submissions')
           .beforeEachResponse((app, request, index) => {
@@ -170,7 +170,7 @@ describe('SubmissionList', () => {
         .respondWithData(testData.submissionOData)
         .complete()
         .route('/projects/1/forms/f')
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .complete()
         .route('/projects/1/forms/f/submissions')
         .respondWithData([/* no responses */]));
@@ -949,7 +949,7 @@ describe('SubmissionList', () => {
             .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
             .respondWithData(() => testData.standardFormAttachments.sorted())
-            .respondWithData(() => []) // assignmentActors
+            .respondWithData(() => []) // formActors
             .afterResponses(app => {
               const formShow = app.first(FormShow);
               formShow.setData({

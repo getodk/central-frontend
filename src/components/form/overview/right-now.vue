@@ -42,21 +42,6 @@ except according to the terms contained in the LICENSE file.
           </template>
         </template>
       </summary-item>
-      <summary-item :route-to="`/projects/${form.projectId}/form-access`"
-        icon="user-circle">
-        <template #heading>
-          {{ assignmentActors.length.toLocaleString() }}
-          <span class="icon-angle-right"></span>
-        </template>
-        <template #body>
-          <template v-if="assignmentActors.length === 1">
-            <strong>App User</strong> in this Project has access to this Form.
-          </template>
-          <template v-else>
-            <strong>App Users</strong> in this Project have access to this Form.
-          </template>
-        </template>
-      </summary-item>
     </template>
   </page-section>
 </template>
@@ -71,7 +56,9 @@ export default {
   name: 'FormOverviewRightNow',
   components: { PageSection, SummaryItem },
   computed: {
-    ...requestData(['form', 'assignmentActors']),
+    // The component assumes that this data will exist when the component is
+    // created.
+    ...requestData(['form']),
     versionClass() {
       const htmlClass = ['form-version'];
       if (this.form.version === '') htmlClass.push('blank-form-version');
@@ -115,13 +102,6 @@ export default {
     + .btn {
       bottom: 5px;
     }
-  }
-
-  .icon-file-o, .icon-inbox {
-    // These icons are a little more narrow than .icon-user-circle, so we use
-    // this to center them.
-    margin-left: 4px;
-    margin-right: 4px;
   }
 }
 </style>

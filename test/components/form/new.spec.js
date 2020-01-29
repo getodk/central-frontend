@@ -207,7 +207,7 @@ describe('FormNew', () => {
         .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
       .respondWithData(() => testData.extendedForms.last()) // FormShow
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => [])); // assignmentActors
+      .respondWithData(() => [])); // formActors
 
     it('redirects to the form overview', () => {
       app.vm.$route.path.should.equal('/projects/1/forms/f');
@@ -438,7 +438,7 @@ describe('FormNew', () => {
           .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
         .respondWithData(() => testData.extendedForms.last()) // FormShow
         .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');
         }));

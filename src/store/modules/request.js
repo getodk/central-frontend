@@ -23,6 +23,7 @@ import User from '../../presenters/user';
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 
 // Each type of response data that this module manages is associated with a key.
+// Each key tends to correspond to a single Backend endpoint.
 const allKeys = [
   'session',
   'currentUser',
@@ -31,16 +32,19 @@ const allKeys = [
   'user',
 
   'roles',
-  'assignmentActors',
+  // Actors associated with sitewide assignments
+  'actors',
 
   'projects',
   'project',
   'projectAssignments',
   'forms',
+  'formSummaryAssignments',
   'form',
   'schema',
-  'formAssignments',
+  'formActors',
   'keys',
+  // Form attachments
   'attachments',
   // A single chunk of submissions OData
   'submissionsChunk',

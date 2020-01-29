@@ -31,7 +31,7 @@ import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['project', 'form', 'attachments', 'assignmentActors'];
+const REQUEST_KEYS = ['project', 'form', 'attachments', 'formActors'];
 
 export default {
   name: 'FormOverview',
@@ -51,6 +51,8 @@ export default {
     }
   },
   computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
     ...requestData(REQUEST_KEYS),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
@@ -68,7 +70,7 @@ export default {
   methods: {
     fetchData() {
       this.$store.dispatch('get', [{
-        key: 'assignmentActors',
+        key: 'formActors',
         url: apiPaths.formActors(this.projectId, this.xmlFormId, 'app-user'),
         resend: false
       }]);

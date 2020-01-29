@@ -58,7 +58,7 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formAssignments'];
+const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formSummaryAssignments'];
 
 export default {
   name: 'ProjectFormAccess',
@@ -112,7 +112,7 @@ export default {
       for (const form of this.forms)
         byForm[form.xmlFormId] = { ...byFieldKey };
 
-      for (const assignment of this.formAssignments) {
+      for (const assignment of this.formSummaryAssignments) {
         const forForm = byForm[assignment.xmlFormId];
         // Skip any assignment whose form is not in this.forms or whose app user
         // is not in this.fieldKeysWithToken.
@@ -180,7 +180,7 @@ export default {
           resend: false
         },
         {
-          key: 'formAssignments',
+          key: 'formSummaryAssignments',
           url: apiPaths.formSummaryAssignments(this.projectId, 'app-user'),
           resend
         }

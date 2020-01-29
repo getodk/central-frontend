@@ -24,7 +24,7 @@ describe('FormShow', () => {
         .respondWithData(() => project)
         .respondWithData(() => form)
         .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // assignmentActors
+        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
         });
@@ -39,7 +39,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+      .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
         text.should.equal('My Project');
@@ -55,7 +55,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+      .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
         text.should.equal('My Project (archived)');
@@ -69,7 +69,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+      .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const a = app.first('#page-head-context span a');
         a.getAttribute('href').should.equal('#/projects/1');
@@ -83,7 +83,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+      .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const a = app.find('#page-head-context a');
         a.length.should.equal(2);
@@ -98,7 +98,7 @@ describe('FormShow', () => {
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
       .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // assignmentActors
+      .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const title = app.first('#page-head-title').text().trim();
         const form = testData.extendedForms.last();
