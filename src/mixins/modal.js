@@ -14,20 +14,23 @@ except according to the terms contained in the LICENSE file.
 A component that contains one or more modals may use this mixin, which includes
 methods for toggling a modal.
 
-The component using this mixin must define a data property for each modal. Each
-modal's corresponding property must be an object. The mixin requires that the
-object have a `state` property that indicates whether the modal should be shown.
+The mixin factory does not take any options.
+
+The component using this mixin must define a data property for each modal that
+it contains. Each modal's corresponding property must be an object. The object
+must have a `state` property that indicates whether the modal should be shown.
 */
-export default () => { // eslint-disable-line arrow-body-style
-  // @vue/component
-  return {
-    methods: {
-      showModal(name) {
-        this[name].state = true;
-      },
-      hideModal(name) {
-        this[name].state = false;
-      }
+
+// @vue/component
+const mixin = {
+  methods: {
+    showModal(name) {
+      this[name].state = true;
+    },
+    hideModal(name) {
+      this[name].state = false;
     }
-  };
+  }
 };
+
+export default () => mixin;
