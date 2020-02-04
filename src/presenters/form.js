@@ -28,7 +28,6 @@ const props = [
 ];
 
 export default class Form extends Base(props) {
-  encodedId() { return encodeURIComponent(this.xmlFormId); }
   nameOrId() { return this.name != null ? this.name : this.xmlFormId; }
 
   updatedOrCreatedAt() {

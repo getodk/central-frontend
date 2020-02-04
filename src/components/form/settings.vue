@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           <div class="panel-body">
             <p>
               To set this Form&rsquo;s state, please visit the Project
-              <router-link :to="`/projects/${projectId}/form-access`">
+              <router-link :to="projectPath('form-access')">
                 <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
                 Form Access settings</router-link>.
             </p>
@@ -51,22 +51,17 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormDelete from './delete.vue';
 import modal from '../../mixins/modal';
+import router from '../../mixins/router';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
-  mixins: [modal(), validateData()],
+  mixins: [modal(), router(), validateData()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
   inheritAttrs: false,
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       deleteForm: {
@@ -74,10 +69,12 @@ export default {
       }
     };
   },
+  // The component does not assume that this data will exist when the component
+  // is created.
   computed: requestData(['form']),
   methods: {
     afterDelete(form) {
-      this.$router.push(`/projects/${form.projectId}`, () => {
+      this.$router.push(this.projectPath(), () => {
         this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
       });
     }

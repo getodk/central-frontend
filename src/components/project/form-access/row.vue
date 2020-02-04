@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <tr class="project-form-access-row">
     <template v-if="frozen">
       <td class="form-name">
-        <router-link :to="formOverviewPath" :title="form.nameOrId()">
+        <router-link :to="formPath(form.projectId, form.xmlFormId)"
+          :title="form.nameOrId()">
           {{ form.nameOrId() }}
         </router-link>
       </td>
@@ -52,9 +53,11 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import Form from '../../../presenters/form';
+import router from '../../../mixins/router';
 
 export default {
   name: 'ProjectFormAccessRow',
+  mixins: [router()],
   props: {
     form: {
       type: Form,
@@ -71,9 +74,6 @@ export default {
   },
   computed: {
     ...mapGetters(['fieldKeysWithToken']),
-    formOverviewPath() {
-      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}`;
-    },
     stateChanged() {
       return this.changes.current.state !== this.changes.previous.state;
     }

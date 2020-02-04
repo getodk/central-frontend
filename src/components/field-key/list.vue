@@ -20,9 +20,10 @@ except according to the terms contained in the LICENSE file.
         App Users in this Project only will be able to download and use Forms
         within this Project. When you create a new App User, it will not have
         access to any Forms at first. To set the Forms each App User may access,
-        use the <router-link :to="formAccessPath">Form Access</router-link> tab.
-        Multiple devices can use the same App User profile without problem. For
-        more information,
+        use the
+        <router-link :to="projectPath('form-access')">Form Access</router-link>
+        tab. Multiple devices can use the same App User profile without problem.
+        For more information,
         <doc-link to="central-users/#managing-app-users">click here</doc-link>.
       </p>
     </div>
@@ -67,6 +68,7 @@ import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
 import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
+import router from '../../mixins/router';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
@@ -84,7 +86,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { DocLink, FieldKeyRow, FieldKeyNew, FieldKeyRevoke, Loading },
-  mixins: [modal(), validateData()],
+  mixins: [modal(), router(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -106,12 +108,7 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(['fieldKeys']),
-    formAccessPath() {
-      return `/projects/${this.projectId}/form-access`;
-    }
-  },
+  computed: requestData(['fieldKeys']),
   watch: {
     projectId() {
       this.$emit('fetch-field-keys');

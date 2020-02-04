@@ -64,22 +64,20 @@ except according to the terms contained in the LICENSE file.
             <strong>You have not created any App Users for this Project yet, so
             nobody will be able to use this Form.</strong> You can create them
             on the
-            <router-link :to="`/projects/${project.id}/app-users`">
+            <router-link :to="projectPath('app-users')">
               <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
               App Users tab of the Project page</router-link>.
           </template>
           <template v-else>
             Right now,
             <strong>
-              <router-link :to="`/projects/${project.id}/form-access`">
+              <router-link :to="projectPath('form-access')">
                 <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
                 {{ $pluralize('App User', formActors.length, true) }}</router-link>
             </strong>
             in this Project {{ $pluralize('has', formActors.length) }} access to
             this Form, but you can always
-            <router-link :to="`/projects/${project.id}/app-users`">
-              <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-              add more.</router-link>
+            <router-link :to="projectPath('app-users')">add more.</router-link>
           </template>
           For more information about this,
           <doc-link to="central-submissions/">click here</doc-link>.
@@ -129,11 +127,13 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormChecklistStep from './checklist-step.vue';
 import PageSection from '../page/section.vue';
+import router from '../../mixins/router';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormChecklist',
   components: { DocLink, FormChecklistStep, PageSection },
+  mixins: [router()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -162,9 +162,6 @@ export default {
       if (step === this.currentStep) return 'current';
       if (this.stepCompletion[step]) return 'complete';
       return 'later';
-    },
-    formPath(suffix) {
-      return `/projects/${this.project.id}/forms/${this.form.encodedId()}/${suffix}`;
     }
   }
 };

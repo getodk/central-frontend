@@ -86,13 +86,14 @@ import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
 import modal from '../../mixins/modal';
+import router from '../../mixins/router';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
   components: { DocLink, ProjectArchive, ProjectEdit, ProjectEnableEncryption },
-  mixins: [modal(), validateData()],
+  mixins: [modal(), router(), validateData()],
   data() {
     return {
       enableEncryption: {
@@ -110,7 +111,7 @@ export default {
       this.$emit('fetch-project');
     },
     afterArchive() {
-      this.$router.push(`/projects/${this.project.id}`, () => {
+      this.$router.push(this.projectPath(), () => {
         this.$alert().success(`The Project "${this.project.name}" was archived.`);
       });
     }

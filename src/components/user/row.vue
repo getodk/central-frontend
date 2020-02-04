@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="{ success: user.id === highlighted }">
     <td class="user-display-name">
-      <router-link :to="`/users/${user.id}/edit`">
-        {{ user.displayName }}
-      </router-link>
+      <router-link :to="userPath(user.id)">{{ user.displayName }}</router-link>
     </td>
     <td class="user-email">{{ user.email }}</td>
     <td class="user-role">
@@ -41,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
           <li>
-            <router-link :to="`/users/${user.id}/edit`" class="edit-profile">
+            <router-link :to="userPath(user.id)" class="edit-profile">
               Edit profile
             </router-link>
           </li>
@@ -65,6 +63,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import router from '../../mixins/router';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -72,7 +71,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'UserRow',
   components: { Spinner },
-  mixins: [request()],
+  mixins: [request(), router()],
   props: {
     user: {
       type: Object,

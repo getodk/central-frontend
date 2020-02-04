@@ -47,8 +47,8 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
-import canRoute from '../../mixins/can-route';
 import modal from '../../mixins/modal';
+import router from '../../mixins/router';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
@@ -64,7 +64,7 @@ export default {
     ProjectOverviewAbout,
     ProjectOverviewRightNow
   },
-  mixins: [canRoute(), modal(), validateData()],
+  mixins: [modal(), router(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -90,7 +90,7 @@ export default {
       // The text of ProjectOverviewAbout implies that the user can form.create.
       if (!this.project.permits('form.create')) return false;
       // ProjectOverviewRightNow links to FieldKeyList.
-      return this.canRoute(`/projects/${this.projectId}/app-users`);
+      return this.canRoute(this.projectPath('app-users'));
     }
   },
   watch: {
@@ -107,8 +107,7 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(form) {
-      const path = `/projects/${form.projectId}/forms/${form.encodedId()}`;
-      this.$router.push(path, () => {
+      this.$router.push(this.formPath(form.projectId, form.xmlFormId), () => {
         this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
       });
     }

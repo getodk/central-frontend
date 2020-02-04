@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <strong>Current version</strong> of this Form.
         </template>
       </summary-item>
-      <summary-item :route-to="submissionsPath" icon="inbox">
+      <summary-item :route-to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ form.submissions.toLocaleString() }}
           <span class="icon-angle-right"></span>
@@ -49,12 +49,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+import router from '../../../mixins/router';
 import { apiPaths } from '../../../util/request';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
   components: { PageSection, SummaryItem },
+  mixins: [router()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -69,9 +71,6 @@ export default {
     },
     xmlPath() {
       return apiPaths.formXml(this.form.projectId, this.form.xmlFormId);
-    },
-    submissionsPath() {
-      return `/projects/${this.form.projectId}/forms/${this.form.encodedId()}/submissions`;
     }
   }
 };

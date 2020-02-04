@@ -79,6 +79,7 @@ import FieldKey from '../../presenters/field-key';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import router from '../../mixins/router';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -86,7 +87,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FieldKeyNew',
   components: { DocLink, Modal, Spinner },
-  mixins: [request()],
+  mixins: [request(), router()],
   props: {
     state: {
       type: Boolean,
@@ -144,7 +145,7 @@ export default {
     navigateToFormAccess() {
       // Clear fieldKeys so that the Form Access tab will fetch it again.
       this.$store.commit('clearData', 'fieldKeys');
-      this.$router.push(`/projects/${this.project.id}/form-access`);
+      this.$router.push(this.projectPath('form-access'));
     },
     createAnother() {
       this.step = 1;
