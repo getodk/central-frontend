@@ -48,7 +48,7 @@ import PageSection from '../page/section.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import modal from '../../mixins/modal';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
@@ -64,7 +64,7 @@ export default {
     ProjectOverviewAbout,
     ProjectOverviewRightNow
   },
-  mixins: [modal(), router(), validateData()],
+  mixins: [modal(), routes(), validateData()],
   props: {
     projectId: {
       type: String,

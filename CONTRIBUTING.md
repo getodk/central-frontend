@@ -66,7 +66,7 @@ Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mi
 
 We support a number of route meta fields, which we document in [`/src/router.js`](/src/router.js). The router contains a fair amount of logic, which is driven largely by the meta fields.
 
-We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `router` mixin ([`/src/mixins/router.js`](/src/mixins/router.js)).
+We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
 ### Styles
 

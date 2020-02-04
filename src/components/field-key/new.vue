@@ -79,7 +79,7 @@ import FieldKey from '../../presenters/field-key';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -87,7 +87,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FieldKeyNew',
   components: { DocLink, Modal, Spinner },
-  mixins: [request(), router()],
+  mixins: [request(), routes()],
   props: {
     state: {
       type: Boolean,

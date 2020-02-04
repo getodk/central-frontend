@@ -30,12 +30,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import { formatDate } from '../../util/util';
 
 export default {
   name: 'ProjectRow',
-  mixins: [router()],
+  mixins: [routes()],
   props: {
     projectCount: {
       type: Number,

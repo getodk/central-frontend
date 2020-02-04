@@ -55,7 +55,7 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -64,7 +64,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'ProjectShow',
   components: { Loading, PageBody, PageHead },
-  mixins: [router(), tab()],
+  mixins: [routes(), tab()],
   props: {
     projectId: {
       type: String,

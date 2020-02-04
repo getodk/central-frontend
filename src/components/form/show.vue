@@ -71,7 +71,7 @@ import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -82,7 +82,7 @@ const REQUEST_KEYS = ['project', 'form', 'attachments'];
 export default {
   name: 'FormShow',
   components: { Loading, PageBody, PageHead },
-  mixins: [router(), tab()],
+  mixins: [routes(), tab()],
   props: {
     projectId: {
       type: String,

@@ -49,14 +49,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import router from '../../../mixins/router';
+import routes from '../../../mixins/routes';
 import { apiPaths } from '../../../util/request';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
   components: { PageSection, SummaryItem },
-  mixins: [router()],
+  mixins: [routes()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.

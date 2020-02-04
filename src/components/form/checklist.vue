@@ -127,13 +127,13 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormChecklistStep from './checklist-step.vue';
 import PageSection from '../page/section.vue';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormChecklist',
   components: { DocLink, FormChecklistStep, PageSection },
-  mixins: [router()],
+  mixins: [routes()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.

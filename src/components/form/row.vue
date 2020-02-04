@@ -33,12 +33,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Form from '../../presenters/form';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import { formatDate } from '../../util/util';
 
 export default {
   name: 'FormRow',
-  mixins: [router()],
+  mixins: [routes()],
   props: {
     form: {
       type: Form,

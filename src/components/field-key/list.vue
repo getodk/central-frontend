@@ -68,7 +68,7 @@ import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
 import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
@@ -86,7 +86,7 @@ const POPOVER_CONTENT_TEMPLATE = `
 export default {
   name: 'FieldKeyList',
   components: { DocLink, FieldKeyRow, FieldKeyNew, FieldKeyRevoke, Loading },
-  mixins: [modal(), router(), validateData()],
+  mixins: [modal(), routes(), validateData()],
   props: {
     projectId: {
       type: String,

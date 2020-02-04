@@ -44,13 +44,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import router from '../../../mixins/router';
+import routes from '../../../mixins/routes';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectOverviewRightNow',
   components: { PageSection, SummaryItem },
-  mixins: [router()],
+  mixins: [routes()],
   computed: requestData(['project', 'forms'])
 };
 </script>

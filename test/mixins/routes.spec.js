@@ -1,6 +1,6 @@
-import router from '../../src/mixins/router';
+import routes from '../../src/mixins/routes';
 
-const mixin = router();
+const mixin = routes();
 const component = {
   $route: {
     params: {
@@ -10,7 +10,7 @@ const component = {
   }
 };
 
-describe('mixins/router', () => {
+describe('mixins/routes', () => {
   describe('projectPath', () => {
     const projectPath = mixin.methods.projectPath.bind(component);
 

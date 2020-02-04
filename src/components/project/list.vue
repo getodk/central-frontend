@@ -128,7 +128,7 @@ import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
-import router from '../../mixins/router';
+import routes from '../../mixins/routes';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -143,7 +143,7 @@ export default {
     ProjectRow,
     SummaryItem
   },
-  mixins: [modal(), router()],
+  mixins: [modal(), routes()],
   data() {
     return {
       newProject: {

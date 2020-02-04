@@ -18,11 +18,11 @@ The mixin factory does not take any options.
 
 import { canRoute } from '../util/router';
 
-const projectPath = (id, suffix = '') => {
+const _projectPath = (id, suffix = '') => {
   const slash = suffix !== '' ? '/' : '';
   return `/projects/${id}${slash}${suffix}`;
 };
-const formPath = (projectId, xmlFormId, suffix = '') => {
+const _formPath = (projectId, xmlFormId, suffix = '') => {
   const encodedFormId = encodeURIComponent(xmlFormId);
   const slash = suffix !== '' ? '/' : '';
   return `/projects/${projectId}/forms/${encodedFormId}${slash}${suffix}`;
@@ -47,8 +47,8 @@ const mixin = {
     */
     projectPath(idOrSuffix, suffix) {
       return suffix != null || typeof idOrSuffix === 'number'
-        ? projectPath(idOrSuffix, suffix)
-        : projectPath(this.$route.params.projectId, idOrSuffix);
+        ? _projectPath(idOrSuffix, suffix)
+        : _projectPath(this.$route.params.projectId, idOrSuffix);
     },
     /*
     Returns a path to a form page. Do not use formPath() for Backend paths: use
@@ -68,9 +68,9 @@ const mixin = {
     formPath(projectIdOrSuffix, xmlFormId, suffix) {
       if (xmlFormId == null) {
         const { params } = this.$route;
-        return formPath(params.projectId, params.xmlFormId, projectIdOrSuffix);
+        return _formPath(params.projectId, params.xmlFormId, projectIdOrSuffix);
       }
-      return formPath(projectIdOrSuffix, xmlFormId, suffix);
+      return _formPath(projectIdOrSuffix, xmlFormId, suffix);
     },
     userPath(id) {
       return `/users/${id}/edit`;

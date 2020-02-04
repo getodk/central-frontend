@@ -53,11 +53,11 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import Form from '../../../presenters/form';
-import router from '../../../mixins/router';
+import routes from '../../../mixins/routes';
 
 export default {
   name: 'ProjectFormAccessRow',
-  mixins: [router()],
+  mixins: [routes()],
   props: {
     form: {
       type: Form,
