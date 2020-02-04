@@ -15,8 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span>Right Now</span>
     </template>
     <template #body>
-      <summary-item :route-to="`/projects/${project.id}/app-users`"
-        icon="user-circle">
+      <summary-item :route-to="projectPath('app-users')" icon="user-circle">
         <template #heading>
           {{ project.appUsers.toLocaleString() }}
           <span class="icon-angle-right"></span>
@@ -45,11 +44,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+import routes from '../../../mixins/routes';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectOverviewRightNow',
   components: { PageSection, SummaryItem },
+  mixins: [routes()],
   computed: requestData(['project', 'forms'])
 };
 </script>

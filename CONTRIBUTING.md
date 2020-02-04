@@ -62,6 +62,12 @@ If no name is specified for a bottom-level route, it is given the same name as i
 
 Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin.)
 
+### Router
+
+We support a number of route meta fields, which we document in [`/src/router.js`](/src/router.js). The router contains a fair amount of logic, which is driven largely by the meta fields.
+
+We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
+
 ### Styles
 
 ODK Central Frontend uses Sass.

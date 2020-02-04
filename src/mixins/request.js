@@ -20,8 +20,10 @@ concurrent requests, for example, by disabling a submit button while a request
 is in progress. Separate components can send concurrent requests, but any single
 component can only send one request at a time.
 
-The mixin factory does not take any options. However, the component using this
-mixin may optionally define the following data property:
+The mixin factory does not take any options.
+
+The component using this mixin may optionally define the following data
+property:
 
   - awaitingResponse. `true` if a request is in progress and `false` if not.
     Initialize the property as `false`. The component using the mixin should not
@@ -75,6 +77,7 @@ function request({
     throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
 
   if (this.awaitingResponse != null) this.awaitingResponse = true;
+
   const token = this.$store.getters.loggedIn
     ? this.$store.state.request.data.session.token
     : null;
@@ -107,21 +110,21 @@ function request({
 const mixin = {
   watch: {
     $route() {
-      this.awaitingResponse = false;
+      if (this.awaitingResponse != null) this.awaitingResponse = false;
     }
   },
   methods: {
     request,
-    post(url, data, config) {
+    post(url, data, config = undefined) {
       return this.request({ ...config, method: 'POST', url, data });
     },
-    put(url, data, config) {
+    put(url, data, config = undefined) {
       return this.request({ ...config, method: 'PUT', url, data });
     },
-    patch(url, data, config) {
+    patch(url, data, config = undefined) {
       return this.request({ ...config, method: 'PATCH', url, data });
     },
-    delete: function del(url, config) {
+    delete: function del(url, config = undefined) {
       return this.request({ ...config, method: 'DELETE', url });
     }
   }

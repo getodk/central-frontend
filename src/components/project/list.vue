@@ -128,6 +128,7 @@ import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
+import routes from '../../mixins/routes';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -142,7 +143,7 @@ export default {
     ProjectRow,
     SummaryItem
   },
-  mixins: [modal()],
+  mixins: [modal(), routes()],
   data() {
     return {
       newProject: {
@@ -182,7 +183,7 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(project) {
-      this.$router.push(`/projects/${project.id}`, () => {
+      this.$router.push(this.projectPath(project.id), () => {
         this.$alert().success('Your new Project has been successfully created.');
       });
     }

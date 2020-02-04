@@ -16,8 +16,8 @@ except according to the terms contained in the LICENSE file.
     <template slot="body">
       <div class="modal-introduction">
         <p>
-          Are you sure you want to delete the form
-          <strong>{{ form.nameOrId() }}</strong> and all of its submissions?
+          Are you sure you want to delete the Form
+          <strong>{{ form.nameOrId() }}</strong> and all of its Submissions?
         </p>
         <p>This action cannot be undone.</p>
       </div>

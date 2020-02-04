@@ -86,15 +86,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import canRoute from '../mixins/can-route';
 import request from '../mixins/request';
+import routes from '../mixins/routes';
 import { apiPaths } from '../util/request';
 import { noop } from '../util/util';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  mixins: [canRoute(), request()],
+  mixins: [request(), routes()],
   computed: {
     ...requestData(['session', 'currentUser']),
     projectsLinkIsActive() {
@@ -103,7 +103,6 @@ export default {
   },
   methods: {
     routePathStartsWith(path) {
-      if (path.endsWith('/') && path !== '/') throw new Error('invalid path');
       return this.$route.path === path ||
         this.$route.path.startsWith(`${path}/`);
     },

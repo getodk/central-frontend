@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr :class="{ archived: project.archived }">
     <td>
       <div class="project-list-project-name">
-        <router-link :to="`/projects/${project.id}`">
+        <router-link :to="projectPath(project.id)">
           {{ project.name }} {{ project.archived ? '(archived)' : '' }}
           <span class="icon-angle-right"></span>
         </router-link>
@@ -30,10 +30,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import routes from '../../mixins/routes';
 import { formatDate } from '../../util/util';
 
 export default {
   name: 'ProjectRow',
+  mixins: [routes()],
   props: {
     projectCount: {
       type: Number,

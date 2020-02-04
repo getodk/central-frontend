@@ -24,8 +24,8 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="initiator">
-      <router-link v-if="audit.actor != null"
-        :to="`/users/${audit.actor.id}/edit`" :title="audit.actor.displayName">
+      <router-link v-if="audit.actor != null" :to="userPath(audit.actor.id)"
+        :title="audit.actor.displayName">
         {{ audit.actor.displayName }}
       </router-link>
     </td>
@@ -44,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import routes from '../../mixins/routes';
 import { formatDate } from '../../util/util';
 
 const TARGETS = {
@@ -117,6 +118,7 @@ const ACTIONS = {
 
 export default {
   name: 'AuditRow',
+  mixins: [routes()],
   props: {
     audit: {
       type: Object,
