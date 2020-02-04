@@ -14,7 +14,14 @@ except according to the terms contained in the LICENSE file.
     <loading :state="initiallyLoading"/>
     <div v-if="dataExists" class="row">
       <div class="col-xs-6">
-        <form-checklist/>
+        <page-section>
+          <template #heading>
+            <span>Checklist</span>
+          </template>
+          <template #body>
+            <form-checklist/>
+          </template>
+        </page-section>
       </div>
       <div class="col-xs-6">
         <form-overview-right-now/>
@@ -27,6 +34,7 @@ except according to the terms contained in the LICENSE file.
 import FormChecklist from './checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
@@ -35,7 +43,7 @@ const REQUEST_KEYS = ['project', 'form', 'attachments', 'formActors'];
 
 export default {
   name: 'FormOverview',
-  components: { FormChecklist, FormOverviewRightNow, Loading },
+  components: { FormChecklist, FormOverviewRightNow, Loading, PageSection },
   mixins: [validateData()],
   // Setting this in order to ignore attributes from FormShow that are intended
   // for other form-related components.
