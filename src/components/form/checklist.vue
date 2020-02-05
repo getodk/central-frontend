@@ -22,23 +22,7 @@ except according to the terms contained in the LICENSE file.
         </doc-link>
       </p>
     </form-checklist-step>
-    <!-- Using v-show rather than v-if so that the number of steps is
-    consistent, which makes testing easier. -->
-    <form-checklist-step v-show="attachments.length !== 0"
-      :stage="stepStage(1)">
-      <template #title>Upload Form media files</template>
-      <p>
-        Your Form design references files that we need in order to present your
-        Form. You can upload these for distribution under the
-        <router-link :to="formPath('media-files')">Media Files tab</router-link>.
-        If you change your mind or make a mistake, you can always replace the
-        files.
-        <doc-link to="central-forms/#forms-with-attachments">
-          Click here to find out more.
-        </doc-link>
-      </p>
-    </form-checklist-step>
-    <form-checklist-step :stage="stepStage(2)">
+    <form-checklist-step :stage="stepStage(1)">
       <template #title>Download Form on survey clients and submit data</template>
       <p>
         <template v-if="form.submissions === 0">
@@ -76,7 +60,7 @@ except according to the terms contained in the LICENSE file.
         <doc-link to="central-submissions/">click here</doc-link>.
       </p>
     </form-checklist-step>
-    <form-checklist-step :stage="stepStage(3)">
+    <form-checklist-step :stage="stepStage(2)">
       <template #title>Evaluate and analyze submitted data</template>
       <p>
         <template v-if="form.submissions === 0">
@@ -95,7 +79,7 @@ except according to the terms contained in the LICENSE file.
         </doc-link>
       </p>
     </form-checklist-step>
-    <form-checklist-step :stage="stepStage(4)">
+    <form-checklist-step :stage="stepStage(3)">
       <template #title>Manage Form retirement</template>
       <p>
         As you come to the end of your data collection, you can use the Form
@@ -126,31 +110,22 @@ export default {
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['project', 'form', 'attachments', 'formActors']),
-    // Returns true if all form attachments exist and false if not. Returns true
-    // if there are no form attachments.
-    allAttachmentsExist() {
-      return this.attachments.every(attachment => attachment.exists);
-    },
+    ...requestData(['project', 'form', 'formActors']),
     // Indicates whether each step is complete.
     stepCompletion() {
       return [
         true,
-        this.allAttachmentsExist,
         this.form.submissions !== 0,
         false,
         this.form.state !== 'open'
       ];
-    },
-    currentStep() {
-      return this.stepCompletion.findIndex(isComplete => !isComplete);
     }
   },
   methods: {
     stepStage(step) {
-      if (step === this.currentStep) return 'current';
       if (this.stepCompletion[step]) return 'complete';
-      return 'later';
+      const current = this.stepCompletion.findIndex(isComplete => !isComplete);
+      return step === current ? 'current' : 'later';
     }
   }
 };
