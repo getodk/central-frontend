@@ -32,7 +32,7 @@ describe('FormChecklist', () => {
   describe('submission count', () => {
     it('renders correctly if there are no submissions', () =>
       loadOverview({ submissionCount: 0 }).afterResponses(app => {
-        const steps = app.find('.form-checklist-step');
+        const steps = app.find('#form-checklist .checklist-step');
         const step2Text = steps[1].find('p')[1].text();
         step2Text.should.containEql('Nobody has submitted any data to this Form yet.');
         const step3Text = steps[2].find('p')[1].text();
@@ -41,7 +41,7 @@ describe('FormChecklist', () => {
 
     it('renders correctly if there is a submission', () =>
       loadOverview({ submissionCount: 12345 }).afterResponses(app => {
-        const steps = app.find('.form-checklist-step');
+        const steps = app.find('#form-checklist .checklist-step');
         const step2Text = steps[1].find('p')[1].text();
         step2Text.should.containEql('12,345');
         const step3Text = steps[2].find('p')[1].text();
@@ -52,14 +52,14 @@ describe('FormChecklist', () => {
   describe('app user count', () => {
     it('renders correctly if there are no app users', () =>
       loadOverview({ fieldKeyCount: 0 }).afterResponses(app => {
-        const step = app.find('.form-checklist-step')[1];
+        const step = app.find('#form-checklist .checklist-step')[1];
         const text = step.find('p')[1].text();
         text.should.containEql('You have not created any App Users for this Project yet');
       }));
 
     it('renders correctly if there is one app user', () =>
       loadOverview({ fieldKeyCount: 1 }).afterResponses(app => {
-        const step = app.find('.form-checklist-step')[1];
+        const step = app.find('#form-checklist .checklist-step')[1];
         const text = step.find('p')[1].text().trim().iTrim();
         text.should.containEql('1 App User');
       }));
@@ -98,15 +98,15 @@ describe('FormChecklist', () => {
       it(`correctly indicates the stages of the checklist steps for case ${i}`, () => {
         const { completedSteps, currentStep, ...loadOverviewArgs } = cases[i];
         return loadOverview(loadOverviewArgs).afterResponses(app => {
-          const steps = app.find('.form-checklist-step');
+          const steps = app.find('#form-checklist .checklist-step');
           steps.length.should.equal(4);
           for (let j = 0; j < steps.length; j += 1) {
             if (completedSteps.includes(j)) {
-              steps[j].hasClass('form-checklist-step-complete').should.be.true();
+              steps[j].hasClass('checklist-step-complete').should.be.true();
             } else if (j === currentStep) {
-              steps[j].hasClass('form-checklist-step-current').should.be.true();
+              steps[j].hasClass('checklist-step-current').should.be.true();
             } else {
-              steps[j].hasClass('form-checklist-step-later').should.be.true();
+              steps[j].hasClass('checklist-step-later').should.be.true();
             }
           }
         });

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div :class="htmlClass">
-    <p class="form-checklist-step-heading">
+    <p class="checklist-step-heading">
       <span class="icon-check-circle"></span><slot name="title"></slot>
     </p>
     <slot></slot>
@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormChecklistStep',
+  name: 'ChecklistStep',
   props: {
     /*
     `stage` is one of three values:
@@ -32,21 +32,21 @@ export default {
     */
     stage: {
       type: String,
-      default: 'later'
+      required: true
     }
   },
   computed: {
     htmlClass() {
-      return ['form-checklist-step', `form-checklist-step-${this.stage}`];
+      return ['checklist-step', `checklist-step-${this.stage}`];
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../assets/scss/variables';
 
-.form-checklist-step {
+.checklist-step {
   margin-bottom: 20px;
 
   p {
@@ -54,7 +54,7 @@ export default {
     line-height: 17px;
   }
 
-  .form-checklist-step-heading {
+  .checklist-step-heading {
     font-weight: bold;
     margin-left: 0;
     margin-bottom: 5px;
@@ -68,17 +68,17 @@ export default {
   }
 }
 
-.form-checklist-step-later .form-checklist-step-heading {
+.checklist-step-later .checklist-step-heading {
   color: #999;
 }
 
-.form-checklist-step-current .form-checklist-step-heading {
+.checklist-step-current .checklist-step-heading {
   .icon-check-circle {
     color: #999;
   }
 }
 
-.form-checklist-step-complete .form-checklist-step-heading {
+.checklist-step-complete .checklist-step-heading {
   color: $color-success;
 }
 </style>

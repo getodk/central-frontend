@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <form-checklist-step :stage="stepStage(0)">
+  <div id="form-checklist">
+    <checklist-step :stage="stepStage(0)">
       <template #title>Create and upload Form</template>
       <p>
         <strong>Great work!</strong> Your Form design has been loaded
@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
           Click here to find out more.
         </doc-link>
       </p>
-    </form-checklist-step>
-    <form-checklist-step :stage="stepStage(1)">
+    </checklist-step>
+    <checklist-step :stage="stepStage(1)">
       <template #title>Download Form on survey clients and submit data</template>
       <p>
         <template v-if="form.submissions === 0">
@@ -59,8 +59,8 @@ except according to the terms contained in the LICENSE file.
         For more information about this,
         <doc-link to="central-submissions/">click here</doc-link>.
       </p>
-    </form-checklist-step>
-    <form-checklist-step :stage="stepStage(2)">
+    </checklist-step>
+    <checklist-step :stage="stepStage(2)">
       <template #title>Evaluate and analyze submitted data</template>
       <p>
         <template v-if="form.submissions === 0">
@@ -78,8 +78,8 @@ except according to the terms contained in the LICENSE file.
           Click here to find out more.
         </doc-link>
       </p>
-    </form-checklist-step>
-    <form-checklist-step :stage="stepStage(3)">
+    </checklist-step>
+    <checklist-step :stage="stepStage(3)">
       <template #title>Manage Form retirement</template>
       <p>
         As you come to the end of your data collection, you can use the Form
@@ -93,19 +93,19 @@ except according to the terms contained in the LICENSE file.
           Click here to find out more.
         </doc-link>
       </p>
-    </form-checklist-step>
+    </checklist-step>
   </div>
 </template>
 
 <script>
+import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
-import FormChecklistStep from './checklist-step.vue';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormChecklist',
-  components: { DocLink, FormChecklistStep },
+  components: { ChecklistStep, DocLink },
   mixins: [routes()],
   computed: {
     // The component assumes that this data will exist when the component is
