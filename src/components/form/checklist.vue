@@ -12,14 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-checklist">
     <checklist-step :stage="stepStage(0)">
-      <template #title>Create and upload Form</template>
+      <template #title>Publish your first draft version</template>
       <p>
-        <strong>Great work!</strong> Your Form design has been loaded
-        successfully. It is ready to accept Submissions. You will have to start
-        over with a new Form if you wish to make changes to the Form questions.
-        <doc-link to="central-forms/#uploading-a-form-to-odk-central">
-          Click here to find out more.
-        </doc-link>
+        <strong>Great work!</strong> You have published your Form. It is ready
+        to accept Submissions. If you want to make changes to the Form or its
+        Media Files, you can make a new draft.
+        <!-- TODO. Specify the `to` attribute. -->
+        <doc-link>Click here to find out more.</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(1)">
@@ -54,7 +53,7 @@ except according to the terms contained in the LICENSE file.
           </strong>
           in this Project {{ $pluralize('has', formActors.length) }} access to
           this Form, but you can always
-          <router-link :to="projectPath('app-users')">add more.</router-link>
+          <router-link :to="projectPath('app-users')">add more</router-link>.
         </template>
         For more information about this,
         <doc-link to="central-submissions/">click here</doc-link>.
@@ -83,10 +82,10 @@ except according to the terms contained in the LICENSE file.
       <template #title>Manage Form retirement</template>
       <p>
         As you come to the end of your data collection, you can use the Form
-        Lifecycle controls on
-        <router-link :to="formPath('settings')">
+        State controls on the
+        <router-link :to="projectPath('form-access')">
           <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-          this Form&rsquo;s Settings tab</router-link>
+          Form Access tab of the Project page</router-link>
         to control whether, for example, App Users will be able to see or create
         new Submissions to this Form.
         <doc-link to="central-forms/#managing-form-lifecycle">
