@@ -71,14 +71,7 @@ export const transforms = {
   form: ({ data }) => new Form(data),
   attachments: ({ data }) =>
     data.map(attachment => new FormAttachment(attachment)),
-  fieldKeys: (response) => {
-    const { data } = response;
-    // Adding this check so that we access response.config only if necessary.
-    // (This facilitates testing.)
-    if (data.length === 0) return [];
-    const projectId = response.config.url.split('/')[3];
-    return data.map(fieldKey => new FieldKey(projectId, fieldKey));
-  },
+  fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
   backupsConfig: (response) => BackupsConfig.fromResponse(response),
   audits: ({ data }) => data.map(audit => new Audit(audit))

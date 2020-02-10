@@ -2,6 +2,7 @@ import { omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
 import { toActor } from './actors';
 
@@ -11,16 +12,19 @@ export const extendedFieldKeys = dataStore({
     id,
     lastCreatedAt,
 
+    project = extendedProjects.firstOrCreatePast(),
     displayName = faker.name.findName(),
     token = !inPast || faker.random.boolean() ? faker.central.token() : null
   }) => {
     const createdBy = extendedUsers.randomOrCreatePast();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
+      project.createdAt,
       createdBy.createdAt
     ]);
     return {
       id,
+      projectId: project.id,
       displayName,
       token,
       lastUsed: inPast && faker.random.boolean()
