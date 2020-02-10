@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           </a>
         </template>
         <template #body>
-          <strong>Current version</strong> of this Form.
+          <strong>Published version</strong> of this Form.
         </template>
       </summary-item>
       <summary-item :route-to="formPath('submissions')" icon="inbox">

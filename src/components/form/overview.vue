@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="initiallyLoading"/>
     <div v-if="dataExists" class="row">
       <div class="col-xs-6">
+        <form-overview-right-now/>
         <page-section>
           <template #heading>
             <span>Checklist</span>
@@ -24,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
       <div class="col-xs-6">
-        <form-overview-right-now/>
+        <!-- TODO -->
       </div>
     </div>
   </div>
