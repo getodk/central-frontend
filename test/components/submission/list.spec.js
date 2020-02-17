@@ -7,7 +7,6 @@ import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
-import { uniqueSequence } from '../../../src/util/util';
 
 describe('SubmissionList', () => {
   describe('routing', () => {
@@ -509,9 +508,12 @@ describe('SubmissionList', () => {
     });
 
     describe('field subset indicator', () => {
-      const id = uniqueSequence();
-      const fields = (type, count) => new Array(count).fill(null)
-        .map(() => ({ path: [`field${id()}`], type }));
+      const fields = (type, count) => {
+        const result = [];
+        for (let i = 1; i <= count; i += 1)
+          result.push({ path: [`field${i}`], type });
+        return result;
+      };
 
       // Array of test cases
       const cases = [
