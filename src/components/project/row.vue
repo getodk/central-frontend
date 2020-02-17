@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'ProjectRow',

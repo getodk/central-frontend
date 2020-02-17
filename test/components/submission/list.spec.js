@@ -2,11 +2,12 @@ import FormShow from '../../../src/components/form/show.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
-import { formatDate, uniqueSequence } from '../../../src/util/util';
+import { formatDate } from '../../../src/util/date-time';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin, mockRouteThroughLogin } from '../../util/session';
-import { setLuxon } from '../../util/util';
+import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
+import { uniqueSequence } from '../../../src/util/util';
 
 describe('SubmissionList', () => {
   describe('routing', () => {

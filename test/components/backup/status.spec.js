@@ -1,6 +1,6 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/util';
+import { formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mountAndMark } from '../../util/destroy';
 

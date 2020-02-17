@@ -1,5 +1,5 @@
 import testData from '../../data';
-import { formatDate } from '../../../src/util/util';
+import { formatDate } from '../../../src/util/date-time';
 import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';

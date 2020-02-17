@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { DateTime } from 'luxon';
 
 export const noop = () => {};
 
@@ -43,21 +42,3 @@ export class StoreAlert {
 
   blank(type = undefined) { this._commit('resetAlert', type); }
 }
-
-const formatDatePart = (dateTime) => {
-  const now = DateTime.local();
-  if (now.hasSame(dateTime, 'day')) return 'Today';
-  if (now.minus({ days: 1 }).hasSame(dateTime, 'day')) return 'Yesterday';
-  for (let i = 2; i <= 5; i += 1)
-    if (now.minus({ days: i }).hasSame(dateTime, 'day'))
-      return dateTime.toFormat('cccc');
-  return dateTime.toFormat('yyyy/MM/dd');
-};
-export const formatDate = (isoString, blankString = '') => {
-  if (isoString == null) return blankString;
-  const dateTime = DateTime.fromISO(isoString);
-  if (!dateTime.isValid) throw new Error(dateTime.invalidReason);
-  const datePart = formatDatePart(dateTime);
-  const timePart = dateTime.toFormat('HH:mm');
-  return `${datePart} ${timePart}`;
-};

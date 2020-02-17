@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'FieldKeyRow',

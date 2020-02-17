@@ -5,7 +5,7 @@ import AuditList from '../../../src/components/audit/list.vue';
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { setLuxon } from '../../util/util';
+import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
 
 describe('AuditFilters', () => {

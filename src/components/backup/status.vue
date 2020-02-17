@@ -80,7 +80,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 export default {

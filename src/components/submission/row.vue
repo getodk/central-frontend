@@ -54,7 +54,7 @@ import { path } from 'ramda';
 import { DateTime, Settings } from 'luxon';
 
 import { apiPaths } from '../../util/request';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 const TITLE_FIELD_TYPES = [

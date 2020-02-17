@@ -1,17 +1,5 @@
 import { DateTime, Settings } from 'luxon';
 
-export const MAXIMUM_TEST_DURATION = { seconds: 10 };
-
-export class MockLogger {
-  log() {}
-  error() {}
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Luxon
-
 // Sets a single Luxon setting.
 const setLuxonSetting = (name, value) => {
   if (name === 'now') {
@@ -29,6 +17,7 @@ const setLuxonSetting = (name, value) => {
 };
 
 // Sets one or more Luxon settings.
+// eslint-disable-next-line import/prefer-default-export
 export const setLuxon = (settings) => {
   const original = {};
   for (const [name, value] of Object.entries(settings)) {

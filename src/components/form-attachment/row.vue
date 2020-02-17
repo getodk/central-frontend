@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { apiPaths } from '../../util/request';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 const TYPES = {
