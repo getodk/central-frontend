@@ -19,26 +19,3 @@ export const uniqueSequence = () => {
     return id;
   };
 };
-
-// Provides access to the single, global alert whose state is stored in the Vuex
-// store.
-export class StoreAlert {
-  constructor(store) {
-    this._store = store;
-  }
-
-  get _storeState() { return this._store.state.alert; }
-  _commit(type, payload) { this._store.commit(type, payload); }
-
-  get type() { return this._storeState.type; }
-  get message() { return this._storeState.message; }
-  get state() { return this._storeState.state; }
-  get at() { return this._storeState.at; }
-
-  success(message) { this._commit('setAlert', { type: 'success', message }); }
-  info(message) { this._commit('setAlert', { type: 'info', message }); }
-  warning(message) { this._commit('setAlert', { type: 'warning', message }); }
-  danger(message) { this._commit('setAlert', { type: 'danger', message }); }
-
-  blank(type = undefined) { this._commit('resetAlert', type); }
-}
