@@ -22,7 +22,8 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to the requests from
           ProjectHome and FormShow. -->
-          <router-view v-bind="routeProps" @fetch-draft="fetchDraft"/>
+          <router-view v-bind="routerViewProps" @fetch-form="fetchForm"
+            @fetch-draft="fetchDraft"/>
         </keep-alive>
       </div>
     </page-body>
@@ -68,7 +69,7 @@ export default {
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     },
-    routeProps() {
+    routerViewProps() {
       switch (this.$route.name) {
         case 'FormOverview':
           return { projectId: this.projectId, xmlFormId: this.xmlFormId };
@@ -98,6 +99,24 @@ export default {
         attachments.isDefined())
         this.$store.commit('setData', { key: 'attachments', value: Option.none() });
     },
+    fetchForm() {
+      this.$store.dispatch('get', [{
+        key: 'form',
+        url: apiPaths.form(this.projectId, this.xmlFormId),
+        extended: true,
+        success: ({ form, submissionsChunk }) => {
+          if (submissionsChunk == null) return;
+          if (submissionsChunk['@odata.count'] === form.submissions)
+            return;
+          this.$store.commit('setData', {
+            key: 'form',
+            value: form.with({
+              submissions: submissionsChunk['@odata.count']
+            })
+          });
+        }
+      }]).catch(noop);
+    },
     fetchDraft() {
       this.$store.dispatch('get', [
         {
@@ -116,22 +135,7 @@ export default {
       ]).catch(noop);
     },
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'form',
-        url: apiPaths.form(this.projectId, this.xmlFormId),
-        extended: true,
-        success: ({ form, submissionsChunk }) => {
-          if (submissionsChunk == null) return;
-          if (submissionsChunk['@odata.count'] === form.submissions)
-            return;
-          this.$store.commit('setData', {
-            key: 'form',
-            value: form.with({
-              submissions: submissionsChunk['@odata.count']
-            })
-          });
-        }
-      }]).catch(noop);
+      this.fetchForm();
       this.fetchDraft();
     }
   }

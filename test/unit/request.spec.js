@@ -116,6 +116,16 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
     });
 
+    it('publishFormDraft', () => {
+      const path = apiPaths.publishFormDraft(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/publish');
+    });
+
+    it('publishFormDraft?version', () => {
+      const path = apiPaths.publishFormDraft(1, 'a b', { version: 'c d' });
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/publish?version=c%20d');
+    });
+
     it('formDraftAttachments', () => {
       const path = apiPaths.formDraftAttachments(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');

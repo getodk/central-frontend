@@ -261,7 +261,7 @@ describe('FormNew', () => {
         request: (modal) => selectFileByInput(modal, xlsForm())
           .then(trigger.click('#form-new-create-button')),
         button: '#form-new-create-button',
-        disabled: ['#form-new-warnings .btn-primary', '.btn-link'],
+        disabled: ['.modal-warnings .btn-primary', '.btn-link'],
         modal: true
       });
   });
@@ -460,7 +460,7 @@ describe('FormNew', () => {
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
-          const warnings = modal.first('#form-new-warnings');
+          const warnings = modal.first('.modal-warnings');
           warnings.should.be.visible();
           warnings.find('li').map(li => li.text()).should.eql(
             ['warning 1', 'warning 2']
@@ -479,12 +479,12 @@ describe('FormNew', () => {
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
-          modal.first('#form-new-warnings').should.be.visible();
+          modal.first('.modal-warnings').should.be.visible();
           return modal;
         })
         .then(modal => selectFileByInput(modal, xlsForm()))
         .then(modal => {
-          modal.first('#form-new-warnings').should.not.be.visible();
+          modal.first('.modal-warnings').should.be.hidden();
         }));
 
     it('hides the warnings after a Problem is received', () =>
@@ -499,14 +499,13 @@ describe('FormNew', () => {
           .then(() => trigger.click(modal, '#form-new-create-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
-          modal.first('#form-new-warnings').should.be.visible();
+          modal.first('.modal-warnings').should.be.visible();
           modal.should.not.alert();
         })
-        .request(modal =>
-          trigger.click(modal, '#form-new-warnings .btn-primary'))
+        .request(trigger.click('.modal-warnings .btn-primary'))
         .respondWithProblem()
         .afterResponse(modal => {
-          modal.first('#form-new-warnings').should.not.be.visible();
+          modal.first('.modal-warnings').should.be.hidden();
           modal.should.alert('danger');
         }));
 
@@ -523,13 +522,13 @@ describe('FormNew', () => {
         .respondWithProblem()
         .afterResponse(modal => {
           modal.should.alert('danger');
-          modal.first('#form-new-warnings').should.not.be.visible();
+          modal.first('.modal-warnings').should.be.hidden();
         })
         .request(modal => trigger.click(modal, '#form-new-create-button'))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.should.not.alert();
-          modal.first('#form-new-warnings').should.be.visible();
+          modal.first('.modal-warnings').should.be.visible();
         }));
 
     it('implements some standard button things for "Create anyway" button', () =>
@@ -545,7 +544,7 @@ describe('FormNew', () => {
         .respondWithProblem(xlsFormWarning)
         .complete()
         .testStandardButton({
-          button: '#form-new-warnings .btn-primary',
+          button: '.modal-warnings .btn-primary',
           disabled: ['#form-new-create-button', '.btn-link'],
           modal: true
         }));
@@ -565,7 +564,7 @@ describe('FormNew', () => {
         })
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(modal => trigger.click(modal, '#form-new-warnings .btn-primary'))
+        .request(trigger.click('.modal-warnings .btn-primary'))
         .beforeEachResponse((modal, config) => {
           config.url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
         })
@@ -580,7 +579,7 @@ describe('FormNew', () => {
           .then(() => trigger.click(app, '#form-new-create-button')))
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(app => trigger.click(app, '#form-new-warnings .btn-primary'))
+        .request(trigger.click('.modal-warnings .btn-primary'))
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f' }))
         .respondFor('/projects/1/forms/f/draft/status', { project: false })

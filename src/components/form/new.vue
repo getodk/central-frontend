@@ -19,7 +19,7 @@ definition for an existing form -->
       {{ formDraft == null ? 'Create Form' : 'Upload New Form Definition' }}
     </template>
     <template #body>
-      <div v-show="warnings != null" id="form-new-warnings">
+      <div v-show="warnings != null" class="modal-warnings">
         <p>
           This XLSForm file can be used, but it has the following possible
           problems (conversion warnings):
@@ -222,20 +222,9 @@ export default {
 
 $drop-zone-vpadding: 15px;
 
-#form-new-warnings {
-  background-color: $color-warning;
-  margin-bottom: 15px;
-  padding: 15px;
-
-  ul {
-    margin-left: -5px;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
+#form-new .modal-warnings ul {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 #form-new-drop-zone {

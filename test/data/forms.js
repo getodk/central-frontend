@@ -212,6 +212,7 @@ export const extendedFormVersions = view(
   formVersions,
   transformVersion(formProps, [...versionProps, ...extendedVersionProps])
 );
+
 export const extendedFormDrafts = view(
   formVersions,
   transformVersion(
@@ -219,3 +220,13 @@ export const extendedFormDrafts = view(
     [...versionProps, ...versionPropsForExtendedForm, ...draftProps]
   )
 );
+extendedFormDrafts.publish = (index) => {
+  if (typeof index !== 'number') throw new Error('invalid index');
+  if (extendedUsers.size === 0) throw new Error('user not found');
+  formVersions.update(index, {
+    publishedAt: new Date().toISOString(),
+    submissions: 0,
+    lastSubmission: null,
+    publishedBy: toActor(extendedUsers.first())
+  });
+};

@@ -53,7 +53,8 @@ for (const eventName of simpleEventNames) {
 }
 
 // Changes the value of an <input> or <select> element, triggering a change
-// event.
+// event. This probably does not work with v-model: consider using fillForm()
+// instead.
 trigger.changeValue = (wrapper, ...args) => {
   if (args.length === 0) throw new Error('value required');
   if (args.length === 1) return trigger.changeValue(wrapper, null, args[0]);

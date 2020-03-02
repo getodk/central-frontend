@@ -58,6 +58,8 @@ export const apiPaths = {
   formDraft: formPath('/draft', ({ ignoreWarnings = undefined }) =>
     (ignoreWarnings ? 'ignoreWarnings=true' : '')),
   formDraftXml: formPath('/draft.xml'),
+  publishFormDraft: formPath('/draft/publish', ({ version = undefined }) =>
+    (version != null ? `version=${encodeURIComponent(version)}` : '')),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

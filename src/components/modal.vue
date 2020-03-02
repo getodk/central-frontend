@@ -215,4 +215,18 @@ export default {
     }
   }
 }
+
+.modal-warnings {
+  background-color: $color-warning;
+  margin-bottom: 15px;
+  padding: 15px;
+
+  ul {
+    margin-left: -5px;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
 </style>
