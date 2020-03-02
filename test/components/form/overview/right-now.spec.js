@@ -32,12 +32,6 @@ describe('FormOverviewRightNow', () => {
       }));
   });
 
-  it('shows a button to view the XML', () =>
-    loadOverview({ xmlFormId: 'f' }).afterResponses(app => {
-      const btn = app.first('#form-overview-right-now .btn');
-      btn.getAttribute('href').should.equal('/v1/projects/1/forms/f.xml');
-    }));
-
   describe('submissions', () => {
     it('shows the count', () =>
       loadOverview({ submissions: 123 }).afterResponses(app => {

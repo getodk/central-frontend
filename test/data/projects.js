@@ -35,29 +35,28 @@ export const extendedProjects = dataStore({
     appUsers = inPast ? faker.random.number() : 0,
     lastSubmission = null,
     key = null,
+    currentUser = extendedUsers.size !== 0
+      ? extendedUsers.first()
+      : extendedUsers.createPast(1).last(),
     // The current user's role on the project
     role = 'none'
-  }) => {
-    if (extendedUsers.size === 0) throw new Error('user not found');
-    const verbs = verbsForUserAndRole(extendedUsers.first(), role);
-    return {
-      id,
-      name,
-      archived,
-      keyId: key != null ? key.id : null,
-      createdAt: inPast
-        ? fakePastDate([lastCreatedAt])
-        : new Date().toISOString(),
-      updatedAt: null,
-      // Extended metadata
-      forms,
-      // This property does not necessarily match testData.extendedForms or
-      // testData.extendedSubmissions.
-      lastSubmission,
-      appUsers,
-      verbs
-    };
-  },
+  }) => ({
+    id,
+    name,
+    archived,
+    keyId: key != null ? key.id : null,
+    createdAt: inPast
+      ? fakePastDate([lastCreatedAt])
+      : new Date().toISOString(),
+    updatedAt: null,
+    // Extended metadata
+    forms,
+    // This property does not necessarily match testData.extendedForms or
+    // testData.extendedSubmissions.
+    lastSubmission,
+    appUsers,
+    verbs: verbsForUserAndRole(currentUser, role)
+  }),
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 

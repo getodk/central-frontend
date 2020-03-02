@@ -66,10 +66,6 @@ describe('util/request', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
     });
 
-    it('formXml', () => {
-      apiPaths.formXml(1, 'a b').should.equal('/v1/projects/1/forms/a%20b.xml');
-    });
-
     it('schema', () => {
       const path = apiPaths.schema(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b.schema.json?flatten=true&odata=true');
@@ -90,9 +86,24 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
+    it('formVersionXml', () => {
+      const path = apiPaths.formVersionXml(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/versions/c%20d.xml');
+    });
+
+    it('formVersionXml: empty version', () => {
+      const path = apiPaths.formVersionXml(1, 'a b', '');
+      path.should.equal('/v1/projects/1/forms/a%20b/versions/___.xml');
+    });
+
     it('formDraft', () => {
       const path = apiPaths.formDraft(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/draft');
+    });
+
+    it('formDraftXml', () => {
+      const path = apiPaths.formDraftXml(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
     });
 
     it('formDraftAttachments', () => {

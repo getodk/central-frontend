@@ -40,7 +40,6 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  formXml: formPath('.xml'),
   schema: formPath('.schema.json?flatten=true&odata=true'),
   oDataSvc: formPath('.svc'),
   formActors: (projectId, xmlFormId, role) => {
@@ -48,7 +47,13 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
   formKeys: formPath('/submissions/keys'),
+  formVersionXml: (projectId, xmlFormId, version) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.xml`;
+  },
   formDraft: formPath('/draft'),
+  formDraftXml: formPath('/draft.xml'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

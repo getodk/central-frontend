@@ -20,9 +20,7 @@ except according to the terms contained in the LICENSE file.
           <span :class="versionClass" :title="versionOrBlank">
             {{ versionOrBlank }}
           </span>
-          <a :href="xmlPath" class="btn btn-primary" target="_blank">
-            <span class="icon-arrow-circle-down"></span>View XML
-          </a>
+          <span><form-version-standard-buttons :version="form"/></span>
         </template>
         <template #body>
           <strong>Published version</strong> of this Form.
@@ -47,15 +45,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 import routes from '../../../mixins/routes';
-import { apiPaths } from '../../../util/request';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
-  components: { PageSection, SummaryItem },
+  components: { FormVersionStandardButtons, PageSection, SummaryItem },
   mixins: [routes()],
   computed: {
     // The component assumes that this data will exist when the component is
@@ -68,9 +66,6 @@ export default {
     },
     versionOrBlank() {
       return this.form.version !== '' ? this.form.version : '(blank)';
-    },
-    xmlPath() {
-      return apiPaths.formXml(this.form.projectId, this.form.xmlFormId);
     }
   }
 };
@@ -88,7 +83,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    + .btn {
+    + span {
       bottom: 10px;
       margin-left: 12px;
       position: relative;
@@ -98,7 +93,7 @@ export default {
   .blank-form-version {
     font-family: inherit;
 
-    + .btn {
+    + span {
       bottom: 5px;
     }
   }
