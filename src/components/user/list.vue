@@ -18,7 +18,7 @@ either is an Administrator or has no role. -->
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="showModal('newUser')">
-        <span class="icon-plus-circle"></span>Create Web User
+        <span class="icon-plus-circle"></span>Create Web User&hellip;
       </button>
       <p>
         Web Users have accounts on this website to oversee and administer the

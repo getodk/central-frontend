@@ -24,13 +24,13 @@ except according to the terms contained in the LICENSE file.
           </a>
           <button v-else id="submission-list-download-button" type="button"
             class="btn btn-primary" @click="showModal('decrypt')">
-            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}
+            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}&hellip;
           </button>
 
           <button id="submission-list-analyze-button" type="button"
             class="btn btn-primary" :disabled="analyzeDisabled"
             :title="analyzeButtonTitle" @click="showModal('analyze')">
-            <span class="icon-plug"></span>Analyze via OData
+            <span class="icon-plug"></span>Analyze via OData&hellip;
           </button>
         </template>
       </float-row>

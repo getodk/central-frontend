@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
-        <span class="icon-cloud-upload"></span>Upload files
+        <span class="icon-cloud-upload"></span>Upload files&hellip;
       </button>
       <div>
         Based on the Form you uploaded, the following files are expected. You

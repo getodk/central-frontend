@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
                 <button id="project-settings-enable-encryption-button"
                   type="button" class="btn btn-primary"
                   @click="showModal('enableEncryption')">
-                  Enable encryption
+                  Enable encryption&hellip;
                 </button>
               </p>
             </template>
@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
               <p>
                 <button id="project-settings-archive-button" type="button"
                   class="btn btn-danger" @click="showModal('archive')">
-                  Archive this Project
+                  Archive this Project&hellip;
                 </button>
               </p>
             </template>

@@ -27,7 +27,7 @@ describe('BackupStatus', () => {
       component,
       'icon-question-circle',
       'Backups are not configured.',
-      'Set up now'
+      'Set up now…'
     );
   });
 
@@ -50,7 +50,7 @@ describe('BackupStatus', () => {
       component,
       'icon-check-circle',
       'Backup is working.',
-      'Terminate'
+      'Terminate…'
     );
 
     const mrla = component.first('#backup-status-most-recently-logged-at');
@@ -76,7 +76,7 @@ describe('BackupStatus', () => {
       component,
       'icon-times-circle',
       'Something is wrong!',
-      'Terminate'
+      'Terminate…'
     );
   });
 
@@ -94,7 +94,7 @@ describe('BackupStatus', () => {
         component,
         'icon-check-circle',
         'The configured backup has not yet run.',
-        'Terminate'
+        'Terminate…'
       );
     });
 
@@ -116,7 +116,7 @@ describe('BackupStatus', () => {
         component,
         'icon-check-circle',
         'The configured backup has not yet run.',
-        'Terminate'
+        'Terminate…'
       );
     });
 
@@ -133,7 +133,7 @@ describe('BackupStatus', () => {
         component,
         'icon-times-circle',
         'Something is wrong!',
-        'Terminate'
+        'Terminate…'
       );
     });
 
@@ -155,7 +155,7 @@ describe('BackupStatus', () => {
         component,
         'icon-times-circle',
         'Something is wrong!',
-        'Terminate'
+        'Terminate…'
       );
     });
   });

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('newFieldKey')">
-        <span class="icon-plus-circle"></span>Create App User
+        <span class="icon-plus-circle"></span>Create App User&hellip;
       </button>
       <p>
         App Users in this Project only will be able to download and use Forms

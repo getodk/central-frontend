@@ -70,11 +70,11 @@ except according to the terms contained in the LICENSE file.
 
     <button v-if="status === 'notConfigured'" type="button"
       class="btn btn-primary" @click="$emit('create')">
-      <span class="icon-plus-circle"></span>Set up now
+      <span class="icon-plus-circle"></span>Set up now&hellip;
     </button>
     <button v-else type="button" class="btn btn-primary"
       @click="$emit('terminate')">
-      <span class="icon-times-circle"></span>Terminate
+      <span class="icon-times-circle"></span>Terminate&hellip;
     </button>
   </div>
 </template>

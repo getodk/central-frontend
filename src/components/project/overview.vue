@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           <button v-if="project.permits('form.create')"
             id="project-overview-new-form-button" type="button"
             class="btn btn-primary" @click="showModal('newForm')">
-            <span class="icon-plus-circle"></span>New
+            <span class="icon-plus-circle"></span>New&hellip;
           </button>
         </template>
         <template #body>

@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
             <p>
               <button type="button" class="btn btn-danger"
                 @click="showModal('deleteForm')">
-                Delete this Form
+                Delete this Form&hellip;
               </button>
             </p>
           </div>
