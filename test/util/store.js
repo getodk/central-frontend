@@ -1,5 +1,5 @@
 import store from '../../src/store';
-import { transforms } from '../../src/store/modules/request';
+import { transforms } from '../../src/store/modules/request/keys';
 
 const successfulResponse = (data) => ({
   status: 200,

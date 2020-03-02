@@ -36,7 +36,7 @@ import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
 import UserList from './components/user/list.vue';
 import store from './store';
-import { keys as requestKeys } from './store/modules/request';
+import { keys as requestKeys } from './store/modules/request/keys';
 import { noop } from './util/util';
 import { preservesData } from './util/router';
 
