@@ -32,7 +32,7 @@ export const extendedProjects = dataStore({
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = inPast ? faker.random.number() : 0,
-    lastSubmission = undefined,
+    lastSubmission = null,
     key = null,
     // The current user's role on the project
     role = 'none'
@@ -44,7 +44,7 @@ export const extendedProjects = dataStore({
     if (extendedUsers.size === 0) throw new Error('user not found');
     const verbs = verbsForUserAndRole(extendedUsers.first(), role);
 
-    const project = {
+    return {
       id,
       name,
       archived,
@@ -53,20 +53,12 @@ export const extendedProjects = dataStore({
       updatedAt,
       // Extended metadata
       forms,
+      // This property does not necessarily match testData.extendedForms or
+      // testData.extendedSubmissions.
+      lastSubmission,
       appUsers,
       verbs
     };
-
-    if (lastSubmission !== undefined) {
-      project.lastSubmission = lastSubmission;
-    } else {
-      // This property does not necessarily match testData.extendedSubmissions.
-      project.lastSubmission = forms !== 0 && faker.random.boolean()
-        ? faker.date.pastSince(createdAt).toISOString()
-        : null;
-    }
-
-    return project;
   },
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
