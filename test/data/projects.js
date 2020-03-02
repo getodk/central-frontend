@@ -1,8 +1,9 @@
+import faker from 'faker';
 import { omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
 import { extendedUsers } from './users';
+import { fakePastDate } from '../util/date-time';
 import { standardRoles } from './roles';
 
 const verbsForUserAndRole = (extendedUser, roleSystem) => {
@@ -37,20 +38,17 @@ export const extendedProjects = dataStore({
     // The current user's role on the project
     role = 'none'
   }) => {
-    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
-      lastCreatedAt
-    ]);
-
     if (extendedUsers.size === 0) throw new Error('user not found');
     const verbs = verbsForUserAndRole(extendedUsers.first(), role);
-
     return {
       id,
       name,
       archived,
       keyId: key != null ? key.id : null,
-      createdAt,
-      updatedAt,
+      createdAt: inPast
+        ? fakePastDate([lastCreatedAt])
+        : new Date().toISOString(),
+      updatedAt: null,
       // Extended metadata
       forms,
       // This property does not necessarily match testData.extendedForms or

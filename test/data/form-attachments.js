@@ -1,6 +1,8 @@
-import faker from '../faker';
+import faker from 'faker';
+
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
+import { fakePastDate } from '../util/date-time';
 
 const fileExtensions = {
   image: 'jpg',
@@ -41,7 +43,7 @@ export const standardFormAttachments = dataStore({
         ? exists
         : (hasUpdatedAt != null ? false : inPast),
       updatedAt: hasUpdatedAt === true || (hasUpdatedAt == null && inPast)
-        ? faker.date.pastSince([form.createdAt]).toISOString()
+        ? fakePastDate([form.createdAt])
         : null
     };
   },

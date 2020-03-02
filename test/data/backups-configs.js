@@ -1,7 +1,7 @@
 import { omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { fakePastDate } from '../util/date-time';
 
 const backupsConfigsWithCreatedAt = dataStore({
   factory: ({ inPast, lastCreatedAt, setAt = undefined }) => {
@@ -9,7 +9,7 @@ const backupsConfigsWithCreatedAt = dataStore({
       type: 'google',
       setAt: setAt != null
         ? setAt
-        : faker.date.timestamps(inPast, [lastCreatedAt])
+        : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString())
     };
     config.createdAt = config.setAt;
     return config;

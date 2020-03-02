@@ -1,3 +1,4 @@
+import faker from 'faker';
 import { DateTime, Settings } from 'luxon';
 
 export const isBefore = (isoString1, isoString2) =>
@@ -27,4 +28,21 @@ export const setLuxon = (settings) => {
     setLuxonSetting(name, value);
   }
   return () => setLuxon(original);
+};
+
+// Returns an ISO string for a date in the past that is no earlier than the
+// specified dates.
+export const fakePastDate = (dateStrings) => {
+  const dateTimes = dateStrings
+    .filter(s => s != null)
+    .map(s => DateTime.fromISO(s));
+  if (dateTimes.length === 0) return faker.date.past().toISOString();
+  const maxDate = DateTime.max(...dateTimes).toJSDate();
+  const almostNow = new Date();
+  almostNow.setTime(almostNow.getTime() - 1000);
+  if (maxDate.getTime() > almostNow.getTime())
+    throw new Error('invalid dateStrings');
+  return faker.date
+    .between(maxDate.toISOString(), almostNow.toISOString())
+    .toISOString();
 };

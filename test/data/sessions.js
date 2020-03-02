@@ -1,5 +1,7 @@
-import faker from '../faker';
+import faker from 'faker';
+
 import { dataStore } from './data-store';
+import { fakePastDate } from '../util/date-time';
 
 // eslint-disable-next-line import/prefer-default-export
 export const sessions = dataStore({
@@ -7,6 +9,6 @@ export const sessions = dataStore({
     token: faker.random.alphaNumeric(64),
     csrf: faker.random.alphaNumeric(64),
     expiresAt: faker.date.future().toISOString(),
-    createdAt: faker.date.timestamps(inPast, [lastCreatedAt]).createdAt
+    createdAt: inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()
   })
 });

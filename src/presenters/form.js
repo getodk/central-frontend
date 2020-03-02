@@ -16,7 +16,6 @@ const props = [
   'xmlFormId',
   'name',
   'version',
-  'hash',
   'keyId',
   'state',
   'createdAt',

@@ -1,11 +1,17 @@
+import faker from 'faker';
 import { DateTime } from 'luxon';
 import { comparator, lensPath, set, view } from 'ramda';
 
-import faker from '../faker';
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
+import { fakePastDate } from '../util/date-time';
 import { toActor } from './actors';
+
+const fakeDateTime = () => {
+  const date = faker.random.boolean() ? faker.date.past() : faker.date.future();
+  return DateTime.fromJSDate(date);
+};
 
 // Returns a random OData value for a particular field of a submission.
 const oDataValue = (field, instanceId) => {
@@ -23,17 +29,14 @@ const oDataValue = (field, instanceId) => {
       return faker.lorem.paragraphs(paragraphs);
     }
     case 'date': {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      return dateTime.toFormat('yyyy-MM-dd');
+      return fakeDateTime().toFormat('yyyy-MM-dd');
     }
     case 'time': {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      const formatted = dateTime.toFormat('HH:mm:ss');
+      const formatted = fakeDateTime().toFormat('HH:mm:ss');
       return faker.random.boolean() ? formatted : `${formatted}+01:00`;
     }
     case 'dateTime': {
-      const dateTime = DateTime.fromJSDate(faker.date.pastOrFuture());
-      const formatted = dateTime.toISO({ includeOffset: false });
+      const formatted = fakeDateTime().toISO({ includeOffset: false });
       return faker.random.boolean() ? formatted : `${formatted}+01:00`;
     }
     case 'geopoint': {
@@ -110,15 +113,14 @@ export const extendedSubmissions = dataStore({
     if (form === undefined) throw new Error('form not found');
     if (extendedUsers.size === 0) throw new Error('user not found');
     const submitter = extendedUsers.first();
-    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
-      lastCreatedAt,
-      submitter.createdAt
-    ]);
+    const createdAt = inPast
+      ? fakePastDate([lastCreatedAt, submitter.createdAt])
+      : new Date().toISOString();
     return {
       instanceId,
       submitter: toActor(submitter),
       createdAt,
-      updatedAt,
+      updatedAt: null,
       _oData: oData({
         form,
         instanceId,

@@ -1,7 +1,8 @@
+import faker from 'faker';
+
 import App from '../../../src/components/app.vue';
 import BackupList from '../../../src/components/backup/list.vue';
 import BackupNew from '../../../src/components/backup/new.vue';
-import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';

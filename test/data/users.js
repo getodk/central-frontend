@@ -1,7 +1,8 @@
+import faker from 'faker';
 import { omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { fakePastDate } from '../util/date-time';
 import { standardRoles } from './roles';
 
 const verbsByRole = (system) => {
@@ -27,7 +28,10 @@ export const extendedUsers = dataStore({
     displayName,
     email,
     verbs,
-    ...faker.date.timestamps(inPast, [lastCreatedAt])
+    createdAt: inPast
+      ? fakePastDate([lastCreatedAt])
+      : new Date().toISOString(),
+    updated: null
   }),
   sort: (administrator1, administrator2) =>
     administrator1.email.localeCompare(administrator2.email)

@@ -1,9 +1,10 @@
+import faker from 'faker';
 import { omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
+import { fakePastDate } from '../util/date-time';
 import { toActor } from './actors';
 
 export const extendedFieldKeys = dataStore({
@@ -20,22 +21,20 @@ export const extendedFieldKeys = dataStore({
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
     const createdBy = extendedUsers.first();
-    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
-      lastCreatedAt,
-      project.createdAt,
-      createdBy.createdAt
-    ]);
+    const createdAt = inPast
+      ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
+      : new Date().toISOString();
     return {
       id,
       projectId: project.id,
       displayName,
       token,
       lastUsed: inPast && faker.random.boolean()
-        ? faker.date.pastSince(createdAt).toISOString()
+        ? fakePastDate([createdAt])
         : null,
       createdBy: toActor(createdBy),
       createdAt,
-      updatedAt
+      updatedAt: null
     };
   },
   sort: (fieldKey1, fieldKey2) => {

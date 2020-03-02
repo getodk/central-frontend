@@ -1,8 +1,7 @@
 import { comparator, omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
-import { isBefore } from '../util/date-time';
+import { fakePastDate, isBefore } from '../util/date-time';
 import { standardBackupsConfigs } from './backups-configs';
 import { toActor } from './actors';
 
@@ -36,13 +35,9 @@ const auditsWithCreatedAt = dataStore({
       audit.acteeId = actee.id;
     }
     if (details != null) audit.details = details;
-    if (loggedAt != null) {
-      if (lastCreatedAt != null && isBefore(loggedAt, lastCreatedAt))
-        throw new Error('invalid loggedAt');
-      audit.loggedAt = loggedAt;
-    } else {
-      audit.loggedAt = faker.date.timestamps(inPast, [lastCreatedAt]).createdAt;
-    }
+    audit.loggedAt = loggedAt != null
+      ? loggedAt
+      : fakePastDate([lastCreatedAt]);
     audit.createdAt = audit.loggedAt;
     return audit;
   },

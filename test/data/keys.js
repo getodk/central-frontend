@@ -1,7 +1,8 @@
+import faker from 'faker';
 import { comparator } from 'ramda';
 
-import faker from '../faker';
 import { dataStore } from './data-store';
+import { fakePastDate } from '../util/date-time';
 
 // eslint-disable-next-line import/prefer-default-export
 export const standardKeys = dataStore({
@@ -17,7 +18,7 @@ export const standardKeys = dataStore({
     get public() { throw new Error('not implemented'); },
     managed,
     hint,
-    createdAt: faker.date.timestamps(inPast, [lastCreatedAt]).createdAt
+    createdAt: inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()
   }),
   sort: comparator((key1, key2) => key1.id > key2.id)
 });
