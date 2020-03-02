@@ -1,5 +1,4 @@
 import FieldKeyRevoke from '../../../src/components/field-key/revoke.vue';
-import faker from '../../faker';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -14,7 +13,7 @@ describe('FieldKeyRevoke', () => {
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys
-          .createPast(1, { token: faker.central.token() })
+          .createPast(1)
           .sorted())
         .afterResponses(app => {
           app.first(FieldKeyRevoke).getProp('state').should.be.false();
@@ -48,11 +47,12 @@ describe('FieldKeyRevoke', () => {
 
   it('implements some standard button things', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
-    const token = faker.central.token();
-    const fieldKey = testData.extendedFieldKeys.createPast(1, { token }).last();
-    const propsData = { fieldKey };
     return mockHttp()
-      .mount(FieldKeyRevoke, { propsData })
+      .mount(FieldKeyRevoke, {
+        propsData: {
+          fieldKey: testData.extendedFieldKeys.createPast(1).last()
+        }
+      })
       .request(component =>
         trigger.click(component, '#field-key-revoke .btn-danger'))
       .standardButton('.btn-danger');
@@ -64,8 +64,7 @@ describe('FieldKeyRevoke', () => {
       .respondWithData(() =>
         testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
       .respondWithData(() => testData.extendedFieldKeys
-        .createPast(1, { token: faker.central.token() })
-        .createPast(1, { token: faker.central.token() })
+        .createPast(2)
         .sorted())
       .afterResponses(component => {
         app = component;

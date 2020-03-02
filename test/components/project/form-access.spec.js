@@ -1,5 +1,4 @@
 import ProjectFormAccess from '../../../src/components/project/form-access.vue';
-import faker from '../../faker';
 import testData from '../../data';
 import { mockLogin, mockRouteThroughLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
@@ -15,8 +14,8 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
     .createPast(1, { xmlFormId: 'f', name: 'My Form', state: 'closing' })
     .sorted())
   .respondWithData(() => testData.extendedFieldKeys
-    .createPast(1, { displayName: 'App User 1', token: faker.central.token() })
-    .createPast(1, { displayName: 'App User 2', token: faker.central.token() })
+    .createPast(1, { displayName: 'App User 1' })
+    .createPast(1, { displayName: 'App User 2' })
     .createPast(1, { displayName: 'App User 3', token: null })
     .sorted())
   .respondWithData(() => testData.standardRoles.sorted())

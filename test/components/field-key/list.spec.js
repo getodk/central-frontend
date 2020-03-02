@@ -1,7 +1,6 @@
 import jsQR from 'jsqr';
 import pako from 'pako';
 
-import faker from '../../faker';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
 import { mockLogin, mockRouteThroughLogin } from '../../util/session';
@@ -104,7 +103,7 @@ describe('FieldKeyList', () => {
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys
-          .createPast(1, { token: faker.central.token() })
+          .createPast(1)
           .sorted())
         .afterResponses(component => {
           app = component;

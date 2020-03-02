@@ -28,33 +28,6 @@ const faker = new Proxy({}, {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// UNIQUE RESULTS
-
-const uniqueResults = [];
-
-// Returns a function that invokes `callback` until it returns a value that has
-// not been seen before.
-const uniqueResult = (callback) => {
-  const results = new Set();
-  uniqueResults.push(results);
-  return (...args) => {
-    let result;
-    do {
-      result = callback(...args);
-    } while (results.has(result));
-    results.add(result);
-    return result;
-  };
-};
-
-export const clearUniqueFakerResults = () => {
-  for (const results of uniqueResults)
-    results.clear();
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // EXTENSIONS
 
 Object.assign(fakerExtensions, {
@@ -89,9 +62,6 @@ Object.assign(fakerExtensions, {
       return { createdAt, updatedAt };
     }
   },
-  internet: {
-    uniqueEmail: uniqueResult(() => faker.internet.email())
-  },
   random: {
     hash: (length) => {
       if (length < 1) throw new RangeError('invalid length');
@@ -100,10 +70,6 @@ Object.assign(fakerExtensions, {
         result += faker.random.number({ max: 15 }).toString(16);
       return result;
     }
-  },
-  central: {
-    token: uniqueResult(() => faker.random.alphaNumeric(64)),
-    xmlFormId: uniqueResult(() => `a${faker.random.alphaNumeric(8)}`)
   }
 });
 

@@ -11,7 +11,6 @@ import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
 import { clearNavGuards, initNavGuards } from './util/router';
-import { clearUniqueFakerResults } from './faker';
 import { destroyMarkedComponent } from './util/destroy';
 import { noop } from '../src/util/util';
 import { setHttp } from './util/http';
@@ -191,13 +190,6 @@ beforeEach(() => {
 });
 
 afterEach(testData.reset);
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// FAKER
-
-afterEach(clearUniqueFakerResults);
 
 
 

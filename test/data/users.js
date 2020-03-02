@@ -18,7 +18,7 @@ export const extendedUsers = dataStore({
     lastCreatedAt,
 
     displayName = faker.name.findName(),
-    email = faker.internet.uniqueEmail(),
+    email = `${faker.random.uuid()}@opendatakit.org`,
     // Sitewide role
     role = 'admin',
     verbs = verbsByRole(role)

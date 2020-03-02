@@ -42,10 +42,11 @@ const defaultSchema = (hasInstanceId) => {
 export const extendedForms = dataStore({
   factory: ({
     inPast,
+    id,
     lastCreatedAt,
 
     project = extendedProjects.firstOrCreatePast(),
-    xmlFormId = faker.central.xmlFormId(),
+    xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
     version = inPast ? 'v1' : null,
     key = null,
