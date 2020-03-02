@@ -129,7 +129,7 @@ describe('SubmissionAnalyze', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(SubmissionAnalyze, {
-        propsData: { projectId: '1' },
+        propsData: { state: true },
         requestData: {
           form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last()
         }
