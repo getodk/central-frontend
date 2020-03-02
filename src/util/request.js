@@ -11,18 +11,24 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
+const withQuery = (path, query, stringifyQuery) => {
+  if (query == null || stringifyQuery == null) return path;
+  const queryString = stringifyQuery(query);
+  return queryString !== '' ? `${path}?${queryString}` : path;
+};
 const projectPath = (suffix) => (id) => `/v1/projects/${id}${suffix}`;
-const formPath = (suffix) => (projectId, xmlFormId) =>
-  `/v1/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}${suffix}`;
+const formPath = (suffix, stringifyQuery = undefined) =>
+  (projectId, xmlFormId, query = undefined) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const path = `/v1/projects/${projectId}/forms/${encodedFormId}${suffix}`;
+    return withQuery(path, query, stringifyQuery);
+  };
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
   session: (token) => `/v1/sessions/${token}`,
-  users: (query = undefined) => {
-    const queryString = query != null && query.q != null
-      ? `?q=${encodeURIComponent(query.q)}`
-      : '';
-    return `/v1/users${queryString}`;
-  },
+  users: (query = undefined) =>
+    withQuery('/v1/users', query, ({ q = undefined }) =>
+      (q != null ? `q=${encodeURIComponent(q)}` : '')),
   user: (id) => `/v1/users/${id}`,
   password: (id) => `/v1/users/${id}/password`,
   assignment: (role, actorId) => `/v1/assignments/${role}/${actorId}`,
@@ -31,12 +37,9 @@ export const apiPaths = {
   projectAssignment: (projectId, role, actorId) =>
     `/v1/projects/${projectId}/assignments/${role}/${actorId}`,
   projectKey: projectPath('/key'),
-  forms: (id, query = undefined) => {
-    const queryString = query != null && query.ignoreWarnings === true
-      ? '?ignoreWarnings=true'
-      : '';
-    return `/v1/projects/${id}/forms${queryString}`;
-  },
+  forms: (id, query = undefined) =>
+    withQuery(`/v1/projects/${id}/forms`, query, ({ ignoreWarnings = undefined }) =>
+      (ignoreWarnings ? 'ignoreWarnings=true' : '')),
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
@@ -52,7 +55,8 @@ export const apiPaths = {
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
     return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.xml`;
   },
-  formDraft: formPath('/draft'),
+  formDraft: formPath('/draft', ({ ignoreWarnings = undefined }) =>
+    (ignoreWarnings ? 'ignoreWarnings=true' : '')),
   formDraftXml: formPath('/draft.xml'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
@@ -61,11 +65,8 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
   submissionsZip: formPath('/submissions.csv.zip'),
-  submissionsOData: (projectId, xmlFormId, { top, skip = 0 }) => {
-    const encodedFormId = encodeURIComponent(xmlFormId);
-    const queryString = `%24top=${top}&%24skip=${skip}&%24count=true`;
-    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions?${queryString}`;
-  },
+  submissionsOData: formPath('.svc/Submissions', ({ top, skip = 0 }) =>
+    `%24top=${top}&%24skip=${skip}&%24count=true`),
   submissionAttachment: (projectId, xmlFormId, instanceId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);

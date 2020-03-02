@@ -10,14 +10,71 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div></div>
+  <div>
+    <div v-if="dataExists" class="row">
+      <div class="col-xs-6">
+        <!-- TODO -->
+      </div>
+      <div class="col-xs-6">
+        <page-section condensed>
+          <template #heading>
+            <span>Your Current Draft</span>
+          </template>
+          <template #body>
+            <form-version-summary-item :version="formDraft.get()">
+              <template #body>
+                <p><strong>Draft version</strong> of this Form.</p>
+                <button id="form-draft-status-upload-button" type="button"
+                  class="btn btn-primary" @click="showModal('upload')">
+                  <!-- TODO. Add icon. -->
+                  <span class="icon-upload"></span>Upload new definition&hellip;
+                </button>
+              </template>
+            </form-version-summary-item>
+          </template>
+        </page-section>
+      </div>
+    </div>
+    <form-new v-bind="upload" @hide="hideModal('upload')"
+      @success="afterUpload"/>
+  </div>
 </template>
 
 <script>
+import FormNew from '../form/new.vue';
+import FormVersionSummaryItem from '../form-version/summary-item.vue';
+import PageSection from '../page/section.vue';
+import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
+import { requestData } from '../../store/modules/request';
+
+// The component does not assume that this data will exist when the component is
+// created.
+const requestKeys = ['formDraft'];
 
 export default {
   name: 'FormDraftStatus',
-  mixins: [validateData()]
+  components: { FormNew, FormVersionSummaryItem, PageSection },
+  mixins: [modal(), validateData()],
+  data() {
+    return {
+      upload: {
+        state: false
+      }
+    };
+  },
+  computed: {
+    ...requestData(requestKeys),
+    dataExists() {
+      return this.$store.getters.dataExists(requestKeys);
+    }
+  },
+  methods: {
+    afterUpload() {
+      this.$emit('fetch-draft');
+      this.hideModal('upload');
+      this.$alert().success('Success! The new Form definition has been uploaded.');
+    }
+  }
 };
 </script>

@@ -112,7 +112,7 @@ export default {
     afterCreate(form) {
       const path = this.formPath(form.projectId, form.xmlFormId, 'draft/status');
       this.$router.push(path, () => {
-        this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
+        this.$alert().success(`Your new Form "${form.nameOrId()}" has been created as a Draft. Take a look at the checklist below, and when you feel it's ready, you can publish the Form for use.`);
       });
     }
   }

@@ -94,7 +94,7 @@ Certain actions are standardized across ODK Central Frontend.
 
 If the user clicks a button that performs a server-side action, then during the request:
 
-* The button should be disabled.
+* The button should be disabled. Related buttons, such as a cancel button, should also be disabled.
 * A spinner should appear within the button.
 * If the button is within a modal, then in most cases, the user should not be able to hide the modal.
 
@@ -102,7 +102,7 @@ Once the request completes:
 
 * An alert should be shown indicating the result of the request. The alert should persist on-screen in the case that performing the button's operation also navigates to another page.
 
-You can use `mockHttp().standardButton()` to test some of these things for a particular form.
+You can use `mockHttp().testStandardButton()` to test some of these things for a particular button.
 
 #### Standard Form Things
 

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import App from '../../src/components/app.vue';
-import Spinner from '../../src/components/spinner.vue';
 import respondFor from './http/respond-for';
 import router from '../../src/router';
 import store from '../../src/store';
@@ -727,45 +726,6 @@ class MockHttp {
 
   //////////////////////////////////////////////////////////////////////////////
   // COMMON TESTS
-
-  // Tests standard button things.
-  testStandardButton(buttonSelector = 'button[type="submit"]') {
-    if (typeof buttonSelector !== 'string')
-      throw new Error('invalid button selector');
-    const spinner = (button) => {
-      const spinners = button
-        .find(Spinner)
-        // I think find() in the previous line starts the search from the
-        // button's parent Vue component: it returns all Spinner components that
-        // are descendants of the parent component.
-        .filter(wrapper => $.contains(button.element, wrapper.vm.$el));
-      if (spinners.length === 0) throw new Error('spinner not found');
-      if (spinners.length > 1) throw new Error('multiple spinners found');
-      return spinners[0];
-    };
-    return this
-      .respondWithProblem()
-      .beforeAnyResponse(component => {
-        const button = component.first(buttonSelector);
-        button.getAttribute('disabled').should.be.ok();
-        spinner(button).getProp('state').should.be.true();
-        // There may end up being tests for which this assertion does not pass,
-        // but for good reason. We will have to update the assertion if/when
-        // that is the case.
-        component.should.not.alert();
-      })
-      .afterResponse(component => {
-        const button = component.first(buttonSelector);
-        button.element.disabled.should.be.false();
-        spinner(button).getProp('state').should.be.false();
-        component.should.alert('danger');
-      });
-  }
-
-  // Deprecated
-  standardButton(buttonSelector = undefined) {
-    return this.testStandardButton(buttonSelector);
-  }
 
   testRefreshButton(options) {
     // Options

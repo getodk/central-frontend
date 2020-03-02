@@ -101,6 +101,16 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft');
     });
 
+    it('formDraft?ignoreWarnings=true', () => {
+      const path = apiPaths.formDraft(1, 'a b', { ignoreWarnings: true });
+      path.should.equal('/v1/projects/1/forms/a%20b/draft?ignoreWarnings=true');
+    });
+
+    it('formDraft?ignoreWarnings=false', () => {
+      const path = apiPaths.formDraft(1, 'a b', { ignoreWarnings: false });
+      path.should.equal('/v1/projects/1/forms/a%20b/draft');
+    });
+
     it('formDraftXml', () => {
       const path = apiPaths.formDraftXml(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');

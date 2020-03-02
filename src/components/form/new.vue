@@ -9,10 +9,15 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- A modal that can be used to create a new form or to upload a new form
+definition for an existing form -->
 <template>
-  <modal :state="state" :hideable="!awaitingResponse" backdrop
+  <modal id="form-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template #title>Create Form</template>
+    <template #title>
+      {{ formDraft == null ? 'Create Form' : 'Upload New Form Definition' }}
+    </template>
     <template #body>
       <div v-show="warnings != null" id="form-new-warnings">
         <p>
@@ -25,6 +30,8 @@ except according to the terms contained in the LICENSE file.
         </ul>
         <p>
           Please correct the problems and try again. If you are sure these
+          <!-- TODO. Use a different word from "create" when uploading a new
+          definition? -->
           problems can be ignored, click the button to create the Form anyway:
         </p>
         <p>
@@ -35,13 +42,14 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-introduction">
+        <!-- TODO. Update this text for uploading a new definition? -->
         <p>
           To create a Form, upload an XForms XML file or an XLSForm Excel file.
           If you don&rsquo;t already have one, there are
           <doc-link to="form-tools/">tools available</doc-link> to help you
           design your Form.
         </p>
-        <p>
+        <p v-if="formDraft == null">
           If you have media, you will be able to upload that on the next page,
           after the Form has been created.
         </p>
@@ -107,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project']),
+    ...requestData(['project', 'formDraft']),
     disabled() {
       return this.awaitingResponse;
     },
@@ -162,18 +170,22 @@ export default {
         return;
       }
 
+      const query = { ignoreWarnings };
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml')
         headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
       const { currentRoute } = this.$store.state.router;
       this.request({
         method: 'POST',
-        url: apiPaths.forms(this.project.id, { ignoreWarnings }),
+        url: this.formDraft == null
+          ? apiPaths.forms(this.project.id, query)
+          : apiPaths.formDraft(this.project.id, this.formDraft.get().xmlFormId, query),
         headers,
         data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
         problemToAlert: ({ code, details }) => {
-          if (code === 400.15) return `The XLSForm could not be converted: ${details.error}`;
+          if (code === 400.15)
+            return `The XLSForm could not be converted: ${details.error}`;
           if (code === 409.3 && details.table === 'forms') {
             const { fields } = details;
             if (fields.length === 2 && fields[0] === 'projectId' &&
@@ -181,10 +193,9 @@ export default {
               const xmlFormId = details.values[1];
               return `A Form already exists in this Project with the Form ID of "${xmlFormId}".`;
             }
-            if (fields.length === 3 && fields[0] === 'projectId' &&
-              fields[1] === 'xmlFormId' && fields[2] === 'version')
-              return 'A Form previously existed in this Project with the same Form ID and version as the Form you are attempting to create now. To prevent confusion, please change one or both and try creating the Form again.';
           }
+          if (code === 400.8 && details.field === 'xmlFormId')
+            return `The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected "${this.formDraft.get().xmlFormId}", got "${details.value}").`;
           return null;
         }
       })
@@ -193,7 +204,7 @@ export default {
             this.$alert().blank();
             this.warnings = data.details.warnings;
           } else {
-            // The `forms` property of the project is now likely out-of-date.
+            // The `forms` property of the project may now be out-of-date.
             this.$emit('success', new Form(data));
           }
         })
