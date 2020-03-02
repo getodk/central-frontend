@@ -38,6 +38,7 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['project', 'form', 'attachments', 'formActors'];
@@ -70,10 +71,10 @@ export default {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     }
   },
-  created() {
-    this.fetchData();
+  watch: {
+    xmlFormId: 'fetchData'
   },
-  beforeRouteUpdate() {
+  created() {
     this.fetchData();
   },
   methods: {
@@ -82,7 +83,7 @@ export default {
         key: 'formActors',
         url: apiPaths.formActors(this.projectId, this.xmlFormId, 'app-user'),
         resend: false
-      }]);
+      }]).catch(noop);
     }
   }
 };
