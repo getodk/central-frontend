@@ -25,11 +25,6 @@ class Collection {
 
   first() { return this.get(0); }
   last() { return this.get(-1); }
-
-  firstOrCreatePast() {
-    if (this.size === 0) this.createPast(1);
-    return this.get(0);
-  }
 }
 
 // Implements the methods of Collection.

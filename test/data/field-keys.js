@@ -12,7 +12,9 @@ export const extendedFieldKeys = dataStore({
     id,
     lastCreatedAt,
 
-    project = extendedProjects.firstOrCreatePast(),
+    project = extendedProjects.size !== 0
+      ? extendedProjects.first()
+      : extendedProjects.createPast(1, { appUsers: 1 }).last(),
     displayName = faker.name.findName(),
     token = faker.random.alphaNumeric(64)
   }) => {

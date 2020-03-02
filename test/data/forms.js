@@ -45,7 +45,9 @@ export const extendedForms = dataStore({
     id,
     lastCreatedAt,
 
-    project = extendedProjects.firstOrCreatePast(),
+    project = extendedProjects.size !== 0
+      ? extendedProjects.first()
+      : extendedProjects.createPast(1, { forms: 1 }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
     version = inPast ? 'v1' : null,
