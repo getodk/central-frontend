@@ -277,26 +277,14 @@ class MockHttp {
     }));
   }
 
-  respondWithProblem(problemOrProblems) {
-    if (Array.isArray(problemOrProblems)) {
-      return problemOrProblems
-        .reduce((acc, problem) => acc.respondWithProblem(problem), this);
-    }
-    if (problemOrProblems == null) return this.respondWithProblem(500.1);
-    if (typeof problemOrProblems === 'number') {
-      return this.respondWithProblem(() => ({
-        code: problemOrProblems,
-        message: 'There was a problem.'
-      }));
-    }
-    return this._respond(() => {
-      const data = problemOrProblems();
-      return { status: Math.floor(data.code), data };
+  respondWithProblem(problemOrCode = 500.1) {
+    const problem = typeof problemOrCode === 'object'
+      ? problemOrCode
+      : { code: problemOrCode, message: 'There was a problem.' };
+    return this._respond(() => ({
+      status: Math.floor(problem.code),
+      data: problem
     });
-  }
-
-  respondWithProblems(problemOrProblems) {
-    return this.respondWithProblem(problemOrProblems);
   }
 
   restoreSession(restore) {
@@ -798,7 +786,7 @@ class MockHttp {
     const clickRefreshButton = (component) =>
       trigger.click(component.first('.btn-refresh'));
 
-    return this
+    let series = this
       // Series 1: Test that the table is initially rendered as expected.
       .respondWithData(dataCallbacks)
       .afterResponses(testRowCount)
@@ -811,13 +799,14 @@ class MockHttp {
       .afterResponses(testRowCount)
       // Series 3: Click the refresh button again, this time returning a problem
       // response (or responses).
-      .request(clickRefreshButton)
-      .respondWithProblems(new Array(respondWithData.length).fill(500))
-      .afterResponses(component => {
-        // The table should not disappear.
-        testRowCount(component);
-        component.should.alert();
-      });
+      .request(clickRefreshButton);
+    for (let i = 0; i < respondWithData.length; i += 1)
+      series = series.respondWithProblem();
+    return series.afterResponses(component => {
+      // The table should not disappear.
+      testRowCount(component);
+      component.should.alert();
+    });
   }
 
   _testRefreshButtonOptions(options) {

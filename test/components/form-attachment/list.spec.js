@@ -758,7 +758,7 @@ describe('FormAttachmentList', () => {
     describe('the upload does not succeed', () => {
       let app;
       beforeEach(() => upload('a')
-        .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+        .respondWithProblem({ code: 500.1, message: 'Failed.' })
         .afterResponses(component => {
           app = component;
         }));
@@ -928,7 +928,7 @@ describe('FormAttachmentList', () => {
             beforeEach(() => confirmUploads()
               .respondWithSuccess()
               .respondWithSuccess()
-              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .respondWithProblem({ code: 500.1, message: 'Failed.' })
               .afterResponses(component => {
                 app = component;
               }));
@@ -961,7 +961,7 @@ describe('FormAttachmentList', () => {
             let app;
             beforeEach(() => confirmUploads()
               .respondWithSuccess()
-              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .respondWithProblem({ code: 500.1, message: 'Failed.' })
               .afterResponses(component => {
                 app = component;
               }));
@@ -993,7 +993,7 @@ describe('FormAttachmentList', () => {
           describe('no uploads succeed', () => {
             let app;
             beforeEach(() => confirmUploads()
-              .respondWithProblem(() => ({ code: 500, message: 'Failed.' }))
+              .respondWithProblem({ code: 500.1, message: 'Failed.' })
               .afterResponses(component => {
                 app = component;
               }));

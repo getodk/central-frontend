@@ -243,7 +243,7 @@ describe('FormNew', () => {
         })
         .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
-        .respondWithProblem(() => ({
+        .respondWithProblem({
           code: 400.15,
           message: 'The given XLSForm file was not valid.',
           details: {
@@ -251,7 +251,7 @@ describe('FormNew', () => {
             result: null,
             warnings: null
           }
-        }))
+        })
         .afterResponse(modal => {
           modal.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
         }));
@@ -266,7 +266,7 @@ describe('FormNew', () => {
         })
         .request(modal => selectFileByInput(modal, xlsForm())
           .then(() => trigger.click(modal, '#form-new-create-button')))
-        .respondWithProblem(() => ({
+        .respondWithProblem({
           code: 409.3,
           message: 'Some message',
           details: {
@@ -274,7 +274,7 @@ describe('FormNew', () => {
             fields: ['projectId', 'xmlFormId'],
             values: ['1', 'f']
           }
-        }))
+        })
         .afterResponse(modal => {
           modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of "f".');
         }));
@@ -306,7 +306,7 @@ describe('FormNew', () => {
   describe('XLSForm warnings', () => {
     beforeEach(mockLogin);
 
-    const xlsFormWarning = () => ({
+    const xlsFormWarning = {
       code: 400.16,
       message: 'The XLSForm is valid, but with warnings.',
       details: {
@@ -314,7 +314,7 @@ describe('FormNew', () => {
         result: '<a><b/></a>',
         warnings: ['warning 1', 'warning 2']
       }
-    });
+    };
 
     it('shows the warnings', () =>
       mockHttp()

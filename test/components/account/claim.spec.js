@@ -38,10 +38,7 @@ describe('AccountClaim', () => {
       .request(app => submitForm(app, '#account-claim form', [
         ['input[type="password"]', 'password']
       ]))
-      .respondWithProblem(() => ({
-        code: 401.2,
-        message: 'AccountClaim problem.'
-      }))
+      .respondWithProblem({ code: 401.2, message: 'AccountClaim problem.' })
       .afterResponse(app => {
         app.should.alert('danger', 'AccountClaim problem. The link in your email may have expired, and a new email may have to be sent.');
       }));
