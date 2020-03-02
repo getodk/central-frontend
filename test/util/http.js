@@ -8,7 +8,7 @@ import store from '../../src/store';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
-import { mountAndMark } from './destroy';
+import { mountAndMark } from './vm';
 import { setRequestData } from './store';
 import { trigger } from './event';
 

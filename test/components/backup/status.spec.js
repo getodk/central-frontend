@@ -2,7 +2,7 @@ import BackupStatus from '../../../src/components/backup/status.vue';
 import testData from '../../data';
 import { ago, formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 
 const assertContent = (component, iconClass, title, buttonText) => {
   const icon = component.first('#backup-status-icon');

@@ -4,7 +4,7 @@ import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../util/event';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 
 describe('ProjectEnableEncryption', () => {
   beforeEach(mockLogin);

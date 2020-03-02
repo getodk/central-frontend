@@ -2,7 +2,7 @@ import ProjectFormAccess from '../../../src/components/project/form-access.vue';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 // Loads ProjectFormAccess, rendering one row for the table.

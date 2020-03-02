@@ -2,7 +2,7 @@ import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { submitForm } from '../../util/event';
 
 describe('ProjectEdit', () => {

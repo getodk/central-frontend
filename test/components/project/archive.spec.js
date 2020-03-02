@@ -3,7 +3,7 @@ import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 describe('ProjectArchive', () => {

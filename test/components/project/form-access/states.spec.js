@@ -2,7 +2,7 @@ import ProjectFormAccess from '../../../../src/components/project/form-access.vu
 import ProjectFormAccessStates from '../../../../src/components/project/form-access/states.vue';
 import testData from '../../../data';
 import { mockLogin } from '../../../util/session';
-import { mountAndMark } from '../../../util/destroy';
+import { mountAndMark } from '../../../util/lifecycle';
 import { trigger } from '../../../util/event';
 
 describe('ProjectFormAccessStates', () => {

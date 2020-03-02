@@ -1,7 +1,12 @@
-import { mount } from 'avoriaz';
+import { mount as avoriazMount } from 'avoriaz';
 
 import store from '../../src/store';
 import { setRequestData } from './store';
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DESTROY
 
 let componentToDestroy = null;
 
@@ -19,10 +24,18 @@ export const destroyMarkedComponent = () => {
   componentToDestroy = null;
 };
 
-export const mountAndMark = (component, options = {}) => {
+
+
+////////////////////////////////////////////////////////////////////////////////
+// MOUNT
+
+export const mount = (component, options = {}) => {
   const { requestData = {}, ...mountOptions } = options;
   setRequestData(requestData);
-  const wrapper = mount(component, { ...mountOptions, store });
+  const wrapper = avoriazMount(component, { ...mountOptions, store });
   markComponentForDestruction(wrapper);
   return wrapper;
 };
+
+// Deprecated
+export const mountAndMark = mount;
