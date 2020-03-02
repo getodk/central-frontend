@@ -3,10 +3,68 @@ import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { noop } from '../../../src/util/util';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
+
+// Create submissions along with the associated project and form.
+const createSubmissions = (count, factoryOptions = {}) => {
+  testData.extendedProjects.size.should.equal(0);
+  testData.extendedForms.size.should.equal(0);
+  testData.extendedSubmissions.size.should.equal(0);
+
+  testData.extendedForms.createPast(1, { submissions: count });
+  testData.extendedSubmissions.createPast(count, factoryOptions);
+};
+const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
+  // Check test data.
+  testData.extendedProjects.size.should.equal(1);
+  testData.extendedForms.size.should.equal(1);
+  const form = testData.extendedForms.last();
+  form.xmlFormId.should.equal('f');
+  form.submissions.should.equal(testData.extendedSubmissions.size);
+
+  const [small = 250, large = 1000] = chunkSizes;
+  return mockHttp()
+    .mount(SubmissionList, {
+      propsData: {
+        projectId: '1',
+        xmlFormId: 'f',
+        chunkSizes: { small, large },
+        scrolledToBottom: () => scrolledToBottom
+      },
+      requestData: { form }
+    })
+    .request(component => {
+      // Normally the `activated` hook calls this method, but that hook is not
+      // called here, so we call the method ourselves instead.
+      component.vm.fetchInitialData();
+    })
+    .respondWithData(() => testData.standardKeys.sorted())
+    .respondWithData(() => testData.extendedForms.last()._schema)
+    .respondWithData(() => testData.submissionOData(small, 0));
+};
+const loadFormOverview = (submissionCount, chunkSizes = []) => {
+  createSubmissions(submissionCount);
+  const [small = 250, large = 1000] = chunkSizes;
+  return load('/projects/1/forms/f')
+    .afterResponses(app => {
+      const formShow = app.first(FormShow);
+      formShow.setData({
+        submissionChunkSizes: { small, large },
+        scrolledToBottom: () => true
+      });
+      return app.vm.$nextTick();
+    })
+    // We want it to be possible for afterResponses() to be chained to this
+    // mockHttp() object, but we have already used afterResponses() to call
+    // setData(). In a slight abuse of request(), we specify a callback that
+    // does not send a request, and we do not specify a response callback,
+    // making afterResponses() available again.
+    .request(noop);
+};
 
 describe('SubmissionList', () => {
   beforeEach(mockLogin);
@@ -49,49 +107,6 @@ describe('SubmissionList', () => {
   });
 
   describe('after login', () => {
-    const form = () => {
-      testData.extendedForms.size.should.equal(1);
-      return testData.extendedForms.last();
-    };
-    const encodedFormId = () => encodeURIComponent(form().xmlFormId);
-    // Create submissions along with the associated project and form.
-    const createSubmissions = (count, factoryOptions = {}) => {
-      testData.extendedProjects.size.should.equal(0);
-      testData.extendedForms.size.should.equal(0);
-      testData.extendedSubmissions.size.should.equal(0);
-
-      testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { submissions: count });
-      testData.extendedSubmissions.createPast(count, factoryOptions);
-    };
-    const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
-      // Check test data.
-      testData.extendedProjects.size.should.equal(1);
-      testData.extendedForms.size.should.equal(1);
-      const formSubmissionCount = testData.extendedForms.last().submissions;
-      formSubmissionCount.should.equal(testData.extendedSubmissions.size);
-
-      const [small = 250, large = 1000] = chunkSizes;
-      return mockHttp()
-        .mount(SubmissionList, {
-          propsData: {
-            projectId: '1',
-            xmlFormId: testData.extendedForms.last().xmlFormId,
-            chunkSizes: { small, large },
-            scrolledToBottom: () => scrolledToBottom
-          },
-          requestData: { form: testData.extendedForms.last() }
-        })
-        .request(component => {
-          // Normally the `activated` hook calls this method, but that hook is
-          // not called here, so we call the method ourselves instead.
-          component.vm.fetchInitialData();
-        })
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(() => testData.submissionOData(small, 0));
-    };
-
     it('does not send a new request if user navigates back to tab', () =>
       mockRoute('/projects/1/forms/f/submissions')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
@@ -399,7 +414,7 @@ describe('SubmissionList', () => {
               td.hasClass('submission-row-binary-column').should.be.true();
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
-              $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions/abc%20123/attachments/def%20456.jpg`);
+              $a.attr('href').should.equal('/v1/projects/1/forms/f/submissions/abc%20123/attachments/def%20456.jpg');
               $a.find('.icon-check').length.should.equal(1);
               $a.find('.icon-download').length.should.equal(1);
             });
@@ -506,21 +521,17 @@ describe('SubmissionList', () => {
 
     describe('refresh button', () => {
       for (let i = 1; i <= 2; i += 1) {
-        it(`refreshes part ${i} of table after refresh button is clicked`, () =>
-          mockRoute('/projects/1/forms/f/submissions')
-            .respondWithData(() =>
-              testData.extendedProjects.createPast(1, { forms: 1 }).last())
-            .respondWithData(() =>
-              testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-            .respondWithProblem(404.1) // formDraft
-            .respondWithProblem(404.1) // attachments
-            .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+        it(`refreshes part ${i} of table after refresh button is clicked`, () => {
+          testData.extendedForms.createPast(1).last();
+          return load('/projects/1/forms/f/submissions', {}, {
+            submissionsChunk: false
+          })
             .testRefreshButton({
               collection: testData.extendedSubmissions,
               respondWithData: testData.submissionOData,
               tableSelector: `#submission-table${i}`
-            }));
+            });
+        });
       }
     });
 
@@ -543,7 +554,7 @@ describe('SubmissionList', () => {
             const button = page.first('#submission-list-download-button');
             const $button = $(button.element);
             $button.prop('tagName').should.equal('A');
-            $button.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId()}/submissions.csv.zip`);
+            $button.attr('href').should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
           });
       });
     });
@@ -876,31 +887,6 @@ describe('SubmissionList', () => {
       });
 
       describe('count update', () => {
-        const loadFormOverview = (submissionCount, chunkSizes = []) => {
-          createSubmissions(submissionCount);
-          const [small = 250, large = 1000] = chunkSizes;
-          return mockRoute(`/projects/1/forms/${encodedFormId()}`)
-            .respondWithData(() => testData.extendedProjects.last())
-            .respondWithData(form)
-            .respondWithProblem(404.1) // formDraft
-            .respondWithProblem(404.1) // attachments
-            .respondWithData(() => []) // formActors
-            .afterResponses(app => {
-              const formShow = app.first(FormShow);
-              formShow.setData({
-                submissionChunkSizes: { small, large },
-                scrolledToBottom: () => true
-              });
-              return app.vm.$nextTick();
-            })
-            // We want it to be possible for afterResponses() to be chained to
-            // this mockHttp() object, but we have already used afterResponses()
-            // to call setData(). In a slight abuse of request(), we specify a
-            // callback that does not send a request, and we do not specify a
-            // response callback, making afterResponses() available again.
-            .request(() => {});
-        };
-
         it('updates the form checklist', () =>
           loadFormOverview(10)
             .afterResponses(app => {
@@ -908,15 +894,15 @@ describe('SubmissionList', () => {
               p.text().should.containEql('10 ');
               p.text().should.not.containEql('11 ');
             })
-            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
+            .route('/projects/1/forms/f/submissions')
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => form()._schema)
+            .respondWithData(() => testData.extendedForms.last()._schema)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData();
             })
             .complete()
-            .route(`/projects/1/forms/${encodedFormId()}`)
+            .route('/projects/1/forms/f')
             .then(app => {
               const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
               p.text().should.containEql('11 ');
@@ -926,10 +912,12 @@ describe('SubmissionList', () => {
         it('updates the count in the download button', () =>
           loadFormOverview(10)
             .complete()
-            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
-            .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => form()._schema)
-            .respondWithData(testData.submissionOData)
+            .load('/projects/1/forms/f/submissions', {
+              project: false,
+              form: false,
+              formDraft: false,
+              attachments: false
+            })
             .afterResponses(app => {
               const button = app.first('#submission-list-download-button');
               const text = button.text().trim().iTrim();
@@ -950,9 +938,9 @@ describe('SubmissionList', () => {
           loadFormOverview(4, [2])
             .complete()
             // 4 submissions exist. About to request $top=2, $skip=0.
-            .route(`/projects/1/forms/${encodedFormId()}/submissions`)
+            .route('/projects/1/forms/f/submissions')
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => form()._schema)
+            .respondWithData(() => testData.extendedForms.last()._schema)
             .respondWithData(() => testData.submissionOData(2, 0))
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to
