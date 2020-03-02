@@ -204,9 +204,10 @@ describe('FormNew', () => {
         .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
         .then(() => trigger.click(app, '#form-new-create-button')))
       .respondWithData(() => testData.standardForms
-        .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
+        .createNew({ xmlFormId: 'f', name: 'My Form', draft: false })) // FormNew
       .respondWithData(() => testData.extendedForms.last()) // FormShow
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => [])); // formActors
 
     it('redirects to the form overview', () => {
@@ -433,9 +434,10 @@ describe('FormNew', () => {
         .complete()
         .request(app => trigger.click(app, '#form-new-warnings .btn-primary'))
         .respondWithData(() => testData.standardForms
-          .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
+          .createNew({ xmlFormId: 'f', name: 'My Form', draft: false })) // FormNew
         .respondWithData(() => testData.extendedForms.last()) // FormShow
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f');

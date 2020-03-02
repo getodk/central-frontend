@@ -23,7 +23,8 @@ describe('FormShow', () => {
         })
         .respondWithData(() => project)
         .respondWithData(() => form)
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
@@ -38,7 +39,8 @@ describe('FormShow', () => {
         testData.extendedProjects.createPast(1, { name: 'My Project' }).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
@@ -54,7 +56,8 @@ describe('FormShow', () => {
         .last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const text = app.first('#page-head-context span').text().trim();
@@ -68,7 +71,8 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const a = app.first('#page-head-context span a');
@@ -82,7 +86,8 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const a = app.find('#page-head-context a');
@@ -97,7 +102,8 @@ describe('FormShow', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => []) // formActors
       .afterResponses(app => {
         const title = app.first('#page-head-title').text().trim();
@@ -115,8 +121,10 @@ describe('FormShow', () => {
         loading[0].getProp('state').should.eql(true);
       })
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+      .respondWithData(() => testData.extendedForms
+        .createPast(1, { xmlFormId: 'f', draft: true })
+        .last())
+      .respondWithData(() => testData.extendedFormDrafts.last())
       .respondWithData(() =>
         testData.standardFormAttachments.createPast(1).sorted())
       .afterResponses(app => {
@@ -130,12 +138,14 @@ describe('FormShow', () => {
     mockLogin({ role: 'none' });
     const { project, form } = testData.createProjectAndFormWithoutSubmissions({
       project: { role: 'viewer' },
-      form: { xmlFormId: 'f' }
+      form: { xmlFormId: 'f', draft: true }
     });
     return mockRoute('/projects/1/forms/f/submissions')
       .respondWithData(() => project)
       .respondWithData(() => form)
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithData(() => testData.extendedFormDrafts.last())
+      .respondWithData(() =>
+        testData.standardFormAttachments.createPast(1).sorted())
       .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => form._schema)
       .respondWithData(testData.submissionOData)

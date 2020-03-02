@@ -6,15 +6,21 @@ const successfulResponse = (data) => ({
   data,
   get config() { throw new Error(); }
 });
+const problemResponse = (code) => ({
+  status: Math.floor(code),
+  data: { code, message: 'Problem' },
+  get config() { throw new Error(); }
+});
 
 // eslint-disable-next-line import/prefer-default-export
 export const setRequestData = (data) => {
   for (const [key, value] of Object.entries(data)) {
     const transform = transforms[key];
-    const response = value.status != null ? value : successfulResponse(value);
-    const success = response.status >= 200 && response.status < 300;
-    if (transform == null && !success)
-      throw new Error('unexpected error response');
+    if (transform == null && value.problem != null)
+      throw new Error('unexpected problem response');
+    const response = value.problem == null
+      ? successfulResponse(value)
+      : problemResponse(value);
     const transformed = transform != null ? transform(response) : response.data;
     store.commit('setData', { key, value: transformed });
   }

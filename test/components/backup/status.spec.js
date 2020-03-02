@@ -20,13 +20,7 @@ describe('BackupStatus', () => {
   it('renders correctly if backups are not configured', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: {
-          status: 404,
-          data: {
-            code: 404.1,
-            message: 'Problem'
-          }
-        }
+        backupsConfig: { problem: 404.1 }
       }
     });
     assertContent(

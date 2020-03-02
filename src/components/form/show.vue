@@ -70,6 +70,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Loading from '../loading.vue';
+import Option from '../../util/option';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
@@ -79,7 +80,7 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['project', 'form', 'attachments'];
+const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
@@ -128,6 +129,11 @@ export default {
     this.fetchData();
   },
   methods: {
+    reconcileFormDraftAndAttachments({ formDraft, attachments }) {
+      if (formDraft != null && formDraft.isEmpty() && attachments != null &&
+        attachments.isDefined())
+        this.$store.commit('setData', { key: 'attachments', value: Option.none() });
+    },
     fetchData() {
       this.$store.dispatch('get', [
         {
@@ -147,9 +153,17 @@ export default {
           }
         },
         {
+          key: 'formDraft',
+          url: apiPaths.formDraft(this.projectId, this.xmlFormId),
+          extended: true,
+          fulfillProblem: ({ code }) => code === 404.1,
+          success: this.reconcileFormDraftAndAttachments
+        },
+        {
           key: 'attachments',
           url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
-          fulfillProblem: ({ code }) => code === 404.1
+          fulfillProblem: ({ code }) => code === 404.1,
+          success: this.reconcileFormDraftAndAttachments
         }
       ]).catch(noop);
     }

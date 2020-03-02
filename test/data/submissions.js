@@ -121,6 +121,9 @@ export const extendedSubmissions = dataStore({
       submitter: toActor(submitter),
       createdAt,
       updatedAt: null,
+      // An actual submission JSON response does not have this property. We
+      // include it here so that it is easy to match submission data and
+      // metadata during testing.
       _oData: oData({
         form,
         instanceId,

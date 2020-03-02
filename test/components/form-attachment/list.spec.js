@@ -7,22 +7,25 @@ import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
 import { formatDate } from '../../../src/util/date-time';
 import { mockHttp, mockRoute } from '../../util/http';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
+import { noop } from '../../../src/util/util';
 
+// It is expected that test data is created before loadAttachments() is called.
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
-  // It is expected that test data is created before loadAttachments() is
-  // called.
   testData.extendedProjects.size.should.equal(1);
   testData.extendedForms.size.should.equal(1);
+  testData.extendedFormVersions.size.should.equal(1);
+  should.not.exist(testData.extendedFormVersions.last().publishedAt);
   testData.standardFormAttachments.size.should.not.equal(0);
 
-  const form = testData.extendedForms.last();
   if (route) {
-    const encodedFormId = encodeURIComponent(form.xmlFormId);
+    const { xmlFormId } = testData.extendedForms.last();
+    const encodedFormId = encodeURIComponent(xmlFormId);
     const path = `/projects/1/forms/${encodedFormId}/media-files`;
     return mockRoute(path, { attachToDocument })
       .respondWithData(() => testData.extendedProjects.last())
-      .respondWithData(() => form)
+      .respondWithData(() => testData.extendedForms.last())
+      .respondWithData(() => testData.extendedFormDrafts.last())
       .respondWithData(() => testData.standardFormAttachments.sorted());
   }
   if (attachToDocument) throw new Error('invalid options');
@@ -31,7 +34,8 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
       propsData: { projectId: '1' },
       requestData: {
         project: testData.extendedProjects.last(),
-        form,
+        form: testData.extendedForms.last(),
+        formDraft: testData.extendedFormDrafts.last(),
         attachments: testData.standardFormAttachments.sorted()
       }
     });
@@ -51,143 +55,16 @@ const selectFilesUsingModal = (app, files) =>
     .then(() => app);
 
 describe('FormAttachmentList', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/forms/f/media-files')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/forms/f/media-files')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-        .respondWithData(() =>
-          testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/media-files');
-        }));
-
-    it('resets the component after the route updates', () => {
-      mockLogin();
-      return mockRoute('/projects/1/forms/f1/media-files')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
-        .respondWithData(() =>
-          testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app => {
-          const files = blankFiles(['a']);
-          return trigger.dragAndDrop(app, FormAttachmentList, { files })
-            .then(() => {
-              const { unmatchedFiles } = app.first(FormAttachmentList).data();
-              unmatchedFiles.length.should.equal(1);
-            });
-        })
-        .route('/projects/1/forms/f2/media-files')
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
-        .respondWithData(() => testData.standardFormAttachments
-          .createPast(1, { hasUpdatedAt: false })
-          .sorted())
-        .afterResponses(app => {
-          const { unmatchedFiles } = app.first(FormAttachmentList).data();
-          unmatchedFiles.length.should.equal(0);
-        });
-    });
-
-    describe('project viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.createProjectAndFormWithoutSubmissions({
-          project: { role: 'viewer' },
-          form: { xmlFormId: 'f' }
-        });
-      });
-
-      it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/forms/f/media-files')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() =>
-            testData.standardFormAttachments.createPast(1).sorted())
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a project viewer navigating from project overview', () =>
-        mockRoute('/projects/1')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .complete()
-          .route('/projects/1/forms/f/media-files')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponse(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-
-    describe('no form attachments', () => {
-      beforeEach(mockLogin);
-
-      it('redirects a user whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/forms/f/media-files')
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() =>
-            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a user who navigates to the tab from another tab', () =>
-        mockRoute('/projects/1/forms/f')
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() =>
-            testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => []) // formActors
-          .complete()
-          .route('/projects/1/forms/f/media-files')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a user navigating from a different form', () =>
-        mockRoute('/projects/1/forms/f1/media-files')
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() =>
-            testData.extendedForms.createPast(1, { xmlFormId: 'f1' }).last())
-          .respondWithData(() =>
-            testData.standardFormAttachments.createPast(1).sorted())
-          .complete()
-          .route('/projects/1/forms/f2/media-files')
-          .respondWithData(() =>
-            testData.extendedForms.createPast(1, { xmlFormId: 'f2' }).last())
-          .respondWithData(() => []) // attachments
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-  });
+  beforeEach(mockLogin);
 
   describe('Media Files tab', () => {
-    beforeEach(mockLogin);
-
     it('is not shown if there are no form attachments', () =>
-      mockRoute('/projects/1/forms/x')
+      mockRoute('/projects/1/forms/f')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', draft: true })
+          .last())
+        .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => []) // formActors
         .afterResponses(app => {
@@ -197,10 +74,12 @@ describe('FormAttachmentList', () => {
         }));
 
     it('is shown if there are form attachments', () =>
-      mockRoute('/projects/1/forms/x')
+      mockRoute('/projects/1/forms/f')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'x' }).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', draft: true })
+          .last())
+        .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments
           .createPast(1, { exists: false })
           .sorted())
@@ -212,6 +91,11 @@ describe('FormAttachmentList', () => {
         }));
 
     describe('badge', () => {
+      beforeEach(() => {
+        testData.extendedProjects.createPast(1, { forms: 1 });
+        testData.extendedForms.createPast(1, { draft: true });
+      });
+
       it('is correct when all files are missing', () => {
         testData.standardFormAttachments.createPast(2, { exists: false });
         return loadAttachments({ route: true }).then(app => {
@@ -240,7 +124,9 @@ describe('FormAttachmentList', () => {
   });
 
   describe('table', () => {
-    beforeEach(mockLogin);
+    beforeEach(() => {
+      testData.extendedForms.createPast(1, { draft: true });
+    });
 
     it('correctly sorts the table', () => {
       const attachments = testData.standardFormAttachments
@@ -367,6 +253,7 @@ describe('FormAttachmentList', () => {
     describe('table', () => {
       let app;
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
@@ -397,6 +284,7 @@ describe('FormAttachmentList', () => {
     describe('after the uploads are canceled', () => {
       let app;
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
@@ -421,6 +309,7 @@ describe('FormAttachmentList', () => {
 
     describe('unmatched files', () => {
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' })
@@ -528,6 +417,7 @@ describe('FormAttachmentList', () => {
 
     describe('after a selection', () => {
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
@@ -591,6 +481,7 @@ describe('FormAttachmentList', () => {
 
     describe('unmatched file after a selection', () => {
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' });
@@ -649,6 +540,7 @@ describe('FormAttachmentList', () => {
   */
   const testSingleFileUpload = (upload) => {
     beforeEach(() => {
+      testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments
         .createPast(1, { name: 'a', exists: true })
         .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
@@ -790,12 +682,11 @@ describe('FormAttachmentList', () => {
   for (const ie of [false, true]) {
     const not = ie ? '' : 'not ';
     describe(`dragging and dropping outside a row of the table ${not}using IE`, () => {
-      beforeEach(mockLogin);
-
       describe('multiple files', () => {
         describe('drag', () => {
           let app;
           beforeEach(() => {
+            testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments.createPast(2);
             // Specifying `route: true` in order to trigger the Vue activated
             // hook, which attaches the jQuery event handlers.
@@ -831,6 +722,7 @@ describe('FormAttachmentList', () => {
 
         describe('confirming the uploads', () => {
           beforeEach(() => {
+            testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments
               .createPast(1, { name: 'a', exists: true })
               .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
@@ -1027,6 +919,7 @@ describe('FormAttachmentList', () => {
         describe('drag', () => {
           let app;
           beforeEach(() => {
+            testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments.createPast(2);
             return loadAttachments({ route: true }).then(component => {
               app = component;
@@ -1072,10 +965,9 @@ describe('FormAttachmentList', () => {
   }
 
   describe('upload files modal', () => {
-    beforeEach(mockLogin);
-
     describe('state', () => {
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a' })
           .createPast(1, { name: 'b' });
@@ -1107,8 +999,6 @@ describe('FormAttachmentList', () => {
   });
 
   describe('dragging and dropping a single file over a row', () => {
-    beforeEach(mockLogin);
-
     const dragAndDropOntoRow = (app, attachmentName, filename) => {
       const tr = app.find('#form-attachment-list-table tbody tr');
       const attachments = testData.standardFormAttachments.sorted();
@@ -1123,6 +1013,10 @@ describe('FormAttachmentList', () => {
     };
 
     describe('drag over a row of the table', () => {
+      beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
+      });
+
       it('highlights only the target row', () => {
         testData.standardFormAttachments.createPast(2);
         return loadAttachments({ route: true })
@@ -1196,6 +1090,7 @@ describe('FormAttachmentList', () => {
 
     describe('name mismatch modal', () => {
       beforeEach(() => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false });
@@ -1259,8 +1154,6 @@ describe('FormAttachmentList', () => {
   });
 
   describe('gzipping', () => {
-    beforeEach(mockLogin);
-
     const cases = [
       {
         name: 'not_csv.txt',
@@ -1281,6 +1174,7 @@ describe('FormAttachmentList', () => {
 
     for (const { name, contents, gzip } of cases) {
       it(`${gzip ? 'gzips' : 'does not gzip'} ${name}`, () => {
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments.createPast(1, { name });
         const file = new File([contents], name);
         return loadAttachments({ route: true })
@@ -1300,7 +1194,7 @@ describe('FormAttachmentList', () => {
           .respondWithSuccess()
           .afterResponses({
             pollWork: (app) => !app.first(FormAttachmentList).data().uploading,
-            callback: () => {}
+            callback: noop
           });
       });
     }

@@ -90,6 +90,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
+    it('formDraft', () => {
+      const path = apiPaths.formDraft(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft');
+    });
+
     it('formDraftAttachments', () => {
       const path = apiPaths.formDraftAttachments(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');

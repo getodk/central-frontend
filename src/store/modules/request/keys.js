@@ -39,6 +39,7 @@ export const keys = [
   'schema',
   'formActors',
   'keys',
+  'formDraft',
   // Form draft attachments
   'attachments',
   // A single chunk of submissions OData
@@ -63,6 +64,7 @@ export const transforms = {
   project: ({ data }) => new Project(data),
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
+  formDraft: optional(({ data }) => new Form(data)),
   attachments: optional(({ data }) =>
     data.map(attachment => new FormAttachment(attachment))),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),

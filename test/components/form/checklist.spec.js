@@ -21,7 +21,8 @@ const loadOverview = ({
   return mockRoute('/projects/1/forms/f')
     .respondWithData(() => testData.extendedProjects.last())
     .respondWithData(() => testData.extendedForms.last())
-    .respondWithData(() => testData.standardFormAttachments.sorted())
+    .respondWithProblem(404.1) // formDraft
+    .respondWithProblem(404.1) // attachments
     .respondWithData(() =>
       testData.extendedFieldKeys.sorted().map(testData.toActor));
 };

@@ -48,6 +48,7 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
   formKeys: formPath('/submissions/keys'),
+  formDraft: formPath('/draft'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

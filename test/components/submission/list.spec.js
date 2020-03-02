@@ -4,117 +4,51 @@ import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
 import { mockHttp, mockRoute } from '../../util/http';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
 
 describe('SubmissionList', () => {
-  describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
-      mockRoute('/projects/1/forms/f/submissions')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
+  beforeEach(mockLogin);
 
-    it('after login, user is redirected back', () =>
-      mockRouteThroughLogin('/projects/1/forms/f/submissions')
+  describe('routing', () => {
+    it('requests schema for a user whose first navigation is to the tab', () =>
+      mockRoute('/projects/1/forms/f/submissions')
+        .beforeEachResponse((app, request, index) => {
+          if (index === 5)
+            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
+        })
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f', submissions: 0 })
           .last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .respondWithData(() => testData.standardKeys.sorted())
         .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData)
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-        }));
+        .respondWithData(testData.submissionOData));
 
-    describe('after login', () => {
-      beforeEach(mockLogin);
-
-      it('requests schema for a user whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/forms/f/submissions')
-          .beforeEachResponse((app, request, index) => {
-            if (index === 4)
-              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-          })
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() => testData.extendedForms
-            .createPast(1, { xmlFormId: 'f', submissions: 0 })
-            .last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => testData.standardKeys.sorted())
-          .respondWithData(() => testData.extendedForms.last()._schema)
-          .respondWithData(testData.submissionOData));
-
-      it('requests schema for a user who navigates to the tab from another tab', () =>
-        mockRoute('/projects/1/forms/f')
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() => testData.extendedForms
-            .createPast(1, { xmlFormId: 'f', submissions: 0 })
-            .last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => []) // formActors
-          .complete()
-          .route('/projects/1/forms/f/submissions')
-          .beforeEachResponse((app, request, index) => {
-            if (index === 1)
-              request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-          })
-          .respondWithData(() => testData.standardKeys.sorted())
-          .respondWithData(() => testData.extendedForms.last()._schema)
-          .respondWithData(testData.submissionOData));
-
-      it('resets and updates the component after the route updates', () =>
-        mockRoute('/projects/1/forms/f1/submissions')
-          .beforeEachResponse((app, request, index) => {
-            if (index === 4)
-              request.url.should.equal('/v1/projects/1/forms/f1.schema.json?flatten=true&odata=true');
-          })
-          .respondWithData(() => testData.extendedProjects.createPast(1).last())
-          .respondWithData(() => testData.extendedForms
-            .createPast(1, { xmlFormId: 'f1', submissions: 1 })
-            .last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => testData.standardKeys.sorted())
-          .respondWithData(() => testData.extendedForms.last()._schema)
-          .respondWithData(() => {
-            testData.extendedSubmissions.createPast(1);
-            return testData.submissionOData(1, 0);
-          })
-          .afterResponses(app => {
-            app.first(SubmissionList).data().submissions.length.should.equal(1);
-          })
-          .route('/projects/1/forms/f2/submissions')
-          .beforeAnyResponse(app => {
-            should.not.exist(app.first(SubmissionList).data().submissions);
-          })
-          .beforeEachResponse((app, request, index) => {
-            if (index === 3)
-              request.url.should.equal('/v1/projects/1/forms/f2.schema.json?flatten=true&odata=true');
-          })
-          .respondWithData(() => testData.extendedForms
-            .createPast(1, { xmlFormId: 'f2', submissions: 2 })
-            .last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithData(() => testData.standardKeys.sorted())
-          .respondWithData(() => testData.extendedForms.last()._schema)
-          .respondWithData(() => {
-            const form = testData.extendedForms.last();
-            testData.extendedSubmissions.createPast(2, { form });
-            return testData.submissionOData(2, 1);
-          })
-          .afterResponses(app => {
-            app.first(SubmissionList).data().submissions.length.should.equal(2);
-          }));
-    });
+    it('requests schema for a user who navigates to the tab from another tab', () =>
+      mockRoute('/projects/1/forms/f')
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
+        .respondWithData(() => testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', submissions: 0 })
+          .last())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
+        .respondWithData(() => []) // formActors
+        .complete()
+        .route('/projects/1/forms/f/submissions')
+        .beforeEachResponse((app, request, index) => {
+          if (index === 1)
+            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
+        })
+        .respondWithData(() => testData.standardKeys.sorted())
+        .respondWithData(() => testData.extendedForms.last()._schema)
+        .respondWithData(testData.submissionOData));
   });
 
   describe('after login', () => {
-    beforeEach(mockLogin);
-
     const form = () => {
       testData.extendedForms.size.should.equal(1);
       return testData.extendedForms.last();
@@ -164,7 +98,8 @@ describe('SubmissionList', () => {
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f', submissions: 0 })
           .last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .respondWithData(() => testData.standardKeys.sorted())
         .respondWithData(() => testData.extendedForms.last()._schema)
         .respondWithData(testData.submissionOData)
@@ -571,21 +506,21 @@ describe('SubmissionList', () => {
 
     describe('refresh button', () => {
       for (let i = 1; i <= 2; i += 1) {
-        it(`refreshes part ${i} of table after refresh button is clicked`, () => {
-          testData.extendedProjects.createPast(1);
-          testData.extendedForms.createPast(1);
-          return mockRoute(`/projects/1/forms/${encodedFormId()}/submissions`)
-            .respondWithData(() => testData.extendedProjects.last())
-            .respondWithData(form)
-            .respondWithData(() => testData.standardFormAttachments.sorted())
+        it(`refreshes part ${i} of table after refresh button is clicked`, () =>
+          mockRoute('/projects/1/forms/f/submissions')
+            .respondWithData(() =>
+              testData.extendedProjects.createPast(1, { forms: 1 }).last())
+            .respondWithData(() =>
+              testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+            .respondWithProblem(404.1) // formDraft
+            .respondWithProblem(404.1) // attachments
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => form()._schema)
+            .respondWithData(() => testData.extendedForms.last()._schema)
             .testRefreshButton({
               collection: testData.extendedSubmissions,
               respondWithData: testData.submissionOData,
               tableSelector: `#submission-table${i}`
-            });
-        });
+            }));
       }
     });
 
@@ -947,7 +882,8 @@ describe('SubmissionList', () => {
           return mockRoute(`/projects/1/forms/${encodedFormId()}`)
             .respondWithData(() => testData.extendedProjects.last())
             .respondWithData(form)
-            .respondWithData(() => testData.standardFormAttachments.sorted())
+            .respondWithProblem(404.1) // formDraft
+            .respondWithProblem(404.1) // attachments
             .respondWithData(() => []) // formActors
             .afterResponses(app => {
               const formShow = app.first(FormShow);

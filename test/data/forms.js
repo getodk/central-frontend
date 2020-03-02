@@ -1,11 +1,19 @@
 import faker from 'faker';
-import { omit } from 'ramda';
+import { pick } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
 import { fakePastDate } from '../util/date-time';
 import { toActor } from './actors';
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DATA STORES
+
+// There is no direct access to these stores: they are not exported. Instead,
+// use the views defined below.
 
 const defaultSchema = (hasInstanceId) => {
   const instanceId = [];
@@ -40,7 +48,10 @@ const defaultSchema = (hasInstanceId) => {
   ];
 };
 
-export const extendedForms = dataStore({
+let formVersions;
+
+// Logical forms (the form itself, as distinct from the form version)
+const forms = dataStore({
   factory: ({
     inPast,
     id,
@@ -51,37 +62,42 @@ export const extendedForms = dataStore({
       : extendedProjects.createPast(1, { forms: 1 }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
-    version = inPast ? 'v1' : null,
     key = null,
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
-    submissions = 0,
+    createdBy = extendedUsers.size !== 0
+      ? extendedUsers.first()
+      : extendedUsers.createPast(1).last(),
 
     hasInstanceId = faker.random.boolean(),
-    schema = defaultSchema(hasInstanceId)
+    schema = defaultSchema(hasInstanceId),
+
+    draft = !inPast,
+    ...rest
   }) => {
-    if (extendedUsers.size === 0) throw new Error('user not found');
-    const createdBy = extendedUsers.first();
-    const createdAt = inPast
-      ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
-      : new Date().toISOString();
-    return {
+    const form = {
       projectId: project.id,
       xmlFormId,
       name,
-      version,
       keyId: key != null ? key.id : project.keyId,
       state,
-      // The following two properties do not necessarily match
-      // testData.extendedSubmissions.
-      submissions,
-      lastSubmission: submissions !== 0 ? fakePastDate([createdAt]) : null,
-      createdBy: toActor(createdBy),
-      createdAt,
+      createdAt: inPast
+        ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
+        : new Date().toISOString(),
       updatedAt: null,
+      // Extended metadata
+      createdBy: toActor(createdBy),
+      // An actual form does not have this property. We include it here for ease
+      // of access during testing.
       _schema: schema
     };
+    const versionOptions = { ...rest, form, draft };
+    if (inPast)
+      formVersions.createPast(1, versionOptions);
+    else
+      formVersions.createNew(versionOptions);
+    return form;
   },
   sort: (form1, form2) => {
     const nameOrId1 = form1.name != null ? form1.name : form1.xmlFormId;
@@ -90,10 +106,124 @@ export const extendedForms = dataStore({
   }
 });
 
+// All form versions: primary, draft, and archived.
+formVersions = dataStore({
+  factory: ({
+    inPast,
+    lastCreatedAt,
+
+    version = 'v1',
+    form = forms.first(),
+    draft = false,
+    draftToken = draft ? faker.random.alphaNumeric(64) : null,
+    submissions = 0,
+    lastSubmission = undefined,
+    publishedBy = undefined
+  }) => {
+    if (form === undefined) throw new Error('form not found');
+    const createdAt = inPast
+      ? fakePastDate([lastCreatedAt, form.createdAt])
+      : new Date().toISOString();
+    return {
+      form,
+      version,
+      createdAt,
+      publishedAt: !draft ? createdAt : null,
+      // Extended form and extended form draft
+      // This property does not necessarily match testData.extendedSubmissions.
+      submissions,
+      // This property does not necessarily match testData.extendedProjects or
+      // testData.extendedSubmissions.
+      lastSubmission: lastSubmission != null
+        ? lastSubmission
+        : (submissions !== 0 ? fakePastDate([createdAt]) : null),
+      // Extended form version
+      publishedBy: publishedBy != null
+        ? toActor(publishedBy)
+        : (!draft ? form.createdBy : null),
+      // Form draft
+      draftToken
+    };
+  }
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VIEWS
+
+const findPrimaryVersion = (form) => {
+  for (let i = formVersions.size - 1; i >= 0; i -= 1) {
+    const version = formVersions.get(i);
+    if (version.form === form && version.publishedAt != null) return version;
+  }
+  return null;
+};
+const transformForm = (formProps, versionProps) => (form) => {
+  const data = pick(formProps, form);
+  const primary = findPrimaryVersion(form);
+  if (primary != null) {
+    // We should probably sum `submissions` for all published versions, rather
+    // than simply copying it from the primary version.
+    Object.assign(data, pick(versionProps, primary));
+  } else if (versionProps.includes('submissions')) {
+    data.submissions = 0;
+  }
+  return data;
+};
+const transformVersion = (formProps, versionProps) => (version) =>
+  ({ ...pick(formProps, version.form), ...pick(versionProps, version) });
+
+const formProps = [
+  'projectId',
+  'xmlFormId',
+  'name',
+  'keyId',
+  'state',
+  'createdAt',
+  'updatedAt',
+  '_schema'
+];
+const extendedFormProps = ['createdBy'];
+const versionProps = ['version', 'publishedAt'];
+const versionPropsForExtendedForm = ['submissions', 'lastSubmission'];
+const extendedVersionProps = ['publishedBy'];
+const draftProps = ['draftToken'];
+
 export const standardForms = view(
-  extendedForms,
-  omit(['submissions', 'lastSubmission', 'createdBy'])
+  forms,
+  transformForm(formProps, versionProps)
 );
+
+export const extendedForms = view(
+  forms,
+  transformForm(
+    [...formProps, ...extendedFormProps],
+    [...versionProps, ...versionPropsForExtendedForm]
+  )
+);
+extendedForms.updateState = function updateState(index, state) {
+  if (typeof index !== 'number') throw new Error('invalid index');
+  forms.update(index, { state });
+  return this.get(index);
+};
+
+export const extendedFormVersions = view(
+  formVersions,
+  transformVersion(formProps, [...versionProps, ...extendedVersionProps])
+);
+export const extendedFormDrafts = view(
+  formVersions,
+  transformVersion(
+    [...formProps, ...extendedFormProps],
+    [...versionProps, ...versionPropsForExtendedForm, ...draftProps]
+  )
+);
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HELPER FUNCTIONS
 
 export const createProjectAndFormWithoutSubmissions = (options) => {
   const project = extendedProjects

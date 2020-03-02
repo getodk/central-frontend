@@ -12,7 +12,8 @@ describe('FormDelete', () => {
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
       .respondWithData(() =>
         testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .afterResponses(app => {
         app.first(FormDelete).getProp('state').should.be.false();
         return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
@@ -38,7 +39,8 @@ describe('FormDelete', () => {
       return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
         .respondWithData(() => testData.extendedProjects.last())
         .respondWithData(() => testData.extendedForms.first())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .afterResponses(component => {
           app = component;
           return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
