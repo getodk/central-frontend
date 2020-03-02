@@ -87,7 +87,7 @@ export const extendedSubmissions = dataStore({
     inPast,
     lastCreatedAt,
 
-    form = extendedForms.randomOrCreatePast(),
+    form = extendedForms.first(),
     instanceId = faker.random.uuid(),
     status = null,
 
@@ -107,7 +107,9 @@ export const extendedSubmissions = dataStore({
     // false, the int field will have the specified value.
     ...partialOData
   }) => {
-    const submitter = extendedUsers.randomOrCreatePast();
+    if (form === undefined) throw new Error('form not found');
+    if (extendedUsers.size === 0) throw new Error('user not found');
+    const submitter = extendedUsers.first();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       submitter.createdAt

@@ -57,7 +57,8 @@ export const extendedForms = dataStore({
     hasInstanceId = faker.random.boolean(),
     schema = defaultSchema(hasInstanceId)
   }) => {
-    const createdBy = extendedUsers.randomOrCreatePast();
+    if (extendedUsers.size === 0) throw new Error('user not found');
+    const createdBy = extendedUsers.first();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       project.createdAt,

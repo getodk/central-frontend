@@ -16,7 +16,8 @@ export const extendedFieldKeys = dataStore({
     displayName = faker.name.findName(),
     token = !inPast || faker.random.boolean() ? faker.central.token() : null
   }) => {
-    const createdBy = extendedUsers.randomOrCreatePast();
+    if (extendedUsers.size === 0) throw new Error('user not found');
+    const createdBy = extendedUsers.first();
     const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
       lastCreatedAt,
       project.createdAt,

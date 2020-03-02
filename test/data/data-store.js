@@ -1,5 +1,3 @@
-import faker from '../faker';
-
 // An array-like collection of objects. Objects may be created, read, sorted,
 // and deleted. The objects are ordered within the collection in order of
 // creation.
@@ -28,20 +26,9 @@ class Collection {
   first() { return this.size !== 0 ? this.get(0) : undefined; }
   last() { return this.size !== 0 ? this.get(this.size - 1) : undefined; }
 
-  random() {
-    if (this.size === 0) return undefined;
-    return this.get(faker.random.number({ max: this.size - 1 }));
-  }
-
   firstOrCreatePast() {
     if (this.size === 0) this.createPast(1);
     return this.get(0);
-  }
-
-  randomOrCreatePast() {
-    return this.size !== 0
-      ? this.random()
-      : this.createPast(1).get(0);
   }
 }
 
