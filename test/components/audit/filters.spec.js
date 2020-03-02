@@ -140,14 +140,12 @@ describe('AuditFilters', () => {
       .respondWithData(() => testData.extendedAudits.sorted())
       .complete()
       // Select the same date range.
-      .request(component => {
+      .testNoRequest(component => {
         const date = DateTime.fromISO('1970-01-01').toJSDate();
         component.first(AuditFilters).vm.closeCalendar([date, date]);
       })
-      .respondWithData([/* no responses */])
-      .complete()
       // Clear the date range (defaulting to the same date range).
-      .request(component => {
+      .testNoRequest(component => {
         const auditFilters = component.first(AuditFilters);
         const { dateRangeToString } = auditFilters.vm;
         auditFilters.setMethods({
@@ -160,7 +158,6 @@ describe('AuditFilters', () => {
           auditFilters.vm.closeCalendar([]);
         });
       })
-      .respondWithData([/* no responses */])
       .then(() => {
         // The date range has not changed, but the dateRangeString property
         // still should have been reset.

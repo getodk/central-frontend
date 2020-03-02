@@ -31,6 +31,6 @@ describe('ProjectOverview', () => {
         .route('/projects/1/settings')
         .complete()
         .route('/projects/1')
-        .respondWithData([/* no responses */]));
+        .testNoRequest());
   });
 });

@@ -5,6 +5,7 @@ import Spinner from '../../src/components/spinner.vue';
 import router from '../../src/router';
 import store from '../../src/store';
 import testData from '../data';
+import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
 import { mountAndMark } from './destroy';
 import { setRequestData } from './store';
@@ -289,14 +290,13 @@ class MockHttp {
 
   restoreSession(restore) {
     if (!restore) return this.respondWithProblem(404.1);
-    return this.respondWithData([
-      () => testData.sessions.createNew(),
-      () => {
+    return this
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => {
         if (testData.extendedUsers.size !== 0)
           throw new Error('user already exists');
         return testData.extendedUsers.createPast(1, { role: 'admin' }).last();
-      }
-    ]);
+      });
   }
 
   _respond(callback) {
@@ -727,8 +727,8 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // COMMON TESTS
 
-  // Tests standard button thinking things.
-  standardButton(buttonSelector = 'button[type="submit"]') {
+  // Tests standard button things.
+  testStandardButton(buttonSelector = 'button[type="submit"]') {
     if (typeof buttonSelector !== 'string')
       throw new Error('invalid button selector');
     const spinner = (button) => {
@@ -761,19 +761,15 @@ class MockHttp {
       });
   }
 
+  // Deprecated
+  standardButton(buttonSelector = undefined) {
+    return this.testStandardButton(buttonSelector);
+  }
+
   testRefreshButton(options) {
     // Options
     const normalizedOptions = this._testRefreshButtonOptions(options);
     const { collection, respondWithData, tableSelector } = normalizedOptions;
-
-    // Data responses
-    const dataCallbacks = [...respondWithData];
-    // Create a new object before returning the first response.
-    dataCallbacks[0] = () => {
-      collection.createNew();
-      const callback = respondWithData[0];
-      return callback();
-    };
 
     // Helper functions
     const testRowCount = (component) => {
@@ -783,23 +779,33 @@ class MockHttp {
       const rowCount = tables[0].find('tbody tr').length;
       rowCount.should.equal(collection.size);
     };
-    const clickRefreshButton = (component) =>
-      trigger.click(component.first('.btn-refresh'));
 
-    let series = this
-      // Series 1: Test that the table is initially rendered as expected.
-      .respondWithData(dataCallbacks)
-      .afterResponses(testRowCount)
-      // Series 2: Click the refresh button and return a successful response (or
-      // responses). The table should not disappear during the refresh, and it
-      // should be updated afterwards.
-      .request(clickRefreshButton)
-      .respondWithData(dataCallbacks)
+    // Series 1: Test that the table is initially rendered as expected.
+    let series = this.respondWithData(() => {
+      collection.createNew();
+      return respondWithData[0]();
+    });
+    for (let i = 1; i < respondWithData.length; i += 1)
+      series = series.respondWithData(respondWithData[i]);
+    series = series.afterResponses(testRowCount);
+    // Series 2: Click the refresh button and return a successful response (or
+    // responses). The table should not disappear during the refresh, and it
+    // should be updated afterwards.
+    series = series
+      .request(component => trigger.click(component, '.btn-refresh'))
+      .respondWithData(() => {
+        collection.createNew();
+        return respondWithData[0]();
+      });
+    for (let i = 1; i < respondWithData.length; i += 1)
+      series = series.respondWithData(respondWithData[i]);
+    series = series
       .beforeEachResponse(testRowCount)
-      .afterResponses(testRowCount)
-      // Series 3: Click the refresh button again, this time returning a problem
-      // response (or responses).
-      .request(clickRefreshButton);
+      .afterResponses(testRowCount);
+    // Series 3: Click the refresh button again, this time returning a Problem
+    // response (or responses).
+    series = series
+      .request(component => trigger.click(component, '.btn-refresh'));
     for (let i = 0; i < respondWithData.length; i += 1)
       series = series.respondWithProblem();
     return series.afterResponses(component => {
@@ -849,6 +855,8 @@ class MockHttp {
   catch(onRejected) { return this.promise().catch(onRejected); }
   finally(onFinally) { return this.promise().finally(onFinally); }
 }
+
+Object.assign(MockHttp.prototype, commonTests);
 
 export const mockHttp = () => new MockHttp();
 

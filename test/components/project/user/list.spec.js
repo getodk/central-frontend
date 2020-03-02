@@ -135,7 +135,7 @@ describe('ProjectUserList', () => {
         .route('/projects/1/settings')
         .complete()
         .route('/projects/1/users')
-        .respondWithData([/* no responses */]);
+        .testNoRequest();
     });
 
     describe('before the initial data is received', () => {

@@ -63,7 +63,7 @@ describe('FieldKeyList', () => {
         .route('/projects/1/settings')
         .complete()
         .route('/projects/1/app-users')
-        .respondWithData([/* no responses */]));
+        .testNoRequest());
 
     it('table contains the correct data', () =>
       mockRoute('/projects/1/app-users')

@@ -173,7 +173,7 @@ describe('SubmissionList', () => {
         .respondWithData(() => []) // formActors
         .complete()
         .route('/projects/1/forms/f/submissions')
-        .respondWithData([/* no responses */]));
+        .testNoRequest());
 
     describe('table data', () => {
       it('contains the correct data for the left half of the table', () => {
@@ -812,10 +812,9 @@ describe('SubmissionList', () => {
               return testData.submissionOData(1, 0);
             })
             .complete()
-            .request(component => {
+            .testNoRequest(component => {
               component.vm.onScroll();
-            })
-            .respondWithData([/* no responses */]));
+            }));
 
         it('does nothing upon scroll if schema request results in error', () =>
           mockHttp()
@@ -842,10 +841,9 @@ describe('SubmissionList', () => {
               return testData.submissionOData(1, 0);
             })
             .complete()
-            .request(component => {
+            .testNoRequest(component => {
               component.vm.onScroll();
-            })
-            .respondWithData([/* no responses */]));
+            }));
 
         it('does nothing upon scroll if submissions request results in error', () =>
           mockHttp()
@@ -869,19 +867,17 @@ describe('SubmissionList', () => {
             .respondWithData(() => testData.extendedForms.last()._schema)
             .respondWithProblem()
             .complete()
-            .request(component => {
+            .testNoRequest(component => {
               component.vm.onScroll();
-            })
-            .respondWithData([/* no responses */]));
+            }));
 
         it('does nothing after user scrolls somewhere other than bottom of page', () => {
           createSubmissions(5);
           return loadSubmissionList([2], false)
             .complete()
-            .request(component => {
+            .testNoRequest(component => {
               component.vm.onScroll();
-            })
-            .respondWithData([/* no responses */]);
+            });
         });
 
         it('clicking refresh button loads first chunk, even after scrolling', () => {
