@@ -29,6 +29,7 @@ module.exports = {
     'no-console': 'error',
     'no-debugger': 'error',
     'no-multiple-empty-lines': ['error', { max: 3 }],
+    'no-nested-ternary': 'off',
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
     'no-underscore-dangle': 'off',
     'nonblock-statement-body-position': 'off',
