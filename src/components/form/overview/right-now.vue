@@ -15,17 +15,11 @@ except according to the terms contained in the LICENSE file.
       <span>Right Now</span>
     </template>
     <template #body>
-      <summary-item icon="file-o">
-        <template #heading>
-          <span :class="versionClass" :title="versionOrBlank">
-            {{ versionOrBlank }}
-          </span>
-          <span><form-version-standard-buttons :version="form"/></span>
-        </template>
+      <form-version-summary-item :version="form">
         <template #body>
-          <strong>Published version</strong> of this Form.
+          <p><strong>Published version</strong> of this Form.</p>
         </template>
-      </summary-item>
+      </form-version-summary-item>
       <summary-item :route-to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ form.submissions.toLocaleString() }}
@@ -45,7 +39,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
+import FormVersionSummaryItem from '../../form-version/summary-item.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 import routes from '../../../mixins/routes';
@@ -53,49 +47,10 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
-  components: { FormVersionStandardButtons, PageSection, SummaryItem },
+  components: { FormVersionSummaryItem, PageSection, SummaryItem },
   mixins: [routes()],
-  computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['form']),
-    versionClass() {
-      const htmlClass = ['form-version'];
-      if (this.form.version === '') htmlClass.push('blank-form-version');
-      return htmlClass;
-    },
-    versionOrBlank() {
-      return this.form.version !== '' ? this.form.version : '(blank)';
-    }
-  }
+  // The component assumes that this data will exist when the component is
+  // created.
+  computed: requestData(['form'])
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/variables';
-
-#form-overview-right-now {
-  .form-version {
-    display: inline-block;
-    font-family: $font-family-monospace;
-    max-width: calc(100% - 102px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    + span {
-      bottom: 10px;
-      margin-left: 12px;
-      position: relative;
-    }
-  }
-
-  .blank-form-version {
-    font-family: inherit;
-
-    + span {
-      bottom: 5px;
-    }
-  }
-}
-</style>

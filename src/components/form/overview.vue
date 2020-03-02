@@ -24,8 +24,32 @@ except according to the terms contained in the LICENSE file.
           </template>
         </page-section>
       </div>
-      <div class="col-xs-6">
-        <!-- TODO -->
+      <div id="form-overview-draft" class="col-xs-6">
+        <page-section v-if="formDraft.isDefined()" condensed>
+          <template #heading>
+            <span>Your Current Draft</span>
+          </template>
+          <template #body>
+            <form-version-summary-item :version="formDraft.get()">
+              <template #body>
+                <p><strong>Draft version</strong> of this Form.</p>
+              </template>
+            </form-version-summary-item>
+            <form-draft-checklist/>
+          </template>
+        </page-section>
+        <page-section v-else condensed>
+          <template #heading>
+            <span>No Current Draft</span>
+          </template>
+          <template #body>
+            <p>
+              There is not currently a Draft version of this Form. If you want
+              to make changes to the Form or its Media Files, start by creating
+              a Draft using the button above.
+            </p>
+          </template>
+        </page-section>
       </div>
     </div>
   </div>
@@ -33,7 +57,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormChecklist from './checklist.vue';
+import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
+import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import validateData from '../../mixins/validate-data';
@@ -41,11 +67,20 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['project', 'form', 'attachments', 'formActors'];
+// The component does not assume that this data will exist when the component is
+// created.
+const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments', 'formActors'];
 
 export default {
   name: 'FormOverview',
-  components: { FormChecklist, FormOverviewRightNow, Loading, PageSection },
+  components: {
+    FormChecklist,
+    FormDraftChecklist,
+    FormOverviewRightNow,
+    FormVersionSummaryItem,
+    Loading,
+    PageSection
+  },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -58,9 +93,7 @@ export default {
     }
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(REQUEST_KEYS),
+    ...requestData(['formDraft']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
@@ -85,3 +118,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#form-overview-draft {
+  background-color: #ddd;
+  margin-top: -$margin-top-page-body;
+  padding-top: $margin-top-page-body;
+
+  .page-section-heading > span:first-child {
+    color: $color-accent-secondary;
+  }
+}
+</style>

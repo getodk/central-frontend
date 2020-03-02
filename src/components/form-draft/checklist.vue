@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
 
@@ -10,23 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="page-body" class="row">
-    <div class="col-xs-12">
-      <slot></slot>
-    </div>
-  </div>
+  <div id="form-draft-checklist"></div>
 </template>
 
 <script>
 export default {
-  name: 'PageBody'
+  name: 'FormDraftChecklist'
 };
 </script>
-
-<style lang="scss">
-@import '../../assets/scss/variables';
-
-#page-body {
-  margin-top: $margin-top-page-body;
-}
-</style>
