@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
           <router-link :to="tabPath('')">Web Users</router-link>
         </li>
         <li class="disabled" role="presentation">
-          <a href="#" @click.prevent>
+          <a href="#">
             Role Settings <span class="coming-soon">(coming soon)</span>
           </a>
         </li>

@@ -504,13 +504,21 @@ a {
       }
     }
 
-    &.disabled > a {
-      &, &:hover, &:focus {
-        color: #999;
+    &.disabled {
+      &:hover {
+        cursor: not-allowed;
       }
 
-      &:hover, &:focus {
-        border-bottom-color: transparent;
+      > a {
+        pointer-events: none;
+
+        &, &:focus {
+          color: #999;
+        }
+
+        &:focus {
+          border-bottom-color: transparent;
+        }
       }
     }
   }
