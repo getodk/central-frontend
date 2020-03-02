@@ -1056,7 +1056,7 @@ describe('FormAttachmentList', () => {
         testSingleFileSelection((app, files) =>
           trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
 
-        describe('confirming the upload', () =>
+        describe('confirming the upload', () => {
           testSingleFileUpload(attachmentName =>
             loadAttachments({ route: true })
               .afterResponses(app => trigger.dragAndDrop(
@@ -1065,7 +1065,8 @@ describe('FormAttachmentList', () => {
                 { files: blankFiles([attachmentName]), ie }
               ))
               .request(app =>
-                trigger.click(app, '#form-attachment-popups-main .btn-primary'))));
+                trigger.click(app, '#form-attachment-popups-main .btn-primary')));
+        });
       });
     });
   }
@@ -1107,6 +1108,19 @@ describe('FormAttachmentList', () => {
 
   describe('dragging and dropping a single file over a row', () => {
     beforeEach(mockLogin);
+
+    const dragAndDropOntoRow = (app, attachmentName, filename) => {
+      const tr = app.find('#form-attachment-list-table tbody tr');
+      const attachments = testData.standardFormAttachments.sorted();
+      tr.length.should.equal(attachments.length);
+      for (let i = 0; i < tr.length; i += 1) {
+        if (attachments[i].name === attachmentName) {
+          return trigger.dragAndDrop(tr[i], blankFiles([filename]))
+            .then(() => app);
+        }
+      }
+      throw new Error('matching attachment not found');
+    };
 
     describe('drag over a row of the table', () => {
       it('highlights only the target row', () => {
@@ -1173,80 +1187,70 @@ describe('FormAttachmentList', () => {
       });
     });
 
-    const dragAndDropOntoRow = (app, attachmentName, filename) => {
-      const tr = app.find('#form-attachment-list-table tbody tr');
-      const attachments = testData.standardFormAttachments.sorted();
-      tr.length.should.equal(attachments.length);
-      for (let i = 0; i < tr.length; i += 1) {
-        if (attachments[i].name === attachmentName) {
-          return trigger.dragAndDrop(tr[i], blankFiles([filename]))
-            .then(() => app);
-        }
-      }
-      throw new Error('matching attachment not found');
-    };
-
-    describe('drop over an attachment with the same name', () => {
+    describe('dropping over an attachment with the same name', () => {
       testSingleFileUpload(attachmentName => loadAttachments({ route: true })
         .complete()
         .request(app =>
           dragAndDropOntoRow(app, attachmentName, attachmentName)));
     });
 
-    describe('drop over an attachment with a different name', () => {
-      const dropMismatchingFile = (attachmentName) =>
-        loadAttachments({ route: true }).afterResponses(app =>
-          dragAndDropOntoRow(app, attachmentName, 'mismatching_file'));
-
-      describe('name mismatch modal', () => {
-        beforeEach(() => {
-          testData.standardFormAttachments
-            .createPast(1, { name: 'a', exists: true })
-            .createPast(1, { name: 'b', exists: false });
-        });
-
-        it('is initially hidden', () =>
-          loadAttachments({ route: true })
-            .then(app => {
-              const modal = app.first(FormAttachmentNameMismatch);
-              modal.getProp('state').should.be.false();
-            }));
-
-        it('is shown after the drop', () =>
-          dropMismatchingFile('a')
-            .then(app => {
-              const modal = app.first(FormAttachmentNameMismatch);
-              modal.getProp('state').should.be.true();
-            }));
-
-        it('is hidden upon cancel', () =>
-          dropMismatchingFile('a')
-            .then(app => {
-              const modal = app.first(FormAttachmentNameMismatch);
-              return trigger.click(modal, '.btn-link');
-            })
-            .then(modal => {
-              modal.getProp('state').should.be.false();
-            }));
-
-        it('renders correctly for an existing attachment', () =>
-          dropMismatchingFile('a')
-            .then(app => {
-              const modal = app.first(FormAttachmentNameMismatch);
-              const title = modal.first('.modal-title').text().trim();
-              title.should.equal('Replace File');
-            }));
-
-        it('renders correctly for a missing attachment', () =>
-          dropMismatchingFile('b')
-            .then(app => {
-              const modal = app.first(FormAttachmentNameMismatch);
-              const title = modal.first('.modal-title').text().trim();
-              title.should.equal('Upload File');
-            }));
+    describe('name mismatch modal', () => {
+      beforeEach(() => {
+        testData.standardFormAttachments
+          .createPast(1, { name: 'a', exists: true })
+          .createPast(1, { name: 'b', exists: false });
       });
 
-      testSingleFileUpload(attachmentName => dropMismatchingFile(attachmentName)
+      it('is shown after the drop', () =>
+        loadAttachments({ route: true })
+          .afterResponses(app => {
+            const modal = app.first(FormAttachmentNameMismatch);
+            modal.getProp('state').should.be.false();
+            return app;
+          })
+          .then(app => dragAndDropOntoRow(app, 'a', 'mismatching_file'))
+          .then(app => {
+            const modal = app.first(FormAttachmentNameMismatch);
+            modal.getProp('state').should.be.true();
+          }));
+
+      it('is hidden upon cancel', () =>
+        loadAttachments({ route: true })
+          .afterResponses(app =>
+            dragAndDropOntoRow(app, 'a', 'mismatching_file'))
+          .then(app => {
+            const modal = app.first(FormAttachmentNameMismatch);
+            return trigger.click(modal, '.btn-link');
+          })
+          .then(modal => {
+            modal.getProp('state').should.be.false();
+          }));
+
+      it('renders correctly for an existing attachment', () =>
+        loadAttachments({ route: true })
+          .afterResponses(app =>
+            dragAndDropOntoRow(app, 'a', 'mismatching_file'))
+          .then(app => {
+            const modal = app.first(FormAttachmentNameMismatch);
+            const title = modal.first('.modal-title').text().trim();
+            title.should.equal('Replace File');
+          }));
+
+      it('renders correctly for a missing attachment', () =>
+        loadAttachments({ route: true })
+          .afterResponses(app =>
+            dragAndDropOntoRow(app, 'b', 'mismatching_file'))
+          .then(app => {
+            const modal = app.first(FormAttachmentNameMismatch);
+            const title = modal.first('.modal-title').text().trim();
+            title.should.equal('Upload File');
+          }));
+    });
+
+    describe('uploading after a name mismatch', () => {
+      testSingleFileUpload(attachmentName => loadAttachments({ route: true })
+        .afterResponses(app =>
+          dragAndDropOntoRow(app, attachmentName, 'mismatching_file'))
         .request(app => {
           const modal = app.first(FormAttachmentNameMismatch);
           return trigger.click(modal, '.btn-primary').then(() => app);
