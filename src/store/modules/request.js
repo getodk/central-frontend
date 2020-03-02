@@ -14,10 +14,10 @@ import { DateTime } from 'luxon';
 import { mapState } from 'vuex';
 
 import Audit from '../../presenters/audit';
-import BackupsConfig from '../../presenters/backups-config';
 import FieldKey from '../../presenters/field-key';
 import Form from '../../presenters/form';
 import FormAttachment from '../../presenters/form-attachment';
+import Option from '../../util/option';
 import Project from '../../presenters/project';
 import User from '../../presenters/user';
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
@@ -54,7 +54,10 @@ const allKeys = [
   'audits'
 ];
 
-// Functions to transform responses (by key)
+// Define functions to transform responses.
+const optional = (transform = undefined) => (response) => (response.status === 200
+  ? Option.of(transform != null ? transform(response) : response.data)
+  : Option.none());
 export const transforms = {
   session: ({ data }) => ({
     token: data.token,
@@ -73,14 +76,14 @@ export const transforms = {
     data.map(attachment => new FormAttachment(attachment)),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
-  backupsConfig: (response) => BackupsConfig.fromResponse(response),
+  backupsConfig: optional(),
   audits: ({ data }) => data.map(audit => new Audit(audit))
 };
 
 export default {
   state: {
-    // Using allKeys.reduce() in part so that there is a reactive property for
-    // each key.
+    // Using allKeys.reduce() in part so that `requests` has a reactive property
+    // for each key.
     requests: allKeys.reduce(
       (acc, key) => {
         // An object used to manage requests for the key
@@ -98,9 +101,16 @@ export default {
       },
       {}
     ),
-    // `data` has a reactive property for each key. However, if the value of a
-    // reactive property is itself a object, that object's properties are not
-    // reactive. If you need one of them to be, use setDataProp().
+    /*
+    `data` contains all response data, mapping each key to its data. `data` has
+    a reactive property for each key.
+
+    If the value of the property associated with a key is `null`, that means
+    that either no response has been received for the key, or the associated
+    data has been cleared. It does not mean that a response has been received
+    for the key, and the data itself is simply null or nonexistent. To implement
+    the latter case, transform the response and return an Option.
+    */
     data: allKeys.reduce(
       (acc, key) => {
         acc[key] = null;
@@ -152,7 +162,39 @@ export default {
 
     fieldKeysWithToken: ({ data }) => (data.fieldKeys != null
       ? data.fieldKeys.filter(fieldKey => fieldKey.token != null)
-      : null)
+      : null),
+
+    // Returns the backup attempts for the current backups config.
+    auditsForBackupsConfig: ({ data }) => {
+      const { audits, backupsConfig } = data;
+      if (audits == null || backupsConfig == null) return null;
+      if (backupsConfig.isEmpty()) return [];
+
+      const result = [];
+      for (const audit of audits) {
+        if (audit.loggedAt < backupsConfig.get().setAt) {
+          // Any backup attempts that follow are for a previous config: `audits`
+          // is sorted descending by loggedAt.
+          break;
+        }
+        // eslint-disable-next-line no-continue
+        if (audit.action !== 'backup') continue;
+
+        const { details } = audit;
+        /* This will evaluate to `false` only if an attempt for a previous
+        config was logged after the current config was created, which seems
+        unlikely. A failed attempt might not have a configSetAt property, which
+        means that if a failed attempt was logged after the current config was
+        created, we might not be able to determine whether the attempt
+        corresponds to the current config or (again unlikely) to a previous one.
+        We assume that an attempt without a configSetAt property corresponds to
+        the current config. */
+        if (details.configSetAt === backupsConfig.get().setAt ||
+          details.configSetAt == null)
+          result.push(audit);
+      }
+      return result;
+    }
   },
   mutations: {
     /* eslint-disable no-param-reassign */

@@ -2,6 +2,8 @@ import { comparator, omit } from 'ramda';
 
 import faker from '../faker';
 import { dataStore, view } from './data-store';
+import { isBefore } from '../util/date-time';
+import { standardBackupsConfigs } from './backups-configs';
 import { toActor } from './actors';
 
 // An audit object does not have a createdAt property, but it does have a
@@ -35,7 +37,7 @@ const auditsWithCreatedAt = dataStore({
     }
     if (details != null) audit.details = details;
     if (loggedAt != null) {
-      if (lastCreatedAt != null && loggedAt < lastCreatedAt)
+      if (lastCreatedAt != null && isBefore(loggedAt, lastCreatedAt))
         throw new Error('invalid loggedAt');
       audit.loggedAt = loggedAt;
     } else {
@@ -44,7 +46,8 @@ const auditsWithCreatedAt = dataStore({
     audit.createdAt = audit.loggedAt;
     return audit;
   },
-  sort: comparator((audit1, audit2) => audit1.loggedAt > audit2.loggedAt)
+  sort: comparator((audit1, audit2) =>
+    isBefore(audit2.loggedAt, audit1.loggedAt))
 });
 
 export const extendedAudits = view(auditsWithCreatedAt, omit(['createdAt']));
@@ -52,3 +55,32 @@ export const standardAudits = view(
   auditsWithCreatedAt,
   omit(['actor', 'actee', 'createdAt'])
 );
+
+function createBackupAudit({ success, configSetAt = undefined, loggedAt }) {
+  const details = { success };
+  if (success) {
+    if (configSetAt != null)
+      details.configSetAt = configSetAt;
+    else if (standardBackupsConfigs.size === 1)
+      details.configSetAt = standardBackupsConfigs.last().setAt;
+    else
+      throw new Error('backups config not found');
+  } else {
+    const error = new Error('error');
+    details.stack = error.stack;
+    details.message = error.message;
+  }
+  if (loggedAt == null || isBefore(loggedAt, details.configSetAt))
+    throw new Error('invalid loggedAt');
+  auditsWithCreatedAt.createPast(1, {
+    actor: null,
+    action: 'backup',
+    actee: null,
+    details,
+    loggedAt
+  });
+  return this;
+}
+
+extendedAudits.createBackupAudit = createBackupAudit;
+standardAudits.createBackupAudit = createBackupAudit;

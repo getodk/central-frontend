@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="backup-status">
     <span id="backup-status-icon" :class="iconClass"></span>
 
-    <template v-if="backupsConfig.status === 'notConfigured'">
+    <template v-if="status === 'notConfigured'">
       <p>Backups are not configured.</p>
       <p>
         <strong>The data server has not been set up to automatically back up
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         unlock it.
       </p>
     </template>
-    <template v-else-if="backupsConfig.status === 'neverRun'">
+    <template v-else-if="status === 'neverRun'">
       <p>The configured backup has not yet run.</p>
       <p>
         If you have configured backups within the last couple of days, this is
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
           community forum</a>.
       </p>
     </template>
-    <template v-else-if="backupsConfig.status === 'somethingWentWrong'">
+    <template v-else-if="status === 'somethingWentWrong'">
       <p>Something is wrong!</p>
       <p>
         The latest backup that completed successfully was <strong>more than
@@ -68,7 +68,7 @@ except according to the terms contained in the LICENSE file.
       </p>
     </template>
 
-    <button v-if="backupsConfig.status === 'notConfigured'" type="button"
+    <button v-if="status === 'notConfigured'" type="button"
       class="btn btn-primary" @click="$emit('create')">
       <span class="icon-plus-circle"></span>Set up now
     </button>
@@ -80,15 +80,35 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util/date-time';
+import { DateTime } from 'luxon';
+import { mapGetters } from 'vuex';
+
+import { ago, formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupStatus',
   computed: {
+    // The component assumes that this data will exist when the component is
+    // created.
     ...requestData(['backupsConfig']),
+    ...mapGetters(['auditsForBackupsConfig']),
+    status() {
+      if (this.backupsConfig.isEmpty()) return 'notConfigured';
+      const latestAudit = this.auditsForBackupsConfig[0];
+      // The earliest DateTime that is still considered recent for the purposes
+      // of this component
+      const recentThreshold = ago({ days: 3 });
+      // No recent backup attempt
+      if (latestAudit == null ||
+        DateTime.fromISO(latestAudit.loggedAt) < recentThreshold) {
+        const setAt = DateTime.fromISO(this.backupsConfig.get().setAt);
+        return setAt < recentThreshold ? 'somethingWentWrong' : 'neverRun';
+      }
+      return latestAudit.details.success ? 'success' : 'somethingWentWrong';
+    },
     iconClass() {
-      switch (this.backupsConfig.status) {
+      switch (this.status) {
         case 'notConfigured':
           return 'icon-question-circle';
         case 'neverRun':
@@ -99,7 +119,7 @@ export default {
       }
     },
     mostRecentlyLoggedAt() {
-      return formatDate(this.backupsConfig.recent[0].loggedAt);
+      return formatDate(this.auditsForBackupsConfig[0].loggedAt);
     }
   }
 };

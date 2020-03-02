@@ -8,39 +8,32 @@ import { trigger } from '../../util/event';
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
-  describe('modal', () => {
-    it('does not show the modal initially', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithData(() => testData.backups.createPast(1).last())
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(component => {
-          component.first(BackupTerminate).getProp('state').should.be.false();
-        }));
+  it('shows the modal after the button is clicked', () =>
+    mockHttp()
+      .mount(BackupList)
+      .respondWithData(() =>
+        testData.standardBackupsConfigs.createPast(1).last())
+      .respondWithData(() => testData.standardAudits.sorted())
+      .afterResponses(component => {
+        component.first(BackupTerminate).getProp('state').should.be.false();
+        return trigger.click(component, '#backup-status button');
+      })
+      .then(component => {
+        component.first(BackupTerminate).getProp('state').should.be.true();
+      }));
 
-    it('shows the modal after the terminate button is clicked', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithData(() => testData.backups.createPast(1).last())
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(component =>
-          trigger.click(component, '#backup-status button'))
-        .then(component => {
-          component.first(BackupTerminate).getProp('state').should.be.true();
-        }));
-  });
-
-  it('standard button thinking things', () =>
+  it('implements some standard button things', () =>
     mockHttp()
       .mount(BackupTerminate)
       .request(component =>
         trigger.click(component, '#backup-terminate .btn-danger'))
       .standardButton('.btn-danger'));
 
-  describe('after successful response', () => {
+  describe('after a successful response', () => {
     let app;
     beforeEach(() => mockRoute('/system/backups')
-      .respondWithData(() => testData.backups.createPast(1).last())
+      .respondWithData(() =>
+        testData.standardBackupsConfigs.createPast(1).last())
       .respondWithData(() => testData.standardAudits.sorted())
       .afterResponses(component => {
         app = component;
@@ -49,16 +42,16 @@ describe('BackupTerminate', () => {
         .then(() => trigger.click(app, '#backup-terminate .btn-danger')))
       .respondWithSuccess());
 
-    it('modal is hidden', () => {
+    it('hides the modal', () => {
       app.first(BackupTerminate).getProp('state').should.be.false();
     });
 
-    it('backup status is updated', () => {
+    it('updates the backups status', () => {
       const { backupsConfig } = app.vm.$store.state.request.data;
-      backupsConfig.status.should.equal('notConfigured');
+      backupsConfig.isEmpty().should.be.true();
     });
 
-    it('success message is shown', () => {
+    it('shows a success alert', () => {
       app.should.alert('success');
     });
   });

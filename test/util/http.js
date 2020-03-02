@@ -46,7 +46,7 @@ First, specify a component to mount. Some components will send a request after
 being mounted, for example:
 
   mockHttp()
-    .mount(BackupList);
+    .mount(AuditList, { router });
 
 Other components will not send a request. Specify a request after mounting the
 component:
@@ -67,13 +67,13 @@ If you already have a mounted component, you can skip mockHttp().mount():
   ...
 
   mockHttp()
-    .request(component => trigger.click(component, '#navbar-users-link'));
+    .request(() => submitLoginForm(component, 'example@opendatakit.org'));
 
 After specifying the request, specify the response as a callback:
 
   mockHttp()
-    .mount(BackupList)
-    .respondWithData(() => testData.backups.createPast(1).last());
+    .mount(AuditList, { router })
+    .respondWithData(() => testData.extendedAudits.sorted());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
@@ -150,7 +150,7 @@ cycles: series can be chained. For example:
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
-    })
+    });
 
 Notice how the mounted component is passed to each request() and
 afterResponses() callback, even in the second series.

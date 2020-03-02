@@ -43,34 +43,25 @@ const completeSetup = (component) => {
   return moveToStep3(component)
     .request(next3)
     .respondWithSuccess()
-    .respondWithData(() => testData.backups.createNew())
+    .respondWithData(() => testData.standardBackupsConfigs.createNew())
     .respondWithData(() => testData.standardAudits.sorted());
 };
 
 describe('BackupNew', () => {
   beforeEach(mockLogin);
 
-  describe('modal', () => {
-    it('does not show the modal initially', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithProblem(404.1)
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(component => {
-          component.first(BackupNew).getProp('state').should.be.false();
-        }));
-
-    it('shows the modal after the "Set up now" button is clicked', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithProblem(404.1)
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(component =>
-          trigger.click(component, '#backup-status button'))
-        .then(page => {
-          page.first(BackupNew).getProp('state').should.be.true();
-        }));
-  });
+  it('shows the modal after the button is clicked', () =>
+    mockHttp()
+      .mount(BackupList)
+      .respondWithProblem(404.1)
+      .respondWithData(() => testData.standardAudits.sorted())
+      .afterResponses(component => {
+        component.first(BackupNew).getProp('state').should.be.false();
+        return trigger.click(component, '#backup-status button');
+      })
+      .then(component => {
+        component.first(BackupNew).getProp('state').should.be.true();
+      }));
 
   describe('step 1', () => {
     it('field is focused', () =>
@@ -94,19 +85,19 @@ describe('BackupNew', () => {
         .standardButton());
   });
 
-  describe('after successful setup', () => {
-    it('modal is hidden', () =>
+  describe('after setup is successful', () => {
+    it('hides the modal', () =>
       completeSetup(BackupList).then(page => {
         page.first(BackupNew).getProp('state').should.be.false();
       }));
 
-    it('backup status is updated', () =>
+    it('updates the backups status', () =>
       completeSetup(BackupList).then(page => {
         const { backupsConfig } = page.vm.$store.state.request.data;
-        backupsConfig.status.should.not.equal('notConfigured');
+        backupsConfig.isDefined().should.be.true();
       }));
 
-    it('success message is shown', () =>
+    it('shows a success alert', () =>
       completeSetup(App).then(app => app.should.alert('success')));
   });
 });

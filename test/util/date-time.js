@@ -1,5 +1,8 @@
 import { DateTime, Settings } from 'luxon';
 
+export const isBefore = (isoString1, isoString2) =>
+  DateTime.fromISO(isoString1) < DateTime.fromISO(isoString2);
+
 // Sets a single Luxon setting.
 const setLuxonSetting = (name, value) => {
   if (name === 'now') {
@@ -17,7 +20,6 @@ const setLuxonSetting = (name, value) => {
 };
 
 // Sets one or more Luxon settings.
-// eslint-disable-next-line import/prefer-default-export
 export const setLuxon = (settings) => {
   const original = {};
   for (const [name, value] of Object.entries(settings)) {

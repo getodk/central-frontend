@@ -11,6 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import { DateTime } from 'luxon';
 
+export const ago = (duration) => DateTime.local().minus(duration);
+
 const formatDatePart = (dateTime) => {
   const now = DateTime.local();
   if (now.hasSame(dateTime, 'day')) return 'Today';

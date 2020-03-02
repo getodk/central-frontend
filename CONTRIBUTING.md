@@ -40,6 +40,14 @@ Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap
 
 We use some, but not all, of Bootstrap's jQuery plugins. We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
 
+### HTTP Requests
+
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vuex store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
+
+### Presenter Classes
+
+Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters`](/src/presenters)). This class extends the [base presenter class](/src/presenters/base.js). When you use the `request` module of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the store will automatically wrap the response data within a presenter object.
+
 ### Learning About a Component
 
 To learn how a given component works, one of the best places to start is how the component communicates with its parent component:
@@ -47,10 +55,6 @@ To learn how a given component works, one of the best places to start is how the
 - Does the component have props?
 - Does it have slots?
 - Does it emit events?
-
-### HTTP Requests
-
-We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vuex store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
 
 ### Component Names
 

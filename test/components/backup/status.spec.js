@@ -1,6 +1,6 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
+import { ago, formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mountAndMark } from '../../util/destroy';
 
@@ -40,9 +40,15 @@ describe('BackupStatus', () => {
   it('renders correctly if the latest recent attempt was a success', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: testData.backups
-          .createPast(1, { recentAttemptsForCurrent: [true] })
-          .last()
+        backupsConfig: testData.standardBackupsConfigs
+          .createPast(1, { setAt: ago({ days: 4 }).toISO() })
+          .last(),
+        audits: testData.standardAudits
+          .createBackupAudit({
+            success: true,
+            loggedAt: ago({ days: 2 }).toISO()
+          })
+          .sorted()
       }
     });
 
@@ -54,16 +60,22 @@ describe('BackupStatus', () => {
     );
 
     const mrla = component.first('#backup-status-most-recently-logged-at');
-    const { loggedAt } = testData.backups.last().recent[0];
+    const { loggedAt } = testData.extendedAudits.last();
     mrla.text().trim().should.equal(formatDate(loggedAt));
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: testData.backups
-          .createPast(1, { recentAttemptsForCurrent: [false] })
-          .last()
+        backupsConfig: testData.standardBackupsConfigs
+          .createPast(1, { setAt: ago({ days: 2 }).toISO() })
+          .last(),
+        audits: testData.standardAudits
+          .createBackupAudit({
+            success: false,
+            loggedAt: ago({ days: 1 }).toISO()
+          })
+          .sorted()
       }
     });
     assertContent(
@@ -78,12 +90,32 @@ describe('BackupStatus', () => {
     it('renders correctly if the config was recently set up', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: true,
-              recentAttemptsForCurrent: []
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 2 }).toISO() })
+            .last(),
+          audits: []
+        }
+      });
+      assertContent(
+        component,
+        'icon-check-circle',
+        'The configured backup has not yet run.',
+        'Terminate'
+      );
+    });
+
+    it('renders correctly if latest attempt was a recent failure for previous config', () => {
+      const component = mountAndMark(BackupStatus, {
+        requestData: {
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 1 }).toISO() })
+            .last(),
+          audits: testData.standardAudits
+            .createBackupAudit({
+              success: false,
+              loggedAt: ago({ days: 2 }).toISO()
             })
-            .last()
+            .sorted()
         }
       });
       assertContent(
@@ -97,12 +129,10 @@ describe('BackupStatus', () => {
     it('renders correctly if the config was not recently set up', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: false,
-              recentAttemptsForCurrent: []
-            })
-            .last()
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 4 }).toISO() })
+            .last(),
+          audits: []
         }
       });
       assertContent(
@@ -113,22 +143,24 @@ describe('BackupStatus', () => {
       );
     });
 
-    it('renders correctly if latest recent attempt for a previous config failed', () => {
+    it('renders correctly if latest non-recent attempt was a success', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: true,
-              recentAttemptsForCurrent: [],
-              recentAttemptsForPrevious: [false]
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 5 }).toISO() })
+            .last(),
+          audits: testData.standardAudits
+            .createBackupAudit({
+              success: true,
+              loggedAt: ago({ days: 4 }).toISO()
             })
-            .last()
+            .sorted()
         }
       });
       assertContent(
         component,
-        'icon-check-circle',
-        'The configured backup has not yet run.',
+        'icon-times-circle',
+        'Something is wrong!',
         'Terminate'
       );
     });

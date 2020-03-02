@@ -1,5 +1,5 @@
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
+import { ago, formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
@@ -170,14 +170,16 @@ describe('AuditTable', () => {
 
   it('renders a backup audit correctly', () =>
     mockRoute('/system/backups')
-      .respondWithData(() => testData.backups
-        .createPast(1, {
-          recentAttemptsForCurrent: [true],
-          recentAttemptsForPrevious: []
-        })
+      .respondWithData(() => testData.standardBackupsConfigs
+        .createPast(1, { setAt: ago({ days: 2 }).toISO() })
         .last())
-      .respondWithData(() => testData.standardAudits.sorted())
-      .afterResponse(assertTriple(['Backup'], null, null)));
+      .respondWithData(() => testData.standardAudits
+        .createBackupAudit({
+          success: true,
+          loggedAt: ago({ days: 1 }).toISO()
+        })
+        .sorted())
+      .afterResponses(assertTriple(['Backup'], null, null)));
 
   it('renders an audit with an unknown action correctly', () =>
     mockRoute('/system/audits')
