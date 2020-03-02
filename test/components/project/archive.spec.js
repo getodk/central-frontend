@@ -51,10 +51,8 @@ describe('ProjectArchive', () => {
       })
       .request(() => trigger.click(app, '#project-settings-archive-button')
         .then(() => trigger.click(app, '#project-archive .btn-danger')))
-      .respondWithData(() => testData.extendedProjects.update(
-        testData.extendedProjects.last(),
-        { archived: true }
-      ))
+      .respondWithData(() =>
+        testData.extendedProjects.update(-1, { archived: true }))
       .respondWithData(() => testData.extendedForms.sorted()));
 
     it('redirects the user to the project overview', () => {

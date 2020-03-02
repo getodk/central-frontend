@@ -159,7 +159,7 @@ describe('ProjectEnableEncryption', () => {
         .request(app =>
           trigger.click(app, '#project-enable-encryption .btn-primary'))
         .respondWithData(() => testData.extendedProjects.update(
-          testData.extendedProjects.last(),
+          -1,
           { keyId: testData.standardKeys.createNew({ managed: true }).id }
         ))
         .afterResponse(app => {
