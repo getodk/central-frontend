@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-head/>
+    <form-head @fetch-draft="fetchDraft"/>
     <page-body>
       <loading :state="initiallyLoading"/>
       <div v-show="dataExists">

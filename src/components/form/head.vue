@@ -66,8 +66,10 @@ except according to the terms contained in the LICENSE file.
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
             <button v-show="formDraft.isEmpty()" id="form-head-new-draft-button"
-              type="primary" class="btn btn-primary">
+              type="primary" class="btn btn-primary"
+              :disabled="awaitingResponse" @click="createDraft">
               <span class="icon-plus-circle"></span>Create a new Draft
+              <spinner :state="awaitingResponse"/>
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
               <li v-if="canRoute(tabPath('draft/status'))"
@@ -102,15 +104,25 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
+import Spinner from '../spinner.vue';
+import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormHead',
-  mixins: [routes(), tab()],
+  components: { Spinner },
+  mixins: [request(), routes(), tab()],
+  data() {
+    return {
+      awaitingResponse: false
+    };
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -141,6 +153,14 @@ export default {
       if (this.form != null && this.form.publishedAt == null)
         htmlClass.disabled = true;
       return htmlClass;
+    },
+    createDraft() {
+      this.post(apiPaths.formDraft(this.form.projectId, this.form.xmlFormId))
+        .then(() => {
+          this.$emit('fetch-draft');
+          this.$router.push(this.formPath('draft/status'));
+        })
+        .catch(noop);
     }
   }
 };
