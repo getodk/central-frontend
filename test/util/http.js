@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import App from '../../src/components/app.vue';
 import Spinner from '../../src/components/spinner.vue';
+import respondFor from './http/respond-for';
 import router from '../../src/router';
 import store from '../../src/store';
 import testData from '../data';
@@ -36,7 +37,7 @@ export const setHttp = (respond) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// mockHttp()
+// mockHttp(), mockRoute(), load()
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -260,32 +261,30 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(callbackOrCallbacks) {
-    if (Array.isArray(callbackOrCallbacks)) {
-      return callbackOrCallbacks
-        .reduce((acc, callback) => acc.respondWithData(callback), this);
-    }
-    return this._respond(() => ({
-      status: 200,
-      data: callbackOrCallbacks()
-    }));
+  respond(callback) {
+    return this._with({
+      responses: [
+        ...this._responses,
+        () => {
+          const result = callback();
+          const { problem } = result;
+          if (problem == null) return { status: 200, data: result };
+          if (typeof problem === 'object')
+            return { status: Math.floor(problem.code), data: problem };
+          return {
+            status: Math.floor(problem),
+            data: { code: problem, message: 'There was a problem.' }
+          };
+        }
+      ]
+    });
   }
 
-  respondWithSuccess() {
-    return this.respondWithData(() => ({
-      status: 200,
-      data: { success: true }
-    }));
-  }
+  respondWithData(callback) { return this.respond(callback); }
+  respondWithSuccess() { return this.respond(() => ({ success: true })); }
 
   respondWithProblem(problemOrCode = 500.1) {
-    const problem = typeof problemOrCode === 'object'
-      ? problemOrCode
-      : { code: problemOrCode, message: 'There was a problem.' };
-    return this._respond(() => ({
-      status: Math.floor(problem.code),
-      data: problem
-    });
+    return this.respond(() => ({ problem: problemOrCode }));
   }
 
   restoreSession(restore) {
@@ -299,8 +298,14 @@ class MockHttp {
       });
   }
 
-  _respond(callback) {
-    return this._with({ responses: [...this._responses, callback] });
+  respondFor(location, options = undefined) {
+    const respond = respondFor[router.resolve(location).route.name];
+    if (respond == null) throw new Error('invalid location');
+    return respond(this, options);
+  }
+
+  load(location, options) {
+    return this.route(location).respondFor(location, options);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -859,7 +864,18 @@ class MockHttp {
 Object.assign(MockHttp.prototype, commonTests);
 
 export const mockHttp = () => new MockHttp();
-
-export const mockRoute = (location, mountOptions = {}) => mockHttp()
+export const mockRoute = (location, mountOptions = undefined) => mockHttp()
   .mount(App, { ...mountOptions, router })
   .route(location);
+export const load = (
+  location,
+  mountOptions = undefined,
+  respondForOptions = undefined
+) => {
+  // Prevent the user from accidentally specifying respondForOptions without
+  // mountOptions.
+  if (mountOptions != null && respondForOptions == null)
+    throw new Error('specify either both sets of options or neither');
+  return mockRoute(location, mountOptions)
+    .respondFor(location, respondForOptions);
+};
