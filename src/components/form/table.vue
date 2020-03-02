@@ -10,10 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <p v-if="forms.length === 0" id="form-list-empty-message">
-    There are no Forms to show.
-  </p>
-  <table v-else id="form-list-table" class="table">
+  <table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -33,36 +30,8 @@ import FormRow from './row.vue';
 import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'FormList',
+  name: 'FormTable',
   components: { FormRow },
   computed: requestData(['forms'])
 };
 </script>
-
-<style lang="scss">
-@import '../../assets/scss/variables';
-
-#form-list-table {
-  tbody td {
-    vertical-align: middle;
-
-    .form-list-form-name {
-      color: unset;
-      font-size: 30px;
-      text-decoration: unset;
-
-      .icon-angle-right {
-        color: $color-accent-primary;
-        font-size: 20px;
-        margin-left: 3px;
-        margin-right: 0;
-        vertical-align: 2px;
-      }
-    }
-
-    .form-list-form-id {
-      font-size: 18px;
-    }
-  }
-}
-</style>

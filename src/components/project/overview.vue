@@ -31,7 +31,10 @@ except according to the terms contained in the LICENSE file.
           </button>
         </template>
         <template #body>
-          <form-list v-if="forms != null"/>
+          <form-table/>
+          <p v-if="forms.length === 0" class="empty-table-message">
+            There are no Forms to show.
+          </p>
         </template>
       </page-section>
     </template>
@@ -41,8 +44,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
+import FormTable from '../form/table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectOverviewAbout from './overview/about.vue';
@@ -57,8 +60,8 @@ const REQUEST_KEYS = ['project', 'forms'];
 export default {
   name: 'ProjectOverview',
   components: {
-    FormList,
     FormNew,
+    FormTable,
     Loading,
     PageSection,
     ProjectOverviewAbout,

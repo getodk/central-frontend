@@ -105,7 +105,7 @@ describe('ProjectFormAccess', () => {
           formSummaryAssignments: []
         }
       });
-      component.find('.empty-table-message').length.should.equal(1);
+      component.first('.empty-table-message').should.be.visible();
     });
 
     describe("changing a form's state", () => {

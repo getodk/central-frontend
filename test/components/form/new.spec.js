@@ -1,4 +1,5 @@
 import FormNew from '../../../src/components/form/new.vue';
+import FormRow from '../../../src/components/form/row.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
 import { mockHttp, mockRoute } from '../../util/http';
@@ -227,7 +228,7 @@ describe('FormNew', () => {
         .route('/projects/1')
         .respondWithData(() => testData.extendedForms.sorted())
         .afterResponse(() => {
-          app.find('#form-list-table tbody tr').length.should.equal(2);
+          app.find(FormRow).length.should.equal(2);
         }));
   });
 
