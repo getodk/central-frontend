@@ -1,3 +1,5 @@
+import { isBefore } from '../util/date-time';
+
 // An array-like collection of objects. Objects may be created, read, sorted,
 // and deleted. The objects are ordered within the collection in order of
 // creation.
@@ -47,26 +49,18 @@ class Store extends Collection {
 
   reset() {
     this._objects = [];
-    this._createdNew = false;
     this._id = 0;
     this._lastCreatedAt = null;
   }
 
   createPast(count, options = undefined) {
-    if (count === 0) return this;
-    // We could remove this restriction, but it would require reworking
-    // this._lastCreatedAt and maybe other things.
-    if (this._createdNew)
-      throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1)
       this._create(true, options);
     return this;
   }
 
   createNew(options = undefined) {
-    const object = this._create(false, options);
-    this._createdNew = true;
-    return object;
+    return this._create(false, options);
   }
 
   _create(inPast, options = undefined) {
@@ -89,8 +83,13 @@ class Store extends Collection {
       // should be greater than or equal to lastCreatedAt.
       lastCreatedAt: this._lastCreatedAt
     });
-    this._objects.push(object);
+
+    if (object.createdAt != null && this._lastCreatedAt != null &&
+      isBefore(object.createdAt, this._lastCreatedAt))
+      throw new Error('invalid createdAt');
     this._lastCreatedAt = object.createdAt;
+
+    this._objects.push(object);
     return object;
   }
 
