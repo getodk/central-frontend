@@ -9,9 +9,8 @@ describe('ProjectOverviewRightNow', () => {
   it('is not shown to a project viewer', () => {
     mockLogin({ role: 'none' });
     return mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects
-        .createPast({ role: 'viewer', forms: 0 })
-        .last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { role: 'viewer' }).last())
       .respondWithData(() => testData.extendedForms.sorted())
       .afterResponses(app => {
         app.find(ProjectOverviewRightNow).length.should.equal(0);
@@ -23,9 +22,8 @@ describe('ProjectOverviewRightNow', () => {
 
     it('shows the count', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { appUsers: 3, forms: 0 })
-          .last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 3 }).last())
         .respondWithData(() => testData.extendedForms.sorted())
         .afterResponses(app => {
           const items = app.find(SummaryItem);
@@ -36,9 +34,8 @@ describe('ProjectOverviewRightNow', () => {
 
     it('links to the app users page', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { appUsers: 1, forms: 0 })
-          .last())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedForms.sorted())
         .afterResponses(app => {
           const items = app.find(SummaryItem);
@@ -54,12 +51,9 @@ describe('ProjectOverviewRightNow', () => {
 
     it('shows the count', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { forms: 3, lastSubmission: null })
-          .last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(3, { submissions: 0 })
-          .sorted())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { forms: 3 }).last())
+        .respondWithData(() => testData.extendedForms.createPast(3).sorted())
         .afterResponses(app => {
           const items = app.find(SummaryItem);
           items.length.should.equal(2);

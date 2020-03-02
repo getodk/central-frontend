@@ -22,9 +22,8 @@ describe('FormNew', () => {
   it('does not show the button to a project viewer', () => {
     mockLogin({ role: 'none' });
     return mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects
-        .createPast(1, { role: 'viewer', forms: 0 })
-        .last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { role: 'viewer' }).last())
       .respondWithData(() => testData.extendedForms.sorted())
       .afterResponses(app => {
         app.find('#project-overview-new-form-button').length.should.equal(0);
@@ -35,12 +34,11 @@ describe('FormNew', () => {
     mockLogin();
     return mockRoute('/projects/1')
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() => testData.extendedForms.createPast(1).sorted())
+      .respondWithData(() => testData.extendedForms.sorted())
       .afterResponses(app => {
         app.first(FormNew).getProp('state').should.be.false();
-        return app;
+        return trigger.click(app, '#project-overview-new-form-button');
       })
-      .then(app => trigger.click(app, '#project-overview-new-form-button'))
       .then(app => {
         app.first(FormNew).getProp('state').should.be.true();
       });
@@ -195,7 +193,9 @@ describe('FormNew', () => {
 
     let app;
     beforeEach(() => mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
+      .respondWithData(() => testData.extendedProjects
+        .createPast(1, { forms: 1 })
+        .last())
       .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponse(component => {
         app = component;
@@ -423,9 +423,7 @@ describe('FormNew', () => {
 
     it('redirects to the form overview if "Create anyway" is clicked', () =>
       mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { forms: 0 })
-          .last())
+        .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.sorted())
         .complete()
         .request(app => trigger.click(app, '#project-overview-new-form-button')

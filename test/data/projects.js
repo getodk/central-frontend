@@ -28,7 +28,7 @@ export const extendedProjects = dataStore({
     archived = false,
     // The default value of this property does not necessarily match
     // testData.extendedForms.
-    forms = inPast ? faker.random.number() : 0,
+    forms = 0,
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = inPast ? faker.random.number() : 0,

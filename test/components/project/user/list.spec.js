@@ -98,7 +98,7 @@ describe('ProjectUserList', () => {
     describe('project viewer', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
+        testData.extendedProjects.createPast(1, { role: 'viewer' });
       });
 
       it('redirects a project viewer whose first navigation is to the tab', () =>
