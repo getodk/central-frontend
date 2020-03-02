@@ -90,14 +90,14 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
-    it('formAttachments', () => {
-      const path = apiPaths.formAttachments(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/attachments');
+    it('formDraftAttachments', () => {
+      const path = apiPaths.formDraftAttachments(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');
     });
 
-    it('formAttachment', () => {
-      const path = apiPaths.formAttachment(1, 'a b', 'c d');
-      path.should.equal('/v1/projects/1/forms/a%20b/attachments/c%20d');
+    it('formDraftAttachment', () => {
+      const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
     });
 
     it('submissionsZip', () => {

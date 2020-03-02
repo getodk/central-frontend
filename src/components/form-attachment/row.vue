@@ -101,7 +101,7 @@ export default {
       return displayName != null ? displayName : type;
     },
     href() {
-      return apiPaths.formAttachment(
+      return apiPaths.formDraftAttachment(
         this.form.projectId,
         this.form.xmlFormId,
         this.attachment.name

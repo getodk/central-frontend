@@ -27,13 +27,15 @@ except according to the terms contained in the LICENSE file.
           role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>
-        <li v-if="rendersMediaFilesTab" :class="tabClass('media-files')"
-          role="presentation">
+        <li v-if="canRoute(tabPath('media-files'))"
+          :class="tabClass('media-files')" role="presentation">
           <router-link :to="tabPath('media-files')">
             Media Files
-            <span v-show="missingAttachmentCount !== 0" class="badge">
-              {{ missingAttachmentCount.toLocaleString() }}
-            </span>
+            <template v-if="attachments != null">
+              <span v-show="missingAttachmentCount !== 0" class="badge">
+                {{ missingAttachmentCount.toLocaleString() }}
+              </span>
+            </template>
           </router-link>
         </li>
         <!-- Everyone with access to the project should be able to navigate to
@@ -112,12 +114,9 @@ export default {
     tabPathPrefix() {
       return this.formPath();
     },
-    rendersMediaFilesTab() {
-      return this.canRoute(this.tabPath('media-files')) &&
-        this.attachments != null && this.attachments.length !== 0;
-    },
     missingAttachmentCount() {
-      return this.attachments.filter(attachment => !attachment.exists).length;
+      return this.attachments.get()
+        .reduce((acc, attachment) => (attachment.exists ? acc : acc + 1), 0);
     }
   },
   watch: {
@@ -149,7 +148,8 @@ export default {
         },
         {
           key: 'attachments',
-          url: apiPaths.formAttachments(this.projectId, this.xmlFormId)
+          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
+          fulfillProblem: ({ code }) => code === 404.1
         }
       ]).catch(noop);
     }

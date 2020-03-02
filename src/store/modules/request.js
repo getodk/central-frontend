@@ -44,7 +44,7 @@ const allKeys = [
   'schema',
   'formActors',
   'keys',
-  // Form attachments
+  // Form draft attachments
   'attachments',
   // A single chunk of submissions OData
   'submissionsChunk',
@@ -72,8 +72,8 @@ export const transforms = {
   project: ({ data }) => new Project(data),
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
-  attachments: ({ data }) =>
-    data.map(attachment => new FormAttachment(attachment)),
+  attachments: optional(({ data }) =>
+    data.map(attachment => new FormAttachment(attachment))),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
   backupsConfig: optional(),
@@ -224,8 +224,8 @@ export default {
     setData({ data }, { key, value }) {
       data[key] = value;
     },
-    setDataProp({ data }, { key, prop, value }) {
-      Vue.set(data[key], prop, value);
+    setDataProp({ data }, { key, prop, value, optional = false }) {
+      Vue.set(!optional ? data[key] : data[key].get(), prop, value);
     },
     clearData({ data }, key = undefined) {
       if (key != null) {

@@ -254,7 +254,9 @@ const routes = [
               validateData: {
                 project: (project) =>
                   project.permits(['form.read', 'form.update']),
-                attachments: (attachments) => attachments.length !== 0
+                attachments: (option) => option
+                  .map(attachments => attachments.length !== 0)
+                  .orElse(false)
               }
             }
           },

@@ -48,11 +48,11 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
   formKeys: formPath('/submissions/keys'),
-  formAttachments: formPath('/attachments'),
-  formAttachment: (projectId, xmlFormId, attachmentName) => {
+  formDraftAttachments: formPath('/draft/attachments'),
+  formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedName = encodeURIComponent(attachmentName);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/attachments/${encodedName}`;
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
   submissionsZip: formPath('/submissions.csv.zip'),
   submissionsOData: (projectId, xmlFormId, { top, skip = 0 }) => {

@@ -35,8 +35,8 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody v-if="form != null && attachments != null">
-        <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :attachment="attachment"
+        <form-attachment-row v-for="(attachment, index) in attachments.get()"
+          :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -198,7 +198,7 @@ export default {
         const $tr = $(jQueryEvent.target)
           .closest('#form-attachment-list-table tbody tr');
         this.dragoverAttachment = $tr.length !== 0
-          ? this.attachments[$tr.data('index')]
+          ? this.attachments.get()[$tr.data('index')]
           : null;
       }
       this.cancelUploads();
@@ -237,7 +237,7 @@ export default {
       // files is a FileList, not an Array, hence the style of for-loop.
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
-        const attachment = this.attachments.find(a => a.name === file.name);
+        const attachment = this.attachments.get().find(a => a.name === file.name);
         if (attachment != null)
           this.plannedUploads.push({ attachment, file });
         else
@@ -249,8 +249,6 @@ export default {
     // cancelUploads() cancels the uploads before they start, after files have
     // been selected. (It does not cancel an upload in progress.)
     cancelUploads() {
-      // Checking `length` in order to avoid setting these properties
-      // unnecessarily, which could result in Vue calculations.
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
@@ -291,8 +289,8 @@ export default {
         reader.readAsText(file);
       });
     },
-    // uploadFile() may mutate `updated`.
-    uploadFile({ attachment, file }, updated) {
+    // uploadFile() may mutate `updateAttachments`.
+    uploadFile({ attachment, file }, updatedAttachments) {
       // We decrement uploadStatus.remaining here rather than after the POST so
       // that uploadStatus.remaining and uploadStatus.current continue to be in
       // sync.
@@ -306,7 +304,7 @@ export default {
             throw new Error();
           return this.request({
             method: 'POST',
-            url: apiPaths.formAttachment(
+            url: apiPaths.formDraftAttachment(
               this.form.projectId,
               this.form.xmlFormId,
               attachment.name
@@ -334,16 +332,17 @@ export default {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
           const updatedAt = new Date().toISOString();
-          updated.push(attachment.with({ exists: true, updatedAt }));
+          updatedAttachments.push(attachment.with({ exists: true, updatedAt }));
         });
     },
     updateAttachment(updatedAttachment) {
-      const index = this.attachments.findIndex(attachment =>
+      const index = this.attachments.get().findIndex(attachment =>
         attachment.name === updatedAttachment.name);
       this.$store.commit('setDataProp', {
         key: 'attachments',
         prop: index,
-        value: updatedAttachment
+        value: updatedAttachment,
+        optional: true
       });
     },
     uploadFiles() {
