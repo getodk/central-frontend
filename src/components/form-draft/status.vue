@@ -13,7 +13,14 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div v-if="dataExists" class="row">
       <div class="col-xs-6">
-        <!-- TODO -->
+        <page-section condensed>
+          <template #heading>
+            <span>Draft Checklist</span>
+          </template>
+          <template #body>
+            <form-draft-checklist/>
+          </template>
+        </page-section>
       </div>
       <div class="col-xs-6">
         <page-section condensed>
@@ -54,6 +61,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
@@ -72,6 +80,7 @@ export default {
   name: 'FormDraftStatus',
   components: {
     FormNew,
+    FormDraftChecklist,
     FormDraftPublish,
     FormVersionSummaryItem,
     PageSection
