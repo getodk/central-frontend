@@ -72,6 +72,22 @@ const mixin = {
       }
       return _formPath(projectIdOrSuffix, xmlFormId, suffix);
     },
+    // Returns the path to the primary page for a form. This changes based on
+    // the current user's role, as well as whether the form has a published
+    // version.
+    primaryFormPath(form) {
+      if (form.publishedAt != null) {
+        const path = this.formPath(form.projectId, form.xmlFormId);
+        // Project viewers can't navigate to the form overview, but everyone
+        // should be able to navigate to .../submissions.
+        return this.canRoute(path) ? path : `${path}/submissions`;
+      } else { // eslint-disable-line no-else-return
+        const path = this.formPath(form.projectId, form.xmlFormId, 'draft/status');
+        return this.canRoute(path)
+          ? path
+          : this.formPath(form.projectId, form.xmlFormId, 'draft/testing');
+      }
+    },
     userPath(id) {
       return `/users/${id}/edit`;
     },

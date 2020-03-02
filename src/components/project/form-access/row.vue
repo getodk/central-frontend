@@ -12,9 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="project-form-access-row">
     <template v-if="frozen">
-      <td class="form-name">
-        <router-link :to="formPath(form.projectId, form.xmlFormId)"
-          :title="form.nameOrId()">
+      <td class="project-form-access-row-form-name">
+        <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">
           {{ form.nameOrId() }}
         </router-link>
       </td>
@@ -33,7 +32,8 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <td></td>
-      <td v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id">
+      <td v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
+        class="project-form-access-row-access">
         <div class="checkbox">
           <label>
             <input type="checkbox"
@@ -94,13 +94,13 @@ export default {
 </script>
 
 <style lang="scss">
-.project-form-access-row {
-  .form-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.project-form-access-row-form-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
+.project-form-access-row {
   .form-group {
     margin-bottom: 0;
     padding-bottom: 0;

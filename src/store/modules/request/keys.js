@@ -85,6 +85,14 @@ const dataGetters = {
     ];
   },
 
+  missingAttachmentCount: ({ data: { attachments } }) => {
+    if (attachments == null) return null;
+    if (attachments.isEmpty()) return 0;
+    return attachments.get().reduce(
+      (count, attachment) => (attachment.exists ? count : count + 1),
+      0
+    );
+  },
   fieldKeysWithToken: ({ data: { fieldKeys } }) => (fieldKeys != null
     ? fieldKeys.filter(fieldKey => fieldKey.token != null)
     : null),

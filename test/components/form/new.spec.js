@@ -205,18 +205,17 @@ describe('FormNew', () => {
         .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
         .then(() => trigger.click(app, '#form-new-create-button')))
       .respondWithData(() => testData.standardForms
-        .createNew({ xmlFormId: 'f', name: 'My Form', draft: false })) // FormNew
+        .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
       .respondWithData(() => testData.extendedForms.last()) // FormShow
-      .respondWithProblem(404.1) // formDraft
-      .respondWithProblem(404.1) // attachments
-      .respondWithData(() => [])); // formActors
+      .respondWithData(() => testData.extendedFormDrafts.last())
+      .respondWithData(() => testData.standardFormAttachments.sorted()));
 
-    it('redirects to the form overview', () => {
-      app.vm.$route.path.should.equal('/projects/1/forms/f');
+    it('redirects to .../draft/status', () => {
+      app.vm.$route.path.should.equal('/projects/1/forms/f/draft/status');
     });
 
     it('shows the form name', () => {
-      app.first('#page-head-title').text().trim().should.equal('My Form');
+      app.first('#form-head-form-nav .h1').text().trim().should.equal('My Form');
     });
 
     it('shows a success alert', () => {
@@ -423,7 +422,7 @@ describe('FormNew', () => {
         })
         .respondWithProblem());
 
-    it('redirects to the form overview if "Create anyway" is clicked', () =>
+    it('redirects to .../draft/status if "Create anyway" is clicked', () =>
       mockRoute('/projects/1')
         .respondWithData(() => testData.extendedProjects.createPast(1).last())
         .respondWithData(() => testData.extendedForms.sorted())
@@ -435,13 +434,12 @@ describe('FormNew', () => {
         .complete()
         .request(app => trigger.click(app, '#form-new-warnings .btn-primary'))
         .respondWithData(() => testData.standardForms
-          .createNew({ xmlFormId: 'f', name: 'My Form', draft: false })) // FormNew
+          .createNew({ xmlFormId: 'f', name: 'My Form' })) // FormNew
         .respondWithData(() => testData.extendedForms.last()) // FormShow
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => []) // formActors
+        .respondWithData(() => testData.extendedFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/status');
         }));
   });
 });

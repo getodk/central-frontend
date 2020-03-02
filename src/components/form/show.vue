@@ -11,44 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="dataExists">
-      <template v-if="project != null" #context>
-        <span>
-          <router-link :to="projectPath()">
-            {{ project.name }}{{ project.archived ? ' (archived)' : '' }}</router-link>
-        </span>
-        <router-link :to="projectPath()">Back to Project Overview</router-link>
-      </template>
-      <template v-if="form != null" #title>
-        {{ form.nameOrId() }}
-      </template>
-      <template #tabs>
-        <li v-if="canRoute(tabPath(''))" :class="tabClass('')"
-          role="presentation">
-          <router-link :to="tabPath('')">Overview</router-link>
-        </li>
-        <li v-if="canRoute(tabPath('media-files'))"
-          :class="tabClass('media-files')" role="presentation">
-          <router-link :to="tabPath('media-files')">
-            Media Files
-            <template v-if="attachments != null">
-              <span v-show="missingAttachmentCount !== 0" class="badge">
-                {{ missingAttachmentCount.toLocaleString() }}
-              </span>
-            </template>
-          </router-link>
-        </li>
-        <!-- Everyone with access to the project should be able to navigate to
-        SubmissionList. -->
-        <li :class="tabClass('submissions')" role="presentation">
-          <router-link :to="tabPath('submissions')">Submissions</router-link>
-        </li>
-        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
-          role="presentation">
-          <router-link :to="tabPath('settings')">Settings</router-link>
-        </li>
-      </template>
-    </page-head>
+    <form-head/>
     <page-body>
       <loading :state="initiallyLoading"/>
       <div v-show="dataExists">
@@ -59,9 +22,7 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to the requests from
           ProjectHome and FormShow. -->
-          <router-view :project-id="projectId" :xml-form-id="xmlFormId"
-            :chunk-sizes="submissionChunkSizes"
-            :scrolled-to-bottom="scrolledToBottom"/>
+          <router-view v-bind="routeProps"/>
         </keep-alive>
       </div>
     </page-body>
@@ -69,23 +30,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
-import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
-import routes from '../../mixins/routes';
-import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
-  components: { Loading, PageBody, PageHead },
-  mixins: [routes(), tab()],
+  components: { FormHead, Loading, PageBody },
   props: {
     projectId: {
       type: String,
@@ -105,19 +62,26 @@ export default {
     };
   },
   computed: {
-    ...requestData(REQUEST_KEYS),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     },
-    tabPathPrefix() {
-      return this.formPath();
-    },
-    missingAttachmentCount() {
-      return this.attachments.get()
-        .reduce((acc, attachment) => (attachment.exists ? acc : acc + 1), 0);
+    routeProps() {
+      switch (this.$route.name) {
+        case 'FormOverview':
+          return { projectId: this.projectId, xmlFormId: this.xmlFormId };
+        case 'SubmissionList':
+          return {
+            projectId: this.projectId,
+            xmlFormId: this.xmlFormId,
+            chunkSizes: this.submissionChunkSizes,
+            scrolledToBottom: this.scrolledToBottom
+          };
+        default:
+          return {};
+      }
     }
   },
   watch: {
@@ -140,13 +104,13 @@ export default {
           key: 'form',
           url: apiPaths.form(this.projectId, this.xmlFormId),
           extended: true,
-          success: ({ submissionsChunk }) => {
+          success: ({ form, submissionsChunk }) => {
             if (submissionsChunk == null) return;
-            if (submissionsChunk['@odata.count'] === this.form.submissions)
+            if (submissionsChunk['@odata.count'] === form.submissions)
               return;
             this.$store.commit('setData', {
               key: 'form',
-              value: this.form.with({
+              value: form.with({
                 submissions: submissionsChunk['@odata.count']
               })
             });

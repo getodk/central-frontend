@@ -110,7 +110,8 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(form) {
-      this.$router.push(this.formPath(form.projectId, form.xmlFormId), () => {
+      const path = this.formPath(form.projectId, form.xmlFormId, 'draft/status');
+      this.$router.push(path, () => {
         this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
       });
     }

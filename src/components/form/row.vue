@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-row">
     <td>
       <div>
-        <router-link :to="permittedFormPath" class="form-row-name">
+        <router-link :to="primaryFormPath(form)" class="form-row-name">
           {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>
       </div>
@@ -45,12 +45,6 @@ export default {
     }
   },
   computed: {
-    permittedFormPath() {
-      const path = this.formPath(this.form.projectId, this.form.xmlFormId);
-      // Project Viewers can't navigate to FormOverview, but everyone should be
-      // able to navigate to SubmissionList.
-      return this.canRoute(path) ? path : `${path}/submissions`;
-    },
     updatedOrCreatedAt() {
       return formatDate(this.form.updatedOrCreatedAt());
     },

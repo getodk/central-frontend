@@ -47,9 +47,6 @@ export default {
   name: 'FormOverview',
   components: { FormChecklist, FormOverviewRightNow, Loading, PageSection },
   mixins: [validateData()],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
   props: {
     projectId: {
       type: String,

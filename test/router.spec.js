@@ -47,9 +47,12 @@ describe('router', () => {
       '/projects/1/form-access',
       '/projects/1/settings',
       '/projects/1/forms/f',
-      '/projects/1/forms/f/media-files',
+      '/projects/1/forms/f/versions',
       '/projects/1/forms/f/submissions',
-      '/projects/1/forms/f/settings'
+      '/projects/1/forms/f/settings',
+      '/projects/1/forms/f/draft/status',
+      '/projects/1/forms/f/draft/attachments',
+      '/projects/1/forms/f/draft/testing'
     ];
 
     for (const path of paths) {
@@ -151,20 +154,157 @@ describe('router', () => {
               app.vm.$route.path.should.equal('/');
             }));
 
-        it('redirects the user from .../media-files', () =>
-          load('/projects/1/forms/f/media-files')
-            .respondFor('/', { users: false })
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-
         it('redirects the user from .../settings', () =>
           load('/projects/1/forms/f/settings')
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
+
+        it('redirects the user from .../draft/status', () =>
+          load('/projects/1/forms/f/draft/status')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects the user from .../draft/attachments', () =>
+          load('/projects/1/forms/f/draft/attachments')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
       });
+    });
+
+    describe('form without a published version', () => {
+      beforeEach(() => {
+        mockLogin();
+        testData.extendedProjects.createPast(1, { forms: 2 });
+        testData.extendedForms
+          .createPast(1, { xmlFormId: 'f2' })
+          .createPast(1, { xmlFormId: 'f', draft: true });
+      });
+
+      describe('form overview', () => {
+        it('redirects a user whose first navigation is to the route', () =>
+          load('/projects/1/forms/f')
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects a user navigating from a different form route', () =>
+          load('/projects/1/forms/f/draft/status')
+            .complete()
+            .route('/projects/1/forms/f')
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects a user navigating from a different form', () =>
+          load('/projects/1/forms/f2', {}, {
+            form: () => testData.extendedForms.first(),
+            formDraft: 404.1,
+            attachments: 404.1
+          })
+            .complete()
+            .load('/projects/1/forms/f', { project: false })
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+      });
+
+      it('redirects the user from .../versions', () =>
+        load('/projects/1/forms/f/versions')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects the user from .../submissions', () =>
+        load('/projects/1/forms/f/submissions')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects the user from .../settings', () =>
+        load('/projects/1/forms/f/settings')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
+
+    describe('form without a draft', () => {
+      beforeEach(() => {
+        mockLogin();
+        testData.extendedProjects.createPast(1, { forms: 2 });
+        testData.extendedForms
+          .createPast(1, { xmlFormId: 'f2', draft: true })
+          .createPast(1, { xmlFormId: 'f' });
+      });
+
+      describe('.../draft/status', () => {
+        it('redirects a user whose first navigation is to the route', () =>
+          load('/projects/1/forms/f/draft/status')
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects a user navigating from a different form route', () =>
+          load('/projects/1/forms/f')
+            .complete()
+            .route('/projects/1/forms/f/draft/status')
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects a user navigating from a different form', () =>
+          load('/projects/1/forms/f2/draft/status', {}, {
+            form: () => testData.extendedForms.first(),
+            formDraft: () => testData.extendedFormDrafts.first(),
+            attachments: () => []
+          })
+            .complete()
+            .load('/projects/1/forms/f/draft/status', { project: false })
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+      });
+
+      describe('.../draft/attachments', () => {
+        it('redirects the user', () =>
+          load('/projects/1/forms/f/draft/attachments')
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
+        it('redirects user after a 404 for formDraft but a 200 for attachments', () =>
+          load('/projects/1/forms/f/draft/attachments', {}, {
+            attachments: () => testData.standardFormAttachments
+              .createPast(1, { form: testData.extendedForms.last() })
+              .sorted()
+          })
+            .respondFor('/')
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+      });
+
+      it('redirects the user from .../draft/testing', () =>
+        load('/projects/1/forms/f/draft/testing')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
     });
 
     describe('form draft without attachments', () => {
@@ -177,14 +317,23 @@ describe('router', () => {
       });
 
       it('redirects a user whose first navigation is to the route', () =>
-        load('/projects/1/forms/f/media-files')
+        load('/projects/1/forms/f/draft/attachments')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user navigating from a different form route', () =>
+        load('/projects/1/forms/f/draft/status')
+          .complete()
+          .route('/projects/1/forms/f/draft/attachments')
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
 
       it('redirects a user navigating from a different form', () =>
-        load('/projects/1/forms/f2/media-files', {}, {
+        load('/projects/1/forms/f2/draft/attachments', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first(),
           attachments: () => testData.standardFormAttachments
@@ -192,7 +341,7 @@ describe('router', () => {
             .sorted()
         })
           .complete()
-          .load('/projects/1/forms/f/media-files', {
+          .load('/projects/1/forms/f/draft/attachments', {
             project: false,
             attachments: () => []
           })
@@ -254,7 +403,7 @@ describe('router', () => {
         }));
 
     it('resets FormAttachmentList', () =>
-      mockRoute('/projects/1/forms/f1/media-files')
+      mockRoute('/projects/1/forms/f1/draft/attachments')
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { forms: 2 }).last())
         .respondWithData(() => testData.extendedForms
@@ -271,7 +420,7 @@ describe('router', () => {
               unmatchedFiles.length.should.equal(1);
             });
         })
-        .route('/projects/1/forms/f2/media-files')
+        .route('/projects/1/forms/f2/draft/attachments')
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f2', draft: true })
           .last())

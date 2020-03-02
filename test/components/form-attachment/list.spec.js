@@ -21,7 +21,7 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   if (route) {
     const { xmlFormId } = testData.extendedForms.last();
     const encodedFormId = encodeURIComponent(xmlFormId);
-    const path = `/projects/1/forms/${encodedFormId}/media-files`;
+    const path = `/projects/1/forms/${encodedFormId}/draft/attachments`;
     return mockRoute(path, { attachToDocument })
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
@@ -56,72 +56,6 @@ const selectFilesUsingModal = (app, files) =>
 
 describe('FormAttachmentList', () => {
   beforeEach(mockLogin);
-
-  describe('Media Files tab', () => {
-    it('is not shown if there are no form attachments', () =>
-      mockRoute('/projects/1/forms/f')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // formActors
-        .afterResponses(app => {
-          const tabs = app.find('#page-head .nav-tabs li a')
-            .map(a => a.text());
-          tabs.should.eql(['Overview', 'Submissions', 'Settings']);
-        }));
-
-    it('is shown if there are form attachments', () =>
-      mockRoute('/projects/1/forms/f')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments
-          .createPast(1, { exists: false })
-          .sorted())
-        .respondWithData(() => []) // formActors
-        .afterResponses(app => {
-          const tabs = app.find('#page-head .nav-tabs li a')
-            .map(a => a.text().trim().iTrim());
-          tabs.should.eql(['Overview', 'Media Files 1', 'Submissions', 'Settings']);
-        }));
-
-    describe('badge', () => {
-      beforeEach(() => {
-        testData.extendedProjects.createPast(1, { forms: 1 });
-        testData.extendedForms.createPast(1, { draft: true });
-      });
-
-      it('is correct when all files are missing', () => {
-        testData.standardFormAttachments.createPast(2, { exists: false });
-        return loadAttachments({ route: true }).then(app => {
-          const badge = app.first('#page-head .nav-tabs .badge');
-          badge.text().trim().should.equal('2');
-        });
-      });
-
-      it('is correct when some files are missing', () => {
-        testData.standardFormAttachments
-          .createPast(2, { exists: true })
-          .createPast(1, { exists: false });
-        return loadAttachments({ route: true }).then(app => {
-          const badge = app.first('#page-head .nav-tabs .badge');
-          badge.text().trim().should.equal('1');
-        });
-      });
-
-      it('is not shown when all files exist', () => {
-        testData.standardFormAttachments.createPast(2, { exists: true });
-        return loadAttachments({ route: true }).then(app => {
-          app.first('#page-head .nav-tabs .badge').should.be.hidden();
-        });
-      });
-    });
-  });
 
   describe('table', () => {
     beforeEach(() => {

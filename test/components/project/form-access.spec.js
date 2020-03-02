@@ -20,8 +20,8 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
     .sorted())
   .respondWithData(() => testData.standardRoles.sorted())
   .respondWithData(() => testData.standardFormSummaryAssignments
-    // Create an assignment for "App User 2", which will be the first app user
-    // in the table.
+    // Create an assignment for "App User 2", which will be the first field key
+    // shown in the table.
     .createPast(1, {
       actorId: testData.extendedFieldKeys.get(1).id,
       role: 'app-user',
@@ -70,26 +70,6 @@ describe('ProjectFormAccess', () => {
         ]);
         th[3].getAttribute('title').should.equal('App User 2');
         th[4].getAttribute('title').should.equal('App User 1');
-      }));
-
-    it('correctly renders a row of the table', () =>
-      loadFormAccess().afterResponses(app => {
-        const td = app.first('#project-form-access-table').find('td');
-        td.length.should.equal(6);
-
-        // Form column
-        const a = td[0].first('a');
-        a.text().trim().should.equal('My Form');
-        a.getAttribute('title').should.equal('My Form');
-        a.getAttribute('href').should.equal('#/projects/1/forms/f');
-
-        // State column
-        td[1].first('select').element.value.should.equal('closing');
-
-        // App User Access columns
-        td[3].first('input').element.checked.should.be.true();
-        td[4].first('input').element.checked.should.be.false();
-        // There is no column for "App User 3".
       }));
 
     it('shows a message if there are no forms', () => {

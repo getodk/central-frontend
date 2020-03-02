@@ -477,14 +477,23 @@ a {
     margin-bottom: -1px;
     margin-right: 10px;
 
-    & > a, &.active > a {
+    > a, &.active > a {
       &, &:hover, &:focus {
-        background-color: transparent;
         border: none;
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
         padding: 7px 8px 6px;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    > a {
+      &, &:hover, &:focus {
+        background-color: transparent;
       }
 
       &:hover {
@@ -493,7 +502,6 @@ a {
 
       &:focus {
         border-bottom-color: $color-action-foreground;
-        outline: none;
       }
     }
 

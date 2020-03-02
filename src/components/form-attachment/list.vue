@@ -87,9 +87,6 @@ export default {
     request(),
     validateData()
   ],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
   data() {
     return {
       /*

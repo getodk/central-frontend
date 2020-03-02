@@ -19,9 +19,12 @@ import AuditList from './components/audit/list.vue';
 import BackupList from './components/backup/list.vue';
 import FieldKeyList from './components/field-key/list.vue';
 import FormAttachmentList from './components/form-attachment/list.vue';
+import FormDraftStatus from './components/form-draft/status.vue';
+import FormDraftTesting from './components/form-draft/testing.vue';
 import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
+import FormVersionList from './components/form-version/list.vue';
 import NotFound from './components/not-found.vue';
 import ProjectFormAccess from './components/project/form-access.vue';
 import ProjectHome from './components/project/home.vue';
@@ -243,20 +246,18 @@ const routes = [
             meta: {
               validateData: {
                 project: (project) =>
-                  project.permits(['form.read', 'assignment.list'])
+                  project.permits(['form.read', 'assignment.list']),
+                form: (form) => form.publishedAt != null
               }
             }
           },
           {
-            path: 'media-files',
-            component: FormAttachmentList,
+            path: 'versions',
+            component: FormVersionList,
             meta: {
               validateData: {
-                project: (project) =>
-                  project.permits(['form.read', 'form.update']),
-                attachments: (option) => option
-                  .map(attachments => attachments.length !== 0)
-                  .orElse(false)
+                project: (project) => project.permits('form.read'),
+                form: (form) => form.publishedAt != null
               }
             }
           },
@@ -269,7 +270,8 @@ const routes = [
                   'form.read',
                   'submission.list',
                   'submission.read'
-                ])
+                ]),
+                form: (form) => form.publishedAt != null
               }
             }
           },
@@ -279,7 +281,46 @@ const routes = [
             meta: {
               validateData: {
                 project: (project) =>
-                  project.permits(['form.read', 'form.update', 'form.delete'])
+                  project.permits(['form.read', 'form.update', 'form.delete']),
+                form: (form) => form.publishedAt != null
+              }
+            }
+          },
+          {
+            path: 'draft/status',
+            component: FormDraftStatus,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update', 'form.delete']),
+                formDraft: (formDraft) => formDraft.isDefined()
+              }
+            }
+          },
+          {
+            path: 'draft/attachments',
+            component: FormAttachmentList,
+            meta: {
+              validateData: {
+                project: (project) =>
+                  project.permits(['form.read', 'form.update']),
+                attachments: (option) => option
+                  .map(attachments => attachments.length !== 0)
+                  .orElse(false)
+              }
+            }
+          },
+          {
+            path: 'draft/testing',
+            component: FormDraftTesting,
+            meta: {
+              validateData: {
+                project: (project) => project.permits([
+                  'form.read',
+                  'submission.list',
+                  'submission.read'
+                ]),
+                formDraft: (formDraft) => formDraft.isDefined()
               }
             }
           }
@@ -492,7 +533,15 @@ preserveDataForKey({
 });
 preserveDataForKey({
   key: '*',
-  to: ['FormOverview', 'FormAttachmentList', 'SubmissionList', 'FormSettings'],
+  to: [
+    'FormOverview',
+    'FormVersionList',
+    'SubmissionList',
+    'FormSettings',
+    'FormDraftStatus',
+    'FormAttachmentList',
+    'FormDraftTesting'
+  ],
   params: ['projectId', 'xmlFormId']
 });
 
@@ -507,9 +556,12 @@ preserveDataForKey({
     'ProjectSettings',
     // FormShow
     'FormOverview',
-    'FormAttachmentList',
+    'FormVersionList',
     'SubmissionList',
-    'FormSettings'
+    'FormSettings',
+    'FormDraftStatus',
+    'FormAttachmentList',
+    'FormDraftTesting'
   ],
   params: ['projectId']
 });
