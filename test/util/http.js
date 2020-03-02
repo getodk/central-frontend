@@ -8,8 +8,7 @@ import store from '../../src/store';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
-import { mountAndMark } from './vm';
-import { setRequestData } from './store';
+import { mount as lifecycleMount } from './lifecycle';
 import { trigger } from './event';
 
 
@@ -64,7 +63,7 @@ component:
 
 If you already have a mounted component, you can skip mockHttp().mount():
 
-  const component = mountAndMark(App, { router });
+  const component = mount(App, { router });
 
   ...
 
@@ -238,15 +237,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // OTHER REQUESTS
 
-  mount(component, { requestData = {}, ...avoriazOptions } = {}) {
+  mount(component, options = undefined) {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    setRequestData(requestData);
-    return this._with({
-      mount: () => mountAndMark(component, { ...avoriazOptions, store })
-    });
+    return this._with({ mount: () => lifecycleMount(component, options) });
   }
 
   // The callback may return a Promise or a non-Promise value.
