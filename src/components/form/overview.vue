@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <div v-if="dataExists" class="row">
       <div class="col-xs-6">
         <form-overview-right-now/>
-        <page-section>
+        <page-section condensed>
           <template #heading>
             <span>Checklist</span>
           </template>
@@ -85,9 +85,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-#form-overview .row {
-  margin-top: 10px;
-}
-</style>

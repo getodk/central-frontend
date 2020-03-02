@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="form-overview-right-now">
+  <page-section id="form-overview-right-now" condensed>
     <template #heading>
       <span>Right Now</span>
     </template>
