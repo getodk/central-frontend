@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { DateTime } from 'luxon';
 import { mapState } from 'vuex';
 
 import Audit from '../../presenters/audit';
@@ -59,10 +58,6 @@ const optional = (transform = undefined) => (response) => (response.status === 2
   ? Option.of(transform != null ? transform(response) : response.data)
   : Option.none());
 export const transforms = {
-  session: ({ data }) => ({
-    token: data.token,
-    expiresAt: DateTime.fromISO(data.expiresAt).toMillis()
-  }),
   currentUser: ({ data }) => new User(data),
 
   users: ({ data }) => data.map(user => new User(user)),
