@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsId" class="dropdown-menu">
           <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="revoke">Revoke access</a>
+            <a href="#" @click.prevent="revoke">Revoke access&hellip;</a>
           </li>
         </ul>
       </div>
