@@ -153,7 +153,8 @@ export default {
             : null
         ),
         problemToAlert: ({ code }) => (code === 409.6
-          ? "The version you've specified conflicts with a past version of this Form. Please change it to something new and try again."
+          // TODO. Added "name."
+          ? "The version name you've specified conflicts with a past version of this Form. Please change it to something new and try again."
           : null)
       })
         .then(() => {
