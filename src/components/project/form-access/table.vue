@@ -102,8 +102,6 @@ export default {
   }
 
   .table {
-    table-layout: fixed;
-
     th {
       height: 33px;
     }
@@ -114,21 +112,27 @@ export default {
     }
   }
 
-  .table-frozen th {
-    &:first-child {
-      min-width: 250px;
-      width: 250px;
-    }
+  .table-frozen {
+    $form-name-width: 250px;
+    $state-width: 200px;
 
-    &:nth-child(2) {
-      min-width: 200px;
-      width: 200px;
+    table-layout: fixed;
+    width: $form-name-width + $state-width;
 
-      .btn-link {
-        padding: 0;
+    th {
+      &:first-child {
+        width: $form-name-width;
+      }
 
-        .icon-question-circle {
-          margin-right: 0;
+      &:nth-child(2) {
+        width: $state-width;
+
+        .btn-link {
+          padding: 0;
+
+          .icon-question-circle {
+            margin-right: 0;
+          }
         }
       }
     }
