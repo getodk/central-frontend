@@ -94,11 +94,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    reconcileFormDraftAndAttachments({ formDraft, attachments }) {
-      if (formDraft != null && formDraft.isEmpty() && attachments != null &&
-        attachments.isDefined())
-        this.$store.commit('setData', { key: 'attachments', value: Option.none() });
-    },
     fetchForm() {
       this.$store.dispatch('get', [{
         key: 'form',
@@ -116,6 +111,20 @@ export default {
           });
         }
       }]).catch(noop);
+    },
+    reconcileFormDraftAndAttachments({ formDraft, attachments }) {
+      if (formDraft == null || attachments == null) return;
+      if (formDraft.isDefined() && attachments.isEmpty()) {
+        this.$store.commit('setData', {
+          key: 'formDraft',
+          value: Option.none()
+        });
+      } else if (formDraft.isEmpty() && attachments.isDefined()) {
+        this.$store.commit('setData', {
+          key: 'attachments',
+          value: Option.none()
+        });
+      }
     },
     fetchDraft() {
       this.$store.dispatch('get', [

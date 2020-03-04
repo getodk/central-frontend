@@ -279,28 +279,37 @@ describe('router', () => {
             }));
       });
 
-      describe('.../draft/attachments', () => {
-        it('redirects the user', () =>
-          load('/projects/1/forms/f/draft/attachments')
-            .respondFor('/')
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-
-        it('redirects user after a 404 for formDraft but a 200 for attachments', () =>
-          load('/projects/1/forms/f/draft/attachments', {}, {
-            attachments: () => testData.standardFormAttachments
-              .createPast(1, { form: testData.extendedForms.last() })
-              .sorted()
-          })
-            .respondFor('/')
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-      });
+      it('redirects the user', () =>
+        load('/projects/1/forms/f/draft/attachments')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
 
       it('redirects the user from .../draft/testing', () =>
         load('/projects/1/forms/f/draft/testing')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects user after a 404 for formDraft but a 200 for attachments', () =>
+        load('/projects/1/forms/f/draft/attachments', {}, {
+          attachments: () => testData.standardFormAttachments
+            .createPast(1, { form: testData.extendedForms.last() })
+            .sorted()
+        })
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects user after a 200 for formDraft but a 404 for attachments', () =>
+        load('/projects/1/forms/f2/draft/status', {}, {
+          form: () => testData.extendedForms.first(),
+          formDraft: () => testData.extendedFormDrafts.first(),
+          attachments: 404.1
+        })
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
