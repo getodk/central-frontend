@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody v-if="form != null && attachments != null">
-        <form-attachment-row v-for="(attachment, index) in attachments.get()"
+        <form-attachment-row v-for="(attachment, index) in attachments"
           :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
@@ -149,7 +149,7 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['form', 'attachments']),
+    ...requestData(['form', { key: 'attachments', getOption: true }]),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -195,7 +195,7 @@ export default {
         const $tr = $(jQueryEvent.target)
           .closest('#form-attachment-list-table tbody tr');
         this.dragoverAttachment = $tr.length !== 0
-          ? this.attachments.get()[$tr.data('index')]
+          ? this.attachments[$tr.data('index')]
           : null;
       }
       this.cancelUploads();
@@ -234,7 +234,7 @@ export default {
       // files is a FileList, not an Array, hence the style of for-loop.
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
-        const attachment = this.attachments.get().find(a => a.name === file.name);
+        const attachment = this.attachments.find(a => a.name === file.name);
         if (attachment != null)
           this.plannedUploads.push({ attachment, file });
         else
@@ -333,7 +333,7 @@ export default {
         });
     },
     updateAttachment(updatedAttachment) {
-      const index = this.attachments.get().findIndex(attachment =>
+      const index = this.attachments.findIndex(attachment =>
         attachment.name === updatedAttachment.name);
       this.$store.commit('setDataProp', {
         key: 'attachments',

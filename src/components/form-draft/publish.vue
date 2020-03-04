@@ -93,12 +93,8 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
 import { noop } from '../../util/util';
-
-// The component does not assume that this data will exist when the component is
-// created.
-const requestKeys = ['form', 'formDraft'];
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftPublish',
@@ -117,25 +113,28 @@ export default {
     };
   },
   computed: {
-    ...requestData(requestKeys),
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData([
+      'form',
+      { key: 'formDraft', getOption: true },
+      'attachments'
+    ]),
     ...mapGetters(['missingAttachmentCount']),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    },
     draftVersionMatchesPrimary() {
-      return this.dataExists && this.form.publishedAt != null &&
-        this.formDraft.get().version === this.form.version;
+      return this.form != null && this.form.publishedAt != null &&
+        this.formDraft != null && this.formDraft.version === this.form.version;
     },
     rendersAttachmentsWarning() {
-      return this.missingAttachmentCount !== 0;
+      return this.attachments != null && this.missingAttachmentCount !== 0;
     },
     rendersTestingWarning() {
-      return this.dataExists && this.formDraft.get().submissions === 0;
+      return this.formDraft != null && this.formDraft.submissions === 0;
     }
   },
   watch: {
     state(state) {
-      if (state) this.versionString = this.formDraft.get().version;
+      if (state) this.versionString = this.formDraft.version;
     }
   },
   methods: {
@@ -146,9 +145,9 @@ export default {
       this.request({
         method: 'POST',
         url: apiPaths.publishFormDraft(
-          this.formDraft.get().projectId,
-          this.formDraft.get().xmlFormId,
-          this.versionString !== this.formDraft.get().version
+          this.formDraft.projectId,
+          this.formDraft.xmlFormId,
+          this.versionString !== this.formDraft.version
             ? { version: this.versionString }
             : null
         ),

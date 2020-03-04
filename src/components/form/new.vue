@@ -115,7 +115,9 @@ export default {
     };
   },
   computed: {
-    ...requestData(['project', 'formDraft']),
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['project', { key: 'formDraft', getOption: true }]),
     disabled() {
       return this.awaitingResponse;
     },
@@ -179,7 +181,7 @@ export default {
         method: 'POST',
         url: this.formDraft == null
           ? apiPaths.forms(this.project.id, query)
-          : apiPaths.formDraft(this.project.id, this.formDraft.get().xmlFormId, query),
+          : apiPaths.formDraft(this.project.id, this.formDraft.xmlFormId, query),
         headers,
         data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
@@ -195,7 +197,7 @@ export default {
             }
           }
           if (code === 400.8 && details.field === 'xmlFormId')
-            return `The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected "${this.formDraft.get().xmlFormId}", got "${details.value}").`;
+            return `The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected "${this.formDraft.xmlFormId}", got "${details.value}").`;
           return null;
         }
       })

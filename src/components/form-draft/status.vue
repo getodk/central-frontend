@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div v-if="dataExists" class="row">
+    <div v-if="formDraft != null" class="row">
       <div class="col-xs-6">
         <page-section condensed>
           <template #heading>
@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
             <span>Your Current Draft</span>
           </template>
           <template #body>
-            <form-version-summary-item :version="formDraft.get()">
+            <form-version-summary-item :version="formDraft">
               <template #body>
                 <p><strong>Draft version</strong> of this Form.</p>
                 <button id="form-draft-status-upload-button" type="button"
@@ -72,10 +72,6 @@ import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
-// The component does not assume that this data will exist when the component is
-// created.
-const requestKeys = ['formDraft'];
-
 export default {
   name: 'FormDraftStatus',
   components: {
@@ -96,12 +92,9 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(requestKeys),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    }
-  },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData([{ key: 'formDraft', getOption: true }]),
   methods: {
     afterUpload() {
       this.$emit('fetch-draft');

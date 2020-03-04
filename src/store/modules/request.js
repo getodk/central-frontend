@@ -336,9 +336,22 @@ export default {
   }
 };
 
-export const requestData = (keys) => {
+export const requestData = (options) => {
   const map = {};
-  for (const key of keys)
-    map[key] = (state) => state.request.data[key];
+  for (const keyOptions of options) {
+    if (typeof keyOptions === 'string') {
+      map[keyOptions] = (state) => state.request.data[keyOptions];
+    } else {
+      const { key, getOption = false } = keyOptions;
+      if (!getOption) {
+        map[key] = (state) => state.request.data[key];
+      } else {
+        map[key] = (state) => {
+          const value = state.request.data[key];
+          return value != null ? value.get() : null;
+        };
+      }
+    }
+  }
   return mapState(map);
 };
