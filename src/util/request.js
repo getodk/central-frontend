@@ -50,14 +50,17 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
   formKeys: formPath('/submissions/keys'),
-  formVersionXml: (projectId, xmlFormId, version) => {
+  formVersionDef: (projectId, xmlFormId, version, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.xml`;
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.${extension}`;
   },
   formDraft: formPath('/draft', ({ ignoreWarnings = undefined }) =>
     (ignoreWarnings ? 'ignoreWarnings=true' : '')),
-  formDraftXml: formPath('/draft.xml'),
+  formDraftDef: (projectId, xmlFormId, extension) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/draft.${extension}`;
+  },
   publishFormDraft: formPath('/draft/publish', ({ version = undefined }) =>
     (version != null ? `version=${encodeURIComponent(version)}` : '')),
   formDraftAttachments: formPath('/draft/attachments'),

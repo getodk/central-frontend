@@ -62,7 +62,6 @@ const forms = dataStore({
       : extendedProjects.createPast(1, { forms: 1 }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
-    key = null,
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
@@ -77,10 +76,10 @@ const forms = dataStore({
     ...rest
   }) => {
     const form = {
+      project,
       projectId: project.id,
       xmlFormId,
       name,
-      keyId: key != null ? key.id : project.keyId,
       state,
       createdAt: inPast
         ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
@@ -112,13 +111,15 @@ formVersions = dataStore({
     inPast,
     lastCreatedAt,
 
-    version = 'v1',
     form = forms.first(),
+    version = 'v1',
+    key = null,
     draft = false,
-    draftToken = draft ? faker.random.alphaNumeric(64) : null,
+    excelContentType = null,
     submissions = 0,
     lastSubmission = undefined,
-    publishedBy = undefined
+    publishedBy = undefined,
+    draftToken = draft ? faker.random.alphaNumeric(64) : null
   }) => {
     if (form === undefined) throw new Error('form not found');
     const createdAt = inPast
@@ -127,8 +128,11 @@ formVersions = dataStore({
     return {
       form,
       version,
+      keyId: key != null ? key.id : form.project.keyId,
       createdAt,
       publishedAt: !draft ? createdAt : null,
+      // Extended form, extended form version, and extended form draft
+      excelContentType,
       // Extended form and extended form draft
       // This property does not necessarily match testData.extendedSubmissions.
       submissions,
@@ -178,16 +182,19 @@ const formProps = [
   'projectId',
   'xmlFormId',
   'name',
-  'keyId',
   'state',
   'createdAt',
   'updatedAt',
   '_schema'
 ];
 const extendedFormProps = ['createdBy'];
-const versionProps = ['version', 'publishedAt'];
-const versionPropsForExtendedForm = ['submissions', 'lastSubmission'];
-const extendedVersionProps = ['publishedBy'];
+const versionProps = ['version', 'keyId', 'publishedAt'];
+const versionPropsForExtendedForm = [
+  'excelContentType',
+  'submissions',
+  'lastSubmission'
+];
+const extendedVersionProps = ['excelContentType', 'publishedBy'];
 const draftProps = ['draftToken'];
 
 export const standardForms = view(

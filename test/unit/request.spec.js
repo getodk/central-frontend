@@ -86,13 +86,13 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
-    it('formVersionXml', () => {
-      const path = apiPaths.formVersionXml(1, 'a b', 'c d');
+    it('formVersionDef', () => {
+      const path = apiPaths.formVersionDef(1, 'a b', 'c d', 'xml');
       path.should.equal('/v1/projects/1/forms/a%20b/versions/c%20d.xml');
     });
 
-    it('formVersionXml: empty version', () => {
-      const path = apiPaths.formVersionXml(1, 'a b', '');
+    it('formVersionDef: empty version', () => {
+      const path = apiPaths.formVersionDef(1, 'a b', '', 'xml');
       path.should.equal('/v1/projects/1/forms/a%20b/versions/___.xml');
     });
 
@@ -111,8 +111,8 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft');
     });
 
-    it('formDraftXml', () => {
-      const path = apiPaths.formDraftXml(1, 'a b');
+    it('formDraftDef', () => {
+      const path = apiPaths.formDraftDef(1, 'a b', 'xml');
       path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
     });
 

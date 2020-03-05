@@ -206,8 +206,8 @@ export default {
 
   th, td {
     &.field-key-actions {
-      // 160px is the width of the .dropdown-menu.
-      width: $padding-left-table-data + $padding-right-table-data + 160px;
+      width: $padding-left-table-data + $padding-right-table-data +
+        $min-width-dropdown-menu;
     }
   }
 

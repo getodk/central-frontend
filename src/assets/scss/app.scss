@@ -41,11 +41,16 @@ p {
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
+.btn, a {
+  .caret { margin-left: 6px; }
+}
+
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
   .btn > &:first-child, a > &:first-child {
     margin-right: 6px;
+    + .caret { margin-left: 0; }
   }
 
   a > &:first-child {
@@ -85,7 +90,7 @@ class. */
 .btn {
   border: none;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: $font-size-button;
   padding: 6px 10px 5px;
 
   // I think we set these for the Spinner component.
@@ -171,6 +176,16 @@ a {
   &:active:focus {
     outline: none;
   }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DROPDOWNS
+
+.dropdown-menu {
+  font-size: $font-size-button;
+  min-width: $min-width-dropdown-menu;
 }
 
 

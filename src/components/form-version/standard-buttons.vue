@@ -10,11 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span>
-    <a :href="href" class="btn btn-primary" target="_blank">
-      <span class="icon-arrow-circle-down"></span>View XML
-    </a>
-  </span>
+  <a v-if="version.excelContentType == null" class="btn btn-primary"
+    :href="defPath('xml')" :download="xmlFilename">
+    <span class="icon-arrow-circle-down"></span>Download XML
+  </a>
+  <div v-else class="btn-group">
+    <button :id="dropdownToggleId" type="button"
+      class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-arrow-circle-down"></span>
+      <span>Download</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" :aria-labelledby="dropdownToggleId">
+      <li>
+        <a :href="defPath('xml')" :download="xmlFilename">As XForm (.xml)</a>
+      </li>
+      <li>
+        <a :href="defPath(excelExtension)">As Excel (.{{ excelExtension }})</a>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -30,11 +46,25 @@ export default {
     }
   },
   computed: {
-    href() {
+    xmlFilename() {
+      return `${this.version.xmlFormId}.xml`;
+    },
+    dropdownToggleId() {
+      const { key } = this.version;
+      return `#form-version-standard-buttons-dropdown-toggle-${key}`;
+    },
+    excelExtension() {
+      return this.version.excelContentType === 'application/vnd.ms-excel'
+        ? 'xls'
+        : 'xlsx';
+    }
+  },
+  methods: {
+    defPath(extension) {
       const { projectId, xmlFormId, publishedAt } = this.version;
       return publishedAt != null
-        ? apiPaths.formVersionXml(projectId, xmlFormId, this.version.version)
-        : apiPaths.formDraftXml(projectId, xmlFormId);
+        ? apiPaths.formVersionDef(projectId, xmlFormId, this.version.version, extension)
+        : apiPaths.formDraftDef(projectId, xmlFormId, extension);
     }
   }
 };
