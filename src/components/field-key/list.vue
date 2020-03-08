@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <th>Created</th>
           <th>Last Used</th>
           <th>Configure Client</th>
-          <th class="field-key-actions">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody v-if="fieldKeys != null">
@@ -204,11 +204,9 @@ export default {
 #field-key-list-table {
   table-layout: fixed;
 
-  th, td {
-    &.field-key-actions {
-      width: $padding-left-table-data + $padding-right-table-data +
-        $min-width-dropdown-menu;
-    }
+  th:nth-child(5) {
+    width: $padding-left-table-data + $padding-right-table-data +
+      $min-width-dropdown-menu;
   }
 
   td {

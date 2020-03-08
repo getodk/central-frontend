@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         Access revoked
       </template>
     </td>
-    <td class="field-key-actions">
+    <td>
       <div class="dropdown">
         <button :id="actionsId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"

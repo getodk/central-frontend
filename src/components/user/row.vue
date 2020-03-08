@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </form>
     </td>
-    <td class="user-actions">
+    <td>
       <div class="dropdown">
         <button :id="actionsButtonId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"

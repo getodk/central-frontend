@@ -40,7 +40,7 @@ either is an Administrator or has no role. -->
           <th>Display Name</th>
           <th>Email Address</th>
           <th>Sitewide Role</th>
-          <th class="user-actions">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody v-if="users != null && adminIds != null">
@@ -202,11 +202,9 @@ export default {
 #user-list-table {
   table-layout: fixed;
 
-  th, td {
-    &.user-actions {
-      width: $padding-left-table-data + $padding-right-table-data +
-        $min-width-dropdown-menu;
-    }
+  th:nth-child(4) {
+    width: $padding-left-table-data + $padding-right-table-data +
+      $min-width-dropdown-menu;
   }
 }
 </style>
