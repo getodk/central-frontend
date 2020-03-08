@@ -336,6 +336,25 @@ export default {
   }
 };
 
+/*
+requestData() facilitates access to the response data, returning functions that
+can be used for computed properties. (It probably would have been more accurate
+to name it responseData().)
+
+requestData() takes a single parameter, an array specifying the keys for the
+data to which the component requires access. For each element of the array,
+specify either a key or an object.
+
+Examples:
+
+// The component requires access to `project` and `form`.
+requestData(['project', 'form'])
+
+// The component also requires access to formDraft, which is an Option. Because
+// getOption is specified as `true`, get() will be called on the Option. The
+// resulting value, not the Option, will be passed to the component.
+requestData(['project', 'form', { key: 'formDraft', getOption: true }])
+*/
 export const requestData = (options) => {
   const map = {};
   for (const keyOptions of options) {

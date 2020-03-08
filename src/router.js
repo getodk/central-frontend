@@ -76,8 +76,8 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  Request data
-  ------------
+  Response data
+  -------------
 
   - preserveData (optional)
 
@@ -111,9 +111,9 @@ The following meta fields are supported for bottom-level routes:
     Some routes can be navigated to only if certain conditions are met. For
     example, the user may have to be able to perform certain verbs sitewide.
 
-    validateData checks that conditions about the request data are met. (Perhaps
-    more precisely, it checks that no condition is violated.) Here is an example
-    value:
+    validateData checks that conditions about the response data are met.
+    (Perhaps more precisely, it checks that no condition is violated.) Here is
+    an example value:
 
     {
       // Specifies a condition for currentUser: the user must be able to
@@ -685,7 +685,7 @@ router.afterEach(() => {
   if (store.state.modal.ref != null) store.dispatch('hideModal');
 });
 
-// Clear data.
+// Clear response data.
 router.afterEach((to, from) => {
   if (preservesData('*', to, from)) return;
   for (const key of requestKeys) {

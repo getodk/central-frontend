@@ -36,7 +36,7 @@ export const preservesData = (key, to, from) => {
 };
 
 /*
-canRoute() returns `false` if request data exists that violates a validateData
+canRoute() returns `false` if response data exists that violates a validateData
 condition specified for the `to` route. Otherwise it returns `true`.
 
   - to. A Route object.
