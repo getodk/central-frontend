@@ -276,7 +276,7 @@ const routes = [
             }
           },
           {
-            path: 'draft/status',
+            path: 'draft',
             component: FormDraftStatus,
             meta: {
               validateData: {

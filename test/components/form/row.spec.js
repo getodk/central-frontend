@@ -38,11 +38,11 @@ describe('FormRow', () => {
         });
       });
 
-      it('links to .../draft/status for a form without a published version', () => {
+      it('links to .../draft for a form without a published version', () => {
         testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
         return load('/projects/1').then(app => {
           const href = app.first('.form-row-name').getAttribute('href');
-          href.should.equal('#/projects/1/forms/a%20b/draft/status');
+          href.should.equal('#/projects/1/forms/a%20b/draft');
         });
       });
     });

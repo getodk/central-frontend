@@ -73,9 +73,9 @@ except according to the terms contained in the LICENSE file.
               <spinner :state="awaitingResponse"/>
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
-              <li v-if="canRoute(tabPath('draft/status'))"
-                :class="tabClass('draft/status')" role="presentation">
-                <router-link :to="tabPath('draft/status')">Status</router-link>
+              <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
+                role="presentation">
+                <router-link :to="tabPath('draft')">Status</router-link>
               </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"
                 :class="tabClass('draft/attachments')" role="presentation">
@@ -159,7 +159,7 @@ export default {
       this.post(apiPaths.formDraft(this.form.projectId, this.form.xmlFormId))
         .then(() => {
           this.$emit('fetch-draft');
-          this.$router.push(this.formPath('draft/status'));
+          this.$router.push(this.formPath('draft'));
         })
         .catch(noop);
     }

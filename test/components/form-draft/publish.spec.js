@@ -5,7 +5,7 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 const showModal = (attachToDocument = false) =>
-  load('/projects/1/forms/f/draft/status', { attachToDocument }, {})
+  load('/projects/1/forms/f/draft', { attachToDocument }, {})
     .afterResponses(trigger.click('#form-draft-status-publish-button'));
 
 describe('FormDraftPublish', () => {
@@ -14,7 +14,7 @@ describe('FormDraftPublish', () => {
   describe('modal toggles', () => {
     it('toggles the modal', () => {
       testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft/status').testModalToggles(
+      return load('/projects/1/forms/f/draft').testModalToggles(
         FormDraftPublish,
         '#form-draft-status-publish-button',
         '.btn-link'

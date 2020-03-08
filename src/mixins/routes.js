@@ -82,10 +82,8 @@ const mixin = {
         // should be able to navigate to .../submissions.
         return this.canRoute(path) ? path : `${path}/submissions`;
       } else { // eslint-disable-line no-else-return
-        const path = this.formPath(form.projectId, form.xmlFormId, 'draft/status');
-        return this.canRoute(path)
-          ? path
-          : this.formPath(form.projectId, form.xmlFormId, 'draft/testing');
+        const path = this.formPath(form.projectId, form.xmlFormId, 'draft');
+        return this.canRoute(path) ? path : `${path}/testing`;
       }
     },
     userPath(id) {

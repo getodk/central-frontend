@@ -71,20 +71,20 @@ describe('FormNew', () => {
     });
 
     it('toggles the modal', () =>
-      load('/projects/1/forms/f/draft/status').testModalToggles(
+      load('/projects/1/forms/f/draft').testModalToggles(
         FormNew,
         '#form-draft-status-upload-button',
         '.btn-link'
       ));
 
     it('shows the correct modal title', () =>
-      load('/projects/1/forms/f/draft/status').then(app => {
+      load('/projects/1/forms/f/draft').then(app => {
         const text = app.first('#form-new .modal-title').text().trim();
         text.should.equal('Upload New Form Definition');
       }));
 
     it('does not render the paragraph about media files', () =>
-      load('/projects/1/forms/f/draft/status').then(app => {
+      load('/projects/1/forms/f/draft').then(app => {
         app.find('#form-new .modal-introduction p').length.should.equal(1);
       }));
   });
@@ -164,7 +164,7 @@ describe('FormNew', () => {
 
     it('sends a request to .../draft when uploading a new draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
-      return load('/projects/1/forms/f/draft/status')
+      return load('/projects/1/forms/f/draft')
         .complete()
         .request(app => trigger.click(app, '#form-draft-status-upload-button')
           .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
@@ -278,12 +278,12 @@ describe('FormNew', () => {
           .then(trigger.click('#form-new-create-button')))
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
-        .respondFor('/projects/1/forms/f2/draft/status', { project: false });
+        .respondFor('/projects/1/forms/f2/draft', { project: false });
     };
 
-    it('redirects to .../draft/status', () =>
+    it('redirects to .../draft', () =>
       createForm().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f2/draft/status');
+        app.vm.$route.path.should.equal('/projects/1/forms/f2/draft');
       }));
 
     it('shows the form name', () =>
@@ -316,7 +316,7 @@ describe('FormNew', () => {
         draft: true
       });
       testData.standardFormAttachments.createPast(1, { exists: false });
-      return load('/projects/1/forms/f/draft/status')
+      return load('/projects/1/forms/f/draft')
         .complete()
         .request(app => trigger.click(app, '#form-draft-status-upload-button')
           .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
@@ -570,7 +570,7 @@ describe('FormNew', () => {
         })
         .respondWithProblem());
 
-    it('redirects to .../draft/status if "Create anyway" is clicked', () => {
+    it('redirects to .../draft if "Create anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
         .complete()
@@ -582,9 +582,9 @@ describe('FormNew', () => {
         .request(trigger.click('.modal-warnings .btn-primary'))
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f' }))
-        .respondFor('/projects/1/forms/f/draft/status', { project: false })
+        .respondFor('/projects/1/forms/f/draft', { project: false })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/status');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/draft');
         });
     });
   });

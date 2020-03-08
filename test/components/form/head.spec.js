@@ -70,7 +70,7 @@ describe('FormHead', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { exists: false });
-      return load('/projects/1/forms/f/draft/status').then(app => {
+      return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text().trim().iTrim());
         text.should.eql([
@@ -100,7 +100,7 @@ describe('FormHead', () => {
     it('disables tabs for a form without a published version', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft/status').then(app => {
+      return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
         tabs.length.should.equal(4);
         for (const tab of tabs) {
@@ -114,7 +114,7 @@ describe('FormHead', () => {
       mockLogin();
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft/status').then(app => {
+      return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
         tabs.length.should.equal(4);
         for (const tab of tabs) {
@@ -132,14 +132,14 @@ describe('FormHead', () => {
     });
 
     it('is not shown if there are no form attachments', () =>
-      load('/projects/1/forms/f/draft/status').then(app => {
+      load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-draft-nav .nav-tabs a');
         tabs.map(a => a.text().trim()).should.eql(['Status', 'Testing']);
       }));
 
     it('is shown if there are form attachments', () => {
       testData.standardFormAttachments.createPast(2, { exists: false });
-      return load('/projects/1/forms/f/draft/status').then(app => {
+      return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-draft-nav .nav-tabs a');
         const text = tabs.map(a => a.text().trim().iTrim());
         text.should.eql(['Status', 'Media Files 2', 'Testing']);
@@ -220,7 +220,7 @@ describe('FormHead', () => {
           })
           .respondWithProblem());
 
-      it('redirects to .../draft/status', () =>
+      it('redirects to .../draft', () =>
         load('/projects/1/forms/f')
           .complete()
           .request(app => trigger.click(app, '#form-head-create-draft-button'))
@@ -229,7 +229,7 @@ describe('FormHead', () => {
             testData.extendedFormDrafts.createNew({ draft: true }))
           .respondWithData(() => testData.standardFormAttachments.sorted())
           .afterResponses(app => {
-            app.vm.$route.path.should.equal('/projects/1/forms/f/draft/status');
+            app.vm.$route.path.should.equal('/projects/1/forms/f/draft');
           }));
     });
   });
