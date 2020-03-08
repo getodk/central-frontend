@@ -60,7 +60,7 @@ To learn how a given component works, one of the best places to start is how the
 
 We specify a name for every component, which facilitates the use of the Vue devtools.
 
-If no name is specified for a bottom-level route, it is given the same name as its component. See [`router.js`](/src/router.js) for details.
+If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
 
 ### Vue Mixins
 
@@ -68,7 +68,7 @@ Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mi
 
 ### Router
 
-We support a number of route meta fields, which we document in [`/src/router.js`](/src/router.js). The router contains a fair amount of logic, which is driven largely by the meta fields.
+We support a number of route meta fields, which we document in [`/src/routes.js`](/src/routes.js). The router ([`/src/router.js`](/src/router.js)) contains a fair amount of logic, which is driven largely by the meta fields.
 
 We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
