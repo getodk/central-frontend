@@ -62,6 +62,21 @@ We specify a name for every component, which facilitates the use of the Vue devt
 
 If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
 
+In general, we try not to use component names to drive logic. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
+
+#### Naming Conventions
+
+Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormOverview`. The following are common suffixes:
+
+* `List`. A component that lists resources of a particular type. The component often includes a table, an empty table message, text and buttons above the table, and one or more modals.
+* `Table`. A table for a particular type of resource. A `Table` component should just be the `<table>` element and should not include an empty table message or other content.
+* `Row`. A row of a `*Table` component.
+* `Show`. A component that shows a single resource of a particular type.
+* `Home`. A parent component of related components, for example, `SystemHome`.
+* `New`. A modal used to create a new resource of a particular type.
+* `Edit`. A component used to update an existing resource of a particular type.
+* `Delete`. A modal used to delete an existing resource of a particular type.
+
 ### Vue Mixins
 
 Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin.)

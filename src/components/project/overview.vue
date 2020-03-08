@@ -92,7 +92,7 @@ export default {
     rendersTopRow() {
       // The text of ProjectOverviewAbout implies that the user can form.create.
       if (!this.project.permits('form.create')) return false;
-      // ProjectOverviewRightNow links to FieldKeyList.
+      // ProjectOverviewRightNow links to .../app-users.
       return this.canRoute(this.projectPath('app-users'));
     }
   },
