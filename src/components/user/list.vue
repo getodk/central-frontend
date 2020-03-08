@@ -177,19 +177,19 @@ export default {
     },
     showResetPassword(user) {
       this.resetPassword.user = user;
-      this.resetPassword.state = true;
+      this.showModal('resetPassword');
     },
     afterResetPassword(user) {
-      this.resetPassword.state = false;
+      this.hideModal('resetPassword');
       this.$alert().success(`The password for "${user.displayName}" has been invalidated. An email has been sent to ${user.email} with instructions on how to proceed.`);
     },
     showRetire(user) {
       this.retire.user = user;
-      this.retire.state = true;
+      this.showModal('retire');
     },
     afterRetire(user) {
       this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
-      this.retire.state = false;
+      this.hideModal('retire');
       this.$alert().success(`The user "${user.displayName}" has been retired.`);
     }
   }
