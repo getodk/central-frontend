@@ -65,9 +65,10 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <button v-show="formDraft.isEmpty()" id="form-head-new-draft-button"
-              type="primary" class="btn btn-primary"
-              :disabled="awaitingResponse" @click="createDraft">
+            <button v-show="formDraft.isEmpty()"
+              id="form-head-create-draft-button" type="primary"
+              class="btn btn-primary" :disabled="awaitingResponse"
+              @click="createDraft">
               <span class="icon-plus-circle"></span>Create a new Draft
               <spinner :state="awaitingResponse"/>
             </button>
@@ -256,7 +257,7 @@ body {
       /* .nav-tabs > li > a padding-left */ 8px;
   }
 
-  #form-head-new-draft-button {
+  #form-head-create-draft-button {
     /*
     6px =   1px (.nav-tabs > li > a has more top padding than .btn)
           + 1px (.nav-tabs > li > a has more bottom padding)

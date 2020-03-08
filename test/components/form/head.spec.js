@@ -201,19 +201,19 @@ describe('FormHead', () => {
 
       it('shows the button to an administrator', () =>
         load('/projects/1/forms/f').then(app => {
-          app.first('#form-head-new-draft-button').should.be.visible();
+          app.first('#form-head-create-draft-button').should.be.visible();
         }));
 
       it('implements some standard button things', () =>
         load('/projects/1/forms/f')
           .complete()
-          .request(app => trigger.click(app, '#form-head-new-draft-button'))
-          .standardButton('#form-head-new-draft-button'));
+          .request(app => trigger.click(app, '#form-head-create-draft-button'))
+          .standardButton('#form-head-create-draft-button'));
 
       it('posts to the correct endpoint', () =>
         load('/projects/1/forms/f')
           .complete()
-          .request(app => trigger.click(app, '#form-head-new-draft-button'))
+          .request(app => trigger.click(app, '#form-head-create-draft-button'))
           .beforeEachResponse((app, { method, url }) => {
             method.should.equal('POST');
             url.should.equal('/v1/projects/1/forms/f/draft');
@@ -223,7 +223,7 @@ describe('FormHead', () => {
       it('redirects to .../draft/status', () =>
         load('/projects/1/forms/f')
           .complete()
-          .request(app => trigger.click(app, '#form-head-new-draft-button'))
+          .request(app => trigger.click(app, '#form-head-create-draft-button'))
           .respondWithSuccess()
           .respondWithData(() =>
             testData.extendedFormDrafts.createNew({ draft: true }))

@@ -257,7 +257,7 @@ describe('FormDraftPublish', () => {
 
     it('shows the create draft button', () =>
       publish().then(app => {
-        app.first('#form-head-new-draft-button').should.be.visible();
+        app.first('#form-head-create-draft-button').should.be.visible();
       }));
   });
 });
