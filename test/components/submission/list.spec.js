@@ -560,9 +560,9 @@ describe('SubmissionList', () => {
     });
 
     describe('load by chunk', () => {
-      const checkTopSkip = (request, top, skip) => {
-        request.url.should.match(new RegExp(`%24top=${top}(&|$)`));
-        request.url.should.match(new RegExp(`%24skip=${skip}(&|$)`));
+      const checkTopSkip = ({ url }, top, skip) => {
+        url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
+        url.should.match(new RegExp(`[?&]%24skip=${skip}(&|$)`));
       };
       const checkIds = (component, count, offset = 0) => {
         const rows = component.find('#submission-table2 tbody tr');

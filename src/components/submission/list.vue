@@ -138,7 +138,7 @@ export default {
         url: apiPaths.submissionsOData(
           this.projectId,
           this.xmlFormId,
-          { top: this.chunkSizes.small }
+          { $top: this.chunkSizes.small }
         ),
         success: () => {
           this.processChunk();
@@ -308,7 +308,7 @@ export default {
           url: apiPaths.submissionsOData(
             this.projectId,
             this.xmlFormId,
-            { top: this.chunkSizes.small }
+            { $top: this.chunkSizes.small }
           ),
           success: () => {
             this.processChunk();
@@ -346,7 +346,7 @@ export default {
         url: apiPaths.submissionsOData(
           this.projectId,
           this.xmlFormId,
-          { top, skip }
+          { $top: top, $skip: skip }
         ),
         success: () => {
           this.processChunk(false);

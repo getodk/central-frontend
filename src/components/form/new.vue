@@ -183,7 +183,7 @@ export default {
         return;
       }
 
-      const query = { ignoreWarnings };
+      const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml')
         headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');

@@ -11,24 +11,31 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-const withQuery = (path, query, stringifyQuery) => {
-  if (query == null || stringifyQuery == null) return path;
-  const queryString = stringifyQuery(query);
-  return queryString !== '' ? `${path}?${queryString}` : path;
+const queryString = (query) => {
+  if (query == null) return '';
+  const entries = Object.entries(query);
+  if (entries.length === 0) return '';
+  const params = new URLSearchParams();
+  for (const [name, value] of entries)
+    if (value != null) params.set(name, value.toString());
+  const qs = params.toString();
+  return qs !== '' ? `?${qs}` : qs;
 };
-const projectPath = (suffix) => (id) => `/v1/projects/${id}${suffix}`;
-const formPath = (suffix, stringifyQuery = undefined) =>
+const projectPath = (suffix) => (id, query = undefined) =>
+  `/v1/projects/${id}${suffix}${queryString(query)}`;
+const formPath = (suffix, queryDefaults = undefined) =>
   (projectId, xmlFormId, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
-    const path = `/v1/projects/${projectId}/forms/${encodedFormId}${suffix}`;
-    return withQuery(path, query, stringifyQuery);
+    const combinedQuery = queryDefaults != null
+      ? (query != null ? { ...queryDefaults, ...query } : queryDefaults)
+      : query;
+    const qs = queryString(combinedQuery);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}${suffix}${qs}`;
   };
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
   session: (token) => `/v1/sessions/${token}`,
-  users: (query = undefined) =>
-    withQuery('/v1/users', query, ({ q = undefined }) =>
-      (q != null ? `q=${encodeURIComponent(q)}` : '')),
+  users: (query = undefined) => `/v1/users${queryString(query)}`,
   user: (id) => `/v1/users/${id}`,
   password: (id) => `/v1/users/${id}/password`,
   assignment: (role, actorId) => `/v1/assignments/${role}/${actorId}`,
@@ -37,13 +44,11 @@ export const apiPaths = {
   projectAssignment: (projectId, role, actorId) =>
     `/v1/projects/${projectId}/assignments/${role}/${actorId}`,
   projectKey: projectPath('/key'),
-  forms: (id, query = undefined) =>
-    withQuery(`/v1/projects/${id}/forms`, query, ({ ignoreWarnings = undefined }) =>
-      (ignoreWarnings ? 'ignoreWarnings=true' : '')),
+  forms: projectPath('/forms'),
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  schema: formPath('.schema.json?flatten=true&odata=true'),
+  schema: formPath('.schema.json', { flatten: true, odata: true }),
   oDataSvc: formPath('.svc'),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
@@ -55,14 +60,12 @@ export const apiPaths = {
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
     return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.${extension}`;
   },
-  formDraft: formPath('/draft', ({ ignoreWarnings = undefined }) =>
-    (ignoreWarnings ? 'ignoreWarnings=true' : '')),
+  formDraft: formPath('/draft'),
   formDraftDef: (projectId, xmlFormId, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft.${extension}`;
   },
-  publishFormDraft: formPath('/draft/publish', ({ version = undefined }) =>
-    (version != null ? `version=${encodeURIComponent(version)}` : '')),
+  publishFormDraft: formPath('/draft/publish'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
@@ -70,21 +73,15 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
   submissionsZip: formPath('/submissions.csv.zip'),
-  submissionsOData: formPath('.svc/Submissions', ({ top, skip = 0 }) =>
-    `%24top=${top}&%24skip=${skip}&%24count=true`),
+  submissionsOData: formPath('.svc/Submissions', { $skip: 0, $count: true }),
   submissionAttachment: (projectId, xmlFormId, instanceId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
   },
-  fieldKeys: (id) => `/v1/projects/${id}/app-users`,
-  audits: ({ action, start = undefined, end = undefined, limit = undefined }) => {
-    const startParam = start != null ? `&start=${encodeURIComponent(start)}` : '';
-    const endParam = end != null ? `&end=${encodeURIComponent(end)}` : '';
-    const limitParam = limit != null ? `&limit=${limit}` : '';
-    return `/v1/audits?action=${action}${startParam}${endParam}${limitParam}`;
-  }
+  fieldKeys: projectPath('/app-users'),
+  audits: (query) => `/v1/audits${queryString(query)}`
 };
 
 export const configForPossibleBackendRequest = (config, token) => {
