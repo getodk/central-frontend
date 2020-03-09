@@ -18,6 +18,8 @@ const selectFileByInput = (modal, file) => {
   $(input.element).trigger(event);
   return modal.vm.$nextTick().then(() => modal);
 };
+const upload = (app) => selectFileByInput(app.first(FormNew), xlsForm())
+  .then(trigger.click('#form-new-upload-button'));
 
 describe('FormNew', () => {
   describe('new form modal', () => {
@@ -50,24 +52,35 @@ describe('FormNew', () => {
         });
     });
 
-    it('renders the paragraph about media files', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      return load('/projects/1')
-        .then(trigger.click('#project-overview-new-form-button'))
-        .then(app => {
-          const p = app.find('#form-new .modal-introduction p');
-          p.length.should.equal(2);
-          p[1].text().trim().should.containEql('media');
-        });
+    describe('.modal-introduction', () => {
+      beforeEach(() => {
+        mockLogin();
+        testData.extendedProjects.createPast(1);
+      });
+
+      it('shows the correct text for the first paragraph', () =>
+        load('/projects/1')
+          .then(trigger.click('#project-overview-new-form-button'))
+          .then(app => {
+            const p = app.first('#form-new .modal-introduction p');
+            p.text().trim().should.startWith('To create a Form,');
+          }));
+
+      it('renders the paragraph about media files', () =>
+        load('/projects/1')
+          .then(trigger.click('#project-overview-new-form-button'))
+          .then(app => {
+            const p = app.find('#form-new .modal-introduction p');
+            p.length.should.equal(2);
+            p[1].text().should.containEql('media');
+          }));
     });
   });
 
-  describe('upload new draft modal', () => {
+  describe('modal for uploading a new definition', () => {
     beforeEach(() => {
       mockLogin();
-      testData.extendedProjects.createPast(1, { forms: 1 });
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
+      testData.extendedForms.createPast(1, { draft: true });
     });
 
     it('toggles the modal', () =>
@@ -78,15 +91,29 @@ describe('FormNew', () => {
       ));
 
     it('shows the correct modal title', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        const text = app.first('#form-new .modal-title').text().trim();
-        text.should.equal('Upload New Form Definition');
-      }));
+      load('/projects/1/forms/f/draft')
+        .then(trigger.click('#form-draft-status-upload-button'))
+        .then(app => {
+          const text = app.first('#form-new .modal-title').text().trim();
+          text.should.equal('Upload New Form Definition');
+        }));
 
-    it('does not render the paragraph about media files', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.find('#form-new .modal-introduction p').length.should.equal(1);
-      }));
+    describe('.modal-introduction', () => {
+      it('shows the correct text', () =>
+        load('/projects/1/forms/f/draft')
+          .then(trigger.click('#form-draft-status-upload-button'))
+          .then(app => {
+            const p = app.first('#form-new .modal-introduction p');
+            p.text().trim().should.startWith('To update the Draft,');
+          }));
+
+      it('does not render the paragraph about media files', () =>
+        load('/projects/1/forms/f/draft')
+          .then(trigger.click('#form-draft-status-upload-button'))
+          .then(app => {
+            app.find('#form-new .modal-introduction p').length.should.equal(1);
+          }));
+    });
   });
 
   describe('file selection', () => {
@@ -98,7 +125,7 @@ describe('FormNew', () => {
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
       modal.should.not.alert();
-      return trigger.click(modal, '#form-new-create-button')
+      return trigger.click(modal, '#form-new-upload-button')
         .then(() => {
           modal.should.alert('info');
         });
@@ -109,7 +136,7 @@ describe('FormNew', () => {
         propsData: { state: true },
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
-      return trigger.click(modal, '#form-new-create-button')
+      return trigger.click(modal, '#form-new-upload-button')
         .then(() => {
           modal.should.alert('info');
         })
@@ -152,23 +179,19 @@ describe('FormNew', () => {
     it('sends a request to .../forms when creating a form', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .complete()
-        .request(app => trigger.click(app, '#project-overview-new-form-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
-          .then(trigger.click('#form-new-create-button')))
+        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .request(upload)
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/forms');
         })
         .respondWithProblem();
     });
 
-    it('sends a request to .../draft when uploading a new draft', () => {
+    it('sends a request to .../draft when uploading a new definition', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
       return load('/projects/1/forms/f/draft')
-        .complete()
-        .request(app => trigger.click(app, '#form-draft-status-upload-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
-          .then(trigger.click('#form-new-create-button')))
+        .afterResponses(trigger.click('#form-draft-status-upload-button'))
+        .request(upload)
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/forms/f/draft');
         })
@@ -189,7 +212,7 @@ describe('FormNew', () => {
         })
         .request(modal =>
           selectFileByInput(modal, new File(['<a><b/></a>'], 'my_form.xml'))
-            .then(() => trigger.click(modal, '#form-new-create-button')))
+            .then(trigger.click('#form-new-upload-button')))
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/xml');
         })
@@ -204,7 +227,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           config.headers['X-XlsForm-FormId-Fallback'].should.equal('my_form');
@@ -223,7 +246,7 @@ describe('FormNew', () => {
           const type = 'application/vnd.ms-excel';
           const file = new File([''], 'my_form.xls', { type });
           return selectFileByInput(modal, file)
-            .then(() => trigger.click(modal, '#form-new-create-button'));
+            .then(trigger.click('#form-new-upload-button'));
         })
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/vnd.ms-excel');
@@ -242,7 +265,7 @@ describe('FormNew', () => {
         .request(modal => {
           const file = new File([''], 'my_form.xlsx', { type: 'application/xml' });
           return selectFileByInput(modal, file)
-            .then(() => trigger.click(modal, '#form-new-create-button'));
+            .then(trigger.click('#form-new-upload-button'));
         })
         .beforeEachResponse((modal, config) => {
           config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -250,7 +273,7 @@ describe('FormNew', () => {
         .respondWithProblem());
   });
 
-  it('implements some standard button things for the create button', () => {
+  it('implements some standard button things for the upload button', () => {
     mockLogin();
     return mockHttp()
       .mount(FormNew, {
@@ -258,9 +281,9 @@ describe('FormNew', () => {
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       })
       .testStandardButton({
+        button: '#form-new-upload-button',
         request: (modal) => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-create-button')),
-        button: '#form-new-create-button',
+          .then(trigger.click('#form-new-upload-button')),
         disabled: ['.modal-warnings .btn-primary', '.btn-link'],
         modal: true
       });
@@ -272,10 +295,8 @@ describe('FormNew', () => {
     const createForm = () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'Form 1' });
       return load('/projects/1')
-        .complete()
-        .request(app => trigger.click(app, '#project-overview-new-form-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
-          .then(trigger.click('#form-new-create-button')))
+        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .request(upload)
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
         .respondFor('/projects/1/forms/f2/draft', { project: false });
@@ -306,51 +327,79 @@ describe('FormNew', () => {
         }));
   });
 
-  describe('after uploading a new draft', () => {
+  describe('after uploading a new definition', () => {
     beforeEach(mockLogin);
 
-    const uploadDraft = () => {
-      testData.extendedForms.createPast(1, {
-        xmlFormId: 'f',
-        version: 'v1',
-        draft: true
-      });
+    it('hides the modal', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(trigger.click('#form-draft-status-upload-button'))
+        .request(upload)
+        .respondWithSuccess()
+        .respondWithData(() =>
+          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          app.first(FormNew).getProp('state').should.be.false();
+        });
+    });
+
+    it('shows a success alert', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(trigger.click('#form-draft-status-upload-button'))
+        .request(upload)
+        .respondWithSuccess()
+        .respondWithData(() =>
+          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          app.should.alert('success');
+        });
+    });
+
+    it('shows the new version string', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(app => {
+          const text = app.first('.form-version-summary-item-version').text();
+          text.trim().should.equal('v1');
+
+          return trigger.click(app, '#form-draft-status-upload-button');
+        })
+        .request(upload)
+        .respondWithSuccess()
+        .respondWithData(() =>
+          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          const text = app.first('.form-version-summary-item-version').text();
+          text.trim().should.equal('v2');
+        });
+    });
+
+    it('shows the updated count of missing attachments', () => {
+      testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { exists: false });
       return load('/projects/1/forms/f/draft')
-        .complete()
-        .request(app => trigger.click(app, '#form-draft-status-upload-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
-          .then(trigger.click('#form-new-create-button')))
+        .afterResponses(app => {
+          const badge = app.first('#form-head-draft-nav .nav-tabs .badge');
+          badge.text().trim().should.equal('1');
+
+          return trigger.click(app, '#form-draft-status-upload-button');
+        })
+        .request(upload)
         .respondWithSuccess()
-        .respondWithData(() => testData.extendedFormDrafts
-          .createPast(1, { version: 'v2', draft: true })
-          .last())
+        .respondWithData(() =>
+          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
         .respondWithData(() => testData.standardFormAttachments
           .createPast(1, { exists: false })
-          .sorted());
-    };
-
-    it('hides the modal', () =>
-      uploadDraft().then(app => {
-        app.first(FormNew).getProp('state').should.be.false();
-      }));
-
-    it('shows a success alert', () =>
-      uploadDraft().then(app => {
-        app.should.alert('success');
-      }));
-
-    it('shows the new version string', () =>
-      uploadDraft().then(app => {
-        const text = app.first('.form-version-summary-item-version').text().trim();
-        text.should.equal('v2');
-      }));
-
-    it('shows the updated count of missing attachments', () =>
-      uploadDraft().then(app => {
-        const badge = app.first('#form-head-draft-nav .nav-tabs .badge');
-        badge.text().trim().should.equal('2');
-      }));
+          .sorted())
+        .afterResponses(app => {
+          const badge = app.first('#form-head-draft-nav .nav-tabs .badge');
+          badge.text().trim().should.equal('2');
+        });
+    });
 
     // TODO
     it('updates the checklist');
@@ -368,7 +417,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem({
           code: 400.15,
           message: 'The given XLSForm file was not valid.',
@@ -391,7 +440,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem({
           code: 409.3,
           message: 'Some message',
@@ -421,7 +470,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem({
           code: 400.8,
           message: 'Some message',
@@ -457,7 +506,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           const warnings = modal.first('.modal-warnings');
@@ -476,7 +525,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.first('.modal-warnings').should.be.visible();
@@ -496,7 +545,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.first('.modal-warnings').should.be.visible();
@@ -518,20 +567,46 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem()
         .afterResponse(modal => {
           modal.should.alert('danger');
           modal.first('.modal-warnings').should.be.hidden();
         })
-        .request(modal => trigger.click(modal, '#form-new-create-button'))
+        .request(trigger.click('#form-new-upload-button'))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.should.not.alert();
           modal.first('.modal-warnings').should.be.visible();
         }));
 
-    it('implements some standard button things for "Create anyway" button', () =>
+    describe('explanatory text', () => {
+      it('shows the correct text for the new form modal', () => {
+        testData.extendedProjects.createPast(1);
+        return load('/projects/1')
+          .afterResponses(trigger.click('#project-overview-new-form-button'))
+          .request(upload)
+          .respondWithProblem(xlsFormWarning)
+          .afterResponse(app => {
+            const text = app.find('#form-new .modal-warnings p')[1].text();
+            text.should.containEql('create the Form');
+          });
+      });
+
+      it('shows the correct text when uploading a new definition', () => {
+        testData.extendedForms.createPast(1, { draft: true });
+        return load('/projects/1/forms/f/draft')
+          .afterResponses(trigger.click('#form-draft-status-upload-button'))
+          .request(upload)
+          .respondWithProblem(xlsFormWarning)
+          .afterResponse(app => {
+            const text = app.find('#form-new .modal-warnings p')[1].text();
+            text.should.containEql('update the Draft');
+          });
+      });
+    });
+
+    it('implements some standard button things for "Upload anyway" button', () =>
       mockHttp()
         .mount(FormNew, {
           propsData: { state: true },
@@ -540,16 +615,16 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .respondWithProblem(xlsFormWarning)
         .complete()
         .testStandardButton({
           button: '.modal-warnings .btn-primary',
-          disabled: ['#form-new-create-button', '.btn-link'],
+          disabled: ['#form-new-upload-button', '.btn-link'],
           modal: true
         }));
 
-    it('sends ?ignoreWarnings=true if "Create anyway" is clicked', () =>
+    it('sends ?ignoreWarnings=true if "Upload anyway" is clicked', () =>
       mockHttp()
         .mount(FormNew, {
           propsData: { state: true },
@@ -558,7 +633,7 @@ describe('FormNew', () => {
           }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
-          .then(() => trigger.click(modal, '#form-new-create-button')))
+          .then(trigger.click('#form-new-upload-button')))
         .beforeEachResponse((modal, config) => {
           config.url.should.equal('/v1/projects/1/forms');
         })
@@ -570,16 +645,14 @@ describe('FormNew', () => {
         })
         .respondWithProblem());
 
-    it('redirects to .../draft if "Create anyway" is clicked', () => {
+    it('redirects to .../draft if "Upload anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .complete()
-        .request(app => trigger.click(app, '#project-overview-new-form-button')
-          .then(() => selectFileByInput(app.first(FormNew), xlsForm()))
-          .then(() => trigger.click(app, '#form-new-create-button')))
+        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(trigger.click('.modal-warnings .btn-primary'))
+        .request(trigger.click('#form-new .modal-warnings .btn-primary'))
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f' }))
         .respondFor('/projects/1/forms/f/draft', { project: false })

@@ -29,22 +29,33 @@ definition for an existing form -->
           <li v-for="warning of warnings">{{ warning.trim() }}</li>
         </ul>
         <p>
-          Please correct the problems and try again. If you are sure these
-          <!-- TODO. Use a different word from "create" when uploading a new
-          definition? -->
-          problems can be ignored, click the button to create the Form anyway:
+          Please correct the problems and try again.
+          <template v-if="formDraft == null">
+            If you are sure these problems can be ignored, click the button to
+            create the Form anyway:
+          </template>
+          <template v-else>
+            If you are sure these problems can be ignored, click the button to
+            update the Draft anyway:
+          </template>
         </p>
         <p>
           <button type="button" class="btn btn-primary"
-            :disabled="awaitingResponse" @click="create(true)">
-            Create anyway <spinner :state="awaitingResponse"/>
+            :disabled="awaitingResponse" @click="upload(true)">
+            Upload anyway <spinner :state="awaitingResponse"/>
           </button>
         </p>
       </div>
       <div class="modal-introduction">
-        <!-- TODO. Update this text for uploading a new definition? -->
         <p>
-          To create a Form, upload an XForms XML file or an XLSForm Excel file.
+          <template v-if="formDraft == null">
+            To create a Form, upload an XForms XML file or an XLSForm Excel
+            file.
+          </template>
+          <template v-else>
+            To update the Draft, upload an XForms XML file or an XLSForm Excel
+            file.
+          </template>
           If you don&rsquo;t already have one, there are
           <doc-link to="form-tools/">tools available</doc-link> to help you
           design your Form.
@@ -69,10 +80,10 @@ definition for an existing form -->
         </div>
       </div>
       <div class="modal-actions">
-        <button id="form-new-create-button" type="button"
+        <button id="form-new-upload-button" type="button"
           class="btn btn-primary" :disabled="awaitingResponse"
-          @click="create(false)">
-          Create <spinner :state="awaitingResponse"/>
+          @click="upload(false)">
+          Upload <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
@@ -166,7 +177,7 @@ export default {
     ondrop(jQueryEvent) {
       this.afterFileSelection(jQueryEvent.originalEvent.dataTransfer.files[0]);
     },
-    create(ignoreWarnings) {
+    upload(ignoreWarnings) {
       if (this.file == null) {
         this.$alert().info('Please choose a file.');
         return;
