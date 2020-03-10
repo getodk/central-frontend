@@ -99,7 +99,7 @@ export default {
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
-      this.$alert().success('Success! The new Form definition has been uploaded.');
+      this.$alert().success('Success! The new Form definition has been saved as your Draft.');
     },
     afterPublish() {
       this.$emit('fetch-form');

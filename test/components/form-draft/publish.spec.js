@@ -21,7 +21,8 @@ describe('FormDraftPublish', () => {
       );
     });
 
-    // The modal renders two .modal-actions elements.
+    // The modal renders two .modal-actions elements. The test above tests the
+    // first; this tests the second.
     it('hides the modal if the version string input is shown', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });

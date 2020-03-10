@@ -20,7 +20,6 @@ except according to the terms contained in the LICENSE file.
           <span>Latest Backups</span>
         </template>
         <template #body>
-          <!-- TODO. Should we use auditsForBackupsConfig here? -->
           <audit-table :audits="audits"/>
         </template>
       </page-section>

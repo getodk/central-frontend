@@ -16,7 +16,6 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div v-if="rendersAttachmentsWarning || rendersTestingWarning"
         class="modal-warnings">
-        <!-- TODO. Add explanatory text? -->
         <ul>
           <li v-if="rendersAttachmentsWarning">
             You have not provided all the
@@ -44,10 +43,10 @@ except according to the terms contained in the LICENSE file.
         </p>
         <p v-if="draftVersionMatchesPrimary">
           Every version of a Form requires a unique version name. Right now,
-          <!-- TODO. Replaced "version" with "name." -->
-          your Draft Form has the same name as a previously published version.
-          You can set a new one by uploading a Form definition with your desired
-          name, or you can type a new one below and I will change it for you.
+          your Draft Form has the same version name as a previously published
+          version. You can set a new one by uploading a Form definition with
+          your desired name, or you can type a new one below and I will change
+          it for you.
         </p>
       </div>
       <form v-if="draftVersionMatchesPrimary" @submit.prevent="publish">
@@ -152,7 +151,6 @@ export default {
             : null
         ),
         problemToAlert: ({ code }) => (code === 409.6
-          // TODO. Added "name."
           ? "The version name you've specified conflicts with a past version of this Form. Please change it to something new and try again."
           : null)
       })
