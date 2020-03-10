@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div v-if="formDraft != null" class="row">
+    <div class="row">
       <div class="col-xs-6">
         <page-section condensed>
           <template #heading>
             <span>Draft Checklist</span>
           </template>
           <template #body>
-            <form-draft-checklist/>
+            <form-draft-checklist status/>
           </template>
         </page-section>
       </div>
@@ -28,7 +28,8 @@ except according to the terms contained in the LICENSE file.
             <span>Your Current Draft</span>
           </template>
           <template #body>
-            <form-version-summary-item :version="formDraft">
+            <form-version-summary-item v-if="formDraft != null"
+              :version="formDraft">
               <template #body>
                 <p><strong>Draft version</strong> of this Form.</p>
                 <button id="form-draft-status-upload-button" type="button"
