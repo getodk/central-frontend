@@ -53,10 +53,10 @@ except according to the terms contained in the LICENSE file.
       :stage="formDraft.submissions !== 0 ? 'complete' : 'current'">
       <template #title>Test the Form on your mobile device</template>
       <p>
-        It&rsquo; a good idea to test the Form to be sure it (still) works the
+        It&rsquo;s a good idea to test the Form to be sure it (still) works the
         way you expect. Using the
         <router-link :to="formPath('draft/testing')">test QR code</router-link>,
-        you can make a test Submission that won&rsquo; affect your real data.
+        you can make a test Submission that won&rsquo;t affect your real data.
         <!-- TODO. Specify the `to` attribute. -->
         <doc-link>Click here to find out more.</doc-link>
       </p>
