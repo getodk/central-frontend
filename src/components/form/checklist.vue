@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-checklist">
+  <div v-if="dataExists" id="form-checklist">
     <checklist-step :stage="stepStage(0)">
       <template #title>Publish your first draft version</template>
       <p>
@@ -102,14 +102,19 @@ import DocLink from '../doc-link.vue';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
+// The component does not assume that this data will exist when the component is
+// created.
+const requestKeys = ['project', 'form', 'formActors'];
+
 export default {
   name: 'FormChecklist',
   components: { ChecklistStep, DocLink },
   mixins: [routes()],
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['project', 'form', 'formActors']),
+    ...requestData(requestKeys),
+    dataExists() {
+      return this.$store.getters.dataExists(requestKeys);
+    },
     // Indicates whether each step is complete.
     stepCompletion() {
       return [

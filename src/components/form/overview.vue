@@ -12,9 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-overview">
     <loading :state="initiallyLoading"/>
-    <div v-if="dataExists" class="row">
+    <div v-show="dataExists" class="row">
       <div class="col-xs-6">
-        <form-overview-right-now/>
+        <form-overview-right-now v-if="form != null"/>
         <page-section condensed>
           <template #heading>
             <span>Checklist</span>
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </page-section>
       </div>
-      <div id="form-overview-draft" class="col-xs-6">
+      <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()" condensed>
           <template #heading>
             <span>Your Current Draft</span>
@@ -93,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...requestData(['formDraft']),
+    ...requestData(['form', 'formDraft']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },

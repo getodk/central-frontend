@@ -1,3 +1,4 @@
+import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormRow from '../../../src/components/form/row.vue';
 import testData from '../../data';
@@ -401,8 +402,32 @@ describe('FormNew', () => {
         });
     });
 
-    // TODO
-    it('updates the checklist');
+    it('updates the checklist', () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, {
+        submissions: 1,
+        draft: true
+      });
+      testData.standardFormAttachments.createPast(1);
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(app => {
+          const steps = app.find(ChecklistStep);
+          steps.length.should.equal(4);
+          steps[2].getProp('stage').should.equal('complete');
+
+          return trigger.click(app, '#form-draft-status-upload-button');
+        })
+        .request(upload)
+        .respondWithSuccess()
+        .respondWithData(() =>
+          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          const steps = app.find(ChecklistStep);
+          steps.length.should.equal(4);
+          steps[2].getProp('stage').should.equal('current');
+        });
+    });
   });
 
   describe('custom alert messages', () => {

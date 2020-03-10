@@ -28,12 +28,6 @@ describe('FormOverview', () => {
           const text = section.first('.form-version-summary-item-version').text().trim();
           text.should.equal('v2');
         }));
-
-      // TODO
-      describe('draft checklist', () => {
-        it('shows a shorter checklist');
-        it('links to .../draft/status');
-      });
     });
 
     it('shows the correct title if there is no draft', () => {
