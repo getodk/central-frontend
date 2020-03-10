@@ -1,7 +1,7 @@
-import { formatDate } from '../../src/util/util';
-import { setLuxon } from '../util/util';
+import { formatDate } from '../../src/util/date-time';
+import { setLuxon } from '../util/date-time';
 
-describe('util/util', () => {
+describe('util/date-time', () => {
   describe('formatDate()', () => {
     it('formats null as an empty string by default', () => {
       formatDate(null).should.equal('');

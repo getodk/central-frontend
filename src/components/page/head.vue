@@ -12,10 +12,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="page-head" class="row">
     <div class="col-xs-12">
-      <div id="page-head-context">
-        <div><slot name="context"></slot></div>
-        <div></div>
-      </div>
       <div id="page-head-title" class="h1"><slot name="title"></slot></div>
       <p id="page-head-body"><slot name="body"></slot></p>
       <ul id="page-head-tabs" class="nav nav-tabs">
@@ -37,39 +33,6 @@ export default {
 #page-head {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
-}
-
-#page-head-context > :first-child {
-  background-color: #ddd;
-  font-size: 18px;
-
-  &:not(:empty) {
-    margin: 0 -15px;
-    padding: 15px;
-
-    + div {
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 12px solid #ddd;
-      height: 0;
-      margin-bottom: -10px;
-      width: 0;
-    }
-  }
-
-  > span:first-child {
-    font-weight: bold;
-    margin-right: 10px;
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-  }
-
-  > a {
-    font-size: 12px;
-  }
 }
 
 #page-head-body {

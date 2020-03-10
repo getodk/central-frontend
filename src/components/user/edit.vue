@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head v-show="user != null">
-      <template v-if="user != null" #title>
-        {{ user.displayName }}
-      </template>
+      <template v-if="user != null" #title>{{ user.displayName }}</template>
     </page-head>
     <page-body>
       <loading :state="$store.getters.initiallyLoading(['user'])"/>
@@ -57,6 +55,8 @@ export default {
       required: true
     }
   },
+  // The component does not assume that this data will exist when the component
+  // is created.
   computed: requestData(['user']),
   watch: {
     /*

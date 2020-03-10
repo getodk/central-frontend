@@ -1,13 +1,13 @@
 import Vue from 'vue';
 
 import App from '../../src/components/app.vue';
-import Spinner from '../../src/components/spinner.vue';
+import respondFor from './http/respond-for';
 import router from '../../src/router';
 import store from '../../src/store';
 import testData from '../data';
+import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
-import { mountAndMark } from './destroy';
-import { setRequestData } from './store';
+import { mount as lifecycleMount } from './lifecycle';
 import { trigger } from './event';
 
 
@@ -35,7 +35,7 @@ export const setHttp = (respond) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// mockHttp()
+// mockHttp(), mockRoute(), load()
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -46,7 +46,7 @@ First, specify a component to mount. Some components will send a request after
 being mounted, for example:
 
   mockHttp()
-    .mount(BackupList);
+    .mount(AuditList, { router });
 
 Other components will not send a request. Specify a request after mounting the
 component:
@@ -62,18 +62,18 @@ component:
 
 If you already have a mounted component, you can skip mockHttp().mount():
 
-  const component = mountAndMark(App, { router });
+  const component = mount(App, { router });
 
   ...
 
   mockHttp()
-    .request(component => trigger.click(component, '#navbar-users-link'));
+    .request(() => submitLoginForm(component, 'example@opendatakit.org'));
 
 After specifying the request, specify the response as a callback:
 
   mockHttp()
-    .mount(BackupList)
-    .respondWithData(() => testData.backups.createPast(1).last());
+    .mount(AuditList, { router })
+    .respondWithData(() => testData.extendedAudits.sorted());
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
@@ -150,7 +150,7 @@ cycles: series can be chained. For example:
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
-    })
+    });
 
 Notice how the mounted component is passed to each request() and
 afterResponses() callback, even in the second series.
@@ -236,15 +236,12 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // OTHER REQUESTS
 
-  mount(component, { requestData = {}, ...avoriazOptions } = {}) {
+  mount(component, options = undefined) {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    setRequestData(requestData);
-    return this._with({
-      mount: () => mountAndMark(component, { ...avoriazOptions, store })
-    });
+    return this._with({ mount: () => lifecycleMount(component, options) });
   }
 
   // The callback may return a Promise or a non-Promise value.
@@ -259,60 +256,51 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
-  respondWithData(callbackOrCallbacks) {
-    if (Array.isArray(callbackOrCallbacks)) {
-      return callbackOrCallbacks
-        .reduce((acc, callback) => acc.respondWithData(callback), this);
-    }
-    return this._respond(() => ({
-      status: 200,
-      data: callbackOrCallbacks()
-    }));
-  }
-
-  respondWithSuccess() {
-    return this.respondWithData(() => ({
-      status: 200,
-      data: { success: true }
-    }));
-  }
-
-  respondWithProblem(problemOrProblems) {
-    if (Array.isArray(problemOrProblems)) {
-      return problemOrProblems
-        .reduce((acc, problem) => acc.respondWithProblem(problem), this);
-    }
-    if (problemOrProblems == null) return this.respondWithProblem(500.1);
-    if (typeof problemOrProblems === 'number') {
-      return this.respondWithProblem(() => ({
-        code: problemOrProblems,
-        message: 'There was a problem.'
-      }));
-    }
-    return this._respond(() => {
-      const data = problemOrProblems();
-      return { status: Math.floor(data.code), data };
+  respond(callback) {
+    return this._with({
+      responses: [
+        ...this._responses,
+        () => {
+          const result = callback();
+          const { problem } = result;
+          if (problem == null) return { status: 200, data: result };
+          if (typeof problem === 'object')
+            return { status: Math.floor(problem.code), data: problem };
+          return {
+            status: Math.floor(problem),
+            data: { code: problem, message: 'There was a problem.' }
+          };
+        }
+      ]
     });
   }
 
-  respondWithProblems(problemOrProblems) {
-    return this.respondWithProblem(problemOrProblems);
+  respondWithData(callback) { return this.respond(callback); }
+  respondWithSuccess() { return this.respond(() => ({ success: true })); }
+
+  respondWithProblem(problemOrCode = 500.1) {
+    return this.respond(() => ({ problem: problemOrCode }));
   }
 
   restoreSession(restore) {
     if (!restore) return this.respondWithProblem(404.1);
-    return this.respondWithData([
-      () => testData.sessions.createNew(),
-      () => {
+    return this
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => {
         if (testData.extendedUsers.size !== 0)
           throw new Error('user already exists');
         return testData.extendedUsers.createPast(1, { role: 'admin' }).last();
-      }
-    ]);
+      });
   }
 
-  _respond(callback) {
-    return this._with({ responses: [...this._responses, callback] });
+  respondFor(location, options = undefined) {
+    const respond = respondFor[router.resolve(location).route.name];
+    if (respond == null) throw new Error('invalid location');
+    return respond(this, options);
+  }
+
+  load(location, options) {
+    return this.route(location).respondFor(location, options);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -739,53 +727,10 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // COMMON TESTS
 
-  // Tests standard button thinking things.
-  standardButton(buttonSelector = 'button[type="submit"]') {
-    if (typeof buttonSelector !== 'string')
-      throw new Error('invalid button selector');
-    const spinner = (button) => {
-      const spinners = button
-        .find(Spinner)
-        // I think find() in the previous line starts the search from the
-        // button's parent Vue component: it returns all Spinner components that
-        // are descendants of the parent component.
-        .filter(wrapper => $.contains(button.element, wrapper.vm.$el));
-      if (spinners.length === 0) throw new Error('spinner not found');
-      if (spinners.length > 1) throw new Error('multiple spinners found');
-      return spinners[0];
-    };
-    return this
-      .respondWithProblem()
-      .beforeAnyResponse(component => {
-        const button = component.first(buttonSelector);
-        button.getAttribute('disabled').should.be.ok();
-        spinner(button).getProp('state').should.be.true();
-        // There may end up being tests for which this assertion does not pass,
-        // but for good reason. We will have to update the assertion if/when
-        // that is the case.
-        component.should.not.alert();
-      })
-      .afterResponse(component => {
-        const button = component.first(buttonSelector);
-        button.element.disabled.should.be.false();
-        spinner(button).getProp('state').should.be.false();
-        component.should.alert('danger');
-      });
-  }
-
   testRefreshButton(options) {
     // Options
     const normalizedOptions = this._testRefreshButtonOptions(options);
     const { collection, respondWithData, tableSelector } = normalizedOptions;
-
-    // Data responses
-    const dataCallbacks = [...respondWithData];
-    // Create a new object before returning the first response.
-    dataCallbacks[0] = () => {
-      collection.createNew();
-      const callback = respondWithData[0];
-      return callback();
-    };
 
     // Helper functions
     const testRowCount = (component) => {
@@ -795,29 +740,40 @@ class MockHttp {
       const rowCount = tables[0].find('tbody tr').length;
       rowCount.should.equal(collection.size);
     };
-    const clickRefreshButton = (component) =>
-      trigger.click(component.first('.btn-refresh'));
 
-    return this
-      // Series 1: Test that the table is initially rendered as expected.
-      .respondWithData(dataCallbacks)
-      .afterResponses(testRowCount)
-      // Series 2: Click the refresh button and return a successful response (or
-      // responses). The table should not disappear during the refresh, and it
-      // should be updated afterwards.
-      .request(clickRefreshButton)
-      .respondWithData(dataCallbacks)
-      .beforeEachResponse(testRowCount)
-      .afterResponses(testRowCount)
-      // Series 3: Click the refresh button again, this time returning a problem
-      // response (or responses).
-      .request(clickRefreshButton)
-      .respondWithProblems(new Array(respondWithData.length).fill(500))
-      .afterResponses(component => {
-        // The table should not disappear.
-        testRowCount(component);
-        component.should.alert();
+    // Series 1: Test that the table is initially rendered as expected.
+    let series = this.respondWithData(() => {
+      collection.createNew();
+      return respondWithData[0]();
+    });
+    for (let i = 1; i < respondWithData.length; i += 1)
+      series = series.respondWithData(respondWithData[i]);
+    series = series.afterResponses(testRowCount);
+    // Series 2: Click the refresh button and return a successful response (or
+    // responses). The table should not disappear during the refresh, and it
+    // should be updated afterwards.
+    series = series
+      .request(component => trigger.click(component, '.btn-refresh'))
+      .respondWithData(() => {
+        collection.createNew();
+        return respondWithData[0]();
       });
+    for (let i = 1; i < respondWithData.length; i += 1)
+      series = series.respondWithData(respondWithData[i]);
+    series = series
+      .beforeEachResponse(testRowCount)
+      .afterResponses(testRowCount);
+    // Series 3: Click the refresh button again, this time returning a Problem
+    // response (or responses).
+    series = series
+      .request(component => trigger.click(component, '.btn-refresh'));
+    for (let i = 0; i < respondWithData.length; i += 1)
+      series = series.respondWithProblem();
+    return series.afterResponses(component => {
+      // The table should not disappear.
+      testRowCount(component);
+      component.should.alert();
+    });
   }
 
   _testRefreshButtonOptions(options) {
@@ -861,8 +817,21 @@ class MockHttp {
   finally(onFinally) { return this.promise().finally(onFinally); }
 }
 
-export const mockHttp = () => new MockHttp();
+Object.assign(MockHttp.prototype, commonTests);
 
-export const mockRoute = (location, mountOptions = {}) => mockHttp()
+export const mockHttp = () => new MockHttp();
+export const mockRoute = (location, mountOptions = undefined) => mockHttp()
   .mount(App, { ...mountOptions, router })
   .route(location);
+export const load = (
+  location,
+  mountOptions = undefined,
+  respondForOptions = undefined
+) => {
+  // Prevent the user from accidentally specifying respondForOptions without
+  // mountOptions.
+  if (mountOptions != null && respondForOptions == null)
+    throw new Error('specify either both sets of options or neither');
+  return mockRoute(location, mountOptions)
+    .respondFor(location, respondForOptions);
+};

@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         Access revoked
       </template>
     </td>
-    <td class="field-key-actions">
+    <td>
       <div class="dropdown">
         <button :id="actionsId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsId" class="dropdown-menu">
           <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="revoke">Revoke access</a>
+            <a href="#" @click.prevent="revoke">Revoke access&hellip;</a>
           </li>
         </ul>
       </div>
@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'FieldKeyRow',

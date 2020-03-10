@@ -39,8 +39,12 @@ export const trigger = {};
 
 const simpleEventNames = ['click', 'submit'];
 for (const eventName of simpleEventNames) {
-  // Triggers an event.
-  trigger[eventName] = (wrapper, selector = undefined) => {
+  // Triggers an event, then waits a tick for the DOM to update.
+  trigger[eventName] = (...args) => {
+    if (args.length === 0) throw new Error('wrapper or selector required');
+    if (typeof args[0] === 'string')
+      return (wrapper) => trigger[eventName](wrapper, args[0]);
+    const [wrapper, selector] = args;
     const target = selector == null ? wrapper : wrapper.first(selector);
     target.trigger(eventName);
     const nextTick = Vue.nextTick();
@@ -49,7 +53,8 @@ for (const eventName of simpleEventNames) {
 }
 
 // Changes the value of an <input> or <select> element, triggering a change
-// event.
+// event. This probably does not work with v-model: consider using fillForm()
+// instead.
 trigger.changeValue = (wrapper, ...args) => {
   if (args.length === 0) throw new Error('value required');
   if (args.length === 1) return trigger.changeValue(wrapper, null, args[0]);

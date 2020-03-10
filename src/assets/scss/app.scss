@@ -41,11 +41,16 @@ p {
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
+.btn, a {
+  .caret { margin-left: 6px; }
+}
+
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: -1px;
 
   .btn > &:first-child, a > &:first-child {
     margin-right: 6px;
+    + .caret { margin-left: 0; }
   }
 
   a > &:first-child {
@@ -85,7 +90,7 @@ class. */
 .btn {
   border: none;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: $font-size-button;
   padding: 6px 10px 5px;
 
   // I think we set these for the Spinner component.
@@ -171,6 +176,16 @@ a {
   &:active:focus {
     outline: none;
   }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DROPDOWNS
+
+.dropdown-menu {
+  font-size: $font-size-button;
+  min-width: $min-width-dropdown-menu;
 }
 
 
@@ -477,14 +492,23 @@ a {
     margin-bottom: -1px;
     margin-right: 10px;
 
-    & > a, &.active > a {
+    > a, &.active > a {
       &, &:hover, &:focus {
-        background-color: transparent;
         border: none;
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
         padding: 7px 8px 6px;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    > a {
+      &, &:hover, &:focus {
+        background-color: transparent;
       }
 
       &:hover {
@@ -493,7 +517,6 @@ a {
 
       &:focus {
         border-bottom-color: $color-action-foreground;
-        outline: none;
       }
     }
 
@@ -504,13 +527,21 @@ a {
       }
     }
 
-    &.disabled > a {
-      &, &:hover, &:focus {
-        color: #999;
+    &.disabled {
+      &:hover {
+        cursor: not-allowed;
       }
 
-      &:hover, &:focus {
-        border-bottom-color: transparent;
+      > a {
+        pointer-events: none;
+
+        &, &:focus {
+          color: #999;
+        }
+
+        &:focus {
+          border-bottom-color: transparent;
+        }
       }
     }
   }

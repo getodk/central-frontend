@@ -1,60 +1,16 @@
 import jsQR from 'jsqr';
 import pako from 'pako';
 
-import faker from '../../faker';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/util';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { formatDate } from '../../../src/util/date-time';
+import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
 
 describe('FieldKeyList', () => {
-  describe('routing', () => {
-    it('anonymous user is redirected to login', () =>
-      mockRoute('/projects/1/app-users')
-        .restoreSession(false)
-        .afterResponse(app => app.vm.$route.path.should.equal('/login')));
-
-    it('after login, user is redirected back', () =>
-      mockRouteThroughLogin('/projects/1/app-users')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-        .respondWithData(() => testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/app-users');
-        }));
-
-    describe('project viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
-      });
-
-      it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/app-users')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithProblem(403.1)
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a project viewer navigating from another tab', () =>
-        mockRoute('/projects/1')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .complete()
-          .route('/projects/1/app-users')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponse(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-  });
+  beforeEach(mockLogin);
 
   describe('after login', () => {
-    beforeEach(mockLogin);
-
     it('does not send a new request if user navigates back to tab', () =>
       mockRoute('/projects/1/app-users')
         .respondWithData(() =>
@@ -64,7 +20,7 @@ describe('FieldKeyList', () => {
         .route('/projects/1/settings')
         .complete()
         .route('/projects/1/app-users')
-        .respondWithData([/* no responses */]));
+        .testNoRequest());
 
     it('table contains the correct data', () =>
       mockRoute('/projects/1/app-users')
@@ -104,7 +60,7 @@ describe('FieldKeyList', () => {
         .respondWithData(() =>
           testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
         .respondWithData(() => testData.extendedFieldKeys
-          .createPast(1, { token: faker.central.token() })
+          .createPast(1)
           .sorted())
         .afterResponses(component => {
           app = component;

@@ -3,7 +3,7 @@ import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 const clickTab = (wrapper, tabText) => {
@@ -54,7 +54,8 @@ describe('SubmissionAnalyze', () => {
           form: testData.extendedForms
             .createPast(1, { xmlFormId: 'f', submissions: 1 })
             .last(),
-          attachments: testData.standardFormAttachments.sorted()
+          formDraft: { problem: 404.1 },
+          attachments: { problem: 404.1 }
         }
       })
       .request(component => {
@@ -81,7 +82,8 @@ describe('SubmissionAnalyze', () => {
         requestData: {
           project: testData.extendedProjects.createPast(1).last(),
           form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last(),
-          attachments: testData.standardFormAttachments.sorted()
+          formDraft: { problem: 404.1 },
+          attachments: { problem: 404.1 }
         }
       })
       .request(component => {
@@ -110,7 +112,8 @@ describe('SubmissionAnalyze', () => {
     return mockRoute(path, { attachToDocument: true })
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
+      .respondWithProblem(404.1) // formDraft
+      .respondWithProblem(404.1) // attachments
       .respondWithData(() => testData.standardKeys.sorted())
       .respondWithData(() => testData.extendedForms.last()._schema)
       .respondWithData(testData.submissionOData)
@@ -129,7 +132,7 @@ describe('SubmissionAnalyze', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(SubmissionAnalyze, {
-        propsData: { projectId: '1' },
+        propsData: { state: true },
         requestData: {
           form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last()
         }

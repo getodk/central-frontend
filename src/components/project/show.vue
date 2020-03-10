@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
-        ProjectOverview. -->
+        the project overview. -->
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">Overview</router-link>
         </li>

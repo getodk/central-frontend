@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="{ archived: project.archived }">
     <td>
-      <div class="project-list-project-name">
+      <div class="project-row-name">
         <router-link :to="projectPath(project.id)">
           {{ project.name }} {{ project.archived ? '(archived)' : '' }}
           <span class="icon-angle-right"></span>
@@ -25,13 +25,13 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td>{{ $pluralize('Form', project.forms, true) }}</td>
-    <td>{{ latestSubmission }}</td>
+    <td>{{ lastSubmission }}</td>
   </tr>
 </template>
 
 <script>
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'ProjectRow',
@@ -51,7 +51,7 @@ export default {
       return this.projectCount === 1 &&
         this.project.name === 'Default Project' && this.project.forms === 0;
     },
-    latestSubmission() {
+    lastSubmission() {
       return formatDate(this.project.lastSubmission, '(none)');
     }
   }
@@ -65,7 +65,7 @@ export default {
   td {
     vertical-align: middle;
 
-    .project-list-project-name a {
+    .project-row-name a {
       color: inherit;
       font-size: 24px;
       text-decoration: none;

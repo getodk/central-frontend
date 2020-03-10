@@ -9,85 +9,19 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+
+// This module sends GET requests and stores the resulting response data.
+
 import Vue from 'vue';
-import { DateTime } from 'luxon';
 import { mapState } from 'vuex';
 
-import Audit from '../../presenters/audit';
-import BackupsConfig from '../../presenters/backups-config';
-import FieldKey from '../../presenters/field-key';
-import Form from '../../presenters/form';
-import FormAttachment from '../../presenters/form-attachment';
-import Project from '../../presenters/project';
-import User from '../../presenters/user';
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
-
-// Each type of response data that this module manages is associated with a key.
-// Each key tends to correspond to a single Backend endpoint.
-const allKeys = [
-  'session',
-  'currentUser',
-
-  'users',
-  'user',
-
-  'roles',
-  // Actors associated with sitewide assignments
-  'actors',
-
-  'projects',
-  'project',
-  'projectAssignments',
-  'forms',
-  'formSummaryAssignments',
-  'form',
-  'schema',
-  'formActors',
-  'keys',
-  // Form attachments
-  'attachments',
-  // A single chunk of submissions OData
-  'submissionsChunk',
-  'fieldKeys',
-
-  'backupsConfig',
-  'audits'
-];
-
-// Functions to transform responses (by key)
-export const transforms = {
-  session: ({ data }) => ({
-    token: data.token,
-    expiresAt: DateTime.fromISO(data.expiresAt).toMillis()
-  }),
-  currentUser: ({ data }) => new User(data),
-
-  users: ({ data }) => data.map(user => new User(user)),
-  user: ({ data }) => new User(data),
-
-  projects: ({ data }) => data.map(project => new Project(project)),
-  project: ({ data }) => new Project(data),
-  forms: ({ data }) => data.map(form => new Form(form)),
-  form: ({ data }) => new Form(data),
-  attachments: ({ data }) =>
-    data.map(attachment => new FormAttachment(attachment)),
-  fieldKeys: (response) => {
-    const { data } = response;
-    // Adding this check so that we access response.config only if necessary.
-    // (This facilitates testing.)
-    if (data.length === 0) return [];
-    const projectId = response.config.url.split('/')[3];
-    return data.map(fieldKey => new FieldKey(projectId, fieldKey));
-  },
-
-  backupsConfig: (response) => BackupsConfig.fromResponse(response),
-  audits: ({ data }) => data.map(audit => new Audit(audit))
-};
+import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 
 export default {
   state: {
-    // Using allKeys.reduce() in part so that there is a reactive property for
-    // each key.
+    // Using allKeys.reduce() in part so that `requests` has a reactive property
+    // for each key.
     requests: allKeys.reduce(
       (acc, key) => {
         // An object used to manage requests for the key
@@ -105,9 +39,16 @@ export default {
       },
       {}
     ),
-    // `data` has a reactive property for each key. However, if the value of a
-    // reactive property is itself a object, that object's properties are not
-    // reactive. If you need one of them to be, use setDataProp().
+    /*
+    `data` contains all response data, mapping each key to its data. `data` has
+    a reactive property for each key.
+
+    If the value of the property associated with a key is `null`, that means
+    that either no response has been received for the key, or the associated
+    data has been cleared. It does not mean that a response has been received
+    for the key, and the data itself is simply null or nonexistent. To implement
+    the latter case, transform the response and return an Option.
+    */
     data: allKeys.reduce(
       (acc, key) => {
         acc[key] = null;
@@ -144,22 +85,7 @@ export default {
       }
       return true;
     },
-
-    loggedIn: ({ data }) => data.session != null && data.session.token != null,
-    loggedOut: (state, getters) => !getters.loggedIn,
-
-    projectRoles: ({ data }) => {
-      const { roles } = data;
-      if (roles == null) return null;
-      return [
-        roles.find(role => role.system === 'manager'),
-        roles.find(role => role.system === 'viewer')
-      ];
-    },
-
-    fieldKeysWithToken: ({ data }) => (data.fieldKeys != null
-      ? data.fieldKeys.filter(fieldKey => fieldKey.token != null)
-      : null)
+    ...dataGetters
   },
   mutations: {
     /* eslint-disable no-param-reassign */
@@ -189,8 +115,8 @@ export default {
     setData({ data }, { key, value }) {
       data[key] = value;
     },
-    setDataProp({ data }, { key, prop, value }) {
-      Vue.set(data[key], prop, value);
+    setDataProp({ data }, { key, prop, value, optional = false }) {
+      Vue.set(!optional ? data[key] : data[key].get(), prop, value);
     },
     clearData({ data }, key = undefined) {
       if (key != null) {
@@ -410,11 +336,41 @@ export default {
   }
 };
 
-export const requestData = (keys) => {
+/*
+requestData() facilitates access to the response data, returning functions that
+can be used for computed properties. (It probably would have been more accurate
+to name it responseData().)
+
+requestData() takes a single parameter, an array specifying the keys for the
+data to which the component requires access. For each element of the array,
+specify either a key or an object.
+
+Examples:
+
+// The component requires access to `project` and `form`.
+requestData(['project', 'form'])
+
+// The component also requires access to formDraft, which is an Option. Because
+// getOption is specified as `true`, get() will be called on the Option. The
+// resulting value, not the Option, will be passed to the component.
+requestData(['project', 'form', { key: 'formDraft', getOption: true }])
+*/
+export const requestData = (options) => {
   const map = {};
-  for (const key of keys)
-    map[key] = (state) => state.request.data[key];
+  for (const keyOptions of options) {
+    if (typeof keyOptions === 'string') {
+      map[keyOptions] = (state) => state.request.data[keyOptions];
+    } else {
+      const { key, getOption = false } = keyOptions;
+      if (!getOption) {
+        map[key] = (state) => state.request.data[key];
+      } else {
+        map[key] = (state) => {
+          const value = state.request.data[key];
+          return value != null ? value.get() : null;
+        };
+      }
+    }
+  }
   return mapState(map);
 };
-
-export const keys = allKeys;

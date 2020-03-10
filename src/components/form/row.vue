@@ -10,19 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr>
+  <tr class="form-row">
     <td>
       <div>
-        <router-link :to="permittedFormPath" class="form-list-form-name">
+        <router-link :to="primaryFormPath(form)" class="form-row-name">
           {{ form.nameOrId() }} <span class="icon-angle-right"></span>
         </router-link>
       </div>
-      <div v-if="form.name != null" class="form-list-form-id">
+      <div v-if="form.name != null" class="form-row-form-id">
         {{ form.xmlFormId }}
       </div>
-      <div class="form-list-submissions">
-        {{ form.submissions.toLocaleString() }}
-        {{ $pluralize('submission', form.submissions) }}
+      <div class="form-row-submissions">
+        {{ $pluralize('submission', form.submissions, true) }}
       </div>
     </td>
     <td>{{ form.createdBy != null ? form.createdBy.displayName : '' }}</td>
@@ -34,7 +33,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'FormRow',
@@ -46,12 +45,6 @@ export default {
     }
   },
   computed: {
-    permittedFormPath() {
-      const path = this.formPath(this.form.projectId, this.form.xmlFormId);
-      // Project Viewers can't navigate to FormOverview, but everyone should be
-      // able to navigate to SubmissionList.
-      return this.canRoute(path) ? path : `${path}/submissions`;
-    },
     updatedOrCreatedAt() {
       return formatDate(this.form.updatedOrCreatedAt());
     },
@@ -61,3 +54,32 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+.form-row td {
+  vertical-align: middle;
+}
+
+.form-row-name {
+  font-size: 30px;
+
+  &, &:hover, &:focus {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .icon-angle-right {
+    color: $color-accent-primary;
+    font-size: 20px;
+    margin-left: 3px;
+    margin-right: 0;
+    vertical-align: 2px;
+  }
+}
+
+.form-row-form-id {
+  font-size: 18px;
+}
+</style>

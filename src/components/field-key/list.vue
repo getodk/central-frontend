@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('newFieldKey')">
-        <span class="icon-plus-circle"></span>Create App User
+        <span class="icon-plus-circle"></span>Create App User&hellip;
       </button>
       <p>
         App Users in this Project only will be able to download and use Forms
@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <th>Created</th>
           <th>Last Used</th>
           <th>Configure Client</th>
-          <th class="field-key-actions">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody v-if="fieldKeys != null">
@@ -204,11 +204,9 @@ export default {
 #field-key-list-table {
   table-layout: fixed;
 
-  th, td {
-    &.field-key-actions {
-      // 160px is the width of the .dropdown-menu.
-      width: $padding-left-table-data + $padding-right-table-data + 160px;
-    }
+  th:nth-child(5) {
+    width: $padding-left-table-data + $padding-right-table-data +
+      $min-width-dropdown-menu;
   }
 
   td {

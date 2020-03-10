@@ -11,7 +11,7 @@ describe('util/request', () => {
     });
 
     it('users?q', () => {
-      apiPaths.users({ q: 'a b' }).should.equal('/v1/users?q=a%20b');
+      apiPaths.users({ q: 'a b' }).should.equal('/v1/users?q=a+b');
     });
 
     it('user', () => {
@@ -47,14 +47,9 @@ describe('util/request', () => {
       apiPaths.forms(1).should.equal('/v1/projects/1/forms');
     });
 
-    it('forms?ignoreWarnings=true', () => {
+    it('forms?ignoreWarnings', () => {
       const path = apiPaths.forms(1, { ignoreWarnings: true });
       path.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
-    });
-
-    it('forms?ignoreWarnings=false', () => {
-      const path = apiPaths.forms(1, { ignoreWarnings: false });
-      path.should.equal('/v1/projects/1/forms');
     });
 
     it('formSummaryAssignments', () => {
@@ -64,10 +59,6 @@ describe('util/request', () => {
 
     it('form', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
-    });
-
-    it('formXml', () => {
-      apiPaths.formXml(1, 'a b').should.equal('/v1/projects/1/forms/a%20b.xml');
     });
 
     it('schema', () => {
@@ -90,14 +81,49 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
-    it('formAttachments', () => {
-      const path = apiPaths.formAttachments(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/attachments');
+    it('formVersionDef', () => {
+      const path = apiPaths.formVersionDef(1, 'a b', 'c d', 'xml');
+      path.should.equal('/v1/projects/1/forms/a%20b/versions/c%20d.xml');
     });
 
-    it('formAttachment', () => {
-      const path = apiPaths.formAttachment(1, 'a b', 'c d');
-      path.should.equal('/v1/projects/1/forms/a%20b/attachments/c%20d');
+    it('formVersionDef: empty version', () => {
+      const path = apiPaths.formVersionDef(1, 'a b', '', 'xml');
+      path.should.equal('/v1/projects/1/forms/a%20b/versions/___.xml');
+    });
+
+    it('formDraft', () => {
+      const path = apiPaths.formDraft(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft');
+    });
+
+    it('formDraft?ignoreWarnings', () => {
+      const path = apiPaths.formDraft(1, 'a b', { ignoreWarnings: true });
+      path.should.equal('/v1/projects/1/forms/a%20b/draft?ignoreWarnings=true');
+    });
+
+    it('formDraftDef', () => {
+      const path = apiPaths.formDraftDef(1, 'a b', 'xml');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
+    });
+
+    it('publishFormDraft', () => {
+      const path = apiPaths.publishFormDraft(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/publish');
+    });
+
+    it('publishFormDraft?version', () => {
+      const path = apiPaths.publishFormDraft(1, 'a b', { version: 'c d' });
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/publish?version=c+d');
+    });
+
+    it('formDraftAttachments', () => {
+      const path = apiPaths.formDraftAttachments(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');
+    });
+
+    it('formDraftAttachment', () => {
+      const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
     });
 
     it('submissionsZip', () => {
@@ -106,13 +132,13 @@ describe('util/request', () => {
     });
 
     it('submissionsOData', () => {
-      const path = apiPaths.submissionsOData(1, 'a b', { top: 250 });
-      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24top=250&%24skip=0&%24count=true');
+      const path = apiPaths.submissionsOData(1, 'a b', { $top: 250 });
+      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24skip=0&%24count=true&%24top=250');
     });
 
-    it('submissionsOData?skip', () => {
-      const path = apiPaths.submissionsOData(1, 'a b', { top: 250, skip: 500 });
-      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24top=250&%24skip=500&%24count=true');
+    it('submissionsOData?$skip', () => {
+      const path = apiPaths.submissionsOData(1, 'a b', { $top: 250, $skip: 500 });
+      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24skip=500&%24count=true&%24top=250');
     });
 
     it('submissionAttachment', () => {

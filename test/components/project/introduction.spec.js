@@ -10,7 +10,7 @@ describe('ProjectIntroduction', () => {
   let app;
   beforeEach(() => mockRoute('/')
     .respondWithData(() => testData.extendedProjects
-      .createPast(1, { name: 'Default Project', forms: 0 })
+      .createPast(1, { name: 'Default Project' })
       .sorted())
     .respondWithData(() => testData.administrators.sorted())
     .afterResponses(component => {

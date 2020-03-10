@@ -27,11 +27,14 @@ except according to the terms contained in the LICENSE file.
           <button v-if="project.permits('form.create')"
             id="project-overview-new-form-button" type="button"
             class="btn btn-primary" @click="showModal('newForm')">
-            <span class="icon-plus-circle"></span>New
+            <span class="icon-plus-circle"></span>New&hellip;
           </button>
         </template>
         <template #body>
-          <form-list v-if="forms != null"/>
+          <form-table/>
+          <p v-if="forms.length === 0" class="empty-table-message">
+            There are no Forms to show.
+          </p>
         </template>
       </page-section>
     </template>
@@ -41,8 +44,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormList from '../form/list.vue';
 import FormNew from '../form/new.vue';
+import FormTable from '../form/table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectOverviewAbout from './overview/about.vue';
@@ -57,8 +60,8 @@ const REQUEST_KEYS = ['project', 'forms'];
 export default {
   name: 'ProjectOverview',
   components: {
-    FormList,
     FormNew,
+    FormTable,
     Loading,
     PageSection,
     ProjectOverviewAbout,
@@ -89,7 +92,7 @@ export default {
     rendersTopRow() {
       // The text of ProjectOverviewAbout implies that the user can form.create.
       if (!this.project.permits('form.create')) return false;
-      // ProjectOverviewRightNow links to FieldKeyList.
+      // ProjectOverviewRightNow links to .../app-users.
       return this.canRoute(this.projectPath('app-users'));
     }
   },
@@ -107,8 +110,9 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(form) {
-      this.$router.push(this.formPath(form.projectId, form.xmlFormId), () => {
-        this.$alert().success(`The Form "${form.nameOrId()}" was created successfully.`);
+      const path = this.formPath(form.projectId, form.xmlFormId, 'draft');
+      this.$router.push(path, () => {
+        this.$alert().success(`Your new Form "${form.nameOrId()}" has been created as a Draft. Take a look at the checklist below, and when you feel it's ready, you can publish the Form for use.`);
       });
     }
   }

@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
-        <span class="icon-cloud-upload"></span>Upload files
+        <span class="icon-cloud-upload"></span>Upload files&hellip;
       </button>
       <div>
         Based on the Form you uploaded, the following files are expected. You
@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="form != null && attachments != null">
         <form-attachment-row v-for="(attachment, index) in attachments"
-          :key="attachment.key" :attachment="attachment"
+          :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
@@ -87,9 +87,6 @@ export default {
     request(),
     validateData()
   ],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
   data() {
     return {
       /*
@@ -152,7 +149,7 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['form', 'attachments']),
+    ...requestData(['form', { key: 'attachments', getOption: true }]),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -249,8 +246,6 @@ export default {
     // cancelUploads() cancels the uploads before they start, after files have
     // been selected. (It does not cancel an upload in progress.)
     cancelUploads() {
-      // Checking `length` in order to avoid setting these properties
-      // unnecessarily, which could result in Vue calculations.
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
@@ -291,8 +286,8 @@ export default {
         reader.readAsText(file);
       });
     },
-    // uploadFile() may mutate `updated`.
-    uploadFile({ attachment, file }, updated) {
+    // uploadFile() may mutate `updateAttachments`.
+    uploadFile({ attachment, file }, updatedAttachments) {
       // We decrement uploadStatus.remaining here rather than after the POST so
       // that uploadStatus.remaining and uploadStatus.current continue to be in
       // sync.
@@ -306,7 +301,7 @@ export default {
             throw new Error();
           return this.request({
             method: 'POST',
-            url: apiPaths.formAttachment(
+            url: apiPaths.formDraftAttachment(
               this.form.projectId,
               this.form.xmlFormId,
               attachment.name
@@ -334,7 +329,7 @@ export default {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
           const updatedAt = new Date().toISOString();
-          updated.push(attachment.with({ exists: true, updatedAt }));
+          updatedAttachments.push(attachment.with({ exists: true, updatedAt }));
         });
     },
     updateAttachment(updatedAttachment) {
@@ -343,7 +338,8 @@ export default {
       this.$store.commit('setDataProp', {
         key: 'attachments',
         prop: index,
-        value: updatedAttachment
+        value: updatedAttachment,
+        optional: true
       });
     },
     uploadFiles() {

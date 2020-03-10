@@ -11,11 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <loading :state="$store.getters.initiallyLoading(['backupsConfig'])"/>
-    <template v-if="backupsConfig != null">
+    <loading :state="initiallyLoading"/>
+    <template v-if="dataExists">
       <backup-status @create="showModal('newBackup')"
         @terminate="showModal('terminate')"/>
-      <page-section v-if="audits != null && audits.length !== 0">
+      <page-section v-if="audits.length !== 0">
         <template #heading>
           <span>Latest Backups</span>
         </template>
@@ -36,14 +36,16 @@ import AuditTable from '../audit/table.vue';
 import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
-import BackupsConfig from '../../presenters/backups-config';
 import Loading from '../loading.vue';
+import Option from '../../util/option';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+const REQUEST_KEYS = ['backupsConfig', 'audits'];
 
 export default {
   name: 'BackupList',
@@ -66,7 +68,17 @@ export default {
       }
     };
   },
-  computed: requestData(['backupsConfig', 'audits']),
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(REQUEST_KEYS),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(REQUEST_KEYS);
+    }
+  },
   created() {
     this.fetchData();
   },
@@ -96,7 +108,7 @@ export default {
       this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
       this.$store.commit('setData', {
         key: 'backupsConfig',
-        value: BackupsConfig.notConfigured()
+        value: Option.none()
       });
     }
   }

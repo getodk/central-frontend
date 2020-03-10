@@ -2,7 +2,7 @@ import ProjectUserList from '../../../../src/components/project/user/list.vue';
 import Spinner from '../../../../src/components/spinner.vue';
 import testData from '../../../data';
 import { mockHttp, mockRoute } from '../../../util/http';
-import { mockLogin, mockRouteThroughLogin } from '../../../util/session';
+import { mockLogin } from '../../../util/session';
 import { trigger } from '../../../util/event';
 
 // Creates a project, users, and project assignments, then loads the component.
@@ -78,52 +78,6 @@ const search = (route = undefined) => load({
   ]);
 
 describe('ProjectUserList', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/users')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/users')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.standardRoles.sorted())
-        .respondWithData(() => testData.extendedProjectAssignments.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/users');
-        }));
-
-    describe('project viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
-      });
-
-      it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/users')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.standardRoles.sorted())
-          .respondWithProblem(403.1)
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a project viewer navigating from another tab', () =>
-        mockRoute('/projects/1')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .complete()
-          .route('/projects/1/users')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponse(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-  });
-
   describe('behavior of the component before any role change', () => {
     it('does not send a new request if user navigates back to tab', () => {
       mockLogin();
@@ -135,7 +89,7 @@ describe('ProjectUserList', () => {
         .route('/projects/1/settings')
         .complete()
         .route('/projects/1/users')
-        .respondWithData([/* no responses */]);
+        .testNoRequest();
     });
 
     describe('before the initial data is received', () => {

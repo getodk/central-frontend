@@ -24,7 +24,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #page-body {
-  margin-top: 20px;
+  margin-top: $margin-top-page-body;
 }
 </style>

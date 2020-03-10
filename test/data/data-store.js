@@ -1,4 +1,4 @@
-import faker from '../faker';
+import { isBefore } from '../util/date-time';
 
 // An array-like collection of objects. Objects may be created, read, sorted,
 // and deleted. The objects are ordered within the collection in order of
@@ -16,7 +16,7 @@ class Collection {
   createNew(options = undefined) { throw new Error('not implemented'); }
   // Returns the number of objects in the store.
   get size() { throw new Error('not implemented'); }
-  // Returns the object at the specified index.
+  // Returns the object at the specified index. The index may be negative.
   get(index) { throw new Error('not implemented'); }
   // Returns the objects of the collection as an Array that is sorted in some
   // way (in order of creation or otherwise).
@@ -25,24 +25,8 @@ class Collection {
 
   /* eslint-enable no-unused-vars */
 
-  first() { return this.size !== 0 ? this.get(0) : undefined; }
-  last() { return this.size !== 0 ? this.get(this.size - 1) : undefined; }
-
-  random() {
-    if (this.size === 0) return undefined;
-    return this.get(faker.random.number({ max: this.size - 1 }));
-  }
-
-  firstOrCreatePast() {
-    if (this.size === 0) this.createPast(1);
-    return this.get(0);
-  }
-
-  randomOrCreatePast() {
-    return this.size !== 0
-      ? this.random()
-      : this.createPast(1).get(0);
-  }
+  first() { return this.get(0); }
+  last() { return this.get(-1); }
 }
 
 // Implements the methods of Collection.
@@ -65,26 +49,18 @@ class Store extends Collection {
 
   reset() {
     this._objects = [];
-    this._createdNew = false;
     this._id = 0;
     this._lastCreatedAt = null;
   }
 
   createPast(count, options = undefined) {
-    if (count === 0) return this;
-    // We could remove this restriction, but it would require reworking
-    // this._lastCreatedAt and maybe other things.
-    if (this._createdNew)
-      throw new Error('createPast() is not allowed after createNew()');
     for (let i = 0; i < count; i += 1)
       this._create(true, options);
     return this;
   }
 
   createNew(options = undefined) {
-    const object = this._create(false, options);
-    this._createdNew = true;
-    return object;
+    return this._create(false, options);
   }
 
   _create(inPast, options = undefined) {
@@ -107,13 +83,24 @@ class Store extends Collection {
       // should be greater than or equal to lastCreatedAt.
       lastCreatedAt: this._lastCreatedAt
     });
-    this._objects.push(object);
+
+    if (object.createdAt != null && this._lastCreatedAt != null &&
+      isBefore(object.createdAt, this._lastCreatedAt))
+      throw new Error('invalid createdAt');
     this._lastCreatedAt = object.createdAt;
+
+    this._objects.push(object);
     return object;
   }
 
   get size() { return this._objects.length; }
-  get(index) { return this._objects[index]; }
+
+  get(index) {
+    if (index >= 0) return this._objects[index];
+    return index >= -this._objects.length
+      ? this._objects[this._objects.length + index]
+      : undefined;
+  }
 
   sorted() {
     const copy = [...this._objects];
@@ -128,21 +115,26 @@ class Store extends Collection {
   // Updates an existing object in place, setting the properties specified by
   // `props`. If the object has an updatedAt property, it is set to the current
   // time. Returns the updated object.
-  update(object, props) {
-    if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
-      // Objects are ordered in the store in order of creation. If the factory
-      // returns objects with a createdAt property, then the objects should also
-      // be ordered by createdAt. (The order by createdAt should match the
-      // actual order of creation.) Because of that, update() does not support
-      // updating an object's createdAt property.
-      throw new Error('createdAt cannot be updated');
+  update(objectOrIndex, props = undefined) {
+    if (typeof objectOrIndex === 'number')
+      return this.update(this.get(objectOrIndex), props);
+    if (objectOrIndex == null) throw new Error('invalid object');
+    if (props != null) {
+      if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
+        // Objects are ordered in the store in order of creation. If the factory
+        // returns objects with a createdAt property, then the objects should
+        // also be ordered by createdAt. (The order by createdAt should match
+        // the actual order of creation.) Because of that, update() does not
+        // support updating an object's createdAt property.
+        throw new Error('createdAt cannot be updated');
+      }
+      Object.assign(objectOrIndex, props);
     }
-    Object.assign(object, props);
-    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
+    if (Object.prototype.hasOwnProperty.call(objectOrIndex, 'updatedAt')) {
       // eslint-disable-next-line no-param-reassign
-      object.updatedAt = new Date().toISOString();
+      objectOrIndex.updatedAt = new Date().toISOString();
     }
-    return object;
+    return objectOrIndex;
   }
 }
 
@@ -166,7 +158,11 @@ class View extends Collection {
   }
 
   get size() { return this._store.size; }
-  get(index) { return this._transform(this._store.get(index)); }
+
+  get(index) {
+    const object = this._store.get(index);
+    return object !== undefined ? this._transform(object) : undefined;
+  }
 
   sorted() {
     const sorted = this._store.sorted();

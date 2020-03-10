@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
             <p>
               <button type="button" class="btn btn-danger"
                 @click="showModal('deleteForm')">
-                Delete this Form
+                Delete this Form&hellip;
               </button>
             </p>
           </div>
@@ -59,9 +59,6 @@ export default {
   name: 'FormSettings',
   components: { FormDelete },
   mixins: [modal(), routes(), validateData()],
-  // Setting this in order to ignore attributes from FormShow that are intended
-  // for other form-related components.
-  inheritAttrs: false,
   data() {
     return {
       deleteForm: {

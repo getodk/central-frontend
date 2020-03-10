@@ -9,7 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
+
+let key = 0;
 
 class Base {
   constructor(data) {
@@ -25,8 +26,9 @@ class Base {
   // Backend Key object.
   get key() {
     if (this._key != null) return this._key;
-    this._key = Vue.prototype.$uniqueId();
-    return this._key;
+    key += 1;
+    this._key = key;
+    return key;
   }
 
   with(data) {

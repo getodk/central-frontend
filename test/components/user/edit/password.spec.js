@@ -4,7 +4,7 @@ import testData from '../../../data';
 import { fillForm, submitForm } from '../../../util/event';
 import { mockHttp, mockRoute } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
-import { mountAndMark } from '../../../util/destroy';
+import { mountAndMark } from '../../../util/lifecycle';
 
 const submitPasswords = (wrapper, { match }) =>
   submitForm(wrapper, '#user-edit-password form', [

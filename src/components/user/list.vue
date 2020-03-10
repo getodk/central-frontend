@@ -18,7 +18,7 @@ either is an Administrator or has no role. -->
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="showModal('newUser')">
-        <span class="icon-plus-circle"></span>Create Web User
+        <span class="icon-plus-circle"></span>Create Web User&hellip;
       </button>
       <p>
         Web Users have accounts on this website to oversee and administer the
@@ -40,7 +40,7 @@ either is an Administrator or has no role. -->
           <th>Display Name</th>
           <th>Email Address</th>
           <th>Sitewide Role</th>
-          <th class="user-actions">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody v-if="users != null && adminIds != null">
@@ -177,19 +177,19 @@ export default {
     },
     showResetPassword(user) {
       this.resetPassword.user = user;
-      this.resetPassword.state = true;
+      this.showModal('resetPassword');
     },
     afterResetPassword(user) {
-      this.resetPassword.state = false;
+      this.hideModal('resetPassword');
       this.$alert().success(`The password for "${user.displayName}" has been invalidated. An email has been sent to ${user.email} with instructions on how to proceed.`);
     },
     showRetire(user) {
       this.retire.user = user;
-      this.retire.state = true;
+      this.showModal('retire');
     },
     afterRetire(user) {
       this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
-      this.retire.state = false;
+      this.hideModal('retire');
       this.$alert().success(`The user "${user.displayName}" has been retired.`);
     }
   }
@@ -202,11 +202,9 @@ export default {
 #user-list-table {
   table-layout: fixed;
 
-  th, td {
-    &.user-actions {
-      // 160px is the width of the .dropdown-menu.
-      width: $padding-left-table-data + $padding-right-table-data + 160px;
-    }
+  th:nth-child(4) {
+    width: $padding-left-table-data + $padding-right-table-data +
+      $min-width-dropdown-menu;
   }
 }
 </style>

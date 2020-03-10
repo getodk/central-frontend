@@ -11,20 +11,29 @@ except according to the terms contained in the LICENSE file.
 */
 import Base from './base';
 
+// This presenter class is used for forms and form versions (primary, draft, and
+// archived).
+
 const props = [
   'projectId',
   'xmlFormId',
   'name',
   'version',
-  'hash',
   'keyId',
   'state',
+  'publishedAt',
   'createdAt',
   'updatedAt',
-  // Extended metadata
+  // Extended form, extended form version, and extended form draft
+  'excelContentType',
+  // Extended form and extended form draft
   'submissions',
   'lastSubmission',
-  'createdBy'
+  'createdBy',
+  // Extended form version
+  'publishedBy',
+  // Form draft
+  'draftToken'
 ];
 
 export default class Form extends Base(props) {

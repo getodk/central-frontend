@@ -40,6 +40,14 @@ Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap
 
 We use some, but not all, of Bootstrap's jQuery plugins. We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
 
+### HTTP Requests
+
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vuex store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
+
+### Presenter Classes
+
+Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters`](/src/presenters)). This class extends the [base presenter class](/src/presenters/base.js). When you use the `request` module of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the store will automatically wrap the response data within a presenter object.
+
 ### Learning About a Component
 
 To learn how a given component works, one of the best places to start is how the component communicates with its parent component:
@@ -48,15 +56,26 @@ To learn how a given component works, one of the best places to start is how the
 - Does it have slots?
 - Does it emit events?
 
-### HTTP Requests
-
-We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vuex store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
-
 ### Component Names
 
 We specify a name for every component, which facilitates the use of the Vue devtools.
 
-If no name is specified for a bottom-level route, it is given the same name as its component. See [`router.js`](/src/router.js) for details.
+If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
+
+In general, we try not to use component names to drive logic. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
+
+#### Naming Conventions
+
+Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormOverview`. The following are common suffixes:
+
+* `List`. A component that lists resources of a particular type. The component often includes a table, an empty table message, text and buttons above the table, and one or more modals.
+* `Table`. A table for a particular type of resource. A `Table` component should just be the `<table>` element and should not include an empty table message or other content.
+* `Row`. A row of a `*Table` component.
+* `Show`. A component that shows a single resource of a particular type.
+* `Home`. A parent component of related components, for example, `SystemHome`.
+* `New`. A modal used to create a new resource of a particular type.
+* `Edit`. A component used to update an existing resource of a particular type.
+* `Delete`. A modal used to delete an existing resource of a particular type.
 
 ### Vue Mixins
 
@@ -64,7 +83,7 @@ Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mi
 
 ### Router
 
-We support a number of route meta fields, which we document in [`/src/router.js`](/src/router.js). The router contains a fair amount of logic, which is driven largely by the meta fields.
+We support a number of route meta fields, which we document in [`/src/routes.js`](/src/routes.js). The router ([`/src/router.js`](/src/router.js)) contains a fair amount of logic, which is driven largely by the meta fields.
 
 We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
@@ -90,7 +109,7 @@ Certain actions are standardized across ODK Central Frontend.
 
 If the user clicks a button that performs a server-side action, then during the request:
 
-* The button should be disabled.
+* The button should be disabled. Related buttons, such as a cancel button, should also be disabled.
 * A spinner should appear within the button.
 * If the button is within a modal, then in most cases, the user should not be able to hide the modal.
 
@@ -98,7 +117,7 @@ Once the request completes:
 
 * An alert should be shown indicating the result of the request. The alert should persist on-screen in the case that performing the button's operation also navigates to another page.
 
-You can use `mockHttp().standardButton()` to test some of these things for a particular form.
+You can use `mockHttp().testStandardButton()` to test some of these things for a particular button.
 
 #### Standard Form Things
 

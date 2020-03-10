@@ -1,8 +1,9 @@
+import faker from 'faker';
 import { omit } from 'ramda';
 
-import faker from '../faker';
 import { dataStore, view } from './data-store';
 import { extendedUsers } from './users';
+import { fakePastDate } from '../util/date-time';
 import { standardRoles } from './roles';
 
 const verbsForUserAndRole = (extendedUser, roleSystem) => {
@@ -28,46 +29,34 @@ export const extendedProjects = dataStore({
     archived = false,
     // The default value of this property does not necessarily match
     // testData.extendedForms.
-    forms = inPast ? faker.random.number() : 0,
+    forms = 0,
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = inPast ? faker.random.number() : 0,
-    lastSubmission = undefined,
+    lastSubmission = null,
     key = null,
+    currentUser = extendedUsers.size !== 0
+      ? extendedUsers.first()
+      : extendedUsers.createPast(1).last(),
     // The current user's role on the project
     role = 'none'
-  }) => {
-    const { createdAt, updatedAt } = faker.date.timestamps(inPast, [
-      lastCreatedAt
-    ]);
-
-    if (extendedUsers.size === 0) throw new Error('user not found');
-    const verbs = verbsForUserAndRole(extendedUsers.first(), role);
-
-    const project = {
-      id,
-      name,
-      archived,
-      keyId: key != null ? key.id : null,
-      createdAt,
-      updatedAt,
-      // Extended metadata
-      forms,
-      appUsers,
-      verbs
-    };
-
-    if (lastSubmission !== undefined) {
-      project.lastSubmission = lastSubmission;
-    } else {
-      // This property does not necessarily match testData.extendedSubmissions.
-      project.lastSubmission = forms !== 0 && faker.random.boolean()
-        ? faker.date.pastSince(createdAt).toISOString()
-        : null;
-    }
-
-    return project;
-  },
+  }) => ({
+    id,
+    name,
+    archived,
+    keyId: key != null ? key.id : null,
+    createdAt: inPast
+      ? fakePastDate([lastCreatedAt])
+      : new Date().toISOString(),
+    updatedAt: null,
+    // Extended metadata
+    forms,
+    // This property does not necessarily match testData.extendedForms or
+    // testData.extendedSubmissions.
+    lastSubmission,
+    appUsers,
+    verbs: verbsForUserAndRole(currentUser, role)
+  }),
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 

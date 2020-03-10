@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </form>
     </td>
-    <td class="user-actions">
+    <td>
       <div class="dropdown">
         <button :id="actionsButtonId" type="button"
           class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
@@ -46,12 +46,12 @@ except according to the terms contained in the LICENSE file.
           <li>
             <a class="reset-password" href="#"
               @click.prevent="$emit('reset-password', user)">
-              Reset password
+              Reset password&hellip;
             </a>
           </li>
           <li :class="{ disabled }" :title="retireTitle">
             <a class="retire-user" href="#" @click.prevent="retire">
-              Retire user
+              Retire user&hellip;
             </a>
           </li>
         </ul>

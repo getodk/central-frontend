@@ -129,7 +129,7 @@ export default {
           this.nickname = '';
 
           this.step = 2;
-          this.created = new FieldKey(this.project.id, data);
+          this.created = new FieldKey(data);
         })
         .catch(noop);
     },

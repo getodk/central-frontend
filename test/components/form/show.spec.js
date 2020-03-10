@@ -5,6 +5,8 @@ import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 
 describe('FormShow', () => {
+  beforeEach(mockLogin);
+
   describe('route params', () => {
     it('requires projectId param to be integer', () =>
       mockRoute('/projects/p/forms/f')
@@ -12,137 +14,40 @@ describe('FormShow', () => {
           app.find(NotFound).length.should.equal(1);
         }));
 
-    it('handles encoded xmlFormId correctly', () => {
-      mockLogin();
-      const { project, form } = testData.createProjectAndFormWithoutSubmissions({
-        form: { xmlFormId: 'i ı' }
-      });
-      return mockRoute('/projects/1/forms/i%20%C4%B1')
+    it('handles an encoded xmlFormId correctly', () =>
+      mockRoute('/projects/1/forms/i%20%C4%B1')
         .beforeEachResponse((app, request, index) => {
           if (index === 1) request.url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
         })
-        .respondWithData(() => project)
-        .respondWithData(() => form)
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondWithData(() =>
+          testData.extendedProjects.createPast(1, { forms: 1 }).last())
+        .respondWithData(() =>
+          testData.extendedForms.createPast(1, { xmlFormId: 'i ı' }).last())
+        .respondWithProblem(404.1) // formDraft
+        .respondWithProblem(404.1) // attachments
         .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
-        });
-    });
+        }));
   });
 
-  it("shows the project's name", () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { name: 'My Project' }).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // formActors
-      .afterResponses(app => {
-        const text = app.first('#page-head-context span').text().trim();
-        text.should.equal('My Project');
-      });
-  });
-
-  it("appends (archived) to an archived project's name", () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f')
-      .respondWithData(() => testData.extendedProjects
-        .createPast(1, { name: 'My Project', archived: true })
-        .last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // formActors
-      .afterResponses(app => {
-        const text = app.first('#page-head-context span').text().trim();
-        text.should.equal('My Project (archived)');
-      });
-  });
-
-  it("renders the project's name as a link", () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // formActors
-      .afterResponses(app => {
-        const a = app.first('#page-head-context span a');
-        a.getAttribute('href').should.equal('#/projects/1');
-      });
-  });
-
-  it('shows a link back to the project overview', () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // formActors
-      .afterResponses(app => {
-        const a = app.find('#page-head-context a');
-        a.length.should.equal(2);
-        a[1].getAttribute('href').should.equal('#/projects/1');
-      });
-  });
-
-  it("shows the form's name", () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => []) // formActors
-      .afterResponses(app => {
-        const title = app.first('#page-head-title').text().trim();
-        const form = testData.extendedForms.last();
-        title.should.equal(form.name != null ? form.name : form.xmlFormId);
-      });
-  });
-
-  it('shows a loading message until all responses are received', () => {
-    mockLogin();
-    return mockRoute('/projects/1/forms/f/media-files')
+  it('shows a loading message until all responses are received', () =>
+    mockRoute('/projects/1/forms/f/draft/attachments')
       .beforeEachResponse(app => {
         const loading = app.find(Loading);
         loading.length.should.equal(1);
         loading[0].getProp('state').should.eql(true);
       })
       .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
+      .respondWithData(() => testData.extendedForms
+        .createPast(1, { xmlFormId: 'f', draft: true })
+        .last())
+      .respondWithData(() => testData.extendedFormDrafts.last())
       .respondWithData(() =>
         testData.standardFormAttachments.createPast(1).sorted())
       .afterResponses(app => {
         const loading = app.find(Loading);
         loading.length.should.equal(1);
         loading[0].getProp('state').should.eql(false);
-      });
-  });
-
-  it('only shows the Submissions tab to a project viewer', () => {
-    mockLogin({ role: 'none' });
-    const { project, form } = testData.createProjectAndFormWithoutSubmissions({
-      project: { role: 'viewer' },
-      form: { xmlFormId: 'f' }
-    });
-    return mockRoute('/projects/1/forms/f/submissions')
-      .respondWithData(() => project)
-      .respondWithData(() => form)
-      .respondWithData(() => testData.standardFormAttachments.sorted())
-      .respondWithData(() => testData.standardKeys.sorted())
-      .respondWithData(() => form._schema)
-      .respondWithData(testData.submissionOData)
-      .afterResponses(app => {
-        const tabs = app.find('#page-head-tabs a');
-        tabs.length.should.equal(1);
-        tabs[0].text().should.equal('Submissions');
-      });
-  });
+      }));
 });

@@ -1,7 +1,7 @@
 import * as Actors from './actors';
 import * as Assignments from './assignments';
 import * as Audits from './audits';
-import * as Backups from './backups';
+import * as BackupsConfigs from './backups-configs';
 import * as FieldKeys from './field-keys';
 import * as FormAttachments from './form-attachments';
 import * as Forms from './forms';
@@ -18,7 +18,7 @@ const testData = Object.assign(
   Actors,
   Assignments,
   Audits,
-  Backups,
+  BackupsConfigs,
   FieldKeys,
   FormAttachments,
   Forms,

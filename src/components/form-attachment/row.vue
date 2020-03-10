@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { apiPaths } from '../../util/request';
-import { formatDate } from '../../util/util';
+import { formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 const TYPES = {
@@ -101,7 +101,7 @@ export default {
       return displayName != null ? displayName : type;
     },
     href() {
-      return apiPaths.formAttachment(
+      return apiPaths.formDraftAttachment(
         this.form.projectId,
         this.form.xmlFormId,
         this.attachment.name

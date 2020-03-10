@@ -5,7 +5,7 @@ import { mockRoute } from '../util/http';
 describe('NotFound', () => {
   it('does not send a request, including to restore the session', () =>
     mockRoute('/not-found')
-      .respondWithData([/* no responses */]));
+      .testNoRequest());
 
   // This might not be the ideal behavior, but this test documents the current
   // behavior.
@@ -13,14 +13,14 @@ describe('NotFound', () => {
     mockRoute('/not-found')
       .complete()
       .route('/login')
-      .respondWithData([/* no responses */]));
+      .testNoRequest());
 
-  it('is accessible by a user who is logged in', () => {
+  it('is accessible to a user who is logged in', () => {
     mockLogin();
     return mockRoute('/account/edit')
       .respondWithData(() => testData.standardUsers.first())
       .complete()
       .route('/not-found')
-      .respondWithData([/* no responses */]);
+      .testNoRequest();
   });
 });

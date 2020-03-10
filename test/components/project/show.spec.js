@@ -58,9 +58,8 @@ describe('ProjectShow', () => {
   it('only shows the Overview tab to a project viewer', () => {
     mockLogin({ role: 'none' });
     return mockRoute('/projects/1')
-      .respondWithData(() => testData.extendedProjects
-        .createPast(1, { role: 'viewer', forms: 0 })
-        .last())
+      .respondWithData(() =>
+        testData.extendedProjects.createPast(1, { role: 'viewer' }).last())
       .respondWithData(() => testData.extendedForms.sorted())
       .afterResponses(app => {
         const tabs = app.find('#page-head-tabs a');

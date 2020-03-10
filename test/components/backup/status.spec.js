@@ -1,8 +1,8 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/util';
+import { ago, formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 
 const assertContent = (component, iconClass, title, buttonText) => {
   const icon = component.first('#backup-status-icon');
@@ -20,29 +20,29 @@ describe('BackupStatus', () => {
   it('renders correctly if backups are not configured', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: {
-          status: 404,
-          data: {
-            code: 404.1,
-            message: 'Problem'
-          }
-        }
+        backupsConfig: { problem: 404.1 }
       }
     });
     assertContent(
       component,
       'icon-question-circle',
       'Backups are not configured.',
-      'Set up now'
+      'Set up now…'
     );
   });
 
   it('renders correctly if the latest recent attempt was a success', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: testData.backups
-          .createPast(1, { recentAttemptsForCurrent: [true] })
-          .last()
+        backupsConfig: testData.standardBackupsConfigs
+          .createPast(1, { setAt: ago({ days: 4 }).toISO() })
+          .last(),
+        audits: testData.standardAudits
+          .createBackupAudit({
+            success: true,
+            loggedAt: ago({ days: 2 }).toISO()
+          })
+          .sorted()
       }
     });
 
@@ -50,27 +50,33 @@ describe('BackupStatus', () => {
       component,
       'icon-check-circle',
       'Backup is working.',
-      'Terminate'
+      'Terminate…'
     );
 
     const mrla = component.first('#backup-status-most-recently-logged-at');
-    const { loggedAt } = testData.backups.last().recent[0];
+    const { loggedAt } = testData.extendedAudits.last();
     mrla.text().trim().should.equal(formatDate(loggedAt));
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {
     const component = mountAndMark(BackupStatus, {
       requestData: {
-        backupsConfig: testData.backups
-          .createPast(1, { recentAttemptsForCurrent: [false] })
-          .last()
+        backupsConfig: testData.standardBackupsConfigs
+          .createPast(1, { setAt: ago({ days: 2 }).toISO() })
+          .last(),
+        audits: testData.standardAudits
+          .createBackupAudit({
+            success: false,
+            loggedAt: ago({ days: 1 }).toISO()
+          })
+          .sorted()
       }
     });
     assertContent(
       component,
       'icon-times-circle',
       'Something is wrong!',
-      'Terminate'
+      'Terminate…'
     );
   });
 
@@ -78,58 +84,78 @@ describe('BackupStatus', () => {
     it('renders correctly if the config was recently set up', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: true,
-              recentAttemptsForCurrent: []
-            })
-            .last()
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 2 }).toISO() })
+            .last(),
+          audits: []
         }
       });
       assertContent(
         component,
         'icon-check-circle',
         'The configured backup has not yet run.',
-        'Terminate'
+        'Terminate…'
+      );
+    });
+
+    it('renders correctly if latest attempt was a recent failure for previous config', () => {
+      const component = mountAndMark(BackupStatus, {
+        requestData: {
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 1 }).toISO() })
+            .last(),
+          audits: testData.standardAudits
+            .createBackupAudit({
+              success: false,
+              loggedAt: ago({ days: 2 }).toISO()
+            })
+            .sorted()
+        }
+      });
+      assertContent(
+        component,
+        'icon-check-circle',
+        'The configured backup has not yet run.',
+        'Terminate…'
       );
     });
 
     it('renders correctly if the config was not recently set up', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: false,
-              recentAttemptsForCurrent: []
-            })
-            .last()
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 4 }).toISO() })
+            .last(),
+          audits: []
         }
       });
       assertContent(
         component,
         'icon-times-circle',
         'Something is wrong!',
-        'Terminate'
+        'Terminate…'
       );
     });
 
-    it('renders correctly if latest recent attempt for a previous config failed', () => {
+    it('renders correctly if latest non-recent attempt was a success', () => {
       const component = mountAndMark(BackupStatus, {
         requestData: {
-          backupsConfig: testData.backups
-            .createPast(1, {
-              recentlySetUp: true,
-              recentAttemptsForCurrent: [],
-              recentAttemptsForPrevious: [false]
+          backupsConfig: testData.standardBackupsConfigs
+            .createPast(1, { setAt: ago({ days: 5 }).toISO() })
+            .last(),
+          audits: testData.standardAudits
+            .createBackupAudit({
+              success: true,
+              loggedAt: ago({ days: 4 }).toISO()
             })
-            .last()
+            .sorted()
         }
       });
       assertContent(
         component,
-        'icon-check-circle',
-        'The configured backup has not yet run.',
-        'Terminate'
+        'icon-times-circle',
+        'Something is wrong!',
+        'Terminate…'
       );
     });
   });

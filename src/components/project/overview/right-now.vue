@@ -21,9 +21,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <strong>{{ $pluralize('App User', project.appUsers) }}</strong> who
-          can use a data collection client to download and submit Form data to
-          this Project.
+          <p>
+            <strong>{{ $pluralize('App User', project.appUsers) }}</strong> who
+            can use a data collection client to download and submit Form data to
+            this Project.
+          </p>
         </template>
       </summary-item>
       <summary-item clickable icon="file-text"
@@ -33,8 +35,10 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <strong>{{ $pluralize('Form', forms.length) }}</strong> which can be
-          downloaded and given as surveys on mobile clients.
+          <p>
+            <strong>{{ $pluralize('Form', forms.length) }}</strong> which can be
+            downloaded and given as surveys on mobile clients.
+          </p>
         </template>
       </summary-item>
     </template>

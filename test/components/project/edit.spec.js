@@ -2,7 +2,7 @@ import ProjectSettings from '../../../src/components/project/settings.vue';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { submitForm } from '../../util/event';
 
 describe('ProjectEdit', () => {
@@ -52,10 +52,8 @@ describe('ProjectEdit', () => {
         .request(app => submitForm(app, '#project-edit form', [
           ['input', 'New Name']
         ]))
-        .respondWithData(() => testData.extendedProjects.update(
-          testData.extendedProjects.last(),
-          { name: 'New Name' }
-        ))
+        .respondWithData(() =>
+          testData.extendedProjects.update(-1, { name: 'New Name' }))
         .afterResponse(app => {
           app.should.alert('success');
         }));
@@ -68,10 +66,8 @@ describe('ProjectEdit', () => {
         .request(app => submitForm(app, '#project-edit form', [
           ['input', 'New Name']
         ]))
-        .respondWithData(() => testData.extendedProjects.update(
-          testData.extendedProjects.last(),
-          { name: 'New Name' }
-        ))
+        .respondWithData(() =>
+          testData.extendedProjects.update(-1, { name: 'New Name' }))
         .afterResponse(app => {
           app.first('#page-head-title').text().trim().should.equal('New Name');
         }));

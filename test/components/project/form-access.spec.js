@@ -1,9 +1,8 @@
 import ProjectFormAccess from '../../../src/components/project/form-access.vue';
-import faker from '../../faker';
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 // Loads ProjectFormAccess, rendering one row for the table.
@@ -15,14 +14,14 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
     .createPast(1, { xmlFormId: 'f', name: 'My Form', state: 'closing' })
     .sorted())
   .respondWithData(() => testData.extendedFieldKeys
-    .createPast(1, { displayName: 'App User 1', token: faker.central.token() })
-    .createPast(1, { displayName: 'App User 2', token: faker.central.token() })
+    .createPast(1, { displayName: 'App User 1' })
+    .createPast(1, { displayName: 'App User 2' })
     .createPast(1, { displayName: 'App User 3', token: null })
     .sorted())
   .respondWithData(() => testData.standardRoles.sorted())
   .respondWithData(() => testData.standardFormSummaryAssignments
-    // Create an assignment for "App User 2", which will be the first app user
-    // in the table.
+    // Create an assignment for "App User 2", which will be the first field key
+    // shown in the table.
     .createPast(1, {
       actorId: testData.extendedFieldKeys.get(1).id,
       role: 'app-user',
@@ -49,59 +48,9 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
     .sorted());
 
 describe('ProjectFormAccess', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/form-access')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/form-access')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .respondWithData(() => testData.extendedFieldKeys.sorted())
-        .respondWithData(() => testData.standardRoles.sorted())
-        .respondWithData(() => testData.standardFormSummaryAssignments.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/form-access');
-        }));
-
-    describe('project viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 0 });
-      });
-
-      it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/form-access')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .respondWithProblem(403.1) // fieldKeys
-          .respondWithData(() => testData.standardRoles.sorted())
-          .respondWithProblem(403.1) // formSummaryAssignments
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a project viewer navigating from another tab', () =>
-        mockRoute('/projects/1')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .complete()
-          .route('/projects/1/form-access')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponse(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-  });
+  beforeEach(mockLogin);
 
   describe('after login', () => {
-    beforeEach(mockLogin);
-
     it('initially disables the Save button', () =>
       loadFormAccess().afterResponses(app => {
         app.first('#project-form-access-save-button').should.be.disabled();
@@ -123,26 +72,6 @@ describe('ProjectFormAccess', () => {
         th[4].getAttribute('title').should.equal('App User 1');
       }));
 
-    it('correctly renders a row of the table', () =>
-      loadFormAccess().afterResponses(app => {
-        const td = app.first('#project-form-access-table').find('td');
-        td.length.should.equal(6);
-
-        // Form column
-        const a = td[0].first('a');
-        a.text().trim().should.equal('My Form');
-        a.getAttribute('title').should.equal('My Form');
-        a.getAttribute('href').should.equal('#/projects/1/forms/f');
-
-        // State column
-        td[1].first('select').element.value.should.equal('closing');
-
-        // App User Access columns
-        td[3].first('input').element.checked.should.be.true();
-        td[4].first('input').element.checked.should.be.false();
-        // There is no column for "App User 3".
-      }));
-
     it('shows a message if there are no forms', () => {
       const component = mountAndMark(ProjectFormAccess, {
         propsData: {
@@ -156,7 +85,7 @@ describe('ProjectFormAccess', () => {
           formSummaryAssignments: []
         }
       });
-      component.find('.empty-table-message').length.should.equal(1);
+      component.first('.empty-table-message').should.be.visible();
     });
 
     describe("changing a form's state", () => {
@@ -326,10 +255,7 @@ describe('ProjectFormAccess', () => {
       const saveWithSuccess = () => save()
         .respondWithData(() => testData.standardProjects.last())
         .respondWithData(() => {
-          testData.extendedForms.update(
-            testData.extendedForms.last(),
-            { state: 'open' }
-          );
+          testData.extendedForms.updateState(-1, 'open');
           return testData.extendedForms.sorted();
         })
         .respondWithData(() => testData.extendedFieldKeys.sorted())

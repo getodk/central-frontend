@@ -63,7 +63,8 @@ except according to the terms contained in the LICENSE file.
           <li v-else class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
               role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span>{{ currentUser.displayName }}
+              <span class="icon-user-circle-o"></span>
+              <span>{{ currentUser.displayName }}</span>
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -134,7 +135,7 @@ $shadow-color: #dedede;
   min-height: auto;
 
   .navbar-brand {
-    font-size: 12px;
+    font-size: $font-size-button;
     font-weight: bold;
     height: auto;
     letter-spacing: -0.02em;
@@ -146,7 +147,7 @@ $shadow-color: #dedede;
   }
 
   .navbar-nav {
-    font-size: 12px;
+    font-size: $font-size-button;
     margin-top: -1 * $border-height;
 
     > li > a {

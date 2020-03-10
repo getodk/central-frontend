@@ -51,9 +51,7 @@ describe('UserEditBasicDetails', () => {
         ['input[type="email"]', 'new@email.com']
       ]))
       .respondWithData(() => {
-        testData.extendedUsers.update(testData.extendedUsers.last(), {
-          email: 'new@email.com'
-        });
+        testData.extendedUsers.update(-1, { email: 'new@email.com' });
         return testData.standardUsers.last();
       })
       .afterResponse(app => {
@@ -68,9 +66,7 @@ describe('UserEditBasicDetails', () => {
         ['input[type="text"]', 'New Name']
       ]))
       .respondWithData(() => {
-        testData.extendedUsers.update(testData.extendedUsers.last(), {
-          displayName: 'New Name'
-        });
+        testData.extendedUsers.update(-1, { displayName: 'New Name' });
         return testData.standardUsers.last();
       })
       .afterResponse(app => {

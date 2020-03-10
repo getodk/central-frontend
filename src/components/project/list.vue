@@ -86,7 +86,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="currentUser.can('project.create')"
           id="project-list-new-button" type="button" class="btn btn-primary"
           @click="showModal('newProject')">
-          <span class="icon-plus-circle"></span>New
+          <span class="icon-plus-circle"></span>New&hellip;
         </button>
       </template>
       <template #body>

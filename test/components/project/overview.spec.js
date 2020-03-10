@@ -1,36 +1,24 @@
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
+import { load } from '../../util/http';
+import { mockLogin } from '../../util/session';
 
 describe('ProjectOverview', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
+  beforeEach(mockLogin);
 
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1');
-        }));
+  it('does not send a new request if user navigates back to tab', () => {
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1')
+      .complete()
+      .route('/projects/1/settings')
+      .complete()
+      .route('/projects/1')
+      .testNoRequest();
   });
 
-  describe('after login', () => {
-    beforeEach(mockLogin);
-
-    it('does not send a new request if user navigates back to tab', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .complete()
-        .route('/projects/1/settings')
-        .complete()
-        .route('/projects/1')
-        .respondWithData([/* no responses */]));
+  it('shows a message if there are no forms', () => {
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1').then(app => {
+      app.first('#project-overview .empty-table-message').should.be.visible();
+    });
   });
 });

@@ -41,7 +41,11 @@ $color-input: #555;
 $color-input-inactive: #777;
 $color-input-background: #eee;
 $color-panel-input-background: #f7f7f7;
+$font-size-button: 12px;
 $width-flatpickr-range-input: 192px;
+
+// Dropdowns
+$min-width-dropdown-menu: 150px;
 
 // Tables
 $margin-bottom-table: 20px;
@@ -59,6 +63,9 @@ $padding-top-table-data: 8px;
 
 // Modals
 $padding-modal-body: 15px;
+
+// PageBody
+$margin-top-page-body: 20px;
 
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;

@@ -25,7 +25,8 @@ import './assets/css/icomoon.css';
 import 'flatpickr/dist/flatpickr.css';
 import './assets/scss/app.scss';
 
-import { StoreAlert, uniqueSequence } from './util/util';
+import { StoreAlert } from './util/alert';
+import { uniqueSequence } from './util/util';
 // ./jquery must be imported before ./bootstrap, as Bootstrap's JavaScript
 // requires jQuery.
 import './jquery';

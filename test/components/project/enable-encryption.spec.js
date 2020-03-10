@@ -4,7 +4,7 @@ import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../util/event';
 import { mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/destroy';
+import { mountAndMark } from '../../util/lifecycle';
 
 describe('ProjectEnableEncryption', () => {
   beforeEach(mockLogin);
@@ -159,7 +159,7 @@ describe('ProjectEnableEncryption', () => {
         .request(app =>
           trigger.click(app, '#project-enable-encryption .btn-primary'))
         .respondWithData(() => testData.extendedProjects.update(
-          testData.extendedProjects.last(),
+          -1,
           { keyId: testData.standardKeys.createNew({ managed: true }).id }
         ))
         .afterResponse(app => {

@@ -11,42 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="dataExists">
-      <template v-if="project != null" #context>
-        <span>
-          <router-link :to="projectPath()">
-            {{ project.name }}{{ project.archived ? ' (archived)' : '' }}</router-link>
-        </span>
-        <router-link :to="projectPath()">Back to Project Overview</router-link>
-      </template>
-      <template v-if="form != null" #title>
-        {{ form.nameOrId() }}
-      </template>
-      <template #tabs>
-        <li v-if="canRoute(tabPath(''))" :class="tabClass('')"
-          role="presentation">
-          <router-link :to="tabPath('')">Overview</router-link>
-        </li>
-        <li v-if="rendersMediaFilesTab" :class="tabClass('media-files')"
-          role="presentation">
-          <router-link :to="tabPath('media-files')">
-            Media Files
-            <span v-show="missingAttachmentCount !== 0" class="badge">
-              {{ missingAttachmentCount.toLocaleString() }}
-            </span>
-          </router-link>
-        </li>
-        <!-- Everyone with access to the project should be able to navigate to
-        SubmissionList. -->
-        <li :class="tabClass('submissions')" role="presentation">
-          <router-link :to="tabPath('submissions')">Submissions</router-link>
-        </li>
-        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
-          role="presentation">
-          <router-link :to="tabPath('settings')">Settings</router-link>
-        </li>
-      </template>
-    </page-head>
+    <form-head @fetch-draft="fetchDraft"/>
     <page-body>
       <loading :state="initiallyLoading"/>
       <div v-show="dataExists">
@@ -57,9 +22,8 @@ except according to the terms contained in the LICENSE file.
           <!-- <router-view> is immediately created and can send its own
           requests even before the server has responded to the requests from
           ProjectHome and FormShow. -->
-          <router-view :project-id="projectId" :xml-form-id="xmlFormId"
-            :chunk-sizes="submissionChunkSizes"
-            :scrolled-to-bottom="scrolledToBottom"/>
+          <router-view v-bind="routerViewProps" @fetch-form="fetchForm"
+            @fetch-draft="fetchDraft"/>
         </keep-alive>
       </div>
     </page-body>
@@ -67,22 +31,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormHead from './head.vue';
 import Loading from '../loading.vue';
+import Option from '../../util/option';
 import PageBody from '../page/body.vue';
-import PageHead from '../page/head.vue';
 import SubmissionList from '../submission/list.vue';
-import routes from '../../mixins/routes';
-import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['project', 'form', 'attachments'];
+const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
-  components: { Loading, PageBody, PageHead },
-  mixins: [routes(), tab()],
+  components: { FormHead, Loading, PageBody },
   props: {
     projectId: {
       type: String,
@@ -102,22 +63,26 @@ export default {
     };
   },
   computed: {
-    ...requestData(REQUEST_KEYS),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     },
-    tabPathPrefix() {
-      return this.formPath();
-    },
-    rendersMediaFilesTab() {
-      return this.canRoute(this.tabPath('media-files')) &&
-        this.attachments != null && this.attachments.length !== 0;
-    },
-    missingAttachmentCount() {
-      return this.attachments.filter(attachment => !attachment.exists).length;
+    routerViewProps() {
+      switch (this.$route.name) {
+        case 'FormOverview':
+          return { projectId: this.projectId, xmlFormId: this.xmlFormId };
+        case 'SubmissionList':
+          return {
+            projectId: this.projectId,
+            xmlFormId: this.xmlFormId,
+            chunkSizes: this.submissionChunkSizes,
+            scrolledToBottom: this.scrolledToBottom
+          };
+        default:
+          return {};
+      }
     }
   },
   watch: {
@@ -129,29 +94,58 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData() {
+    fetchForm() {
+      this.$store.dispatch('get', [{
+        key: 'form',
+        url: apiPaths.form(this.projectId, this.xmlFormId),
+        extended: true,
+        success: ({ form, submissionsChunk }) => {
+          if (submissionsChunk == null) return;
+          if (submissionsChunk['@odata.count'] === form.submissions)
+            return;
+          this.$store.commit('setData', {
+            key: 'form',
+            value: form.with({
+              submissions: submissionsChunk['@odata.count']
+            })
+          });
+        }
+      }]).catch(noop);
+    },
+    reconcileFormDraftAndAttachments({ formDraft, attachments }) {
+      if (formDraft == null || attachments == null) return;
+      if (formDraft.isDefined() && attachments.isEmpty()) {
+        this.$store.commit('setData', {
+          key: 'formDraft',
+          value: Option.none()
+        });
+      } else if (formDraft.isEmpty() && attachments.isDefined()) {
+        this.$store.commit('setData', {
+          key: 'attachments',
+          value: Option.none()
+        });
+      }
+    },
+    fetchDraft() {
       this.$store.dispatch('get', [
         {
-          key: 'form',
-          url: apiPaths.form(this.projectId, this.xmlFormId),
+          key: 'formDraft',
+          url: apiPaths.formDraft(this.projectId, this.xmlFormId),
           extended: true,
-          success: ({ submissionsChunk }) => {
-            if (submissionsChunk == null) return;
-            if (submissionsChunk['@odata.count'] === this.form.submissions)
-              return;
-            this.$store.commit('setData', {
-              key: 'form',
-              value: this.form.with({
-                submissions: submissionsChunk['@odata.count']
-              })
-            });
-          }
+          fulfillProblem: ({ code }) => code === 404.1,
+          success: this.reconcileFormDraftAndAttachments
         },
         {
           key: 'attachments',
-          url: apiPaths.formAttachments(this.projectId, this.xmlFormId)
+          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
+          fulfillProblem: ({ code }) => code === 404.1,
+          success: this.reconcileFormDraftAndAttachments
         }
       ]).catch(noop);
+    },
+    fetchData() {
+      this.fetchForm();
+      this.fetchDraft();
     }
   }
 };

@@ -10,10 +10,9 @@ import Blank from '../src/components/blank.vue';
 import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
-import { MockLogger } from './util/util';
 import { clearNavGuards, initNavGuards } from './util/router';
-import { clearUniqueFakerResults } from './faker';
-import { destroyMarkedComponent } from './util/destroy';
+import { destroyMarkedComponent } from './util/lifecycle';
+import { noop } from '../src/util/util';
 import { setHttp } from './util/http';
 import './assertions';
 
@@ -38,7 +37,7 @@ setHttp(config => {
   return Promise.reject(new Error());
 });
 
-Vue.prototype.$logger = new MockLogger();
+Vue.prototype.$logger = { log: noop, error: noop };
 
 
 
@@ -191,13 +190,6 @@ beforeEach(() => {
 });
 
 afterEach(testData.reset);
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// FAKER
-
-afterEach(clearUniqueFakerResults);
 
 
 

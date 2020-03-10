@@ -1,58 +1,48 @@
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
+import { load } from '../../util/http';
+import { mockLogin } from '../../util/session';
 
 describe('FormOverview', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/projects/1/forms/f')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
+  beforeEach(mockLogin);
 
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/projects/1/forms/f')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f' })
-          .last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => []) // formActors
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f');
-        }));
-
-    describe('project viewer', () => {
+  describe('draft section', () => {
+    describe('draft exists', () => {
       beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.createProjectAndFormWithoutSubmissions({
-          project: { role: 'viewer' },
-          form: { xmlFormId: 'f' }
+        testData.extendedForms.createPast(1, { version: 'v1' });
+        testData.extendedFormVersions.createPast(1, {
+          version: 'v2',
+          draft: true
         });
       });
 
-      it('redirects a project viewer whose first navigation is to the tab', () =>
-        mockRoute('/projects/1/forms/f')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
-          .respondWithProblem(403.1)
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
+      it('shows the correct title', () =>
+        load('/projects/1/forms/f').then(app => {
+          const section = app.first('#form-overview-draft');
+          const text = section.first('.page-section-heading span').text().trim();
+          text.should.equal('Your Current Draft');
+        }));
 
-      it('redirects a project viewer navigating from project overview', () =>
-        mockRoute('/projects/1')
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondWithData(() => testData.extendedForms.sorted())
-          .complete()
-          .route('/projects/1/forms/f')
-          .respondWithData(() => testData.extendedProjects.sorted())
-          .afterResponse(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
+      it('shows the version string of the draft', () =>
+        load('/projects/1/forms/f').then(app => {
+          const section = app.first('#form-overview-draft');
+          const text = section.first('.form-version-summary-item-version').text().trim();
+          text.should.equal('v2');
+        }));
+
+      // TODO
+      describe('draft checklist', () => {
+        it('shows a shorter checklist');
+        it('links to .../draft/status');
+      });
+    });
+
+    it('shows the correct title if there is no draft', () => {
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f').then(app => {
+        const section = app.first('#form-overview-draft');
+        const text = section.first('.page-section-heading span').text().trim();
+        text.should.equal('No Current Draft');
+      });
     });
   });
 });
