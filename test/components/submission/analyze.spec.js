@@ -31,7 +31,7 @@ describe('SubmissionAnalyze', () => {
         requestData: { form }
       })
       .respondWithData(() => []) // keys
-      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(() => testData.extendedForms.last()._fields)
       .respondWithData(testData.submissionOData)
       .afterResponses(component => {
         const button = component.first('#submission-list-analyze-button');
@@ -56,7 +56,7 @@ describe('SubmissionAnalyze', () => {
       .respondWithData(() =>
         // The button should be disabled even if the key is not managed.
         testData.standardKeys.createPast(1, { managed: false }).sorted())
-      .respondWithData(() => form._schema)
+      .respondWithData(() => form._fields)
       .respondWithData(() => {
         testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
         return testData.submissionOData();
@@ -77,7 +77,7 @@ describe('SubmissionAnalyze', () => {
         }
       })
       .respondWithData(() => testData.standardKeys.sorted())
-      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(() => testData.extendedForms.last()._fields)
       .respondWithData(testData.submissionOData)
       .testModalToggles(
         SubmissionAnalyze,
@@ -98,7 +98,7 @@ describe('SubmissionAnalyze', () => {
       .respondWithProblem(404.1) // formDraft
       .respondWithProblem(404.1) // attachments
       .respondWithData(() => testData.standardKeys.sorted())
-      .respondWithData(() => testData.extendedForms.last()._schema)
+      .respondWithData(() => testData.extendedForms.last()._fields)
       .respondWithData(testData.submissionOData)
       .afterResponses(app =>
         trigger.click(app, '#submission-list-analyze-button'))

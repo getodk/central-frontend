@@ -22,8 +22,7 @@ const oDataValue = (field, instanceId) => {
       return faker.random.number({ precision: 0.00001 });
     case 'string': {
       const { path } = field;
-      if ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
-        (path.length === 1 && path[0] === 'instanceID'))
+      if (path === '/meta/instanceID' || path === '/instanceID')
         return instanceId;
       const paragraphs = faker.random.number({ min: 1, max: 3 });
       return faker.lorem.paragraphs(paragraphs);
@@ -59,11 +58,13 @@ const oDataValue = (field, instanceId) => {
 // `exists` indicates for each field type whether a field of that type should
 // have a value or should be empty. `partial` takes precedence over `exists`:
 // see partialOData in extendedSubmissions.
-const oData = ({ form, instanceId, partial, exists }) => form._schema.reduce(
+const oData = ({ form, instanceId, partial, exists }) => form._fields.reduce(
   (data, field) => {
     // Once we resolve issue #82 for Backend, we should implement repeat groups.
     if (field.type === 'repeat') return data;
-    const fieldLens = lensPath(field.path);
+    const split = field.path.split('/');
+    split.shift();
+    const fieldLens = lensPath(split);
     if (view(fieldLens, data) != null) {
       // `partial` has already specified a value for the field. Return without
       // overwriting the existing value.
@@ -77,8 +78,8 @@ const oData = ({ form, instanceId, partial, exists }) => form._schema.reduce(
     // However, if the field is an element of a group, we ensure that the data
     // includes an object for the group -- even though that object may end up
     // being empty.
-    if (field.path.length === 1) return data;
-    const groupLens = lensPath(field.path.slice(0, field.path.length - 1));
+    if (split.length === 1) return data;
+    const groupLens = lensPath(split.slice(0, split.length - 1));
     return view(groupLens, data) != null ? data : set(groupLens, {}, data);
   },
   partial

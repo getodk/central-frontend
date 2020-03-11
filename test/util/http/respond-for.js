@@ -13,7 +13,7 @@ const defaults = {
   formSummaryAssignments: () =>
     testData.standardFormSummaryAssignments.sorted(),
   form: () => testData.extendedForms.last(),
-  schema: () => testData.extendedForms.last()._schema,
+  fields: () => testData.extendedForms.last()._fields,
   formActors: () => testData.extendedFieldKeys.sorted().map(testData.toActor),
   keys: () => testData.standardKeys.sorted(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
@@ -60,7 +60,7 @@ export default {
   SubmissionList: respond([
     ...formShowKeys,
     'keys',
-    'schema',
+    'fields',
     'submissionsChunk'
   ]),
   FormSettings: respond(formShowKeys),

@@ -29,7 +29,7 @@ const loadSubmissionList = (attachToDocument = false) => {
       attachToDocument
     })
     .respondWithData(() => testData.standardKeys.sorted())
-    .respondWithData(() => testData.extendedForms.last()._schema)
+    .respondWithData(() => testData.extendedForms.last()._fields)
     .respondWithData(testData.submissionOData);
 };
 const wait = (delay) => new Promise(resolve => {

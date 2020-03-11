@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <!-- This table element contains the frozen columns of the submissions
-    table, which contain metadata about each submission. -->
+    table, which display metadata about each submission. -->
     <table id="submission-table1" class="table table-frozen">
       <thead>
         <tr>
@@ -27,16 +27,17 @@ except according to the terms contained in the LICENSE file.
           :row-number="originalCount - index"/>
       </tbody>
     </table>
-    <!-- The next table element contains the form-field data and instance ID of
-    each submission. -->
+    <!-- The next table element displays the data and instance ID of each
+    submission. -->
     <div class="table-container">
-      <table id="submission-table2" :class="table2Class">
+      <table id="submission-table2"
+        class="table" :class="{ 'field-subset': subsetShown }">
         <thead>
           <tr>
             <!-- Adding a title attribute in case the column header is so long
             that it is truncated. -->
-            <th v-for="column of fieldColumns" :key="column.key"
-              :class="column.htmlClass" :title="column.header">
+            <th v-for="column of fieldColumnsToShow" :key="column.path"
+              class="submission-table-field" :title="column.header">
               {{ column.header }}
             </th>
             <th>Instance ID</th>
@@ -45,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <tbody>
           <submission-row v-for="submission of submissions"
             :key="submission.__id" :submission="submission"
-            :field-columns="fieldColumns"/>
+            :field-columns="fieldColumnsToShow"/>
         </tbody>
       </table>
     </div>
@@ -54,7 +55,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SubmissionRow from './row.vue';
-import { requestData } from '../../store/modules/request';
+
+const instanceIdPaths = ['/meta/instanceID', '/instanceID'];
+
+const anySlash = /\//g;
+const replaceWithHyphen = (match, offset) => (offset !== 0 ? '-' : '');
+const pathToHeader = (path) => path.replace(anySlash, replaceWithHyphen);
 
 export default {
   name: 'SubmissionTable',
@@ -64,52 +70,46 @@ export default {
       type: Array,
       required: true
     },
+    fields: {
+      type: Array,
+      required: true
+    },
     originalCount: {
       type: Number,
       required: true
     }
   },
-  computed: {
-    ...requestData(['schema']),
-    // Returns information about the schema after processing it.
-    schemaAnalysis() {
-      // `columns` holds the columns of the table that correspond to a form
-      // field. We display a maximum of 10 such columns in the table.
+  data() {
+    const { columns, anyRepeat } = this.analyzeFields();
+    const fieldColumnsToShow = columns.slice(0, 10);
+    const subsetShown = fieldColumnsToShow.length !== columns.length || anyRepeat;
+    return { fieldColumnsToShow, subsetShown };
+  },
+  methods: {
+    analyzeFields() {
       const columns = [];
-      let idFieldCount = 0;
-      for (const field of this.schema) {
-        // Note that the field might not have a type, in which case `type` will
-        // be undefined -- though I have seen a field without a type only in the
-        // Widgets sample form (<branch>):
-        // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
-        const { type, path } = field;
-        // We already display __id as the instance ID, so if there is also an
-        // meta.instanceID or instanceID field, we do not display it. Further,
-        // if the only fields that we do not display are instanceID fields, we
-        // do not show the field subset indicator.
-        if (type === 'string' &&
-          ((path.length === 2 && path[0] === 'meta' && path[1] === 'instanceID') ||
-          (path.length === 1 && path[0] === 'instanceID')))
-          idFieldCount += 1;
-        else if (type !== 'repeat' && columns.length < 10) {
-          const header = path.join('-');
-          const htmlClass = ['submission-field'];
-          if (type != null && /^\w+$/.test(type))
-            htmlClass.push(`submission-row-${type}-column`);
-          const key = this.$uniqueId();
-          columns.push({ type, path, header, htmlClass, key });
+      let anyRepeat = false;
+      // The path of the top-level repeat group currently being traversed
+      let repeat = null;
+      for (const field of this.fields) {
+        const { path } = field;
+        if (repeat == null || !path.startsWith(repeat)) {
+          repeat = null;
+          // Note that `type` may be `undefined`, though I have seen this only
+          // in the Widgets sample form (<branch>):
+          // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
+          const { type } = field;
+          if (type === 'repeat') {
+            anyRepeat = true;
+            repeat = `${path}/`;
+          } else if (!(type === 'structure' ||
+            // We use the submission's __id property to display its instance ID.
+            (type === 'string' && instanceIdPaths.includes(path)))) {
+            columns.push({ ...field, header: pathToHeader(path) });
+          }
         }
       }
-      return {
-        columns,
-        subsetShown: columns.length !== this.schema.length - idFieldCount
-      };
-    },
-    table2Class() {
-      return { table: true, 'field-subset': this.schemaAnalysis.subsetShown };
-    },
-    fieldColumns() {
-      return this.schemaAnalysis.columns;
+      return { columns, anyRepeat };
     }
   }
 };
@@ -136,7 +136,7 @@ export default {
 
 #submission-table2 {
   th, td {
-    &.submission-field {
+    &.submission-table-field {
       max-width: 250px;
     }
 

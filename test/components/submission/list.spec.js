@@ -3,7 +3,7 @@ import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
-import { load, mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { noop } from '../../../src/util/util';
 import { setLuxon } from '../../util/date-time';
@@ -38,7 +38,7 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
       requestData: { form }
     })
     .respondWithData(() => testData.standardKeys.sorted())
-    .respondWithData(() => testData.extendedForms.last()._schema)
+    .respondWithData(() => testData.extendedForms.last()._fields)
     .respondWithData(() => testData.submissionOData(small, 0));
 };
 const loadFormOverview = (submissionCount, chunkSizes = []) => {
@@ -140,7 +140,7 @@ describe('SubmissionList', () => {
             const submission = testData.extendedSubmissions.last();
             const localeString = submission._oData.testInt.toLocaleString();
             td.text().trim().should.equal(localeString);
-            td.hasClass('submission-row-int-column').should.be.true();
+            td.hasClass('submission-cell-int').should.be.true();
           });
         });
 
@@ -153,7 +153,7 @@ describe('SubmissionList', () => {
                   component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
-                td.hasClass('submission-row-decimal-column').should.be.true();
+                td.hasClass('submission-cell-decimal').should.be.true();
               });
           });
 
@@ -351,7 +351,7 @@ describe('SubmissionList', () => {
                 component.first('#submission-table2 tbody tr'),
                 'testGroup-testBinary'
               );
-              td.hasClass('submission-row-binary-column').should.be.true();
+              td.hasClass('submission-cell-binary').should.be.true();
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
               $a.attr('href').should.equal('/v1/projects/1/forms/f/submissions/abc%20123/attachments/def%20456.jpg');
@@ -386,8 +386,8 @@ describe('SubmissionList', () => {
       it('does not show encryption message if form only has instanceID field', () => {
         const key = testData.standardKeys.createPast(1).last();
         testData.extendedProjects.createPast(1, { key });
-        const schema = [{ path: ['meta', 'instanceID'], type: 'string' }];
-        testData.extendedForms.createPast(1, { schema, submissions: 1 });
+        const fields = [{ path: '/meta/instanceID', type: 'string' }];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
         testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
         return loadSubmissionList().afterResponses(component => {
           const td = component.find('#submission-table2 tbody td');
@@ -395,61 +395,6 @@ describe('SubmissionList', () => {
           should.not.exist(td[0].element.getAttribute('colspan'));
         });
       });
-    });
-
-    describe('field subset indicator', () => {
-      const fields = (type, count) => {
-        const result = [];
-        for (let i = 1; i <= count; i += 1)
-          result.push({ path: [`field${i}`], type });
-        return result;
-      };
-
-      // Array of test cases
-      const cases = [
-        // Schemas for which an indicator is not expected
-        [false, [
-          ['1 field', fields('int', 1)],
-          ['10 fields', fields('int', 10)],
-          ['10 fields and meta.instanceID', [
-            ...fields('int', 10),
-            { path: ['meta', 'instanceID'], type: 'string' }
-          ]],
-          ['10 fields and instanceID', [
-            ...fields('int', 10),
-            { path: ['instanceID'], type: 'string' }
-          ]],
-          ['10 fields, meta.instanceID, and instanceID', [
-            ...fields('int', 10),
-            { path: ['meta', 'instanceID'], type: 'string' },
-            { path: ['instanceID'], type: 'string' }
-          ]]
-        ]],
-        // Schemas for which an indicator is expected
-        [true, [
-          ['11 fields', fields('int', 11)],
-          ['1 field and 1 repeat', [
-            ...fields('int', 1),
-            ...fields('repeat', 1)
-          ]],
-          ['1 repeat and no other root fields', fields('repeat', 1)]
-        ]]
-      ];
-      for (const [hasClass, subcases] of cases) {
-        describe(hasClass ? 'is shown' : 'is not shown', () => {
-          for (const [description, schema] of subcases) {
-            it(description, () => {
-              testData.extendedProjects.createPast(1);
-              testData.extendedForms.createPast(1, { schema, submissions: 1 });
-              testData.extendedSubmissions.createPast(1);
-              return loadSubmissionList().afterResponses(component => {
-                const table2 = component.first('#submission-table2');
-                table2.hasClass('field-subset').should.equal(hasClass);
-              });
-            });
-          }
-        });
-      }
     });
 
     it('shows a message if there are no submissions', () => {
@@ -689,7 +634,7 @@ describe('SubmissionList', () => {
               }
             })
             .respondWithProblem()
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(2);
               return testData.submissionOData(1, 0);
@@ -699,7 +644,7 @@ describe('SubmissionList', () => {
               component.vm.onScroll();
             }));
 
-        it('does nothing upon scroll if schema request results in error', () =>
+        it('does nothing upon scroll if fields request results in error', () =>
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
@@ -741,7 +686,7 @@ describe('SubmissionList', () => {
               }
             })
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithProblem()
             .complete()
             .testNoRequest(component => {
@@ -827,7 +772,7 @@ describe('SubmissionList', () => {
             })
             .route('/projects/1/forms/f/submissions')
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData();
@@ -871,7 +816,7 @@ describe('SubmissionList', () => {
             // 4 submissions exist. About to request $top=2, $skip=0.
             .route('/projects/1/forms/f/submissions')
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithData(() => testData.submissionOData(2, 0))
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to

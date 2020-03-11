@@ -48,7 +48,7 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  schema: formPath('.schema.json', { flatten: true, odata: true }),
+  fields: formPath('/fields', { odata: true }),
   oDataSvc: formPath('.svc'),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

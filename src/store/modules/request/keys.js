@@ -36,7 +36,7 @@ export const keys = [
   'forms',
   'formSummaryAssignments',
   'form',
-  'schema',
+  'fields',
   'formActors',
   'keys',
   'formDraft',

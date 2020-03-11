@@ -61,9 +61,9 @@ describe('util/request', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
     });
 
-    it('schema', () => {
-      const path = apiPaths.schema(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b.schema.json?flatten=true&odata=true');
+    it('fields', () => {
+      const path = apiPaths.fields(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/fields?odata=true');
     });
 
     it('oDataSvc', () => {

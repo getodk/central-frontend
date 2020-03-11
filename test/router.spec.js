@@ -366,9 +366,9 @@ describe('router', () => {
 
     it('resets and updates SubmissionList', () =>
       mockRoute('/projects/1/forms/f1/submissions')
-        .beforeEachResponse((app, request, index) => {
+        .beforeEachResponse((app, { url }, index) => {
           if (index === 5)
-            request.url.should.equal('/v1/projects/1/forms/f1.schema.json?flatten=true&odata=true');
+            url.should.equal('/v1/projects/1/forms/f1/fields?odata=true');
         })
         .respondWithData(() => testData.extendedProjects
           .createPast(1, { forms: 3, lastSubmission: new Date().toISOString() })
@@ -379,7 +379,7 @@ describe('router', () => {
         .respondWithProblem(404.1) // formDraft
         .respondWithProblem(404.1) // attachments
         .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
+        .respondWithData(() => testData.extendedForms.last()._fields)
         .respondWithData(() => {
           testData.extendedSubmissions.createPast(1);
           return testData.submissionOData(1, 0);
@@ -391,9 +391,9 @@ describe('router', () => {
         .beforeAnyResponse(app => {
           should.not.exist(app.first(SubmissionList).data().submissions);
         })
-        .beforeEachResponse((app, request, index) => {
+        .beforeEachResponse((app, { url }, index) => {
           if (index === 4)
-            request.url.should.equal('/v1/projects/1/forms/f2.schema.json?flatten=true&odata=true');
+            url.should.equal('/v1/projects/1/forms/f2/fields?odata=true');
         })
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f2', submissions: 2 })
@@ -401,7 +401,7 @@ describe('router', () => {
         .respondWithProblem(404.1) // formDraft
         .respondWithProblem(404.1) // attachments
         .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
+        .respondWithData(() => testData.extendedForms.last()._fields)
         .respondWithData(() => {
           const form = testData.extendedForms.last();
           testData.extendedSubmissions.createPast(2, { form });

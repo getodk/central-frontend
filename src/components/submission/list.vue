@@ -39,8 +39,8 @@ except according to the terms contained in the LICENSE file.
           There are no Submissions yet for
           <strong>{{ form.nameOrId() }}</strong>.
         </p>
-        <submission-table v-else-if="schema != null" :submissions="submissions"
-          :original-count="originalCount"/>
+        <submission-table v-else-if="fields != null" :submissions="submissions"
+          :fields="fields" :original-count="originalCount"/>
       </template>
       <div v-if="message != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
@@ -69,7 +69,7 @@ import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['form', 'keys', 'schema', 'submissionsChunk'];
+const REQUEST_KEYS = ['form', 'keys', 'fields', 'submissionsChunk'];
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
@@ -279,8 +279,8 @@ export default {
           url: apiPaths.formKeys(this.projectId, this.xmlFormId)
         },
         {
-          key: 'schema',
-          url: apiPaths.schema(this.projectId, this.xmlFormId)
+          key: 'fields',
+          url: apiPaths.formFields(this.projectId, this.xmlFormId)
         },
         {
           key: 'submissionsChunk',
