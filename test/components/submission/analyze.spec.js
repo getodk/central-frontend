@@ -27,7 +27,7 @@ describe('SubmissionAnalyze', () => {
 
     return mockHttp()
       .mount(SubmissionList, {
-        propsData: { projectId: '1', xmlFormId: form.xmlFormId },
+        propsData: { baseUrl: '/v1/projects/1/forms/f' },
         requestData: { form }
       })
       .respondWithData(() => []) // keys
@@ -50,7 +50,7 @@ describe('SubmissionAnalyze', () => {
       .last();
     return mockHttp()
       .mount(SubmissionList, {
-        propsData: { projectId: '1', xmlFormId: 'f' },
+        propsData: { baseUrl: '/v1/projects/1/forms/f' },
         requestData: { form }
       })
       .respondWithData(() =>
@@ -71,7 +71,7 @@ describe('SubmissionAnalyze', () => {
   it('shows the modal after the button is clicked', () =>
     mockHttp()
       .mount(SubmissionList, {
-        propsData: { projectId: '1', xmlFormId: 'f' },
+        propsData: { baseUrl: '/v1/projects/1/forms/f' },
         requestData: {
           form: testData.extendedForms.createPast(1).last()
         }
@@ -115,10 +115,7 @@ describe('SubmissionAnalyze', () => {
     let modal;
     beforeEach(() => {
       modal = mountAndMark(SubmissionAnalyze, {
-        propsData: { state: true },
-        requestData: {
-          form: testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last()
-        }
+        propsData: { state: true, baseUrl: '/v1/projects/1/forms/f' }
       });
     });
 

@@ -1,11 +1,9 @@
-import FormShow from '../../../src/components/form/show.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { noop } from '../../../src/util/util';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
 
@@ -30,8 +28,7 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
   return mockHttp()
     .mount(SubmissionList, {
       propsData: {
-        projectId: '1',
-        xmlFormId: 'f',
+        baseUrl: '/v1/projects/1/forms/f',
         chunkSizes: { small, large },
         scrolledToBottom: () => scrolledToBottom
       },
@@ -40,25 +37,6 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
     .respondWithData(() => testData.standardKeys.sorted())
     .respondWithData(() => testData.extendedForms.last()._fields)
     .respondWithData(() => testData.submissionOData(small, 0));
-};
-const loadFormOverview = (submissionCount, chunkSizes = []) => {
-  createSubmissions(submissionCount);
-  const [small = 250, large = 1000] = chunkSizes;
-  return load('/projects/1/forms/f')
-    .afterResponses(app => {
-      const formShow = app.first(FormShow);
-      formShow.setData({
-        submissionChunkSizes: { small, large },
-        scrolledToBottom: () => true
-      });
-      return app.vm.$nextTick();
-    })
-    // We want it to be possible for afterResponses() to be chained to this
-    // mockHttp() object, but we have already used afterResponses() to call
-    // setData(). In a slight abuse of request(), we specify a callback that
-    // does not send a request, and we do not specify a response callback,
-    // making afterResponses() available again.
-    .request(noop);
 };
 
 describe('SubmissionList', () => {
@@ -398,9 +376,9 @@ describe('SubmissionList', () => {
     });
 
     it('shows a message if there are no submissions', () => {
-      testData.extendedForms.createPast(1, { submissions: 0 });
-      return loadSubmissionList().afterResponses(component => {
-        component.find('.empty-table-message').length.should.equal(1);
+      testData.extendedForms.createPast(1);
+      return loadSubmissionList().then(component => {
+        component.first('.empty-table-message').should.be.visible();
       });
     });
 
@@ -622,8 +600,7 @@ describe('SubmissionList', () => {
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -648,8 +625,7 @@ describe('SubmissionList', () => {
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -674,8 +650,7 @@ describe('SubmissionList', () => {
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -763,8 +738,9 @@ describe('SubmissionList', () => {
       });
 
       describe('count update', () => {
-        it('updates the form checklist', () =>
-          loadFormOverview(10)
+        it('updates the form checklist', () => {
+          createSubmissions(10);
+          return load('/projects/1/forms/f')
             .afterResponses(app => {
               const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
               p.text().should.containEql('10 ');
@@ -783,10 +759,12 @@ describe('SubmissionList', () => {
               const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
               p.text().should.containEql('11 ');
               p.text().should.not.containEql('10 ');
-            }));
+            });
+        });
 
-        it('updates the count in the download button', () =>
-          loadFormOverview(10)
+        it('updates the count in the download button', () => {
+          createSubmissions(10);
+          return load('/projects/1/forms/f')
             .complete()
             .load('/projects/1/forms/f/submissions', {
               project: false,
@@ -808,67 +786,71 @@ describe('SubmissionList', () => {
               const button = app.first('#submission-list-download-button');
               const text = button.text().trim().iTrim();
               text.should.equal('Download all 11 records');
-            }));
+            });
+        });
 
-        it('scrolling to the bottom continues to fetch the next chunk', () =>
-          loadFormOverview(4, [2])
-            .complete()
-            // 4 submissions exist. About to request $top=2, $skip=0.
-            .route('/projects/1/forms/f/submissions')
-            .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._fields)
-            .respondWithData(() => testData.submissionOData(2, 0))
+        it('scrolling to the bottom continues to fetch the next chunk', () => {
+          createSubmissions(4);
+          // 4 submissions exist. About to request $top=2, $skip=0.
+          return loadSubmissionList([2])
+            .beforeEachResponse((component, config, index) => {
+              if (index === 2) {
+                checkTopSkip(config, 2, 0);
+                checkMessage(component, true, 'Loading the first 2 of 4 submissions…');
+              }
+            })
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to
             // request $top=2, $skip=2.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 2);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 2);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(4);
               // This returns 2 of the 4 new submissions.
               return testData.submissionOData(2, 2);
             })
-            .afterResponse(app => {
-              checkIds(app, 2, 4);
-              checkMessage(app, false, '2 rows remain.');
+            .afterResponse(component => {
+              checkIds(component, 2, 4);
+              checkMessage(component, false, '2 rows remain.');
             })
             // 8 submissions exist. About to request $top=2, $skip=4.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 4);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 4);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
             .respondWithData(() => testData.submissionOData(2, 4))
-            .afterResponse(app => {
-              checkIds(app, 2, 4);
-              checkMessage(app, false, '2 rows remain.');
+            .afterResponse(component => {
+              checkIds(component, 2, 4);
+              checkMessage(component, false, '2 rows remain.');
             })
             // 8 submissions exist. About to request $top=2, $skip=6.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 6);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 6);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             // Returns the last 2 submissions.
             .respondWithData(() => testData.submissionOData(2, 6))
-            .afterResponse(app => {
-              checkIds(app, 4, 4);
-              app.find('#submission-list-message').should.be.empty();
+            .afterResponse(component => {
+              checkIds(component, 4, 4);
+              component.find('#submission-list-message').length.should.equal(0);
             })
             // 8 submissions exist. No request will be sent.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
-            }));
+            .testNoRequest(component => {
+              component.vm.onScroll();
+            });
+        });
       });
     });
   });

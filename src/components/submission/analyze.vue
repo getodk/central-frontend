@@ -108,13 +108,15 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Modal from '../modal.vue';
-import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionAnalyze',
   components: { Modal },
   props: {
+    baseUrl: {
+      type: String,
+      required: true
+    },
     state: {
       type: Boolean,
       default: false
@@ -126,10 +128,8 @@ export default {
     };
   },
   computed: {
-    ...requestData(['form']),
     oDataUrl() {
-      const path = apiPaths.oDataSvc(this.form.projectId, this.form.xmlFormId);
-      return `${window.location.origin}${path}`;
+      return `${window.location.origin}${this.baseUrl}.svc`;
     }
   },
   watch: {

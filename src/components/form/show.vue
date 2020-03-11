@@ -18,8 +18,7 @@ except according to the terms contained in the LICENSE file.
         <!-- <router-view> is immediately created and can send its own requests
         even before the server has responded to the requests from ProjectHome
         and FormShow. -->
-        <router-view v-bind="routerViewProps" @fetch-form="fetchForm"
-          @fetch-draft="fetchDraft"/>
+        <router-view @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
       </div>
     </page-body>
   </div>
@@ -30,7 +29,6 @@ import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
-import SubmissionList from '../submission/list.vue';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -49,35 +47,12 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      // Passing these to SubmissionList in order to facilitate SubmissionList
-      // testing.
-      submissionChunkSizes: SubmissionList.props.chunkSizes.default(),
-      scrolledToBottom: SubmissionList.props.scrolledToBottom.default
-    };
-  },
   computed: {
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
     dataExists() {
       return this.$store.getters.dataExists(REQUEST_KEYS);
-    },
-    routerViewProps() {
-      switch (this.$route.name) {
-        case 'FormOverview':
-          return { projectId: this.projectId, xmlFormId: this.xmlFormId };
-        case 'SubmissionList':
-          return {
-            projectId: this.projectId,
-            xmlFormId: this.xmlFormId,
-            chunkSizes: this.submissionChunkSizes,
-            scrolledToBottom: this.scrolledToBottom
-          };
-        default:
-          return {};
-      }
     }
   },
   watch: {

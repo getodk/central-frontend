@@ -27,8 +27,6 @@ except according to the terms contained in the LICENSE file.
 import { DateTime, Settings } from 'luxon';
 import { path } from 'ramda';
 
-import { apiPaths } from '../../util/request';
-
 const typeOptions = {
   barcode: { title: true },
   binary: { htmlClass: true },
@@ -44,6 +42,10 @@ const typeOptions = {
 export default {
   name: 'SubmissionCell',
   props: {
+    baseUrl: {
+      type: String,
+      required: true
+    },
     submission: {
       type: Object,
       required: true
@@ -133,13 +135,9 @@ export default {
             .join(' ');
 
         case 'binary': {
-          const { form } = this.$store.state.request.data;
-          return apiPaths.submissionAttachment(
-            form.projectId,
-            form.xmlFormId,
-            this.submission.__id,
-            rawValue
-          );
+          const encodedId = encodeURIComponent(this.submission.__id);
+          const encodedName = encodeURIComponent(rawValue);
+          return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
         }
 
         default:

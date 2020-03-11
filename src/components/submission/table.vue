@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <submission-row v-for="submission of submissions"
-            :key="submission.__id" :submission="submission"
+            :key="submission.__id" :base-url="baseUrl" :submission="submission"
             :field-columns="fieldColumnsToShow"/>
         </tbody>
       </table>
@@ -66,6 +66,10 @@ export default {
   name: 'SubmissionTable',
   components: { SubmissionRow },
   props: {
+    baseUrl: {
+      type: String,
+      required: true
+    },
     submissions: {
       type: Array,
       required: true

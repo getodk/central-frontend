@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
     :class="{ 'encrypted-submission': submission.__system.status != null }">
     <template v-if="submission.__system.status == null">
       <submission-cell v-for="column of fieldColumns" :key="column.path"
-        :submission="submission" :column="column"/>
+        :base-url="baseUrl" :submission="submission" :column="column"/>
     </template>
     <template v-else-if="fieldColumns.length !== 0">
       <td class="encrypted-data" :colspan="fieldColumns.length">
@@ -45,6 +45,10 @@ export default {
   name: 'SubmissionRow',
   components: { SubmissionCell },
   props: {
+    baseUrl: {
+      type: String,
+      default: ''
+    },
     submission: {
       type: Object,
       required: true

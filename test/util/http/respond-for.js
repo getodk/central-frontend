@@ -41,6 +41,12 @@ const respond = (keys) => (series, options = undefined) => keys.reduce(
 );
 
 const formShowKeys = ['project', 'form', 'formDraft', 'attachments'];
+const submissionListKeys = [
+  ...formShowKeys,
+  'keys',
+  'fields',
+  'submissionsChunk'
+];
 
 export default {
   ProjectList: respond(['projects', 'users']),
@@ -57,15 +63,10 @@ export default {
   ProjectSettings: respond(['project']),
   FormOverview: respond([...formShowKeys, 'formActors']),
   FormVersionList: respond(formShowKeys),
-  SubmissionList: respond([
-    ...formShowKeys,
-    'keys',
-    'fields',
-    'submissionsChunk'
-  ]),
+  FormSubmissions: respond(submissionListKeys),
   FormSettings: respond(formShowKeys),
   FormDraftStatus: respond(formShowKeys),
   FormAttachmentList: respond(formShowKeys),
-  FormDraftTesting: respond(formShowKeys),
+  FormDraftTesting: respond(submissionListKeys),
   UserList: respond(['users', 'actors'])
 };

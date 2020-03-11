@@ -19,7 +19,7 @@ import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 
 export default {
-  name: 'FormDraftTesting',
+  name: 'FormSubmissions',
   components: { SubmissionList },
   mixins: [validateData()],
   props: {
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     baseUrl() {
-      return apiPaths.formDraft(this.projectId, this.xmlFormId);
+      return apiPaths.form(this.projectId, this.xmlFormId);
     }
   }
 };

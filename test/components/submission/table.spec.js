@@ -3,6 +3,7 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (fields) => mount(SubmissionTable, {
   propsData: {
+    baseUrl: '/v1/projects/1/forms/f',
     submissions: [],
     fields,
     originalCount: 0
