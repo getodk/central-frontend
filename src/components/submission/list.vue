@@ -173,43 +173,22 @@ export default {
     }
   },
   watch: {
-    $route(newRoute, oldRoute) {
-      // Do not do anything if the user has simply navigated to another tab for
-      // the same form.
-      if (newRoute.params.projectId === oldRoute.params.projectId &&
-        newRoute.params.xmlFormId === oldRoute.params.xmlFormId)
-        return;
-
-      // Reset the component. Even if after the route change, the component is
-      // not rendered by the FormShow <router-view> (that is, even if the
-      // component is not the active tab), the component will still be kept
-      // alive, so it must be reset.
+    $route() {
+      this.fetchInitialData();
       this.submissions = null;
       this.instanceIds = new Set();
       this.originalCount = null;
       this.chunkCount = 0;
       this.message = null;
-
-      if (oldRoute.name === 'SubmissionList' &&
-        newRoute.name === 'SubmissionList') {
-        // The route has changed, but the component's `activated` hook will not
-        // be called. Because of that, we call this.fetchInitialData() here
-        // instead.
-        this.fetchInitialData();
-      }
     }
   },
-  activated() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new set of requests (unless there was a response
-    // error).
-    if ((this.keys == null && !this.$store.getters.loading('keys')) ||
-      (this.schema == null && !this.$store.getters.loading('schema')) ||
-      (this.submissions == null && !this.$store.getters.loading('submissionsChunk')))
-      this.fetchInitialData();
+  created() {
+    this.fetchInitialData();
+  },
+  mounted() {
     $(window).on('scroll.submission-list', this.onScroll);
   },
-  deactivated() {
+  beforeDestroy() {
     $(window).off('.submission-list');
   },
   methods: {

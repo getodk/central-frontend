@@ -15,16 +15,11 @@ except according to the terms contained in the LICENSE file.
     <page-body>
       <loading :state="initiallyLoading"/>
       <div v-show="dataExists">
-        <!-- We only include SubmissionList, because it is the only component
-        whose state we want to preserve when the user navigates to a different
-        tab. -->
-        <keep-alive include="SubmissionList">
-          <!-- <router-view> is immediately created and can send its own
-          requests even before the server has responded to the requests from
-          ProjectHome and FormShow. -->
-          <router-view v-bind="routerViewProps" @fetch-form="fetchForm"
-            @fetch-draft="fetchDraft"/>
-        </keep-alive>
+        <!-- <router-view> is immediately created and can send its own requests
+        even before the server has responded to the requests from ProjectHome
+        and FormShow. -->
+        <router-view v-bind="routerViewProps" @fetch-form="fetchForm"
+          @fetch-draft="fetchDraft"/>
       </div>
     </page-body>
   </div>

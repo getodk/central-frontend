@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="submission-analyze" :state="state" backdrop hideable
     @hide="$emit('hide')">
-    <template slot="title">Using OData</template>
-    <template slot="body">
+    <template #title>Using OData</template>
+    <template #body>
       <div id="submission-analyze-head">
         <div class="modal-introduction">
           <p>

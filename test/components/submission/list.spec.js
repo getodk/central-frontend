@@ -37,11 +37,6 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
       },
       requestData: { form }
     })
-    .request(component => {
-      // Normally the `activated` hook calls this method, but that hook is not
-      // called here, so we call the method ourselves instead.
-      component.vm.fetchInitialData();
-    })
     .respondWithData(() => testData.standardKeys.sorted())
     .respondWithData(() => testData.extendedForms.last()._schema)
     .respondWithData(() => testData.submissionOData(small, 0));
@@ -69,62 +64,7 @@ const loadFormOverview = (submissionCount, chunkSizes = []) => {
 describe('SubmissionList', () => {
   beforeEach(mockLogin);
 
-  describe('routing', () => {
-    it('requests schema for a user whose first navigation is to the tab', () =>
-      mockRoute('/projects/1/forms/f/submissions')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 5)
-            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-        })
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData));
-
-    it('requests schema for a user who navigates to the tab from another tab', () =>
-      mockRoute('/projects/1/forms/f')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => []) // formActors
-        .complete()
-        .route('/projects/1/forms/f/submissions')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 1)
-            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-        })
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData));
-  });
-
   describe('after login', () => {
-    it('does not send a new request if user navigates back to tab', () =>
-      mockRoute('/projects/1/forms/f/submissions')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData)
-        .complete()
-        .route('/projects/1/forms/f')
-        .respondWithData(() => []) // formActors
-        .complete()
-        .route('/projects/1/forms/f/submissions')
-        .testNoRequest());
-
     describe('table data', () => {
       it('contains the correct data for the left half of the table', () => {
         createSubmissions(2);
@@ -748,9 +688,6 @@ describe('SubmissionList', () => {
                   .last()
               }
             })
-            .request(component => {
-              component.vm.fetchInitialData();
-            })
             .respondWithProblem()
             .respondWithData(() => testData.extendedForms.last()._schema)
             .respondWithData(() => {
@@ -777,9 +714,6 @@ describe('SubmissionList', () => {
                   .last()
               }
             })
-            .request(component => {
-              component.vm.fetchInitialData();
-            })
             .respondWithData(() => testData.standardKeys.sorted())
             .respondWithProblem()
             .respondWithData(() => {
@@ -805,9 +739,6 @@ describe('SubmissionList', () => {
                   .createPast(1, { xmlFormId: 'f', submissions: 2 })
                   .last()
               }
-            })
-            .request(component => {
-              component.vm.fetchInitialData();
             })
             .respondWithData(() => testData.standardKeys.sorted())
             .respondWithData(() => testData.extendedForms.last()._schema)
