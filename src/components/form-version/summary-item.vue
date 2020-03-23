@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <summary-item icon="file-o">
     <template #heading>
-      <span :class="versionClass" :title="versionOrBlank">
-        {{ versionOrBlank }}
+      <span :class="versionClass" :title="version.versionOrBlank()">
+        {{ version.versionOrBlank() }}
       </span>
       <span><form-version-standard-buttons :version="version"/></span>
     </template>
@@ -43,9 +43,6 @@ export default {
       if (this.version.version === '')
         htmlClass.push('form-version-summary-item-blank-version');
       return htmlClass;
-    },
-    versionOrBlank() {
-      return this.version.version !== '' ? this.version.version : '(blank)';
     }
   }
 };

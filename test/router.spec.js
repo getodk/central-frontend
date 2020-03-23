@@ -218,7 +218,7 @@ describe('router', () => {
       });
 
       it('redirects the user from .../versions', () =>
-        load('/projects/1/forms/f/versions')
+        load('/projects/1/forms/f/versions', {}, { formVersions: () => [] })
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');

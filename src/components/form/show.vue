@@ -56,9 +56,8 @@ export default {
     }
   },
   watch: {
-    xmlFormId() {
-      this.fetchData();
-    }
+    projectId: 'fetchData',
+    xmlFormId: 'fetchData'
   },
   created() {
     this.fetchData();

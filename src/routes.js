@@ -244,6 +244,7 @@ const routes = [
           {
             path: 'versions',
             component: FormVersionList,
+            props: true,
             meta: {
               validateData: {
                 project: (project) => project.permits('form.read'),

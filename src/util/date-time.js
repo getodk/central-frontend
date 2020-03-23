@@ -20,7 +20,7 @@ const formatDatePart = (dateTime) => {
   for (let i = 2; i <= 5; i += 1)
     if (now.minus({ days: i }).hasSame(dateTime, 'day'))
       return dateTime.toFormat('cccc');
-  return dateTime.toFormat('yyyy/MM/dd');
+  return dateTime.toFormat('y/MM/dd');
 };
 export const formatDate = (isoString, blankString = '') => {
   if (isoString == null) return blankString;

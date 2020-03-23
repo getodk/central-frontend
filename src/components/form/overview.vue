@@ -102,7 +102,7 @@ export default {
     }
   },
   watch: {
-    xmlFormId: 'fetchData'
+    $route: 'fetchData'
   },
   created() {
     this.fetchData();
