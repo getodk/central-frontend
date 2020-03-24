@@ -23,7 +23,7 @@ First, install Node.js 12+.
 
 Next, install dependencies by running `npm install`.
 
-Install NGINX. Depending on your operating system and how you install NGINX, you may need to change the absolute paths in ODK Central Frontend's [`nginx.conf`](/nginx.conf).
+Install NGINX. Depending on your operating system and how you install NGINX, you may need to change the absolute paths in the development [`nginx.conf`](/nginx.conf).
 
 You will also need to set up [ODK Central Backend](https://github.com/opendatakit/central-backend).
 
@@ -52,6 +52,8 @@ Some ODK Central Frontend functionality requires HTTPS, for example, downloading
 ## Deploying to production
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation for Vue CLI](https://cli.vuejs.org/).
+
+Note that this repository's `nginx.conf` is for development only.
 
 For more information on deploying to production, see the [ODK Central repository](https://github.com/opendatakit/central).
 
