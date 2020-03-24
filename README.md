@@ -47,6 +47,8 @@ NGINX effectively places ODK Central Frontend and ODK Central Backend at the sam
 
 ODK Central Frontend will be available on port 8989.
 
+Some ODK Central Frontend functionality requires HTTPS, for example, downloading files from ODK Central Backend. To access this functionality in development, one option is to use [`ngrok`](https://ngrok.com/download). By default, ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use.
+
 ## Deploying to production
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation for Vue CLI](https://cli.vuejs.org/).
