@@ -10,18 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-version-table/>
+  <div>
+    <form-version-table/>
+    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+  </div>
 </template>
 
 <script>
 import FormVersionTable from './table.vue';
+import Loading from '../loading.vue';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'FormVersionList',
-  components: { FormVersionTable },
+  components: { FormVersionTable, Loading },
   mixins: [validateData()],
   props: {
     projectId: {

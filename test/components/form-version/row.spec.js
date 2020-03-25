@@ -1,9 +1,9 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 import FormVersionStandardButtons from '../../../src/components/form-version/standard-buttons.vue';
+import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import testData from '../../data';
 
 describe('FormVersionRow', () => {
   describe('version string', () => {
@@ -50,7 +50,7 @@ describe('FormVersionRow', () => {
       });
     });
 
-    it('shows text for a project manager', () => {
+    it('only shows text for a project manager', () => {
       mockLogin({ displayName: 'Bob', role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
       testData.extendedForms.createPast(1);

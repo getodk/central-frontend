@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <th>Definition</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-if="formVersions != null">
       <form-version-row v-for="version of formVersions" :key="version.version"
         :version="version"/>
     </tbody>
