@@ -84,30 +84,49 @@ export default {
   },
   methods: {
     dateRangeToString(dateRange) {
-      const start = dateRange[0].toFormat('yyyy/MM/dd');
-      const end = dateRange[1].toFormat('yyyy/MM/dd');
+      const start = dateRange[0].toFormat('y/MM/dd');
+      const end = dateRange[1].toFormat('y/MM/dd');
+      // If start === end, then when we set this.dateRangeString to the
+      // following string, vue-flatpickr-component will set this.dateRangeString
+      // to `start`. However, we cannot set this.dateRangeString to `start`
+      // ourselves: if we did, vue-flatpickr-component would treat the selection
+      // as incomplete until the user selected an additional date.
       return `${start} to ${end}`;
     },
     filter() {
       this.$emit('filter', { action: this.action, dateRange: this.dateRange });
     },
-    todayToToday() {
-      const today = DateTime.local().startOf('day');
-      return [today, today];
+    datesToDateRange(dates) {
+      // dates.length === 0 if the user opens the calendar, clears the date
+      // range (for example, by pressing backspace), then closes the calendar.
+      // (There doesn't seem to be an easy way to turn off this behavior.)
+      if (dates.length === 0) {
+        const today = DateTime.local().startOf('day');
+        return [today, today];
+      }
+      // dates.length === 1 if the user opens the calendar, selects a date, then
+      // closes the calendar without selecting a second date -- in other words,
+      // if the user makes an incomplete selection of a single date.
+      if (dates.length === 1) {
+        const dateTime = DateTime.fromJSDate(dates[0]);
+        return [dateTime, dateTime];
+      }
+      return dates.map(date => DateTime.fromJSDate(date));
     },
     closeCalendar(dates) {
-      const dateRange = dates.length !== 0
-        ? dates.map(date => DateTime.fromJSDate(date))
-        : this.todayToToday();
+      const dateRange = this.datesToDateRange(dates);
       if (dateRange[0].valueOf() !== this.dateRange[0].valueOf() ||
         dateRange[1].valueOf() !== this.dateRange[1].valueOf()) {
         this.dateRange = dateRange;
         this.filter();
       }
-      // If the date range is cleared, this.dateRangeString will be empty, and
-      // we will need to reset it (regardless of whether this.dateRange
-      // changed).
-      if (dates.length === 0)
+
+      // If dates.length < 2, the date range selection is incomplete and
+      // therefore does not match this.dateRange. Thus, regardless of whether
+      // this.dateRange has changed, we need to set this.dateRangeString.
+      // (Also, interestingly, the value of the flatpickr input element seems to
+      // become empty even when dates.length === 1.)
+      if (dates.length < 2)
         this.dateRangeString = this.dateRangeToString(dateRange);
     }
   }
