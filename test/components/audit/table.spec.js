@@ -1,7 +1,7 @@
 import testData from '../../data';
 import { ago, formatDate } from '../../../src/util/date-time';
+import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
 
 const assertTriple = (type, initiator, target) => (app) => {
@@ -31,11 +31,10 @@ const assertTriple = (type, initiator, target) => (app) => {
 
   td[3].hasClass('target').should.be.true();
   if (target != null) {
-    td[3].text().trim().should.equal(target.text);
-
     const a = td[3].first('a');
-    a.getAttribute('href').should.equal(`#${target.href}`);
+    a.text().trim().should.equal(target.text);
     a.getAttribute('title').should.equal(target.text);
+    a.getAttribute('href').should.equal(`#${target.href}`);
   } else {
     td[3].text().trim().should.equal('');
     td[3].find('a').length.should.equal(0);
@@ -151,6 +150,17 @@ describe('AuditTable', () => {
         ));
       });
     }
+
+    it('shows the xmlFormId if the form does not have a name', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { name: null }).last()
+      });
+      return load('/system/audits').then(app => {
+        app.find('.audit-row td')[3].first('a').text().trim().should.equal('f');
+      });
+    });
 
     it('encodes the xmlFormId in the form URL', () =>
       mockRoute('/system/audits')

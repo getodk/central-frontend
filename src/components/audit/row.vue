@@ -13,10 +13,10 @@ except according to the terms contained in the LICENSE file.
   <tr class="audit-row">
     <td>{{ loggedAt }}</td>
     <td>
-      <template v-if="action != null">
-        {{ action.type[0] }}
-        <template v-if="action.type.length !== 1">
-          <span class="icon-angle-right"></span> {{ action.type[1] }}
+      <template v-if="actionInfo != null">
+        {{ actionInfo.type[0] }}
+        <template v-if="actionInfo.type.length !== 1">
+          <span class="icon-angle-right"></span> {{ actionInfo.type[1] }}
         </template>
       </template>
       <template v-else>
@@ -30,8 +30,8 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="action != null && action.target != null"
-        :to="action.target.path(audit.actee)" :title="targetTitle">
+      <router-link v-if="actionInfo != null && actionInfo.target != null"
+        :to="actionInfo.target.path(audit.actee)" :title="targetTitle">
         {{ targetTitle }}
       </router-link>
     </td>
@@ -44,20 +44,21 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 import { formatDate } from '../../util/date-time';
 
 const TARGETS = {
   user: {
-    titleProp: 'displayName',
+    title: ({ displayName }) => displayName,
     path: ({ id }) => `/users/${id}/edit`
   },
   project: {
-    titleProp: 'name',
+    title: ({ name }) => name,
     path: ({ id }) => `/projects/${id}`
   },
   form: {
-    titleProp: 'name',
+    title: (form) => new Form(form).nameOrId(),
     path: ({ projectId, xmlFormId }) =>
       `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`
   }
@@ -141,11 +142,11 @@ export default {
     loggedAt() {
       return formatDate(this.audit.loggedAt);
     },
-    action() {
+    actionInfo() {
       return ACTIONS[this.audit.action];
     },
     targetTitle() {
-      return this.audit.actee[this.action.target.titleProp];
+      return this.actionInfo.target.title(this.audit.actee);
     },
     details() {
       return this.audit.details != null
