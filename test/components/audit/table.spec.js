@@ -128,27 +128,28 @@ describe('AuditTable', () => {
     const cases = [
       ['form.create', ['Form', 'Create']],
       ['form.update', ['Form', 'Update Details']],
+      ['form.update.draft.set', ['Form', 'Set Draft']],
+      ['form.update.publish', ['Form', 'Publish Draft']],
+      ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.delete', ['Form', 'Delete']]
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () =>
-        mockRoute('/system/audits')
-          .respondWithData(() => testData.extendedAudits
-            .createPast(1, {
-              actor: testData.extendedUsers.first(),
-              action,
-              actee: testData.standardForms
-                .createPast(1, { xmlFormId: 'f', name: 'My Form' })
-                .last()
-            })
-            .sorted())
-          .afterResponse(assertTriple(
-            type,
-            { text: 'User 1', href: '/users/1/edit' },
-            { text: 'My Form', href: '/projects/1/forms/f' }
-          )));
+      it(`renders a ${action} audit correctly`, () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.standardForms
+            .createPast(1, { name: 'My Form' })
+            .last()
+        });
+        return load('/system/audits').then(assertTriple(
+          type,
+          { text: 'User 1', href: '/users/1/edit' },
+          { text: 'My Form', href: '/projects/1/forms/f' }
+        ));
+      });
     }
 
     it('encodes the xmlFormId in the form URL', () =>

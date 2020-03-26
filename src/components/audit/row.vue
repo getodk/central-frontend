@@ -103,6 +103,18 @@ const ACTIONS = {
     type: ['Form', 'Update Details'],
     target: TARGETS.form
   },
+  'form.update.draft.set': {
+    type: ['Form', 'Set Draft'],
+    target: TARGETS.form
+  },
+  'form.update.publish': {
+    type: ['Form', 'Publish Draft'],
+    target: TARGETS.form
+  },
+  'form.update.draft.delete': {
+    type: ['Form', 'Abandon Draft'],
+    target: TARGETS.form
+  },
   'form.attachment.update': {
     type: ['Form', 'Update Attachments'],
     target: TARGETS.form
