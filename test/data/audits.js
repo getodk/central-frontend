@@ -52,6 +52,8 @@ export const standardAudits = view(
 );
 
 function createBackupAudit({ success, configSetAt = undefined, loggedAt }) {
+  if (loggedAt == null) throw new Error('invalid loggedAt');
+
   const details = { success };
   if (success) {
     if (configSetAt != null)
@@ -60,13 +62,15 @@ function createBackupAudit({ success, configSetAt = undefined, loggedAt }) {
       details.configSetAt = standardBackupsConfigs.last().setAt;
     else
       throw new Error('backups config not found');
+
+    if (isBefore(loggedAt, details.configSetAt))
+      throw new Error('invalid loggedAt');
   } else {
     const error = new Error('error');
     details.stack = error.stack;
     details.message = error.message;
   }
-  if (loggedAt == null || isBefore(loggedAt, details.configSetAt))
-    throw new Error('invalid loggedAt');
+
   auditsWithCreatedAt.createPast(1, {
     actor: null,
     action: 'backup',
@@ -74,6 +78,7 @@ function createBackupAudit({ success, configSetAt = undefined, loggedAt }) {
     details,
     loggedAt
   });
+
   return this;
 }
 

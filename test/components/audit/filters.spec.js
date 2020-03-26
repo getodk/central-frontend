@@ -11,14 +11,6 @@ import { trigger } from '../../util/event';
 describe('AuditFilters', () => {
   beforeEach(mockLogin);
 
-  it('shows a message if no audit log entries are returned', () =>
-    mockHttp()
-      .mount(AuditList)
-      .respondWithData(() => testData.extendedAudits.sorted())
-      .afterResponse(component => {
-        component.find('.empty-table-message').length.should.equal(1);
-      }));
-
   it('initially specifies nonverbose for action', () =>
     mockHttp()
       .mount(AuditList)

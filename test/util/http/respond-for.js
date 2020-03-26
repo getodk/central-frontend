@@ -1,5 +1,6 @@
 import testData from '../../data';
 
+// The names of the following properties correspond to request keys.
 const defaults = {
   users: () => testData.standardUsers.sorted(),
 
@@ -24,22 +25,30 @@ const defaults = {
     : { problem: 404.1 }),
   submissionsChunk: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
-  fieldKeys: () => testData.extendedFieldKeys.sorted()
+  fieldKeys: () => testData.extendedFieldKeys.sorted(),
+
+  backupsConfig: () => (testData.standardBackupsConfigs.size !== 0
+    ? testData.standardBackupsConfigs.last()
+    : { problem: 404.1 }),
+  audits: () => testData.extendedAudits.sorted()
 };
 
-const respond = (keys) => (series, options = undefined) => keys.reduce(
-  (acc, key) => {
-    if (options != null && key in options) {
-      const option = options[key];
-      if (option === false) return acc;
-      return typeof option === 'number'
-        ? acc.respondWithProblem(option)
-        : acc.respond(option);
-    }
-    return acc.respond(defaults[key]);
-  },
-  series
-);
+const respond = (keys, routeDefaults = undefined) =>
+  (series, options = undefined) => keys.reduce(
+    (acc, key) => {
+      if (options != null && key in options) {
+        const option = options[key];
+        if (option === false) return acc;
+        return typeof option === 'number'
+          ? acc.respondWithProblem(option)
+          : acc.respond(option);
+      }
+      return acc.respond(routeDefaults != null && key in routeDefaults
+        ? routeDefaults[key]
+        : defaults[key]);
+    },
+    series
+  );
 
 const formShowKeys = ['project', 'form', 'formDraft', 'attachments'];
 const submissionListKeys = [
@@ -49,6 +58,7 @@ const submissionListKeys = [
   'submissionsChunk'
 ];
 
+// The names of the following properties correspond to route names.
 export default {
   ProjectList: respond(['projects', 'users']),
   ProjectOverview: respond(['project', 'forms']),
@@ -69,5 +79,9 @@ export default {
   FormDraftStatus: respond(formShowKeys),
   FormAttachmentList: respond(formShowKeys),
   FormDraftTesting: respond(submissionListKeys),
-  UserList: respond(['users', 'actors'])
+  UserList: respond(['users', 'actors']),
+  BackupList: respond(['backupsConfig', 'audits'], {
+    audits: () => testData.standardAudits.sorted()
+  }),
+  AuditList: respond(['audits'])
 };
