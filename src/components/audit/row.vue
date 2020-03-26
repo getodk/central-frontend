@@ -30,8 +30,8 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="actionInfo != null && actionInfo.target != null"
-        :to="actionInfo.target.path(audit.actee)" :title="targetTitle">
+      <router-link v-if="targetInfo != null" :to="targetInfo.path(audit.actee)"
+        :title="targetTitle">
         {{ targetTitle }}
       </router-link>
     </td>
@@ -48,81 +48,66 @@ import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 import { formatDate } from '../../util/date-time';
 
-const TARGETS = {
-  user: {
-    title: ({ displayName }) => displayName,
-    path: ({ id }) => `/users/${id}/edit`
-  },
-  project: {
-    title: ({ name }) => name,
-    path: ({ id }) => `/projects/${id}`
-  },
-  form: {
-    title: (form) => new Form(form).nameOrId(),
-    path: ({ projectId, xmlFormId }) =>
-      `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`
-  }
-};
 const ACTIONS = {
   'user.create': {
     type: ['User', 'Create'],
-    target: TARGETS.user
+    target: 'user'
   },
   'user.update': {
     type: ['User', 'Update Details'],
-    target: TARGETS.user
+    target: 'user'
   },
   'assignment.create': {
     type: ['User', 'Assign Role'],
-    target: TARGETS.user
+    target: 'user'
   },
   'assignment.delete': {
     type: ['User', 'Revoke Role'],
-    target: TARGETS.user
+    target: 'user'
   },
   'user.delete': {
     type: ['User', 'Retire'],
-    target: TARGETS.user
+    target: 'user'
   },
   'project.create': {
     type: ['Project', 'Create'],
-    target: TARGETS.project
+    target: 'project'
   },
   'project.update': {
     type: ['Project', 'Update Details'],
-    target: TARGETS.project
+    target: 'project'
   },
   'project.delete': {
     type: ['Project', 'Delete'],
-    target: TARGETS.project
+    target: 'project'
   },
   'form.create': {
     type: ['Form', 'Create'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.update': {
     type: ['Form', 'Update Details'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.update.draft.set': {
     type: ['Form', 'Set Draft'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.update.publish': {
     type: ['Form', 'Publish Draft'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.update.draft.delete': {
     type: ['Form', 'Abandon Draft'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.attachment.update': {
     type: ['Form', 'Update Attachments'],
-    target: TARGETS.form
+    target: 'form'
   },
   'form.delete': {
     type: ['Form', 'Delete'],
-    target: TARGETS.form
+    target: 'form'
   },
   backup: {
     type: ['Backup']
@@ -145,8 +130,29 @@ export default {
     actionInfo() {
       return ACTIONS[this.audit.action];
     },
+    targets() {
+      return {
+        user: {
+          title: ({ displayName }) => displayName,
+          path: ({ id }) => this.userPath(id)
+        },
+        project: {
+          title: ({ name }) => name,
+          path: ({ id }) => this.projectPath(id)
+        },
+        form: {
+          title: (form) => new Form(form).nameOrId(),
+          path: (form) => this.primaryFormPath(form)
+        }
+      };
+    },
+    targetInfo() {
+      if (this.actionInfo == null) return null;
+      const { target } = this.actionInfo;
+      return target != null ? this.targets[target] : null;
+    },
     targetTitle() {
-      return this.actionInfo.target.title(this.audit.actee);
+      return this.targetInfo.title(this.audit.actee);
     },
     details() {
       return this.audit.details != null

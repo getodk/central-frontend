@@ -162,21 +162,29 @@ describe('AuditTable', () => {
       });
     });
 
-    it('encodes the xmlFormId in the form URL', () =>
-      mockRoute('/system/audits')
-        .respondWithData(() => testData.extendedAudits
-          .createPast(1, {
-            actor: testData.extendedUsers.first(),
-            action: 'form.create',
-            actee: testData.standardForms
-              .createPast(1, { xmlFormId: 'i ı' })
-              .last()
-          })
-          .sorted())
-        .afterResponse(app => {
-          const a = app.find('.audit-row td')[3].first('a');
-          a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
-        }));
+    it('encodes the xmlFormId in the form URL', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { xmlFormId: 'i ı' }).last()
+      });
+      return load('/system/audits').then(app => {
+        const a = app.find('.audit-row td')[3].first('a');
+        a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
+      });
+    });
+
+    it('links to .../draft for a form without a published version', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { draft: true }).last()
+      });
+      return load('/system/audits').then(app => {
+        const a = app.find('.audit-row td')[3].first('a');
+        a.getAttribute('href').should.equal('#/projects/1/forms/f/draft');
+      });
+    });
   });
 
   it('renders a backup audit correctly', () =>
