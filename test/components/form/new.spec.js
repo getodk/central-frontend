@@ -316,7 +316,7 @@ describe('FormNew', () => {
 
     it('shows a success alert', () =>
       createForm().then(app => {
-        app.should.alert('success');
+        app.should.alert('success', 'Your new Form "Form 2" has been created as a Draft. Take a look at the checklist below, and when you feel it\'s ready, you can publish the Form for use.');
       }));
 
     it('renders the correct number of rows in the forms table', () =>
@@ -355,7 +355,7 @@ describe('FormNew', () => {
           testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          app.should.alert('success');
+          app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
         });
     });
 

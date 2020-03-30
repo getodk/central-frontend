@@ -50,18 +50,27 @@ except according to the terms contained in the LICENSE file.
               class="btn btn-primary" @click="showModal('publish')">
               <span class="icon-check"></span>Publish Draft&hellip;
             </button>
+            <button id="form-draft-status-abandon-button" type="button"
+              class="btn btn-danger" @click="showModal('abandon')">
+              <!-- TODO. Add icon. -->
+              <span class="icon-trash"></span>Abandon Draft&hellip;
+            </button>
           </template>
         </page-section>
       </div>
     </div>
+
     <form-new v-bind="upload" @hide="hideModal('upload')"
       @success="afterUpload"/>
     <form-draft-publish v-bind="publish" @hide="hideModal('publish')"
       @success="afterPublish"/>
+    <form-draft-abandon v-if="form != null" v-bind="abandon"
+      @hide="hideModal('abandon')" @success="afterAbandon"/>
   </div>
 </template>
 
 <script>
+import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
@@ -76,34 +85,38 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormDraftStatus',
   components: {
-    FormNew,
+    FormDraftAbandon,
     FormDraftChecklist,
     FormDraftPublish,
+    FormNew,
     FormVersionSummaryItem,
     PageSection
   },
   mixins: [modal(), routes(), validateData()],
   data() {
     return {
+      // Modals
       upload: {
         state: false
       },
       publish: {
+        state: false
+      },
+      abandon: {
         state: false
       }
     };
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData([{ key: 'formDraft', getOption: true }]),
+  computed: requestData(['form', { key: 'formDraft', getOption: true }]),
   methods: {
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
       this.$alert().success('Success! The new Form definition has been saved as your Draft.');
     },
-    afterPublish() {
-      this.$emit('fetch-form');
+    clearDraft() {
       this.$store.commit('setData', {
         key: 'formDraft',
         value: Option.none()
@@ -112,10 +125,32 @@ export default {
         key: 'attachments',
         value: Option.none()
       });
+    },
+    afterPublish() {
+      this.$emit('fetch-form');
+      this.clearDraft();
       this.$router.push(this.formPath(), () => {
         this.$alert().success('Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.');
       });
+    },
+    afterAbandon(form) {
+      if (form.publishedAt != null) {
+        this.clearDraft();
+        this.$router.push(this.formPath(), () => {
+          this.$alert().success('The Draft version of this Form has been successfully deleted.');
+        });
+      } else {
+        this.$router.push(this.projectPath(), () => {
+          this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
+        });
+      }
     }
   }
 };
 </script>
+
+<style lang="scss">
+#form-draft-status-publish-button {
+  margin-right: 10px;
+}
+</style>
