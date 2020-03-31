@@ -68,7 +68,7 @@ export default {
         categoryOption('Form Actions', 'form'),
         actionOption('Create', 'form.create'),
         actionOption('Update Details', 'form.update'),
-        actionOption('Set Draft', 'form.update.draft.set'),
+        actionOption('Create or Update Draft', 'form.update.draft.set'),
         actionOption('Publish Draft', 'form.update.publish'),
         actionOption('Abandon Draft', 'form.update.draft.delete'),
         actionOption('Update Attachments', 'form.attachment.update'),

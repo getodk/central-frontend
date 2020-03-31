@@ -90,7 +90,7 @@ const ACTIONS = {
     target: 'form'
   },
   'form.update.draft.set': {
-    type: ['Form', 'Set Draft'],
+    type: ['Form', 'Create or Update Draft'],
     target: 'form'
   },
   'form.update.publish': {

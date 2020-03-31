@@ -127,7 +127,7 @@ describe('AuditTable', () => {
     const cases = [
       ['form.create', ['Form', 'Create']],
       ['form.update', ['Form', 'Update Details']],
-      ['form.update.draft.set', ['Form', 'Set Draft']],
+      ['form.update.draft.set', ['Form', 'Create or Update Draft']],
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
