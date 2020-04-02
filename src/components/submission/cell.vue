@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <td class="submission-table-field" :class="htmlClassByType" :title="title">
+  <td :class="htmlClass" :title="title">
     <template v-if="column.type === 'binary'">
-      <a v-if="formattedValue !== ''" :href="formattedValue" class="binary-link"
+      <a v-if="formattedValue !== ''" class="binary-link" :href="formattedValue"
         target="_blank" title="File was submitted. Click to download.">
         <span class="icon-check"></span> <span class="icon-download"></span>
       </a>
@@ -56,18 +56,18 @@ export default {
     }
   },
   computed: {
-    htmlClassByType() {
+    htmlClass() {
+      const htmlClass = ['submission-table-field'];
       const { type } = this.column;
-      if (type == null) return '';
-      const options = typeOptions[type];
-      return options != null && options.htmlClass === true
-        ? `submission-cell-${type}`
-        : '';
+      if (type != null) {
+        const options = typeOptions[type];
+        if (options != null && options.htmlClass === true)
+          htmlClass.push(`submission-cell-${type}`);
+      }
+      return htmlClass;
     },
     formattedValue() {
-      const split = this.column.path.split('/');
-      split.shift();
-      const rawValue = path(split, this.submission);
+      const rawValue = path(this.column.pathComponents, this.submission);
       if (rawValue == null) return '';
       switch (this.column.type) {
         case 'int':

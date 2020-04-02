@@ -364,7 +364,10 @@ describe('SubmissionList', () => {
       it('does not show encryption message if form only has instanceID field', () => {
         const key = testData.standardKeys.createPast(1).last();
         testData.extendedProjects.createPast(1, { key });
-        const fields = [{ path: '/meta/instanceID', type: 'string' }];
+        const fields = [
+          { path: '/meta', type: 'structure' },
+          { path: '/meta/instanceID', type: 'string' }
+        ];
         testData.extendedForms.createPast(1, { fields, submissions: 1 });
         testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
         return loadSubmissionList().afterResponses(component => {

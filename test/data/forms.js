@@ -16,15 +16,19 @@ import { toActor } from './actors';
 // use the views defined below.
 
 const defaultFields = (hasInstanceId) => {
-  const instanceId = [];
+  const instanceIdFields = [];
   if (hasInstanceId) {
-    instanceId.push({
-      path: faker.random.boolean() ? '/meta/instanceID' : '/instanceID',
-      type: 'string'
-    });
+    if (faker.random.boolean())
+      instanceIdFields.push(
+        { path: '/meta', type: 'structure' },
+        { path: '/meta/instanceID', type: 'string' }
+      );
+    else
+      instanceIdFields.push({ path: '/instanceID', type: 'string' });
   }
+
   return [
-    ...instanceId,
+    ...instanceIdFields,
     { path: '/testInt', type: 'int' },
     { path: '/testDecimal', type: 'decimal' },
     { path: '/testDate', type: 'date' },

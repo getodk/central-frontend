@@ -58,10 +58,6 @@ import SubmissionRow from './row.vue';
 
 const instanceIdPaths = ['/meta/instanceID', '/instanceID'];
 
-const anySlash = /\//g;
-const replaceWithHyphen = (match, offset) => (offset !== 0 ? '-' : '');
-const pathToHeader = (path) => path.replace(anySlash, replaceWithHyphen);
-
 export default {
   name: 'SubmissionTable',
   components: { SubmissionRow },
@@ -90,6 +86,13 @@ export default {
     return { fieldColumnsToShow, subsetShown };
   },
   methods: {
+    // Returns a column object, which is essentially a field object with
+    // additional properties.
+    fieldToColumn(field) {
+      const pathComponents = field.path.split('/');
+      pathComponents.shift();
+      return { ...field, pathComponents, header: pathComponents.join('-') };
+    },
     analyzeFields() {
       const columns = [];
       let anyRepeat = false;
@@ -109,7 +112,7 @@ export default {
           } else if (!(type === 'structure' ||
             // We use the submission's __id property to display its instance ID.
             (type === 'string' && instanceIdPaths.includes(path)))) {
-            columns.push({ ...field, header: pathToHeader(path) });
+            columns.push(this.fieldToColumn(field));
           }
         }
       }

@@ -165,12 +165,13 @@ export default {
   },
   watch: {
     $route() {
-      this.fetchInitialData();
       this.submissions = null;
       this.instanceIds = new Set();
       this.originalCount = null;
       this.chunkCount = 0;
       this.message = null;
+
+      this.fetchInitialData();
     }
   },
   created() {
