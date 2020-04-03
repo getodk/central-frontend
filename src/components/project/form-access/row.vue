@@ -115,6 +115,7 @@ export default {
   }
 
   .icon-edit {
+    cursor: help;
     margin-left: 10px;
   }
 
