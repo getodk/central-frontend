@@ -27,7 +27,6 @@ except according to the terms contained in the LICENSE file.
             <option value="closing">Closing</option>
             <option value="closed">Closed</option>
           </select>
-          <!-- TODO. Add icon. -->
           <span v-if="form.publishedAt == null" class="icon-edit"
             title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. When that happens, the settings shown here will be used."><!-- eslint-disable-line max-len -->
           </span>
@@ -98,8 +97,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/variables';
-
 .project-form-access-row-form-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,7 +115,6 @@ export default {
   }
 
   .icon-edit {
-    color: $color-warning;
     margin-left: 10px;
   }
 

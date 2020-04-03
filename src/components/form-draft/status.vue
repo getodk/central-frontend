@@ -34,7 +34,6 @@ except according to the terms contained in the LICENSE file.
                 <p><strong>Draft version</strong> of this Form.</p>
                 <button id="form-draft-status-upload-button" type="button"
                   class="btn btn-primary" @click="showModal('upload')">
-                  <!-- TODO. Add icon. -->
                   <span class="icon-upload"></span>Upload new definition&hellip;
                 </button>
               </template>
@@ -52,7 +51,6 @@ except according to the terms contained in the LICENSE file.
             </button>
             <button id="form-draft-status-abandon-button" type="button"
               class="btn btn-danger" @click="showModal('abandon')">
-              <!-- TODO. Add icon. -->
               <span class="icon-trash"></span>Abandon Draft&hellip;
             </button>
           </template>
