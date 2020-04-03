@@ -53,6 +53,7 @@ export const apiPaths = {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
+  formVersions: formPath('/versions'),
   formVersionDef: (projectId, xmlFormId, version, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';

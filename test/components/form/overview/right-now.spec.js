@@ -1,3 +1,5 @@
+import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
+import FormVersionSummaryItem from '../../../../src/components/form-version/summary-item.vue';
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
@@ -5,13 +7,14 @@ import { mockLogin } from '../../../util/session';
 describe('FormOverviewRightNow', () => {
   beforeEach(mockLogin);
 
-  it('shows the version string of the primary version', () => {
-    testData.extendedForms.createPast(1, { version: 'v1' });
+  it('renders FormVersionSummaryItem for the primary version', () => {
+    testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
     return load('/projects/1/forms/f').then(app => {
-      const section = app.first('#form-overview-right-now');
-      const text = section.first('.form-version-summary-item-version').text().trim();
-      text.should.equal('v1');
+      const component = app
+        .first(FormOverviewRightNow)
+        .first(FormVersionSummaryItem);
+      component.getProp('version').version.should.equal('v1');
     });
   });
 

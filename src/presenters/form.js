@@ -39,6 +39,11 @@ const props = [
 export default class Form extends Base(props) {
   nameOrId() { return this.name != null ? this.name : this.xmlFormId; }
 
+  versionOrBlank() {
+    if (this.version == null) return null;
+    return this.version !== '' ? this.version : '(blank)';
+  }
+
   updatedOrCreatedAt() {
     return this.updatedAt != null ? this.updatedAt : this.createdAt;
   }

@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- Standard form definition buttons -->
 <template>
   <a v-if="version.excelContentType == null" class="btn btn-primary"
     :href="defPath('xml')" :download="xmlFilename">

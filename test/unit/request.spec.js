@@ -71,6 +71,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/assignments/app-user');
     });
 
+    it('formVersions', () => {
+      const path = apiPaths.formVersions(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/versions');
+    });
+
     it('formVersionDef', () => {
       const path = apiPaths.formVersionDef(1, 'a b', 'c d', 'xml');
       path.should.equal('/v1/projects/1/forms/a%20b/versions/c%20d.xml');

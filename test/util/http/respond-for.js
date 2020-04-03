@@ -15,7 +15,7 @@ const defaults = {
   form: () => testData.extendedForms.last(),
   fields: () => testData.extendedForms.last()._fields,
   formActors: () => testData.extendedFieldKeys.sorted().map(testData.toActor),
-  keys: () => testData.standardKeys.sorted(),
+  formVersions: () => testData.extendedFormVersions.sorted(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.extendedFormDrafts.last()
     : { problem: 404.1 }),
@@ -23,6 +23,7 @@ const defaults = {
     ? testData.standardFormAttachments.sorted()
     : { problem: 404.1 }),
   submissionsChunk: testData.submissionOData,
+  keys: () => testData.standardKeys.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted()
 };
 
@@ -62,7 +63,7 @@ export default {
   ]),
   ProjectSettings: respond(['project']),
   FormOverview: respond([...formShowKeys, 'formActors']),
-  FormVersionList: respond(formShowKeys),
+  FormVersionList: respond([...formShowKeys, 'formVersions']),
   FormSubmissions: respond(submissionListKeys),
   FormSettings: respond(formShowKeys),
   FormDraftStatus: respond(formShowKeys),

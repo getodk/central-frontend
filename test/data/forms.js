@@ -4,7 +4,7 @@ import { pick } from 'ramda';
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
-import { fakePastDate } from '../util/date-time';
+import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 
 
@@ -148,6 +148,13 @@ formVersions = dataStore({
       // Form draft
       draftToken
     };
+  },
+  sort: (version1, version2) => {
+    if (version1.publishedAt == null || version2.publishedAt == null)
+      throw new Error('version must be published');
+    if (isBefore(version1.publishedAt, version2.publishedAt)) return 1;
+    if (isBefore(version2.publishedAt, version1.publishedAt)) return -1;
+    return 0;
   }
 });
 

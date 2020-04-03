@@ -10,14 +10,51 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div></div>
+  <div>
+    <form-version-table/>
+    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+  </div>
 </template>
 
 <script>
+import FormVersionTable from './table.vue';
+import Loading from '../loading.vue';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'FormVersionList',
-  mixins: [validateData()]
+  components: { FormVersionTable, Loading },
+  mixins: [validateData()],
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    }
+  },
+  watch: {
+    $route: 'fetchData'
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.$store.dispatch('get', [{
+        // We do not keep `form` and `formVersions` in sync. For example, we do
+        // not update `form` if it is inconsistent with `formVersions`. In the
+        // unusual case that `formVersions` is empty, we still render the
+        // component.
+        key: 'formVersions',
+        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
+        extended: true
+      }]).catch(noop);
+    }
+  }
 };
 </script>

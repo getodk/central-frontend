@@ -39,13 +39,14 @@ export const keys = [
   // Fields for a single form version (the primary version or otherwise)
   'fields',
   'formActors',
-  // Encryption keys for a single form version
-  'keys',
+  'formVersions',
   'formDraft',
   // Form draft attachments
   'attachments',
   // A single chunk of submissions OData for a single form version
   'submissionsChunk',
+  // Encryption keys for a single form version
+  'keys',
   'fieldKeys',
 
   'backupsConfig',
@@ -66,6 +67,7 @@ export const transforms = {
   project: ({ data }) => new Project(data),
   forms: ({ data }) => data.map(form => new Form(form)),
   form: ({ data }) => new Form(data),
+  formVersions: ({ data }) => data.map(version => new Form(version)),
   formDraft: optional(({ data }) => new Form(data)),
   attachments: optional(({ data }) =>
     data.map(attachment => new FormAttachment(attachment))),
