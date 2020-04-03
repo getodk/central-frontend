@@ -1,11 +1,9 @@
-import FormShow from '../../../src/components/form/show.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
 import { formatDate } from '../../../src/util/date-time';
-import { load, mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { noop } from '../../../src/util/util';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
 
@@ -30,101 +28,21 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
   return mockHttp()
     .mount(SubmissionList, {
       propsData: {
-        projectId: '1',
-        xmlFormId: 'f',
+        baseUrl: '/v1/projects/1/forms/f',
         chunkSizes: { small, large },
         scrolledToBottom: () => scrolledToBottom
       },
       requestData: { form }
     })
-    .request(component => {
-      // Normally the `activated` hook calls this method, but that hook is not
-      // called here, so we call the method ourselves instead.
-      component.vm.fetchInitialData();
-    })
     .respondWithData(() => testData.standardKeys.sorted())
-    .respondWithData(() => testData.extendedForms.last()._schema)
+    .respondWithData(() => testData.extendedForms.last()._fields)
     .respondWithData(() => testData.submissionOData(small, 0));
-};
-const loadFormOverview = (submissionCount, chunkSizes = []) => {
-  createSubmissions(submissionCount);
-  const [small = 250, large = 1000] = chunkSizes;
-  return load('/projects/1/forms/f')
-    .afterResponses(app => {
-      const formShow = app.first(FormShow);
-      formShow.setData({
-        submissionChunkSizes: { small, large },
-        scrolledToBottom: () => true
-      });
-      return app.vm.$nextTick();
-    })
-    // We want it to be possible for afterResponses() to be chained to this
-    // mockHttp() object, but we have already used afterResponses() to call
-    // setData(). In a slight abuse of request(), we specify a callback that
-    // does not send a request, and we do not specify a response callback,
-    // making afterResponses() available again.
-    .request(noop);
 };
 
 describe('SubmissionList', () => {
   beforeEach(mockLogin);
 
-  describe('routing', () => {
-    it('requests schema for a user whose first navigation is to the tab', () =>
-      mockRoute('/projects/1/forms/f/submissions')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 5)
-            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-        })
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData));
-
-    it('requests schema for a user who navigates to the tab from another tab', () =>
-      mockRoute('/projects/1/forms/f')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => []) // formActors
-        .complete()
-        .route('/projects/1/forms/f/submissions')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 1)
-            request.url.should.equal('/v1/projects/1/forms/f.schema.json?flatten=true&odata=true');
-        })
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData));
-  });
-
   describe('after login', () => {
-    it('does not send a new request if user navigates back to tab', () =>
-      mockRoute('/projects/1/forms/f/submissions')
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f', submissions: 0 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._schema)
-        .respondWithData(testData.submissionOData)
-        .complete()
-        .route('/projects/1/forms/f')
-        .respondWithData(() => []) // formActors
-        .complete()
-        .route('/projects/1/forms/f/submissions')
-        .testNoRequest());
-
     describe('table data', () => {
       it('contains the correct data for the left half of the table', () => {
         createSubmissions(2);
@@ -200,7 +118,7 @@ describe('SubmissionList', () => {
             const submission = testData.extendedSubmissions.last();
             const localeString = submission._oData.testInt.toLocaleString();
             td.text().trim().should.equal(localeString);
-            td.hasClass('submission-row-int-column').should.be.true();
+            td.hasClass('submission-cell-int').should.be.true();
           });
         });
 
@@ -213,7 +131,7 @@ describe('SubmissionList', () => {
                   component.first('#submission-table2 tbody tr'),
                   'testDecimal'
                 );
-                td.hasClass('submission-row-decimal-column').should.be.true();
+                td.hasClass('submission-cell-decimal').should.be.true();
               });
           });
 
@@ -411,7 +329,7 @@ describe('SubmissionList', () => {
                 component.first('#submission-table2 tbody tr'),
                 'testGroup-testBinary'
               );
-              td.hasClass('submission-row-binary-column').should.be.true();
+              td.hasClass('submission-cell-binary').should.be.true();
               const $a = $(td.element).find('a');
               $a.length.should.equal(1);
               $a.attr('href').should.equal('/v1/projects/1/forms/f/submissions/abc%20123/attachments/def%20456.jpg');
@@ -446,8 +364,11 @@ describe('SubmissionList', () => {
       it('does not show encryption message if form only has instanceID field', () => {
         const key = testData.standardKeys.createPast(1).last();
         testData.extendedProjects.createPast(1, { key });
-        const schema = [{ path: ['meta', 'instanceID'], type: 'string' }];
-        testData.extendedForms.createPast(1, { schema, submissions: 1 });
+        const fields = [
+          { path: '/meta', type: 'structure' },
+          { path: '/meta/instanceID', type: 'string' }
+        ];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
         testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
         return loadSubmissionList().afterResponses(component => {
           const td = component.find('#submission-table2 tbody td');
@@ -457,65 +378,10 @@ describe('SubmissionList', () => {
       });
     });
 
-    describe('field subset indicator', () => {
-      const fields = (type, count) => {
-        const result = [];
-        for (let i = 1; i <= count; i += 1)
-          result.push({ path: [`field${i}`], type });
-        return result;
-      };
-
-      // Array of test cases
-      const cases = [
-        // Schemas for which an indicator is not expected
-        [false, [
-          ['1 field', fields('int', 1)],
-          ['10 fields', fields('int', 10)],
-          ['10 fields and meta.instanceID', [
-            ...fields('int', 10),
-            { path: ['meta', 'instanceID'], type: 'string' }
-          ]],
-          ['10 fields and instanceID', [
-            ...fields('int', 10),
-            { path: ['instanceID'], type: 'string' }
-          ]],
-          ['10 fields, meta.instanceID, and instanceID', [
-            ...fields('int', 10),
-            { path: ['meta', 'instanceID'], type: 'string' },
-            { path: ['instanceID'], type: 'string' }
-          ]]
-        ]],
-        // Schemas for which an indicator is expected
-        [true, [
-          ['11 fields', fields('int', 11)],
-          ['1 field and 1 repeat', [
-            ...fields('int', 1),
-            ...fields('repeat', 1)
-          ]],
-          ['1 repeat and no other root fields', fields('repeat', 1)]
-        ]]
-      ];
-      for (const [hasClass, subcases] of cases) {
-        describe(hasClass ? 'is shown' : 'is not shown', () => {
-          for (const [description, schema] of subcases) {
-            it(description, () => {
-              testData.extendedProjects.createPast(1);
-              testData.extendedForms.createPast(1, { schema, submissions: 1 });
-              testData.extendedSubmissions.createPast(1);
-              return loadSubmissionList().afterResponses(component => {
-                const table2 = component.first('#submission-table2');
-                table2.hasClass('field-subset').should.equal(hasClass);
-              });
-            });
-          }
-        });
-      }
-    });
-
     it('shows a message if there are no submissions', () => {
-      testData.extendedForms.createPast(1, { submissions: 0 });
-      return loadSubmissionList().afterResponses(component => {
-        component.find('.empty-table-message').length.should.equal(1);
+      testData.extendedForms.createPast(1);
+      return loadSubmissionList().then(component => {
+        component.first('.empty-table-message').should.be.visible();
       });
     });
 
@@ -737,8 +603,7 @@ describe('SubmissionList', () => {
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -748,11 +613,8 @@ describe('SubmissionList', () => {
                   .last()
               }
             })
-            .request(component => {
-              component.vm.fetchInitialData();
-            })
             .respondWithProblem()
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(2);
               return testData.submissionOData(1, 0);
@@ -762,12 +624,11 @@ describe('SubmissionList', () => {
               component.vm.onScroll();
             }));
 
-        it('does nothing upon scroll if schema request results in error', () =>
+        it('does nothing upon scroll if fields request results in error', () =>
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -776,9 +637,6 @@ describe('SubmissionList', () => {
                   .createPast(1, { xmlFormId: 'f', submissions: 2 })
                   .last()
               }
-            })
-            .request(component => {
-              component.vm.fetchInitialData();
             })
             .respondWithData(() => testData.standardKeys.sorted())
             .respondWithProblem()
@@ -795,8 +653,7 @@ describe('SubmissionList', () => {
           mockHttp()
             .mount(SubmissionList, {
               propsData: {
-                projectId: '1',
-                xmlFormId: 'f',
+                baseUrl: '/v1/projects/1/forms/f',
                 chunkSizes: { small: 1, large: 1000 },
                 scrolledToBottom: () => true
               },
@@ -806,11 +663,8 @@ describe('SubmissionList', () => {
                   .last()
               }
             })
-            .request(component => {
-              component.vm.fetchInitialData();
-            })
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithProblem()
             .complete()
             .testNoRequest(component => {
@@ -887,8 +741,9 @@ describe('SubmissionList', () => {
       });
 
       describe('count update', () => {
-        it('updates the form checklist', () =>
-          loadFormOverview(10)
+        it('updates the form checklist', () => {
+          createSubmissions(10);
+          return load('/projects/1/forms/f')
             .afterResponses(app => {
               const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
               p.text().should.containEql('10 ');
@@ -896,7 +751,7 @@ describe('SubmissionList', () => {
             })
             .route('/projects/1/forms/f/submissions')
             .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
+            .respondWithData(() => testData.extendedForms.last()._fields)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData();
@@ -907,10 +762,12 @@ describe('SubmissionList', () => {
               const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
               p.text().should.containEql('11 ');
               p.text().should.not.containEql('10 ');
-            }));
+            });
+        });
 
-        it('updates the count in the download button', () =>
-          loadFormOverview(10)
+        it('updates the count in the download button', () => {
+          createSubmissions(10);
+          return load('/projects/1/forms/f')
             .complete()
             .load('/projects/1/forms/f/submissions', {
               project: false,
@@ -932,67 +789,71 @@ describe('SubmissionList', () => {
               const button = app.first('#submission-list-download-button');
               const text = button.text().trim().iTrim();
               text.should.equal('Download all 11 records');
-            }));
+            });
+        });
 
-        it('scrolling to the bottom continues to fetch the next chunk', () =>
-          loadFormOverview(4, [2])
-            .complete()
-            // 4 submissions exist. About to request $top=2, $skip=0.
-            .route('/projects/1/forms/f/submissions')
-            .respondWithData(() => testData.standardKeys.sorted())
-            .respondWithData(() => testData.extendedForms.last()._schema)
-            .respondWithData(() => testData.submissionOData(2, 0))
+        it('scrolling to the bottom continues to fetch the next chunk', () => {
+          createSubmissions(4);
+          // 4 submissions exist. About to request $top=2, $skip=0.
+          return loadSubmissionList([2])
+            .beforeEachResponse((component, config, index) => {
+              if (index === 2) {
+                checkTopSkip(config, 2, 0);
+                checkMessage(component, true, 'Loading the first 2 of 4 submissions…');
+              }
+            })
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to
             // request $top=2, $skip=2.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 2);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 2);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(4);
               // This returns 2 of the 4 new submissions.
               return testData.submissionOData(2, 2);
             })
-            .afterResponse(app => {
-              checkIds(app, 2, 4);
-              checkMessage(app, false, '2 rows remain.');
+            .afterResponse(component => {
+              checkIds(component, 2, 4);
+              checkMessage(component, false, '2 rows remain.');
             })
             // 8 submissions exist. About to request $top=2, $skip=4.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 4);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 4);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
             .respondWithData(() => testData.submissionOData(2, 4))
-            .afterResponse(app => {
-              checkIds(app, 2, 4);
-              checkMessage(app, false, '2 rows remain.');
+            .afterResponse(component => {
+              checkIds(component, 2, 4);
+              checkMessage(component, false, '2 rows remain.');
             })
             // 8 submissions exist. About to request $top=2, $skip=6.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
+            .request(component => {
+              component.vm.onScroll();
             })
-            .beforeEachResponse((app, request) => {
-              checkTopSkip(request, 2, 6);
-              checkMessage(app, true, 'Loading the last 2 submissions…');
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 6);
+              checkMessage(component, true, 'Loading the last 2 submissions…');
             })
             // Returns the last 2 submissions.
             .respondWithData(() => testData.submissionOData(2, 6))
-            .afterResponse(app => {
-              checkIds(app, 4, 4);
-              app.find('#submission-list-message').should.be.empty();
+            .afterResponse(component => {
+              checkIds(component, 4, 4);
+              component.find('#submission-list-message').length.should.equal(0);
             })
             // 8 submissions exist. No request will be sent.
-            .request(app => {
-              app.first(SubmissionList).vm.onScroll();
-            }));
+            .testNoRequest(component => {
+              component.vm.onScroll();
+            });
+        });
       });
     });
   });

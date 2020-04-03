@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="form != null">
+  <div>
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <template v-if="keys != null">
+    <template v-if="form != null && keys != null">
       <float-row class="table-actions">
         <template #left>
           <refresh-button :configs="configsForRefresh"/>
@@ -36,10 +36,10 @@ except according to the terms contained in the LICENSE file.
       </float-row>
       <template v-if="submissions != null">
         <p v-if="submissions.length === 0" class="empty-table-message">
-          There are no Submissions yet for
-          <strong>{{ form.nameOrId() }}</strong>.
+          There are no Submissions yet.
         </p>
-        <submission-table v-else-if="schema != null" :submissions="submissions"
+        <submission-table v-else-if="fields != null" :base-url="baseUrl"
+          :submissions="submissions" :fields="fields"
           :original-count="originalCount"/>
       </template>
       <div v-if="message != null" id="submission-list-message">
@@ -52,7 +52,8 @@ except according to the terms contained in the LICENSE file.
 
     <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
       :form-action="downloadPath" @hide="hideModal('decrypt')"/>
-    <submission-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
+    <submission-analyze :state="analyze.state" :base-url="baseUrl"
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -65,11 +66,9 @@ import SubmissionAnalyze from './analyze.vue';
 import SubmissionDecrypt from './decrypt.vue';
 import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
-import validateData from '../../mixins/validate-data';
-import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['form', 'keys', 'schema', 'submissionsChunk'];
+const REQUEST_KEYS = ['form', 'keys', 'fields', 'submissionsChunk'];
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
@@ -83,13 +82,9 @@ export default {
     SubmissionDecrypt,
     SubmissionTable
   },
-  mixins: [modal(), validateData()],
+  mixins: [modal()],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
+    baseUrl: {
       type: String,
       required: true
     },
@@ -135,11 +130,7 @@ export default {
     configsForRefresh() {
       return [{
         key: 'submissionsChunk',
-        url: apiPaths.submissionsOData(
-          this.projectId,
-          this.xmlFormId,
-          { $top: this.chunkSizes.small }
-        ),
+        url: this.oDataUrl(this.chunkSizes.small),
         success: () => {
           this.processChunk();
         }
@@ -152,7 +143,7 @@ export default {
       return this.keys != null ? this.keys.find(key => key.managed) : null;
     },
     downloadPath() {
-      return apiPaths.submissionsZip(this.projectId, this.xmlFormId);
+      return `${this.baseUrl}/submissions.csv.zip`;
     },
     downloadButtonText() {
       return this.form.submissions <= 1
@@ -173,43 +164,23 @@ export default {
     }
   },
   watch: {
-    $route(newRoute, oldRoute) {
-      // Do not do anything if the user has simply navigated to another tab for
-      // the same form.
-      if (newRoute.params.projectId === oldRoute.params.projectId &&
-        newRoute.params.xmlFormId === oldRoute.params.xmlFormId)
-        return;
-
-      // Reset the component. Even if after the route change, the component is
-      // not rendered by the FormShow <router-view> (that is, even if the
-      // component is not the active tab), the component will still be kept
-      // alive, so it must be reset.
+    $route() {
       this.submissions = null;
       this.instanceIds = new Set();
       this.originalCount = null;
       this.chunkCount = 0;
       this.message = null;
 
-      if (oldRoute.name === 'SubmissionList' &&
-        newRoute.name === 'SubmissionList') {
-        // The route has changed, but the component's `activated` hook will not
-        // be called. Because of that, we call this.fetchInitialData() here
-        // instead.
-        this.fetchInitialData();
-      }
+      this.fetchInitialData();
     }
   },
-  activated() {
-    // If the user navigates from this tab to another tab, then back to this
-    // tab, we do not send a new set of requests (unless there was a response
-    // error).
-    if ((this.keys == null && !this.$store.getters.loading('keys')) ||
-      (this.schema == null && !this.$store.getters.loading('schema')) ||
-      (this.submissions == null && !this.$store.getters.loading('submissionsChunk')))
-      this.fetchInitialData();
+  created() {
+    this.fetchInitialData();
+  },
+  mounted() {
     $(window).on('scroll.submission-list', this.onScroll);
   },
-  deactivated() {
+  beforeDestroy() {
     $(window).off('.submission-list');
   },
   methods: {
@@ -232,6 +203,9 @@ export default {
       return remaining === 1
         ? 'Loading the last submission…'
         : `Loading the last ${remaining.toLocaleString()} submissions…`;
+    },
+    oDataUrl(top, skip = 0) {
+      return `${this.baseUrl}.svc/Submissions?%24top=${top}&%24skip=${skip}&%24count=true`;
     },
     // Sets this.form.submissions to this.submissionsChunk['@odata.count'].
     updateFormSubmissionCount() {
@@ -297,19 +271,15 @@ export default {
           // We do not keep this.keys in sync with the keyId property of the
           // project or the form.
           key: 'keys',
-          url: apiPaths.formKeys(this.projectId, this.xmlFormId)
+          url: `${this.baseUrl}/submissions/keys`
         },
         {
-          key: 'schema',
-          url: apiPaths.schema(this.projectId, this.xmlFormId)
+          key: 'fields',
+          url: `${this.baseUrl}/fields?odata=true`
         },
         {
           key: 'submissionsChunk',
-          url: apiPaths.submissionsOData(
-            this.projectId,
-            this.xmlFormId,
-            { $top: this.chunkSizes.small }
-          ),
+          url: this.oDataUrl(this.chunkSizes.small),
           success: () => {
             this.processChunk();
           }
@@ -343,11 +313,7 @@ export default {
       };
       this.$store.dispatch('get', [{
         key: 'submissionsChunk',
-        url: apiPaths.submissionsOData(
-          this.projectId,
-          this.xmlFormId,
-          { $top: top, $skip: skip }
-        ),
+        url: this.oDataUrl(top, skip),
         success: () => {
           this.processChunk(false);
         }

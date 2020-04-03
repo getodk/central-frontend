@@ -10,31 +10,25 @@ const loadSubmissionList = (attachToDocument = false) => {
   // Create test data.
   if (testData.standardKeys.size === 0)
     testData.standardKeys.createPast(1, { managed: true });
-  if (testData.extendedProjects.size === 0) {
-    const key = testData.standardKeys.sorted().filter(k => k.managed)[0];
-    testData.extendedProjects.createPast(1, { key }).last();
-  }
-  if (testData.extendedForms.size === 0) testData.extendedForms.createPast(1);
+  else
+    testData.standardKeys.size.should.equal(1);
+  const key = testData.standardKeys.last();
+  testData.extendedProjects.size.should.equal(0);
+  testData.extendedProjects.createPast(1, {
+    key: key.managed ? key : null,
+    forms: 1
+  });
+  testData.extendedForms.size.should.equal(0);
+  const form = testData.extendedForms.createPast(1).last();
 
   return mockHttp()
     .mount(SubmissionList, {
-      propsData: {
-        projectId: testData.extendedProjects.last().id.toString(),
-        xmlFormId: testData.extendedForms.last().xmlFormId
-      },
-      requestData: {
-        project: testData.extendedProjects.last(),
-        form: testData.extendedForms.last()
-      },
+      propsData: { baseUrl: '/v1/projects/1/forms/f' },
+      requestData: { form },
       attachToDocument
     })
-    .request(component => {
-      // Normally the `activated` hook calls this method, but that hook is not
-      // called here, so we call the method ourselves instead.
-      component.vm.fetchInitialData();
-    })
-    .respondWithData(() => testData.standardKeys.sorted())
-    .respondWithData(() => testData.extendedForms.last()._schema)
+    .respondWithData(() => [key])
+    .respondWithData(() => form._fields)
     .respondWithData(testData.submissionOData);
 };
 const wait = (delay) => new Promise(resolve => {

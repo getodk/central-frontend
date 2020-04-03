@@ -21,6 +21,7 @@ import FormDraftTesting from './components/form-draft/testing.vue';
 import FormOverview from './components/form/overview.vue';
 import FormSettings from './components/form/settings.vue';
 import FormShow from './components/form/show.vue';
+import FormSubmissions from './components/form/submissions.vue';
 import FormVersionList from './components/form-version/list.vue';
 import NotFound from './components/not-found.vue';
 import ProjectFormAccess from './components/project/form-access.vue';
@@ -30,7 +31,6 @@ import ProjectOverview from './components/project/overview.vue';
 import ProjectSettings from './components/project/settings.vue';
 import ProjectShow from './components/project/show.vue';
 import ProjectUserList from './components/project/user/list.vue';
-import SubmissionList from './components/submission/list.vue';
 import SystemHome from './components/system/home.vue';
 import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
@@ -232,6 +232,7 @@ const routes = [
           {
             path: '',
             component: FormOverview,
+            props: true,
             meta: {
               validateData: {
                 project: (project) =>
@@ -252,7 +253,8 @@ const routes = [
           },
           {
             path: 'submissions',
-            component: SubmissionList,
+            component: FormSubmissions,
+            props: true,
             meta: {
               validateData: {
                 project: (project) => project.permits([
@@ -302,6 +304,7 @@ const routes = [
           {
             path: 'draft/testing',
             component: FormDraftTesting,
+            props: true,
             meta: {
               validateData: {
                 project: (project) => project.permits([
@@ -526,7 +529,7 @@ preserveDataForKey({
   to: [
     'FormOverview',
     'FormVersionList',
-    'SubmissionList',
+    'FormSubmissions',
     'FormSettings',
     'FormDraftStatus',
     'FormAttachmentList',
@@ -547,7 +550,7 @@ preserveDataForKey({
     // FormShow
     'FormOverview',
     'FormVersionList',
-    'SubmissionList',
+    'FormSubmissions',
     'FormSettings',
     'FormDraftStatus',
     'FormAttachmentList',

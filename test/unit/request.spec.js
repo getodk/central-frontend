@@ -61,24 +61,14 @@ describe('util/request', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
     });
 
-    it('schema', () => {
-      const path = apiPaths.schema(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b.schema.json?flatten=true&odata=true');
-    });
-
-    it('oDataSvc', () => {
-      const path = apiPaths.oDataSvc(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b.svc');
+    it('fields', () => {
+      const path = apiPaths.fields(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/fields?odata=true');
     });
 
     it('formActors', () => {
       const path = apiPaths.formActors(1, 'a b', 'app-user');
       path.should.equal('/v1/projects/1/forms/a%20b/assignments/app-user');
-    });
-
-    it('formKeys', () => {
-      const path = apiPaths.formKeys(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
     it('formVersionDef', () => {
@@ -124,26 +114,6 @@ describe('util/request', () => {
     it('formDraftAttachment', () => {
       const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
-    });
-
-    it('submissionsZip', () => {
-      const path = apiPaths.submissionsZip(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
-    });
-
-    it('submissionsOData', () => {
-      const path = apiPaths.submissionsOData(1, 'a b', { $top: 250 });
-      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24skip=0&%24count=true&%24top=250');
-    });
-
-    it('submissionsOData?$skip', () => {
-      const path = apiPaths.submissionsOData(1, 'a b', { $top: 250, $skip: 500 });
-      path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24skip=500&%24count=true&%24top=250');
-    });
-
-    it('submissionAttachment', () => {
-      const path = apiPaths.submissionAttachment(1, 'a b', 'c d', 'e f');
-      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/attachments/e%20f');
     });
 
     it('fieldKeys', () => {

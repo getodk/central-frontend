@@ -15,36 +15,36 @@ import { toActor } from './actors';
 // There is no direct access to these stores: they are not exported. Instead,
 // use the views defined below.
 
-const defaultSchema = (hasInstanceId) => {
-  const instanceId = [];
+const defaultFields = (hasInstanceId) => {
+  const instanceIdFields = [];
   if (hasInstanceId) {
-    instanceId.push({
-      path: faker.random.boolean() ? ['meta', 'instanceID'] : ['instanceID'],
-      type: 'string'
-    });
+    if (faker.random.boolean())
+      instanceIdFields.push(
+        { path: '/meta', type: 'structure' },
+        { path: '/meta/instanceID', type: 'string' }
+      );
+    else
+      instanceIdFields.push({ path: '/instanceID', type: 'string' });
   }
+
   return [
-    ...instanceId,
-    { path: ['testInt'], type: 'int' },
-    { path: ['testDecimal'], type: 'decimal' },
-    { path: ['testDate'], type: 'date' },
-    { path: ['testTime'], type: 'time' },
-    { path: ['testDateTime'], type: 'dateTime' },
-    { path: ['testGeopoint'], type: 'geopoint' },
-    { path: ['testGroup', 'testBinary'], type: 'binary' },
+    ...instanceIdFields,
+    { path: '/testInt', type: 'int' },
+    { path: '/testDecimal', type: 'decimal' },
+    { path: '/testDate', type: 'date' },
+    { path: '/testTime', type: 'time' },
+    { path: '/testDateTime', type: 'dateTime' },
+    { path: '/testGeopoint', type: 'geopoint' },
+    { path: '/testGroup', type: 'structure' },
+    { path: '/testGroup/testBinary', type: 'binary' },
     // The column header for this question will be the same as the
     // previous question's.
-    { path: ['testGroup-testBinary'], type: 'binary' },
-    { path: ['testBranch'] },
-    { path: ['testString1'], type: 'string' },
-    { path: ['testString2'], type: 'string' },
-    {
-      path: ['testRepeat'],
-      type: 'repeat',
-      children: [
-        { path: ['testString3'], type: 'string' }
-      ]
-    }
+    { path: '/testGroup-testBinary', type: 'binary' },
+    { path: '/testBranch' },
+    { path: '/testString1', type: 'string' },
+    { path: '/testString2', type: 'string' },
+    { path: '/testRepeat', type: 'repeat' },
+    { path: '/testRepeat/testString3', type: 'string' }
   ];
 };
 
@@ -70,7 +70,7 @@ const forms = dataStore({
       : extendedUsers.createPast(1).last(),
 
     hasInstanceId = faker.random.boolean(),
-    schema = defaultSchema(hasInstanceId),
+    fields = defaultFields(hasInstanceId),
 
     draft = !inPast,
     ...rest
@@ -89,7 +89,7 @@ const forms = dataStore({
       createdBy: toActor(createdBy),
       // An actual form does not have this property. We include it here for ease
       // of access during testing.
-      _schema: schema
+      _fields: fields
     };
     const versionOptions = { ...rest, form, draft };
     if (inPast)
@@ -185,7 +185,7 @@ const formProps = [
   'state',
   'createdAt',
   'updatedAt',
-  '_schema'
+  '_fields'
 ];
 const extendedFormProps = ['createdBy'];
 const versionProps = ['version', 'keyId', 'publishedAt'];

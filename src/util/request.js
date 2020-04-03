@@ -48,13 +48,11 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  schema: formPath('.schema.json', { flatten: true, odata: true }),
-  oDataSvc: formPath('.svc'),
+  fields: formPath('/fields', { odata: true }),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
-  formKeys: formPath('/submissions/keys'),
   formVersionDef: (projectId, xmlFormId, version, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
@@ -71,14 +69,6 @@ export const apiPaths = {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
-  },
-  submissionsZip: formPath('/submissions.csv.zip'),
-  submissionsOData: formPath('.svc/Submissions', { $skip: 0, $count: true }),
-  submissionAttachment: (projectId, xmlFormId, instanceId, attachmentName) => {
-    const encodedFormId = encodeURIComponent(xmlFormId);
-    const encodedInstanceId = encodeURIComponent(instanceId);
-    const encodedName = encodeURIComponent(attachmentName);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
   },
   fieldKeys: projectPath('/app-users'),
   audits: (query) => `/v1/audits${queryString(query)}`
