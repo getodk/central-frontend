@@ -44,11 +44,21 @@ describe('ProjectFormAccessRow', () => {
     });
   });
 
-  it('shows the form state', () => {
-    testData.extendedForms.createPast(1, { state: 'closing' });
-    return load('/projects/1/form-access').then(app => {
-      const td = app.find('#project-form-access-table td')[1];
-      td.first('select').element.value.should.equal('closing');
+  describe('form state', () => {
+    it('shows the form state', () => {
+      testData.extendedForms.createPast(1, { state: 'closing' });
+      return load('/projects/1/form-access').then(app => {
+        const td = app.find('.project-form-access-row td')[1];
+        td.first('select').element.value.should.equal('closing');
+      });
+    });
+
+    it('shows an icon for a form without a published version', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/form-access').then(app => {
+        const td = app.find('.project-form-access-row td')[1];
+        td.first('.icon-edit').should.be.visible();
+      });
     });
   });
 
