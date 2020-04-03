@@ -1,56 +1,41 @@
-import BackupList from '../../../src/components/backup/list.vue';
+import AuditTable from '../../../src/components/audit/table.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { ago } from '../../../src/util/date-time';
+import { load } from '../../util/http';
+import { mockLogin } from '../../util/session';
 
 describe('BackupList', () => {
-  describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/system/backups')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
+  beforeEach(mockLogin);
 
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/system/backups')
-        .respondWithProblem(404.1)
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/system/backups');
-        }));
+  it('sends the correct requests', () => {
+    let success = false;
+    return load('/system/backups', { component: true }, {})
+      .beforeEachResponse((component, { method, url }, index) => {
+        method.should.equal('GET');
+        if (index === 0) {
+          url.should.equal('/v1/config/backups');
+        } else {
+          url.should.equal('/v1/audits?action=backup&limit=10');
+          success = true;
+        }
+      })
+      .then(() => {
+        success.should.be.true();
+      });
+  });
 
-    it('redirects a user without a grant to config.read', () => {
-      mockLogin({ role: 'none' });
-      return mockRoute('/system/backups')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/');
-        });
+  it('renders a table if there are audit log entries', () => {
+    testData.extendedAudits.createBackupAudit({
+      success: false,
+      loggedAt: ago({ days: 1 }).toISO()
+    });
+    return load('/system/backups', { component: true }, {}).then(component => {
+      component.find(AuditTable).length.should.equal(1);
     });
   });
 
-  describe('after login', () => {
-    beforeEach(mockLogin);
-
-    it('shows a table if there are audit log entries', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithProblem(404.1)
-        .respondWithData(() => testData.standardAudits
-          .createPast(1, { action: 'backup' })
-          .sorted())
-        .afterResponses(component => {
-          component.find('#audit-table').length.should.equal(1);
-        }));
-
-    it('does not show a table if there are no audit log entries', () =>
-      mockHttp()
-        .mount(BackupList)
-        .respondWithProblem(404.1)
-        .respondWithData(() => testData.standardAudits.sorted())
-        .afterResponses(component => {
-          component.find('#audit-table').length.should.equal(0);
-        }));
-  });
+  it('does not render a table if there are no audit log entries', () =>
+    load('/system/backups', { component: true }, {}).then(component => {
+      component.find(AuditTable).length.should.equal(0);
+    }));
 });

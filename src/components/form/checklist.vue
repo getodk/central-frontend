@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="dataExists" id="form-checklist">
     <checklist-step :stage="stepStage(0)">
-      <template #title>Publish your first draft version</template>
+      <template #title>Publish your first Draft version</template>
       <p>
         <strong>Great work!</strong> You have published your Form. It is ready
         to accept Submissions. If you want to make changes to the Form or its
-        Media Files, you can make a new draft.
+        Media Files, you can make a new Draft.
         <!-- TODO. Specify the `to` attribute. -->
         <doc-link>Click here to find out more.</doc-link>
       </p>

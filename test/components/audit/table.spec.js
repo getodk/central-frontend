@@ -1,7 +1,7 @@
 import testData from '../../data';
 import { ago, formatDate } from '../../../src/util/date-time';
+import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
 
 const assertTriple = (type, initiator, target) => (app) => {
@@ -31,11 +31,10 @@ const assertTriple = (type, initiator, target) => (app) => {
 
   td[3].hasClass('target').should.be.true();
   if (target != null) {
-    td[3].text().trim().should.equal(target.text);
-
     const a = td[3].first('a');
-    a.getAttribute('href').should.equal(`#${target.href}`);
+    a.text().trim().should.equal(target.text);
     a.getAttribute('title').should.equal(target.text);
+    a.getAttribute('href').should.equal(`#${target.href}`);
   } else {
     td[3].text().trim().should.equal('');
     td[3].find('a').length.should.equal(0);
@@ -128,44 +127,64 @@ describe('AuditTable', () => {
     const cases = [
       ['form.create', ['Form', 'Create']],
       ['form.update', ['Form', 'Update Details']],
+      ['form.update.draft.set', ['Form', 'Create or Update Draft']],
+      ['form.update.publish', ['Form', 'Publish Draft']],
+      ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.delete', ['Form', 'Delete']]
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () =>
-        mockRoute('/system/audits')
-          .respondWithData(() => testData.extendedAudits
-            .createPast(1, {
-              actor: testData.extendedUsers.first(),
-              action,
-              actee: testData.standardForms
-                .createPast(1, { xmlFormId: 'f', name: 'My Form' })
-                .last()
-            })
-            .sorted())
-          .afterResponse(assertTriple(
-            type,
-            { text: 'User 1', href: '/users/1/edit' },
-            { text: 'My Form', href: '/projects/1/forms/f' }
-          )));
+      it(`renders a ${action} audit correctly`, () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.standardForms
+            .createPast(1, { name: 'My Form' })
+            .last()
+        });
+        return load('/system/audits').then(assertTriple(
+          type,
+          { text: 'User 1', href: '/users/1/edit' },
+          { text: 'My Form', href: '/projects/1/forms/f' }
+        ));
+      });
     }
 
-    it('encodes the xmlFormId in the form URL', () =>
-      mockRoute('/system/audits')
-        .respondWithData(() => testData.extendedAudits
-          .createPast(1, {
-            actor: testData.extendedUsers.first(),
-            action: 'form.create',
-            actee: testData.standardForms
-              .createPast(1, { xmlFormId: 'i ı' })
-              .last()
-          })
-          .sorted())
-        .afterResponse(app => {
-          const a = app.find('.audit-row td')[3].first('a');
-          a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
-        }));
+    it('shows the xmlFormId if the form does not have a name', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { name: null }).last()
+      });
+      return load('/system/audits').then(app => {
+        app.find('.audit-row td')[3].first('a').text().trim().should.equal('f');
+      });
+    });
+
+    it('encodes the xmlFormId in the form URL', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { xmlFormId: 'i ı' }).last()
+      });
+      return load('/system/audits').then(app => {
+        const a = app.find('.audit-row td')[3].first('a');
+        a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
+      });
+    });
+
+    it('links to .../draft for a form without a published version', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.create',
+        actee: testData.standardForms.createPast(1, { draft: true }).last()
+      });
+      return load('/system/audits').then(app => {
+        const a = app.find('.audit-row td')[3].first('a');
+        a.getAttribute('href').should.equal('#/projects/1/forms/f/draft');
+      });
+    });
   });
 
   it('renders a backup audit correctly', () =>

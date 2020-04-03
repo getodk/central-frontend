@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <button id="form-draft-status-publish-button" type="button"
               class="btn btn-primary" @click="showModal('publish')">
-              <span class="icon-check"></span>Publish draft&hellip;
+              <span class="icon-check"></span>Publish Draft&hellip;
             </button>
           </template>
         </page-section>

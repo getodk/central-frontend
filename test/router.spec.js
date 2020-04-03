@@ -52,7 +52,9 @@ describe('router', () => {
       '/projects/1/forms/f/settings',
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
-      '/projects/1/forms/f/draft/testing'
+      '/projects/1/forms/f/draft/testing',
+      '/system/backups',
+      '/system/audits'
     ];
 
     for (const path of paths) {
@@ -77,6 +79,26 @@ describe('router', () => {
   });
 
   describe('validateData', () => {
+    describe('user without a sitewide role', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+      });
+
+      it('redirects the user from /system/backups', () =>
+        mockRoute('/system/backups')
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects the user from /system/audits', () =>
+        mockRoute('/system/audits')
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
+
     describe('project viewer', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
@@ -121,21 +143,21 @@ describe('router', () => {
               }));
         });
 
-        it('redirects from .../users', () =>
+        it('redirects the user from .../users', () =>
           load('/projects/1/users', {}, { projectAssignments: 403.1 })
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
 
-        it('redirects from .../app-users', () =>
+        it('redirects the user from .../app-users', () =>
           load('/projects/1/app-users', {}, { fieldKeys: 403.1 })
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
 
-        it('redirects from .../form-access', () =>
+        it('redirects the user from .../form-access', () =>
           load('/projects/1/form-access', {}, {
             fieldKeys: 403.1,
             formSummaryAssignments: 403.1

@@ -832,6 +832,21 @@ export const load = (
   // mountOptions.
   if (mountOptions != null && respondForOptions == null)
     throw new Error('specify either both sets of options or neither');
+
+  // If mountOptions.component is specified as `true`, mount only the
+  // bottom-level component, rather than App. This is useful for tests that
+  // don't use the router.
+  if (mountOptions != null && mountOptions.component === true) {
+    const { matched } = router.resolve(location).route;
+    if (matched.length === 0) throw new Error('invalid location');
+    const bottom = matched[matched.length - 1].components.default;
+    const optionsWithoutComponent = { ...mountOptions };
+    delete optionsWithoutComponent.component;
+    return mockHttp()
+      .mount(bottom, optionsWithoutComponent)
+      .respondFor(location, respondForOptions);
+  }
+
   return mockRoute(location, mountOptions)
     .respondFor(location, respondForOptions);
 };
