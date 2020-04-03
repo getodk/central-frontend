@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="form-delete" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template slot="title">Delete Form</template>
-    <template slot="body">
+    <template #title>Delete Form</template>
+    <template #body>
       <div class="modal-introduction">
         <p>
           Are you sure you want to delete the Form
