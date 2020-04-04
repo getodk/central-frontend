@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-list :base-url="baseUrl"/>
+  <submission-list :base-url="baseUrl" shows-submitter/>
 </template>
 
 <script>

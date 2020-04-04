@@ -1,7 +1,6 @@
 import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
@@ -29,6 +28,7 @@ const loadSubmissionList = (chunkSizes = [], scrolledToBottom = true) => {
     .mount(SubmissionList, {
       propsData: {
         baseUrl: '/v1/projects/1/forms/f',
+        showsSubmitter: true,
         chunkSizes: { small, large },
         scrolledToBottom: () => scrolledToBottom
       },
@@ -44,26 +44,6 @@ describe('SubmissionList', () => {
 
   describe('after login', () => {
     describe('table data', () => {
-      it('contains the correct data for the left half of the table', () => {
-        createSubmissions(2);
-        return loadSubmissionList().afterResponses(page => {
-          const tr = page.find('#submission-table1 tbody tr');
-          const submissions = testData.extendedSubmissions.sorted();
-          tr.length.should.equal(submissions.length);
-          for (let i = 0; i < tr.length; i += 1) {
-            const td = tr[i].find('td');
-            td.length.should.equal(3);
-            const submission = submissions[i];
-            const rowNumber = testData.extendedSubmissions.size - i;
-            td[0].text().trim().should.equal(rowNumber.toString());
-            td[1].text().trim().should.equal(submission.submitter != null
-              ? submission.submitter.displayName
-              : '');
-            td[2].text().trim().should.equal(formatDate(submission.createdAt));
-          }
-        });
-      });
-
       describe('right half of the table', () => {
         const headers = [
           'testInt',
@@ -852,6 +832,27 @@ describe('SubmissionList', () => {
             // 8 submissions exist. No request will be sent.
             .testNoRequest(component => {
               component.vm.onScroll();
+            });
+        });
+
+        it('does not update originalCount', () => {
+          testData.extendedForms.createPast(1, { submissions: 2 });
+          testData.extendedSubmissions.createPast(2);
+          return loadSubmissionList([1])
+            .afterResponses(component => {
+              component.data().originalCount.should.equal(2);
+              component.vm.form.submissions.should.equal(2);
+            })
+            .request(component => {
+              component.vm.onScroll();
+            })
+            .respondWithData(() => {
+              testData.extendedSubmissions.createPast(1);
+              return testData.submissionOData(1, 1);
+            })
+            .afterResponse(component => {
+              component.data().originalCount.should.equal(2);
+              component.vm.form.submissions.should.equal(3);
             });
         });
       });

@@ -17,14 +17,15 @@ except according to the terms contained in the LICENSE file.
       <thead>
         <tr>
           <th><!-- Row number --></th>
-          <th>Submitted by</th>
+          <th v-if="showsSubmitter">Submitted by</th>
           <th>Submitted at</th>
         </tr>
       </thead>
       <tbody>
         <submission-row v-for="(submission, index) in submissions"
           :key="submission.__id" :submission="submission"
-          :row-number="originalCount - index"/>
+          :row-number="originalCount - index"
+          :shows-submitter="showsSubmitter"/>
       </tbody>
     </table>
     <!-- The next table element displays the data and instance ID of each
@@ -77,6 +78,10 @@ export default {
     originalCount: {
       type: Number,
       required: true
+    },
+    showsSubmitter: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

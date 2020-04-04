@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
     <td class="row-number">{{ rowNumber }}</td>
-    <td class="submitter-name" :title="submission.__system.submitterName">
+    <td v-if="showsSubmitter" class="submitter-name"
+      :title="submission.__system.submitterName">
       {{ submission.__system.submitterName }}
     </td>
     <td>{{ submissionDate }}</td>
@@ -57,8 +58,11 @@ export default {
       type: Number,
       default: 0
     },
-    // The form-field columns to display
-    fieldColumns: Array // eslint-disable-line vue/require-default-prop
+    fieldColumns: Array, // eslint-disable-line vue/require-default-prop
+    showsSubmitter: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     submissionDate() {

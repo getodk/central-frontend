@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </p>
         <submission-table v-else-if="fields != null" :base-url="baseUrl"
           :submissions="submissions" :fields="fields"
-          :original-count="originalCount"/>
+          :original-count="originalCount" :shows-submitter="showsSubmitter"/>
       </template>
       <div v-if="message != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
@@ -87,6 +87,10 @@ export default {
     baseUrl: {
       type: String,
       required: true
+    },
+    showsSubmitter: {
+      type: Boolean,
+      default: false
     },
     chunkSizes: {
       type: Object,
