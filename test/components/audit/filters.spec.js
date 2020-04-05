@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
 
 import AuditFilters from '../../../src/components/audit/filters.vue';
-import AuditList from '../../../src/components/audit/list.vue';
 import testData from '../../data';
-import { load, mockHttp } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
@@ -12,17 +11,13 @@ describe('AuditFilters', () => {
   beforeEach(mockLogin);
 
   it('initially specifies nonverbose for action', () =>
-    mockHttp()
-      .mount(AuditList)
+    load('/system/audits', { component: true }, {})
       .beforeEachResponse((component, config) => {
         config.url.should.containEql('action=nonverbose');
-      })
-      .respondWithData(() => testData.extendedAudits.sorted()));
+      }));
 
   it('sends a request after the action filter is changed', () =>
-    mockHttp()
-      .mount(AuditList)
-      .respondWithData(() => testData.extendedAudits.sorted())
+    load('/system/audits', { component: true }, {})
       .complete()
       .request(component => trigger.changeValue(
         component,
@@ -39,8 +34,7 @@ describe('AuditFilters', () => {
       defaultZoneName: 'UTC+1',
       now: '1970-01-01T12:00:00+01:00'
     });
-    return mockHttp()
-      .mount(AuditList)
+    return load('/system/audits', { component: true }, {})
       .beforeEachResponse((component, config) => {
         config.url.should.containEql('start=1970-01-01T00%3A00%3A00.000%2B01%3A00');
         config.url.should.containEql('end=1970-01-01T23%3A59%3A59.999%2B01%3A00');
@@ -48,15 +42,12 @@ describe('AuditFilters', () => {
         const input = component.first('.flatpickr-input');
         input.element.value.should.equal('1970/01/01');
       })
-      .respondWithData(() => testData.extendedAudits.sorted())
       .finally(restoreLuxon);
   });
 
   it('sends a request after a range of multiple dates is selected', () => {
     const restoreLuxon = setLuxon({ defaultZoneName: 'utc' });
-    return mockHttp()
-      .mount(AuditList)
-      .respondWithData(() => testData.extendedAudits.sorted())
+    return load('/system/audits', { component: true }, {})
       .complete()
       .request(component => {
         const start = DateTime.fromISO('1970-01-02').toJSDate();
@@ -144,9 +135,7 @@ describe('AuditFilters', () => {
       now: '1970-01-01T12:00:00Z'
     });
     let called = false;
-    return mockHttp()
-      .mount(AuditList)
-      .respondWithData(() => testData.extendedAudits.sorted())
+    return load('/system/audits', { component: true }, {})
       .complete()
       // Select the same date range.
       .testNoRequest(component => {

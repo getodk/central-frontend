@@ -6,7 +6,7 @@ import FormAttachmentUploadFiles from '../../../src/components/form-attachment/u
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
 import { formatDate } from '../../../src/util/date-time';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { noop } from '../../../src/util/util';
 
@@ -14,31 +14,13 @@ import { noop } from '../../../src/util/util';
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   testData.extendedProjects.size.should.equal(1);
   testData.extendedForms.size.should.equal(1);
+  testData.extendedForms.last().xmlFormId.should.equal('f');
   testData.extendedFormVersions.size.should.equal(1);
   should.not.exist(testData.extendedFormVersions.last().publishedAt);
   testData.standardFormAttachments.size.should.not.equal(0);
 
-  if (route) {
-    const { xmlFormId } = testData.extendedForms.last();
-    const encodedFormId = encodeURIComponent(xmlFormId);
-    const path = `/projects/1/forms/${encodedFormId}/draft/attachments`;
-    return mockRoute(path, { attachToDocument })
-      .respondWithData(() => testData.extendedProjects.last())
-      .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => testData.extendedFormDrafts.last())
-      .respondWithData(() => testData.standardFormAttachments.sorted());
-  }
-  if (attachToDocument) throw new Error('invalid options');
-  return mockHttp()
-    .mount(FormAttachmentList, {
-      propsData: { projectId: '1' },
-      requestData: {
-        project: testData.extendedProjects.last(),
-        form: testData.extendedForms.last(),
-        formDraft: testData.extendedFormDrafts.last(),
-        attachments: testData.standardFormAttachments.sorted()
-      }
-    });
+  const path = '/projects/1/forms/f/draft/attachments';
+  return load(path, { component: !route, attachToDocument }, {});
 };
 const blankFiles = (names) => names.map(name => new File([''], name));
 const selectFilesUsingModal = (app, files) =>

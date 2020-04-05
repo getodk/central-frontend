@@ -4,7 +4,7 @@ import App from '../../../src/components/app.vue';
 import BackupList from '../../../src/components/backup/list.vue';
 import BackupNew from '../../../src/components/backup/new.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { submitForm, trigger } from '../../util/event';
 
@@ -51,18 +51,12 @@ const completeSetup = (component) => {
 describe('BackupNew', () => {
   beforeEach(mockLogin);
 
-  it('shows the modal after the button is clicked', () =>
-    mockHttp()
-      .mount(BackupList)
-      .respondWithProblem(404.1)
-      .respondWithData(() => testData.standardAudits.sorted())
-      .afterResponses(component => {
-        component.first(BackupNew).getProp('state').should.be.false();
-        return trigger.click(component, '#backup-status button');
-      })
-      .then(component => {
-        component.first(BackupNew).getProp('state').should.be.true();
-      }));
+  it('toggles the modal', () =>
+    load('/system/backups', { component: true }, {}).testModalToggles(
+      BackupNew,
+      '#backup-status button',
+      '.btn-link'
+    ));
 
   describe('step 1', () => {
     it('field is focused', () =>

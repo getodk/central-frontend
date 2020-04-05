@@ -1,26 +1,20 @@
-import BackupList from '../../../src/components/backup/list.vue';
 import BackupTerminate from '../../../src/components/backup/terminate.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
 describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
-  it('shows the modal after the button is clicked', () =>
-    mockHttp()
-      .mount(BackupList)
-      .respondWithData(() =>
-        testData.standardBackupsConfigs.createPast(1).last())
-      .respondWithData(() => testData.standardAudits.sorted())
-      .afterResponses(component => {
-        component.first(BackupTerminate).getProp('state').should.be.false();
-        return trigger.click(component, '#backup-status button');
-      })
-      .then(component => {
-        component.first(BackupTerminate).getProp('state').should.be.true();
-      }));
+  it('toggles the modal', () => {
+    testData.standardBackupsConfigs.createPast(1);
+    return load('/system/backups', { component: true }, {}).testModalToggles(
+      BackupTerminate,
+      '#backup-status button',
+      '.btn-link'
+    );
+  });
 
   it('implements some standard button things', () =>
     mockHttp()

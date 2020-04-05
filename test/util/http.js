@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import App from '../../src/components/app.vue';
-import respondFor from './http/respond-for';
+import requestDataByComponent from './http/respond-for';
 import router from '../../src/router';
 import store from '../../src/store';
 import testData from '../data';
@@ -293,10 +293,57 @@ class MockHttp {
       });
   }
 
+  // respondForComponent() responds with all the responses expected for the
+  // specified component. This method is used by respondFor() and elsewhere, but
+  // it is rarely used in tests.
+  respondForComponent(component, options = undefined) {
+    return [...requestDataByComponent(component.name)].reduce(
+      (series, [key, callback]) => {
+        if (options != null && options[key] != null) {
+          const option = options[key];
+          if (option === false) return series;
+          return typeof option === 'number'
+            ? series.respondWithProblem(option)
+            : series.respond(option);
+        }
+        return series.respond(callback);
+      },
+      this
+    );
+  }
+
+  /*
+  respondFor() responds with all the responses expected for the specified
+  location. Default responses are used unless you override them. Examples:
+
+    .respondFor('/projects/1') is equivalent to:
+
+      .respondWithData(() => testData.extendedProjects.last())
+      .respondWithData(() => testData.extendedForms.sorted())
+
+    .respondFor('/projects/1', { forms: () => [] }) is equivalent to:
+
+      .respondWithData(() => testData.extendedProjects.last())
+      .respondWithData(() => [])
+
+    .respondFor('/projects/1', { forms: 500.1 }) is equivalent to:
+
+      .respondWithData(() => testData.extendedProjects.last())
+      .respondWithProblem(500.1)
+
+    .respondFor('/projects/1', { forms: false }) is equivalent to:
+
+      .respondWithData(() => testData.extendedProjects.last())
+      // No response for `forms`
+
+  The property names of `options` correspond to request keys.
+  */
   respondFor(location, options = undefined) {
-    const respond = respondFor[router.resolve(location).route.name];
-    if (respond == null) throw new Error('invalid location');
-    return respond(this, options);
+    return router.resolve(location).route.matched.reduce(
+      (series, routeRecord) =>
+        series.respondForComponent(routeRecord.components.default, options),
+      this
+    );
   }
 
   load(location, options) {
@@ -823,6 +870,47 @@ export const mockHttp = () => new MockHttp();
 export const mockRoute = (location, mountOptions = undefined) => mockHttp()
   .mount(App, { ...mountOptions, router })
   .route(location);
+
+// Mounts the component for the bottom-level route matching `location`, setting
+// propsData and requestData and responding to requests that the component
+// sends. This is useful for tests that don't use the router or otherwise need
+// to mount App.
+const mockHttpForBottomComponent = (
+  location,
+  mountOptions,
+  respondForOptions
+) => {
+  const { route } = router.resolve(location);
+  const { matched } = route;
+  if (matched.length === 0) throw new Error('no matching route');
+  const bottomRouteRecord = matched[matched.length - 1];
+  const bottomComponent = bottomRouteRecord.components.default;
+
+  const mountOptionsWithData = { ...mountOptions };
+
+  if (bottomRouteRecord.props.default === true)
+    mountOptionsWithData.propsData = route.params;
+
+  const requestData = {};
+  for (let i = 0; i < matched.length - 1; i += 1) {
+    const { name } = matched[i].components.default;
+    for (const [key, callback] of requestDataByComponent(name)) {
+      if (respondForOptions != null && respondForOptions[key] != null) {
+        const option = respondForOptions[key];
+        requestData[key] = typeof option === 'number'
+          ? { problem: option }
+          : option();
+      } else {
+        requestData[key] = callback();
+      }
+    }
+  }
+  mountOptionsWithData.requestData = requestData;
+
+  return mockHttp()
+    .mount(bottomComponent, mountOptionsWithData)
+    .respondForComponent(bottomComponent, respondForOptions);
+};
 export const load = (
   location,
   mountOptions = undefined,
@@ -833,18 +921,14 @@ export const load = (
   if (mountOptions != null && respondForOptions == null)
     throw new Error('specify either both sets of options or neither');
 
-  // If mountOptions.component is specified as `true`, mount only the
-  // bottom-level component, rather than App. This is useful for tests that
-  // don't use the router.
   if (mountOptions != null && mountOptions.component === true) {
-    const { matched } = router.resolve(location).route;
-    if (matched.length === 0) throw new Error('invalid location');
-    const bottom = matched[matched.length - 1].components.default;
     const optionsWithoutComponent = { ...mountOptions };
     delete optionsWithoutComponent.component;
-    return mockHttp()
-      .mount(bottom, optionsWithoutComponent)
-      .respondFor(location, respondForOptions);
+    return mockHttpForBottomComponent(
+      location,
+      optionsWithoutComponent,
+      respondForOptions
+    );
   }
 
   return mockRoute(location, mountOptions)

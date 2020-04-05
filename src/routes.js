@@ -409,9 +409,10 @@ export default routes;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// FLATTEN ROUTES
+// TRAVERSE ROUTES
 
 const flattenedRoutes = [];
+const bottomRoutes = [];
 {
   const stack = [...routes];
   while (stack.length !== 0) {
@@ -420,6 +421,8 @@ const flattenedRoutes = [];
     if (route.children != null) {
       for (const child of route.children)
         stack.push(child);
+    } else {
+      bottomRoutes.push(route);
     }
   }
 }
@@ -429,37 +432,29 @@ const flattenedRoutes = [];
 ////////////////////////////////////////////////////////////////////////////////
 // ROUTE NAMES
 
-// All bottom-level routes (and only bottom-level routes) have a name. If a name
-// is not specified for a bottom-level route above, the route is given the same
+// All bottom-level routes (and only bottom-level routes) should have a name. If
+// a name is not specified for a bottom-level route above, it is given the same
 // name as its component.
-const namedRoutes = [];
 const routesByName = {};
-for (const route of flattenedRoutes) {
-  if (route.children != null) {
-    if (route.name != null)
-      throw new Error('only bottom-level routes can be named');
-  } else {
-    if (route.name == null) {
-      if (route.component.name == null)
-        throw new Error('component without a name');
-      route.name = route.component.name;
-    }
-
-    namedRoutes.push(route);
-
-    if (routesByName[route.name] != null)
-      throw new Error('duplicate route name');
-    routesByName[route.name] = route;
+for (const route of bottomRoutes) {
+  if (route.name == null) {
+    if (route.component.name == null)
+      throw new Error('component without a name');
+    route.name = route.component.name;
   }
+
+  if (routesByName[route.name] != null) throw new Error('duplicate route name');
+  routesByName[route.name] = route;
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// META FIELD DEFAULTS
+// NORMALIZE META FIELDS
 
-// All bottom-level routes (and only bottom-level routes) have meta fields. Here
-// we set those fields' defaults. We also normalize the values of meta fields.
+// All bottom-level routes (and only bottom-level routes) should have meta
+// fields. Here we normalize the values of meta fields, including by setting
+// defaults.
 for (const route of flattenedRoutes) {
   if (route.children != null) {
     if (route.meta != null)
@@ -508,7 +503,7 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 for (const key of ['session', 'currentUser', 'roles']) {
   preserveDataForKey({
     key,
-    to: namedRoutes.map(route => route.name),
+    to: bottomRoutes.map(route => route.name),
     params: []
   });
 }
