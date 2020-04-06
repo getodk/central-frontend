@@ -64,6 +64,10 @@ export const apiPaths = {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft.${extension}`;
   },
+  serverUrlForFormDraft: (token, projectId, xmlFormId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    return `/v1/test/${token}/projects/${projectId}/forms/${encodedFormId}/draft`;
+  },
   publishFormDraft: formPath('/draft/publish'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
@@ -72,6 +76,8 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
   fieldKeys: projectPath('/app-users'),
+  serverUrlForFieldKey: (token, projectId) =>
+    `/v1/key/${token}/projects/${projectId}`,
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 

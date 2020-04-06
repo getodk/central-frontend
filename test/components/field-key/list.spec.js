@@ -1,7 +1,5 @@
-import jsQR from 'jsqr';
-import pako from 'pako';
-
 import testData from '../../data';
+import { collectQrData } from '../../util/collect-qr';
 import { formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
@@ -80,17 +78,7 @@ describe('FieldKeyList', () => {
 
         it('contains the correct data', () => {
           const img = $('#field-key-list-popover-content img');
-          const width = img.attr('width');
-          const height = img.attr('height');
-          const canvas = $('<canvas></canvas>')
-            .attr('width', width)
-            .attr('height', height);
-          const context = canvas[0].getContext('2d');
-          context.drawImage(img[0], 0, 0);
-          const imageData = context.getImageData(0, 0, width, height);
-          const encoded = jsQR(imageData.data, width, height).data;
-          const inflated = pako.inflate(atob(encoded), { to: 'string' });
-          const data = JSON.parse(inflated);
+          const data = collectQrData(img[0]);
           const { token } = testData.extendedFieldKeys.first();
           const url = `${window.location.origin}/v1/key/${token}/projects/1`;
           data.should.eql({ general: { server_url: url }, admin: {} });

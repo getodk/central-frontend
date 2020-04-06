@@ -10,17 +10,53 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-list :base-url="baseUrl"/>
+  <div>
+    <div id="form-draft-testing-info" class="row">
+      <div class="col-xs-8">
+        <page-section condensed>
+          <template #heading><span>Draft Testing</span></template>
+          <template #body>
+            <p>
+              You can use the configuration code to the right to set up a mobile
+              device to download this Draft. If you fill a blank of the Draft
+              Form and upload it, the Submission will go only into this test
+              table below. You can preview and download the test Submissions
+              below.
+            </p>
+            <p>
+              When you publish this Draft Form, these test Submissions will be
+              permanently removed. Please see
+              <!-- TODO. Specify the `to` attribute. -->
+              <doc-link>this article</doc-link>
+              for more information.
+            </p>
+          </template>
+        </page-section>
+      </div>
+      <div class="col-xs-4">
+        <float-row>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-if="formDraft != null" v-html="qrCodeHtml"></span>
+        </float-row>
+      </div>
+    </div>
+    <submission-list :base-url="baseUrl"/>
+  </div>
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
+import FloatRow from '../float-row.vue';
+import PageSection from '../page/section.vue';
 import SubmissionList from '../submission/list.vue';
+import collectQr from '../../util/collect-qr';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
-  components: { SubmissionList },
+  components: { DocLink, FloatRow, PageSection, SubmissionList },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -33,9 +69,28 @@ export default {
     }
   },
   computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData([{ key: 'formDraft', getOption: true }]),
+    qrCodeHtml() {
+      const url = apiPaths.serverUrlForFormDraft(
+        this.formDraft.draftToken,
+        this.projectId,
+        this.xmlFormId
+      );
+      return collectQr(url, { errorCorrectionLevel: 'Q', cellSize: 3 });
+    },
     baseUrl() {
       return apiPaths.formDraft(this.projectId, this.xmlFormId);
     }
   }
 };
 </script>
+
+<style lang="scss">
+#form-draft-testing-info {
+  .page-section, .float-row {
+    margin-bottom: 25px;
+  }
+}
+</style>

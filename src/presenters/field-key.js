@@ -9,10 +9,9 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import qrcode from 'qrcode-generator';
-import pako from 'pako/lib/deflate';
-
 import Base from './base';
+import collectQr from '../util/collect-qr';
+import { apiPaths } from '../util/request';
 
 const props = [
   'id',
@@ -28,25 +27,13 @@ const props = [
   'lastUsed'
 ];
 
-const QR_CODE_TYPE_NUMBER = 0;
-// This is the level used in Collect.
-const QR_CODE_ERROR_CORRECTION_LEVEL = 'L';
-const QR_CODE_CELL_SIZE = 3;
-const QR_CODE_MARGIN = 0;
+const collectQrOptions = { errorCorrectionLevel: 'L', cellSize: 3 };
 
 export default class FieldKey extends Base(props) {
   qrCodeHtml() {
     if (this._qrCodeHtml != null) return this._qrCodeHtml;
-    const code = qrcode(QR_CODE_TYPE_NUMBER, QR_CODE_ERROR_CORRECTION_LEVEL);
-    // Backend generates tokens that are URL-safe.
-    const url = `${window.location.origin}/v1/key/${this.token}/projects/${this.projectId}`;
-    // Collect requires the JSON to have 'general' and 'admin' keys, even if the
-    // associated values are empty objects.
-    const settings = { general: { server_url: url }, admin: {} };
-    const deflated = pako.deflate(JSON.stringify(settings), { to: 'string' });
-    code.addData(btoa(deflated));
-    code.make();
-    this._qrCodeHtml = code.createImgTag(QR_CODE_CELL_SIZE, QR_CODE_MARGIN);
+    const url = apiPaths.serverUrlForFieldKey(this.token, this.projectId);
+    this._qrCodeHtml = collectQr(url, collectQrOptions);
     return this._qrCodeHtml;
   }
 }

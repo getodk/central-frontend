@@ -101,6 +101,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
     });
 
+    it('serverUrlForFormDraft', () => {
+      const path = apiPaths.serverUrlForFormDraft('xyz', 1, 'a b');
+      path.should.equal('/v1/test/xyz/projects/1/forms/a%20b/draft');
+    });
+
     it('publishFormDraft', () => {
       const path = apiPaths.publishFormDraft(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/publish');
@@ -123,6 +128,11 @@ describe('util/request', () => {
 
     it('fieldKeys', () => {
       apiPaths.fieldKeys(1).should.equal('/v1/projects/1/app-users');
+    });
+
+    it('serverUrlForFieldKey', () => {
+      const path = apiPaths.serverUrlForFieldKey('xyz', 1);
+      path.should.equal('/v1/key/xyz/projects/1');
     });
 
     it('audits', () => {

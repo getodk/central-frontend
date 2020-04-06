@@ -1,6 +1,7 @@
 import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { collectQrData } from '../../util/collect-qr';
+import { load, mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { submitForm, trigger } from '../../util/event';
 
@@ -47,18 +48,42 @@ describe('FieldKeyNew', () => {
       .standardButton());
 
   describe('after a successful response', () => {
-    const submit = () =>
-      mockRoute('/projects/1/app-users', { attachToDocument: true })
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1).sorted())
+    const submit = () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      testData.extendedFieldKeys.createPast(1);
+      return load('/projects/1/app-users', { attachToDocument: true }, {})
         .complete()
         .request(app => trigger.click(app, '.heading-with-button button')
           .then(() => submitForm(app, '#field-key-new form', [
-            ['input', testData.extendedFieldKeys.createNew().displayName]
+            ['input', 'My Field Key']
           ])))
-        .respondWithData(() => testData.standardFieldKeys.last());
+        .respondWithData(() => testData.standardFieldKeys.createNew({
+          displayName: 'My Field Key'
+        }));
+    };
+
+    it("shows the field key's display name", () =>
+      submit().then(app => {
+        const p = app.first('#field-key-new .modal-introduction p');
+        p.text().should.containEql('My Field Key');
+      }));
+
+    it('shows a QR code for the field key', () =>
+      submit().then(app => {
+        // avoriaz can't seem to find the <img> element (maybe because we use
+        // v-html?). We use a little vanilla JavaScript to find it ourselves.
+        const p = app.find('#field-key-new .modal-introduction p')[1].element;
+        p.children.length.should.equal(1);
+        const img = p.children[0];
+        img.tagName.should.equal('IMG');
+        const { token } = testData.extendedFieldKeys.last();
+        collectQrData(img).should.eql({
+          general: {
+            server_url: `${window.location.origin}/v1/key/${token}/projects/1`
+          },
+          admin: {}
+        });
+      }));
 
     describe('after the Done button is clicked', () => {
       it('hides the modal', () =>
