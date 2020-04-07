@@ -1,12 +1,15 @@
+import SubmissionRow from '../../../src/components/submission/row.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
+import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (fields) => mount(SubmissionTable, {
+const mountComponent = (propsData = undefined) => mount(SubmissionTable, {
   propsData: {
     baseUrl: '/v1/projects/1/forms/f',
-    submissions: [],
-    fields,
-    originalCount: 0
+    submissions: testData.submissionOData().value,
+    fields: testData.extendedForms.last()._fields,
+    originalCount: testData.extendedSubmissions.size,
+    ...propsData
   }
 });
 
@@ -19,63 +22,89 @@ const string = field('string');
 const headers = (table) => table.find('th').map(th => th.text().trim());
 
 describe('SubmissionTable', () => {
-  describe('column headers', () => {
+  describe('"Submitted by" header', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1, { submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+    });
+
+    it('renders the header if showsSubmitter is true', () => {
+      const component = mountComponent({ showsSubmitter: true });
+      const table = component.first('#submission-table1');
+      headers(table).should.eql(['', 'Submitted by', 'Submitted at']);
+    });
+
+    it('does not render the header if showsSubmitter is false', () => {
+      const component = mountComponent({ showsSubmitter: false });
+      const table = component.first('#submission-table1');
+      headers(table).should.eql(['', 'Submitted at']);
+    });
+  });
+
+  describe('field column headers', () => {
     it('shows the correct header for /some_field', () => {
-      const component = mountComponent([int('/some_field')]);
-      const table = component.first('#submission-table2');
+      const fields = [int('/some_field')];
+      testData.extendedForms.createPast(1, { fields, submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+      const table = mountComponent().first('#submission-table2');
       headers(table).should.eql(['some_field', 'Instance ID']);
     });
 
     it('shows the correct header for /some_group/some_field', () => {
-      const component = mountComponent([
-        group('/some_group'),
-        int('/some_group/some_field')
-      ]);
-      const table = component.first('#submission-table2');
+      const fields = [group('/some_group'), int('/some_group/some_field')];
+      testData.extendedForms.createPast(1, { fields, submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+      const table = mountComponent().first('#submission-table2');
       headers(table).should.eql(['some_group-some_field', 'Instance ID']);
     });
   });
 
   describe('field visibility and field subset indicator', () => {
     it('does not show field subset indicator if there is a single field', () => {
-      const component = mountComponent([int('/i')]);
-      const table = component.first('#submission-table2');
+      const fields = [int('/i')];
+      testData.extendedForms.createPast(1, { fields, submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+      const table = mountComponent().first('#submission-table2');
       table.hasClass('field-subset').should.be.false();
     });
 
     it('does not show a separate column for a group', () => {
-      const component = mountComponent([group('/g'), int('/g/i')]);
-      const table = component.first('#submission-table2');
+      const fields = [group('/g'), int('/g/i')];
+      testData.extendedForms.createPast(1, { fields, submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+      const table = mountComponent().first('#submission-table2');
       table.hasClass('field-subset').should.be.false();
       headers(table).should.eql(['g-i', 'Instance ID']);
     });
 
     describe('instance ID fields', () => {
       it('does not show /meta/instanceID', () => {
-        const component = mountComponent([
-          group('/meta'),
-          string('/meta/instanceID'),
-          int('/i')
-        ]);
-        const table = component.first('#submission-table2');
+        const fields = [group('/meta'), string('/meta/instanceID'), int('/i')];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const table = mountComponent().first('#submission-table2');
         table.hasClass('field-subset').should.be.false();
         headers(table).should.eql(['i', 'Instance ID']);
       });
 
       it('does not show /instanceID', () => {
-        const component = mountComponent([string('/instanceID'), int('/i')]);
-        const table = component.first('#submission-table2');
+        const fields = [string('/instanceID'), int('/i')];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const table = mountComponent().first('#submission-table2');
         table.hasClass('field-subset').should.be.false();
         headers(table).should.eql(['i', 'Instance ID']);
       });
 
       it('does not show field subset indicator even if there are 10 other fields', () => {
-        const component = mountComponent([
+        const fields = [
           group('/meta'), string('/meta/instanceID'), string('/instanceID'),
           int('/int1'), int('/int2'), int('/int3'), int('/int4'), int('/int5'),
           int('/int6'), int('/int7'), int('/int8'), int('/int9'), int('/int10')
-        ]);
-        const table = component.first('#submission-table2');
+        ];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const table = mountComponent().first('#submission-table2');
         table.hasClass('field-subset').should.be.false();
       });
     });
@@ -83,7 +112,7 @@ describe('SubmissionTable', () => {
     describe('repeat group', () => {
       it('does not show the fields of a repeat group', () => {
         /* eslint-disable indent */
-        const component = mountComponent([
+        const fields = [
           int('/int1'),
           repeat('/repeat1'),
             int('/repeat1/int2'),
@@ -95,9 +124,11 @@ describe('SubmissionTable', () => {
             repeat('/group1/repeat3'),
               int('/group1/repeat3/int6'),
             int('/group1/int7')
-        ]);
+        ];
         /* eslint-enable indent */
-        const table = component.first('#submission-table2');
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const table = mountComponent().first('#submission-table2');
         table.hasClass('field-subset').should.be.true();
         headers(table).should.eql([
           'int1',
@@ -109,20 +140,24 @@ describe('SubmissionTable', () => {
       });
 
       it('does not show a repeat group even if there are no other top-level fields', () => {
-        const component = mountComponent([repeat('/r'), int('/r/i')]);
-        const table = component.first('#submission-table2');
+        const fields = [repeat('/r'), int('/r/i')];
+        testData.extendedForms.createPast(1, { fields, submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const table = mountComponent().first('#submission-table2');
         table.hasClass('field-subset').should.be.true();
         headers(table).should.eql(['Instance ID']);
       });
     });
 
     it('does not show more than 10 fields', () => {
-      const component = mountComponent([
+      const fields = [
         int('/int1'), int('/int2'), int('/int3'), int('/int4'), int('/int5'),
         int('/int6'), int('/int7'), int('/int8'), int('/int9'), int('/int10'),
         int('/int11')
-      ]);
-      const table = component.first('#submission-table2');
+      ];
+      testData.extendedForms.createPast(1, { fields, submissions: 1 });
+      testData.extendedSubmissions.createPast(1);
+      const table = mountComponent().first('#submission-table2');
       table.hasClass('field-subset').should.be.true();
       headers(table).should.eql([
         'int1', 'int2', 'int3', 'int4', 'int5',
@@ -130,5 +165,27 @@ describe('SubmissionTable', () => {
         'Instance ID'
       ]);
     });
+  });
+
+  it('renders the correct number of rows', () => {
+    testData.extendedForms.createPast(1, { submissions: 2 });
+    testData.extendedSubmissions.createPast(2);
+    const component = mountComponent();
+    component.find('#submission-table1 tbody tr').length.should.equal(2);
+    component.find('#submission-table2 tbody tr').length.should.equal(2);
+  });
+
+  it('passes the correct rowNumber prop to SubmissionRow', () => {
+    // Create 10 submissions (so that the count is 10), then pass two to the
+    // component (as if $top was 2).
+    testData.extendedForms.createPast(1, { submissions: 10 });
+    testData.extendedSubmissions.createPast(10);
+    const component = mountComponent({
+      submissions: testData.submissionOData(2).value
+    });
+    const rows = component.find(SubmissionRow);
+    rows.length.should.equal(4);
+    rows[0].getProp('rowNumber').should.equal(10);
+    rows[1].getProp('rowNumber').should.equal(9);
   });
 });
