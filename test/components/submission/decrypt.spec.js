@@ -5,6 +5,7 @@ import { fillForm, submitForm, trigger } from '../../util/event';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mountAndMark } from '../../util/lifecycle';
+import { wait } from '../../util/util';
 
 const loadSubmissionList = (attachToDocument = false) => {
   // Create test data.
@@ -31,9 +32,6 @@ const loadSubmissionList = (attachToDocument = false) => {
     .respondWithData(() => form._fields)
     .respondWithData(testData.submissionOData);
 };
-const wait = (delay) => new Promise(resolve => {
-  setTimeout(resolve, delay);
-});
 const submitDecryptForm = (formAction) => {
   const modal = mountAndMark(SubmissionDecrypt, {
     propsData: {

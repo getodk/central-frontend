@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div class="float-row">
     <div class="float-row-left">
       <slot name="left"></slot>
     </div>
