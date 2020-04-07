@@ -140,6 +140,10 @@ export default {
     .icon-exclamation-triangle {
       color: #e1bf50;
       margin-right: 2px;
+
+      + span {
+        cursor: help;
+      }
     }
   }
 }

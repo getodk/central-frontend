@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?uoc5u9') format('truetype'),
-    url('/fonts/icomoon.woff?uoc5u9') format('woff'),
-    url('/fonts/icomoon.svg?uoc5u9#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?rih6uf') format('truetype'),
+    url('/fonts/icomoon.woff?rih6uf') format('woff'),
+    url('/fonts/icomoon.svg?rih6uf#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -125,4 +125,25 @@
 }
 .icon-save:before {
   content: "\f0c7";
+}
+.icon-clock-o:before {
+  content: "\f017";
+}
+.icon-edit:before {
+  content: "\f044";
+}
+.icon-pencil-square-o:before {
+  content: "\f044";
+}
+.icon-eye:before {
+  content: "\f06e";
+}
+.icon-upload:before {
+  content: "\f093";
+}
+.icon-exchange:before {
+  content: "\f0ec";
+}
+.icon-trash:before {
+  content: "\f1f8";
 }

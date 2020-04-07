@@ -101,6 +101,22 @@ Instead of scoped CSS, use `id` and `class` attributes to style components:
 - Do the same for any `class` attribute. (The exception to this is if a class is always selected in combination with an id. For example, if a component named `ProjectOverview` uses a class for some links, the class can be `styled-link` instead of `project-overview-styled-link` if it is selected as `#project-overview .styled-link`.)
 - If the root element of a component has an `id` or `class` attribute, its value should be the same as the component's name (in kebab case).
 
+### Assets
+
+#### Icons
+
+We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts`](/public/fonts), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css).
+
+To update the icons:
+
+1. Click the "Import Icons" button in IcoMoon. Select [`icomoon.json`](/icomoon.json). When prompted, load the settings stored in the file.
+2. Add Font Awesome.
+3. Move the imported set above Font Awesome. (This should help preserve the icon order and minimize the diff.)
+4. Update the icons.
+5. Download the new font, then copy the files into the repository. You will need to update the paths in the CSS, and you may need to prettify the JSON file.
+
+By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`. (I think these properties may change for the icons that were previously most recently added.)
+
 ### Standard Actions
 
 Certain actions are standardized across ODK Central Frontend.
