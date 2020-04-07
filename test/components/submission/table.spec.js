@@ -207,4 +207,19 @@ describe('SubmissionTable', () => {
     const data = table.find('td').map(td => td.text().trim());
     data.should.eql(['Some string', 'Another string', 'abc']);
   });
+
+  it('converts a field to a column object', () => {
+    const f = {
+      path: '/some_group/some_field',
+      type: 'binary',
+      binary: true
+    };
+    SubmissionTable.methods.fieldToColumn(f).should.eql({
+      path: '/some_group/some_field',
+      type: 'binary',
+      binary: true,
+      pathComponents: ['some_group', 'some_field'],
+      header: 'some_group-some_field'
+    });
+  });
 });
