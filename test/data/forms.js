@@ -36,10 +36,10 @@ const defaultFields = (hasInstanceId) => {
     { path: '/testDateTime', type: 'dateTime' },
     { path: '/testGeopoint', type: 'geopoint' },
     { path: '/testGroup', type: 'structure' },
-    { path: '/testGroup/testBinary', type: 'binary' },
+    { path: '/testGroup/testBinary', type: 'binary', binary: true },
     // The column header for this question will be the same as the
     // previous question's.
-    { path: '/testGroup-testBinary', type: 'binary' },
+    { path: '/testGroup-testBinary', type: 'binary', binary: true },
     { path: '/testBranch' },
     { path: '/testString1', type: 'string' },
     { path: '/testString2', type: 'string' },

@@ -297,26 +297,6 @@ describe('SubmissionList', () => {
             });
           }
         });
-
-        it('correctly formats binary values', () => {
-          createSubmissions(1, {
-            instanceId: 'abc 123',
-            testGroup: { testBinary: 'def 456.jpg' }
-          });
-          return loadSubmissionList()
-            .afterResponses(component => {
-              const td = tdByRowAndColumn(
-                component.first('#submission-table2 tbody tr'),
-                'testGroup-testBinary'
-              );
-              td.hasClass('submission-cell-binary').should.be.true();
-              const $a = $(td.element).find('a');
-              $a.length.should.equal(1);
-              $a.attr('href').should.equal('/v1/projects/1/forms/f/submissions/abc%20123/attachments/def%20456.jpg');
-              $a.find('.icon-check').length.should.equal(1);
-              $a.find('.icon-download').length.should.equal(1);
-            });
-        });
       });
     });
 

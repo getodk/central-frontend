@@ -68,7 +68,7 @@ const oData = ({ form, instanceId, partial, exists }) => form._fields.reduce(
     if (field.type === 'structure') return set(fieldLens, {}, data);
     if (field.type == null)
       return set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
-    return exists[field.type]
+    return exists[field.type] === true
       ? set(fieldLens, oDataValue(field, instanceId), data)
       : data;
   },

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <td :class="htmlClass" :title="title">
-    <template v-if="column.type === 'binary'">
+    <template v-if="column.binary === true">
       <a v-if="formattedValue !== ''" class="binary-link" :href="formattedValue"
         target="_blank" title="File was submitted. Click to download.">
         <span class="icon-check"></span> <span class="icon-download"></span>
@@ -29,7 +29,6 @@ import { path } from 'ramda';
 
 const typeOptions = {
   barcode: { title: true },
-  binary: { htmlClass: true },
   decimal: { htmlClass: true },
   geoshape: { title: true },
   geotrace: { title: true },
@@ -58,6 +57,7 @@ export default {
   computed: {
     htmlClass() {
       const htmlClass = ['submission-table-field'];
+      if (this.column.binary === true) htmlClass.push('submission-cell-binary');
       const { type } = this.column;
       if (type != null) {
         const options = typeOptions[type];
@@ -69,6 +69,14 @@ export default {
     formattedValue() {
       const rawValue = path(this.column.pathComponents, this.submission);
       if (rawValue == null) return '';
+      // A field could have a `binary` property that is `true` but a `type`
+      // property that does not equal 'binary'. Backend treats the `binary`
+      // property as authoritative.
+      if (this.column.binary === true) {
+        const encodedId = encodeURIComponent(this.submission.__id);
+        const encodedName = encodeURIComponent(rawValue);
+        return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
+      }
       switch (this.column.type) {
         case 'int':
           return rawValue.toLocaleString();
@@ -134,17 +142,13 @@ export default {
             })
             .join(' ');
 
-        case 'binary': {
-          const encodedId = encodeURIComponent(this.submission.__id);
-          const encodedName = encodeURIComponent(rawValue);
-          return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
-        }
-
         default:
           return rawValue;
       }
     },
     title() {
+      if (this.column.binary === true || this.formattedValue === '')
+        return null;
       const { type } = this.column;
       if (type == null) return null;
       const options = typeOptions[type];
