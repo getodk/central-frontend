@@ -51,10 +51,16 @@ describe('SubmissionCell', () => {
         fields: [{ path: '/b', type: 'something_unknown', binary: true }],
         submissions: 1
       });
-      testData.extendedSubmissions.createPast(1, { b: 'x.jpg' });
+      testData.extendedSubmissions.createPast(1, {
+        instanceId: 'x',
+        b: 'y.jpg'
+      });
       const cell = mountComponent();
       cell.hasClass('submission-cell-binary').should.be.true();
-      cell.find('a').length.should.equal(1);
+      const a = cell.find('a');
+      a.length.should.equal(1);
+      const href = a[0].getAttribute('href');
+      href.should.equal('/base/submissions/x/attachments/y.jpg');
     });
 
     it('is empty if the value does not exist', () => {
