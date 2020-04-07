@@ -188,4 +188,23 @@ describe('SubmissionTable', () => {
     rows[0].getProp('rowNumber').should.equal(10);
     rows[1].getProp('rowNumber').should.equal(9);
   });
+
+  it('renders data for each field column', () => {
+    testData.extendedForms.createPast(1, {
+      fields: [
+        { path: '/string1', type: 'string' },
+        { path: '/string2', type: 'string' }
+      ],
+      submissions: 1
+    });
+    testData.extendedSubmissions.createPast(1, {
+      instanceId: 'abc',
+      string1: 'Some string',
+      string2: 'Another string'
+    });
+    const table = mountComponent().first('#submission-table2');
+    headers(table).should.eql(['string1', 'string2', 'Instance ID']);
+    const data = table.find('td').map(td => td.text().trim());
+    data.should.eql(['Some string', 'Another string', 'abc']);
+  });
 });

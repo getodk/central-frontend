@@ -33,55 +33,51 @@ const defaults = {
   audits: () => testData.extendedAudits.sorted()
 };
 
-const respond = (keys, routeDefaults = undefined) =>
-  (series, options = undefined) => keys.reduce(
-    (acc, key) => {
-      if (options != null && key in options) {
-        const option = options[key];
-        if (option === false) return acc;
-        return typeof option === 'number'
-          ? acc.respondWithProblem(option)
-          : acc.respond(option);
-      }
-      return acc.respond(routeDefaults != null && key in routeDefaults
-        ? routeDefaults[key]
-        : defaults[key]);
-    },
-    series
-  );
+// Maps each request key to its corresponding callback. Returns a Map so that
+// iteration is guaranteed to be ordered.
+const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
+  (map, key) => map.set(
+    key,
+    componentDefaults != null && componentDefaults[key] != null
+      ? componentDefaults[key]
+      : defaults[key]
+  ),
+  new Map()
+);
 
-const formShowKeys = ['project', 'form', 'formDraft', 'attachments'];
-const submissionListKeys = [
-  ...formShowKeys,
-  'keys',
-  'fields',
-  'submissionsChunk'
-];
-
-// The names of the following properties correspond to route names.
-export default {
-  ProjectList: respond(['projects', 'users']),
-  ProjectOverview: respond(['project', 'forms']),
-  ProjectUserList: respond(['project', 'roles', 'projectAssignments']),
-  FieldKeyList: respond(['project', 'fieldKeys']),
-  ProjectFormAccess: respond([
-    'project',
+const mapsByComponent = {
+  ProjectList: mapKeys(['projects', 'users']),
+  ProjectHome: mapKeys(['project']),
+  ProjectShow: new Map(),
+  ProjectOverview: mapKeys(['forms']),
+  ProjectUserList: mapKeys(['roles', 'projectAssignments']),
+  FieldKeyList: mapKeys(['fieldKeys']),
+  ProjectFormAccess: mapKeys([
     'forms',
     'fieldKeys',
     'roles',
     'formSummaryAssignments'
   ]),
-  ProjectSettings: respond(['project']),
-  FormOverview: respond([...formShowKeys, 'formActors']),
-  FormVersionList: respond([...formShowKeys, 'formVersions']),
-  FormSubmissions: respond(submissionListKeys),
-  FormSettings: respond(formShowKeys),
-  FormDraftStatus: respond(formShowKeys),
-  FormAttachmentList: respond(formShowKeys),
-  FormDraftTesting: respond(submissionListKeys),
-  UserList: respond(['users', 'actors']),
-  BackupList: respond(['backupsConfig', 'audits'], {
+  ProjectSettings: new Map(),
+  FormShow: mapKeys(['form', 'formDraft', 'attachments']),
+  FormOverview: mapKeys(['formActors']),
+  FormVersionList: mapKeys(['formVersions']),
+  FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  FormSettings: new Map(),
+  FormDraftStatus: new Map(),
+  FormAttachmentList: new Map(),
+  FormDraftTesting: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  UserHome: new Map(),
+  UserList: mapKeys(['users', 'actors']),
+  SystemHome: new Map(),
+  BackupList: mapKeys(['backupsConfig', 'audits'], {
     audits: () => testData.standardAudits.sorted()
   }),
-  AuditList: respond(['audits'])
+  AuditList: mapKeys(['audits'])
+};
+
+export default (name) => {
+  const map = mapsByComponent[name];
+  if (map == null) throw new Error(`unknown component ${name}`);
+  return map;
 };
