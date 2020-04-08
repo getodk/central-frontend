@@ -41,13 +41,13 @@ export default {
     }
   },
   created() {
-    // We do not reconcile `submissionsChunk` with either form.lastSubmission or
+    // We do not reconcile submissionsChunk with either form.lastSubmission or
     // project.lastSubmission.
     const deactivate = reconcileData.add(
       'form', 'submissionsChunk',
-      (form, submissionsChunk) => {
+      (form, submissionsChunk, commit) => {
         if (form.submissions !== submissionsChunk['@odata.count']) {
-          this.$store.commit('setData', {
+          commit('setData', {
             key: 'form',
             value: this.form.with({
               submissions: submissionsChunk['@odata.count']

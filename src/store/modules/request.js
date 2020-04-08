@@ -328,7 +328,7 @@ export default {
               ? transform(response)
               : response.data;
             commit('setData', { key, value: transformed });
-            reconcileData.reconcile(key, state.data);
+            reconcileData.reconcile(key, state.data, commit);
             if (success != null) success(state.data);
           });
         commit('createRequest', { key, promise });

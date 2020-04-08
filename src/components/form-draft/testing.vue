@@ -89,10 +89,10 @@ export default {
   created() {
     const deactivate = reconcileData.add(
       'formDraft', 'submissionsChunk',
-      (formDraft, submissionsChunk) => {
+      (formDraft, submissionsChunk, commit) => {
         if (formDraft.isDefined() &&
           formDraft.get().submissions !== submissionsChunk['@odata.count']) {
-          this.$store.commit('setData', {
+          commit('setData', {
             key: 'formDraft',
             value: Option.of(formDraft.get().with({
               submissions: submissionsChunk['@odata.count']

@@ -14,10 +14,10 @@ const byKey = {};
 
 export default {
   add(key1, key2, reconcile) {
-    const reconcileIfExists = (data) => {
+    const reconcileIfExists = (data, commit) => {
       const value1 = data[key1];
       const value2 = data[key2];
-      if (value1 != null && value2 != null) reconcile(value1, value2);
+      if (value1 != null && value2 != null) reconcile(value1, value2, commit);
     };
     const keys = [key1, key2];
     for (const key of keys) {
@@ -30,10 +30,10 @@ export default {
     };
   },
 
-  reconcile(key, data) {
+  reconcile(key, data, commit) {
     if (byKey[key] != null) {
       for (const reconcile of byKey[key])
-        reconcile(data);
+        reconcile(data, commit);
     }
   }
 };

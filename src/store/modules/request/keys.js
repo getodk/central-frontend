@@ -16,6 +16,7 @@ import FormAttachment from '../../../presenters/form-attachment';
 import Option from '../../../util/option';
 import Project from '../../../presenters/project';
 import User from '../../../presenters/user';
+import reconcileData from './reconcile';
 
 // Each type of response data that the `request` module manages is associated
 // with a key. Each key tends to correspond to a single Backend endpoint.
@@ -53,6 +54,11 @@ export const keys = [
   'audits'
 ];
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TRANSFORM RESPONSES
+
 // Define functions to transform responses.
 const optional = (transform = undefined) => (response) => (response.status === 200
   ? Option.of(transform != null ? transform(response) : response.data)
@@ -76,6 +82,26 @@ export const transforms = {
   backupsConfig: optional(),
   audits: ({ data }) => data.map(audit => new Audit(audit))
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// RECONCILE DATA
+
+reconcileData.add(
+  'formDraft', 'attachments',
+  (formDraft, attachments, commit) => {
+    if (formDraft.isDefined() && attachments.isEmpty())
+      commit('setData', { key: 'formDraft', value: Option.none() });
+    else if (formDraft.isEmpty() && attachments.isDefined())
+      commit('setData', { key: 'attachments', value: Option.none() });
+  }
+);
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GETTERS
 
 const dataGetters = {
   loggedIn: ({ data: { session } }) => session != null && session.token != null,
