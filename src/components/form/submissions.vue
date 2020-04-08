@@ -10,13 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-list :base-url="baseUrl" shows-submitter/>
+  <submission-list :base-url="baseUrl" :form-version="form" shows-submitter/>
 </template>
 
 <script>
 import SubmissionList from '../submission/list.vue';
+import reconcileData from '../../store/modules/request/reconcile';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSubmissions',
@@ -33,9 +35,28 @@ export default {
     }
   },
   computed: {
+    ...requestData(['form']),
     baseUrl() {
       return apiPaths.form(this.projectId, this.xmlFormId);
     }
+  },
+  created() {
+    // We do not reconcile `submissionsChunk` with either form.lastSubmission or
+    // project.lastSubmission.
+    const deactivate = reconcileData.add(
+      'form', 'submissionsChunk',
+      (form, submissionsChunk) => {
+        if (form.submissions !== submissionsChunk['@odata.count']) {
+          this.$store.commit('setData', {
+            key: 'form',
+            value: this.form.with({
+              submissions: submissionsChunk['@odata.count']
+            })
+          });
+        }
+      }
+    );
+    this.$once('hook:beforeDestroy', deactivate);
   }
 };
 </script>

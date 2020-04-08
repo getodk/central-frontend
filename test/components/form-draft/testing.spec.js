@@ -1,3 +1,5 @@
+import ChecklistStep from '../../../src/components/checklist-step.vue';
+import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
 import { collectQrData } from '../../util/collect-qr';
@@ -33,6 +35,39 @@ describe('FormDraftTesting', () => {
       .then(component => {
         const baseUrl = component.first(SubmissionList).getProp('baseUrl');
         baseUrl.should.equal('/v1/projects/1/forms/f/draft');
+      });
+  });
+
+  it('passes the form draft to SubmissionList', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return load('/projects/1/forms/f/draft/testing', { component: true }, {})
+      .then(component => {
+        const formVersion = component.first(SubmissionList)
+          .getProp('formVersion');
+        formVersion.version.should.equal('v2');
+      });
+  });
+
+  it('updates the draft checklist if the submission count changes', () => {
+    testData.extendedForms.createPast(1);
+    const draft = testData.extendedFormVersions
+      .createPast(1, { draft: true, submissions: 0 })
+      .last();
+    testData.extendedSubmissions.createPast(1, { form: draft });
+    return load('/projects/1/forms/f/draft')
+      .afterResponses(app => {
+        const step = app.first(FormDraftStatus).find(ChecklistStep)[1];
+        step.getProp('stage').should.equal('current');
+      })
+      .load('/projects/1/forms/f/draft/testing', {
+        project: false, form: false, formDraft: false, attachments: false
+      })
+      .complete()
+      .route('/projects/1/forms/f/draft')
+      .afterResponses(app => {
+        const step = app.first(FormDraftStatus).find(ChecklistStep)[1];
+        step.getProp('stage').should.equal('complete');
       });
   });
 });

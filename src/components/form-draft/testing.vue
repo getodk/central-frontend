@@ -40,16 +40,18 @@ except according to the terms contained in the LICENSE file.
         </float-row>
       </div>
     </div>
-    <submission-list :base-url="baseUrl"/>
+    <submission-list :base-url="baseUrl" :form-version="formDraft"/>
   </div>
 </template>
 
 <script>
 import DocLink from '../doc-link.vue';
 import FloatRow from '../float-row.vue';
+import Option from '../../util/option';
 import PageSection from '../page/section.vue';
 import SubmissionList from '../submission/list.vue';
 import collectQr from '../../util/collect-qr';
+import reconcileData from '../../store/modules/request/reconcile';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
@@ -83,6 +85,23 @@ export default {
     baseUrl() {
       return apiPaths.formDraft(this.projectId, this.xmlFormId);
     }
+  },
+  created() {
+    const deactivate = reconcileData.add(
+      'formDraft', 'submissionsChunk',
+      (formDraft, submissionsChunk) => {
+        if (formDraft.isDefined() &&
+          formDraft.get().submissions !== submissionsChunk['@odata.count']) {
+          this.$store.commit('setData', {
+            key: 'formDraft',
+            value: Option.of(formDraft.get().with({
+              submissions: submissionsChunk['@odata.count']
+            }))
+          });
+        }
+      }
+    );
+    this.$once('hook:beforeDestroy', deactivate);
   }
 };
 </script>

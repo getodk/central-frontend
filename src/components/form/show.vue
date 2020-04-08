@@ -29,6 +29,7 @@ import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
+import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -60,6 +61,23 @@ export default {
     xmlFormId: 'fetchData'
   },
   created() {
+    const deactivate = reconcileData.add(
+      'formDraft', 'attachments',
+      (formDraft, attachments) => {
+        if (formDraft.isDefined() && attachments.isEmpty()) {
+          this.$store.commit('setData', {
+            key: 'formDraft',
+            value: Option.none()
+          });
+        } else if (formDraft.isEmpty() && attachments.isDefined()) {
+          this.$store.commit('setData', {
+            key: 'attachments',
+            value: Option.none()
+          });
+        }
+      }
+    );
+    this.$once('hook:beforeDestroy', deactivate);
     this.fetchData();
   },
   methods: {
@@ -67,33 +85,8 @@ export default {
       this.$store.dispatch('get', [{
         key: 'form',
         url: apiPaths.form(this.projectId, this.xmlFormId),
-        extended: true,
-        success: ({ form, submissionsChunk }) => {
-          if (submissionsChunk == null) return;
-          if (submissionsChunk['@odata.count'] === form.submissions)
-            return;
-          this.$store.commit('setData', {
-            key: 'form',
-            value: form.with({
-              submissions: submissionsChunk['@odata.count']
-            })
-          });
-        }
+        extended: true
       }]).catch(noop);
-    },
-    reconcileFormDraftAndAttachments({ formDraft, attachments }) {
-      if (formDraft == null || attachments == null) return;
-      if (formDraft.isDefined() && attachments.isEmpty()) {
-        this.$store.commit('setData', {
-          key: 'formDraft',
-          value: Option.none()
-        });
-      } else if (formDraft.isEmpty() && attachments.isDefined()) {
-        this.$store.commit('setData', {
-          key: 'attachments',
-          value: Option.none()
-        });
-      }
     },
     fetchDraft() {
       this.$store.dispatch('get', [
@@ -101,14 +94,12 @@ export default {
           key: 'formDraft',
           url: apiPaths.formDraft(this.projectId, this.xmlFormId),
           extended: true,
-          fulfillProblem: ({ code }) => code === 404.1,
-          success: this.reconcileFormDraftAndAttachments
+          fulfillProblem: ({ code }) => code === 404.1
         },
         {
           key: 'attachments',
           url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
-          fulfillProblem: ({ code }) => code === 404.1,
-          success: this.reconcileFormDraftAndAttachments
+          fulfillProblem: ({ code }) => code === 404.1
         }
       ]).catch(noop);
     },

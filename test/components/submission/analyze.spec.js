@@ -1,3 +1,4 @@
+import Form from '../../../src/presenters/form';
 import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
@@ -27,8 +28,10 @@ describe('SubmissionAnalyze', () => {
 
     return mockHttp()
       .mount(SubmissionList, {
-        propsData: { baseUrl: '/v1/projects/1/forms/f' },
-        requestData: { form }
+        propsData: {
+          baseUrl: '/v1/projects/1/forms/f',
+          formVersion: new Form(form)
+        }
       })
       .respondWithData(() => []) // keys
       .respondWithData(() => testData.extendedForms.last()._fields)
@@ -50,8 +53,10 @@ describe('SubmissionAnalyze', () => {
       .last();
     return mockHttp()
       .mount(SubmissionList, {
-        propsData: { baseUrl: '/v1/projects/1/forms/f' },
-        requestData: { form }
+        propsData: {
+          baseUrl: '/v1/projects/1/forms/f',
+          formVersion: new Form(form)
+        }
       })
       .respondWithData(() =>
         // The button should be disabled even if the key is not managed.
@@ -68,22 +73,24 @@ describe('SubmissionAnalyze', () => {
       });
   });
 
-  it('shows the modal after the button is clicked', () =>
-    mockHttp()
+  it('shows the modal after the button is clicked', () => {
+    const form = testData.extendedForms.createPast(1).last();
+    return mockHttp()
       .mount(SubmissionList, {
-        propsData: { baseUrl: '/v1/projects/1/forms/f' },
-        requestData: {
-          form: testData.extendedForms.createPast(1).last()
+        propsData: {
+          baseUrl: '/v1/projects/1/forms/f',
+          formVersion: new Form(form)
         }
       })
       .respondWithData(() => testData.standardKeys.sorted())
-      .respondWithData(() => testData.extendedForms.last()._fields)
+      .respondWithData(() => form._fields)
       .respondWithData(testData.submissionOData)
       .testModalToggles(
         SubmissionAnalyze,
         '#submission-list-analyze-button',
         '.btn-primary'
-      ));
+      );
+  });
 
   it('selects the OData URL upon click', () => {
     const form = testData.extendedForms

@@ -1,3 +1,4 @@
+import Form from '../../../src/presenters/form';
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
@@ -24,8 +25,10 @@ const loadSubmissionList = (attachToDocument = false) => {
 
   return mockHttp()
     .mount(SubmissionList, {
-      propsData: { baseUrl: '/v1/projects/1/forms/f' },
-      requestData: { form },
+      propsData: {
+        baseUrl: '/v1/projects/1/forms/f',
+        formVersion: new Form(form)
+      },
       attachToDocument
     })
     .respondWithData(() => [key])
