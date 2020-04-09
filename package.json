@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix src/ test/",
@@ -46,5 +47,8 @@
     "sass-loader": "~7.1",
     "should": "~13.2",
     "vue-template-compiler": "~2.6"
+  },
+  "resolutions": {
+    "minimist": "1.2.5"
   }
 }
