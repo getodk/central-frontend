@@ -54,7 +54,7 @@ export default {
 .form-version-summary-item-version {
   display: inline-block;
   font-family: $font-family-monospace;
-  max-width: calc(100% - 102px);
+  max-width: calc(100% - 131px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
