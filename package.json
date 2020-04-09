@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "~0.18",
     "bootstrap": "~3",
-    "core-js": "~2.6",
+    "core-js": "~3.6",
     "jquery": "~3",
     "luxon": "~1",
     "pako": "~1.0",
@@ -24,14 +24,15 @@
     "vuex": "~3.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~3.7",
-    "@vue/cli-plugin-eslint": "~3.7",
-    "@vue/cli-plugin-unit-mocha": "~3.7",
-    "@vue/cli-service": "~3.7",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
+    "@vue/cli-plugin-unit-mocha": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
     "@vue/eslint-config-airbnb": "~4.0",
     "avoriaz": "~6.3",
     "babel-eslint": "~10.0",
     "eslint": "~5.16",
+    "eslint-plugin-import": "~2.20",
     "eslint-plugin-vue": "~5.2",
     "faker": "~4.1",
     "jsqr": "~1.0",

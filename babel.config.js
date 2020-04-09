@@ -11,6 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 module.exports = {
   presets: [
-    '@vue/app'
+    '@vue/cli-plugin-babel/preset'
   ]
 };
