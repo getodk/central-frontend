@@ -15,6 +15,7 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import { mapState } from 'vuex';
 
+import reconcileData from './request/reconcile';
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 
@@ -327,6 +328,7 @@ export default {
               ? transform(response)
               : response.data;
             commit('setData', { key, value: transformed });
+            reconcileData.reconcile(key, state.data, commit);
             if (success != null) success(state.data);
           });
         commit('createRequest', { key, promise });

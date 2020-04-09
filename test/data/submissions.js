@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { DateTime } from 'luxon';
-import { comparator, lensPath, set, view } from 'ramda';
+import { comparator, hasPath, lensPath, set } from 'ramda';
 
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
@@ -62,9 +62,10 @@ const oData = ({ form, instanceId, partial, exists }) => form._fields.reduce(
   (data, field) => {
     // Once we resolve issue #82 for Backend, we should implement repeat groups.
     if (field.type === 'repeat') return data;
-    const fieldLens = lensPath(field.path.slice(1).split('/'));
+    const pathComponents = field.path.slice(1).split('/');
     // `partial` may have already specified a value for the field.
-    if (view(fieldLens, data) != null) return data;
+    if (hasPath(pathComponents, data)) return data;
+    const fieldLens = lensPath(pathComponents);
     if (field.type === 'structure') return set(fieldLens, {}, data);
     if (field.type == null)
       return set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <template v-if="form != null && keys != null">
+    <template v-if="formVersion != null && keys != null">
       <float-row class="table-actions">
         <template #left>
           <refresh-button :configs="configsForRefresh"/>
@@ -59,6 +59,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FloatRow from '../float-row.vue';
+import Form from '../../presenters/form';
 import Loading from '../loading.vue';
 import RefreshButton from '../refresh-button.vue';
 import Spinner from '../spinner.vue';
@@ -68,7 +69,7 @@ import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['form', 'keys', 'fields', 'submissionsChunk'];
+const REQUEST_KEYS = ['keys', 'fields', 'submissionsChunk'];
 const MAX_SMALL_CHUNKS = 4;
 
 export default {
@@ -88,6 +89,7 @@ export default {
       type: String,
       required: true
     },
+    formVersion: Form, // eslint-disable-line vue/require-default-prop
     showsSubmitter: {
       type: Boolean,
       default: false
@@ -150,21 +152,21 @@ export default {
       return `${this.baseUrl}/submissions.csv.zip`;
     },
     downloadButtonText() {
-      return this.form.submissions <= 1
+      return this.formVersion.submissions <= 1
         ? 'Download all records'
-        : `Download all ${this.form.submissions.toLocaleString()} records`;
+        : `Download all ${this.formVersion.submissions.toLocaleString()} records`;
     },
     analyzeDisabled() {
-      // If an encrypted form has no submissions, then OData will never be
-      // available for any of the form's submissions (so long as the form
-      // remains encrypted).
-      return (this.form.keyId != null && this.form.submissions === 0) ||
+      // If an encrypted form has no submissions, then there will never be
+      // decrypted submissions available to OData (as long as the form remains
+      // encrypted).
+      return (this.formVersion.keyId != null && this.formVersion.submissions === 0) ||
         this.keys.length !== 0;
     },
     analyzeButtonTitle() {
       return this.analyzeDisabled
         ? 'OData access is unavailable due to Form encryption'
-        : '';
+        : null;
     }
   },
   watch: {
@@ -190,14 +192,15 @@ export default {
   methods: {
     loadingMessageText({ top, skip = 0 }) {
       if (skip === 0) {
-        if (this.form == null) return 'Loading submissions…';
-        if (this.form.submissions > top) {
-          const count = this.form.submissions.toLocaleString();
-          return `Loading the first ${top.toLocaleString()} of ${count} submissions…`;
+        if (this.formVersion == null || this.formVersion.submissions === 0)
+          return 'Loading submissions…';
+        if (this.formVersion.submissions > top) {
+          const total = this.formVersion.submissions.toLocaleString();
+          return `Loading the first ${top.toLocaleString()} of ${total} submissions…`;
         }
-        return this.form.submissions === 1
+        return this.formVersion.submissions === 1
           ? 'Loading 1 submission…'
-          : `Loading ${this.form.submissions.toLocaleString()} submissions…`;
+          : `Loading ${this.formVersion.submissions.toLocaleString()} submissions…`;
       }
       const remaining = this.originalCount - this.submissions.length;
       // This case should be rare or impossible.
@@ -211,23 +214,7 @@ export default {
     oDataUrl(top, skip = 0) {
       return `${this.baseUrl}.svc/Submissions?%24top=${top}&%24skip=${skip}&%24count=true`;
     },
-    // Sets this.form.submissions to this.submissionsChunk['@odata.count'].
-    updateFormSubmissionCount() {
-      if (this.form == null) return;
-      if (this.form.submissions === this.submissionsChunk['@odata.count'])
-        return;
-      this.$store.commit('setData', {
-        key: 'form',
-        value: this.form.with({
-          submissions: this.submissionsChunk['@odata.count']
-        })
-      });
-    },
     processChunk(replace = true) {
-      // We update this.form.submissions, but not this.form.lastSubmission, nor
-      // lastSubmission for the project.
-      this.updateFormSubmissionCount();
-
       if (replace) {
         this.submissions = this.submissionsChunk.value;
         this.instanceIds.clear();
@@ -272,8 +259,7 @@ export default {
       };
       this.$store.dispatch('get', [
         {
-          // We do not keep this.keys in sync with the keyId property of the
-          // project or the form.
+          // We do not reconcile `keys` and formDraft.keyId.
           key: 'keys',
           url: `${this.baseUrl}/submissions/keys`
         },
@@ -303,11 +289,12 @@ export default {
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
-      if (!this.dataExists) return;
+      if (this.formVersion == null || !this.dataExists) return;
       // Return if the next chunk of submissions is already loading.
       if (this.$store.getters.loading('submissionsChunk')) return;
       const skip = this.skip(this.chunkCount);
-      if (skip >= this.form.submissions || !this.scrolledToBottom()) return;
+      if (skip >= this.formVersion.submissions || !this.scrolledToBottom())
+        return;
       const top = this.chunkCount < MAX_SMALL_CHUNKS
         ? this.chunkSizes.small
         : this.chunkSizes.large;
