@@ -77,7 +77,7 @@ describe('FormVersionStandardButtons', () => {
             .createPast(1, { excelContentType: 'application/vnd.ms-excel' })
             .last();
           const text = mountComponent(form).find('a')[1].text().trim();
-          text.should.equal('As Excel (.xls)');
+          text.should.equal('As XLSForm (.xls)');
         });
 
         it('has the correct href attribute for a published version', () => {
@@ -107,7 +107,7 @@ describe('FormVersionStandardButtons', () => {
             })
             .last();
           const text = mountComponent(form).find('a')[1].text().trim();
-          text.should.equal('As Excel (.xlsx)');
+          text.should.equal('As XLSForm (.xlsx)');
         });
 
         it('has the correct href attribute for a published version', () => {

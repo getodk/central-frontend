@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         <a :href="defPath('xml')" :download="xmlFilename">As XForm (.xml)</a>
       </li>
       <li>
-        <a :href="defPath(excelExtension)">As Excel (.{{ excelExtension }})</a>
+        <a :href="defPath(excelExtension)">As XLSForm (.{{ excelExtension }})</a>
       </li>
     </ul>
   </div>
