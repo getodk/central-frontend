@@ -193,23 +193,23 @@ export default {
     loadingMessageText({ top, skip = 0 }) {
       if (skip === 0) {
         if (this.formVersion == null || this.formVersion.submissions === 0)
-          return 'Loading submissions…';
+          return 'Loading Submissions…';
         if (this.formVersion.submissions > top) {
           const total = this.formVersion.submissions.toLocaleString();
-          return `Loading the first ${top.toLocaleString()} of ${total} submissions…`;
+          return `Loading the first ${top.toLocaleString()} of ${total} Submissions…`;
         }
         return this.formVersion.submissions === 1
-          ? 'Loading 1 submission…'
-          : `Loading ${this.formVersion.submissions.toLocaleString()} submissions…`;
+          ? 'Loading 1 Submission…'
+          : `Loading ${this.formVersion.submissions.toLocaleString()} Submissions…`;
       }
       const remaining = this.originalCount - this.submissions.length;
       // This case should be rare or impossible.
-      if (remaining <= 0) return 'Loading submissions…';
+      if (remaining <= 0) return 'Loading Submissions…';
       if (remaining > top)
-        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining submissions…`;
+        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining Submissions…`;
       return remaining === 1
-        ? 'Loading the last submission…'
-        : `Loading the last ${remaining.toLocaleString()} submissions…`;
+        ? 'Loading the last Submission…'
+        : `Loading the last ${remaining.toLocaleString()} Submissions…`;
     },
     oDataUrl(top, skip = 0) {
       return `${this.baseUrl}.svc/Submissions?%24top=${top}&%24skip=${skip}&%24count=true`;
