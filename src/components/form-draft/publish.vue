@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
           Existing Form Submissions will be unaffected, but all Draft test
           Submissions will be removed.
         </p>
-        <p v-if="draftVersionMatchesPrimary">
+        <p v-if="draftVersionStringIsDuplicate">
           Every version of a Form requires a unique version name. Right now,
           your Draft Form has the same version name as a previously published
           version. You can set a new one by uploading a Form definition with
@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
           it for you.
         </p>
       </div>
-      <form v-if="draftVersionMatchesPrimary" @submit.prevent="publish">
+      <form v-if="draftVersionStringIsDuplicate" @submit.prevent="publish">
         <label class="form-group">
           <input ref="versionString" v-model="versionString"
             class="form-control" placeholder="Version *" required
@@ -115,14 +115,15 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData([
-      'form',
+      'formVersions',
       { key: 'formDraft', getOption: true },
       'attachments'
     ]),
     ...mapGetters(['missingAttachmentCount']),
-    draftVersionMatchesPrimary() {
-      return this.form != null && this.form.publishedAt != null &&
-        this.formDraft != null && this.formDraft.version === this.form.version;
+    draftVersionStringIsDuplicate() {
+      if (this.formVersions == null || this.formDraft == null) return false;
+      return this.formVersions.some(version =>
+        version.version === this.formDraft.version);
     },
     rendersAttachmentsWarning() {
       return this.attachments != null && this.missingAttachmentCount !== 0;
@@ -138,7 +139,7 @@ export default {
   },
   methods: {
     focusInput() {
-      if (this.draftVersionMatchesPrimary) this.$refs.versionString.focus();
+      if (this.draftVersionStringIsDuplicate) this.$refs.versionString.focus();
     },
     publish() {
       this.request({

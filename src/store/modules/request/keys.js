@@ -98,6 +98,12 @@ reconcileData.add(
   }
 );
 
+/*
+We do not reconcile the following data:
+
+  - `formVersions` and `form` (for example, form.version)
+*/
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,5 @@
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
+import FormVersionRow from '../../../src/components/form-version/row.vue';
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../util/event';
 import { load } from '../../util/http';
@@ -84,9 +85,13 @@ describe('FormDraftPublish', () => {
   });
 
   describe('version string input', () => {
-    it('shows input if version string of draft is same as primary version', () => {
+    it('shows input if version string of draft is same as a previous version', () => {
       testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, { draft: true });
+      testData.extendedFormVersions.createPast(1, { version: 'v2' });
+      testData.extendedFormVersions.createPast(1, {
+        version: 'v1',
+        draft: true
+      });
       return showModal().then(app => {
         const modal = app.first('#form-draft-publish');
         modal.first('input').should.be.visible();
@@ -125,9 +130,13 @@ describe('FormDraftPublish', () => {
       });
     });
 
-    it('defaults the input to the current version string', () => {
+    it('defaults the input to the version string of the draft', () => {
       testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, { draft: true });
+      testData.extendedFormVersions.createPast(1, { version: 'v2' });
+      testData.extendedFormVersions.createPast(1, {
+        version: 'v1',
+        draft: true
+      });
       return showModal().then(app => {
         app.first('#form-draft-publish input').element.value.should.equal('v1');
       });
@@ -185,7 +194,7 @@ describe('FormDraftPublish', () => {
         .respondWithProblem();
     });
 
-    it('specifies ?version if version string input differs from current string', () => {
+    it('specifies ?version if version string input differs from draft', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       return showModal()
@@ -197,9 +206,13 @@ describe('FormDraftPublish', () => {
         .respondWithProblem();
     });
 
-    it('does not specify ?version if input is same as current string', () => {
+    it('does not specify ?version if input is same as draft', () => {
       testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, { draft: true });
+      testData.extendedFormVersions.createPast(1, { version: 'v2' });
+      testData.extendedFormVersions.createPast(1, {
+        version: 'v1',
+        draft: true
+      });
       return showModal()
         .request(trigger.submit('#form-draft-publish form'))
         .beforeEachResponse((app, { url }) => {
@@ -260,5 +273,32 @@ describe('FormDraftPublish', () => {
       publish().then(app => {
         app.first('#form-head-create-draft-button').should.be.visible();
       }));
+
+    it('shows the published version in .../versions', () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, {
+        version: 'v2',
+        draft: true
+      });
+      return load('/projects/1/forms/f/versions')
+        .afterResponses(app => {
+          app.find(FormVersionRow).length.should.equal(1);
+        })
+        .route('/projects/1/forms/f/draft')
+        .request(app => trigger.click(app, '#form-draft-status-publish-button')
+          .then(trigger.click('#form-draft-publish .btn-primary')))
+        .respondWithSuccess()
+        .respondWithData(() => {
+          testData.extendedFormDrafts.publish(-1);
+          return testData.extendedForms.last();
+        })
+        .respondWithData(() => []) // formActors
+        .complete()
+        .route('/projects/1/forms/f/versions')
+        .respondWithData(() => testData.extendedFormVersions.sorted())
+        .afterResponse(app => {
+          app.find(FormVersionRow).length.should.equal(2);
+        });
+    });
   });
 });

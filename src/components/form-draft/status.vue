@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="row">
+    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+    <div v-show="formVersions != null" class="row">
       <div class="col-xs-6">
         <page-section condensed>
           <template #heading>
@@ -73,11 +74,14 @@ import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
+import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -88,9 +92,20 @@ export default {
     FormDraftPublish,
     FormNew,
     FormVersionSummaryItem,
+    Loading,
     PageSection
   },
   mixins: [modal(), routes(), validateData()],
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       // Modals
@@ -107,8 +122,26 @@ export default {
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['form', { key: 'formDraft', getOption: true }]),
+  computed: requestData([
+    'form',
+    'formVersions',
+    { key: 'formDraft', getOption: true }
+  ]),
+  watch: {
+    $route: 'fetchData'
+  },
+  created() {
+    this.fetchData();
+  },
   methods: {
+    fetchData() {
+      this.$store.dispatch('get', [{
+        key: 'formVersions',
+        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
+        extended: true,
+        resend: false
+      }]).catch(noop);
+    },
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
@@ -126,6 +159,7 @@ export default {
     },
     afterPublish() {
       this.$emit('fetch-form');
+      this.$store.commit('clearData', 'formVersions');
       this.clearDraft();
       this.$router.push(this.formPath(), () => {
         this.$alert().success('Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.');

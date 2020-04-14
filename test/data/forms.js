@@ -105,6 +105,14 @@ const forms = dataStore({
   }
 });
 
+const sortByPublishedAt = (version1, version2) => {
+  if (version1.publishedAt == null || version2.publishedAt == null)
+    throw new Error('version must be published');
+  if (isBefore(version1.publishedAt, version2.publishedAt)) return 1;
+  if (isBefore(version2.publishedAt, version1.publishedAt)) return -1;
+  return 0;
+};
+
 // All form versions: primary, draft, and archived.
 formVersions = dataStore({
   factory: ({
@@ -149,13 +157,7 @@ formVersions = dataStore({
       draftToken
     };
   },
-  sort: (version1, version2) => {
-    if (version1.publishedAt == null || version2.publishedAt == null)
-      throw new Error('version must be published');
-    if (isBefore(version1.publishedAt, version2.publishedAt)) return 1;
-    if (isBefore(version2.publishedAt, version1.publishedAt)) return -1;
-    return 0;
-  }
+  sort: sortByPublishedAt
 });
 
 
@@ -226,6 +228,15 @@ export const extendedFormVersions = view(
   formVersions,
   transformVersion(formProps, [...versionProps, ...extendedVersionProps])
 );
+// Similar to extendedFormVersions.sorted(), but also filters out form drafts.
+extendedFormVersions.published = () => {
+  const published = [];
+  for (let i = 0; i < extendedFormVersions.size; i += 1) {
+    const version = extendedFormVersions.get(i);
+    if (version.publishedAt != null) published.push(version);
+  }
+  return published.sort(sortByPublishedAt);
+};
 
 export const extendedFormDrafts = view(
   formVersions,

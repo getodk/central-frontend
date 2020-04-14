@@ -225,9 +225,12 @@ describe('FormHead', () => {
           .complete()
           .request(app => trigger.click(app, '#form-head-create-draft-button'))
           .respondWithSuccess()
-          .respondWithData(() =>
-            testData.extendedFormDrafts.createNew({ draft: true }))
-          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondFor('/projects/1/forms/f/draft', {
+            project: false,
+            form: false,
+            formDraft: () =>
+              testData.extendedFormDrafts.createNew({ draft: true })
+          })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/projects/1/forms/f/draft');
           }));
