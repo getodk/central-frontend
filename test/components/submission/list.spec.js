@@ -418,7 +418,7 @@ describe('SubmissionList', () => {
         return loadSubmissionList()
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading 1 submission…');
+            checkMessage(component, true, 'Loading 1 Submission…');
             tested = true;
           })
           .then(() => {
@@ -432,7 +432,7 @@ describe('SubmissionList', () => {
         return loadSubmissionList()
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading 2 submissions…');
+            checkMessage(component, true, 'Loading 2 Submissions…');
             tested = true;
           })
           .then(() => {
@@ -446,7 +446,7 @@ describe('SubmissionList', () => {
         return loadSubmissionList([2])
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading the first 2 of 3 submissions…');
+            checkMessage(component, true, 'Loading the first 2 of 3 Submissions…');
             checkTopSkip(request, 2, 0);
             tested = true;
           })
@@ -486,7 +486,7 @@ describe('SubmissionList', () => {
           return loadSubmissionList([2, 3])
             .beforeEachResponse((component, request) => {
               if (!request.url.includes('.svc/Submissions')) return;
-              checkMessage(component, true, 'Loading the first 2 of 12 submissions…');
+              checkMessage(component, true, 'Loading the first 2 of 12 Submissions…');
               tested = true;
             })
             .afterResponses(component => {
@@ -499,7 +499,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 2);
-              checkMessage(component, true, 'Loading 2 more of 10 remaining submissions…');
+              checkMessage(component, true, 'Loading 2 more of 10 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 2))
             .afterResponse(component => {
@@ -512,7 +512,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 4);
-              checkMessage(component, true, 'Loading 2 more of 8 remaining submissions…');
+              checkMessage(component, true, 'Loading 2 more of 8 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 4))
             .afterResponse(component => {
@@ -525,7 +525,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 6);
-              checkMessage(component, true, 'Loading 2 more of 6 remaining submissions…');
+              checkMessage(component, true, 'Loading 2 more of 6 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 6))
             .afterResponse(component => {
@@ -538,7 +538,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 3, 8);
-              checkMessage(component, true, 'Loading 3 more of 4 remaining submissions…');
+              checkMessage(component, true, 'Loading 3 more of 4 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(3, 8))
             .afterResponse(component => {
@@ -551,7 +551,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 3, 11);
-              checkMessage(component, true, 'Loading the last submission…');
+              checkMessage(component, true, 'Loading the last Submission…');
             })
             .respondWithData(() => testData.submissionOData(3, 11))
             .afterResponse(component => {
@@ -751,7 +751,7 @@ describe('SubmissionList', () => {
             .beforeEachResponse((component, config, index) => {
               if (index === 2) {
                 checkTopSkip(config, 2, 0);
-                checkMessage(component, true, 'Loading the first 2 of 4 submissions…');
+                checkMessage(component, true, 'Loading the first 2 of 4 Submissions…');
               }
             })
             .complete()
@@ -762,7 +762,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
-              checkMessage(component, true, 'Loading the last 2 submissions…');
+              checkMessage(component, true, 'Loading the last 2 Submissions…');
             })
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(4);
@@ -779,7 +779,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
-              checkMessage(component, true, 'Loading the last 2 submissions…');
+              checkMessage(component, true, 'Loading the last 2 Submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
             .respondWithData(() => testData.submissionOData(2, 4))
@@ -793,7 +793,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
-              checkMessage(component, true, 'Loading the last 2 submissions…');
+              checkMessage(component, true, 'Loading the last 2 Submissions…');
             })
             // Returns the last 2 submissions.
             .respondWithData(() => testData.submissionOData(2, 6))
