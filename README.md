@@ -47,7 +47,7 @@ NGINX effectively places ODK Central Frontend and ODK Central Backend at the sam
 
 ODK Central Frontend will be available on port 8989.
 
-Some ODK Central Frontend functionality requires HTTPS, for example, downloading files from ODK Central Backend. To access this functionality in development, one option is to use [`ngrok`](https://ngrok.com/download). By default, ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use.
+Some ODK Central Frontend functionality requires HTTPS, for example, downloading files from ODK Central Backend. To access this functionality in development, one option is to use [`ngrok`](https://ngrok.com/download). By default, ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Some functionality additionally requires you to specify the HTTPS URL to ODK Central Backend, for example, getting a form in ODK Collect. To do so, set the `default.env.domain` property in [`config/default.json`](https://github.com/opendatakit/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart the ODK Central Backend server if it is already running.
 
 ## Deploying to production
 
