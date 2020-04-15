@@ -46,13 +46,12 @@ export default {
   methods: {
     fetchData() {
       this.$store.dispatch('get', [{
-        // We do not keep `form` and `formVersions` in sync. For example, we do
-        // not update `form` if it is inconsistent with `formVersions`. In the
-        // unusual case that `formVersions` is empty, we still render the
-        // component.
+        // We do not reconcile `form` and `formVersions`. In the unusual case
+        // that `formVersions` is empty, we still render the component.
         key: 'formVersions',
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
-        extended: true
+        extended: true,
+        resend: false
       }]).catch(noop);
     }
   }

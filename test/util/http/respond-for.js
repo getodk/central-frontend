@@ -16,7 +16,7 @@ const defaults = {
   form: () => testData.extendedForms.last(),
   fields: () => testData.extendedForms.last()._fields,
   formActors: () => testData.extendedFieldKeys.sorted().map(testData.toActor),
-  formVersions: () => testData.extendedFormVersions.sorted(),
+  formVersions: () => testData.extendedFormVersions.published(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.extendedFormDrafts.last()
     : { problem: 404.1 }),
@@ -64,7 +64,7 @@ const mapsByComponent = {
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
   FormSettings: new Map(),
-  FormDraftStatus: new Map(),
+  FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
   FormDraftTesting: mapKeys(['keys', 'fields', 'submissionsChunk']),
   UserHome: new Map(),
