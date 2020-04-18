@@ -26,8 +26,7 @@ except according to the terms contained in the LICENSE file.
             <p>
               When you publish this Draft Form, these test Submissions will be
               permanently removed. Please see
-              <!-- TODO. Specify the `to` attribute. -->
-              <doc-link>this article</doc-link>
+              <doc-link to="central-forms/#form-drafts">this article</doc-link>
               for more information.
             </p>
           </template>

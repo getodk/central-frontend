@@ -43,7 +43,6 @@ except according to the terms contained in the LICENSE file.
         under the
         <router-link :to="formPath('draft/attachments')">Media Files</router-link>
         tab.
-        <!-- TODO. Update the `to` attribute? -->
         <doc-link to="central-forms/#forms-with-attachments">
           Click here to find out more.
         </doc-link>
@@ -57,8 +56,9 @@ except according to the terms contained in the LICENSE file.
         way you expect. Using the
         <router-link :to="formPath('draft/testing')">test QR code</router-link>,
         you can make a test Submission that won&rsquo;t affect your real data.
-        <!-- TODO. Specify the `to` attribute. -->
-        <doc-link>Click here to find out more.</doc-link>
+        <doc-link to="central-forms/#form-draft-tabs">
+          Click here to find out more.
+        </doc-link>
       </p>
     </checklist-step>
     <checklist-step stage="current">
@@ -74,8 +74,9 @@ except according to the terms contained in the LICENSE file.
           your devices in the field, you can
           <router-link :to="formPath('draft')">publish</router-link> it.
         </template>
-        <!-- TODO. Specify the `to` attribute. -->
-        <doc-link>Click here to find out more.</doc-link>
+        <doc-link to="central-forms/#form-drafts">
+          Click here to find out more.
+        </doc-link>
       </p>
     </checklist-step>
   </div>
