@@ -10,12 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="project-form-access-row">
+  <tr :class="htmlClass">
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
-        <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">
-          {{ form.nameOrId() }}
-        </router-link>
+        <span v-if="form.publishedAt == null" class="icon-edit"
+          title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used."><!-- eslint-disable-line max-len -->
+        </span>
+        <!-- eslint-disable-next-line max-len -->
+        <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">{{ form.nameOrId() }}</router-link>
       </td>
       <td>
         <div class="form-group">
@@ -27,9 +29,6 @@ except according to the terms contained in the LICENSE file.
             <option value="closing">Closing</option>
             <option value="closed">Closed</option>
           </select>
-          <span v-if="form.publishedAt == null" class="icon-edit"
-            title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. When that happens, the settings shown here will be used."><!-- eslint-disable-line max-len -->
-          </span>
         </div>
       </td>
     </template>
@@ -77,6 +76,12 @@ export default {
   },
   computed: {
     ...mapGetters(['fieldKeysWithToken']),
+    htmlClass() {
+      return {
+        'project-form-access-row': true,
+        'project-form-access-row-draft': this.form.publishedAt == null
+      };
+    },
     stateChanged() {
       return this.changes.current.state !== this.changes.previous.state;
     }
@@ -110,19 +115,22 @@ export default {
   }
 
   .form-control {
-    display: inline-block;
     width: 120px;
-  }
-
-  .icon-edit {
-    cursor: help;
-    margin-left: 10px;
   }
 
   .checkbox {
     margin-bottom: 0;
     margin-left: 6px;
     margin-top: 5px;
+  }
+}
+
+.project-form-access-row-draft {
+  background-color: rgba(0, 0, 0, 0.0225);
+
+  .icon-edit {
+    cursor: help;
+    margin-right: 9px;
   }
 }
 </style>
