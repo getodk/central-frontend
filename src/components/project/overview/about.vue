@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
         For more information, please see
         <doc-link to="central-projects/">this help article</doc-link>, and if
         you have any feedback please visit
-        <a href="https://forum.opendatakit.org/t/16857" target="_blank">this forum thread</a>.
+        <a href="https://forum.opendatakit.org/t/-/19677" target="_blank">this forum thread</a>.
       </p>
     </template>
   </page-section>

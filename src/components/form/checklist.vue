@@ -17,8 +17,9 @@ except according to the terms contained in the LICENSE file.
         <strong>Great work!</strong> You have published your Form. It is ready
         to accept Submissions. If you want to make changes to the Form or its
         Media Files, you can make a new Draft.
-        <!-- TODO. Specify the `to` attribute. -->
-        <doc-link>Click here to find out more.</doc-link>
+        <doc-link to="central-forms/#form-updates">
+          Click here to find out more.
+        </doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(1)">
