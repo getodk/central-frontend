@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
         way you expect. Using the
         <router-link :to="formPath('draft/testing')">test QR code</router-link>,
         you can make a test Submission that won&rsquo;t affect your real data.
-        <doc-link to="central-forms/#form-draft-tabs">
+        <doc-link to="central-forms/#working-with-form-drafts">
           Click here to find out more.
         </doc-link>
       </p>
@@ -74,7 +74,7 @@ except according to the terms contained in the LICENSE file.
           your devices in the field, you can
           <router-link :to="formPath('draft')">publish</router-link> it.
         </template>
-        <doc-link to="central-forms/#form-drafts">
+        <doc-link to="central-forms/#working-with-form-drafts">
           Click here to find out more.
         </doc-link>
       </p>

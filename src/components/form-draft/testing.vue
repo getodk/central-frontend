@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
             <p>
               When you publish this Draft Form, these test Submissions will be
               permanently removed. Please see
-              <doc-link to="central-forms/#form-drafts">this article</doc-link>
+              <doc-link to="central-forms/#working-with-form-drafts">this article</doc-link>
               for more information.
             </p>
           </template>
