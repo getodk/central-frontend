@@ -25,12 +25,12 @@ except according to the terms contained in the LICENSE file.
             <p>
               If you&rsquo;re not sure where to begin, we have a getting started
               guide and user documentation available on the
-              <doc-link to="central-intro/">Open Data Kit Docs website</doc-link>.
+              <doc-link to="central-intro/">ODK Docs website</doc-link>.
             </p>
             <p>
               In addition, you can always get help from others on the
               <a href="https://forum.opendatakit.org/" target="_blank">
-                Open Data Kit community forum</a>,
+                ODK community forum</a>,
               where you can search for previous answers or ask one of your own.
             </p>
           </template>
