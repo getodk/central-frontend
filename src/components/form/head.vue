@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="dataExists" id="form-head">
+  <div id="form-head">
     <div id="form-head-project-nav" class="row">
       <div class="col-xs-12">
         <div v-if="project !=null">
@@ -67,10 +67,8 @@ except according to the terms contained in the LICENSE file.
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
             <button v-show="formDraft.isEmpty()"
               id="form-head-create-draft-button" type="primary"
-              class="btn btn-primary" :disabled="awaitingResponse"
-              @click="createDraft">
+              class="btn btn-primary" @click="$emit('create-draft')">
               <span class="icon-plus-circle"></span>Create a new Draft
-              <spinner :state="awaitingResponse"/>
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
               <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
@@ -105,25 +103,15 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
-import Spinner from '../spinner.vue';
-import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
-import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormHead',
-  components: { Spinner },
-  mixins: [request(), routes(), tab()],
-  data() {
-    return {
-      awaitingResponse: false
-    };
-  },
+  mixins: [routes(), tab()],
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -154,14 +142,6 @@ export default {
       if (this.form != null && this.form.publishedAt == null)
         htmlClass.disabled = true;
       return htmlClass;
-    },
-    createDraft() {
-      this.post(apiPaths.formDraft(this.form.projectId, this.form.xmlFormId))
-        .then(() => {
-          this.$emit('fetch-draft');
-          this.$router.push(this.formPath('draft'));
-        })
-        .catch(noop);
     }
   }
 };

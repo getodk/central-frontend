@@ -1,3 +1,7 @@
+import FormDraftStatus from '../../../src/components/form-draft/status.vue';
+import FormHead from '../../../src/components/form/head.vue';
+import FormOverview from '../../../src/components/form/overview.vue';
+import Loading from '../../../src/components/loading.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -204,12 +208,6 @@ describe('FormHead', () => {
           app.first('#form-head-create-draft-button').should.be.visible();
         }));
 
-      it('implements some standard button things', () =>
-        load('/projects/1/forms/f')
-          .complete()
-          .request(app => trigger.click(app, '#form-head-create-draft-button'))
-          .standardButton('#form-head-create-draft-button'));
-
       it('posts to the correct endpoint', () =>
         load('/projects/1/forms/f')
           .complete()
@@ -220,7 +218,7 @@ describe('FormHead', () => {
           })
           .respondWithProblem());
 
-      it('redirects to .../draft', () =>
+      it('redirects to .../draft after a successful response', () =>
         load('/projects/1/forms/f')
           .complete()
           .request(app => trigger.click(app, '#form-head-create-draft-button'))
@@ -233,6 +231,40 @@ describe('FormHead', () => {
           })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/projects/1/forms/f/draft');
+          }));
+
+      it('shows a danger alert after a Problem response', () =>
+        load('/projects/1/forms/f')
+          .complete()
+          .request(app => trigger.click(app, '#form-head-create-draft-button'))
+          .beforeAnyResponse(app => {
+            app.should.not.alert();
+          })
+          .respondWithProblem()
+          .afterResponse(app => {
+            app.should.alert('danger');
+          }));
+
+      it('shows a loading message during the request', () =>
+        load('/projects/1/forms/f')
+          .complete()
+          .request(app => trigger.click(app, '#form-head-create-draft-button'))
+          .beforeAnyResponse(app => {
+            app.first(Loading).should.be.visible();
+            app.first(FormHead).should.be.hidden();
+            app.first(FormOverview).vm.$el.parentNode.should.be.hidden();
+          })
+          .respondWithSuccess()
+          .respondFor('/projects/1/forms/f/draft', {
+            project: false,
+            form: false,
+            formDraft: () =>
+              testData.extendedFormDrafts.createNew({ draft: true })
+          })
+          .afterResponses(app => {
+            app.first(Loading).should.be.hidden();
+            app.first(FormHead).should.be.visible();
+            app.first(FormDraftStatus).should.be.visible();
           }));
     });
   });

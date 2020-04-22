@@ -11,10 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-head @fetch-draft="fetchDraft"/>
+    <form-head v-show="dataExists && !awaitingResponse"
+      @create-draft="createDraft"/>
     <page-body>
-      <loading :state="initiallyLoading"/>
-      <div v-show="dataExists">
+      <loading :state="initiallyLoading || awaitingResponse"/>
+      <div v-show="dataExists && !awaitingResponse">
         <!-- <router-view> is immediately created and can send its own requests
         even before the server has responded to the requests from ProjectHome
         and FormShow. -->
@@ -28,6 +29,8 @@ except according to the terms contained in the LICENSE file.
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
+import request from '../../mixins/request';
+import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -36,6 +39,7 @@ const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
+  mixins: [request(), routes()],
   props: {
     projectId: {
       type: String,
@@ -45,6 +49,11 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      awaitingResponse: false
+    };
   },
   computed: {
     initiallyLoading() {
@@ -87,6 +96,14 @@ export default {
     fetchData() {
       this.fetchForm();
       this.fetchDraft();
+    },
+    createDraft() {
+      this.post(apiPaths.formDraft(this.projectId, this.xmlFormId))
+        .then(() => {
+          this.fetchDraft();
+          this.$router.push(this.formPath('draft'));
+        })
+        .catch(noop);
     }
   }
 };
