@@ -57,7 +57,7 @@ component:
     .mount(AccountResetPassword, { router })
     // Sends a POST request.
     .request(component => submitForm(component, 'form', [
-      ['input[type="email"]', 'example@opendatakit.org']
+      ['input[type="email"]', 'example@getodk.org']
     ]));
 
 If you already have a mounted component, you can skip mockHttp().mount():
@@ -67,7 +67,7 @@ If you already have a mounted component, you can skip mockHttp().mount():
   ...
 
   mockHttp()
-    .request(() => submitLoginForm(component, 'example@opendatakit.org'));
+    .request(() => submitLoginForm(component, 'example@getodk.org'));
 
 After specifying the request, specify the response as a callback:
 
@@ -80,10 +80,10 @@ specify all the responses, in order of the request:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@opendatakit.org'))
+    .request(component => submitLoginForm(component, 'example@getodk.org'))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
-      .createPast(1, { email: 'example@opendatakit.org' })
+      .createPast(1, { email: 'example@getodk.org' })
       .last());
 
 In rare cases, you may know that mount() and/or request() will not send any
@@ -136,10 +136,10 @@ cycles: series can be chained. For example:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@opendatakit.org'))
+    .request(component => submitLoginForm(component, 'example@getodk.org'))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
-      .createPast(1, { email: 'example@opendatakit.org' })
+      .createPast(1, { email: 'example@getodk.org' })
       .last())
     .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
     .respondWithData(() => testData.standardUsers.sorted())

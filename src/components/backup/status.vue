@@ -1,7 +1,7 @@
 <!--
 Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
 This file is part of ODK Central. It is subject to the license terms in
 the LICENSE file found in the top-level directory of this distribution and at
@@ -41,8 +41,7 @@ except according to the terms contained in the LICENSE file.
         In that case, the most likely fixes are to <strong>terminate</strong>
         the connection and set it up again, or to restart the service. If you
         are having trouble, please try the
-        <a href="https://forum.opendatakit.org/" target="_blank">
-          community forum</a>.
+        <a href="https://forum.getodk.org/" target="_blank">community forum</a>.
       </p>
     </template>
     <template v-else-if="status === 'somethingWentWrong'">
@@ -55,8 +54,7 @@ except according to the terms contained in the LICENSE file.
         The most likely fixes are to <strong>terminate</strong> the connection
         and set it up again, or to restart the service. If you are having
         trouble, please try the
-        <a href="https://forum.opendatakit.org/" target="_blank">
-          community forum</a>.
+        <a href="https://forum.getodk.org/" target="_blank">community forum</a>.
       </p>
     </template>
     <template v-else>

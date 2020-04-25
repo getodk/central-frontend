@@ -1,7 +1,7 @@
 <!--
 Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
 This file is part of ODK Central. It is subject to the license terms in
 the LICENSE file found in the top-level directory of this distribution and at
@@ -34,7 +34,7 @@ If possible despite our use of Bootstrap, we may wish to remove jQuery from Fron
 
 ### Bootstrap
 
-ODK Central Frontend uses Bootstrap 3. (However, we are considering [moving to Bootstrap 4](https://github.com/opendatakit/central-frontend/issues/142). Let us know if that is something you can help with!)
+ODK Central Frontend uses Bootstrap 3. (However, we are considering [moving to Bootstrap 4](https://github.com/getodk/central-frontend/issues/142). Let us know if that is something you can help with!)
 
 Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use most of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing one, you may find it useful to base the new component off the existing one.
 

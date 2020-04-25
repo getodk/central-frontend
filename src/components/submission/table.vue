@@ -1,7 +1,7 @@
 <!--
 Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
 This file is part of ODK Central. It is subject to the license terms in
 the LICENSE file found in the top-level directory of this distribution and at
@@ -109,7 +109,7 @@ export default {
           repeat = null;
           // Note that `type` may be `undefined`, though I have seen this only
           // in the Widgets sample form (<branch>):
-          // https://github.com/opendatakit/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
+          // https://github.com/getodk/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
           const { type } = field;
           if (type === 'repeat') {
             anyRepeat = true;
