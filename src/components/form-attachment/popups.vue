@@ -105,7 +105,7 @@ some point. -->
           </p>
           <p id="form-attachment-popups-current">
             <strong>Sending {{ uploadStatus.current }}</strong>
-            <span v-if="hasProgress">({{ percentLoaded }})</span>
+            <span v-if="hasProgress"> ({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
             <template v-if="uploadStatus.remaining > 1">
