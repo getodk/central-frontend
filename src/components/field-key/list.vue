@@ -1,7 +1,7 @@
 <!--
 Copyright 2017 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
 This file is part of ODK Central. It is subject to the license terms in
 the LICENSE file found in the top-level directory of this distribution and at
@@ -76,7 +76,7 @@ const POPOVER_CONTENT_TEMPLATE = `
   <div id="field-key-list-popover-content">
     <div class="field-key-list-img-container"></div>
     <div>
-      <a href="https://docs.opendatakit.org/collect-import-export/" target="_blank">
+      <a href="https://docs.getodk.org/collect-import-export/" target="_blank">
         What’s this?
       </a>
     </div>

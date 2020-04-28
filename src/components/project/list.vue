@@ -1,7 +1,7 @@
 <!--
 Copyright 2017 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/opendatakit/central-frontend/blob/master/NOTICE.
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
 This file is part of ODK Central. It is subject to the license terms in
 the LICENSE file found in the top-level directory of this distribution and at
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
             </p>
             <p>
               In addition, you can always get help from others on the
-              <a href="https://forum.opendatakit.org/" target="_blank">
+              <a href="https://forum.getodk.org/" target="_blank">
                 ODK community forum</a>,
               where you can search for previous answers or ask one of your own.
             </p>
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #body>
             <iframe id="project-list-news-iframe"
-              src="https://opendatakit.github.io/central/news.html">
+              src="https://getodk.github.io/central/news.html">
             </iframe>
           </template>
         </page-section>

@@ -138,7 +138,7 @@ fillForm() returns a promise that resolves to the wrapper.
 For example:
 
   fillForm(component, [
-    ['input[type="email"]', 'email@opendatakit.org'],
+    ['input[type="email"]', 'email@getodk.org'],
     ['input[type="password"]', 'password']
   ]);
 */
