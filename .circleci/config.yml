@@ -5,8 +5,8 @@ machine:
 jobs:
   build:
     docker:
-      # Using latest LTS available on CircleCI
-      - image: circleci/node:8.11.2-browsers
+      # Using the same version as production.
+      - image: circleci/node:12.6.0-browsers
         environment:
           - CHROME_BIN: /usr/bin/google-chrome
 
@@ -18,16 +18,16 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
+          - v2-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v2-dependencies-
 
       - run: npm install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
 
       - run: npm run lint
 
