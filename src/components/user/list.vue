@@ -18,18 +18,14 @@ either is an Administrator or has no role. -->
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="showModal('newUser')">
-        <span class="icon-plus-circle"></span>Create Web User&hellip;
+        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <p>
-        Web Users have accounts on this website to oversee and administer the
-        Projects on this server. Administrators can manage anything on the site.
-        Users with no role can still be made Project Managers on any Project,
-        from that Project&rsquo;s settings.
-      </p>
-      <p>
-        For more information,
-        <doc-link to="central-users/#managing-app-users">click here</doc-link>.
-      </p>
+      <p>{{ $t('heading[0]') }}</p>
+      <i18n tag="p" :path="$tPath('heading[1].full')">
+        <template #clickHere>
+          <doc-link to="central-users/#managing-app-users">{{ $t('heading[1].clickHere') }}</doc-link>
+        </template>
+      </i18n>
     </div>
     <div class="table-actions">
       <refresh-button :configs="configsForRefresh"/>
@@ -37,10 +33,10 @@ either is an Administrator or has no role. -->
     <table id="user-list-table" class="table">
       <thead>
         <tr>
-          <th>Display Name</th>
-          <th>Email Address</th>
-          <th>Sitewide Role</th>
-          <th>Actions</th>
+          <th>{{ $t('header.displayName') }}</th>
+          <th>{{ $t('header.email') }}</th>
+          <th>{{ $t('header.sitewideRole') }}</th>
+          <th>{{ $t('header.actions') }}</th>
         </tr>
       </thead>
       <tbody v-if="users != null && adminIds != null">
@@ -144,13 +140,15 @@ export default {
       this.adminIds = null;
       this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
       this.hideModal('newUser');
-      this.$alert().success(`A user was created successfully for "${user.displayName}".`);
+      this.$alert().success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
-      const roleName = admin ? 'Administrator' : 'None';
-      this.$alert().success(`Success! "${user.displayName}" has been given a Sitewide Role of "${roleName}".`);
+      this.$alert().success(this.$t('alert.assignRole', {
+        displayName: user.displayName,
+        roleName: admin ? this.$t('role.admin') : this.$t('role.none')
+      }));
 
       /*
       Here we update this.adminIds. If the current user has also refreshed the
@@ -181,7 +179,7 @@ export default {
     },
     afterResetPassword(user) {
       this.hideModal('resetPassword');
-      this.$alert().success(`The password for "${user.displayName}" has been invalidated. An email has been sent to ${user.email} with instructions on how to proceed.`);
+      this.$alert().success(this.$t('alert.resetPassword', user));
     },
     showRetire(user) {
       this.retire.user = user;
@@ -190,7 +188,7 @@ export default {
     afterRetire(user) {
       this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
       this.hideModal('retire');
-      this.$alert().success(`The user "${user.displayName}" has been retired.`);
+      this.$alert().success(this.$t('alert.retire', user));
     }
   }
 };

@@ -14,7 +14,7 @@ export default {
     // The alert's "contextual" type: 'success', 'info', 'warning', or 'danger'.
     type: 'danger',
     message: null,
-    // `true` if the alert is visible and `false` if not.
+    // `true` if the alert should be visible and `false` if not.
     state: false,
     // The time at which the alert was last set
     at: new Date()
@@ -30,8 +30,8 @@ export default {
     hideAlert(state) {
       state.state = false;
     },
-    resetAlert(state, type = 'danger') {
-      state.type = type;
+    resetAlert(state) {
+      state.type = 'danger';
       state.message = null;
       state.state = false;
       state.at = new Date();

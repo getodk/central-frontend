@@ -325,7 +325,7 @@ describe('ProjectUserList', () => {
           .afterResponses(app => {
             app.should.alert(
               'danger',
-              'Something went wrong. "User 2" has been removed from the Project.'
+              'Something went wrong. “User 2” has been removed from the Project.'
             );
           }));
 

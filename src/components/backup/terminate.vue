@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="backup-terminate" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template slot="title">Terminate Automatic Backups</template>
-    <template slot="body">
+    <template #title>Terminate Automatic Backups</template>
+    <template #body>
       <div class="modal-introduction">
         <p>Are you sure you want to terminate your automatic backups?</p>
         <p>

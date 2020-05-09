@@ -30,11 +30,21 @@ describe('DateTime', () => {
     component.text().trim().should.equal('Today 12:34');
   });
 
-  it('renders correctly if iso is null', () => {
-    const component = mount(DateTime, {
-      propsData: { iso: null }
+  describe('iso prop is null', () => {
+    it('renders correctly if the prop blank does not exist', () => {
+      const component = mount(DateTime, {
+        propsData: { iso: null }
+      });
+      component.text().trim().should.equal('');
+      component.hasAttribute('title').should.be.false();
     });
-    component.vm.$el.title.should.equal('');
-    component.text().trim().should.equal('');
+
+    it('renders correctly if the prop blank exists', () => {
+      const component = mount(DateTime, {
+        propsData: { iso: null, blank: '(none)' }
+      });
+      component.text().trim().should.equal('(none)');
+      component.hasAttribute('title').should.be.false();
+    });
   });
 });

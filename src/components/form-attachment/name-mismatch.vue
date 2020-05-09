@@ -10,29 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" backdrop hideable @hide="$emit('hide')">
-    <template slot="title">
-      <template v-if="attachment.exists">
-        Replace File
-      </template>
-      <template v-else>
-        Upload File
-      </template>
+  <modal :state="state" backdrop hideable @hide="cancel">
+    <template #title>
+      {{ $t(attachment.exists ? 'title.replace' : 'title.upload') }}
     </template>
-    <template slot="body">
+    <template #body>
       <div class="modal-introduction">
-        <p>
-          Are you sure you want to upload <strong>{{ file.name }}</strong> as
-          <strong>{{ attachment.name }}</strong>?
-        </p>
-        <p>We are double-checking because the filenames do not match.</p>
+        <i18n tag="p" :path="$tPath('introduction[0]')">
+          <template #filename>
+            <strong>{{ file.name }}</strong>
+          </template>
+          <template #attachmentName>
+            <strong>{{ attachment.name }}</strong>
+          </template>
+        </i18n>
+        <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
         <button class="btn btn-primary" type="button" @click="confirm">
-          Yes, proceed
+          {{ $t('action.yesProceed') }}
         </button>
         <button class="btn btn-link" type="button" @click="cancel">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>

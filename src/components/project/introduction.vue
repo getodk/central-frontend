@@ -11,23 +11,31 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal :state="state" backdrop hideable @hide="$emit('hide')">
-    <template slot="title">Introducing Projects</template>
-    <template slot="body">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
       <div class="modal-introduction">
-        <p>ODK Central Beta v0.4 introduced <strong>Projects</strong>.</p>
-        <p>
-          Projects group <strong>Forms</strong> and <strong>App Users</strong>
-          together to make them easier to organize and manage, both on this
-          website and on your data collection device.
-        </p>
-        <p>
-          For more information, please see
-          <doc-link to="central-projects/">this help article</doc-link>.
-        </p>
+        <i18n tag="p" :path="$tPath('introduction[0].full')">
+          <template #projects>
+            <strong>{{ $t('introduction[0].projects') }}</strong>
+          </template>
+        </i18n>
+        <i18n tag="p" :path="$tPath('introduction[1].full')">
+          <template #forms>
+            <strong>{{ $t('introduction[1].forms') }}</strong>
+          </template>
+          <template #appUsers>
+            <strong>{{ $t('introduction[1].appUsers') }}</strong>
+          </template>
+        </i18n>
+        <i18n tag="p" :path="$tPath('introduction[2].full')">
+          <template #helpArticle>
+            <doc-link to="central-projects/">{{ $t('introduction[2].helpArticle') }}</doc-link>
+          </template>
+        </i18n>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
-          Okay
+          {{ $t('action.ok') }}
         </button>
       </div>
     </template>

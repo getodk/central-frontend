@@ -11,17 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-edit" class="panel panel-simple">
-    <div class="panel-heading"><h1 class="panel-title">Basic Details</h1></div>
+    <div class="panel-heading">
+      <h1 class="panel-title">{{ $t('title') }}</h1>
+    </div>
     <div class="panel-body">
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input v-model.trim="name" class="form-control"
-            placeholder="Project name *" required>
-          <span class="form-label">Project name *</span>
-        </label>
-        <button :disabled="awaitingResponse" type="submit"
-          class="btn btn-primary">
-          Save settings <spinner :state="awaitingResponse"/>
+        <form-group v-model.trim="name" :placeholder="$t('field.name')" required
+          autocomplete="off"/>
+        <button type="submit" class="btn btn-primary"
+          :disabled="awaitingResponse">
+          {{ $t('action.update') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>
     </div>
@@ -29,6 +28,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
@@ -37,7 +37,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEdit',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     return {
@@ -60,7 +60,7 @@ export default {
               updatedAt: response.data.updatedAt
             })
           });
-          this.$alert().success('Project settings saved!');
+          this.$alert().success(this.$t('alert.success'));
         })
         .catch(noop);
     }

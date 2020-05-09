@@ -16,6 +16,7 @@ import Vue from 'vue';
 // setup.js imports modules matters.
 import './setup';
 import App from './components/app.vue';
+import i18n from './i18n';
 import router from './router';
 import store from './store';
 
@@ -23,5 +24,6 @@ new Vue({ // eslint-disable-line no-new
   el: '#app',
   render: (h) => h(App),
   router,
-  store
+  store,
+  i18n
 });

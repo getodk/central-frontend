@@ -16,22 +16,17 @@ except according to the terms contained in the LICENSE file.
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
-        <span class="icon-cloud-upload"></span>Upload files&hellip;
+        <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
       </button>
-      <div>
-        Based on the Form you uploaded, the following files are expected. You
-        can see which ones have been uploaded or are still missing.
-      </div>
-      <div>
-        To upload files, drag and drop one or more files onto the page.
-      </div>
+      <div>{{ $t('heading[0]') }}</div>
+      <div>{{ $t('heading[1]') }}</div>
     </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
         <tr>
-          <th class="form-attachment-list-type">Type</th>
-          <th class="form-attachment-list-name">Name</th>
-          <th class="form-attachment-list-uploaded">Uploaded</th>
+          <th class="form-attachment-list-type">{{ $t('header.type') }}</th>
+          <th class="form-attachment-list-name">{{ $t('header.name') }}</th>
+          <th class="form-attachment-list-uploaded">{{ $t('header.uploaded') }}</th>
         </tr>
       </thead>
       <tbody v-if="form != null && attachments != null">
@@ -96,8 +91,6 @@ export default {
            - fileIsOverDropZone. Indicates whether there is a file over the drop
              zone. Its value is managed by the dropZone mixin.
            - countOfFilesOverDropZone. The number of files over the drop zone.
-             It is -1 if there are files, but we do not know how many (an issue
-             in IE).
            - dragoverAttachment. Only applicable for
              countOfFilesOverDropZone === 1. When the user drags a single file
              over a row, dragoverAttachment is the attachment that corresponds
@@ -178,14 +171,12 @@ export default {
     ////////////////////////////////////////////////////////////////////////////
     // DRAG AND DROP
 
-    // maybeItems is either a DataTransferItemList or null.
-    fileItemCount(maybeItems) {
-      // IE
-      if (maybeItems == null) return -1;
+    // `items` is a DataTransferItemList.
+    fileItemCount(items) {
       let count = 0;
-      // maybeItems is not an Array, hence the style of for-loop.
-      for (let i = 0; i < maybeItems.length; i += 1)
-        if (maybeItems[i].kind === 'file') count += 1;
+      // `items` is not an Array, hence the style of for-loop.
+      for (let i = 0; i < items.length; i += 1)
+        if (items[i].kind === 'file') count += 1;
       return count;
     },
     ondragenter(jQueryEvent) {
@@ -279,8 +270,11 @@ export default {
           resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
         };
         reader.onerror = () => {
-          if (this.$store.state.router.currentRoute === currentRoute)
-            this.$alert().danger(`Something went wrong while reading "${file.name}".`);
+          if (this.$store.state.router.currentRoute === currentRoute) {
+            this.$alert().danger(this.$t('alert.readError', {
+              filename: file.name
+            }));
+          }
           reject(new Error());
         };
         reader.readAsText(file);
@@ -315,13 +309,14 @@ export default {
               this.uploadStatus.progress = progressEvent;
             },
             problemToAlert: ({ message }) => {
-              if (this.uploadStatus.total === 1) return null;
-              const uploaded = this.uploadStatus.total -
-                this.uploadStatus.remaining;
-              const summary = uploaded !== 0
-                ? `Only ${uploaded} of ${this.uploadStatus.total} files ${this.$pluralize('was', uploaded)} successfully uploaded.`
-                : 'No files were successfully uploaded.';
-              return `${message} ${summary}`;
+              const { total } = this.uploadStatus;
+              if (total === 1) return null;
+              const uploaded = total - this.uploadStatus.remaining;
+              return this.$tc('problem.default', uploaded, {
+                message,
+                uploaded: uploaded.toLocaleString(),
+                total: total.toLocaleString()
+              });
             }
           });
         })
@@ -363,11 +358,8 @@ export default {
         .catch(noop)
         .finally(() => {
           if (this.$store.state.router.currentRoute !== currentRoute) return;
-          if (updated.length === this.uploadStatus.total) {
-            this.$alert().success(updated.length === 1
-              ? '1 file has been successfully uploaded.'
-              : `${updated.length} files have been successfully uploaded.`);
-          }
+          if (updated.length === this.uploadStatus.total)
+            this.$alert().success(this.$tc('alert.success', updated.length));
           for (const attachment of updated)
             this.updateAttachment(attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };

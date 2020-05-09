@@ -12,28 +12,25 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="user-retire" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template slot="title">Retiring User</template>
-    <template slot="body">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
       <div class="modal-introduction">
-        <p v-if="user != null">
-          You are about to retire the user account “{{ user.displayName }}”
-          &lt;{{ user.email }}&gt;. They will be immediately barred from
-          performing any actions and logged out.
-        </p>
-        <p>
-          <strong>This action cannot be undone</strong>, but a new account can
-          always be created for that person with the same email address.
-        </p>
-        <p>Are you sure you wish to proceed?</p>
+        <p v-if="user != null">{{ $t('introduction[0]', user) }}</p>
+        <i18n tag="p" :path="$tPath('introduction[1].full')">
+          <template #noUndo>
+            <strong>{{ $t('introduction[1].noUndo') }}</strong>
+          </template>
+        </i18n>
+        <p>{{ $t('introduction[2]') }}</p>
       </div>
       <div class="modal-actions">
         <button :disabled="awaitingResponse" type="button"
           class="btn btn-danger" @click="retire">
-          Yes, I am sure <spinner :state="awaitingResponse"/>
+          {{ $t('action.yesConfirm') }} <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>

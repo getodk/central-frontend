@@ -14,27 +14,30 @@ except according to the terms contained in the LICENSE file.
     <td>
       <div class="project-row-name">
         <router-link :to="projectPath(project.id)">
-          {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+          {{ project.nameWithArchived() }}
           <span class="icon-angle-right"></span>
         </router-link>
       </div>
       <div v-if="showsIntroductionLink">
         <a href="#" @click.prevent="$emit('show-introduction')">
-          What are Projects?
+          {{ $t('help') }}
         </a>
       </div>
     </td>
-    <td>{{ $pluralize('Form', project.forms, true) }}</td>
-    <td>{{ lastSubmission }}</td>
+    <td>{{ $tc('count.form', project.forms) }}</td>
+    <td>
+      <date-time :iso="project.lastSubmission" :blank="$t('common.none')"/>
+    </td>
   </tr>
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'ProjectRow',
+  components: { DateTime },
   mixins: [routes()],
   props: {
     projectCount: {
@@ -50,9 +53,6 @@ export default {
     showsIntroductionLink() {
       return this.projectCount === 1 &&
         this.project.name === 'Default Project' && this.project.forms === 0;
-    },
-    lastSubmission() {
-      return formatDate(this.project.lastSubmission, '(none)');
     }
   }
 };

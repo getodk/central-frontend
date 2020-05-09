@@ -32,11 +32,8 @@ are Project Manager and Project Viewer. -->
         aria-label="Clear search" @click="clearSearch">
         <span aria-hidden="true">&times;</span>
       </button>
-      <label class="form-group">
-        <input class="form-control" :value="q" :placeholder="searchLabel"
-          :disabled="searchDisabled" @change="changeQ($event.target.value)">
-        <span class="form-label">{{ searchLabel }}</span>
-      </label>
+      <form-group :value="q" :placeholder="searchLabel"
+        :disabled="searchDisabled" autocomplete="off" @change="changeQ"/>
     </form>
 
     <table class="table">
@@ -62,6 +59,7 @@ are Project Manager and Project Viewer. -->
 
 <script>
 import DocLink from '../../doc-link.vue';
+import FormGroup from '../../form-group.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
 import validateData from '../../../mixins/validate-data';
@@ -71,7 +69,7 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow },
+  components: { DocLink, FormGroup, Loading, ProjectUserRow },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -224,11 +222,14 @@ export default {
 
       // Show the alert.
       if (deleteWithoutPost) {
-        this.$alert().danger(`Something went wrong. "${actor.displayName}" has been removed from the Project.`);
+        this.$alert().danger(this.$t('alert.unassignWithoutReassign', actor));
+      } else if (role != null) {
+        this.$alert().success(this.$t('alert.assignRole', {
+          displayName: actor.displayName,
+          roleName: role.name
+        }));
       } else {
-        this.$alert().success(role != null
-          ? `Success! "${actor.displayName}" has been given a Role of "${role.name}" on this Project.`
-          : `Success! "${actor.displayName}" has been removed from this Project.`);
+        this.$alert().success(this.$t('alert.unassignRole', actor));
       }
     }
   }

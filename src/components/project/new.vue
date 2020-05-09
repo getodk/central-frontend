@@ -12,33 +12,29 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="project-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')" @shown="focusInput">
-    <template slot="title">Create Project</template>
-    <template slot="body">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
       <div class="modal-introduction">
-        <p>
-          Projects group Forms and App Users together to make them easier to
-          organize and manage, both on this website and on your data collection
-          device.
-        </p>
-        <p>
-          For more information, please see
-          <doc-link to="central-projects/">this help article</doc-link>.
-        </p>
+        <p>{{ $t('introduction[0]') }}</p>
+        <i18n tag="p" :path="$tPath('introduction[1].full')">
+          <template #helpArticle>
+            <doc-link to="central-projects/">{{ $t('introduction[1].helpArticle') }}</doc-link>
+          </template>
+        </i18n>
       </div>
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input ref="name" v-model.trim="name" :disabled="awaitingResponse"
-            class="form-control" placeholder="My Project name *" required>
-          <span class="form-label">Name *</span>
-        </label>
+        <form-group ref="name" v-model.trim="name"
+          :placeholder="$t('namePlaceholder')" required autocomplete="off">
+          <template #label>{{ $t('field.name') }}</template>
+        </form-group>
         <div class="modal-actions">
           <button :disabled="awaitingResponse" type="submit"
             class="btn btn-primary">
-            Create <spinner :state="awaitingResponse"/>
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
           <button :disabled="awaitingResponse" type="button"
             class="btn btn-link" @click="$emit('hide')">
-            Cancel
+            {{ $t('action.cancel') }}
           </button>
         </div>
       </form>
@@ -48,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -55,7 +52,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectNew',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {

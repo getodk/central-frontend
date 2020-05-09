@@ -15,28 +15,27 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-6">
         <div class="panel panel-simple">
           <div class="panel-heading">
-            <h1 class="panel-title">Form State</h1>
+            <h1 class="panel-title">{{ $t('state.title') }}</h1>
           </div>
           <div class="panel-body">
-            <p>
-              To set this Form&rsquo;s state, please visit the Project
-              <router-link :to="projectPath('form-access')">
-                <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-                Form Access settings</router-link>.
-            </p>
+            <i18n tag="p" :path="$tPath('state.body.full')">
+              <template #formAccessSettings>
+                <router-link :to="projectPath('form-access')">{{ $t('state.body.formAccessSettings') }}</router-link>
+              </template>
+            </i18n>
           </div>
         </div>
       </div>
       <div class="col-xs-6">
         <div class="panel panel-simple-danger">
           <div class="panel-heading">
-            <h1 class="panel-title">Danger Zone</h1>
+            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
           </div>
           <div class="panel-body">
             <p>
               <button type="button" class="btn btn-danger"
                 @click="showModal('deleteForm')">
-                Delete this Form&hellip;
+                {{ $t('action.delete') }}&hellip;
               </button>
             </p>
           </div>
@@ -72,7 +71,9 @@ export default {
   methods: {
     afterDelete(form) {
       this.$router.push(this.projectPath(), () => {
-        this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
+        this.$alert().success(this.$t('alert.delete', {
+          name: form.nameOrId()
+        }));
       });
     }
   }

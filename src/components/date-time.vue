@@ -21,7 +21,8 @@ import { formatDate } from '../util/date-time';
 export default {
   name: 'DateTime',
   props: {
-    iso: String // eslint-disable-line vue/require-default-prop
+    iso: String, // eslint-disable-line vue/require-default-prop
+    blank: String // eslint-disable-line vue/require-default-prop
   },
   computed: {
     title() {
@@ -30,7 +31,7 @@ export default {
         : null;
     },
     text() {
-      return formatDate(this.iso);
+      return formatDate(this.iso, this.blank);
     }
   }
 };

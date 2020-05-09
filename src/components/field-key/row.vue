@@ -12,16 +12,18 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="{ success: fieldKey.id === highlighted }">
     <td>{{ fieldKey.displayName }}</td>
-    <td>{{ created }}</td>
-    <td>{{ lastUsed }}</td>
+    <td>
+      <time-and-user :iso="fieldKey.createdAt" :user="fieldKey.createdBy"/>
+    </td>
+    <td><date-time :iso="fieldKey.lastUsed"/></td>
     <td>
       <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
         class="field-key-row-popover-link" role="button"
         @click.prevent="showCode">
-        <span class="icon-qrcode"></span>See code
+        <span class="icon-qrcode"></span>{{ $t('seeCode') }}
       </a>
       <template v-else>
-        Access revoked
+        {{ $t('accessRevoked') }}
       </template>
     </td>
     <td>
@@ -33,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsId" class="dropdown-menu">
           <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="revoke">Revoke access&hellip;</a>
+            <a href="#" @click.prevent="revoke">{{ $t('revokeAccess') }}&hellip;</a>
           </li>
         </ul>
       </div>
@@ -42,10 +44,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { formatDate } from '../../util/date-time';
+import DateTime from '../date-time.vue';
+import TimeAndUser from '../time-and-user.vue';
 
 export default {
   name: 'FieldKeyRow',
+  components: { DateTime, TimeAndUser },
   props: {
     fieldKey: {
       type: Object,
@@ -54,14 +58,6 @@ export default {
     highlighted: Number // eslint-disable-line vue/require-default-prop
   },
   computed: {
-    created() {
-      const createdAt = formatDate(this.fieldKey.createdAt);
-      const createdBy = this.fieldKey.createdBy.displayName;
-      return `${createdAt} by ${createdBy}`;
-    },
-    lastUsed() {
-      return formatDate(this.fieldKey.lastUsed);
-    },
     actionsId() {
       return `field-key-row-actions${this.fieldKey.id}`;
     }

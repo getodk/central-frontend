@@ -243,7 +243,7 @@ export default {
       this.put(apiPaths.project(this.projectId), this.projectToSave)
         .then(() => {
           this.fetchData(true);
-          this.$alert().success('Your changes have been saved!');
+          this.$alert().success(this.$t('alert.success'));
           this.$store.commit('setUnsavedChanges', false);
           this.changesByForm = null;
           this.changeCount = 0;

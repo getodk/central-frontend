@@ -13,13 +13,13 @@ except according to the terms contained in the LICENSE file.
   <table class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Created by</th>
-        <th>Last Modified</th>
-        <th>Last Submission</th>
+        <th>{{ $t('header.name') }}</th>
+        <th>{{ $t('header.createdBy') }}</th>
+        <th>{{ $t('header.publishedAt') }}</th>
+        <th>{{ $t('header.lastSubmission') }}</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-if="forms != null">
       <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
     </tbody>
   </table>
@@ -32,6 +32,8 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormTable',
   components: { FormRow },
+  // The component does not assume that this data will exist when the component
+  // is created.
   computed: requestData(['forms'])
 };
 </script>

@@ -95,4 +95,15 @@ describe('BackupNew', () => {
     it('shows a success alert', () =>
       completeSetup(App).then(app => app.should.alert('success')));
   });
+
+  it('shows a custom alert message', () =>
+    moveToStep3(BackupNew)
+      .request(next3)
+      .respondWithProblem({ code: 500.1, message: 'Failed: BackupNew.' })
+      .afterResponse(modal => {
+        modal.should.alert(
+          'danger',
+          'Failed: BackupNew. Please try again, and go to the community forum if the problem continues.'
+        );
+      }));
 });

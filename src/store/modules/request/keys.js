@@ -89,6 +89,17 @@ export const transforms = {
 // RECONCILE DATA
 
 reconcileData.add(
+  'project', 'forms',
+  (project, forms, commit) => {
+    if (project.forms !== forms.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ forms: forms.length })
+      });
+    }
+  }
+);
+reconcileData.add(
   'formDraft', 'attachments',
   (formDraft, attachments, commit) => {
     if (formDraft.isDefined() && attachments.isEmpty())

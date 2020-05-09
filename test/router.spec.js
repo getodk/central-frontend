@@ -1,11 +1,72 @@
 import FormAttachmentList from '../src/components/form-attachment/list.vue';
 import SubmissionList from '../src/components/submission/list.vue';
+import i18n from '../src/i18n';
 import testData from './data';
 import { load, mockRoute } from './util/http';
+import { loadLocale } from '../src/util/i18n';
 import { mockLogin, mockRouteThroughLogin } from './util/session';
 import { trigger } from './util/event';
 
 describe('router', () => {
+  describe('i18n', () => {
+    before(() => {
+      const { navigator } = window;
+      const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
+      has.should.be.false();
+    });
+    afterEach(() => {
+      delete window.navigator.language;
+      return loadLocale('en');
+    });
+
+    const setLanguage = (locale) => {
+      Object.defineProperty(window.navigator, 'language', {
+        value: locale,
+        configurable: true
+      });
+    };
+
+    it("loads the user's preferred language", () => {
+      setLanguage('es');
+      return mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
+
+    it('loads a less specific locale', () => {
+      setLanguage('es-ES');
+      return mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
+
+    it('falls back to en for a locale that is not defined', () => {
+      setLanguage('yi');
+      return mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(() => {
+          i18n.locale.should.equal('en');
+        });
+    });
+
+    it('only loads the language before the first navigation', () => {
+      setLanguage('es');
+      return mockRoute('/login')
+        .restoreSession(false)
+        .afterResponse(() => {
+          setLanguage('en');
+        })
+        .route('/reset-password')
+        .then(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
+  });
+
   describe('use of next query param after login', () => {
     it('redirects the user to / if there is no param', () =>
       mockRouteThroughLogin('/login')
@@ -443,14 +504,12 @@ describe('router', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() =>
           testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app => {
-          const files = [new File([''], 'a')];
-          return trigger.dragAndDrop(app, FormAttachmentList, { files })
+        .afterResponses(app =>
+          trigger.dragAndDrop(app, FormAttachmentList, [new File([''], 'a')])
             .then(() => {
               const { unmatchedFiles } = app.first(FormAttachmentList).data();
               unmatchedFiles.length.should.equal(1);
-            });
-        })
+            }))
         .route('/projects/1/forms/f2/draft/attachments')
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f2', draft: true })

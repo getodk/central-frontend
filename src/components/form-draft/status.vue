@@ -145,7 +145,7 @@ export default {
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
-      this.$alert().success('Success! The new Form definition has been saved as your Draft.');
+      this.$alert().success(this.$t('alert.upload'));
     },
     clearDraft() {
       this.$store.commit('setData', {
@@ -162,18 +162,20 @@ export default {
       this.$store.commit('clearData', 'formVersions');
       this.clearDraft();
       this.$router.push(this.formPath(), () => {
-        this.$alert().success('Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.');
+        this.$alert().success(this.$t('alert.publish'));
       });
     },
     afterAbandon(form) {
       if (form.publishedAt != null) {
         this.clearDraft();
         this.$router.push(this.formPath(), () => {
-          this.$alert().success('The Draft version of this Form has been successfully deleted.');
+          this.$alert().success(this.$t('alert.abandon'));
         });
       } else {
         this.$router.push(this.projectPath(), () => {
-          this.$alert().success(`The Form "${form.nameOrId()}" was deleted.`);
+          this.$alert().success(this.$t('alert.delete', {
+            name: form.nameOrId()
+          }));
         });
       }
     }

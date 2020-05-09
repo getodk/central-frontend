@@ -41,7 +41,7 @@ export default class Form extends Base(props) {
 
   versionOrBlank() {
     if (this.version == null) return null;
-    return this.version !== '' ? this.version : '(blank)';
+    return this.version !== '' ? this.version : this.t('common.blank');
   }
 
   updatedOrCreatedAt() {

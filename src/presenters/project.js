@@ -31,6 +31,10 @@ export default class Project extends Base(props) {
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
   }
 
+  nameWithArchived() {
+    return this.archived ? this.t('nameWithArchived', this.object) : this.name;
+  }
+
   permits(verbOrVerbs) {
     return !Array.isArray(verbOrVerbs)
       ? this._verbSet.has(verbOrVerbs)

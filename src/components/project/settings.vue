@@ -110,9 +110,9 @@ export default {
       this.hideModal('enableEncryption');
       this.$emit('fetch-project');
     },
-    afterArchive() {
+    afterArchive(project) {
       this.$router.push(this.projectPath(), () => {
-        this.$alert().success(`The Project "${this.project.name}" was archived.`);
+        this.$alert().success(this.$t('alert.archive', project));
       });
     }
   }

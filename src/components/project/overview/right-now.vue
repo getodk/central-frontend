@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section id="project-overview-right-now">
     <template #heading>
-      <span>Right Now</span>
+      <span>{{ $t('common.rightNow') }}</span>
     </template>
     <template #body>
       <summary-item :route-to="projectPath('app-users')" icon="user-circle">
@@ -22,22 +22,21 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template #body>
           <p>
-            <strong>{{ $pluralize('App User', project.appUsers) }}</strong> who
-            can use a data collection client to download and submit Form data to
-            this Project.
+            <strong>{{ $tc('plural.appUser', project.appUsers) }}</strong>
+            {{ $tc('appUsersCaption', project.appUsers) }}
           </p>
         </template>
       </summary-item>
       <summary-item clickable icon="file-text"
         @click="$emit('scroll-to-forms')">
         <template #heading>
-          {{ forms.length.toLocaleString() }}
+          {{ project.forms.toLocaleString() }}
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
           <p>
-            <strong>{{ $pluralize('Form', forms.length) }}</strong> which can be
-            downloaded and given as surveys on mobile clients.
+            <strong>{{ $tc('plural.form', project.forms) }}</strong>
+            {{ $tc('formsCaption', project.forms) }}
           </p>
         </template>
       </summary-item>
@@ -55,7 +54,7 @@ export default {
   name: 'ProjectOverviewRightNow',
   components: { PageSection, SummaryItem },
   mixins: [routes()],
-  computed: requestData(['project', 'forms'])
+  computed: requestData(['project'])
 };
 </script>
 

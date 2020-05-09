@@ -176,7 +176,7 @@ export default {
 @import '../../assets/scss/variables';
 
 .audit-row {
-  td {
+  .table tbody & td {
     vertical-align: middle;
   }
 

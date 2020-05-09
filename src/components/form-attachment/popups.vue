@@ -19,101 +19,76 @@ some point. -->
     <div v-show="state" id="form-attachment-popups-main" class="modal-content">
       <div class="modal-header">
         <span class="icon-cloud-upload"></span>
-        <h4 class="modal-title">Upload Files</h4>
+        <h4 class="modal-title">{{ $t('title') }}</h4>
       </div>
       <div class="modal-body">
         <template v-if="shownDuringDragover">
-          <p>
-            <template v-if="dragoverAttachment != null">
-              Drop now to upload this file as
-              <strong>{{ dragoverAttachment.name }}</strong>.
+          <i18n v-if="dragoverAttachment != null" tag="p"
+            :path="$tPath('duringDragover.dropToUpload')">
+            <template #attachmentName>
+              <strong>{{ dragoverAttachment.name }}</strong>
             </template>
-            <template v-else-if="countOfFilesOverDropZone === 1">
-              Drag over the file entry you wish to replace with the file and
-              drop to upload.
-            </template>
-            <template v-else-if="countOfFilesOverDropZone > 1">
-              Drop now to prepare
-              <strong>{{ countOfFilesOverDropZone.toLocaleString() }}
-              files</strong> for upload to this Form.
-            </template>
-            <!-- countOfFilesOverDropZone === -1 -->
-            <template v-else>
-              Drop now to upload to this Form.
-            </template>
+          </i18n>
+          <p v-else-if="countOfFilesOverDropZone === 1">
+            {{ $t('duringDragover.dragover') }}
           </p>
+          <i18n v-else tag="p"
+            :path="$tPath('duringDragover.dropToPrepare.full')">
+            <template #countOfFiles>
+              <strong>{{ $tc('duringDragover.dropToPrepare.countOfFiles', countOfFilesOverDropZone) }}</strong>
+            </template>
+          </i18n>
         </template>
         <template v-else-if="shownAfterSelection">
           <template v-if="plannedUploads.length !== 0">
-            <p>
-              <strong>{{ plannedUploads.length.toLocaleString() }}
-              {{ $pluralize('file', plannedUploads.length) }}</strong> ready for
-              upload.
-            </p>
+            <i18n tag="p"
+              :path="$tcPath('afterSelection.matched.full', plannedUploads.length)">
+              <template #countOfFiles>
+                <strong>{{ $tc('afterSelection.matched.countOfFiles', plannedUploads.length) }}</strong>
+              </template>
+            </i18n>
             <p v-show="unmatchedFiles.length !== 0"
               id="form-attachment-popups-unmatched">
-              <template v-if="unmatchedFiles.length === 1">
-                <span class="icon-exclamation-triangle">
-                </span><strong>1 file</strong> has a name we don’t recognize and
-                will be ignored. To upload it, rename it or drag it onto its
-                target.
-              </template>
-              <template v-else>
-                <span class="icon-exclamation-triangle">
-                </span><strong>{{ unmatchedFiles.length.toLocaleString() }}
-                files</strong> have a name we don’t recognize and will be
-                ignored. To upload them, rename them or drag them individually
-                onto their targets.
-              </template>
+              <span class="icon-exclamation-triangle"></span>
+              <i18n
+                :path="$tcPath('afterSelection.someUnmatched.full', unmatchedFiles.length)">
+                <template #countOfFiles>
+                  <strong>{{ $tc('afterSelection.someUnmatched.countOfFiles', unmatchedFiles.length) }}</strong>
+                </template>
+              </i18n>
             </p>
             <p>
               <button type="button" class="btn btn-primary"
                 @click="$emit('confirm')">
-                Looks good, proceed
+                {{ $t('action.looksGood') }}
               </button>
               <button type="button" class="btn btn-link"
                 @click="$emit('cancel')">
-                Cancel
+                {{ $t('action.cancel') }}
               </button>
             </p>
           </template>
           <template v-else>
             <p>
-              <template v-if="unmatchedFiles.length === 1">
-                We don’t recognize the file you are trying to upload. Please
-                rename it to match the names listed above, or drag it
-                individually onto its target.
-              </template>
-              <template v-else>
-                We don’t recognize any of the files you are trying to upload.
-                Please rename them to match the names listed above, or drag them
-                individually onto their targets.
-              </template>
+              {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
             </p>
             <p>
               <button type="button" class="btn btn-primary"
                 @click="$emit('cancel')">
-                Okay
+                {{ $t('action.ok') }}
               </button>
             </p>
           </template>
         </template>
         <template v-else-if="shownDuringUpload">
-          <p>
-            Please wait, uploading your
-            {{ $pluralize('file', uploadStatus.total) }}:
-          </p>
+          <p>{{ $tc('duringUpload.total', uploadStatus.total) }}</p>
           <p id="form-attachment-popups-current">
-            <strong>Sending {{ uploadStatus.current }}</strong>
-            <span v-if="hasProgress"> ({{ percentLoaded }})</span>
+            <strong>{{ $t('duringUpload.current', { filename: uploadStatus.current }) }}</strong>
+            &nbsp;
+            <span v-if="hasProgress">({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
-            <template v-if="uploadStatus.remaining > 1">
-              {{ uploadStatus.remaining.toLocaleString() }} files remain.
-            </template>
-            <template v-else>
-              This is the last file.
-            </template>
+            {{ $tc('duringUpload.remaining', uploadStatus.remaining) }}
           </p>
         </template>
       </div>
@@ -154,8 +129,9 @@ export default {
       return this.countOfFilesOverDropZone !== 0;
     },
     shownAfterSelection() {
-      // If the user dropped a single file over a row (and we are not in IE),
-      // FormAttachmentNameMismatch is shown, not FormAttachmentPopups.
+      // If the user dropped a single file over a row, then
+      // FormAttachmentPopups is not used to confirm the selection:
+      // FormAttachmentNameMismatch is.
       return (this.plannedUploads.length !== 0 && !this.nameMismatch.state) ||
         this.unmatchedFiles.length !== 0;
     },
@@ -288,5 +264,4 @@ $popup-width: 300px;
     transform: translateY(-9px);
   }
 }
-
 </style>

@@ -21,35 +21,34 @@ except according to the terms contained in the LICENSE file.
         {{ form.xmlFormId }}
       </div>
       <div class="form-row-submissions">
-        {{ $pluralize('submission', form.submissions, true) }}
+        {{ $tc('count.submission', form.submissions) }}
       </div>
     </td>
-    <td>{{ form.createdBy != null ? form.createdBy.displayName : '' }}</td>
-    <td>{{ updatedOrCreatedAt }}</td>
-    <td>{{ lastSubmission }}</td>
+    <td class="form-row-created-by">
+      <link-if-can v-if="form.createdBy != null"
+        :to="userPath(form.createdBy.id)" :title="form.createdBy.displayName">
+        {{ form.createdBy.displayName }}
+      </link-if-can>
+    </td>
+    <td><date-time :iso="form.publishedAt"/></td>
+    <td><date-time :iso="form.lastSubmission"/></td>
   </tr>
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
+import LinkIfCan from '../link-if-can.vue';
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'FormRow',
+  components: { DateTime, LinkIfCan },
   mixins: [routes()],
   props: {
     form: {
       type: Form,
       required: true
-    }
-  },
-  computed: {
-    updatedOrCreatedAt() {
-      return formatDate(this.form.updatedOrCreatedAt());
-    },
-    lastSubmission() {
-      return formatDate(this.form.lastSubmission);
     }
   }
 };
@@ -58,7 +57,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-.form-row td {
+.table tbody .form-row td {
   vertical-align: middle;
 }
 
@@ -70,7 +69,7 @@ export default {
     text-decoration: none;
   }
 
-  .icon-angle-right {
+  .icon-angle-right:first-child {
     color: $color-accent-primary;
     font-size: 20px;
     margin-left: 3px;
@@ -81,5 +80,11 @@ export default {
 
 .form-row-form-id {
   font-size: 18px;
+}
+
+.form-row-created-by {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

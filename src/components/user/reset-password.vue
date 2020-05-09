@@ -12,22 +12,24 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template slot="title">Reset Password</template>
-    <template slot="body">
-      <p v-if="user != null" class="modal-introduction">
-        Once you click <strong>Reset Password</strong> below, the password for
-        the user “{{ user.displayName }}” &lt;{{ user.email }}&gt; will be
-        immediately invalidated. An email will be sent to {{ user.email }} with
-        instructions on how to proceed.
-      </p>
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <i18n v-if="user != null" tag="p" :path="$tPath('introduction.full')"
+        class="modal-introduction">
+        <template #resetPassword>
+          <strong>{{ $t('introduction.resetPassword') }}</strong>
+        </template>
+        <template #displayName>{{ user.displayName }}</template>
+        <template #email>{{ user.email }}</template>
+      </i18n>
       <div class="modal-actions">
         <button id="user-reset-password-button" :disabled="awaitingResponse"
           type="button" class="btn btn-primary" @click="resetPassword">
-          Reset password <spinner :state="awaitingResponse"/>
+          {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
-          Close
+          {{ $t('action.close') }}
         </button>
       </div>
     </template>

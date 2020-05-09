@@ -12,12 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section id="form-overview-right-now" condensed>
     <template #heading>
-      <span>Right Now</span>
+      <span>{{ $t('common.rightNow') }}</span>
     </template>
     <template #body>
       <form-version-summary-item :version="form">
         <template #body>
-          <p><strong>Published version</strong> of this Form.</p>
+          <i18n tag="p" :path="$tPath('versionCaption.full')">
+            <template #publishedVersion>
+              <strong>{{ $t('versionCaption.publishedVersion') }}</strong>
+            </template>
+          </i18n>
         </template>
       </form-version-summary-item>
       <summary-item :route-to="formPath('submissions')" icon="inbox">
@@ -26,12 +30,8 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <template v-if="form.submissions === 1">
-            <strong>Submission</strong> has been saved for this Form.
-          </template>
-          <template v-else>
-            <strong>Submissions</strong> have been saved for this Form.
-          </template>
+          <strong>{{ $tc('plural.submission', form.submissions) }}</strong>
+          {{ $tc('submissionsCaption', form.submissions) }}
         </template>
       </summary-item>
     </template>

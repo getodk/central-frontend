@@ -20,12 +20,8 @@ except according to the terms contained in the LICENSE file.
         download, after which I will forget it again.
       </p>
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input ref="passphrase" v-model="passphrase" type="password"
-            class="form-control" placeholder="Passphrase *" required
-            autocomplete="off">
-          <span class="form-label">Passphrase *</span>
-        </label>
+        <form-group ref="passphrase" v-model="passphrase" type="password"
+          placeholder="Passphrase" required autocomplete="off"/>
         <p v-if="managedKey != null && managedKey.hint != null"
           class="modal-introduction">
           Hint: {{ managedKey.hint }}
@@ -47,12 +43,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDecrypt',
-  components: { Modal },
+  components: { FormGroup, Modal },
   props: {
     state: {
       type: Boolean,
@@ -153,7 +151,7 @@ export default {
             } catch (e) {
               this.$logger.error('cannot parse Problem');
             }
-            if (problem != null) {
+            if (isProblem(problem)) {
               this.$logger.error(problem);
               if (problem.message != null)
                 this.$alert().danger(problem.message);
@@ -191,7 +189,7 @@ export default {
       // the result of the request if a Problem is returned: if a Problem is
       // returned, the iframe will change pages, but if the download is
       // successful, the iframe seems not to change.
-      this.$alert().info('Your data download should begin soon. If you have been waiting and it has not started, please try again.');
+      this.$alert().info(this.$t('alert.submitted'));
 
       this.problemChecks = 300;
       if (this.timeoutId == null) this.scheduleProblemCheck();

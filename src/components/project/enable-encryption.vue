@@ -106,16 +106,10 @@ except according to the terms contained in the LICENSE file.
           </p>
         </div>
         <form @submit.prevent="submit">
-          <label class="form-group">
-            <input ref="passphrase" v-model="passphrase" class="form-control"
-              placeholder="Passphrase *" required autocomplete="off">
-            <span class="form-label">Passphrase *</span>
-          </label>
-          <label class="form-group">
-            <input v-model.trim="hint" class="form-control"
-              placeholder="Passphrase hint (optional)" autocomplete="off">
-            <span class="form-label">Passphrase hint (optional)</span>
-          </label>
+          <form-group ref="passphrase" v-model="passphrase"
+            placeholder="Passphrase" required autocomplete="off"/>
+          <form-group v-model="hint" placeholder="Passphrase hint (optional)"
+            autocomplete="off"/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-primary"
               :disabled="awaitingResponse">
@@ -150,6 +144,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -159,7 +154,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {

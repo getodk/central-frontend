@@ -78,7 +78,7 @@ export default {
               updatedAt: response.data.updatedAt
             })
           });
-          this.$emit('success');
+          this.$emit('success', this.project);
         })
         .catch(noop);
     }

@@ -11,6 +11,12 @@ except according to the terms contained in the LICENSE file.
 */
 export default {
   state: {
+    // We define this property because we need to access the current route
+    // elsewhere in the store. An alternative might be to import the router and
+    // use router.currentRoute. However, that is not possible, because the
+    // router itself imports the store: we would have a circular dependency.
+    // Instead, we have the router import the store, then save the current route
+    // here as well.
     currentRoute: null,
     navigations: {
       first: {
@@ -34,6 +40,9 @@ export default {
         confirmed: false
       }
     },
+    // Indicates whether the router should load the locale file before the next
+    // navigation.
+    loadLocale: true,
     unsavedChanges: false
   },
   mutations: {
@@ -55,7 +64,11 @@ export default {
       navigations.first.confirmed = false;
       navigations.last.triggered = false;
       navigations.last.confirmed = false;
+      state.loadLocale = true;
       state.unsavedChanges = false;
+    },
+    setLoadLocale(state, loadLocale) {
+      state.loadLocale = loadLocale;
     },
     setUnsavedChanges(state, unsavedChanges) {
       state.unsavedChanges = unsavedChanges;

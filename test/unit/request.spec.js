@@ -1,4 +1,4 @@
-import { apiPaths, configForPossibleBackendRequest } from '../../src/util/request';
+import { apiPaths, configForPossibleBackendRequest, requestAlertMessage } from '../../src/util/request';
 
 describe('util/request', () => {
   describe('apiPaths', () => {
@@ -206,6 +206,89 @@ describe('util/request', () => {
         'xyz'
       );
       headers.Authorization.should.equal('auth');
+    });
+  });
+
+  describe('requestAlertMessage()', () => {
+    const errorWithProblem = (code = 500.1) => {
+      const error = new Error();
+      error.request = {};
+      error.response = {
+        data: { code, message: 'requestAlertMessage() Problem.' }
+      };
+      return error;
+    };
+
+    it('returns a message if there was no request', () => {
+      const message = requestAlertMessage(new Error());
+      message.should.equal('Something went wrong: there was no request.');
+    });
+
+    it('returns a message if there was no response', () => {
+      const error = new Error();
+      error.request = {};
+      const message = requestAlertMessage(error);
+      message.should.equal('Something went wrong: there was no response to your request.');
+    });
+
+    it('returns a message if the response is not a Problem', () => {
+      const error = new Error();
+      error.request = {};
+      error.response = { x: 1 };
+      const message = requestAlertMessage(error);
+      message.should.equal('Something went wrong: the server returned an invalid error.');
+    });
+
+    it('returns the Problem message by default', () => {
+      const message = requestAlertMessage(errorWithProblem());
+      message.should.equal('requestAlertMessage() Problem.');
+    });
+
+    describe('problemToAlert', () => {
+      it('returns the message from the function', () => {
+        const message = requestAlertMessage(errorWithProblem(), {
+          problemToAlert: ({ code }) => `Problem ${code}`
+        });
+        message.should.equal('Problem 500.1');
+      });
+
+      it('returns the Problem message if the function returns null', () => {
+        const message = requestAlertMessage(errorWithProblem(), {
+          problemToAlert: () => null
+        });
+        message.should.equal('requestAlertMessage() Problem.');
+      });
+    });
+
+    describe('i18nScope', () => {
+      it('returns an i18n message for the Problem code', () => {
+        const message = requestAlertMessage(errorWithProblem(401.2), {
+          i18nScope: 'component.AccountLogin.problem'
+        });
+        message.should.equal('Incorrect email address and/or password.');
+      });
+
+      it('returns an i18n message if there is a default message', () => {
+        const message = requestAlertMessage(errorWithProblem(), {
+          i18nScope: 'component.BackupNew.problem'
+        });
+        message.should.equal('requestAlertMessage() Problem. Please try again, and go to the community forum if the problem continues.');
+      });
+
+      it('returns the Problem message if there is no i18n message', () => {
+        const message = requestAlertMessage(errorWithProblem(), {
+          i18nScope: 'component.AccountLogin.problem'
+        });
+        message.should.equal('requestAlertMessage() Problem.');
+      });
+
+      it('does not use i18nScope if problemToAlert is specified', () => {
+        const message = requestAlertMessage(errorWithProblem(404.2), {
+          i18nScope: 'component.AccountLogin.problem',
+          problemToAlert: () => null
+        });
+        message.should.equal('requestAlertMessage() Problem.');
+      });
     });
   });
 });

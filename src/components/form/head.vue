@@ -16,9 +16,9 @@ except according to the terms contained in the LICENSE file.
         <div v-if="project !=null">
           <span>
             <router-link :to="projectPath()">
-              {{ project.name }}{{ project.archived ? ' (archived)' : '' }}</router-link>
+              {{ project.nameWithArchived() }}</router-link>
           </span>
-          <router-link :to="projectPath()">Back to Project Overview</router-link>
+          <router-link :to="projectPath()">{{ $t('projectNav.link') }}</router-link>
         </div>
         <!-- The triangle below the project name -->
         <div></div>
@@ -43,42 +43,51 @@ except according to the terms contained in the LICENSE file.
               version (in which case canRoute() will return `false`). -->
               <li v-if="rendersFormTabs" :class="formTabClass('')"
                 :title="formTabTitle" role="presentation">
-                <router-link :to="tabPath('')">Overview</router-link>
+                <router-link :to="tabPath('')">
+                  {{ $t('formNav.tab.overview') }}
+                </router-link>
               </li>
               <!-- No v-if, because everyone with access to the project should
               be able to navigate to .../versions and .../submissions. -->
               <li :class="formTabClass('versions')" :title="formTabTitle"
                 role="presentation">
-                <router-link :to="tabPath('versions')">Versions</router-link>
+                <router-link :to="tabPath('versions')">
+                  {{ $t('formNav.tab.versions') }}
+                </router-link>
               </li>
               <li :class="formTabClass('submissions')" :title="formTabTitle"
                 role="presentation">
                 <router-link :to="tabPath('submissions')">
-                  Submissions
+                  {{ $t('formNav.tab.submissions') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
                 :title="formTabTitle" role="presentation">
-                <router-link :to="tabPath('settings')">Settings</router-link>
+                <router-link :to="tabPath('settings')">
+                  {{ $t('formNav.tab.settings') }}
+                </router-link>
               </li>
             </ul>
           </div>
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
+            <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
             <button v-show="formDraft.isEmpty()"
               id="form-head-create-draft-button" type="primary"
               class="btn btn-primary" @click="$emit('create-draft')">
-              <span class="icon-plus-circle"></span>Create a new Draft
+              <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
               <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
                 role="presentation">
-                <router-link :to="tabPath('draft')">Status</router-link>
+                <router-link :to="tabPath('draft')">
+                  {{ $t('draftNav.tab.status') }}
+                </router-link>
               </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"
                 :class="tabClass('draft/attachments')" role="presentation">
                 <router-link :to="tabPath('draft/attachments')">
-                  Media Files
+                  {{ $t('draftNav.tab.attachments') }}
                   <template v-if="attachments != null">
                     <span v-show="missingAttachmentCount !== 0" class="badge">
                       {{ missingAttachmentCount.toLocaleString() }}
@@ -89,7 +98,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft/testing'))"
                 :class="tabClass('draft/testing')" role="presentation">
                 <router-link :to="tabPath('draft/testing')">
-                  Testing
+                  {{ $t('draftNav.tab.testing') }}
                 </router-link>
               </li>
             </ul>
@@ -128,8 +137,8 @@ export default {
     },
     formTabTitle() {
       return this.form != null && this.form.publishedAt == null
-        ? 'These functions will become available once you publish your Draft Form'
-        : '';
+        ? this.$t('formNav.tabTitle')
+        : null;
     },
     rendersDraftNav() {
       return this.dataExists &&
@@ -225,14 +234,13 @@ body {
   padding-top: $draft-nav-padding;
   position: relative;
 
-  &::before {
+  #form-head-draft-nav-title {
     color: #666;
-    content: 'Draft';
     font-size: 12px;
     position: absolute;
     top: 7px;
   }
-  &.draft-exists::before {
+  &.draft-exists #form-head-draft-nav-title {
     left: /* .col-xs-6 padding-left */ 15px +
       /* .nav-tabs > li > a padding-left */ 8px;
   }

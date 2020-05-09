@@ -177,13 +177,6 @@ export default {
            local state that is used outside the DOM, avoid inconsistent state by
            specifying `success`.
 
-      - problemToAlert (optional). If the request results in an error, get()
-        shows an alert. By default, the alert message is the same as that of the
-        Backend Problem. However, if a function is specified for problemToAlert,
-        get() first passes the Problem to the function, which has the option to
-        return a different message. If the function returns `null` or
-        `undefined`, the Problem's message is used.
-
       Existing Data
       -------------
 
@@ -251,7 +244,6 @@ export default {
           // Response handling
           fulfillProblem = undefined,
           success,
-          problemToAlert = undefined,
 
           // Existing data
           resend = true,
@@ -310,7 +302,7 @@ export default {
 
             logAxiosError(error);
             if (firstError) {
-              const message = requestAlertMessage(error, problemToAlert);
+              const message = requestAlertMessage(error);
               commit('setAlert', { type: 'danger', message });
             }
 

@@ -22,15 +22,15 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.exists">
-        {{ updatedAt }}
+        <date-time :iso="attachment.updatedAt"/>
         <span v-show="targeted" class="label label-primary">
-          Replace
+          {{ $t('replace') }}
         </span>
       </template>
       <template v-else>
         <span class="icon-exclamation-triangle"></span>
-        <span title="To upload files, drag and drop one or more files onto this page">
-          Not yet uploaded
+        <span :title="$t('notUploaded.title')">
+          {{ $t('notUploaded.text') }}
         </span>
       </template>
     </td>
@@ -38,19 +38,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import { apiPaths } from '../../util/request';
-import { formatDate } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
-
-const TYPES = {
-  image: 'Image',
-  video: 'Video',
-  audio: 'Audio',
-  file: 'Data File'
-};
 
 export default {
   name: 'FormAttachmentRow',
+  components: { DateTime },
   props: {
     attachment: {
       type: Object,
@@ -97,8 +91,9 @@ export default {
     },
     type() {
       const { type } = this.attachment;
-      const displayName = TYPES[type];
-      return displayName != null ? displayName : type;
+      if (!/^\w+$/.test(type)) return type;
+      const path = `type.${type}`;
+      return this.$te(path) ? this.$t(path) : type;
     },
     href() {
       return apiPaths.formDraftAttachment(
@@ -106,9 +101,6 @@ export default {
         this.form.xmlFormId,
         this.attachment.name
       );
-    },
-    updatedAt() {
-      return formatDate(this.attachment.updatedAt);
     }
   }
 };

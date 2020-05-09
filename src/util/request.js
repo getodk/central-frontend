@@ -11,6 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
+import i18n from '../i18n';
+import { tS, teS } from './i18n';
+
 const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -110,15 +113,30 @@ export const logAxiosError = (error) => {
     $logger.log('Error', error.message);
 };
 
-export const requestAlertMessage = (error, problemToAlert) => {
-  if (error.request == null)
-    return 'Something went wrong: there was no request.';
-  if (error.response == null)
-    return 'Something went wrong: there was no response to your request.';
-  if (!isProblem(error.response.data))
-    return 'Something went wrong: the server returned an invalid error.';
-  const problem = error.response.data;
-  if (problemToAlert == null) return problem.message;
-  const message = problemToAlert(problem);
-  return message != null ? message : problem.message;
+// See the `request` mixin for a description of this function's behavior.
+export const requestAlertMessage = (axiosError, options = {}) => {
+  // No Problem response
+  if (axiosError.request == null) return i18n.t('util.request.noRequest');
+  if (axiosError.response == null) return i18n.t('util.request.noResponse');
+  const { data } = axiosError.response;
+  if (!isProblem(data)) return i18n.t('util.request.errorNotProblem');
+
+  const problem = data;
+
+  const { problemToAlert } = options;
+  if (problemToAlert != null) {
+    const message = problemToAlert(problem);
+    return message != null ? message : problem.message;
+  }
+
+  const { i18nScope } = options;
+  if (i18nScope != null) {
+    const codeKey = problem.code.toString().replace('.', '_');
+    const pathForCode = `${i18nScope}.${codeKey}`;
+    if (teS(i18nScope, pathForCode)) return tS(i18nScope, pathForCode, problem);
+    const defaultPath = `${i18nScope}.default`;
+    if (teS(i18nScope, defaultPath)) return tS(i18nScope, defaultPath, problem);
+  }
+
+  return problem.message;
 };

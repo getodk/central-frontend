@@ -50,12 +50,8 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <form v-if="draftVersionStringIsDuplicate" @submit.prevent="publish">
-        <label class="form-group">
-          <input ref="versionString" v-model="versionString"
-            class="form-control" placeholder="Version *" required
-            autocomplete="off">
-          <span class="form-label">Version *</span>
-        </label>
+        <form-group ref="versionString" v-model.trim="versionString"
+          placeholder="Version" required autocomplete="off"/>
         <!-- We specify two nearly identical .modal-actions, because here we
         want the Proceed button to be a submit button (which means that browsers
         will do some basic form validation when it is clicked). -->
@@ -87,6 +83,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { mapGetters } from 'vuex';
 
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -97,7 +94,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftPublish',
-  components: { Modal, Spinner },
+  components: { FormGroup, Modal, Spinner },
   mixins: [request(), routes()],
   props: {
     state: {
@@ -150,10 +147,7 @@ export default {
           this.versionString !== this.formDraft.version
             ? { version: this.versionString }
             : null
-        ),
-        problemToAlert: ({ code }) => (code === 409.6
-          ? "The version name you've specified conflicts with a past version of this Form. Please change it to something new and try again."
-          : null)
+        )
       })
         .then(() => {
           this.$emit('success');

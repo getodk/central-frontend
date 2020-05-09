@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
 
 ### Vue
 
-We use Vue.js along with Vue Router and Vuex.
+We use Vue.js along with Vue Router, Vuex, and Vue CLI.
 
 ### jQuery
 
@@ -38,7 +38,17 @@ ODK Central Frontend uses Bootstrap 3. (However, we are considering [moving to B
 
 Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use most of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing one, you may find it useful to base the new component off the existing one.
 
-We use some, but not all, of Bootstrap's jQuery plugins. We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
+We use some, but not all, of Bootstrap's jQuery plugins ([`/src/bootstrap.js`](/src/bootstrap.js)). We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
+
+### Global Utilities
+
+We define a number of global utilities as properties on `Vue.prototype`: see [`/src/setup.js`](/src/setup.js). In general, we try to minimize the number of global utilities: do not define a global utility simply to avoid importing to components. However, there are a few occasions in which a global utility may be useful:
+
+- The utility accesses the component using `this` (example: `$alert()`).
+- The utility is used in templates, which do not have direct access to imports.
+- We mock or otherwise modify the utility in testing (examples: `$http`, `$logger`).
+
+If a utility is used in a limited number of components, consider using a mixin instead of defining a global utility.
 
 ### HTTP Requests
 
@@ -62,7 +72,7 @@ We specify a name for every component, which facilitates the use of the Vue devt
 
 If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
 
-In general, we try not to use component names to drive logic. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
+In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect. (One notable exception is internationalization: see below.) We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
 
 #### Naming Conventions
 
@@ -87,6 +97,20 @@ We support a number of route meta fields, which we document in [`/src/routes.js`
 
 We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
+### Internationalization
+
+We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
+
+Translations are stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a language tag that is valid according to BCP47, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and `en.json` is bundled with ODK Central Frontend; other files are loaded asynchronously as needed.
+
+Vue I18n allows you to use single file component `<i18n>` custom blocks to define locale messages specific to the component. For example, `AccountLogin` could define a message named `title`, then call `$t('title')`. However, given our workflow around Transifex (see below), it would be challenging for us to use `<i18n>` custom blocks. Instead, we redefine `$t()`, `$tc()`, and `$te()` so that the methods scope the path to `$i18nScope`. For example, you can call `$t('title')` in `AccountLogin`, and it will return `$t('component.AccountLogin.title')`, because `$i18nScope` equals `'component.AccountLogin'` in `AccountLogin`. Note that although scoped paths are quite convenient overall, they also mean that the Vue I18n report (`npm run i18n:report`) has less value.
+
+In general in Frontend, we use kebab-case to name slots. However, when using component interpolation, name slots using camelCase. This seems a little more readable within locale messages. Also, if the slot corresponds to a message, this allows the slot and its message to have the same name.
+
+#### Transifex
+
+TODO
+
 ### Styles
 
 ODK Central Frontend uses Sass.
@@ -105,7 +129,7 @@ Instead of scoped CSS, use `id` and `class` attributes to style components:
 
 #### Icons
 
-We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts`](/public/fonts), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css).
+We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts/`](/public/fonts/), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css).
 
 To update the icons:
 

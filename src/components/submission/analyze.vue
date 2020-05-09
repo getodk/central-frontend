@@ -49,7 +49,6 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
       </div>
-      <!-- eslint-disable-next-line max-len -->
       <div id="submission-analyze-odata-url" ref="oDataUrl" class="modal-introduction" @click="selectUrl">{{ oDataUrl }}</div>
       <div id="submission-analyze-tool-help" class="modal-introduction">
         <p v-if="tool === 'microsoft'">

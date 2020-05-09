@@ -28,7 +28,7 @@ describe('FormNew', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       return load('/projects/1').then(app => {
-        app.find('#project-overview-new-form-button').length.should.equal(0);
+        app.find('#form-list-create-button').length.should.equal(0);
       });
     });
 
@@ -37,7 +37,7 @@ describe('FormNew', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1').testModalToggles(
         FormNew,
-        '#project-overview-new-form-button',
+        '#form-list-create-button',
         '.btn-link'
       );
     });
@@ -46,7 +46,7 @@ describe('FormNew', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .then(trigger.click('#project-overview-new-form-button'))
+        .then(trigger.click('#form-list-create-button'))
         .then(app => {
           const text = app.first('#form-new .modal-title').text().trim();
           text.should.equal('Create Form');
@@ -61,7 +61,7 @@ describe('FormNew', () => {
 
       it('shows the correct text for the first paragraph', () =>
         load('/projects/1')
-          .then(trigger.click('#project-overview-new-form-button'))
+          .then(trigger.click('#form-list-create-button'))
           .then(app => {
             const p = app.first('#form-new .modal-introduction p');
             p.text().trim().should.startWith('To create a Form,');
@@ -69,7 +69,7 @@ describe('FormNew', () => {
 
       it('renders the paragraph about media files', () =>
         load('/projects/1')
-          .then(trigger.click('#project-overview-new-form-button'))
+          .then(trigger.click('#form-list-create-button'))
           .then(app => {
             const p = app.find('#form-new .modal-introduction p');
             p.length.should.equal(2);
@@ -180,7 +180,7 @@ describe('FormNew', () => {
     it('sends a request to .../forms when creating a form', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .afterResponses(trigger.click('#form-list-create-button'))
         .request(upload)
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/forms');
@@ -296,7 +296,7 @@ describe('FormNew', () => {
     const createForm = () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'Form 1' });
       return load('/projects/1')
-        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .afterResponses(trigger.click('#form-list-create-button'))
         .request(upload)
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
@@ -316,7 +316,7 @@ describe('FormNew', () => {
 
     it('shows a success alert', () =>
       createForm().then(app => {
-        app.should.alert('success', 'Your new Form "Form 2" has been created as a Draft. Take a look at the checklist below, and when you feel it\'s ready, you can publish the Form for use.');
+        app.should.alert('success', 'Your new Form “Form 2” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use.');
       }));
 
     it('renders the correct number of rows in the forms table', () =>
@@ -476,7 +476,7 @@ describe('FormNew', () => {
           }
         })
         .afterResponse(modal => {
-          modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of "f".');
+          modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
         }));
 
     it('shows a message for an xmlFormId mismatch', () =>
@@ -504,7 +504,7 @@ describe('FormNew', () => {
         .afterResponse(modal => {
           modal.should.alert(
             'danger',
-            'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected "expected_id", got "uploaded_id").'
+            'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
           );
         }));
   });
@@ -609,7 +609,7 @@ describe('FormNew', () => {
       it('shows the correct text for the new form modal', () => {
         testData.extendedProjects.createPast(1);
         return load('/projects/1')
-          .afterResponses(trigger.click('#project-overview-new-form-button'))
+          .afterResponses(trigger.click('#form-list-create-button'))
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(app => {
@@ -673,7 +673,7 @@ describe('FormNew', () => {
     it('redirects to .../draft if "Upload anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .afterResponses(trigger.click('#project-overview-new-form-button'))
+        .afterResponses(trigger.click('#form-list-create-button'))
         .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()

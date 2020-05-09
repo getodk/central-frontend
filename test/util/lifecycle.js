@@ -1,5 +1,6 @@
 import { mount as avoriazMount } from 'avoriaz';
 
+import i18n from '../../src/i18n';
 import store from '../../src/store';
 import { transforms } from '../../src/store/modules/request/keys';
 
@@ -56,6 +57,7 @@ export const mount = (component, options = {}) => {
   const { requestData, ...mountOptions } = options;
   if (requestData != null) setRequestData(requestData);
   mountOptions.store = store;
+  mountOptions.i18n = i18n;
   const wrapper = avoriazMount(component, mountOptions);
   markComponentForDestruction(wrapper);
   return wrapper;

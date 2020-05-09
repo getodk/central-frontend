@@ -12,14 +12,35 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+import i18n from './i18n';
 import routes from './routes';
 import store from './store';
 import { keys as requestKeys } from './store/modules/request/keys';
+import { loadLocale } from './util/i18n';
 import { noop } from './util/util';
 import { preservesData } from './util/router';
 
 const router = new VueRouter({ routes });
 export default router;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LOAD INITIAL LOCALE
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.router.loadLocale) {
+    next();
+    return;
+  }
+
+  const locale = window.navigator.language.split('-', 1)[0];
+  // TODO. Should this be concurrent with the request to restore the session?
+  loadLocale(locale).finally(() => {
+    store.commit('setLoadLocale', false);
+    next();
+  });
+});
 
 
 
@@ -99,7 +120,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // eslint-disable-next-line no-alert
-  const result = window.confirm('Are you sure you want to leave this page? Your changes might not be saved.');
+  const result = window.confirm(i18n.t('router.unsavedChanges'));
   if (result)
     next();
   else

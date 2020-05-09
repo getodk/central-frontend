@@ -1,11 +1,11 @@
 import pako from 'pako';
 
+import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentList from '../../../src/components/form-attachment/list.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
-import { formatDate } from '../../../src/util/date-time';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { noop } from '../../../src/util/util';
@@ -66,7 +66,8 @@ describe('FormAttachmentList', () => {
         ['video', 'Video'],
         ['audio', 'Audio'],
         ['file', 'Data File'],
-        ['not_a_type', 'not_a_type']
+        ['not_a_type', 'not_a_type'],
+        ['not.a.type', 'not.a.type']
       ];
       for (const [type, displayName] of cases) {
         it(`is correct for ${type}`, () => {
@@ -105,15 +106,18 @@ describe('FormAttachmentList', () => {
     });
 
     describe('updatedAt', () => {
-      it('formats updatedAt for an existing attachments', () => {
-        testData.standardFormAttachments.createPast(1, { exists: true });
+      it('formats updatedAt for an existing attachment', () => {
+        const attachment = testData.standardFormAttachments
+          .createPast(1, { exists: true })
+          .last();
         return loadAttachments().then(component => {
           const td = component.find('#form-attachment-list-table tbody td')[2];
-          const text = td.text().trim().iTrim();
-          const { updatedAt } = testData.standardFormAttachments.last();
-          text.should.equal(`${formatDate(updatedAt)} Replace`);
-          // Check that "Replace" is hidden.
-          td.first('span').should.be.hidden();
+
+          td.first(DateTime).getProp('iso').should.equal(attachment.updatedAt);
+
+          const span = td.find('span');
+          span.length.should.equal(2);
+          span[1].should.be.hidden();
         });
       });
 
@@ -153,12 +157,10 @@ describe('FormAttachmentList', () => {
   comes later. However, it tests everything between selecting the files and
   uploading them.
 
-  The tests will be run under three different scenarios:
+  The tests will be run under two scenarios:
 
-    1. The user drops multiple files over the page as if under IE.
-    2. The user drops multiple files over the page normally (not as if under
-       IE).
-    3. The user selects multiple files using the file input.
+    1. The user drops multiple files over the page.
+    2. The user selects multiple files using the file input.
 
   For each scenario, the function is passed a callback (`select`) that selects
   the files.
@@ -308,13 +310,10 @@ describe('FormAttachmentList', () => {
   comes later. However, it tests everything between selecting the file and
   uploading it.
 
-  The tests will be run under three different scenarios:
+  The tests will be run under two scenarios:
 
-    1. The user drops a single file outside a row of the table as if under IE
-       (where countOfFilesOverDropZone === -1).
-    2. The user drops a single file outside a row of the table normally
-       (where countOfFilesOverDropZone === 1).
-    3. The user selects a single file using the file input.
+    1. The user drops a single file outside a row of the table.
+    2. The user selects a single file using the file input.
 
   The tests are not run under the following scenario, which differs in a few
   ways:
@@ -437,17 +436,13 @@ describe('FormAttachmentList', () => {
   };
 
   /*
-  The following tests will be run under four different scenarios:
+  The following tests will be run under three different scenarios:
 
     1. The user drops a single file over an attachment with the same name.
     2. The user drops a single file over an attachment with a different name,
        then confirms the upload in the name mismatch modal.
-    3. The user drops a single file outside a row of the table as if under IE
-       (where countOfFilesOverDropZone === -1), then confirms the upload in the
-       popup.
-    4. The user drops a single file outside a row of the table normally
-       (where countOfFilesOverDropZone === 1), then confirms the upload in the
-       popup.
+    3. The user drops a single file outside a row of the table, then confirms
+       the upload in the popup.
 
   For each scenario, the function is passed a callback (`upload`) that starts
   the upload.
@@ -595,9 +590,9 @@ describe('FormAttachmentList', () => {
   // One way for the user to select what to upload is to drag and drop one or
   // more files outside a row of the table. Here we test that drag and drop, as
   // well as the upload that follows.
-  for (const ie of [false, true]) {
-    const not = ie ? '' : 'not ';
-    describe(`dragging and dropping outside a row of the table ${not}using IE`, () => {
+  // TODO. Remove braces.
+  { // eslint-disable-line no-lone-blocks
+    describe('dragging and dropping outside a row of the table', () => {
       describe('multiple files', () => {
         describe('drag', () => {
           let app;
@@ -611,7 +606,7 @@ describe('FormAttachmentList', () => {
               return trigger.dragenter(
                 app,
                 '#form-attachment-list .heading-with-button div',
-                { files: blankFiles(['a', 'b']), ie }
+                blankFiles(['a', 'b'])
               );
             });
           });
@@ -625,15 +620,13 @@ describe('FormAttachmentList', () => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
             const text = popup.first('p').text().trim().iTrim();
-            text.should.equal(!ie
-              ? 'Drop now to prepare 2 files for upload to this Form.'
-              : 'Drop now to upload to this Form.');
+            text.should.equal('Drop now to prepare 2 files for upload to this Form.');
           });
         });
 
         describe('drop', () => {
           testMultipleFileSelection((app, files) =>
-            trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
+            trigger.dragAndDrop(app, FormAttachmentList, files));
         });
 
         describe('confirming the uploads', () => {
@@ -651,7 +644,7 @@ describe('FormAttachmentList', () => {
             .afterResponses(app => trigger.dragAndDrop(
               app,
               FormAttachmentList,
-              { files: blankFiles(['a', 'b', 'c']), ie }
+              blankFiles(['a', 'b', 'c'])
             ))
             .request(app =>
               trigger.click(app, '#form-attachment-popups-main .btn-primary'));
@@ -716,7 +709,7 @@ describe('FormAttachmentList', () => {
 
               it('unhighlights the attachments once a new drag starts', () => {
                 const files = blankFiles(['y', 'z']);
-                return trigger.dragenter(app, FormAttachmentList, { files, ie })
+                return trigger.dragenter(app, FormAttachmentList, files)
                   .then(() => {
                     const table = app.first('#form-attachment-list-table');
                     table.find('.success').should.be.empty();
@@ -842,7 +835,7 @@ describe('FormAttachmentList', () => {
               return trigger.dragenter(
                 app,
                 '#form-attachment-list .heading-with-button div',
-                { files: blankFiles(['a']), ie }
+                blankFiles(['a'])
               );
             });
           });
@@ -856,14 +849,12 @@ describe('FormAttachmentList', () => {
             const popup = app.first('#form-attachment-popups-main');
             popup.should.be.visible();
             const text = popup.first('p').text().trim().iTrim();
-            text.should.containEql(!ie
-              ? 'Drag over the file entry you wish to replace'
-              : 'Drop now to upload to this Form.');
+            text.should.containEql('Drag over the file entry you wish to replace');
           });
         });
 
         testSingleFileSelection((app, files) =>
-          trigger.dragAndDrop(app, FormAttachmentList, { files, ie }));
+          trigger.dragAndDrop(app, FormAttachmentList, files));
 
         describe('confirming the upload', () => {
           testSingleFileUpload(attachmentName =>
@@ -871,7 +862,7 @@ describe('FormAttachmentList', () => {
               .afterResponses(app => trigger.dragAndDrop(
                 app,
                 FormAttachmentList,
-                { files: blankFiles([attachmentName]), ie }
+                blankFiles([attachmentName])
               ))
               .request(app =>
                 trigger.click(app, '#form-attachment-popups-main .btn-primary')));

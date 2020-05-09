@@ -13,29 +13,24 @@ except according to the terms contained in the LICENSE file.
   <div id="account-login" class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
-        <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
+        <div class="panel-heading">
+          <h1 class="panel-title">{{ $t('title') }}</h1>
+        </div>
         <div class="panel-body">
           <form @submit.prevent="submit">
-            <label class="form-group">
-              <input ref="email" v-model.trim="email" type="email"
-                class="form-control" placeholder="Email address *" required
-                autocomplete="off">
-              <span class="form-label">Email address *</span>
-            </label>
-            <label class="form-group">
-              <input v-model="password" type="password" class="form-control"
-                placeholder="Password *" required
-                autocomplete="current-password">
-              <span class="form-label">Password *</span>
-            </label>
+            <form-group ref="email" v-model.trim="email" type="email"
+              :placeholder="$t('field.email')" required autocomplete="off"/>
+            <form-group v-model="password" type="password"
+              :placeholder="$t('field.password')" required
+              autocomplete="current-password"/>
             <div class="panel-footer">
               <button :disabled="disabled" type="submit"
                 class="btn btn-primary">
-                Log in <spinner :state="disabled"/>
+                {{ $t('action.logIn') }} <spinner :state="disabled"/>
               </button>
               <router-link :to="resetPasswordLocation" :disabled="disabled"
                 tag="button" type="button" class="btn btn-link">
-                Reset password
+                {{ $t('action.resetPassword') }}
               </router-link>
             </div>
           </form>
@@ -46,13 +41,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'AccountLogin',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     return {
@@ -97,10 +93,7 @@ export default {
       this.request({
         method: 'POST',
         url: '/sessions',
-        data: { email: this.email, password: this.password },
-        problemToAlert: ({ code }) => (code === 401.2
-          ? 'Incorrect email address and/or password.'
-          : null)
+        data: { email: this.email, password: this.password }
       })
         .then(({ data }) => this.$store.dispatch('get', [{
           key: 'currentUser',

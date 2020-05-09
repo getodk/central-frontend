@@ -12,32 +12,31 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div id="project-list-heading">
-      <span>Welcome to Central.</span>
-      <span>Let&rsquo;s get some things done.</span>
+      <span>{{ $t('welcome') }}</span>
+      <span>{{ $t('getThingsDone') }}</span>
     </div>
     <div class="row">
       <div class="col-xs-6">
         <page-section>
           <template #heading>
-            <span>Getting Started</span>
+            <span>{{ $t('gettingStarted.title') }}</span>
           </template>
           <template #body>
-            <p>
-              If you&rsquo;re not sure where to begin, we have a getting started
-              guide and user documentation available on the
-              <doc-link to="central-intro/">ODK Docs website</doc-link>.
-            </p>
-            <p>
-              In addition, you can always get help from others on the
-              <a href="https://forum.getodk.org/" target="_blank">
-                ODK community forum</a>,
-              where you can search for previous answers or ask one of your own.
-            </p>
+            <i18n tag="p" :path="$tPath('gettingStarted.body[0].full')">
+              <template #docsWebsite>
+                <doc-link to="central-intro/">{{ $t('gettingStarted.body[0].docsWebsite') }}</doc-link>
+              </template>
+            </i18n>
+            <i18n tag="p" :path="$tPath('gettingStarted.body[1].full')">
+              <template #forum>
+                <a href="https://forum.getodk.org/" target="_blank">{{ $t('gettingStarted.body[1].forum') }}</a>
+              </template>
+            </i18n>
           </template>
         </page-section>
         <page-section>
           <template #heading>
-            <span>News</span>
+            <span>{{ $t('news') }}</span>
           </template>
           <template #body>
             <iframe id="project-list-news-iframe"
@@ -49,7 +48,7 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-6">
         <page-section id="project-list-right-now">
           <template #heading>
-            <span>Right Now</span>
+            <span>{{ $t('common.rightNow') }}</span>
           </template>
           <template #body>
             <loading :state="loadingRightNow"/>
@@ -61,8 +60,8 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <strong>{{ $pluralize('Web User', users.length) }}</strong>
-                  who can administer Projects through this website.
+                  <strong>{{ $tc('plural.webUser', users.length) }}</strong>
+                  {{ $tc('rightNow.usersCaption', users.length) }}
                 </template>
               </summary-item>
               <summary-item clickable icon="archive" @click="scrollToProjects">
@@ -71,8 +70,8 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <strong>{{ $pluralize('Project', projects.length) }}</strong>
-                  which can organize Forms and App Users for device deployment.
+                  <strong>{{ $tc('plural.project', projects.length) }}</strong>
+                  {{ $tc('rightNow.projectsCaption', projects.length) }}
                 </template>
               </summary-item>
             </template>
@@ -82,20 +81,20 @@ except according to the terms contained in the LICENSE file.
     </div>
     <page-section id="project-list-projects">
       <template #heading>
-        <span>Projects</span>
+        <span>{{ $t('projectsTitle') }}</span>
         <button v-if="currentUser.can('project.create')"
           id="project-list-new-button" type="button" class="btn btn-primary"
           @click="showModal('newProject')">
-          <span class="icon-plus-circle"></span>New&hellip;
+          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
       </template>
       <template #body>
         <table id="project-list-table" class="table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Forms</th>
-              <th>Latest Submission</th>
+              <th>{{ $t('header.name') }}</th>
+              <th>{{ $t('header.forms') }}</th>
+              <th>{{ $t('header.lastSubmission') }}</th>
             </tr>
           </thead>
           <tbody v-if="projects != null">
@@ -107,7 +106,7 @@ except according to the terms contained in the LICENSE file.
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
         <p v-if="projects != null && projects.length === 0"
           class="empty-table-message">
-          There are no Projects for you to see.
+          {{ $t('emptyTable') }}
         </p>
       </template>
     </page-section>
@@ -184,7 +183,7 @@ export default {
     },
     afterCreate(project) {
       this.$router.push(this.projectPath(project.id), () => {
-        this.$alert().success('Your new Project has been successfully created.');
+        this.$alert().success(this.$t('alert.create'));
       });
     }
   }

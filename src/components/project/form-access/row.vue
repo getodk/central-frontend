@@ -14,9 +14,8 @@ except according to the terms contained in the LICENSE file.
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
         <span v-if="form.publishedAt == null" class="icon-edit"
-          title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used."><!-- eslint-disable-line max-len -->
+          title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used.">
         </span>
-        <!-- eslint-disable-next-line max-len -->
         <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">{{ form.nameOrId() }}</router-link>
       </td>
       <td>

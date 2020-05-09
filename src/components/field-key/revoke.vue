@@ -12,28 +12,25 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-revoke" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template slot="title">Revoke User Access</template>
-    <template slot="body">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
       <div class="modal-introduction">
-        <p>
-          Are you sure you want to revoke access from the App User
-          <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>?
-        </p>
-        <p>
-          Existing Submissions from this user will remain, but anybody relying
-          on this user will have to create a new one to continue downloading
-          Forms or uploading Submissions.
-        </p>
-        <p>This action cannot be undone.</p>
+        <i18n tag="p" :path="$tPath('introduction[0]')">
+          <template #displayName>
+            <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>
+          </template>
+        </i18n>
+        <p>{{ $t('introduction[1]') }}</p>
+        <p>{{ $t('introduction[2]') }}</p>
       </div>
       <div class="modal-actions">
         <button :disabled="awaitingResponse" type="button"
           class="btn btn-danger" @click="revoke">
-          Yes, proceed <spinner :state="awaitingResponse"/>
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>

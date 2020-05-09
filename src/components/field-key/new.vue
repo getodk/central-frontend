@@ -12,28 +12,21 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
-    <template #title>Create App User</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <template v-if="step === 1">
-        <p class="modal-introduction">
-          This user will not have access to any Forms at first. You will be able
-          to assign Forms after the user is created.
-        </p>
+        <p class="modal-introduction">{{ $t('introduction') }}</p>
         <form @submit.prevent="submit">
-          <label class="form-group">
-            <input ref="nickname" v-model.trim="nickname"
-              :disabled="awaitingResponse" class="form-control"
-              placeholder="Nickname *" required>
-            <span class="form-label">Nickname *</span>
-          </label>
+          <form-group ref="nickname" v-model.trim="nickname"
+            :placeholder="$t('field.nickname')" required autocomplete="off"/>
           <div class="modal-actions">
             <button :disabled="awaitingResponse" type="submit"
               class="btn btn-primary">
-              Create <spinner :state="awaitingResponse"/>
+              {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
             </button>
             <button :disabled="awaitingResponse" type="button"
               class="btn btn-link" @click="hideOrComplete">
-              Cancel
+              {{ $t('action.cancel') }}
             </button>
           </div>
         </form>
@@ -41,31 +34,30 @@ except according to the terms contained in the LICENSE file.
       <template v-else>
         <div class="modal-introduction step-2">
           <p>
-            <span class="icon-check-circle"></span><strong>Success!</strong>
-            The App User &ldquo;{{ created.displayName }}&rdquo; has been
-            created.
+            <span class="icon-check-circle"></span>
+            <strong>{{ $t('common.success') }}</strong>
+            {{ $t('success[0]', created) }}
           </p>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="created.qrCodeHtml()"></p>
-          <p>
-            You can configure a mobile device for
-            &ldquo;{{ created.displayName }}&rdquo; right now by
-            <doc-link to="collect-import-export/">scanning the code above</doc-link>
-            into their app. Or you can do it later from the App Users table by
-            clicking &ldquo;See code.&rdquo;
-          </p>
-          <p>
-            You may wish to visit this Project&rsquo;s
-            <a href="#" @click="navigateToFormAccess">Form Access settings</a>
-            to give this user access to Forms.
-          </p>
+          <i18n tag="p" :path="$tPath('success[1].full')">
+            <template #displayName>{{ created.displayName }}</template>
+            <template #scanningCode>
+              <doc-link to="collect-import-export/">{{ $t('success[1].scanningCode') }}</doc-link>
+            </template>
+          </i18n>
+          <i18n tag="p" :path="$tPath('success[2].full')">
+            <template #formAccessSettings>
+              <a href="#" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
+            </template>
+          </i18n>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="complete">
-            Done
+            {{ $t('action.done' ) }}
           </button>
           <button type="button" class="btn btn-link" @click="createAnother">
-            Create another
+            {{ $t('action.createAnother') }}
           </button>
         </div>
       </template>
@@ -76,6 +68,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import FieldKey from '../../presenters/field-key';
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -86,7 +79,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request(), routes()],
   props: {
     state: {

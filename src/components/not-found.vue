@@ -14,10 +14,10 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
         <div class="panel-heading">
-          <h1 class="panel-title">Page Not Found</h1>
+          <h1 class="panel-title">{{ $t('title') }}</h1>
         </div>
         <div class="panel-body">
-          <p>The page you requested could not be found.</p>
+          <p>{{ $t('body') }}</p>
         </div>
       </div>
     </div>

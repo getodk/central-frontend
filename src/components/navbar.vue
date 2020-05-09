@@ -17,39 +17,39 @@ except according to the terms contained in the LICENSE file.
         <button type="button" class="navbar-toggle collapsed"
           data-toggle="collapse" data-target="#navbar-collapse"
           aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
+          <span class="sr-only">{{ $t('toggle') }}</span>
           <span class="navbar-icon-bar"></span>
           <span class="navbar-icon-bar"></span>
           <span class="navbar-icon-bar"></span>
         </button>
-        <router-link to="/" class="navbar-brand">ODK Central</router-link>
+        <router-link to="/" class="navbar-brand">{{ $t('brand') }}</router-link>
       </div>
 
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <ul v-if="currentUser != null" id="navbar-links" class="nav navbar-nav">
           <li :class="{ active: projectsLinkIsActive }">
             <router-link id="navbar-projects-link" to="/">
-              Projects
+              {{ $t('link.projects') }}
               <span v-show="projectsLinkIsActive" class="sr-only">
-                (current)
+                {{ $t('link.current') }}
               </span>
             </router-link>
           </li>
           <li v-if="canRoute('/users')"
             :class="{ active: routePathStartsWith('/users') }">
             <router-link id="navbar-users-link" to="/users">
-              Users
+              {{ $t('link.users') }}
               <span v-show="routePathStartsWith('/users')" class="sr-only">
-                (current)
+                {{ $t('link.current') }}
               </span>
             </router-link>
           </li>
           <li v-if="canRoute('/system/backups')"
             :class="{ active: routePathStartsWith('/system') }">
             <router-link id="navbar-system-link" to="/system/backups">
-              System
+              {{ $t('link.system') }}
               <span v-show="routePathStartsWith('/system')" class="sr-only">
-                (current)
+                {{ $t('link.current') }}
               </span>
             </router-link>
           </li>
@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
         <ul class="nav navbar-nav navbar-right">
           <li v-if="$store.getters.loggedOut">
             <a href="#" @click.prevent>
-              <span class="icon-user-circle-o"></span>Not logged in
+              <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
             </a>
           </li>
           <li v-else class="dropdown">
@@ -70,12 +70,12 @@ except according to the terms contained in the LICENSE file.
             <ul class="dropdown-menu">
               <li>
                 <router-link id="navbar-edit-profile-action" to="/account/edit">
-                  Edit profile
+                  {{ $t('action.editProfile') }}
                 </router-link>
               </li>
               <li>
                 <a id="navbar-log-out-action" href="#" @click.prevent="logOut">
-                  Log out
+                  {{ $t('action.logOut') }}
                 </a>
               </li>
             </ul>
@@ -111,7 +111,7 @@ export default {
       this.delete(apiPaths.session(this.session.token)).catch(noop);
       this.$store.commit('clearData');
       this.$router.push('/login', () => {
-        this.$alert().success('You have logged out successfully.');
+        this.$alert().success(this.$t('alert.logOut'));
       });
     }
   }

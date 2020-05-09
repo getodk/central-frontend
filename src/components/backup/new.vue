@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="backup-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="cancel" @shown="focusPassphraseInput">
-    <template slot="title">Set up Backups</template>
-    <template slot="body">
+    <template #title>Set up Backups</template>
+    <template #body>
       <template v-if="step === 1">
         <p class="modal-introduction">
           If you want, you may set up an encryption passphrase which must be
@@ -22,19 +22,15 @@ except according to the terms contained in the LICENSE file.
           remember, or write it down somewhere safe.
         </p>
         <form @submit.prevent="initiate">
-          <label class="form-group">
-            <input ref="passphrase" v-model="passphrase"
-              :disabled="awaitingResponse" class="form-control"
-              placeholder="Passphrase (optional)" autocomplete="off">
-            <span class="form-label">Passphrase (optional)</span>
-          </label>
+          <form-group ref="passphrase" v-model="passphrase"
+            placeholder="Passphrase (optional)" autocomplete="off"/>
           <div class="modal-actions">
-            <button :disabled="awaitingResponse" type="submit"
-              class="btn btn-primary">
+            <button type="submit" class="btn btn-primary"
+              :disabled="awaitingResponse">
               Next <spinner :state="awaitingResponse"/>
             </button>
-            <button :disabled="awaitingResponse" type="button"
-              class="btn btn-link" @click="cancel">
+            <button type="button" class="btn btn-link"
+              :disabled="awaitingResponse" @click="cancel">
               Cancel
             </button>
           </div>
@@ -78,19 +74,15 @@ except according to the terms contained in the LICENSE file.
           <p>Otherwise, paste it below and you are done!</p>
         </div>
         <form @submit.prevent="verify">
-          <label class="form-group">
-            <input ref="confirmationText" v-model.trim="confirmationText"
-              :disabled="awaitingResponse" class="form-control" required
-              placeholder="Confirmation text *" autocomplete="off">
-            <span class="form-label">Confirmation text *</span>
-          </label>
+          <form-group ref="confirmationText" v-model.trim="confirmationText"
+            placeholder="Confirmation text" required autocomplete="off"/>
           <div class="modal-actions">
-            <button :disabled="awaitingResponse" type="submit"
-              class="btn btn-primary">
+            <button type="submit" class="btn btn-primary"
+              :disabled="awaitingResponse">
               Next <spinner :state="awaitingResponse"/>
             </button>
-            <button :disabled="awaitingResponse" type="button"
-              class="btn btn-link" @click="cancel">
+            <button type="button" class="btn btn-link"
+              :disabled="awaitingResponse" @click="cancel">
               Cancel
             </button>
           </div>
@@ -101,6 +93,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -110,7 +103,7 @@ const GOOGLE_BREAKPOINT = 601;
 
 export default {
   name: 'BackupNew',
-  components: { Modal, Spinner },
+  components: { FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -175,9 +168,7 @@ export default {
         method: 'POST',
         url: '/config/backups/verify',
         headers: { Authorization: `Bearer ${this.authToken}` },
-        data: { code: this.confirmationText },
-        problemToAlert: ({ message }) =>
-          `${message} Please try again, and go to the community forum if the problem continues.`
+        data: { code: this.confirmationText }
       })
         .then(() => {
           this.$emit('success');

@@ -101,11 +101,11 @@ export default {
     afterCreate() {
       this.fetchData();
       this.hideModal('newBackup');
-      this.$alert().success('Success! Automatic backups are now configured.');
+      this.$alert().success(this.$t('alert.create'));
     },
     afterTerminate() {
       this.hideModal('terminate');
-      this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
+      this.$alert().success(this.$t('alert.terminate'));
       this.$store.commit('setData', {
         key: 'backupsConfig',
         value: Option.none()
