@@ -564,3 +564,33 @@ a {
     padding: 0;
   }
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////
+// PASSWORD FIELD
+
+.password-strength {
+  position: relative;
+  height: 3px;
+  background: #DDD;
+  margin: 20px auto 20px;
+  border-radius: 3px;
+}
+.password-strength:before, .password-strength:after {
+content: '';
+height: inherit;
+background: transparent;
+display: block;
+border-color: #FFF;
+border-style: solid;
+border-width: 0 5px 0 5px;
+position: absolute;
+width: 20%;
+z-index: 10;
+}
+.password-strength:before {
+left: 20%;
+}
+.password-strength:after {
+right: 20%;
+}

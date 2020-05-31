@@ -27,6 +27,8 @@ except according to the terms contained in the LICENSE file.
               :disabled="awaitingResponse" class="form-control"
               placeholder="Passphrase (optional)" autocomplete="off">
             <span class="form-label">Passphrase (optional)</span>
+            <password v-model="passphrase" :strength-meter-only="true"
+            strength-meter-class="password-strength"/>
           </label>
           <div class="modal-actions">
             <button :disabled="awaitingResponse" type="submit"
@@ -107,10 +109,11 @@ import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
 const GOOGLE_BREAKPOINT = 601;
+const Password = () => import('vue-password-strength-meter');
 
 export default {
   name: 'BackupNew',
-  components: { Modal, Spinner },
+  components: { Modal, Spinner, Password },
   mixins: [request()],
   props: {
     state: {

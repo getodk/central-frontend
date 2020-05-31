@@ -110,6 +110,8 @@ except according to the terms contained in the LICENSE file.
             <input ref="passphrase" v-model="passphrase" class="form-control"
               placeholder="Passphrase *" required autocomplete="off">
             <span class="form-label">Passphrase *</span>
+            <password v-model="passphrase" :strength-meter-only="true"
+            strength-meter-class="password-strength"/>
           </label>
           <label class="form-group">
             <input v-model.trim="hint" class="form-control"
@@ -157,9 +159,11 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
+const Password = () => import('vue-password-strength-meter');
+
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, Modal, Spinner, Password },
   mixins: [request()],
   props: {
     state: {

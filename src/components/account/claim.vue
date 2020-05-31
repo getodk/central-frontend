@@ -28,6 +28,8 @@ except according to the terms contained in the LICENSE file.
                 class="form-control" placeholder="New Password *" required
                 autocomplete="new-password">
               <span class="form-label">New Password *</span>
+              <password v-model="password" :strength-meter-only="true"
+               strength-meter-class="password-strength"/>
             </label>
             <div class="panel-footer">
               <button :disabled="awaitingResponse" type="submit"
@@ -47,9 +49,11 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
+const Password = () => import('vue-password-strength-meter');
+
 export default {
   name: 'AccountClaim',
-  components: { Spinner },
+  components: { Spinner, Password },
   mixins: [request()],
   data() {
     return {
@@ -62,6 +66,10 @@ export default {
   },
   methods: {
     submit() {
+      if (this.password.length < 10) {
+        this.$alert().danger('Please enter minimum 10 characters password');
+        return;
+      }
       const headers = {};
       const { token } = this.$route.query;
       if (token != null) headers.Authorization = `Bearer ${token}`;

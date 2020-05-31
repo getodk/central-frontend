@@ -37,6 +37,8 @@ except according to the terms contained in the LICENSE file.
             autocomplete="new-password">
           <span class="form-label">New password (confirm) *</span>
         </label>
+        <password v-model="newPassword" :strength-meter-only="true"
+         strength-meter-class="password-strength"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
           Change password <spinner :state="awaitingResponse"/>
@@ -56,9 +58,11 @@ import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
+const Password = () => import('vue-password-strength-meter');
+
 export default {
   name: 'UserEditPassword',
-  components: { Spinner },
+  components: { Spinner, Password },
   mixins: [request()],
   data() {
     return {
@@ -83,6 +87,10 @@ export default {
       this.mismatch = this.newPassword !== this.confirm;
       if (this.mismatch) {
         this.$alert().danger('Please check that your new passwords match.');
+        return;
+      }
+      if (this.newPassword.length < 10) {
+        this.$alert().danger('Please enter minimum 10 characters password');
         return;
       }
       const data = { old: this.oldPassword, new: this.newPassword };
