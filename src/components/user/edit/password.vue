@@ -29,6 +29,8 @@ except according to the terms contained in the LICENSE file.
             type="password" class="form-control" placeholder="New password *"
             required autocomplete="new-password">
           <span class="form-label">New password *</span>
+          <password v-model="newPassword" strength-meter-only
+            strength-meter-class="password-strength"/>
         </label>
         <label :class="{ 'has-error': mismatch }" class="form-group">
           <input id="user-edit-password-confirm" v-model="confirm"
@@ -37,8 +39,6 @@ except according to the terms contained in the LICENSE file.
             autocomplete="new-password">
           <span class="form-label">New password (confirm) *</span>
         </label>
-        <password v-model="newPassword" :strength-meter-only="true"
-         strength-meter-class="password-strength"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
           Change password <spinner :state="awaitingResponse"/>
@@ -58,11 +58,12 @@ import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
-const Password = () => import('vue-password-strength-meter');
-
 export default {
   name: 'UserEditPassword',
-  components: { Spinner, Password },
+  components: {
+    Spinner,
+    Password: () => import('vue-password-strength-meter')
+  },
   mixins: [request()],
   data() {
     return {
@@ -85,12 +86,12 @@ export default {
   methods: {
     submit() {
       this.mismatch = this.newPassword !== this.confirm;
-      if (this.mismatch) {
-        this.$alert().danger('Please check that your new passwords match.');
+      if (this.newPassword.length < 10) {
+        this.$alert().danger('Please input a password at least 10 characters long.');
         return;
       }
-      if (this.newPassword.length < 10) {
-        this.$alert().danger('Please enter minimum 10 characters password');
+      if (this.mismatch) {
+        this.$alert().danger('Please check that your new passwords match.');
         return;
       }
       const data = { old: this.oldPassword, new: this.newPassword };
