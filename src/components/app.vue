@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <!-- Do not show the navbar until the first time a navigation is confirmed.
     The user's session may change during that time, affecting how the navbar is
     rendered. -->
-    <navbar v-show="firstNavigationConfirmed"/>
+    <navbar v-show="anyNavigationConfirmed"/>
     <alert id="app-alert"/>
     <div class="container-fluid">
       <router-view/>
@@ -23,21 +23,21 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  computed: {
-    // Vue seems to trigger the initial navigation before creating App. If the
-    // initial navigation is synchronous, Vue seems to confirm the navigation
-    // before creating App. However, if the initial navigation is asynchronous,
-    // Vue seems to create App before waiting to confirm the navigation.
-    firstNavigationConfirmed() {
-      return this.$store.state.router.navigations.first.confirmed;
-    }
-  },
+  // Vue seems to trigger the initial navigation before creating App. If the
+  // initial navigation is synchronous, Vue seems to confirm the navigation
+  // before creating App. However, if the initial navigation is asynchronous,
+  // Vue seems to create App before confirming the navigation.
+  computed: mapState({
+    anyNavigationConfirmed: (state) => state.router.anyNavigationConfirmed
+  }),
   mounted() {
     // The `disabled` class on an <a> element does not prevent keyboard
     // navigation.

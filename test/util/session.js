@@ -12,6 +12,7 @@ export const mockLogin = (options = undefined) => {
     .createPast(1, { role: 'admin', ...options })
     .first();
   store.commit('setData', { key: 'currentUser', value: new User(user) });
+  store.commit('setSendInitialRequests', false);
 };
 
 export const submitLoginForm = (wrapper, email) =>

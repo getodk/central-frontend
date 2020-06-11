@@ -31,7 +31,6 @@ import axios from 'axios';
 
 import { StoreAlert } from './util/alert';
 import { $tcPath, $tcn } from './util/i18n';
-import { uniqueSequence } from './util/util';
 
 
 
@@ -54,7 +53,6 @@ Vue.prototype.$alert = function $alert() {
 Vue.prototype.$http = axios;
 // Adding $logger makes it easier to silence certain logging during testing.
 Vue.prototype.$logger = console;
-Vue.prototype.$uniqueId = uniqueSequence();
 
 // i18n
 Vue.prototype.$tcn = $tcn;

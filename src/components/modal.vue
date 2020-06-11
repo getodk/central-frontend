@@ -34,6 +34,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Alert from './alert.vue';
 
+let id = 0;
+
 export default {
   name: 'Modal',
   components: { Alert },
@@ -54,7 +56,7 @@ export default {
     }
   },
   data() {
-    const id = this.$uniqueId();
+    id += 1;
     return {
       titleId: `modal-title${id}`,
       mousedownOutsideDialog: false

@@ -43,6 +43,22 @@ Vue.prototype.$logger = { log: noop, error: noop };
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// DESTROY COMPONENT
+
+afterEach(() => {
+  destroyMarkedComponent();
+
+  const afterScript = document.querySelector('body > script:last-of-type + *');
+  if (afterScript != null) {
+    // eslint-disable-next-line no-console
+    console.log(`Unexpected element: ${afterScript.outerHTML}`);
+    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+  }
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // ROUTER
 
 /*
@@ -74,7 +90,37 @@ destroy the component. This approach is admittedly fragile, relying on
 undocumented VueRouter behavior, and it may need to change with updates to the
 vue-router package.
 */
+store.commit('setSendInitialRequests', false);
 mount(Blank, { router });
+store.commit('setSendInitialRequests', true);
+
+let lastRoute = null;
+afterEach(() => {
+  if (router.currentRoute === lastRoute) {
+    store.commit('resetRouterState');
+    return undefined;
+  }
+
+  return new Promise((resolve, reject) => {
+    store.commit('setUnsavedChanges', false);
+    store.commit('setSendInitialRequests', false);
+    const random = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    // If the next test that uses the router tries to navigate to the current
+    // location, the navigation will be aborted. To prevent that, we navigate to
+    // a unique location before the next test.
+    router.push(
+      `/not-found/${random}`,
+      () => {
+        store.commit('resetRouterState');
+        lastRoute = router.currentRoute;
+        resolve();
+      },
+      () => {
+        reject(new Error('navigation aborted'));
+      }
+    );
+  });
+});
 
 initNavGuards();
 afterEach(clearNavGuards);
@@ -82,32 +128,12 @@ afterEach(clearNavGuards);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DESTROY COMPONENT
-
-afterEach(() => {
-  destroyMarkedComponent();
-
-  const afterScript = document.querySelector('body > script:last-of-type + *');
-  if (afterScript != null) {
-    // eslint-disable-next-line no-console
-    console.log(`Unexpected element: ${afterScript.outerHTML}`);
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
-  }
-});
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // VUEX
 
-// Reset the store.
 afterEach(() => {
   store.commit('resetAlert');
   store.commit('resetRequests');
   store.commit('clearData');
-
-  // We do not reset the router state, because mockHttp() does that. (Though
-  // perhaps it would be better to move that code here?)
 });
 
 

@@ -26,20 +26,59 @@ export default router;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// LOAD INITIAL LOCALE
+// ROUTER STATE
+
+// Set select properties of store.state.router.
 
 router.beforeEach((to, from, next) => {
-  if (!store.state.router.loadLocale) {
+  store.commit('triggerNavigation');
+  next();
+});
+router.afterEach(to => {
+  store.commit('setCurrentRoute', to);
+  store.commit('confirmNavigation');
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// INITIAL REQUESTS
+
+const initialLocale = () => {
+  return window.navigator.language.split('-', 1)[0];
+};
+
+// Implements the restoreSession meta field.
+const restoreSession = (to) => {
+  if (!to.matched[to.matched.length - 1].meta.restoreSession)
+    return Promise.resolve();
+  return Vue.prototype.$http.get('/v1/sessions/restore')
+    .then(({ data }) => store.dispatch('get', [{
+      key: 'currentUser',
+      url: '/users/current',
+      headers: { Authorization: `Bearer ${data.token}` },
+      extended: true,
+      success: () => {
+        store.commit('setData', { key: 'session', value: data });
+      }
+    }]));
+};
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.router.sendInitialRequests) {
     next();
     return;
   }
 
-  const locale = window.navigator.language.split('-', 1)[0];
-  // TODO. Should this be concurrent with the request to restore the session?
-  loadLocale(locale).finally(() => {
-    store.commit('setLoadLocale', false);
-    next();
-  });
+  Promise.all([
+    loadLocale(initialLocale()).catch(noop),
+    restoreSession(to).catch(noop)
+  ])
+    .then(() => {
+      store.commit('setSendInitialRequests', false);
+      next();
+    })
+    .catch(noop);
 });
 
 
@@ -47,11 +86,8 @@ router.beforeEach((to, from, next) => {
 ////////////////////////////////////////////////////////////////////////////////
 // LOGIN
 
-// nextByLoginStatus() implements the requireLogin and requireAnonymity meta
-// fields. It navigates based on whether the user is logged in and whether the
-// route being navigated to requires login, requires anonymity, or requires
-// neither.
-const nextByLoginStatus = (to, next) => {
+// Implements the requireLogin and requireAnonymity meta fields.
+router.beforeEach((to, from, next) => {
   const { meta } = to.matched[to.matched.length - 1];
   if (meta.requireLogin) {
     if (store.getters.loggedIn) {
@@ -67,37 +103,6 @@ const nextByLoginStatus = (to, next) => {
       next();
   } else {
     next();
-  }
-};
-
-// Implements the restoreSession meta field.
-router.beforeEach((to, from, next) => {
-  const isFirstNavigation = !store.state.router.navigations.first.triggered;
-  if (isFirstNavigation) store.commit('triggerNavigation', 'first');
-  store.commit('triggerNavigation', 'last');
-
-  const { restoreSession } = to.matched[to.matched.length - 1].meta;
-  // In production, the last condition is not strictly needed: if this is the
-  // first navigation triggered, the user is necessarily logged out. However,
-  // the condition is useful for testing, where the user might be logged in
-  // before the first navigation is triggered.
-  if (isFirstNavigation && restoreSession && store.getters.loggedOut) {
-    Vue.prototype.$http.get('/v1/sessions/restore')
-      .then(({ data }) => store.dispatch('get', [{
-        key: 'currentUser',
-        url: '/users/current',
-        headers: { Authorization: `Bearer ${data.token}` },
-        extended: true,
-        success: () => {
-          store.commit('setData', { key: 'session', value: data });
-        }
-      }]))
-      .catch(noop)
-      .finally(() => {
-        nextByLoginStatus(to, next);
-      });
-  } else {
-    nextByLoginStatus(to, next);
   }
 });
 
@@ -136,14 +141,6 @@ router.afterEach(() => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // OTHER NAVIGATION GUARDS
-
-// Set router state.
-router.afterEach(to => {
-  store.commit('setCurrentRoute', to);
-  if (!store.state.router.navigations.first.confirmed)
-    store.commit('confirmNavigation', 'first');
-  store.commit('confirmNavigation', 'last');
-});
 
 router.afterEach(() => {
   if (store.state.alert.state) store.commit('hideAlert');
