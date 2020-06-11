@@ -55,7 +55,7 @@ except according to the terms contained in the LICENSE file.
               <summary-item v-if="currentUser.can('user.list')"
                 route-to="/users" icon="user-circle">
                 <template #heading>
-                  {{ users.length.toLocaleString() }}
+                  {{ $n(users.length, 'default') }}
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
@@ -65,7 +65,7 @@ except according to the terms contained in the LICENSE file.
               </summary-item>
               <summary-item clickable icon="archive" @click="scrollToProjects">
                 <template #heading>
-                  {{ projects.length.toLocaleString() }}
+                  {{ $n(projects.length, 'default') }}
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>

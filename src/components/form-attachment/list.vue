@@ -314,8 +314,8 @@ export default {
               const uploaded = total - this.uploadStatus.remaining;
               return this.$tc('problem.default', uploaded, {
                 message,
-                uploaded: uploaded.toLocaleString(),
-                total: total.toLocaleString()
+                uploaded: this.$n(uploaded, 'default'),
+                total: this.$n(total, 'default')
               });
             }
           });

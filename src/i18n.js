@@ -27,7 +27,18 @@ const fallbackLocale = 'en';
 
 const fallbackNumberFormats = {
   default: {},
+  percent: { style: 'percent' }
 };
+
+for (let i = 1; i < 15; i += 1)
+  fallbackNumberFormats[`maximumFractionDigits${i}`] = { maximumFractionDigits: i };
+
+for (let i = 1; i < 8; i += 1) {
+  fallbackNumberFormats[`fractionDigits${i}`] = {
+    minimumFractionDigits: i,
+    maximumFractionDigits: i
+  };
+}
 
 const numberFormats = {
   [fallbackLocale]: fallbackNumberFormats,

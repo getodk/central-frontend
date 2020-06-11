@@ -147,9 +147,7 @@ export default {
     },
     percentLoaded() {
       const { loaded, total } = this.uploadStatus.progress;
-      // Not using the option { style: 'percent' }, because it is not supported
-      // in IE 10.
-      return `${Math.floor(100 * (loaded / total)).toLocaleString()}%`;
+      return this.$n(loaded / total, 'percent');
     }
   },
   updated() {

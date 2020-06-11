@@ -29,14 +29,15 @@ except according to the terms contained in the LICENSE file.
 
           <button id="submission-list-analyze-button" type="button"
             class="btn btn-primary" :disabled="analyzeDisabled"
-            :title="analyzeButtonTitle" @click="showModal('analyze')">
-            <span class="icon-plug"></span>Analyze via OData&hellip;
+            :title="analyzeDisabled ? $t('analyzeDisabled') : null"
+            @click="showModal('analyze')">
+            <span class="icon-plug"></span>{{ $t('action.analyze') }}&hellip;
           </button>
         </template>
       </float-row>
       <template v-if="submissions != null">
         <p v-if="submissions.length === 0" class="empty-table-message">
-          There are no Submissions yet.
+          {{ $t('emptyTable') }}
         </p>
         <submission-table v-else-if="fields != null" :base-url="baseUrl"
           :submissions="submissions" :fields="fields"
@@ -152,9 +153,9 @@ export default {
       return `${this.baseUrl}/submissions.csv.zip`;
     },
     downloadButtonText() {
-      return this.formVersion.submissions <= 1
-        ? 'Download all records'
-        : `Download all ${this.formVersion.submissions.toLocaleString()} records`;
+      return this.formVersion.submissions > 1
+        ? this.$tcn('action.download.withCount', this.formVersion.submissions)
+        : this.$t('action.download.withoutCount');
     },
     analyzeDisabled() {
       // If an encrypted form has no submissions, then there will never be
@@ -162,11 +163,6 @@ export default {
       // encrypted).
       return (this.formVersion.keyId != null && this.formVersion.submissions === 0) ||
         this.keys.length !== 0;
-    },
-    analyzeButtonTitle() {
-      return this.analyzeDisabled
-        ? 'OData access is unavailable due to Form encryption'
-        : null;
     }
   },
   watch: {
@@ -193,23 +189,19 @@ export default {
     loadingMessageText({ top, skip = 0 }) {
       if (skip === 0) {
         if (this.formVersion == null || this.formVersion.submissions === 0)
-          return 'Loading Submissions…';
-        if (this.formVersion.submissions > top) {
-          const total = this.formVersion.submissions.toLocaleString();
-          return `Loading the first ${top.toLocaleString()} of ${total} Submissions…`;
-        }
-        return this.formVersion.submissions === 1
-          ? 'Loading 1 Submission…'
-          : `Loading ${this.formVersion.submissions.toLocaleString()} Submissions…`;
+          return this.$t('loading.withoutCount');
+        if (this.formVersion.submissions <= top)
+          return this.$tcn('loading.all', this.formVersion.submissions);
+        return this.$t('loading.first', { top, count: this.formVersion.submissions });
       }
       const remaining = this.originalCount - this.submissions.length;
       // This case should be rare or impossible.
-      if (remaining <= 0) return 'Loading Submissions…';
+      if (remaining <= 0) return this.$t('loading.withoutCount');
       if (remaining > top)
-        return `Loading ${top.toLocaleString()} more of ${remaining.toLocaleString()} remaining Submissions…`;
-      return remaining === 1
-        ? 'Loading the last Submission…'
-        : `Loading the last ${remaining.toLocaleString()} Submissions…`;
+        return this.$t('loading.middle', { top, count: remaining });
+      return remaining > 1
+        ? this.$tcn('loading.last.multiple', remaining)
+        : this.$t('loading.last.one');
     },
     oDataUrl(top, skip = 0) {
       return `${this.baseUrl}.svc/Submissions?%24top=${top}&%24skip=${skip}&%24count=true`;
@@ -240,17 +232,9 @@ export default {
       }
 
       const remaining = this.originalCount - this.submissions.length;
-      // A negative value should be rare or impossible.
-      if (remaining <= 0)
-        this.message = null;
-      else {
-        this.message = {
-          text: remaining === 1
-            ? '1 row remains.'
-            : `${remaining.toLocaleString()} rows remain.`,
-          spinner: false
-        };
-      }
+      this.message = remaining > 0
+        ? { text: this.$tcn('remaining', remaining), spinner: false }
+        : null;
     },
     fetchInitialData() {
       this.message = {
@@ -344,3 +328,30 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "download": {
+        "withCount": "Download all {count} record | Download all {count} records",
+        "withoutCount": "Download all records"
+      },
+      "analyze": "Analyze via OData"
+    },
+    "analyzeDisabled": "OData access is unavailable due to Form encryption",
+    "loading": {
+      "withoutCount": "Loading Submissions…",
+      "all": "Loading {count} Submission… | Loading {count} Submissions…",
+      "first": "Loading the first {top} of {count} Submissions…",
+      "middle": "Loading {top} more of {count} remaining Submissions…",
+      "last": {
+        "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
+        "one": "Loading the last Submission…"
+      }
+    },
+    "emptyTable": "There are no Submissions yet.",
+    "remaining": "{count} row remains. | {count} rows remain."
+  }
+}
+</i18n>

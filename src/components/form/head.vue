@@ -90,7 +90,7 @@ except according to the terms contained in the LICENSE file.
                   {{ $t('draftNav.tab.attachments') }}
                   <template v-if="attachments != null">
                     <span v-show="missingAttachmentCount !== 0" class="badge">
-                      {{ missingAttachmentCount.toLocaleString() }}
+                      {{ $n(missingAttachmentCount, 'default') }}
                     </span>
                   </template>
                 </router-link>

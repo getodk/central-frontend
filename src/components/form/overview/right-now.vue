@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       </form-version-summary-item>
       <summary-item :route-to="formPath('submissions')" icon="inbox">
         <template #heading>
-          {{ form.submissions.toLocaleString() }}
+          {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>
         </template>
         <template #body>

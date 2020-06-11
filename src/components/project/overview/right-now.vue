@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <summary-item :route-to="projectPath('app-users')" icon="user-circle">
         <template #heading>
-          {{ project.appUsers.toLocaleString() }}
+          {{ $n(project.appUsers, 'default') }}
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <summary-item clickable icon="file-text"
         @click="$emit('scroll-to-forms')">
         <template #heading>
-          {{ project.forms.toLocaleString() }}
+          {{ $n(project.forms, 'default') }}
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
