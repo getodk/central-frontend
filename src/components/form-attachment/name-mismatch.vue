@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="state" backdrop hideable @hide="cancel">
     <template #title>
-      {{ $t(attachment.exists ? 'title.replace' : 'title.upload') }}
+      {{ attachment.exists ? $t('title.replace') : $t('title.upload') }}
     </template>
     <template #body>
       <div class="modal-introduction">

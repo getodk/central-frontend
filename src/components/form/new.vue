@@ -16,7 +16,7 @@ definition for an existing form -->
   <modal id="form-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
     <template #title>
-      {{ $t(formDraft == null ? 'title.create' : 'title.update') }}
+      {{ formDraft == null ? $t('title.create') : $t('title.update') }}
     </template>
     <template #body>
       <div v-show="warnings != null" class="modal-warnings">
@@ -27,7 +27,7 @@ definition for an existing form -->
         </ul>
         <p>
           {{ $t('warningsText[1]') }}
-          {{ $t(formDraft == null ? 'warningsText[2].create' : 'warningsText[2].update') }}
+          {{ formDraft == null ? $t('warningsText[2].create') : $t('warningsText[2].update') }}
         </p>
         <p>
           <button type="button" class="btn btn-primary"
@@ -38,7 +38,7 @@ definition for an existing form -->
       </div>
       <div class="modal-introduction">
         <p>
-          {{ $t(formDraft == null ? 'introduction[0].create' : 'introduction[0].update') }}
+          {{ formDraft == null ? $t('introduction[0].create') : $t('introduction[0].update') }}
           <i18n path="introduction[1].full">
             <template #tools>
               <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
