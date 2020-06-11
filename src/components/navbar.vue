@@ -148,7 +148,6 @@ $shadow-color: #dedede;
 
   .navbar-nav {
     font-size: $font-size-button;
-    margin-top: -1 * $border-height;
 
     > li > a {
       &, &:hover, &:focus {
@@ -164,6 +163,8 @@ $shadow-color: #dedede;
     }
 
     .navbar-nav {
+      margin-top: -1 * $border-height;
+
       > li > a {
         border-top: transparent solid $border-height;
         margin-right: 10px;
@@ -197,7 +198,7 @@ $shadow-color: #dedede;
         margin-left: 30px;
       }
 
-      &.navbar-right > li > a {
+      &.navbar-right > li:last-child > a {
         margin-right: -10px;
       }
     }
@@ -228,12 +229,18 @@ $shadow-color: #dedede;
     .navbar-nav {
       margin-top: 0;
 
-      .active a {
+      .active > a, .open > a {
         border-left: $border-height solid #fff;
         padding-left: 15px - $border-height;
 
         &, &:hover, &:focus {
           background-color: $color-accent-secondary;
+          color: #fff;
+        }
+      }
+
+      .open .dropdown-menu > li > a {
+        &, &:hover, &:focus {
           color: #fff;
         }
       }
