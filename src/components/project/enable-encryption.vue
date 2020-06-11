@@ -12,112 +12,92 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="project-enable-encryption" :state="state" backdrop
     :hideable="!awaitingResponse" @hide="$emit(success ? 'success' : 'hide')">
-    <template #title>Enable Encryption</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <template v-if="step === 0">
         <div class="modal-introduction">
           <div class="info-block">
-            <p>If you enable encryption, the following things will happen:</p>
+            <p>{{ $t('steps[0].introduction[0][0]') }}</p>
             <div class="info-item">
               <span class="icon-check"></span>
-              <p>
-                Finalized Submission data will be encrypted on mobile devices.
-              </p>
+              <p>{{ $t('steps[0].introduction[0][1]') }}</p>
             </div>
             <div class="info-item">
               <span class="icon-check"></span>
-              <p>
-                Submission data at rest will be encrypted on the Central server.
-              </p>
+              <p>{{ $t('steps[0].introduction[0][2]') }}</p>
             </div>
             <div class="info-item">
               <span class="icon-circle-o"></span>
-              <p>
-                Forms configured with manual <code>&lt;submission&gt;</code>
-                keys will continue to use those keys, and must be manually
-                decrypted.
-              </p>
-              <p>
-                To use the automatic Central encryption process on these Forms,
-                remove the <code>base64RsaPublicKey</code> configuration.
-              </p>
+              <i18n tag="p" path="steps[0].introduction[0][3][0]">
+                <template #submission>
+                  <code>&lt;submission&gt;</code>
+                </template>
+              </i18n>
+              <i18n tag="p" path="steps[0].introduction[0][3][1]">
+                <template #base64RsaPublicKey>
+                  <code>base64RsaPublicKey</code>
+                </template>
+              </i18n>
             </div>
             <div class="info-item">
               <span class="icon-close"></span>
-              <p>
-                You will no longer be able to preview Submission data online.
-              </p>
+              <p>{{ $t('steps[0].introduction[0][4]') }}</p>
             </div>
             <div class="info-item">
               <span class="icon-close"></span>
-              <p>You will no longer be able to connect to data over OData.</p>
+              <p>{{ $t('steps[0].introduction[0][5]') }}</p>
             </div>
           </div>
           <div class="info-block">
-            <p>
-              In addition, the following are true in this version of ODK
-              Central:
-            </p>
+            <p>{{ $t('steps[0].introduction[1][0]') }}</p>
             <div class="info-item">
               <span class="icon-circle-o"></span>
-              <p>Existing Submissions will remain unencrypted.</p>
-              <p>
-                In a future version, you will have the option to encrypt
-                existing data.
-              </p>
+              <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
+              <p>{{ $t('steps[0].introduction[1][1][1]') }}</p>
             </div>
             <div class="info-item">
               <span class="icon-close"></span>
-              <p>Encryption cannot be turned off once enabled.</p>
-              <p>
-                In a future version, you will be able to disable encryption,
-                which will decrypt your data. This will be true even if you
-                enable encryption now.
-              </p>
+              <p>{{ $t('steps[0].introduction[1][2][0]') }}</p>
+              <p>{{ $t('steps[0].introduction[1][2][1]') }}</p>
             </div>
           </div>
-          <p>
-            You can learn more about encryption
-            <doc-link to="central-encryption/">here</doc-link>. If this sounds
-            like something you want, press Next to proceed.
-          </p>
+          <i18n tag="p" path="steps[0].introduction[2].full">
+            <template #here>
+              <doc-link to="central-encryption/">here</doc-link>
+            </template>
+          </i18n>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="moveToForm">
-            Next
+            {{ $t('action.next') }}
           </button>
           <button type="button" class="btn btn-link" @click="$emit('hide')">
-            Never mind, cancel
+            {{ $t('action.neverMind') }}
           </button>
         </div>
       </template>
       <template v-else-if="step === 1">
         <div class="modal-introduction">
-          <p>
-            First, you will need to choose a passphrase. This passphrase will be
-            required to decrypt your Submissions. For your privacy, the server
-            will not remember this passphrase: only people with the passphrase
-            will be able to decrypt and read your Submission data.
-          </p>
-          <p>
-            There are no length or content restrictions on the passphrase, but
-            if you lose it, there is <strong>no</strong> way to recover it or
-            your data!
-          </p>
+          <p>{{ $t('steps[1].introduction[0]') }}</p>
+          <i18n tag="p" path="steps[1].introduction[1].full">
+            <template #no>
+              <strong>{{ $t('steps[1].introduction[1].no') }}</strong>
+            </template>
+          </i18n>
         </div>
         <form @submit.prevent="submit">
           <form-group ref="passphrase" v-model="passphrase"
-            placeholder="Passphrase" required autocomplete="off"/>
-          <form-group v-model="hint" placeholder="Passphrase hint (optional)"
+            :placeholder="$t('field.passphrase')" required autocomplete="off"/>
+          <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-primary"
               :disabled="awaitingResponse">
-              Next <spinner :state="awaitingResponse"/>
+              {{ $t('action.next') }} <spinner :state="awaitingResponse"/>
             </button>
             <button type="button" class="btn btn-link"
               :disabled="awaitingResponse" @click="$emit('hide')">
-              Never mind, cancel
+              {{ $t('action.neverMind') }}
             </button>
           </div>
         </form>
@@ -127,14 +107,13 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-check-circle"></span>
         </p>
         <p class="modal-introduction">
-          <strong>Success!</strong> Encryption has been configured for this
-          Project. Any mobile devices will have to fetch or refetch the latest
-          Forms for encryption to take place.
+          <strong>{{ $t('common.success') }}</strong>
+          {{ $t('steps[2].introduction') }}
         </p>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary"
             @click="$emit('success')">
-            Done
+            {{ $t('action.done') }}
           </button>
         </div>
       </template>
@@ -257,3 +236,63 @@ export default {
   text-align: center;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Enable Encryption",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "If you enable encryption, the following things will happen:",
+            "Finalized Submission data will be encrypted on mobile devices.",
+            "Submission data at rest will be encrypted on the Central server.",
+            [
+              // {submission} will have the text "<submission>", which is XML
+              // and will not be translated.
+              "Forms configured with manual {submission} keys will continue to use those keys, and must be manually decrypted.",
+              // {base64RsaPublicKey} will have the text "base64RsaPublicKey",
+              // which is code and will not be translated.
+              "To use the automatic Central encryption process on these Forms, remove the {base64RsaPublicKey} configuration."
+            ],
+            "You will no longer be able to preview Submission data online.",
+            "You will no longer be able to connect to data over OData."
+          ],
+          [
+            "In addition, the following are true in this version of ODK Central:",
+            [
+              "Existing Submissions will remain unencrypted.",
+              "In a future version, you will have the option to encrypt existing data."
+            ],
+            [
+              "Encryption cannot be turned off once enabled.",
+              "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
+            ]
+          ],
+          {
+            "full": "You can learn more about encryption {here}. If this sounds like something you want, press Next to proceed.",
+            "here": "here"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data.",
+          {
+            "full": "There are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!",
+            "no": "no"
+          }
+        ]
+      },
+      {
+        "introduction": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
+      }
+    ],
+    "field": {
+      "passphrase": "Passphrase",
+      "hint": "Passphrase hint (optional)"
+    }
+  }
+}
+</i18n>
