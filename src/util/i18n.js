@@ -61,6 +61,8 @@ export function $tcn(path, choice, values = undefined) {
 // each plural form. (It looks like the next major version of Vue I18n will have
 // a more elegant solution for this.)
 export function $tcPath(path, choice) {
+  // This is how we identify these paths in /bin/transifex/restructure.js.
+  if (!path.endsWith('.full')) throw new Error('invalid path');
   // `path` is the path to an array, but this.$t(path) will actually return a
   // non-array object: see https://github.com/intlify/vue-i18n-loader/issues/30.
   const choices = Object.keys(this.$t(path)).length;
