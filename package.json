@@ -37,6 +37,7 @@
     "eslint-plugin-import": "~2.20",
     "eslint-plugin-vue": "~5.2",
     "faker": "~4.1",
+    "json5-loader": "~4.0",
     "jsqr": "~1.0",
     "karma": "~5.0",
     "karma-chrome-launcher": "~2.2",
