@@ -49,7 +49,7 @@ const initialLocale = () => {
     const locale = localStorage.getItem('locale');
     if (locale != null) return locale;
   } catch (e) {}
-  return window.navigator.language.split('-', 1)[0];
+  return navigator.language.split('-', 1)[0];
 };
 
 // Implements the restoreSession meta field.

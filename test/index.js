@@ -142,7 +142,7 @@ afterEach(() => {
 // LOCAL STORAGE
 
 afterEach(() => {
-  window.localStorage.clear();
+  localStorage.clear();
 });
 
 

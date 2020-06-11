@@ -10,17 +10,16 @@ import { trigger } from './util/event';
 describe('router', () => {
   describe('i18n', () => {
     before(() => {
-      const { navigator } = window;
       const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
       has.should.be.false();
     });
     afterEach(() => {
-      delete window.navigator.language;
+      delete navigator.language;
       return loadLocale('en');
     });
 
     const setLanguage = (locale) => {
-      Object.defineProperty(window.navigator, 'language', {
+      Object.defineProperty(navigator, 'language', {
         value: locale,
         configurable: true
       });
@@ -48,7 +47,7 @@ describe('router', () => {
     });
 
     it('loads the locale saved to local storage', () => {
-      window.localStorage.setItem('locale', 'es');
+      localStorage.setItem('locale', 'es');
       return load('/login').then(() => {
         i18n.locale.should.equal('es');
       });

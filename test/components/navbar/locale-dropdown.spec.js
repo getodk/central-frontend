@@ -43,7 +43,7 @@ describe('NavbarLocaleDropdown', () => {
 
     it('saves the new locale in local storage', () =>
       selectLocale().then(() => {
-        window.localStorage.getItem('locale').should.equal('es');
+        localStorage.getItem('locale').should.equal('es');
       }));
   });
 });
