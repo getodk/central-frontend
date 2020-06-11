@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       :placeholder="`${placeholder}${star}`" :required="required"
       :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
       @change="$emit('change', $event.target.value)">
-    <span class="form-label"><slot name="label">{{ placeholder }}</slot>{{ star }}</span>
+    <span class="form-label">{{ placeholder }}{{ star }}</span>
   </label>
 </template>
 

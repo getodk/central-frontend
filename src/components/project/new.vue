@@ -24,9 +24,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <form @submit.prevent="submit">
         <form-group ref="name" v-model.trim="name"
-          :placeholder="$t('namePlaceholder')" required autocomplete="off">
-          <template #label>{{ $t('field.name') }}</template>
-        </form-group>
+          :placeholder="$t('field.name')" required autocomplete="off"/>
         <div class="modal-actions">
           <button :disabled="awaitingResponse" type="submit"
             class="btn btn-primary">
@@ -96,8 +94,7 @@ export default {
         "full": "For more information, please see {helpArticle}.",
         "helpArticle": "this help article"
       }
-    ],
-    "namePlaceholder": "My Project name"
+    ]
   }
 }
 </i18n>
