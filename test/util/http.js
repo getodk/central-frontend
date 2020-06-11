@@ -914,7 +914,9 @@ export const load = (
     .modify(series => {
       const { matched } = router.resolve(location).route;
       const { meta } = matched[matched.length - 1];
-      return meta.requireAnonymity ? series.restoreSession(false) : series;
+      return meta.restoreSession && meta.requireAnonymity
+        ? series.restoreSession(false)
+        : series;
     })
     .respondFor(location, respondForOptions);
 };

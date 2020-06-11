@@ -30,7 +30,7 @@ describe('NavbarLocaleDropdown', () => {
     it('loads the locale', () =>
       selectLocale()
         // Wait for the locale to be loaded.
-        .then(() => wait())
+        .then(() => wait(100))
         .then(() => {
           i18n.locale.should.equal('es');
         }));
@@ -41,7 +41,7 @@ describe('NavbarLocaleDropdown', () => {
         toggle.text().trim().should.equal('es');
       }));
 
-    it('saves the new locale in locale storage', () =>
+    it('saves the new locale in local storage', () =>
       selectLocale().then(() => {
         window.localStorage.getItem('locale').should.equal('es');
       }));
