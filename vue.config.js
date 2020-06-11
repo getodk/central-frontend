@@ -10,6 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 module.exports = {
+  chainWebpack: (config) => {
+    // We don't want to prefetch all locale files.
+    config.plugins.delete('prefetch');
+  },
   lintOnSave: false,
   pluginOptions: {
     i18n: {
