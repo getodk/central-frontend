@@ -24,7 +24,12 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(1)">
       <template #title>{{ $t('steps[1].title') }}</template>
       <p>
-        {{ $tcn('steps[1].body[0]', form.submissions) }}
+        <template v-if="form.submissions === 0">
+          {{ $t('steps[1].body[0].none') }}
+        </template>
+        <template v-else>
+          {{ $tcn('steps[1].body[0].any', form.submissions) }}
+        </template>
         {{ $t('steps[1].body[1]') }}
         <template v-if="project.appUsers === 0">
           <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>&nbsp;
@@ -58,7 +63,12 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(2)">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        {{ $tcn('steps[2].body[0]', form.submissions) }}
+        <template v-if="form.submissions === 0">
+          {{ $t('steps[2].body[0].none') }}
+        </template>
+        <template v-else>
+          {{ $tcn('steps[2].body[0].any', form.submissions) }}
+        </template>
         <i18n path="steps[2].body[1].full">
           <template #submissionsTab>
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
@@ -139,7 +149,10 @@ export default {
       {
         "title": "Download Form on survey clients and submit data",
         "body": [
-          "Nobody has submitted any data to this Form yet. | A total of 1 Submission has been sent to this server. | A total of {count} Submissions have been sent to this server.",
+          {
+            "none": "Nobody has submitted any data to this Form yet.",
+            "any": "A total of {count} Submission has been sent to this server. | A total of {count} Submissions have been sent to this server."
+          },
           "App Users will be able to see this Form on their mobile device to download and fill out.",
           {
             "none": [
@@ -169,7 +182,10 @@ export default {
       {
         "title": "Evaluate and analyze submitted data",
         "body": [
-          "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results. | You can export or synchronize the 1 Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results.",
+          {
+            "none": "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results.",
+            "any": "You can export or synchronize the 1 Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
+          },
           {
             "full": "You can do this with the Download and Analyze buttons on the {submissionsTab}.",
             "submissionsTab": "Submissions tab"

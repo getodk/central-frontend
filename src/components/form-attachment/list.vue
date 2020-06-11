@@ -308,12 +308,14 @@ export default {
             onUploadProgress: (progressEvent) => {
               this.uploadStatus.progress = progressEvent;
             },
-            problemToAlert: ({ message }) => {
+            problemToAlert: (problem) => {
               const { total } = this.uploadStatus;
               if (total === 1) return null;
               const uploaded = total - this.uploadStatus.remaining;
-              return this.$tc('problem.default', uploaded, {
-                message,
+              if (uploaded === 0)
+                return this.$t('problem.noneUploaded', problem);
+              return this.$tc('problem.someUploaded', uploaded, {
+                message: problem.message,
                 uploaded: this.$n(uploaded, 'default'),
                 total: this.$n(total, 'default')
               });
@@ -422,7 +424,8 @@ export default {
       "uploaded": "Uploaded"
     },
     "problem": {
-      "default": "{message} No files were successfully uploaded. | {message} Only 1 of {total} files was successfully uploaded. | {message} Only {uploaded} of {total} files were successfully uploaded."
+      "noneUploaded": "{message} No files were successfully uploaded.",
+      "someUploaded": "{message} Only {uploaded} of {total} files was successfully uploaded. | {message} Only {uploaded} of {total} files were successfully uploaded."
     },
     "alert": {
       "readError": "Something went wrong while reading “{filename}”.",
