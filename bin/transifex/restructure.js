@@ -73,6 +73,8 @@ const validatePluralForms = (forms) => {
     // Single quotes are used for escaping in ICU plurals.
     if (forms[i].includes("'"))
       throw new Error("We don't support straight single quotes in ICU plurals, but curly quotes are supported.");
+
+    if (forms[i].includes('#')) throw new Error('unexpected #');
   }
   if (forms.length === 2) {
     if (vars[0].length !== vars[1].length)
