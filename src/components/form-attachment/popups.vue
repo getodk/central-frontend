@@ -270,8 +270,10 @@ $popup-width: 300px;
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Upload Files",
     "duringDragover": {
+      // {attachmentName} is formatted in bold.
       "dropToUpload": "Drop now to upload this file as {attachmentName}.",
       "dragover": "Drag over the file entry you wish to replace with the file and drop to upload.",
       "dropToPrepare": {

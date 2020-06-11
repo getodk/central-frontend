@@ -121,6 +121,7 @@ export default {
     "clickForInfo": "Click here to find out more.",
     "steps": [
       {
+        // This is the title of a checklist item.
         "title": "Upload initial Form definition",
         "body": [
           "Great work!",
@@ -128,6 +129,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Upload revised Form definition (optional)",
         "body": [
           {
@@ -140,6 +142,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Upload Form Media Files",
         "body": [
           {
@@ -149,6 +152,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Test the Form on your mobile device",
         "body": [
           {
@@ -158,6 +162,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Publish the Draft",
         "body": [
           {

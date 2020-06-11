@@ -62,6 +62,8 @@ export default {
       "full": "{publishedVersion} of this Form.",
       "publishedVersion": "Published version"
     },
+    // This is preceded by a count of Submissions, for example: 10 Submissions
+    // have been…
     "submissionsCaption": "has been saved for this Form. | have been saved for this Form."
   }
 }

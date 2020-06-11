@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="projectPath()">
               {{ project.nameWithArchived() }}</router-link>
           </span>
-          <router-link :to="projectPath()">{{ $t('projectNav.link') }}</router-link>
+          <router-link :to="projectPath()">{{ $t('projectNav.action.back') }}</router-link>
         </div>
         <!-- The triangle below the project name -->
         <div></div>
@@ -268,7 +268,9 @@ body {
 {
   "en": {
     "projectNav": {
-      "link": "Back to Project Overview"
+      "action": {
+        "back": "Back to Project Overview"
+      }
     },
     "formNav": {
       "tab": {
@@ -280,6 +282,7 @@ body {
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
     "draftNav": {
+      // This is shown above the navigation tabs for the Form Draft.
       "title": "Draft",
       "action": {
         "create": "Create a new Draft"

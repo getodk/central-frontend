@@ -81,11 +81,13 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "Set Password",
     "action": {
       "set": "Set password"
     },
     "problem": {
+      // {message} is an error message from the server.
       "401_2": "{message} The link in your email may have expired, and a new email may have to be sent."
     },
     "alert": {

@@ -52,6 +52,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is shown as the title at the top of the page.
     "title": "System Management",
     "tab": {
       "backups": "Backups",

@@ -1,6 +1,14 @@
+// action: This is the text for an action, for example, the text of a button.
+// field: This is the text of a form field.
+// header: This is the text of a table column header.
+
+// tab: This is the text of a navigation tab.
+
 {
   "role": {
+    // This is shown when a user does not have a role.
     "none": "None",
+    // This is the name of a user role.
     "admin": "Administrator"
   },
   "action": {
@@ -31,6 +39,8 @@
   },
   "header": {
     "actions": "Actions",
+    // This is the text of a table column header. The column shows who created
+    // the resource and possibly also when they did so.
     "created": "Created",
     "createdBy": "Created by",
     "displayName": "Display Name",
@@ -46,20 +56,27 @@
     "submission": "Submission | Submissions",
     "webUser": "Web User | Web Users"
   },
+  // This text appears on its own and is not part of a longer sentence.
   "count": {
     "appUser": "{count} App User | {count} App Users",
     "form": "{count} Form | {count} Forms",
     "submission": "{count} Submission | {count} Submissions"
   },
   "common": {
+    // This text appears on its own in the navigation bar at the top of the
+    // page.
+    "appName": "ODK Central",
     "blank": "(blank)",
     "dangerZone": "Danger Zone",
     "none": "(none)",
+    // This is a title shown above a section of the page.
     "rightNow": "Right Now",
     "success": "Success!"
   },
   "presenter": {
     "Project": {
+      // {name} is the name of a Project. We append "(archived)" to the name if
+      // the Project is archived.
       "nameWithArchived": "{name} (archived)"
     }
   },

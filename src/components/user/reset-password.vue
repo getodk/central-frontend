@@ -75,6 +75,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Reset Password",
     "introduction": {
       "full": "Once you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed.",

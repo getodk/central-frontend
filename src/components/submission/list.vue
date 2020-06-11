@@ -343,7 +343,9 @@ export default {
     "loading": {
       "withoutCount": "Loading Submissions…",
       "all": "Loading {count} Submission… | Loading {count} Submissions…",
+      // {top} is a number.
       "first": "Loading the first {top} of {count} Submissions…",
+      // {top} is a number.
       "middle": "Loading {top} more of {count} remaining Submissions…",
       "last": {
         "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",

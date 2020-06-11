@@ -55,6 +55,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is used to show the time at which a particular user completed an
+    // action, for example: 2020/01/01 01:23 by Alice
     "text": "{dateTime} by {displayName}"
   }
 }

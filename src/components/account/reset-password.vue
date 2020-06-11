@@ -82,6 +82,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "Reset Password",
     "alert": {
       "success": "An email has been sent to {email} with further instructions."

@@ -42,6 +42,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "About Projects",
     "body": [
       "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project.",

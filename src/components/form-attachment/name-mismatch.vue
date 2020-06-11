@@ -84,11 +84,13 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": {
       "upload": "Upload File",
       "replace": "Replace File"
     },
     "introduction": [
+      // {filename} and {attachmentName} are formatted in bold.
       "Are you sure you want to upload {filename} as {attachmentName}?",
       "We are double-checking because the filenames do not match."
     ]

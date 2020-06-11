@@ -70,7 +70,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is preceded by a count of App Users, for example: 10 App Users who
+    // can…
     "appUsersCaption": "who can use a data collection client to download and submit Form data to this Project. | who can use a data collection client to download and submit Form data to this Project.",
+    // This is preceded by a count of Forms, for example: 10 Forms which can…
     "formsCaption": "which can be downloaded and given as surveys on mobile clients. | which can be downloaded and given as surveys on mobile clients."
   }
 }

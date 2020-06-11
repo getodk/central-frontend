@@ -75,6 +75,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Delete Form",
     "introduction": [
       "Are you sure you want to delete the Form {name} and all of its Submissions?",

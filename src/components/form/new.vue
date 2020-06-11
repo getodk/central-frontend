@@ -256,6 +256,7 @@ $drop-zone-vpadding: 15px;
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": {
       "create": "Create Form",
       "update": "Upload New Form Definition"

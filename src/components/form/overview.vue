@@ -136,13 +136,16 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "checklist": "Checklist",
     "draft": {
       "none": {
+        // This is a title shown above a section of the page.
         "title": "No Current Draft",
         "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
       },
       "any": {
+        // This is a title shown above a section of the page.
         "title": "Your Current Draft",
         "versionCaption": {
           "full": "{draftVersion} of this Form.",

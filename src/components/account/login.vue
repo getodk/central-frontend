@@ -119,6 +119,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "Log in",
     "problem": {
       "401_2": "Incorrect email address and/or password."

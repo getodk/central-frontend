@@ -144,14 +144,18 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a type of Media File.
     "type": {
       "image": "Image",
       "audio": "Audio",
       "video": "Video",
       "file": "Data File"
     },
+    // This is a label that is shown next to a Media File that would be replaced
+    // if the selected files were uploaded.
     "replace": "Replace",
     "notUploaded": {
+      // This is shown for a Media File that has not been uploaded.
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     }

@@ -137,6 +137,7 @@ export default {
     "clickForInfo": "Click here to find out more.",
     "steps": [
       {
+        // This is the title of a checklist item.
         "title": "Publish your first Draft version",
         "body": [
           "Great work!",
@@ -144,6 +145,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Download Form on survey clients and submit data",
         "body": [
           {
@@ -177,6 +179,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Evaluate and analyze submitted data",
         "body": [
           {
@@ -190,6 +193,7 @@ export default {
         ]
       },
       {
+        // This is the title of a checklist item.
         "title": "Manage Form retirement",
         "body": [
           {

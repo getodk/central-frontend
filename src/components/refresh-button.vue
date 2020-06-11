@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <button :disabled="disabled || refreshing" type="button"
     class="btn btn-secondary btn-refresh" @click="refresh">
-    <span class="icon-refresh"></span>{{ $t('text') }}
+    <span class="icon-refresh"></span>{{ $t('action.refresh') }}
     <spinner :state="refreshing"/>
   </button>
 </template>
@@ -59,7 +59,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "text": "Refresh list"
+    "action": {
+      "refresh": "Refresh list"
+    }
   }
 }
 </i18n>

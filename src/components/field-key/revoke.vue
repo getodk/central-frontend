@@ -75,8 +75,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Revoke User Access",
     "introduction": [
+      // {displayName} is formatted in bold.
       "Are you sure you want to revoke access from the App User {displayName}?",
       "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions.",
       "This action cannot be undone."

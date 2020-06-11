@@ -79,6 +79,7 @@ export default {
       "downloadXForm": "Download XML",
       "download": "Download"
     },
+    // Here, the user selects the format that a Form should be downloaded as.
     "format": {
       "xForm": "As XForm",
       "xlsForm": "As XLSForm"

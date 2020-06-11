@@ -99,6 +99,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "Change Password",
     "action": {
       "change": "Change password"

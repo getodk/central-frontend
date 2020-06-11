@@ -67,6 +67,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This text is shown if the user is not logged in. It is shown in the
+    // navigation bar at the top of the page.
     "notLoggedIn": "Not logged in",
     "action": {
       "logOut": "Log out"

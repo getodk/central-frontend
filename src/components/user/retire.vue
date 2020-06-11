@@ -76,6 +76,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up. An Administrator can use the
+    // pop-up to retire another Web User.
     "title": "Retiring User",
     "introduction": [
       "You are about to retire the user account “{displayName}” <{email}>. They will be immediately barred from performing any actions and logged out.",

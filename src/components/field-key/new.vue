@@ -173,6 +173,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Create App User",
     "introduction": "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created.",
     "field": {

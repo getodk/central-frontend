@@ -60,11 +60,14 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is shown as the title at the top of the page.
     "title": "User Settings",
     "tab": {
       "users": "Web Users",
       "roles": "Role Settings"
     },
+    // This is shown within a disabled navigation tab to indicate that the
+    // functionality is not yet implemented, but will be soon.
     "comingSoon": "(coming soon)"
   }
 }

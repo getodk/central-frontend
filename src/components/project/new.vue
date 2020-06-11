@@ -87,6 +87,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Create Project",
     "introduction": [
       "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device.",

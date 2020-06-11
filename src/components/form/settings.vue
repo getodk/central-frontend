@@ -92,6 +92,7 @@ export default {
 {
   "en": {
     "state": {
+      // This is a title shown above a section of the page.
       "title": "Form State",
       "body": {
         "full": "To set this Form’s state, please visit the Project {formAccessSettings}.",

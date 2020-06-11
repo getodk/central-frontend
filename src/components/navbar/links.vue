@@ -71,8 +71,14 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the text of a link shown in the navigation bar at the top of the
+    // page.
     "projects": "Projects",
+    // This is the text of a link shown in the navigation bar at the top of the
+    // page.
     "users": "Users",
+    // This is the text of a link shown in the navigation bar at the top of the
+    // page.
     "system": "System",
     "current": "(current)"
   }

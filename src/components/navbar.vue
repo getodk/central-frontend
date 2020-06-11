@@ -16,12 +16,12 @@ except according to the terms contained in the LICENSE file.
         <button type="button" class="navbar-toggle collapsed"
           data-toggle="collapse" data-target="#navbar-collapse"
           aria-expanded="false">
-          <span class="sr-only">{{ $t('toggle') }}</span>
+          <span class="sr-only">{{ $t('action.toggle') }}</span>
           <span class="navbar-icon-bar"></span>
           <span class="navbar-icon-bar"></span>
           <span class="navbar-icon-bar"></span>
         </button>
-        <router-link to="/" class="navbar-brand">{{ $t('brand') }}</router-link>
+        <router-link to="/" class="navbar-brand">{{ $t('common.appName') }}</router-link>
       </div>
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <navbar-links v-if="currentUser != null"/>
@@ -179,8 +179,9 @@ $shadow-color: #dedede;
 <i18n lang="json5">
 {
   "en": {
-    "toggle": "Toggle navigation",
-    "brand": "ODK Central"
+    "action": {
+      "toggle": "Toggle navigation"
+    }
   }
 }
 </i18n>

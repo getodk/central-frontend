@@ -231,6 +231,7 @@ export default {
       "Let’s get some things done."
     ],
     "gettingStarted": {
+      // This is a title shown above a section of the page.
       "title": "Getting Started",
       "body": [
         {
@@ -243,13 +244,20 @@ export default {
         }
       ]
     },
+    // This is a title shown above a section of the page.
     "news": "News",
     "rightNow": {
+      // This is preceded by a count of Web Users, for example: 10 Web Users who
+      // can…
       "usersCaption": "who can administer Projects through this website. | who can administer Projects through this website.",
+      // This is preceded by a count of Projects, for example: 10 Projects which
+      // can…
       "projectsCaption": "which can organize Forms and App Users for device deployment. | which can organize Forms and App Users for device deployment."
     },
+    // This is a title shown above a section of the page.
     "projectsTitle": "Projects",
     "action": {
+      // This is the text of a button that is used to create a new Project.
       "create": "New"
     },
     "header": {

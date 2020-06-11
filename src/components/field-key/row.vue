@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <ul :aria-labelledby="actionsId" class="dropdown-menu">
           <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="revoke">{{ $t('revokeAccess') }}&hellip;</a>
+            <a href="#" @click.prevent="revoke">{{ $t('action.revokeAccess') }}&hellip;</a>
           </li>
         </ul>
       </div>
@@ -81,7 +81,9 @@ export default {
   "en": {
     "seeCode": "See code",
     "accessRevoked": "Access revoked",
-    "revokeAccess": "Revoke access"
+    "action": {
+      "revokeAccess": "Revoke access"
+    }
   }
 }
 </i18n>

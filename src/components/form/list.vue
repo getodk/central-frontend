@@ -79,8 +79,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "title": "Forms",
     "action": {
+      // This is the text of a button that is used to create a new Form.
       "create": "New"
     },
     "emptyTable": "There are no Forms to show.",

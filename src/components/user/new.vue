@@ -86,6 +86,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Create Web User",
     "introduction": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
   }

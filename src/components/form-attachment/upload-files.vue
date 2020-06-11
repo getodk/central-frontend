@@ -74,6 +74,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Upload Files",
     "introduction": [
       {
