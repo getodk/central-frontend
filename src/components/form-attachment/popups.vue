@@ -87,7 +87,12 @@ some point. -->
             <span v-if="hasProgress">({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
-            {{ $tcn('duringUpload.remaining', uploadStatus.remaining) }}
+            <template v-if="uploadStatus.remaining > 1">
+              {{ $tcn('duringUpload.remaining.beforeLast', uploadStatus.remaining) }}
+            </template>
+            <template v-else>
+              {{ $t('duringUpload.remaining.last') }}
+            </template>
           </p>
         </template>
       </div>
@@ -272,7 +277,7 @@ $popup-width: 300px;
       "dragover": "Drag over the file entry you wish to replace with the file and drop to upload.",
       "dropToPrepare": {
         "full": "Drop now to prepare {countOfFiles} for upload to this Form.",
-        "countOfFiles": "1 file | {count} files"
+        "countOfFiles": "{count} file | {count} files"
       }
     },
     "afterSelection": {
@@ -281,21 +286,24 @@ $popup-width: 300px;
           "{countOfFiles} ready for upload.",
           "{countOfFiles} ready for upload."
         ],
-        "countOfFiles": "1 file | {count} files"
+        "countOfFiles": "{count} file | {count} files"
       },
       "someUnmatched": {
         "full": [
           "{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target.",
           "{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
         ],
-        "countOfFiles": "1 file | {count} files"
+        "countOfFiles": "{count} file | {count} files"
       },
       "noneMatched": "We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target. | We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets."
     },
     "duringUpload": {
-      "total": "Please wait, uploading your 1 file: | Please wait, uploading your {count} files:",
+      "total": "Please wait, uploading your {count} file: | Please wait, uploading your {count} files:",
       "current": "Sending {filename}",
-      "remaining": "This is the last file. | {count} files remain."
+      "remaining": {
+        "beforeLast": "{count} file remains. | {count} files remain.",
+        "last": "This is the last file."
+      }
     }
   }
 }

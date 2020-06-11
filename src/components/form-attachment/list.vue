@@ -429,7 +429,7 @@ export default {
     },
     "alert": {
       "readError": "Something went wrong while reading “{filename}”.",
-      "success": "1 file has been successfully uploaded. | {count} files have been successfully uploaded."
+      "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded."
     }
   }
 }

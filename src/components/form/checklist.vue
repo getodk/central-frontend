@@ -168,7 +168,7 @@ export default {
                   "Right now, {countOfAppUsers} in this Project has access to this Form, but you can always {addMore}.",
                   "Right now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}."
                 ],
-                "countOfAppUsers": "1 App User | {count} App Users",
+                "countOfAppUsers": "{count} App User | {count} App Users",
                 "addMore": "add more"
               }
             ]
@@ -184,7 +184,7 @@ export default {
         "body": [
           {
             "none": "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results.",
-            "any": "You can export or synchronize the 1 Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
+            "any": "You can export or synchronize the {count} Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
           },
           {
             "full": "You can do this with the Download and Analyze buttons on the {submissionsTab}.",

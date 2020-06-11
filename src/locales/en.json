@@ -45,8 +45,9 @@
     "webUser": "Web User | Web Users"
   },
   "count": {
-    "form": "1 Form | {count} Forms",
-    "submission": "1 Submission | {count} Submissions"
+    "appUser": "{count} App User | {count} App Users",
+    "form": "{count} Form | {count} Forms",
+    "submission": "{count} Submission | {count} Submissions"
   },
   "common": {
     "blank": "(blank)",
