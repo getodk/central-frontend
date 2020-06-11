@@ -153,8 +153,7 @@ export default {
             }
             if (isProblem(problem)) {
               this.$logger.error(problem);
-              if (problem.message != null)
-                this.$alert().danger(problem.message);
+              this.$alert().danger(problem.message);
             }
             this.problemChecks = 0;
             this.timeoutId = null;
@@ -189,7 +188,7 @@ export default {
       // the result of the request if a Problem is returned: if a Problem is
       // returned, the iframe will change pages, but if the download is
       // successful, the iframe seems not to change.
-      this.$alert().info(this.$t('alert.submitted'));
+      this.$alert().info(this.$t('alert.submit'));
 
       this.problemChecks = 300;
       if (this.timeoutId == null) this.scheduleProblemCheck();
@@ -202,7 +201,7 @@ export default {
 {
   "en": {
     "alert": {
-      "submitted": "Your data download should begin soon. If you have been waiting and it has not started, please try again."
+      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
     }
   }
 }
