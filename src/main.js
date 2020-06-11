@@ -9,12 +9,14 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 
-// Importing setup.js first, because other import statements below may import
-// some of the same modules as setup.js, and in some cases, the order in which
+// Importing setup.js first, because the import statements below may import some
+// of the same modules as setup.js, and in some cases, the order in which
 // setup.js imports modules matters.
 import './setup';
+
+import Vue from 'vue';
+
 import App from './components/app.vue';
 import i18n from './i18n';
 import router from './router';

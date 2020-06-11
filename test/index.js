@@ -1,11 +1,12 @@
+// Importing src/setup.js first, because the import statements below may import
+// some of the same modules as src/setup.js, and in some cases, the order in
+// which src/setup.js imports modules matters.
+import '../src/setup';
+
 import Vue from 'vue';
 import { mount } from 'avoriaz';
 import 'should';
 
-// Importing src/setup.js first, because other import statements below may
-// import some of the same modules as src/setup.js, and in some cases, the order
-// in which src/setup.js imports modules matters.
-import '../src/setup';
 import Blank from '../src/components/blank.vue';
 import router from '../src/router';
 import store from '../src/store';
