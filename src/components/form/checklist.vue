@@ -181,7 +181,7 @@ export default {
         "body": [
           {
             "none": "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results.",
-            "any": "You can export or synchronize the {count} Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
+            "any": "You can export or synchronize the {count} Submission on this Form to monitor and analyze the Submission for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
           },
           {
             "full": "You can do this with the Download and Analyze buttons on the {submissionsTab}.",
