@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed"
           data-toggle="collapse" data-target="#navbar-collapse"
@@ -24,62 +23,10 @@ except according to the terms contained in the LICENSE file.
         </button>
         <router-link to="/" class="navbar-brand">{{ $t('brand') }}</router-link>
       </div>
-
       <div id="navbar-collapse" class="collapse navbar-collapse">
-        <ul v-if="currentUser != null" id="navbar-links" class="nav navbar-nav">
-          <li :class="{ active: projectsLinkIsActive }">
-            <router-link id="navbar-projects-link" to="/">
-              {{ $t('link.projects') }}
-              <span v-show="projectsLinkIsActive" class="sr-only">
-                {{ $t('link.current') }}
-              </span>
-            </router-link>
-          </li>
-          <li v-if="canRoute('/users')"
-            :class="{ active: routePathStartsWith('/users') }">
-            <router-link id="navbar-users-link" to="/users">
-              {{ $t('link.users') }}
-              <span v-show="routePathStartsWith('/users')" class="sr-only">
-                {{ $t('link.current') }}
-              </span>
-            </router-link>
-          </li>
-          <li v-if="canRoute('/system/backups')"
-            :class="{ active: routePathStartsWith('/system') }">
-            <router-link id="navbar-system-link" to="/system/backups">
-              {{ $t('link.system') }}
-              <span v-show="routePathStartsWith('/system')" class="sr-only">
-                {{ $t('link.current') }}
-              </span>
-            </router-link>
-          </li>
-        </ul>
+        <navbar-links v-if="currentUser != null"/>
         <ul class="nav navbar-nav navbar-right">
-          <li v-if="$store.getters.loggedOut">
-            <a href="#" @click.prevent>
-              <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
-            </a>
-          </li>
-          <li v-else class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-              role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="icon-user-circle-o"></span>
-              <span>{{ currentUser.displayName }}</span>
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link id="navbar-edit-profile-action" to="/account/edit">
-                  {{ $t('action.editProfile') }}
-                </router-link>
-              </li>
-              <li>
-                <a id="navbar-log-out-action" href="#" @click.prevent="logOut">
-                  {{ $t('action.logOut') }}
-                </a>
-              </li>
-            </ul>
-          </li>
+          <navbar-actions/>
         </ul>
       </div>
     </div>
@@ -87,34 +34,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import request from '../mixins/request';
-import routes from '../mixins/routes';
-import { apiPaths } from '../util/request';
-import { noop } from '../util/util';
+import NavbarActions from './navbar/actions.vue';
+import NavbarLinks from './navbar/links.vue';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  mixins: [request(), routes()],
-  computed: {
-    ...requestData(['session', 'currentUser']),
-    projectsLinkIsActive() {
-      return this.$route.path === '/' || this.routePathStartsWith('/projects');
-    }
-  },
-  methods: {
-    routePathStartsWith(path) {
-      return this.$route.path === path ||
-        this.$route.path.startsWith(`${path}/`);
-    },
-    logOut() {
-      this.delete(apiPaths.session(this.session.token)).catch(noop);
-      this.$store.commit('clearData');
-      this.$router.push('/login', () => {
-        this.$alert().success(this.$t('alert.logOut'));
-      });
-    }
-  }
+  components: { NavbarActions, NavbarLinks },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['currentUser'])
 };
 </script>
 
@@ -194,10 +123,6 @@ $shadow-color: #dedede;
         }
       }
 
-      #navbar-projects-link, #navbar-users-link {
-        margin-left: 30px;
-      }
-
       &.navbar-right > li:last-child > a {
         margin-right: -10px;
       }
@@ -253,20 +178,7 @@ $shadow-color: #dedede;
 {
   "en": {
     "toggle": "Toggle navigation",
-    "brand": "ODK Central",
-    "link": {
-      "projects": "Projects",
-      "users": "Users",
-      "system": "System",
-      "current": "(current)"
-    },
-    "notLoggedIn": "Not logged in",
-    "action": {
-      "logOut": "Log out"
-    },
-    "alert": {
-      "logOut": "You have logged out successfully."
-    }
+    "brand": "ODK Central"
   }
 }
 </i18n>

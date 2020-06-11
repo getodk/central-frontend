@@ -3,6 +3,7 @@ import testData from '../../data';
 // The names of the following properties correspond to request keys.
 const defaults = {
   users: () => testData.standardUsers.sorted(),
+  user: () => testData.standardUsers.last(),
 
   roles: () => testData.standardRoles.sorted(),
   actors: () => testData.standardUsers.sorted().map(testData.toActor),
@@ -46,6 +47,7 @@ const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
 );
 
 const mapsByComponent = {
+  AccountClaim: new Map(),
   ProjectList: mapKeys(['projects', 'users']),
   ProjectHome: mapKeys(['project']),
   ProjectShow: new Map(),
@@ -69,6 +71,7 @@ const mapsByComponent = {
   FormDraftTesting: mapKeys(['keys', 'fields', 'submissionsChunk']),
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),
+  UserEdit: mapKeys(['user']),
   SystemHome: new Map(),
   BackupList: mapKeys(['backupsConfig', 'audits'], {
     audits: () => testData.standardAudits.sorted()

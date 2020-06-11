@@ -146,7 +146,7 @@ cycles: series can be chained. For example:
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     })
-    .request(component => trigger.click(component, '#navbar-users-link'))
+    .request(component => trigger.click(component, '#navbar-links-users'))
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
