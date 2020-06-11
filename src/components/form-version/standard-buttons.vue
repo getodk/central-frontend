@@ -71,3 +71,18 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "downloadXForm": "Download XML",
+      "download": "Download"
+    },
+    "format": {
+      "xForm": "As XForm",
+      "xlsForm": "As XLSForm"
+    }
+  }
+}
+</i18n>

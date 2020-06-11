@@ -39,7 +39,7 @@ definition for an existing form -->
       <div class="modal-introduction">
         <p>
           {{ $t(formDraft == null ? 'introduction[0].create' : 'introduction[0].update') }}
-          <i18n :path="$tPath('introduction[1].full')">
+          <i18n path="introduction[1].full">
             <template #tools>
               <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
             </template>
@@ -48,9 +48,9 @@ definition for an existing form -->
         <p v-if="formDraft == null">{{ $t('introduction[2]') }}</p>
       </div>
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
-        <i18n tag="div" :path="$tPath('dropZone.full')">
+        <i18n tag="div" path="dropZone.full">
           <template #chooseOne>
-            <input ref="input" type="file" class="hidden">
+            <input v-show="false" ref="input" type="file">
             <button type="button" class="btn btn-primary"
               :disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
@@ -252,3 +252,49 @@ $drop-zone-vpadding: 15px;
   padding: 6px 0;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": {
+      "create": "Create Form",
+      "update": "Upload New Form Definition"
+    },
+    "introduction": [
+      {
+        "create": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
+        "update": "To update the Draft, upload an XForms XML file or an XLSForm Excel file."
+      },
+      {
+        "full": "If you don’t already have one, there are {tools} to help you design your Form.",
+        "tools": "tools available"
+      },
+      "If you have media, you will be able to upload that on the next page, after the Form has been created."
+    ],
+    "dropZone": {
+      "full": "Drop a file here, or {chooseOne} to upload.",
+      "chooseOne": "choose one"
+    },
+    "action": {
+      "upload": "Upload",
+      "uploadAnyway": "Upload anyway"
+    },
+    "alert": {
+      "fileRequired": "Please choose a file."
+    },
+    "problem": {
+      "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
+      "400_15": "The XLSForm could not be converted: {error}",
+      "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
+    },
+    "warningsText": [
+      "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
+      "Please correct the problems and try again.",
+      {
+        "create": "If you are sure these problems can be ignored, click the button to create the Form anyway:",
+        "update": "If you are sure these problems can be ignored, click the button to update the Draft anyway:"
+      }
+    ]
+  }
+}
+</i18n>

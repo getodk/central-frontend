@@ -168,7 +168,9 @@ export default {
         method: 'POST',
         url: '/config/backups/verify',
         headers: { Authorization: `Bearer ${this.authToken}` },
-        data: { code: this.confirmationText }
+        data: { code: this.confirmationText },
+        problemToAlert: ({ message }) =>
+          `${message} ${this.$t('problem.verify')}`
       })
         .then(() => {
           this.$emit('success');
@@ -178,3 +180,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "problem": {
+      "verify": "Please try again, and go to the community forum if the problem continues."
+    }
+  }
+}
+</i18n>

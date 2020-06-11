@@ -78,3 +78,14 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Reset Password",
+    "alert": {
+      "success": "An email has been sent to {email} with further instructions."
+    }
+  }
+}
+</i18n>

@@ -15,14 +15,14 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" :path="$tPath('introduction[0].full')">
+        <i18n tag="p" path="introduction[0].full">
           <template #dragAndDrop>
             <strong>{{ $t('introduction[0].dragAndDrop') }}</strong>
           </template>
         </i18n>
-        <i18n tag="p" :path="$tPath('introduction[1].full')">
+        <i18n tag="p" path="introduction[1].full">
           <template #clickHere>
-            <input ref="input" type="file" class="hidden" multiple>
+            <input v-show="false" ref="input" type="file" multiple>
             <a ref="link" href="#" role="button" @click.prevent="clickInput">
               <span class="icon-folder-open"></span>
               <span>{{ $t('introduction[1].clickHere') }}</span>
@@ -70,3 +70,21 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Upload Files",
+    "introduction": [
+      {
+        "full": "To upload files, you can {dragAndDrop} one or more files onto the table on this page.",
+        "dragAndDrop": "drag and drop"
+      },
+      {
+        "full": "If you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}.",
+        "clickHere": "click here to choose"
+      }
+    ]
+  }
+}
+</i18n>

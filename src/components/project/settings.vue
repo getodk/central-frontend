@@ -124,3 +124,13 @@ export default {
   margin-bottom: 5px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "archive": "The Project “{name}” was archived."
+    }
+  }
+}
+</i18n>

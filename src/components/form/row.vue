@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         {{ form.xmlFormId }}
       </div>
       <div class="form-row-submissions">
-        {{ $tc('count.submission', form.submissions) }}
+        {{ $tcn('count.submission', form.submissions) }}
       </div>
     </td>
     <td class="form-row-created-by">

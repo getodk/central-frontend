@@ -75,3 +75,17 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Basic Details",
+    "action": {
+      "update": "Update details"
+    },
+    "alert": {
+      "success": "User details saved!"
+    }
+  }
+}
+</i18n>

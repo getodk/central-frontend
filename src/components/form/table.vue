@@ -37,3 +37,13 @@ export default {
   computed: requestData(['forms'])
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      "publishedAt": "Last Published"
+    }
+  }
+}
+</i18n>

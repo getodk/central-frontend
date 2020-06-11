@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <form-version-summary-item :version="form">
         <template #body>
-          <i18n tag="p" :path="$tPath('versionCaption.full')">
+          <i18n tag="p" path="versionCaption.full">
             <template #publishedVersion>
               <strong>{{ $t('versionCaption.publishedVersion') }}</strong>
             </template>
@@ -54,3 +54,15 @@ export default {
   computed: requestData(['form'])
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "versionCaption": {
+      "full": "{publishedVersion} of this Form.",
+      "publishedVersion": "Published version"
+    },
+    "submissionsCaption": "has been saved for this Form. | have been saved for this Form."
+  }
+}
+</i18n>

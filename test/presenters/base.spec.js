@@ -1,9 +1,21 @@
 import Base from '../../src/presenters/base';
 
-class SimplePresenter extends Base([]) {}
+class Point extends Base(['x', 'y']) {}
 
 describe('Base', () => {
-  it('returns the correct i18n scope', () => {
-    new SimplePresenter({}).i18nScope.should.equal('presenter.SimplePresenter');
+  it('returns each known property', () => {
+    const point = new Point({ x: 0, y: 1 });
+    point.x.should.equal(0);
+    point.y.should.equal(1);
+  });
+
+  it('does not return an unknown property', () => {
+    const point = new Point({ x: 0, y: 1, z: 2 });
+    should.not.exist(point.z);
+  });
+
+  it('returns the object', () => {
+    const data = { x: 0, y: 1 };
+    new Point(data).object.should.equal(data);
   });
 });

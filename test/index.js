@@ -87,10 +87,10 @@ afterEach(clearNavGuards);
 afterEach(() => {
   destroyMarkedComponent();
 
-  const afterScript = $('body > script:last-of-type + *');
-  if (afterScript.length > 0) {
+  const afterScript = document.querySelector('body > script:last-of-type + *');
+  if (afterScript != null) {
     // eslint-disable-next-line no-console
-    console.log(`Unexpected element: ${afterScript[0].outerHTML}`);
+    console.log(`Unexpected element: ${afterScript.outerHTML}`);
     throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
   }
 });

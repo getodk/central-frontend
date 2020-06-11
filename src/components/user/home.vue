@@ -56,3 +56,16 @@ export default {
   font-size: 10px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "User Settings",
+    "tab": {
+      "users": "Web Users",
+      "roles": "Role Settings"
+    },
+    "comingSoon": "(coming soon)"
+  }
+}
+</i18n>

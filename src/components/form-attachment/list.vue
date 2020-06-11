@@ -359,7 +359,7 @@ export default {
         .finally(() => {
           if (this.$store.state.router.currentRoute !== currentRoute) return;
           if (updated.length === this.uploadStatus.total)
-            this.$alert().success(this.$tc('alert.success', updated.length));
+            this.$alert().success(this.$tcn('alert.success', updated.length));
           for (const attachment of updated)
             this.updateAttachment(attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
@@ -407,3 +407,27 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "upload": "Upload files"
+    },
+    "heading": [
+      "Based on the Form you uploaded, the following files are expected. You can see which ones have been uploaded or are still missing.",
+      "To upload files, drag and drop one or more files onto the page."
+    ],
+    "header": {
+      "uploaded": "Uploaded"
+    },
+    "problem": {
+      "default": "{message} No files were successfully uploaded. | {message} Only 1 of {total} files was successfully uploaded. | {message} Only {uploaded} of {total} files were successfully uploaded."
+    },
+    "alert": {
+      "readError": "Something went wrong while reading “{filename}”.",
+      "success": "1 file has been successfully uploaded. | {count} files have been successfully uploaded."
+    }
+  }
+}
+</i18n>

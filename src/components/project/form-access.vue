@@ -253,3 +253,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "success": "Your changes have been saved!"
+    }
+  }
+}
+</i18n>

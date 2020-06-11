@@ -30,7 +30,7 @@ import './assets/scss/app.scss';
 import axios from 'axios';
 
 import { StoreAlert } from './util/alert';
-import { tS, tcPath, tcS, teS } from './util/i18n';
+import { $tcPath, $tcn } from './util/i18n';
 import { uniqueSequence } from './util/util';
 
 
@@ -45,7 +45,7 @@ Vue.config.productionTip = false;
 ////////////////////////////////////////////////////////////////////////////////
 // GLOBAL UTILITIES
 
-// See https://vuejs.org/v2/cookbook/adding-instance-properties.html.
+// See: https://vuejs.org/v2/cookbook/adding-instance-properties.html
 
 Vue.prototype.$alert = function $alert() {
   return new StoreAlert(this.$store);
@@ -57,21 +57,5 @@ Vue.prototype.$logger = console;
 Vue.prototype.$uniqueId = uniqueSequence();
 
 // i18n
-Object.defineProperty(Vue.prototype, '$i18nScope', {
-  get() { return `component.${this.$options.name}`; }
-});
-Vue.prototype.$t = function $t(path, values) {
-  return tS(this.$i18nScope, path, values);
-};
-Vue.prototype.$tc = function $tc(path, choice, values) {
-  return tcS(this.$i18nScope, path, choice, values);
-};
-Vue.prototype.$te = function $te(path) {
-  return teS(this.$i18nScope, path);
-};
-Vue.prototype.$tPath = function $tPath(path) {
-  return `${this.$i18nScope}.${path}`;
-};
-Vue.prototype.$tcPath = function $tcPath(path, choice) {
-  return tcPath(this.$i18nScope, path, choice);
-};
+Vue.prototype.$tcn = $tcn;
+Vue.prototype.$tcPath = $tcPath;

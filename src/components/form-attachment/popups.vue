@@ -24,7 +24,7 @@ some point. -->
       <div class="modal-body">
         <template v-if="shownDuringDragover">
           <i18n v-if="dragoverAttachment != null" tag="p"
-            :path="$tPath('duringDragover.dropToUpload')">
+            path="duringDragover.dropToUpload">
             <template #attachmentName>
               <strong>{{ dragoverAttachment.name }}</strong>
             </template>
@@ -32,10 +32,9 @@ some point. -->
           <p v-else-if="countOfFilesOverDropZone === 1">
             {{ $t('duringDragover.dragover') }}
           </p>
-          <i18n v-else tag="p"
-            :path="$tPath('duringDragover.dropToPrepare.full')">
+          <i18n v-else tag="p" path="duringDragover.dropToPrepare.full">
             <template #countOfFiles>
-              <strong>{{ $tc('duringDragover.dropToPrepare.countOfFiles', countOfFilesOverDropZone) }}</strong>
+              <strong>{{ $tcn('duringDragover.dropToPrepare.countOfFiles', countOfFilesOverDropZone) }}</strong>
             </template>
           </i18n>
         </template>
@@ -44,7 +43,7 @@ some point. -->
             <i18n tag="p"
               :path="$tcPath('afterSelection.matched.full', plannedUploads.length)">
               <template #countOfFiles>
-                <strong>{{ $tc('afterSelection.matched.countOfFiles', plannedUploads.length) }}</strong>
+                <strong>{{ $tcn('afterSelection.matched.countOfFiles', plannedUploads.length) }}</strong>
               </template>
             </i18n>
             <p v-show="unmatchedFiles.length !== 0"
@@ -53,7 +52,7 @@ some point. -->
               <i18n
                 :path="$tcPath('afterSelection.someUnmatched.full', unmatchedFiles.length)">
                 <template #countOfFiles>
-                  <strong>{{ $tc('afterSelection.someUnmatched.countOfFiles', unmatchedFiles.length) }}</strong>
+                  <strong>{{ $tcn('afterSelection.someUnmatched.countOfFiles', unmatchedFiles.length) }}</strong>
                 </template>
               </i18n>
             </p>
@@ -81,14 +80,14 @@ some point. -->
           </template>
         </template>
         <template v-else-if="shownDuringUpload">
-          <p>{{ $tc('duringUpload.total', uploadStatus.total) }}</p>
+          <p>{{ $tcn('duringUpload.total', uploadStatus.total) }}</p>
           <p id="form-attachment-popups-current">
             <strong>{{ $t('duringUpload.current', { filename: uploadStatus.current }) }}</strong>
             &nbsp;
             <span v-if="hasProgress">({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
-            {{ $tc('duringUpload.remaining', uploadStatus.remaining) }}
+            {{ $tcn('duringUpload.remaining', uploadStatus.remaining) }}
           </p>
         </template>
       </div>
@@ -265,3 +264,41 @@ $popup-width: 300px;
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Upload Files",
+    "duringDragover": {
+      "dropToUpload": "Drop now to upload this file as {attachmentName}.",
+      "dragover": "Drag over the file entry you wish to replace with the file and drop to upload.",
+      "dropToPrepare": {
+        "full": "Drop now to prepare {countOfFiles} for upload to this Form.",
+        "countOfFiles": "1 file | {count} files"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": [
+          "{countOfFiles} ready for upload.",
+          "{countOfFiles} ready for upload."
+        ],
+        "countOfFiles": "1 file | {count} files"
+      },
+      "someUnmatched": {
+        "full": [
+          "{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target.",
+          "{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
+        ],
+        "countOfFiles": "1 file | {count} files"
+      },
+      "noneMatched": "We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target. | We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets."
+    },
+    "duringUpload": {
+      "total": "Please wait, uploading your 1 file: | Please wait, uploading your {count} files:",
+      "current": "Sending {filename}",
+      "remaining": "This is the last file. | {count} files remain."
+    }
+  }
+}
+</i18n>

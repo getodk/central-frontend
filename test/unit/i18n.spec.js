@@ -1,15 +1,6 @@
-import AccountLogin from '../../src/components/account/login.vue';
 import i18n from '../../src/i18n';
-import { loadLocale, tS } from '../../src/util/i18n';
-import { mockRoute } from '../util/http';
-
-const silentTranslationWarn = () => {
-  const original = i18n.silentTranslationWarn;
-  i18n.silentTranslationWarn = true;
-  return () => {
-    i18n.silentTranslationWarn = original;
-  };
-};
+import { i18nProps } from '../util/i18n';
+import { loadLocale } from '../../src/util/i18n';
 
 describe('util/i18n', () => {
   describe('loadLocale()', () => {
@@ -31,7 +22,7 @@ describe('util/i18n', () => {
 
     it('throws an error for a locale that is not defined', () => {
       let thrown = false;
-      return loadLocale('yi')
+      return loadLocale('la')
         .catch(() => {
           thrown = true;
         })
@@ -41,91 +32,50 @@ describe('util/i18n', () => {
     });
   });
 
-  describe('paths', () => {
+  describe('pluralization', () => {
     before(() => {
       i18n.setLocaleMessage('la', {
-        resourceCount: {
-          form: '1 Forma | {localeN} Formae'
-        },
-        action: {
-          create: 'Crea',
-          yesConfirm: 'Ita, certus sum'
-        },
-        component: {
-          FormList: {
-            title: 'Formae',
-            action: {
-              create: 'Novus'
-            },
-            alert: {
-              create: 'Forma nova tua "{name}" creata est.'
-            }
+        forms: '{count} Forma | {count} Formae',
+        parts: '{name} est omnis divisa in partes {count}.',
+        interpolation: {
+          full: {
+            0: 'Singular',
+            1: 'Plural'
           }
         }
       });
       i18n.locale = 'la';
     });
-
     after(() => {
       i18n.locale = 'en';
+      i18n.setLocaleMessage('la', {});
     });
 
-    describe('tS()', () => {
-      it('returns a message if the path exists in the scope', () => {
-        tS('component.FormList', 'title').should.equal('Formae');
+    describe('$tcn()', () => {
+      it('returns the singular', () => {
+        i18nProps.$tcn('forms', 1).should.equal('1 Forma');
       });
 
-      it('falls back to root if path does not exist in scope', () => {
-        const message = tS('component.FormList', 'action.yesConfirm');
-        message.should.equal('Ita, certus sum');
-      });
-
-      it('does not fall back to root if path exists in fallback locale', () => {
-        const message = tS('component.FieldKeyList', 'action.create');
-        message.should.equal('Create App User');
-      });
-
-      it('prefers the scope to the root if the path exists in both', () => {
-        tS('component.FormList', 'action.create').should.equal('Novus');
-      });
-
-      it('returns path if path does not exist in scope or at root', () => {
-        const unsilent = silentTranslationWarn();
-        tS('action', 'doesNotExist').should.equal('doesNotExist');
-        unsilent();
+      it('returns the plural', () => {
+        i18nProps.$tcn('forms', 1234).should.equal('1,234 Formae');
       });
 
       it('uses values', () => {
-        const message = tS('component.FormList', 'alert.create', { name: 'F' });
-        message.should.equal('Forma nova tua "F" creata est.');
+        const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
+        message.should.equal('Gallia est omnis divisa in partes 3.');
       });
     });
 
-    // TODO
-    describe('tc()', () => {});
-    describe('te()', () => {});
-    describe('tcPath()', () => {});
-  });
+    describe('$tcPath()', () => {
+      it('returns the correct path for the singular', () => {
+        const path = i18nProps.$tcPath('interpolation.full', 1);
+        path.should.equal('interpolation.full[0]');
+      });
 
-  describe('Vue.prototype', () => {
-    describe('$i18nScope', () => {
-      it('returns the correct scope', () =>
-        mockRoute('/')
-          .restoreSession(false)
-          .afterResponse(app => {
-            const scope = app.first(AccountLogin).vm.$i18nScope;
-            scope.should.equal('component.AccountLogin');
-          }));
-    });
-
-    describe('$tPath()', () => {
-      it('returns a scoped path', () =>
-        mockRoute('/')
-          .restoreSession(false)
-          .afterResponse(app => {
-            const path = app.first(AccountLogin).vm.$tPath('title');
-            path.should.equal('component.AccountLogin.title');
-          }));
+      it('returns the correct path for the plural', () => {
+        const path = i18nProps.$tcPath('interpolation.full', 10);
+        path.should.equal('interpolation.full[1]');
+      });
     });
   });
 });

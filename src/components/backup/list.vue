@@ -114,3 +114,14 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "create": "Success! Automatic backups are now configured.",
+      "terminate": "Your automatic backups were terminated. I recommend you set up a new one as soon as possible."
+    }
+  }
+}
+</i18n>

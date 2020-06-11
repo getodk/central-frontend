@@ -77,3 +77,20 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Set Password",
+    "action": {
+      "set": "Set password"
+    },
+    "problem": {
+      "401_2": "{message} The link in your email may have expired, and a new email may have to be sent."
+    },
+    "alert": {
+      "success": "The password was reset successfully."
+    }
+  }
+}
+</i18n>

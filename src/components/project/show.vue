@@ -112,3 +112,17 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "tab": {
+      "overview": "Overview",
+      "users": "Project Roles",
+      "appUsers": "App Users",
+      "formAccess": "Form Access",
+      "settings": "Settings"
+    }
+  }
+}
+</i18n>

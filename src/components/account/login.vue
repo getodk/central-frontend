@@ -115,3 +115,14 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Log in",
+    "problem": {
+      "401_2": "Incorrect email address and/or password."
+    }
+  }
+}
+</i18n>

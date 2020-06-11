@@ -67,3 +67,20 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Basic Details",
+    "field": {
+      "name": "Project name"
+    },
+    "action": {
+      "update": "Save settings"
+    },
+    "alert": {
+      "success": "Project settings saved!"
+    }
+  }
+}
+</i18n>

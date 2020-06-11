@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { tS, tcS, teS } from '../util/i18n';
 
 let key = 0;
 
@@ -31,11 +30,6 @@ class Base {
     this._key = key;
     return key;
   }
-
-  get i18nScope() { return `presenter.${this.constructor.name}`; }
-  t(path, values) { return tS(this.i18nScope, path, values); }
-  tc(path, choice, values) { return tcS(this.i18nScope, path, choice, values); }
-  te(path) { return teS(this.i18nScope, path); }
 
   with(data) {
     return new (this.constructor)({ ...this._data, ...data });

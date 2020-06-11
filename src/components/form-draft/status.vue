@@ -188,3 +188,16 @@ export default {
   margin-right: 10px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "upload": "Success! The new Form definition has been saved as your Draft.",
+      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.",
+      "abandon": "The Draft version of this Form has been successfully deleted.",
+      "delete": "The Form “{name}” was deleted."
+    }
+  }
+}
+</i18n>

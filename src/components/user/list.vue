@@ -21,7 +21,7 @@ either is an Administrator or has no role. -->
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <p>{{ $t('heading[0]') }}</p>
-      <i18n tag="p" :path="$tPath('heading[1].full')">
+      <i18n tag="p" path="heading[1].full">
         <template #clickHere>
           <doc-link to="central-users/#managing-app-users">{{ $t('heading[1].clickHere') }}</doc-link>
         </template>
@@ -206,3 +206,29 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "create": "Create Web User"
+    },
+    "heading": [
+      "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no role can still be made Project Managers on any Project, from that Project’s settings.",
+      {
+        "full": "For more information, {clickHere}.",
+        "clickHere": "click here"
+      }
+    ],
+    "header": {
+      "sitewideRole": "Sitewide Role"
+    },
+    "alert": {
+      "create": "A user was created successfully for “{displayName}”.",
+      "assignRole": "Success! “{displayName}” has been given a Sitewide Role of “{roleName}”.",
+      "resetPassword": "The password for “{displayName}” has been invalidated. An email has been sent to {email} with instructions on how to proceed.",
+      "retire": "The user “{displayName}” has been retired."
+    }
+  }
+}
+</i18n>

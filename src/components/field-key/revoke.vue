@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" :path="$tPath('introduction[0]')">
+        <i18n tag="p" path="introduction[0]">
           <template #displayName>
             <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>
           </template>
@@ -71,3 +71,16 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Revoke User Access",
+    "introduction": [
+      "Are you sure you want to revoke access from the App User {displayName}?",
+      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions.",
+      "This action cannot be undone."
+    ]
+  }
+}
+</i18n>

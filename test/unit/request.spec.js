@@ -1,4 +1,6 @@
+import i18n from '../../src/i18n';
 import { apiPaths, configForPossibleBackendRequest, requestAlertMessage } from '../../src/util/request';
+import { i18nProps } from '../util/i18n';
 
 describe('util/request', () => {
   describe('apiPaths', () => {
@@ -214,7 +216,7 @@ describe('util/request', () => {
       const error = new Error();
       error.request = {};
       error.response = {
-        data: { code, message: 'requestAlertMessage() Problem.' }
+        data: { code, message: 'Message from API' }
       };
       return error;
     };
@@ -241,53 +243,85 @@ describe('util/request', () => {
 
     it('returns the Problem message by default', () => {
       const message = requestAlertMessage(errorWithProblem());
-      message.should.equal('requestAlertMessage() Problem.');
+      message.should.equal('Message from API');
     });
 
     describe('problemToAlert', () => {
       it('returns the message from the function', () => {
         const message = requestAlertMessage(errorWithProblem(), {
-          problemToAlert: ({ code }) => `Problem ${code}`
+          problemToAlert: (problem) =>
+            `Message from problemToAlert: ${problem.message} (${problem.code})`
         });
-        message.should.equal('Problem 500.1');
+        message.should.equal('Message from problemToAlert: Message from API (500.1)');
       });
 
       it('returns the Problem message if the function returns null', () => {
         const message = requestAlertMessage(errorWithProblem(), {
           problemToAlert: () => null
         });
-        message.should.equal('requestAlertMessage() Problem.');
+        message.should.equal('Message from API');
       });
     });
 
-    describe('i18nScope', () => {
-      it('returns an i18n message for the Problem code', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          i18nScope: 'component.AccountLogin.problem'
+    describe('i18n', () => {
+      before(() => {
+        i18n.setLocaleMessage('la', {
+          problem: {
+            '401_2': 'Message for locale: {message} ({code})'
+          }
         });
-        message.should.equal('Incorrect email address and/or password.');
+        i18n.locale = 'la';
+
+        i18n.setLocaleMessage('ett', {
+          problem: {
+            '401_2': 'Message for fallback (401.2)',
+            '404_1': 'Message for fallback (404.1)'
+          }
+        });
+        i18n.fallbackLocale = 'ett';
+      });
+      after(() => {
+        i18n.fallbackLocale = 'en';
+        i18n.locale = 'en';
+        i18n.setLocaleMessage('la', {});
+        i18n.setLocaleMessage('ett', {});
       });
 
-      it('returns an i18n message if there is a default message', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          i18nScope: 'component.BackupNew.problem'
+      it('returns an i18n message for the Problem code', () => {
+        const message = requestAlertMessage(errorWithProblem(401.2), {
+          component: i18nProps
         });
-        message.should.equal('requestAlertMessage() Problem. Please try again, and go to the community forum if the problem continues.');
+        message.should.equal('Message for locale: Message from API (401.2)');
       });
 
       it('returns the Problem message if there is no i18n message', () => {
         const message = requestAlertMessage(errorWithProblem(), {
-          i18nScope: 'component.AccountLogin.problem'
+          component: i18nProps
         });
-        message.should.equal('requestAlertMessage() Problem.');
+        message.should.equal('Message from API');
       });
 
-      it('does not use i18nScope if problemToAlert is specified', () => {
-        const message = requestAlertMessage(errorWithProblem(404.2), {
-          i18nScope: 'component.AccountLogin.problem',
-          problemToAlert: () => null
+      it('returns an i18n message for the fallback locale', () => {
+        const message = requestAlertMessage(errorWithProblem(404.1), {
+          component: i18nProps
         });
-        message.should.equal('requestAlertMessage() Problem.');
+        message.should.equal('Message for fallback (404.1)');
+      });
+
+      it('does not return i18n message if problemToAlert function returns string', () => {
+        const message = requestAlertMessage(errorWithProblem(401.2), {
+          problemToAlert: () => 'Message from problemToAlert',
+          component: i18nProps
+        });
+        message.should.equal('Message from problemToAlert');
+      });
+
+      it('does not return i18n message if problemToAlert function returns null', () => {
+        const message = requestAlertMessage(errorWithProblem(401.2), {
+          problemToAlert: () => null,
+          component: i18nProps
+        });
+        message.should.equal('Message from API');
       });
     });
   });

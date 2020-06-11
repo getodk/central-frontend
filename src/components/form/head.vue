@@ -263,3 +263,33 @@ body {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "projectNav": {
+      "link": "Back to Project Overview"
+    },
+    "formNav": {
+      "tab": {
+        "overview": "Overview",
+        "versions": "Versions",
+        "submissions": "Submissions",
+        "settings": "Settings"
+      },
+      "tabTitle": "These functions will become available once you publish your Draft Form"
+    },
+    "draftNav": {
+      "title": "Draft",
+      "action": {
+        "create": "Create a new Draft"
+      },
+      "tab": {
+        "status": "Status",
+        "attachments": "Media Files",
+        "testing": "Testing"
+      }
+    }
+  }
+}
+</i18n>

@@ -75,3 +75,18 @@ export default {
   margin-top: 10px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Forms",
+    "action": {
+      "create": "New"
+    },
+    "emptyTable": "There are no Forms to show.",
+    "alert": {
+      "create": "Your new Form “{name}” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use."
+    }
+  }
+}
+</i18n>

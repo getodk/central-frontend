@@ -66,3 +66,12 @@ export default {
   margin-right: 4px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "appUsersCaption": "who can use a data collection client to download and submit Form data to this Project. | who can use a data collection client to download and submit Form data to this Project.",
+    "formsCaption": "which can be downloaded and given as surveys on mobile clients. | which can be downloaded and given as surveys on mobile clients."
+  }
+}
+</i18n>

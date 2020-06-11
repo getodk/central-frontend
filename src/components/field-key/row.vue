@@ -75,3 +75,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "seeCode": "See code",
+    "accessRevoked": "Access revoked",
+    "revokeAccess": "Revoke access"
+  }
+}
+</i18n>

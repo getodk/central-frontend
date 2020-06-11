@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 import Vue from 'vue';
 
 import i18n from '../i18n';
-import { tS, teS } from './i18n';
 
 const queryString = (query) => {
   if (query == null) return '';
@@ -129,13 +128,12 @@ export const requestAlertMessage = (axiosError, options = {}) => {
     return message != null ? message : problem.message;
   }
 
-  const { i18nScope } = options;
-  if (i18nScope != null) {
-    const codeKey = problem.code.toString().replace('.', '_');
-    const pathForCode = `${i18nScope}.${codeKey}`;
-    if (teS(i18nScope, pathForCode)) return tS(i18nScope, pathForCode, problem);
-    const defaultPath = `${i18nScope}.default`;
-    if (teS(i18nScope, defaultPath)) return tS(i18nScope, defaultPath, problem);
+  const { component } = options;
+  if (component != null) {
+    const key = problem.code.toString().replace('.', '_');
+    const path = `problem.${key}`;
+    if (component.$te(path, i18n.fallbackLocale))
+      return component.$t(path, problem);
   }
 
   return problem.message;

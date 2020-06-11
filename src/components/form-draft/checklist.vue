@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       <p v-if="status">
         {{ $t('steps[1].body[0].status') }}
       </p>
-      <i18n v-else tag="p" :path="$tPath('steps[1].body[0].link.full')">
+      <i18n v-else tag="p" path="steps[1].body[0].link.full">
         <template #upload>
           <router-link :to="formPath('draft')">{{ $t('steps[1].body[0].link.upload') }}</router-link>
         </template>
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
       :stage="missingAttachmentCount === 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        <i18n :path="$tPath('steps[2].body[0].full')">
+        <i18n path="steps[2].body[0].full">
           <template #mediaFiles>
             <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
           </template>
@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
       :stage="formDraft.submissions !== 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n :path="$tPath('steps[3].body[0].full')">
+        <i18n path="steps[3].body[0].full">
           <template #testQrCode>
             <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].testQrCode') }}</router-link>
           </template>
@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[4].title') }}</template>
       <p>
         <span v-if="status">{{ $t('steps[4].body[0].status') }}</span>
-        <i18n v-else :path="$tPath('steps[4].body[0].link.full')">
+        <i18n v-else path="steps[4].body[0].link.full">
           <template #publish>
             <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
           </template>
@@ -115,3 +115,62 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "clickForInfo": "Click here to find out more.",
+    "steps": [
+      {
+        "title": "Upload initial Form definition",
+        "body": [
+          "Great work!",
+          "Your Form design has been loaded successfully."
+        ]
+      },
+      {
+        "title": "Upload revised Form definition (optional)",
+        "body": [
+          {
+            "status": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
+            "link": {
+              "full": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
+              "upload": "upload"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Upload Form Media Files",
+        "body": [
+          {
+            "full": "Your Form design references files that we need in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
+            "mediaFiles": "Media Files"
+          }
+        ]
+      },
+      {
+        "title": "Test the Form on your mobile device",
+        "body": [
+          {
+            "full": "It’s a good idea to test the Form to be sure it (still) works the way you expect. Using the {testQrCode}, you can make a test Submission that won’t affect your real data.",
+            "testQrCode": "test QR code"
+          }
+        ]
+      },
+      {
+        "title": "Publish the Draft",
+        "body": [
+          {
+            "status": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can publish it using the button to the right.",
+            "link": {
+              "full": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it.",
+              "publish": "publish"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+</i18n>

@@ -157,3 +157,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "problem": {
+      "409_6": "The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again."
+    }
+  }
+}
+</i18n>

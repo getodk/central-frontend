@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(1)">
       <template #title>{{ $t('steps[1].title') }}</template>
       <p>
-        {{ $tc('steps[1].body[0]', form.submissions) }}
+        {{ $tcn('steps[1].body[0]', form.submissions) }}
         {{ $t('steps[1].body[1]') }}
         <template v-if="project.appUsers === 0">
           <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>&nbsp;
-          <i18n :path="$tPath('steps[1].body[2].none[1].full')">
+          <i18n path="steps[1].body[2].none[1].full">
             <template #appUsersTab>
               <router-link :to="projectPath('app-users')">{{ $t('steps[1].body[2].none[1].appUsersTab') }}</router-link>
             </template>
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
             :path="$tcPath('steps[1].body[2].any[0].full', formActors.length)">
             <template #countOfAppUsers>
               <router-link :to="projectPath('form-access')">
-                <strong>{{ $tc('steps[1].body[2].any[0].countOfAppUsers', formActors.length) }}</strong>
+                <strong>{{ $tcn('steps[1].body[2].any[0].countOfAppUsers', formActors.length) }}</strong>
               </router-link>
             </template>
             <template #addMore>
@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </template>
         &nbsp;
-        <i18n :path="$tPath('steps[1].body[3].full')">
+        <i18n path="steps[1].body[3].full">
           <template #clickHere>
             <doc-link to="central-submissions/">{{ $t('steps[1].body[3].clickHere') }}</doc-link>
           </template>
@@ -58,8 +58,8 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(2)">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        {{ $tc('steps[2].body[0]', form.submissions) }}
-        <i18n :path="$tPath('steps[2].body[1].full')">
+        {{ $tcn('steps[2].body[0]', form.submissions) }}
+        <i18n path="steps[2].body[1].full">
           <template #submissionsTab>
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
           </template>
@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(3)">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n :path="$tPath('steps[3].body[0].full')">
+        <i18n path="steps[3].body[0].full">
           <template #formAccessTab>
             <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
           </template>
@@ -123,3 +123,69 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "clickForInfo": "Click here to find out more.",
+    "steps": [
+      {
+        "title": "Publish your first Draft version",
+        "body": [
+          "Great work!",
+          "You have published your Form. It is ready to accept Submissions. If you want to make changes to the Form or its Media Files, you can make a new Draft."
+        ]
+      },
+      {
+        "title": "Download Form on survey clients and submit data",
+        "body": [
+          "Nobody has submitted any data to this Form yet. | A total of 1 Submission has been sent to this server. | A total of {count} Submissions have been sent to this server.",
+          "App Users will be able to see this Form on their mobile device to download and fill out.",
+          {
+            "none": [
+              "You have not created any App Users for this Project yet, so nobody will be able to use this Form.",
+              {
+                "full": "You can create them on the {appUsersTab}.",
+                "appUsersTab": "App Users tab of the Project page"
+              }
+            ],
+            "any": [
+              {
+                "full": [
+                  "Right now, {countOfAppUsers} in this Project has access to this Form, but you can always {addMore}.",
+                  "Right now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}."
+                ],
+                "countOfAppUsers": "1 App User | {count} App Users",
+                "addMore": "add more"
+              }
+            ]
+          },
+          {
+            "full": "For more information about this, {clickHere}.",
+            "clickHere": "click here"
+          }
+        ]
+      },
+      {
+        "title": "Evaluate and analyze submitted data",
+        "body": [
+          "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results. | You can export or synchronize the 1 Submission on this Form to monitor and analyze them for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results.",
+          {
+            "full": "You can do this with the Download and Analyze buttons on the {submissionsTab}.",
+            "submissionsTab": "Submissions tab"
+          }
+        ]
+      },
+      {
+        "title": "Manage Form retirement",
+        "body": [
+          {
+            "full": "As you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form.",
+            "formAccessTab": "Form Access tab of the Project page"
+          }
+        ]
+      }
+    ]
+  }
+}
+</i18n>

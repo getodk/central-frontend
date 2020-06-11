@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" :path="$tPath('introduction[0]')">
+        <i18n tag="p" path="introduction[0]">
           <template #filename>
             <strong>{{ file.name }}</strong>
           </template>
@@ -80,3 +80,18 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": {
+      "upload": "Upload File",
+      "replace": "Replace File"
+    },
+    "introduction": [
+      "Are you sure you want to upload {filename} as {attachmentName}?",
+      "We are double-checking because the filenames do not match."
+    ]
+  }
+}
+</i18n>

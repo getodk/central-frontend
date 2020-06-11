@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p v-if="user != null">{{ $t('introduction[0]', user) }}</p>
-        <i18n tag="p" :path="$tPath('introduction[1].full')">
+        <i18n tag="p" path="introduction[1].full">
           <template #noUndo>
             <strong>{{ $t('introduction[1].noUndo') }}</strong>
           </template>
@@ -71,3 +71,21 @@ export default {
   }
 };
 </script>
+
+<!-- eslint-disable vue/no-parsing-error -->
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Retiring User",
+    "introduction": [
+      "You are about to retire the user account “{displayName}” <{email}>. They will be immediately barred from performing any actions and logged out.",
+      {
+        "full": "{noUndo}, but a new account can always be created for that person with the same email address.",
+        "noUndo": "This action cannot be undone"
+      },
+      "Are you sure you wish to proceed?"
+    ]
+  }
+}
+</i18n>
+<!-- eslint-enable vue/no-parsing-error -->

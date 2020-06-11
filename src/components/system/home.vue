@@ -48,3 +48,15 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "System Management",
+    "tab": {
+      "backups": "Backups",
+      "audits": "Server Audit Logs"
+    }
+  }
+}
+</i18n>

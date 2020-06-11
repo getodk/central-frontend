@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <p>{{ $t('body[0]') }}</p>
       <p>{{ $t('body[1]') }}</p>
-      <i18n tag="p" :path="$tPath('body[2].full')">
+      <i18n tag="p" path="body[2].full">
         <template #helpArticle>
           <doc-link to="central-projects/">{{ $t('body[2].helpArticle') }}</doc-link>
         </template>
@@ -38,3 +38,20 @@ export default {
   components: { DocLink, PageSection }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "About Projects",
+    "body": [
+      "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project.",
+      "Future releases of ODK Central will add more Project-centric features, including improvements to Form states and workflow, device state updates, Collect settings management, and more granular permissioning.",
+      {
+        "full": "For more information, please see {helpArticle}, and if you have any feedback please visit {forumThread}.",
+        "helpArticle": "this help article",
+        "forumThread": "this forum thread"
+      }
+    ]
+  }
+}
+</i18n>

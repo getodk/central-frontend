@@ -45,7 +45,7 @@ describe('router', () => {
     });
 
     it('falls back to en for a locale that is not defined', () => {
-      setLanguage('yi');
+      setLanguage('la');
       return mockRoute('/login')
         .restoreSession(false)
         .afterResponse(() => {

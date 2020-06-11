@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <i18n v-if="user != null" tag="p" :path="$tPath('introduction.full')"
+      <i18n v-if="user != null" tag="p" path="introduction.full"
         class="modal-introduction">
         <template #resetPassword>
           <strong>{{ $t('introduction.resetPassword') }}</strong>
@@ -70,3 +70,17 @@ export default {
   }
 };
 </script>
+
+<!-- eslint-disable vue/no-parsing-error -->
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Reset Password",
+    "introduction": {
+      "full": "Once you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed.",
+      "resetPassword": "Reset password"
+    }
+  }
+}
+</i18n>
+<!-- eslint-enable vue/no-parsing-error -->

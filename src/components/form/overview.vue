@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <form-version-summary-item :version="formDraft.get()">
               <template #body>
-                <i18n tag="p" :path="$tPath('draft.any.versionCaption.full')">
+                <i18n tag="p" path="draft.any.versionCaption.full">
                   <template #draftVersion>
                     <strong>{{ $t('draft.any.versionCaption.draftVersion') }}</strong>
                   </template>
@@ -132,3 +132,24 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "checklist": "Checklist",
+    "draft": {
+      "none": {
+        "title": "No Current Draft",
+        "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
+      },
+      "any": {
+        "title": "Your Current Draft",
+        "versionCaption": {
+          "full": "{draftVersion} of this Form.",
+          "draftVersion": "Draft version"
+        }
+      }
+    }
+  }
+}
+</i18n>

@@ -55,3 +55,11 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "text": "Refresh list"
+  }
+}
+</i18n>

@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <!-- TODO. Add unit tests. -->
 <template>
-  <i18n v-if="user != null" tag="div" :path="$tPath('text')"
-    class="time-and-user">
+  <i18n v-if="user != null" tag="div" path="text" class="time-and-user">
     <template #dateTime>
       <date-time :iso="iso"/>
     </template>
@@ -52,3 +51,11 @@ export default {
   white-space: nowrap;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "text": "{dateTime} by {displayName}"
+  }
+}
+</i18n>

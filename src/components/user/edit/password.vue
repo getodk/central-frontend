@@ -95,3 +95,19 @@ export default {
   display: none;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Change Password",
+    "action": {
+      "change": "Change password"
+    },
+    "cannotChange": "Only the owner of the account may directly set their own password.",
+    "alert": {
+      "mismatch": "Please check that your new passwords match.",
+      "success": "Success! Your password has been updated."
+    }
+  }
+}
+</i18n>

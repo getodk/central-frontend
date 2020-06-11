@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
-        <i18n tag="p" :path="$tPath('introduction[1].full')">
+        <i18n tag="p" path="introduction[1].full">
           <template #helpArticle>
             <doc-link to="central-projects/">{{ $t('introduction[1].helpArticle') }}</doc-link>
           </template>
@@ -85,3 +85,19 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Create Project",
+    "introduction": [
+      "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device.",
+      {
+        "full": "For more information, please see {helpArticle}.",
+        "helpArticle": "this help article"
+      }
+    ],
+    "namePlaceholder": "My Project name"
+  }
+}
+</i18n>

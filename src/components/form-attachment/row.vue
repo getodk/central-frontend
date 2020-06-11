@@ -93,7 +93,7 @@ export default {
       const { type } = this.attachment;
       if (!/^\w+$/.test(type)) return type;
       const path = `type.${type}`;
-      return this.$te(path) ? this.$t(path) : type;
+      return this.$te(path, this.$i18n.fallbackLocale) ? this.$t(path) : type;
     },
     href() {
       return apiPaths.formDraftAttachment(
@@ -140,3 +140,21 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "type": {
+      "image": "Image",
+      "audio": "Audio",
+      "video": "Video",
+      "file": "Data File"
+    },
+    "replace": "Replace",
+    "notUploaded": {
+      "text": "Not yet uploaded",
+      "title": "To upload files, drag and drop one or more files onto this page"
+    }
+  }
+}
+</i18n>

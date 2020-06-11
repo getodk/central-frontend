@@ -241,3 +241,25 @@ $shadow-color: #dedede;
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "toggle": "Toggle navigation",
+    "brand": "ODK Central",
+    "link": {
+      "projects": "Projects",
+      "users": "Users",
+      "system": "System",
+      "current": "(current)"
+    },
+    "notLoggedIn": "Not logged in",
+    "action": {
+      "logOut": "Log out"
+    },
+    "alert": {
+      "logOut": "You have logged out successfully."
+    }
+  }
+}
+</i18n>

@@ -32,3 +32,11 @@ export default {
   text-align: center;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "text": "Loading…"
+  }
+}
+</i18n>

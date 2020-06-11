@@ -11,12 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import i18n from '../i18n';
-
-export const locales = {
-  en: 'English',
-  es: 'Español'
-};
+import i18n, { locales } from '../i18n';
 
 
 
@@ -27,7 +22,6 @@ export const locales = {
 const loaded = new Set([i18n.fallbackLocale]);
 
 const setLocale = (locale) => {
-  if (locale === i18n.locale) return;
   i18n.locale = locale;
   document.querySelector('html').setAttribute('lang', locale);
 };
@@ -35,10 +29,10 @@ const setLocale = (locale) => {
 // Loads a locale asynchronously.
 export const loadLocale = (locale) => {
   if (loaded.has(locale)) {
-    setLocale(locale);
+    if (locale !== i18n.locale) setLocale(locale);
     return Promise.resolve();
   }
-  if (locales[locale] == null) return Promise.reject();
+  if (!locales.has(locale)) return Promise.reject();
   return import(/* webpackChunkName: "lang-[request]" */ `../locales/${locale}.json`)
     .then(messages => {
       i18n.setLocaleMessage(locale, messages);
@@ -54,36 +48,28 @@ export const loadLocale = (locale) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// PATHS
+// PLURALIZATION
 
-// See the contributing guide for an explanation of scoped paths.
-const scopePath = (scope, path) => {
-  const scoped = `${scope}.${path}`;
-  return i18n.te(scoped, i18n.fallbackLocale) ? scoped : path;
-};
+// Combination of $tc() and $n()
+export function $tcn(path, choice, values = undefined) {
+  const count = this.$n(choice, 'default');
+  return this.$tc(path, choice, { count, ...values });
+}
 
-// "S" for "scoped"
-export const tS = (scope, path, values = undefined) => {
-  const scoped = scopePath(scope, path);
-  return values != null ? i18n.t(scoped, values) : i18n.t(scoped);
-};
-
-// tcS() is similar to i18n.tc(). Like tS(), it supports scoped paths. It also
-// calls toLocaleString() on the count, passing the result to the message as
-// localeN.
-export const tcS = (scope, path, choice, values = undefined) => i18n.tc(
-  scopePath(scope, path),
-  choice,
-  { localeN: choice.toLocaleString(), ...values }
-);
-
-export const teS = (scope, path) =>
-  i18n.te(`${scope}.${path}`, i18n.fallbackLocale) ||
-  i18n.te(path, i18n.fallbackLocale);
-
-// TODO. Add comments.
-export const tcPath = (scope, path, choice) => {
-  const scoped = scopePath(scope, path);
-  const index = i18n.getChoiceIndex(choice, i18n.t(scoped).length);
-  return `${scoped}[${index}]`;
-};
+// $tcPath() is used when the full/main text of a component interpolation
+// requires pluralization. `path` is the path to an array with a message for
+// each plural form. (It looks like the next major version of Vue I18n will have
+// a more elegant solution for this.)
+export function $tcPath(path, choice) {
+  // `path` is the path to an array, but this.$t(path) will actually return a
+  // non-array object: see https://github.com/intlify/vue-i18n-loader/issues/30.
+  const choices = Object.keys(this.$t(path)).length;
+  const index = i18n.getChoiceIndex(choice, choices);
+  // Using [] seems to work even though this.$t(path) returns a non-array
+  // object.
+  const choicePath = `${path}[${index}]`;
+  if (this.$te(choicePath)) return choicePath;
+  if (choices !== 2) throw new Error('invalid number of choices');
+  const fallbackIndex = choice === 1 ? 0 : 1;
+  return `${path}[${fallbackIndex}]`;
+}

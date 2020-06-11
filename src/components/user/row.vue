@@ -156,3 +156,15 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "cannotAssignRole": "You may not edit your own Sitewide Role.",
+    "cannotRetire": "You may not retire yourself.",
+    "action": {
+      "retire": "Retire user"
+    }
+  }
+}
+</i18n>

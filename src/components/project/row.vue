@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </div>
     </td>
-    <td>{{ $tc('count.form', project.forms) }}</td>
+    <td>{{ $tcn('count.form', project.forms) }}</td>
     <td>
       <date-time :iso="project.lastSubmission" :blank="$t('common.none')"/>
     </td>
@@ -84,3 +84,11 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "help": "What are Projects?"
+  }
+}
+</i18n>

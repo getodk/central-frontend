@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div id="project-list-heading">
-      <span>{{ $t('welcome') }}</span>
-      <span>{{ $t('getThingsDone') }}</span>
+      <span>{{ $t('heading[0]') }}</span><span>{{ $t('heading[1]') }}</span>
     </div>
     <div class="row">
       <div class="col-xs-6">
@@ -22,12 +21,12 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('gettingStarted.title') }}</span>
           </template>
           <template #body>
-            <i18n tag="p" :path="$tPath('gettingStarted.body[0].full')">
+            <i18n tag="p" path="gettingStarted.body[0].full">
               <template #docsWebsite>
                 <doc-link to="central-intro/">{{ $t('gettingStarted.body[0].docsWebsite') }}</doc-link>
               </template>
             </i18n>
-            <i18n tag="p" :path="$tPath('gettingStarted.body[1].full')">
+            <i18n tag="p" path="gettingStarted.body[1].full">
               <template #forum>
                 <a href="https://forum.getodk.org/" target="_blank">{{ $t('gettingStarted.body[1].forum') }}</a>
               </template>
@@ -223,3 +222,43 @@ export default {
   table-layout: fixed;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "heading": [
+      "Welcome to Central.",
+      "Let’s get some things done."
+    ],
+    "gettingStarted": {
+      "title": "Getting Started",
+      "body": [
+        {
+          "full": "If you’re not sure where to begin, we have a getting started guide and user documentation available on the {docsWebsite}.",
+          "docsWebsite": "ODK Docs website"
+        },
+        {
+          "full": "In addition, you can always get help from others on the {forum}, where you can search for previous answers or ask one of your own.",
+          "forum": "ODK community forum"
+        }
+      ]
+    },
+    "news": "News",
+    "rightNow": {
+      "usersCaption": "who can administer Projects through this website. | who can administer Projects through this website.",
+      "projectsCaption": "which can organize Forms and App Users for device deployment. | which can organize Forms and App Users for device deployment."
+    },
+    "projectsTitle": "Projects",
+    "action": {
+      "create": "New"
+    },
+    "header": {
+      "forms": "Forms"
+    },
+    "emptyTable": "There are no Projects for you to see.",
+    "alert": {
+      "create": "Your new Project has been successfully created."
+    }
+  }
+}
+</i18n>

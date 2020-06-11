@@ -40,13 +40,13 @@ except according to the terms contained in the LICENSE file.
           </p>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="created.qrCodeHtml()"></p>
-          <i18n tag="p" :path="$tPath('success[1].full')">
+          <i18n tag="p" path="success[1].full">
             <template #displayName>{{ created.displayName }}</template>
             <template #scanningCode>
               <doc-link to="collect-import-export/">{{ $t('success[1].scanningCode') }}</doc-link>
             </template>
           </i18n>
-          <i18n tag="p" :path="$tPath('success[2].full')">
+          <i18n tag="p" path="success[2].full">
             <template #formAccessSettings>
               <a href="#" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
             </template>
@@ -169,3 +169,26 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Create App User",
+    "introduction": "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created.",
+    "field": {
+      "nickname": "Nickname"
+    },
+    "success": [
+      "The App User “{displayName}” has been created.",
+      {
+        "full": "You can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”",
+        "scanningCode": "scanning the code above"
+      },
+      {
+        "full": "You may wish to visit this Project’s {formAccessSettings} to give this user access to Forms.",
+        "formAccessSettings": "Form Access settings"
+      }
+    ]
+  }
+}
+</i18n>

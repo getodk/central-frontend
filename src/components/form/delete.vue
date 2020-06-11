@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" :path="$tPath('introduction[0]')">
+        <i18n tag="p" path="introduction[0]">
           <template #name>
             <strong>{{ form.nameOrId() }}</strong>
           </template>
@@ -71,3 +71,15 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Delete Form",
+    "introduction": [
+      "Are you sure you want to delete the Form {name} and all of its Submissions?",
+      "This action cannot be undone."
+    ]
+  }
+}
+</i18n>

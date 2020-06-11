@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n tag="p" :path="$tPath('heading.full')">
+      <i18n tag="p" path="heading.full">
         <template #formAccess>
           <router-link :to="projectPath('form-access')">{{ $t('heading.formAccess') }}</router-link>
         </template>
@@ -223,3 +223,29 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "create": "Create App User"
+    },
+    "heading": {
+      "full": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem. For more information, {clickHere}.",
+      "formAccess": "Form Access",
+      "clickHere": "click here"
+    },
+    "header": {
+      "nickname": "Nickname",
+      "lastUsed": "Last Used",
+      "configureClient": "Configure Client"
+    },
+    "qrCodeHelp": "What’s this?",
+    "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
+    "alert": {
+      "create": "The App User “{displayName}” was created successfully.",
+      "revoke": "Access was revoked for the App User “{displayName}”."
+    }
+  }
+}
+</i18n>

@@ -82,3 +82,12 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Create Web User",
+    "introduction": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+  }
+}
+</i18n>

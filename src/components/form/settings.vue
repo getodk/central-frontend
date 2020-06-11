@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('state.title') }}</h1>
           </div>
           <div class="panel-body">
-            <i18n tag="p" :path="$tPath('state.body.full')">
+            <i18n tag="p" path="state.body.full">
               <template #formAccessSettings>
                 <router-link :to="projectPath('form-access')">{{ $t('state.body.formAccessSettings') }}</router-link>
               </template>
@@ -87,3 +87,23 @@ export default {
   text-align: center;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "state": {
+      "title": "Form State",
+      "body": {
+        "full": "To set this Form’s state, please visit the Project {formAccessSettings}.",
+        "formAccessSettings": "Form Access settings"
+      }
+    },
+    "action": {
+      "delete": "Delete this Form"
+    },
+    "alert": {
+      "delete": "The Form “{name}” was deleted."
+    }
+  }
+}
+</i18n>

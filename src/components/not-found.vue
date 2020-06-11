@@ -29,3 +29,12 @@ export default {
   name: 'NotFound'
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Page Not Found",
+    "body": "The page you requested could not be found."
+  }
+}
+</i18n>

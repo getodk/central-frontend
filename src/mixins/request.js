@@ -53,20 +53,18 @@ of validateStatus). It also accepts the following options:
        message. If the function returns `null` or `undefined`, the Problem's
        message is used.
     2. If (and only if) problemToAlert has not been specified, request() will
-       check whether there is an i18n message to return for the Problem. The
-       component first checks whether there is a message specific to the Problem
-       code, then checks whether there is a default message. For example:
+       check whether the component has specified an i18n message for the Problem
+       code. For example:
 
-         {
-           "component": {
-             "SomeComponent": {
-               "problem": {
-                 "404_1": "Not found.",
-                 "default": "There was a Problem."
-               }
-             }
+       <i18n>
+       {
+         "en": {
+           "problem": {
+             "404_1": "Not found."
            }
          }
+       }
+       </i18n>
 
 Return Value
 ------------
@@ -112,7 +110,7 @@ function request({
       logAxiosError(error);
       const message = requestAlertMessage(error, {
         problemToAlert,
-        i18nScope: this.$tPath('problem')
+        component: this
       });
       this.$store.commit('setAlert', { type: 'danger', message });
       throw error;

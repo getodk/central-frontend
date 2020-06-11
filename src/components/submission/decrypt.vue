@@ -197,3 +197,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "submitted": "Your data download should begin soon. If you have been waiting and it has not started, please try again."
+    }
+  }
+}
+</i18n>
