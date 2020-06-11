@@ -33,12 +33,11 @@ except according to the terms contained in the LICENSE file.
       :stage="missingAttachmentCount === 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        <i18n path="steps[2].body[0].full">
+        <i18n :tag="false" path="steps[2].body[0].full">
           <template #mediaFiles>
             <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
         <doc-link to="central-forms/#forms-with-attachments">
           {{ $t('clickForInfo') }}
         </doc-link>
@@ -48,12 +47,11 @@ except according to the terms contained in the LICENSE file.
       :stage="formDraft.submissions !== 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n path="steps[3].body[0].full">
+        <i18n :tag="false" path="steps[3].body[0].full">
           <template #testQrCode>
             <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].testQrCode') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
         <doc-link to="central-forms/#working-with-form-drafts">
           {{ $t('clickForInfo') }}
         </doc-link>
@@ -62,13 +60,14 @@ except according to the terms contained in the LICENSE file.
     <checklist-step stage="current">
       <template #title>{{ $t('steps[4].title') }}</template>
       <p>
-        <span v-if="status">{{ $t('steps[4].body[0].status') }}</span>
-        <i18n v-else path="steps[4].body[0].link.full">
+        <template v-if="status">
+          {{ $t('steps[4].body[0].status') }}
+        </template>
+        <i18n v-else :tag="false" path="steps[4].body[0].link.full">
           <template #publish>
             <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
         <doc-link to="central-forms/#working-with-form-drafts">
           {{ $t('clickForInfo') }}
         </doc-link>

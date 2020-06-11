@@ -83,8 +83,7 @@ some point. -->
           <p>{{ $tcn('duringUpload.total', uploadStatus.total) }}</p>
           <p id="form-attachment-popups-current">
             <strong>{{ $t('duringUpload.current', { filename: uploadStatus.current }) }}</strong>
-            &nbsp;
-            <span v-if="hasProgress">({{ percentLoaded }})</span>
+            <span v-if="hasProgress"> ({{ percentLoaded }})</span>
           </p>
           <p v-if="uploadStatus.total !== 1">
             <template v-if="uploadStatus.remaining > 1">

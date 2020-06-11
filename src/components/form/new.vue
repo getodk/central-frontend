@@ -39,7 +39,7 @@ definition for an existing form -->
       <div class="modal-introduction">
         <p>
           {{ formDraft == null ? $t('introduction[0].create') : $t('introduction[0].update') }}
-          <i18n path="introduction[1].full">
+          <i18n :tag="false" path="introduction[1].full">
             <template #tools>
               <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
             </template>

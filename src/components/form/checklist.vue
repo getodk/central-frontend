@@ -32,8 +32,8 @@ except according to the terms contained in the LICENSE file.
         </template>
         {{ $t('steps[1].body[1]') }}
         <template v-if="project.appUsers === 0">
-          <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>&nbsp;
-          <i18n path="steps[1].body[2].none[1].full">
+          <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>
+          <i18n :tag="false" path="steps[1].body[2].none[1].full">
             <template #appUsersTab>
               <router-link :to="projectPath('app-users')">{{ $t('steps[1].body[2].none[1].appUsersTab') }}</router-link>
             </template>
@@ -52,8 +52,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </i18n>
         </template>
-        &nbsp;
-        <i18n path="steps[1].body[3].full">
+        <i18n :tag="false" path="steps[1].body[3].full">
           <template #clickHere>
             <doc-link to="central-submissions/">{{ $t('steps[1].body[3].clickHere') }}</doc-link>
           </template>
@@ -69,24 +68,22 @@ except according to the terms contained in the LICENSE file.
         <template v-else>
           {{ $tcn('steps[2].body[0].any', form.submissions) }}
         </template>
-        <i18n path="steps[2].body[1].full">
+        <i18n :tag="false" path="steps[2].body[1].full">
           <template #submissionsTab>
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
         <doc-link to="central-submissions/">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(3)">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n path="steps[3].body[0].full">
+        <i18n :tag="false" path="steps[3].body[0].full">
           <template #formAccessTab>
             <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
         <doc-link to="central-forms/#managing-form-lifecycle">
           {{ $t('clickForInfo') }}
         </doc-link>
