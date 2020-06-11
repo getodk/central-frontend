@@ -209,6 +209,8 @@ class MockHttp {
     });
   }
 
+  modify(f) { return f(this); }
+
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
 
@@ -909,5 +911,10 @@ export const load = (
   }
 
   return mockRoute(location, mountOptions)
+    .modify(series => {
+      const { matched } = router.resolve(location).route;
+      const { meta } = matched[matched.length - 1];
+      return meta.requireAnonymity ? series.restoreSession(false) : series;
+    })
     .respondFor(location, respondForOptions);
 };

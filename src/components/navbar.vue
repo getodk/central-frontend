@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <navbar-links v-if="currentUser != null"/>
         <ul class="nav navbar-nav navbar-right">
+          <navbar-locale-dropdown/>
           <navbar-actions/>
         </ul>
       </div>
@@ -36,11 +37,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import NavbarActions from './navbar/actions.vue';
 import NavbarLinks from './navbar/links.vue';
+import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  components: { NavbarActions, NavbarLinks },
+  components: { NavbarActions, NavbarLinks, NavbarLocaleDropdown },
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['currentUser'])

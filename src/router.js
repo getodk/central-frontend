@@ -45,6 +45,10 @@ router.afterEach(to => {
 // INITIAL REQUESTS
 
 const initialLocale = () => {
+  try {
+    const locale = localStorage.getItem('locale');
+    if (locale != null) return locale;
+  } catch (e) {}
   return window.navigator.language.split('-', 1)[0];
 };
 

@@ -47,6 +47,7 @@ const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
 );
 
 const mapsByComponent = {
+  AccountLogin: new Map(),
   AccountClaim: new Map(),
   ProjectList: mapKeys(['projects', 'users']),
   ProjectHome: mapKeys(['project']),

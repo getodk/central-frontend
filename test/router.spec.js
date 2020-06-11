@@ -28,36 +28,36 @@ describe('router', () => {
 
     it("loads the user's preferred language", () => {
       setLanguage('es');
-      return mockRoute('/login')
-        .restoreSession(false)
-        .afterResponse(() => {
-          i18n.locale.should.equal('es');
-        });
+      return load('/login').then(() => {
+        i18n.locale.should.equal('es');
+      });
     });
 
     it('loads a less specific locale', () => {
       setLanguage('es-ES');
-      return mockRoute('/login')
-        .restoreSession(false)
-        .afterResponse(() => {
-          i18n.locale.should.equal('es');
-        });
+      return load('/login').then(() => {
+        i18n.locale.should.equal('es');
+      });
     });
 
     it('falls back to en for a locale that is not defined', () => {
       setLanguage('la');
-      return mockRoute('/login')
-        .restoreSession(false)
-        .afterResponse(() => {
-          i18n.locale.should.equal('en');
-        });
+      return load('/login').then(() => {
+        i18n.locale.should.equal('en');
+      });
     });
 
-    it('only loads the language before the first navigation', () => {
+    it('loads the locale saved to local storage', () => {
+      window.localStorage.setItem('locale', 'es');
+      return load('/login').then(() => {
+        i18n.locale.should.equal('es');
+      });
+    });
+
+    it('only loads the locale before the first navigation', () => {
       setLanguage('es');
-      return mockRoute('/login')
-        .restoreSession(false)
-        .afterResponse(() => {
+      return load('/login')
+        .afterResponses(() => {
           setLanguage('en');
         })
         .route('/reset-password')
