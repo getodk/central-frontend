@@ -112,13 +112,15 @@ for (const { value } of messages[Symbol.for('before-all')]) {
   if (match != null) commentsByKey[match[1]] = match[2];
 }
 
-const getComment = (path) => {
-  const parent = R.path(path.slice(0, path.length - 1), messages);
-  const key = path[path.length - 1];
-
+// Returns a comment for a message whose path ends with .full or for a sibling
+// message.
+const getCommentForFull = (obj, key, entries) => {
   if (key === 'full') {
-    const siblings = Object.entries(parent)
-      .filter(([k, v]) => k !== 'full' && typeof v === 'string');
+    const siblings = entries.filter(([k, v]) => {
+      if (k === 'full') return false;
+      if (typeof v !== 'string') throw new Error('invalid sibling');
+      return true;
+    });
     if (siblings.length === 0) return null;
 
     if (siblings.length === 1) {
@@ -142,23 +144,12 @@ const getComment = (path) => {
     return `The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n${joined}`;
   }
 
-  if (parent.full != null) {
-    // parent.full will be an array if $tcPath() is used.
-    return Array.isArray(parent.full)
-      ? `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text. (The plural form of the text is shown.)\n\n${parent.full[1]}`
-      : `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text:\n\n${parent.full}`;
-  }
-
-  for (let i = path.length - 1; i >= 0; i -= 1) {
-    const ancestor = R.path(path.slice(0, i), messages);
-    const comments = ancestor[Symbol.for(`before:${path[i]}`)];
-    if (comments != null)
-      return comments.map(comment => comment.value.trim()).join(' ');
-  }
-
-  for (let i = path.length - 1; i >= 0; i -= 1) {
-    const comment = commentsByKey[path[i]];
-    if (comment != null) return comment;
+  if (obj.full != null) {
+    // obj.full will be an array if $tcPath() is used.
+    if (Array.isArray(obj.full))
+      return `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text. (The plural form of the text is shown.)\n\n${obj.full[1]}`;
+    if (typeof obj.full !== 'string') throw new Error('invalid .full message');
+    return `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text:\n\n${obj.full}`;
   }
 
   return null;
@@ -169,39 +160,50 @@ const getComment = (path) => {
 ////////////////////////////////////////////////////////////////////////////////
 // CONVERT TO STRUCTURED JSON
 
-const restructure = (value, path = []) => {
+const restructure = (
+  value,
+  commentForPath = null,
+  commentForKey = null,
+  commentForFull = null
+) => {
   if (value == null) throw new Error('invalid value');
 
   if (typeof value === 'string') {
     const structured = { string: joinPluralForms(splitPluralForms(value)) };
-    const comment = getComment(path);
-    if (comment != null) structured.developer_comment = comment;
-    return structured;
-  }
 
-  // Needed for $tcPath().
-  if (path[path.length - 1] === 'full') {
-    if (!Array.isArray(value)) throw new Error('invalid .full message');
-    const structured = { string: joinPluralForms(value) };
-    const comment = getComment(path);
-    if (comment != null) structured.developer_comment = comment;
-    return structured;
-  }
+    if (commentForPath != null) {
+      structured.developer_comment = commentForFull != null
+        ? `${commentForPath}\n\n${commentForFull}`
+        : commentForPath;
+    } else if (commentForKey != null) {
+      structured.developer_comment = commentForFull != null
+        ? `${commentForKey}\n\n${commentForFull}`
+        : commentForKey;
+    } else if (commentForFull != null) {
+      structured.developer_comment = commentForFull;
+    }
 
-  if (Array.isArray(value)) {
-    // Convert `value` to a non-array object: it seems that structured JSON does
-    // not support arrays.
-    const structured = {};
-    for (let i = 0; i < value.length; i += 1)
-      structured[i] = restructure(value[i], [...path, i.toString()]);
     return structured;
   }
 
   if (typeof value !== 'object') throw new Error('invalid value');
 
+  // `structured` will be a non-array object, even if `value` is an array: it
+  // seems that structured JSON does not support arrays.
   const structured = {};
-  for (const [k, v] of Object.entries(value))
-    structured[k] = restructure(v, [...path, k]);
+  const entries = Object.entries(value);
+  for (const [k, v] of entries) {
+    const comments = value[Symbol.for(`before:${k}`)];
+    structured[k] = restructure(
+      // v will be an array if $tcPath() is used.
+      k === 'full' && Array.isArray(v) ? v.join(' | ') : v,
+      comments != null
+        ? comments.map(comment => comment.value.trim()).join(' ')
+        : commentForPath,
+      commentsByKey[k] != null ? commentsByKey[k] : commentForKey,
+      getCommentForFull(value, k, entries)
+    );
+  }
   return structured;
 };
 
