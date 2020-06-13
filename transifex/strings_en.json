@@ -305,11 +305,12 @@
         },
         "configureClient": {
           "string": "Configure Client",
-          "developer_comment": "This is the text of a table column header."
+          "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
         }
       },
       "qrCodeHelp": {
-        "string": "What’s this?"
+        "string": "What’s this?",
+        "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
       },
       "emptyTable": {
         "string": "There are no App Users yet. You will need to create some to download Forms and submit data from your device."
@@ -510,7 +511,8 @@
           "string": "{count, plural, one {Please wait, uploading your {count} file:} other {Please wait, uploading your {count} files:}}"
         },
         "current": {
-          "string": "Sending {filename}"
+          "string": "Sending {filename}",
+          "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
           "beforeLast": {
@@ -693,7 +695,7 @@
         "3": {
           "title": {
             "string": "Manage Form retirement",
-            "developer_comment": "This is the title of a checklist item."
+            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
           },
           "body": {
             "0": {
@@ -751,7 +753,8 @@
           "body": {
             "0": {
               "status": {
-                "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right."
+                "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
+                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
               },
               "link": {
                 "full": {
@@ -879,7 +882,8 @@
           }
         },
         "tabTitle": {
-          "string": "These functions will become available once you publish your Draft Form"
+          "string": "These functions will become available once you publish your Draft Form",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
         }
       },
       "draftNav": {
@@ -1133,7 +1137,7 @@
       "action": {
         "toggle": {
           "string": "Toggle navigation",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
         }
       }
     },
@@ -1168,7 +1172,8 @@
         "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
       },
       "current": {
-        "string": "(current)"
+        "string": "current",
+        "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
     "NotFound": {
@@ -1606,7 +1611,7 @@
     "SystemHome": {
       "title": {
         "string": "System Management",
-        "developer_comment": "This is shown as the title at the top of the page."
+        "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
       },
       "tab": {
         "backups": {
