@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           <span class="navbar-icon-bar"></span>
           <span class="navbar-icon-bar"></span>
         </button>
-        <router-link to="/" class="navbar-brand">{{ $t('common.appName') }}</router-link>
+        <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <navbar-links v-if="currentUser != null"/>

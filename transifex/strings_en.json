@@ -167,10 +167,6 @@
     }
   },
   "common": {
-    "appName": {
-      "string": "ODK Central",
-      "developer_comment": "This text appears on its own in the navigation bar at the top of the page."
-    },
     "blank": {
       "string": "(blank)"
     },
