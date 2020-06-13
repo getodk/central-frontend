@@ -52,7 +52,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is shown as the title at the top of the page.
+    // This is the title of the page for managing backups, audit logs, and other system-level functions.
     "title": "System Management",
     "tab": {
       "backups": "Backups",

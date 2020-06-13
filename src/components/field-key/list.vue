@@ -238,8 +238,10 @@ export default {
     "header": {
       "nickname": "Nickname",
       "lastUsed": "Last Used",
+      // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"
     },
+    // Linked to a help file about QR codes to configure data collection clients.
     "qrCodeHelp": "What’s this?",
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {

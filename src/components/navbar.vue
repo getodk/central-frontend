@@ -180,6 +180,7 @@ $shadow-color: #dedede;
 {
   "en": {
     "action": {
+      // Used by screen readers to describe the button used to show or hide the navigation bar on small screens ("hamburger menu").
       "toggle": "Toggle navigation"
     }
   }
