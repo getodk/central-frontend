@@ -80,7 +80,8 @@ export default {
     // This is the text of a link shown in the navigation bar at the top of the
     // page.
     "system": "System",
-    "current": "(current)"
+    // Used by screen readers to identify the currently-selected navigation tab
+    "current": "current"
   }
 }
 </i18n>

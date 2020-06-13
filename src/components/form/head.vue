@@ -279,6 +279,7 @@ body {
         "submissions": "Submissions",
         "settings": "Settings"
       },
+      // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
     "draftNav": {

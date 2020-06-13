@@ -193,7 +193,7 @@ export default {
         ]
       },
       {
-        // This is the title of a checklist item.
+        // This is the title of a checklist item. "Retirement" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it.
         "title": "Manage Form retirement",
         "body": [
           {

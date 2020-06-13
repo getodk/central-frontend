@@ -300,6 +300,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Please wait, uploading your {count} file: | Please wait, uploading your {count} files:",
+      // Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form.
       "current": "Sending {filename}",
       "remaining": {
         "beforeLast": "{count} file remains. | {count} files remain.",

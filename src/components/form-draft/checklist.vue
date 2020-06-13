@@ -133,8 +133,10 @@ export default {
         "title": "Upload revised Form definition (optional)",
         "body": [
           {
+            // This refers to changes to the form definition as opposed to just the media associated with the Form.
             "status": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
             "link": {
+              // This refers to changes to the form definition as opposed to just the media associated with the Form.
               "full": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
               "upload": "upload"
             }
