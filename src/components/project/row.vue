@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td>{{ $tcn('count.form', project.forms) }}</td>
     <td>
-      <date-time :iso="project.lastSubmission" :blank="$t('common.none')"/>
+      <date-time :iso="project.lastSubmission" :blank="$t('noSubmission')"/>
     </td>
   </tr>
 </template>
@@ -88,7 +88,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "help": "What are Projects?"
+    "help": "What are Projects?",
+    // This text is shown under the "Latest Submission" column of the Projects
+    // table. It is shown for a Project with no Submissions.
+    "noSubmission": "(none)"
   }
 }
 </i18n>

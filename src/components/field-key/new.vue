@@ -189,7 +189,11 @@ export default {
         "full": "You may wish to visit this Project’s {formAccessSettings} to give this user access to Forms.",
         "formAccessSettings": "Form Access settings"
       }
-    ]
+    ],
+    "action": {
+      // This is the text of a button that is used to create another App User.
+      "createAnother": "Create another"
+    }
   }
 }
 </i18n>

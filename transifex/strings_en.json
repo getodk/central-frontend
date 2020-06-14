@@ -22,10 +22,6 @@
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "createAnother": {
-      "string": "Create another",
-      "developer_comment": "This is the text for an action, for example, the text of a button."
-    },
     "done": {
       "string": "Done",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -167,14 +163,9 @@
     }
   },
   "common": {
-    "blank": {
-      "string": "(blank)"
-    },
     "dangerZone": {
-      "string": "Danger Zone"
-    },
-    "none": {
-      "string": "(none)"
+      "string": "Danger Zone",
+      "developer_comment": "This is a title shown above a section of the page."
     },
     "rightNow": {
       "string": "Right Now",
@@ -185,6 +176,12 @@
     }
   },
   "presenter": {
+    "Form": {
+      "blankVersion": {
+        "string": "(blank)",
+        "developer_comment": "This is shown for a Form with a blank version name."
+      }
+    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (archived)",
@@ -361,6 +358,12 @@
             "string": "Form Access settings",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
           }
+        }
+      },
+      "action": {
+        "createAnother": {
+          "string": "Create another",
+          "developer_comment": "This is the text of a button that is used to create another App User."
         }
       }
     },
@@ -1496,6 +1499,10 @@
     "ProjectRow": {
       "help": {
         "string": "What are Projects?"
+      },
+      "noSubmission": {
+        "string": "(none)",
+        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
       }
     },
     "ProjectSettings": {

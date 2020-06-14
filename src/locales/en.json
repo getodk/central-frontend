@@ -15,7 +15,6 @@
     "cancel": "Cancel",
     "close": "Close",
     "create": "Create",
-    "createAnother": "Create another",
     "done": "Done",
     "editProfile": "Edit profile",
     "logIn": "Log in",
@@ -63,14 +62,17 @@
     "submission": "{count} Submission | {count} Submissions"
   },
   "common": {
-    "blank": "(blank)",
+    // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
-    "none": "(none)",
     // This is a title shown above a section of the page.
     "rightNow": "Right Now",
     "success": "Success!"
   },
   "presenter": {
+    "Form": {
+      // This is shown for a Form with a blank version name.
+      "blankVersion": "(blank)"
+    },
     "Project": {
       // {name} is the name of a Project. We append "(archived)" to the name if
       // the Project is archived.
