@@ -103,7 +103,6 @@ afterEach(() => {
 
   return new Promise((resolve, reject) => {
     store.commit('setUnsavedChanges', false);
-    store.commit('setSendInitialRequests', false);
     const random = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
     // If the next test that uses the router tries to navigate to the current
     // location, the navigation will be aborted. To prevent that, we navigate to
