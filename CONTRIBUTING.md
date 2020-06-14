@@ -162,6 +162,15 @@ For more background on Transifex, see these articles:
 - [Introduction to File Formats](https://docs.transifex.com/formats/introduction)
 - [Working with Plurals and Genders](https://docs.transifex.com/localization-tips-workflows/plurals-and-genders)
 
+#### Adding a New Locale
+
+To add a new locale to ODK Central Frontend:
+
+1. Add the locale to Transifex.
+2. Add the locale to `locales` in [`/src/i18n.js`](/src/i18n.js).
+
+Note that right now, the router will use the user's preferred language to load the locale, but it will only use the first subtag of the language. If/when we add a locale with multiple subtags, we will need to update the router.
+
 ### Styles
 
 ODK Central Frontend uses Sass.
