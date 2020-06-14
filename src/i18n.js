@@ -25,25 +25,27 @@ const fallbackLocale = 'en';
 ////////////////////////////////////////////////////////////////////////////////
 // NUMBER FORMATS
 
-const fallbackNumberFormats = {
+const numberFormats = {
   default: {},
   percent: { style: 'percent' }
 };
 
 for (let i = 1; i < 15; i += 1)
-  fallbackNumberFormats[`maximumFractionDigits${i}`] = { maximumFractionDigits: i };
+  numberFormats[`maximumFractionDigits${i}`] = { maximumFractionDigits: i };
 
 for (let i = 1; i < 8; i += 1) {
-  fallbackNumberFormats[`fractionDigits${i}`] = {
+  numberFormats[`fractionDigits${i}`] = {
     minimumFractionDigits: i,
     maximumFractionDigits: i
   };
 }
 
-const numberFormats = {
-  [fallbackLocale]: fallbackNumberFormats,
-  es: fallbackNumberFormats
-};
+const numberFormatsByLocale = {};
+for (const locale of locales.keys()) {
+  // There must be a property for each locale, even though the value is the
+  // same. Otherwise, $n() will use the fallback locale.
+  numberFormatsByLocale[locale] = numberFormats;
+}
 
 
 
@@ -54,7 +56,7 @@ export default new VueI18n({
   locale: fallbackLocale,
   fallbackLocale,
   messages: { [fallbackLocale]: fallbackMessages },
-  numberFormats,
+  numberFormats: numberFormatsByLocale,
   warnHtmlInMessage: 'error',
   silentFallbackWarn: true
 });
