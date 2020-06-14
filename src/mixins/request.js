@@ -56,7 +56,7 @@ of validateStatus). It also accepts the following options:
        check whether the component has specified an i18n message for the Problem
        code. For example:
 
-       <i18n>
+       <i18n lang="json5">
        {
          "en": {
            "problem": {
