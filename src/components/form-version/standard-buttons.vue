@@ -76,8 +76,7 @@ export default {
 {
   "en": {
     "action": {
-      "downloadXForm": "Download XML",
-      "download": "Download"
+      "downloadXForm": "Download XML"
     },
     // Here, the user selects the format that a Form should be downloaded as.
     "format": {

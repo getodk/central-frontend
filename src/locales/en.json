@@ -16,6 +16,7 @@
     "close": "Close",
     "create": "Create",
     "done": "Done",
+    "download": "Download",
     "editProfile": "Edit profile",
     "logIn": "Log in",
     "looksGood": "Looks good, proceed",
@@ -23,8 +24,8 @@
     "next": "Next",
     "noCancel": "No, cancel",
     "ok": "Okay",
+    "proceed": "Proceed",
     "resetPassword": "Reset password",
-    "yesConfirm": "Yes, I am sure",
     "yesProceed": "Yes, proceed"
   },
   "field": {
@@ -33,6 +34,7 @@
     "name": "Name",
     "newPassword": "New password",
     "oldPassword": "Old password",
+    "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)"
   },

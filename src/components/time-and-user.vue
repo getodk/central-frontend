@@ -55,8 +55,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is used to show the time at which a particular user completed an
-    // action, for example: 2020/01/01 01:23 by Alice
+    // This shows the date and time at which a particular user completed an
+    // action, for example: "2020/01/01 01:23 by Alice". {dateTime} may show a
+    // formatted date like "2020/01/01", or it may use a word like "Today" or
+    // "Yesterday".
     "text": "{dateTime} by {displayName}"
   }
 }

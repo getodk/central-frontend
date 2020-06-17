@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-actions">
         <button :disabled="awaitingResponse" type="button"
           class="btn btn-danger" @click="retire">
-          {{ $t('action.yesConfirm') }} <spinner :state="awaitingResponse"/>
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
         <button :disabled="awaitingResponse" type="button" class="btn btn-link"
           @click="$emit('hide')">
@@ -80,7 +80,7 @@ export default {
     // pop-up to retire another Web User.
     "title": "Retiring User",
     "introduction": [
-      "You are about to retire the user account “{displayName}” <{email}>. They will be immediately barred from performing any actions and logged out.",
+      "You are about to retire the user account “{displayName}” <{email}>. That user will be immediately barred from performing any actions and logged out.",
       {
         "full": "{noUndo}, but a new account can always be created for that person with the same email address.",
         "noUndo": "This action cannot be undone"

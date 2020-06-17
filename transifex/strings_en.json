@@ -26,6 +26,10 @@
       "string": "Done",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "download": {
+      "string": "Download",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "editProfile": {
       "string": "Edit profile",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -54,12 +58,12 @@
       "string": "Okay",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "resetPassword": {
-      "string": "Reset password",
+    "proceed": {
+      "string": "Proceed",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "yesConfirm": {
-      "string": "Yes, I am sure",
+    "resetPassword": {
+      "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "yesProceed": {
@@ -86,6 +90,10 @@
     },
     "oldPassword": {
       "string": "Old password",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passphrase": {
+      "string": "Passphrase",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -254,19 +262,198 @@
       }
     },
     "BackupList": {
+      "auditsTitle": {
+        "string": "Latest Backups",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
       "alert": {
         "create": {
           "string": "Success! Automatic backups are now configured."
         },
         "terminate": {
-          "string": "Your automatic backups were terminated. I recommend you set up a new one as soon as possible."
+          "string": "Your automatic backups were terminated. It is recommended that you set up a new one as soon as possible."
         }
       }
     },
     "BackupNew": {
+      "title": {
+        "string": "Set up Backups",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "string": "If you want, you may set up an encryption passphrase which must be used to unlock the backup."
+            },
+            "1": {
+              "string": "There is no way to recover the passphrase if you lose it!"
+            },
+            "2": {
+              "string": "Be sure to pick something you will remember, or write it down somewhere safe."
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "For safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "here",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
+              }
+            },
+            "1": {
+              "string": "When you press next, Google will confirm that you wish to allow the server to access your account. The only thing the server will be allowed to touch are the backup files it creates."
+            },
+            "2": {
+              "string": "Once you confirm this, you will be asked to copy and paste some text back here."
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Welcome back! Did you get some text to copy and paste? If not, click {here} to try again.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "here",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
+              }
+            },
+            "1": {
+              "string": "Otherwise, paste it below and you are done!"
+            }
+          }
+        }
+      },
+      "field": {
+        "passphrase": {
+          "string": "Passphrase (optional)",
+          "developer_comment": "This is the text of a form field."
+        },
+        "confirmationText": {
+          "string": "Confirmation text",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
       "problem": {
         "verify": {
           "string": "Please try again, and go to the community forum if the problem continues."
+        }
+      }
+    },
+    "BackupStatus": {
+      "getHelp": {
+        "full": {
+          "string": "If you are having trouble, please try the {forum}.",
+          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
+        },
+        "forum": {
+          "string": "community forum",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
+        }
+      },
+      "notConfigured": {
+        "0": {
+          "string": "Backups are not configured."
+        },
+        "1": {
+          "string": "The data server has not been set up to automatically back up its data anywhere."
+        },
+        "2": {
+          "full": {
+            "string": "Unless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe.",
+            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
+          },
+          "recommended": {
+            "string": "strongly recommended",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
+          }
+        },
+        "3": {
+          "string": "Automatic data backups happen through this system once a day. All your data is encrypted with a password you provide so that only you can unlock it."
+        }
+      },
+      "neverRun": {
+        "0": {
+          "string": "The configured backup has not yet run."
+        },
+        "1": {
+          "string": "If you have configured backups within the last couple of days, this is normal. Otherwise, something has gone wrong."
+        },
+        "2": {
+          "full": {
+            "string": "In that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "terminate",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "somethingWentWrong": {
+        "0": {
+          "string": "Something is wrong!"
+        },
+        "1": {
+          "full": {
+            "string": "The latest backup that completed successfully was {moreThanThreeDaysAgo}.",
+            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
+          },
+          "moreThanThreeDaysAgo": {
+            "string": "more than three days ago",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "The most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "terminate",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Backup is working."
+        },
+        "1": {
+          "string": "The last backup completed successfully {dateTime}.",
+          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\" or \"yesterday\". {dateTime} is formatted in bold."
+        }
+      },
+      "action": {
+        "setUp": {
+          "string": "Set up now",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "terminate": {
+          "string": "Terminate",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "BackupTerminate": {
+      "title": {
+        "string": "Terminate Automatic Backups",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to terminate your automatic backups?"
+        },
+        "1": {
+          "string": "You will have to reconfigure them again from scratch to start them again, and this action cannot be undone."
         }
       }
     },
@@ -292,10 +479,6 @@
         }
       },
       "header": {
-        "nickname": {
-          "string": "Nickname",
-          "developer_comment": "This is the text of a table column header."
-        },
         "lastUsed": {
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
@@ -327,12 +510,8 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
-        "string": "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created."
-      },
-      "field": {
-        "nickname": {
-          "string": "Nickname",
-          "developer_comment": "This is the text of a form field."
+        "0": {
+          "string": "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created."
         }
       },
       "success": {
@@ -780,12 +959,12 @@
           "body": {
             "0": {
               "full": {
-                "string": "Your Form design references files that we need in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
+                "string": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
                 "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
               },
               "mediaFiles": {
                 "string": "Media Files",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that we need in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
               }
             }
           }
@@ -834,6 +1013,49 @@
       }
     },
     "FormDraftPublish": {
+      "title": {
+        "string": "Publish Draft",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "warnings": {
+        "attachments": {
+          "full": {
+            "string": "You have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later.",
+            "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+          },
+          "mediaFiles": {
+            "string": "Media Files",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
+          }
+        },
+        "testing": {
+          "full": {
+            "string": "You have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended.",
+            "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
+          },
+          "tested": {
+            "string": "tested this Form",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+          }
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "You are about to make this Draft the published version of your Form. This will finalize any changes you have made to the Form definition and its attached Media Files."
+        },
+        "1": {
+          "string": "Existing Form Submissions will be unaffected, but all Draft test Submissions will be removed."
+        },
+        "2": {
+          "string": "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you."
+        }
+      },
+      "field": {
+        "version": {
+          "string": "Version",
+          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
+        }
+      },
       "problem": {
         "409_6": {
           "string": "The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again."
@@ -1057,7 +1279,7 @@
       }
     },
     "FormOverviewRightNow": {
-      "versionCaption": {
+      "version": {
         "full": {
           "string": "{publishedVersion} of this Form.",
           "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
@@ -1067,9 +1289,15 @@
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
         }
       },
-      "submissionsCaption": {
-        "string": "{count, plural, one {has been saved for this Form.} other {have been saved for this Form.}}",
-        "developer_comment": "This is preceded by a count of Submissions, for example: 10 Submissions have been…"
+      "submissions": {
+        "full": {
+          "string": "{count, plural, one {{submissions} has been saved for this Form.} other {{submissions} have been saved for this Form.}}",
+          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
+        },
+        "submissions": {
+          "string": "{count, plural, one {Submission} other {Submissions}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
+        }
       }
     },
     "FormSettings": {
@@ -1113,10 +1341,6 @@
       "action": {
         "downloadXForm": {
           "string": "Download XML",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "download": {
-          "string": "Download",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -1213,7 +1437,8 @@
     },
     "ProjectEnableEncryption": {
       "title": {
-        "string": "Enable Encryption"
+        "string": "Enable Encryption",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
       "steps": {
         "0": {
@@ -1297,15 +1522,13 @@
         },
         "2": {
           "introduction": {
-            "string": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
+            "0": {
+              "string": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
+            }
           }
         }
       },
       "field": {
-        "passphrase": {
-          "string": "Passphrase",
-          "developer_comment": "This is the text of a form field."
-        },
         "hint": {
           "string": "Passphrase hint (optional)",
           "developer_comment": "This is the text of a form field."
@@ -1378,22 +1601,22 @@
         "body": {
           "0": {
             "full": {
-              "string": "If you’re not sure where to begin, we have a getting started guide and user documentation available on the {docsWebsite}.",
+              "string": "If you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}.",
               "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
             },
             "docsWebsite": {
               "string": "ODK Docs website",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, we have a getting started guide and user documentation available on the {docsWebsite}."
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
             }
           },
           "1": {
             "full": {
-              "string": "In addition, you can always get help from others on the {forum}, where you can search for previous answers or ask one of your own.",
+              "string": "In addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own.",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
             },
             "forum": {
               "string": "ODK community forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search for previous answers or ask one of your own."
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
             }
           }
         }
@@ -1403,13 +1626,25 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "rightNow": {
-        "usersCaption": {
-          "string": "{count, plural, one {who can administer Projects through this website.} other {who can administer Projects through this website.}}",
-          "developer_comment": "This is preceded by a count of Web Users, for example: 10 Web Users who can…"
+        "users": {
+          "full": {
+            "string": "{count, plural, one {{webUsers} who can administer Projects through this website.} other {{webUsers} who can administer Projects through this website.}}",
+            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
+          },
+          "webUsers": {
+            "string": "{count, plural, one {Web User} other {Web Users}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
+          }
         },
-        "projectsCaption": {
-          "string": "{count, plural, one {which can organize Forms and App Users for device deployment.} other {which can organize Forms and App Users for device deployment.}}",
-          "developer_comment": "This is preceded by a count of Projects, for example: 10 Projects which can…"
+        "projects": {
+          "full": {
+            "string": "{count, plural, one {{projects} which can organize Forms and App Users for device deployment.} other {{projects} which can organize Forms and App Users for device deployment.}}",
+            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
+          },
+          "projects": {
+            "string": "{count, plural, one {Project} other {Projects}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
+          }
         }
       },
       "projectsTitle": {
@@ -1487,13 +1722,25 @@
       }
     },
     "ProjectOverviewRightNow": {
-      "appUsersCaption": {
-        "string": "{count, plural, one {who can use a data collection client to download and submit Form data to this Project.} other {who can use a data collection client to download and submit Form data to this Project.}}",
-        "developer_comment": "This is preceded by a count of App Users, for example: 10 App Users who can…"
+      "appUsers": {
+        "full": {
+          "string": "{count, plural, one {{appUsers} who can use a data collection client to download and submit Form data to this Project.} other {{appUsers} who can use a data collection client to download and submit Form data to this Project.}}",
+          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "{count, plural, one {App User} other {App Users}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
+        }
       },
-      "formsCaption": {
-        "string": "{count, plural, one {which can be downloaded and given as surveys on mobile clients.} other {which can be downloaded and given as surveys on mobile clients.}}",
-        "developer_comment": "This is preceded by a count of Forms, for example: 10 Forms which can…"
+      "forms": {
+        "full": {
+          "string": "{count, plural, one {{forms} which can be downloaded and given as surveys on mobile clients.} other {{forms} which can be downloaded and given as surveys on mobile clients.}}",
+          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
+        },
+        "forms": {
+          "string": "{count, plural, one {Form} other {Forms}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+        }
       }
     },
     "ProjectRow": {
@@ -1558,6 +1805,19 @@
       }
     },
     "SubmissionDecrypt": {
+      "title": {
+        "string": "Decrypt and Download",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+        }
+      },
+      "hint": {
+        "string": "Hint: {hint}",
+        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+      },
       "alert": {
         "submit": {
           "string": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
@@ -1634,7 +1894,7 @@
     "TimeAndUser": {
       "text": {
         "string": "{dateTime} by {displayName}",
-        "developer_comment": "This is used to show the time at which a particular user completed an action, for example: 2020/01/01 01:23 by Alice"
+        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"Today\" or \"Yesterday\"."
       }
     },
     "UserEditBasicDetails": {
@@ -1746,7 +2006,9 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
-        "string": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+        "0": {
+          "string": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+        }
       }
     },
     "UserResetPassword": {
@@ -1772,7 +2034,7 @@
       },
       "introduction": {
         "0": {
-          "string": "You are about to retire the user account “{displayName}” <{email}>. They will be immediately barred from performing any actions and logged out."
+          "string": "You are about to retire the user account “{displayName}” <{email}>. That user will be immediately barred from performing any actions and logged out."
         },
         "1": {
           "full": {

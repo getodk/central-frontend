@@ -21,10 +21,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <p>
-            <strong>{{ $tc('plural.appUser', project.appUsers) }}</strong>
-            {{ $tc('appUsersCaption', project.appUsers) }}
-          </p>
+          <i18n tag="p" :path="$tcPath('appUsers.full', project.appUsers)">
+            <template #appUsers>
+              <strong>{{ $tc('appUsers.appUsers', project.appUsers) }}</strong>
+            </template>
+          </i18n>
         </template>
       </summary-item>
       <summary-item clickable icon="file-text"
@@ -34,10 +35,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <p>
-            <strong>{{ $tc('plural.form', project.forms) }}</strong>
-            {{ $tc('formsCaption', project.forms) }}
-          </p>
+          <i18n tag="p" :path="$tcPath('forms.full', project.forms)">
+            <template #forms>
+              <strong>{{ $tc('forms.forms', project.forms) }}</strong>
+            </template>
+          </i18n>
         </template>
       </summary-item>
     </template>
@@ -70,11 +72,22 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is preceded by a count of App Users, for example: 10 App Users who
-    // can…
-    "appUsersCaption": "who can use a data collection client to download and submit Form data to this Project. | who can use a data collection client to download and submit Form data to this Project.",
-    // This is preceded by a count of Forms, for example: 10 Forms which can…
-    "formsCaption": "which can be downloaded and given as surveys on mobile clients. | which can be downloaded and given as surveys on mobile clients."
+    "appUsers": {
+      // The count of App Users is shown separately above this text.
+      "full": [
+        "{appUsers} who can use a data collection client to download and submit Form data to this Project.",
+        "{appUsers} who can use a data collection client to download and submit Form data to this Project."
+      ],
+      "appUsers": "App User | App Users"
+    },
+    "forms": {
+      // The count of Forms is shown separately above this text.
+      "full": [
+        "{forms} which can be downloaded and given as surveys on mobile clients.",
+        "{forms} which can be downloaded and given as surveys on mobile clients."
+      ],
+      "forms": "Form | Forms"
+    }
   }
 }
 </i18n>

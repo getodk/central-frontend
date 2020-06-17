@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
           :disabled="awaitingResponse" @click="archive">
-          Yes, I am sure <spinner :state="awaitingResponse"/>
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">

@@ -48,7 +48,13 @@ for (const { componentName, filename } of sfcs) {
     const end = content.indexOf('</i18n>', begin);
     if (end === -1) throw new Error('invalid single file component');
     const json = content.slice(begin, end);
-    messages.component[componentName] = parse(json)[fallbackLocale];
+    try {
+      messages.component[componentName] = parse(json)[fallbackLocale];
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(`could not parse the i18n JSON of ${componentName}`);
+      throw e;
+    }
   }
 }
 

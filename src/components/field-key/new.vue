@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
+    backdrop @hide="hideOrComplete" @shown="focusInput">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <template v-if="step === 1">
-        <p class="modal-introduction">{{ $t('introduction') }}</p>
+      <template v-if="step === 0">
+        <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
         <form @submit.prevent="submit">
-          <form-group ref="nickname" v-model.trim="nickname"
-            :placeholder="$t('field.nickname')" required autocomplete="off"/>
+          <form-group ref="displayName" v-model.trim="displayName"
+            :placeholder="$t('field.displayName')" required autocomplete="off"/>
           <div class="modal-actions">
             <button :disabled="awaitingResponse" type="submit"
               class="btn btn-primary">
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div class="modal-introduction step-2">
+        <div id="field-key-new-success" class="modal-introduction">
           <p>
             <span class="icon-check-circle"></span>
             <strong>{{ $t('common.success') }}</strong>
@@ -91,37 +91,38 @@ export default {
     return {
       awaitingResponse: false,
       // There are two steps/screens in the app user creation process. `step`
-      // indicates the current step. Note that it is 1-indexed.
-      step: 1,
-      nickname: '',
+      // indicates the current step.
+      step: 0,
+      displayName: '',
       created: null
     };
   },
   computed: requestData(['project']),
   watch: {
     state(state) {
-      if (state) return;
-      this.step = 1;
-      this.nickname = '';
-      this.created = null;
+      if (!state) {
+        this.step = 0;
+        this.displayName = '';
+        this.created = null;
+      }
     }
   },
   methods: {
-    focusNicknameInput() {
-      this.$refs.nickname.focus();
+    focusInput() {
+      this.$refs.displayName.focus();
     },
     submit() {
       this.request({
         method: 'POST',
         url: apiPaths.fieldKeys(this.project.id),
-        data: { displayName: this.nickname }
+        data: { displayName: this.displayName }
       })
         .then(({ data }) => {
           // Reset the form.
           this.$alert().blank();
-          this.nickname = '';
+          this.displayName = '';
 
-          this.step = 2;
+          this.step = 1;
           this.created = new FieldKey(data);
         })
         .catch(noop);
@@ -141,10 +142,10 @@ export default {
       this.$router.push(this.projectPath('form-access'));
     },
     createAnother() {
-      this.step = 1;
+      this.step = 0;
       // We do not reset this.created, because it will still be used once the
       // modal is hidden.
-      this.$nextTick(this.focusNicknameInput);
+      this.$nextTick(this.focusInput);
     }
   }
 };
@@ -153,7 +154,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#field-key-new .modal-introduction.step-2 {
+#field-key-new-success {
   text-align: center;
 
   .icon-check-circle {
@@ -175,10 +176,9 @@ export default {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Create App User",
-    "introduction": "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created.",
-    "field": {
-      "nickname": "Nickname"
-    },
+    "introduction": [
+      "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created."
+    ],
     "success": [
       "The App User “{displayName}” has been created.",
       {

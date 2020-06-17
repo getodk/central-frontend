@@ -108,7 +108,7 @@ except according to the terms contained in the LICENSE file.
         </p>
         <p class="modal-introduction">
           <strong>{{ $t('common.success') }}</strong>
-          {{ $t('steps[2].introduction') }}
+          {{ $t('steps[2].introduction[0]') }}
         </p>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary"
@@ -240,6 +240,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
     "title": "Enable Encryption",
     "steps": [
       {
@@ -286,11 +287,12 @@ export default {
         ]
       },
       {
-        "introduction": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
+        "introduction": [
+          "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
+        ]
       }
     ],
     "field": {
-      "passphrase": "Passphrase",
       "hint": "Passphrase hint (optional)"
     }
   }

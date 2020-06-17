@@ -59,8 +59,12 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <strong>{{ $tc('plural.webUser', users.length) }}</strong>
-                  {{ $tc('rightNow.usersCaption', users.length) }}
+                  <i18n tag="p"
+                    :path="$tcPath('rightNow.users.full', users.length)">
+                    <template #webUsers>
+                      <strong>{{ $tc('rightNow.users.webUsers', users.length) }}</strong>
+                    </template>
+                  </i18n>
                 </template>
               </summary-item>
               <summary-item clickable icon="archive" @click="scrollToProjects">
@@ -69,8 +73,12 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <strong>{{ $tc('plural.project', projects.length) }}</strong>
-                  {{ $tc('rightNow.projectsCaption', projects.length) }}
+                  <i18n tag="p"
+                    :path="$tcPath('rightNow.projects.full', projects.length)">
+                    <template #projects>
+                      <strong>{{ $tc('rightNow.projects.projects', projects.length) }}</strong>
+                    </template>
+                  </i18n>
                 </template>
               </summary-item>
             </template>
@@ -235,11 +243,11 @@ export default {
       "title": "Getting Started",
       "body": [
         {
-          "full": "If you’re not sure where to begin, we have a getting started guide and user documentation available on the {docsWebsite}.",
+          "full": "If you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}.",
           "docsWebsite": "ODK Docs website"
         },
         {
-          "full": "In addition, you can always get help from others on the {forum}, where you can search for previous answers or ask one of your own.",
+          "full": "In addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own.",
           "forum": "ODK community forum"
         }
       ]
@@ -247,12 +255,22 @@ export default {
     // This is a title shown above a section of the page.
     "news": "News",
     "rightNow": {
-      // This is preceded by a count of Web Users, for example: 10 Web Users who
-      // can…
-      "usersCaption": "who can administer Projects through this website. | who can administer Projects through this website.",
-      // This is preceded by a count of Projects, for example: 10 Projects which
-      // can…
-      "projectsCaption": "which can organize Forms and App Users for device deployment. | which can organize Forms and App Users for device deployment."
+      "users": {
+        // The count of Web Users is shown separately above this text.
+        "full": [
+          "{webUsers} who can administer Projects through this website.",
+          "{webUsers} who can administer Projects through this website."
+        ],
+        "webUsers": "Web User | Web Users"
+      },
+      "projects": {
+        // The count of Projects is shown separately above this text.
+        "full": [
+          "{projects} which can organize Forms and App Users for device deployment.",
+          "{projects} which can organize Forms and App Users for device deployment."
+        ],
+        "projects": "Project | Projects"
+      }
     },
     // This is a title shown above a section of the page.
     "projectsTitle": "Projects",

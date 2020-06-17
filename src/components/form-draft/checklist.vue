@@ -38,9 +38,8 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
           </template>
         </i18n>
-        <doc-link to="central-forms/#forms-with-attachments">
-          {{ $t('clickForInfo') }}
-        </doc-link>
+        &nbsp;
+        <doc-link to="central-forms/#forms-with-attachments">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step
@@ -52,9 +51,8 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].testQrCode') }}</router-link>
           </template>
         </i18n>
-        <doc-link to="central-forms/#working-with-form-drafts">
-          {{ $t('clickForInfo') }}
-        </doc-link>
+        &nbsp;
+        <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step stage="current">
@@ -68,9 +66,8 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
           </template>
         </i18n>
-        <doc-link to="central-forms/#working-with-form-drafts">
-          {{ $t('clickForInfo') }}
-        </doc-link>
+        &nbsp;
+        <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
   </div>
@@ -148,7 +145,7 @@ export default {
         "title": "Upload Form Media Files",
         "body": [
           {
-            "full": "Your Form design references files that we need in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
+            "full": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
             "mediaFiles": "Media Files"
           }
         ]

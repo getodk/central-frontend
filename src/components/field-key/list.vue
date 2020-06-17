@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button type="button" class="btn btn-primary"
-        @click="showModal('newFieldKey')">
+      <button id="field-key-list-create-button" type="button"
+        class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n tag="p" path="heading.full">
@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
     <table id="field-key-list-table" class="table">
       <thead>
         <tr>
-          <th>{{ $t('header.nickname') }}</th>
+          <th>{{ $t('header.displayName') }}</th>
           <th>{{ $t('header.created') }}</th>
           <th>{{ $t('header.lastUsed') }}</th>
           <th>{{ $t('header.configureClient') }}</th>
@@ -236,7 +236,6 @@ export default {
       "clickHere": "click here"
     },
     "header": {
-      "nickname": "Nickname",
       "lastUsed": "Last Used",
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"

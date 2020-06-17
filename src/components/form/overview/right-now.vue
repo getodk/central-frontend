@@ -17,9 +17,9 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <form-version-summary-item :version="form">
         <template #body>
-          <i18n tag="p" path="versionCaption.full">
+          <i18n tag="p" path="version.full">
             <template #publishedVersion>
-              <strong>{{ $t('versionCaption.publishedVersion') }}</strong>
+              <strong>{{ $t('version.publishedVersion') }}</strong>
             </template>
           </i18n>
         </template>
@@ -30,8 +30,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <strong>{{ $tc('plural.submission', form.submissions) }}</strong>
-          {{ $tc('submissionsCaption', form.submissions) }}
+          <i18n tag="p" :path="$tcPath('submissions.full', form.submissions)">
+            <template #submissions>
+              <strong>{{ $tc('submissions.submissions', form.submissions) }}</strong>
+            </template>
+          </i18n>
         </template>
       </summary-item>
     </template>
@@ -58,13 +61,18 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "versionCaption": {
+    "version": {
       "full": "{publishedVersion} of this Form.",
       "publishedVersion": "Published version"
     },
-    // This is preceded by a count of Submissions, for example: 10 Submissions
-    // have been…
-    "submissionsCaption": "has been saved for this Form. | have been saved for this Form."
+    "submissions": {
+      // The count of Submissions is shown separately above this text.
+      "full": [
+        "{submissions} has been saved for this Form.",
+        "{submissions} have been saved for this Form."
+      ],
+      "submissions": "Submission | Submissions"
+    }
   }
 }
 </i18n>

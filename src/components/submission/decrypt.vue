@@ -10,28 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" backdrop hideable @hide="$emit('hide')"
+  <modal :state="state" hideable backdrop @hide="$emit('hide')"
     @shown="$refs.passphrase.focus()">
-    <template #title>Decrypt and Download</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">
-        In order to download this data, you will need to provide your
-        passphrase. Your passphrase will be used only to decrypt your data for
-        download, after which I will forget it again.
-      </p>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
         <form-group ref="passphrase" v-model="passphrase" type="password"
-          placeholder="Passphrase" required autocomplete="off"/>
+          :placeholder="$t('field.passphrase')" required autocomplete="off"/>
         <p v-if="managedKey != null && managedKey.hint != null"
           class="modal-introduction">
-          Hint: {{ managedKey.hint }}
+          {{ $t('hint', managedKey) }}
         </p>
         <div class="modal-actions">
           <button type="submit" class="btn btn-primary">
-            Download
+            {{ $t('action.download') }}
           </button>
           <button type="button" class="btn btn-link" @click="$emit('hide')">
-            Cancel
+            {{ $t('action.cancel') }}
           </button>
         </div>
       </form>
@@ -200,6 +196,14 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Decrypt and Download",
+    "introduction": [
+      "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+    ],
+    // This text is shown if there is a passphrase hint. {hint} is the
+    // passphrase hint.
+    "hint": "Hint: {hint}",
     "alert": {
       "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
     }

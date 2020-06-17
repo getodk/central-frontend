@@ -12,23 +12,20 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="backup-terminate" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template #title>Terminate Automatic Backups</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <p>Are you sure you want to terminate your automatic backups?</p>
-        <p>
-          You will have to reconfigure them again from scratch to start them
-          again, and this action cannot be undone.
-        </p>
+        <p>{{ $t('introduction[0]') }}</p>
+        <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
-        <button :disabled="awaitingResponse" type="button"
-          class="btn btn-danger" @click="terminate">
-          Yes, proceed <spinner :state="awaitingResponse"/>
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="terminate">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>
@@ -58,7 +55,10 @@ export default {
   },
   methods: {
     terminate() {
-      this.delete('/config/backups')
+      this.request({
+        method: 'DELETE',
+        url: '/config/backups'
+      })
         .then(() => {
           this.$emit('success');
         })
@@ -67,3 +67,16 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Terminate Automatic Backups",
+    "introduction": [
+      "Are you sure you want to terminate your automatic backups?",
+      "You will have to reconfigure them again from scratch to start them again, and this action cannot be undone."
+    ]
+  }
+}
+</i18n>

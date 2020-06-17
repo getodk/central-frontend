@@ -16,9 +16,7 @@ except according to the terms contained in the LICENSE file.
       <p>
         <strong>{{ $t('steps[0].body[0]') }}</strong>
         {{ $t('steps[0].body[1]') }}
-        <doc-link to="central-forms/#updating-forms-to-a-new-version">
-          {{ $t('clickForInfo') }}
-        </doc-link>
+        <doc-link to="central-forms/#updating-forms-to-a-new-version">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(1)">
@@ -33,6 +31,7 @@ except according to the terms contained in the LICENSE file.
         {{ $t('steps[1].body[1]') }}
         <template v-if="project.appUsers === 0">
           <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>
+          &nbsp;
           <i18n :tag="false" path="steps[1].body[2].none[1].full">
             <template #appUsersTab>
               <router-link :to="projectPath('app-users')">{{ $t('steps[1].body[2].none[1].appUsersTab') }}</router-link>
@@ -40,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </template>
         <template v-else>
-          <i18n
+          <i18n :tag="false"
             :path="$tcPath('steps[1].body[2].any[0].full', formActors.length)">
             <template #countOfAppUsers>
               <router-link :to="projectPath('form-access')">
@@ -52,6 +51,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </i18n>
         </template>
+        &nbsp;
         <i18n :tag="false" path="steps[1].body[3].full">
           <template #clickHere>
             <doc-link to="central-submissions/">{{ $t('steps[1].body[3].clickHere') }}</doc-link>
@@ -73,6 +73,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
           </template>
         </i18n>
+        &nbsp;
         <doc-link to="central-submissions/">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
@@ -84,9 +85,8 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
           </template>
         </i18n>
-        <doc-link to="central-forms/#managing-form-lifecycle">
-          {{ $t('clickForInfo') }}
-        </doc-link>
+        &nbsp;
+        <doc-link to="central-forms/#managing-form-lifecycle">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
   </div>

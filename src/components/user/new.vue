@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')" @shown="focusEmailInput">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">{{ $t('introduction') }}</p>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
         <form-group ref="email" v-model.trim="email" type="email"
           :placeholder="$t('field.email')" required autocomplete="off"/>
@@ -88,7 +88,9 @@ export default {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Create Web User",
-    "introduction": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+    "introduction": [
+      "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+    ]
   }
 }
 </i18n>
