@@ -72,7 +72,7 @@ We specify a name for every component, which facilitates the use of the Vue devt
 
 If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
 
-In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect. (One notable exception is internationalization: see below.) We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
+In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
 
 #### Naming Conventions
 
@@ -101,7 +101,7 @@ We also store router state in the Vuex store (see [`/src/store/modules/router.js
 
 We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
 
-ODK Central Frontend uses the translations stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a BCP 47 language tag, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and `en.json` is bundled with Frontend; other files are loaded asynchronously as needed. We also make ample use of single file component `<i18n>` custom blocks.
+ODK Central Frontend uses the translations stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a BCP 47 language tag, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and `en.json` is bundled with Frontend; other files are loaded asynchronously as needed. We also make ample use of single file component `i18n` custom blocks.
 
 We also define internationalization-related utilities in [`/src/util/i18n.js`](/src/util/i18n.js).
 
