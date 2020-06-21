@@ -11,19 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form id="audit-filters" class="form-inline" @submit.prevent>
-    <span class="icon-filter"></span><span>Filter by</span>
+    <span class="icon-filter"></span><span>{{ $t('filter') }}</span>
     <div class="form-group">
-      <select v-model="action" class="form-control" aria-label="Type">
+      <select v-model="action" class="form-control"
+        :aria-label="$t('field.type')">
         <option v-for="option of actionOptions" :key="option.value"
           :class="{ 'action-category': option.category }" :value="option.value">
-          <template v-if="!option.category">&nbsp;&nbsp;&nbsp;</template>{{ option.text }}
+          {{ option.text }}
         </option>
       </select>
     </div>
     <div class="form-group">
       <flat-pickr v-model="dateRangeString" :config="flatPickrConfig"
-        class="form-control" placeholder="Date range" aria-label="Date range"
-        @on-close="closeCalendar"/>
+        class="form-control" :placeholder="$t('field.dateRange')"
+        :aria-label="$t('field.dateRange')" @on-close="closeCalendar"/>
     </div>
   </form>
 </template>
@@ -32,7 +33,42 @@ except according to the terms contained in the LICENSE file.
 import flatPickr from 'vue-flatpickr-component';
 import { DateTime } from 'luxon';
 
+import i18n from '../../i18n';
+import { auditActionMessage } from '../../util/i18n';
 import { flatPickrConfig, formatDate } from '../../util/date-time';
+
+const categoryOption = (category) => ({
+  text: i18n.t(`audit.category.${category}`),
+  value: category,
+  category: true
+});
+const actionOption = (action) => ({
+  // Adding non-breaking spaces: see #323 on GitHub.
+  text: `\u00a0\u00a0\u00a0${auditActionMessage(action)}`,
+  value: action,
+  category: false
+});
+const actionOptions = [
+  categoryOption('nonverbose'),
+  categoryOption('user'),
+  actionOption('user.create'),
+  actionOption('user.update'),
+  actionOption('assignment.create'),
+  actionOption('assignment.delete'),
+  actionOption('user.delete'),
+  categoryOption('project'),
+  actionOption('project.create'),
+  actionOption('project.update'),
+  actionOption('project.delete'),
+  categoryOption('form'),
+  actionOption('form.create'),
+  actionOption('form.update'),
+  actionOption('form.update.draft.set'),
+  actionOption('form.update.publish'),
+  actionOption('form.update.draft.delete'),
+  actionOption('form.attachment.update'),
+  actionOption('form.delete')
+];
 
 export default {
   name: 'AuditFilters',
@@ -53,29 +89,7 @@ export default {
   },
   computed: {
     actionOptions() {
-      const categoryOption = (text, value) => ({ text, value, category: true });
-      const actionOption = (text, value) => ({ text, value, category: false });
-      return [
-        categoryOption('(All Actions)', 'nonverbose'),
-        categoryOption('Web User Actions', 'user'),
-        actionOption('Create', 'user.create'),
-        actionOption('Update Details', 'user.update'),
-        actionOption('Assign Role', 'assignment.create'),
-        actionOption('Revoke Role', 'assignment.delete'),
-        actionOption('Retire', 'user.delete'),
-        categoryOption('Project Actions', 'project'),
-        actionOption('Create', 'project.create'),
-        actionOption('Update Details', 'project.update'),
-        actionOption('Delete', 'project.delete'),
-        categoryOption('Form Actions', 'form'),
-        actionOption('Create', 'form.create'),
-        actionOption('Update Details', 'form.update'),
-        actionOption('Create or Update Draft', 'form.update.draft.set'),
-        actionOption('Publish Draft', 'form.update.publish'),
-        actionOption('Abandon Draft', 'form.update.draft.delete'),
-        actionOption('Update Attachments', 'form.attachment.update'),
-        actionOption('Delete', 'form.delete')
-      ];
+      return actionOptions;
     },
     flatPickrConfig() {
       return flatPickrConfig.range;
@@ -164,3 +178,12 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This text is shown next to options for filtering a table.
+    "filter": "Filter by"
+  }
+}
+</i18n>

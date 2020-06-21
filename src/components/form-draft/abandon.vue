@@ -16,34 +16,22 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <template v-if="form.publishedAt != null">
-          <p>
-            You are about to permanently delete the Draft version of this Form.
-            This means that the draft Form definition, any draft Media Files you
-            have uploaded, and all test Submissions will be removed.
-          </p>
-          <p>
-            Your published Form definition, its Media Files, and Submissions
-            will not be affected.
-          </p>
+          <p>{{ $t('introduction.abandon[0]') }}</p>
+          <p>{{ $t('introduction.abandon[1]') }}</p>
         </template>
         <template v-else>
-          <p>
-            You are about to permanently delete this draft Form definition,
-            along with any draft Media Files you have uploaded, and all test
-            Submissions. Because you have not yet published it, this Form will
-            be entirely deleted.
-          </p>
+          <p>{{ $t('introduction.deleteForm[0]') }}</p>
         </template>
-        <p>Are you sure you wish to proceed?</p>
+        <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
           :disabled="awaitingResponse" @click="abandon">
-          Abandon <spinner :state="awaitingResponse"/>
+          {{ $t('action.abandon') }} <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
-          Cancel
+          {{ $t('action.cancel') }}
         </button>
       </div>
     </template>
@@ -79,8 +67,8 @@ export default {
     ...requestData(['form']),
     title() {
       return this.form.publishedAt != null
-        ? 'Abandon Draft'
-        : 'Abandon Draft and Delete Form';
+        ? this.$t('title.abandon')
+        : this.$t('title.deleteForm');
     }
   },
   methods: {
@@ -99,3 +87,27 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": {
+      "abandon": "Abandon Draft",
+      "deleteForm": "Abandon Draft and Delete Form"
+    },
+    "introduction": {
+      "abandon": [
+        "You are about to permanently delete the Draft version of this Form. This means that the draft Form definition, any draft Media Files you have uploaded, and all test Submissions will be removed.",
+        "Your published Form definition, its Media Files, and Submissions will not be affected."
+      ],
+      "deleteForm": [
+        "You are about to permanently delete this draft Form definition, along with any draft Media Files you have uploaded, and all test Submissions. Because you have not yet published it, this Form will be entirely deleted."
+      ]
+    },
+    "action": {
+      "abandon": "Abandon"
+    }
+  }
+}
+</i18n>

@@ -27,9 +27,9 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('introduction[1].appUsers') }}</strong>
           </template>
         </i18n>
-        <i18n tag="p" path="introduction[2].full">
+        <i18n tag="p" path="moreInfo.helpArticle.full">
           <template #helpArticle>
-            <doc-link to="central-projects/">{{ $t('introduction[2].helpArticle') }}</doc-link>
+            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
           </template>
         </i18n>
       </div>
@@ -72,10 +72,6 @@ export default {
         "full": "Projects group {forms} and {appUsers} together to make them easier to organize and manage, both on this website and on your data collection device.",
         "forms": "Forms",
         "appUsers": "App Users"
-      },
-      {
-        "full": "For more information, please see {helpArticle}.",
-        "helpArticle": "this help article"
       }
     ]
   }

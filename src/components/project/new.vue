@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="project-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="focusInput">
+    @hide="$emit('hide')" @shown="$refs.name.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
-        <i18n tag="p" path="introduction[1].full">
+        <i18n tag="p" path="moreInfo.helpArticle.full">
           <template #helpArticle>
-            <doc-link to="central-projects/">{{ $t('introduction[1].helpArticle') }}</doc-link>
+            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
           </template>
         </i18n>
       </div>
@@ -26,12 +26,12 @@ except according to the terms contained in the LICENSE file.
         <form-group ref="name" v-model.trim="name"
           :placeholder="$t('field.name')" required autocomplete="off"/>
         <div class="modal-actions">
-          <button :disabled="awaitingResponse" type="submit"
-            class="btn btn-primary">
+          <button type="submit" class="btn btn-primary"
+            :disabled="awaitingResponse">
             {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
-          <button :disabled="awaitingResponse" type="button"
-            class="btn btn-link" @click="$emit('hide')">
+          <button type="button" class="btn btn-link"
+            :disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
           </button>
         </div>
@@ -70,9 +70,6 @@ export default {
     }
   },
   methods: {
-    focusInput() {
-      this.$refs.name.focus();
-    },
     submit() {
       this.post('/projects', { name: this.name })
         .then(({ data }) => {
@@ -90,11 +87,7 @@ export default {
     // This is the title at the top of a pop-up.
     "title": "Create Project",
     "introduction": [
-      "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device.",
-      {
-        "full": "For more information, please see {helpArticle}.",
-        "helpArticle": "this help article"
-      }
+      "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device."
     ]
   }
 }

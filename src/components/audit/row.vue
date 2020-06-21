@@ -13,14 +13,9 @@ except according to the terms contained in the LICENSE file.
   <tr class="audit-row">
     <td><date-time :iso="audit.loggedAt"/></td>
     <td>
-      <template v-if="actionInfo != null">
-        {{ actionInfo.type[0] }}
-        <template v-if="actionInfo.type.length !== 1">
-          <span class="icon-angle-right"></span> {{ actionInfo.type[1] }}
-        </template>
-      </template>
-      <template v-else>
-        {{ audit.action }}
+      {{ type[0] }}
+      <template v-if="type.length > 1">
+        <span class="icon-angle-right"></span> {{ type[1] }}
       </template>
     </td>
     <td class="initiator">
@@ -30,9 +25,9 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="targetInfo != null" :to="targetInfo.path(audit.actee)"
-        :title="targetTitle">
-        {{ targetTitle }}
+      <router-link v-if="acteeSpecies != null" :to="acteePath"
+        :title="acteeTitle">
+        {{ acteeTitle }}
       </router-link>
     </td>
     <td class="details">
@@ -46,73 +41,28 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
+import i18n from '../../i18n';
 import routes from '../../mixins/routes';
+import { auditActionMessage } from '../../util/i18n';
 
-const ACTIONS = {
-  'user.create': {
-    type: ['User', 'Create'],
-    target: 'user'
+const acteeSpeciesByCategory = {
+  user: {
+    title: () => i18n.t('common.user'),
+    acteeTitle: ({ displayName }) => displayName,
+    acteePath: ({ id }, vm) => vm.userPath(id)
   },
-  'user.update': {
-    type: ['User', 'Update Details'],
-    target: 'user'
+  project: {
+    title: () => i18n.t('common.project'),
+    acteeTitle: ({ name }) => name,
+    acteePath: ({ id }, vm) => vm.projectPath(id)
   },
-  'assignment.create': {
-    type: ['User', 'Assign Role'],
-    target: 'user'
-  },
-  'assignment.delete': {
-    type: ['User', 'Revoke Role'],
-    target: 'user'
-  },
-  'user.delete': {
-    type: ['User', 'Retire'],
-    target: 'user'
-  },
-  'project.create': {
-    type: ['Project', 'Create'],
-    target: 'project'
-  },
-  'project.update': {
-    type: ['Project', 'Update Details'],
-    target: 'project'
-  },
-  'project.delete': {
-    type: ['Project', 'Delete'],
-    target: 'project'
-  },
-  'form.create': {
-    type: ['Form', 'Create'],
-    target: 'form'
-  },
-  'form.update': {
-    type: ['Form', 'Update Details'],
-    target: 'form'
-  },
-  'form.update.draft.set': {
-    type: ['Form', 'Create or Update Draft'],
-    target: 'form'
-  },
-  'form.update.publish': {
-    type: ['Form', 'Publish Draft'],
-    target: 'form'
-  },
-  'form.update.draft.delete': {
-    type: ['Form', 'Abandon Draft'],
-    target: 'form'
-  },
-  'form.attachment.update': {
-    type: ['Form', 'Update Attachments'],
-    target: 'form'
-  },
-  'form.delete': {
-    type: ['Form', 'Delete'],
-    target: 'form'
-  },
-  backup: {
-    type: ['Backup']
+  form: {
+    title: () => i18n.t('common.form'),
+    acteeTitle: (form) => new Form(form).nameOrId(),
+    acteePath: (form, vm) => vm.primaryFormPath(form)
   }
 };
+acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
 
 export default {
   name: 'AuditRow',
@@ -125,32 +75,31 @@ export default {
     }
   },
   computed: {
-    actionInfo() {
-      return ACTIONS[this.audit.action];
+    category() {
+      const index = this.audit.action.indexOf('.');
+      return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
-    targets() {
-      return {
-        user: {
-          title: ({ displayName }) => displayName,
-          path: ({ id }) => this.userPath(id)
-        },
-        project: {
-          title: ({ name }) => name,
-          path: ({ id }) => this.projectPath(id)
-        },
-        form: {
-          title: (form) => new Form(form).nameOrId(),
-          path: (form) => this.primaryFormPath(form)
-        }
-      };
+    acteeSpecies() {
+      return this.category != null
+        ? acteeSpeciesByCategory[this.category]
+        : null;
     },
-    targetInfo() {
-      if (this.actionInfo == null) return null;
-      const { target } = this.actionInfo;
-      return target != null ? this.targets[target] : null;
+    type() {
+      const actionMessage = auditActionMessage(this.audit.action);
+      if (actionMessage == null) return [this.audit.action];
+      return this.acteeSpecies != null
+        ? [this.acteeSpecies.title(), actionMessage]
+        : [actionMessage];
     },
-    targetTitle() {
-      return this.targetInfo.title(this.audit.actee);
+    acteePath() {
+      return this.acteeSpecies != null
+        ? this.acteeSpecies.acteePath(this.audit.actee, this)
+        : null;
+    },
+    acteeTitle() {
+      return this.acteeSpecies != null
+        ? this.acteeSpecies.acteeTitle(this.audit.actee)
+        : null;
     },
     details() {
       return this.audit.details != null

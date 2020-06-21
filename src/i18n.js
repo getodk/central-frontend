@@ -27,6 +27,7 @@ const fallbackLocale = 'en';
 
 const numberFormats = {
   default: {},
+  noGrouping: { useGrouping: false },
   percent: { style: 'percent' }
 };
 
@@ -58,5 +59,8 @@ export default new VueI18n({
   messages: { [fallbackLocale]: fallbackMessages },
   numberFormats: numberFormatsByLocale,
   warnHtmlInMessage: 'error',
-  silentFallbackWarn: true
+  silentFallbackWarn: true,
+  // Silence the following warning:
+  // Fall back to interpolate the keypath '[path]' with root locale.
+  silentTranslationWarn: /\.full$/
 });

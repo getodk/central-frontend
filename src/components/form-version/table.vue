@@ -13,9 +13,9 @@ except according to the terms contained in the LICENSE file.
   <table id="form-version-table" class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Published</th>
-        <th>Definition</th>
+        <th>{{ $t('header.name') }}</th>
+        <th>{{ $t('header.published') }}</th>
+        <th>{{ $t('header.definition') }}</th>
       </tr>
     </thead>
     <tbody v-if="formVersions != null">
@@ -47,3 +47,18 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      // This is the text of a table column header. The column shows who
+      // published the version of the Form, as well as when they did so.
+      "published": "Published",
+      // This is the text of a table column header. "Definition" refers to a
+      // Form definition.
+      "definition": "Definition"
+    }
+  }
+}
+</i18n>

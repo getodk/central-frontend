@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
       :class="{ 'no-field-keys': fieldKeysWithToken.length === 0 }">
       <thead>
         <tr>
-          <th>Form</th>
+          <th>{{ $t('header.form') }}</th>
           <th>
-            State
+            {{ $t('header.state') }}
             <button type="button" class="btn btn-link"
               @click="$emit('show-states')">
               <span class="icon-question-circle"></span>
@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
       <table class="table">
         <thead>
           <tr>
-            <th><div>App User Access</div></th>
+            <th><div>{{ $t('header.appUserAccess') }}</div></th>
             <th v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
               :title="fieldKey.displayName">
               <div>{{ fieldKey.displayName }}</div>
@@ -208,3 +208,15 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      "form": "Form",
+      "state": "State",
+      "appUserAccess": "App User Access"
+    }
+  }
+}
+</i18n>

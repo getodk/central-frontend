@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('introduction[1].noUndo') }}</strong>
           </template>
         </i18n>
-        <p>{{ $t('introduction[2]') }}</p>
+        <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
         <button :disabled="awaitingResponse" type="button"
@@ -84,8 +84,7 @@ export default {
       {
         "full": "{noUndo}, but a new account can always be created for that person with the same email address.",
         "noUndo": "This action cannot be undone"
-      },
-      "Are you sure you wish to proceed?"
+      }
     ]
   }
 }

@@ -47,7 +47,8 @@ for (const { componentName, filename } of sfcs) {
     const begin = match.index + match[0].length;
     const end = content.indexOf('</i18n>', begin);
     if (end === -1) throw new Error('invalid single file component');
-    const json = content.slice(begin, end);
+    // Trimming so that if there is an error, the line number is clear.
+    const json = content.slice(begin, end).trim();
     try {
       messages.component[componentName] = parse(json)[fallbackLocale];
     } catch (e) {
@@ -199,6 +200,10 @@ const restructure = (
   const structured = {};
   const entries = Object.entries(value);
   for (const [k, v] of entries) {
+    // Skip linked locale messages.
+    if (typeof v === 'string' && /^@:\w+(\.\w+)*$/.test(v))
+      continue; // eslint-disable-line no-continue
+
     const comments = value[Symbol.for(`before:${k}`)];
     structured[k] = restructure(
       // v will be an array if $tcPath() is used.
@@ -209,6 +214,10 @@ const restructure = (
       commentsByKey[k] != null ? commentsByKey[k] : commentForKey,
       getCommentForFull(value, k, entries)
     );
+
+    // Remove an object that only contains linked locale messages.
+    if (typeof v === 'object' && Object.keys(structured[k]).length === 0)
+      delete structured[k];
   }
   return structured;
 };

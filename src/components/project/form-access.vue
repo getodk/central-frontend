@@ -16,14 +16,16 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary"
         :class="{ 'uncommitted-change': changeCount !== 0 }"
         :disabled="saveDisabled" @click="save">
-        <span class="icon-floppy-o"></span>Save
+        <span class="icon-floppy-o"></span>{{ $t('action.save') }}
         <spinner :state="awaitingResponse"/>
       </button>
       <p>
-        Here you can set Form States, which control whether Forms are available
-        for download and open for submission. You can also separately control
-        which App Users may see each Form at all. For more information,
-        <doc-link to="central-projects/#managing-form-access">click here</doc-link>.
+        {{ $t('heading[0]') }}
+        <i18n :tag="false" path="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n>
       </p>
     </div>
 
@@ -34,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         @update:field-key-access="updateFieldKeyAccess"
         @show-states="showModal('statesModal')"/>
       <p v-if="forms.length === 0" class="empty-table-message">
-        There are no Forms to show.
+        {{ $t('emptyTable') }}
       </p>
     </template>
 
@@ -257,6 +259,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "heading": [
+      "Here you can set Form States, which control whether Forms are available for download and open for submission. You can also separately control which App Users may see each Form at all."
+    ],
+    "emptyTable": "There are no Forms to show.",
     "alert": {
       "success": "Your changes have been saved!"
     }

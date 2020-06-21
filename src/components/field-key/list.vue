@@ -16,14 +16,19 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n tag="p" path="heading.full">
-        <template #formAccess>
-          <router-link :to="projectPath('form-access')">{{ $t('heading.formAccess') }}</router-link>
-        </template>
-        <template #clickHere>
-          <doc-link to="central-users/#managing-app-users">{{ $t('heading.clickHere') }}</doc-link>
-        </template>
-      </i18n>
+      <p>
+        <i18n :tag="false" path="heading.full">
+          <template #formAccess>
+            <router-link :to="projectPath('form-access')">{{ $t('heading.formAccess') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-users/#managing-app-users">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n>
+      </p>
     </div>
     <table id="field-key-list-table" class="table">
       <thead>
@@ -231,9 +236,8 @@ export default {
       "create": "Create App User"
     },
     "heading": {
-      "full": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem. For more information, {clickHere}.",
-      "formAccess": "Form Access",
-      "clickHere": "click here"
+      "full": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem.",
+      "formAccess": "Form Access"
     },
     "header": {
       "lastUsed": "Last Used",

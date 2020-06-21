@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <td :class="htmlClass" :title="title">
     <template v-if="column.binary === true">
       <a v-if="formattedValue !== ''" class="binary-link" :href="formattedValue"
-        target="_blank" title="File was submitted. Click to download.">
+        target="_blank" :title="$t('binaryLinkTitle')">
         <span class="icon-check"></span> <span class="icon-download"></span>
       </a>
     </template>
@@ -199,3 +199,11 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "binaryLinkTitle": "File was submitted. Click to download."
+  }
+}
+</i18n>

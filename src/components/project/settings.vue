@@ -18,55 +18,52 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-4">
         <div class="panel panel-simple">
           <div class="panel-heading">
-            <h1 class="panel-title">Encryption</h1>
+            <h1 class="panel-title">{{ $t('encryption.title') }}</h1>
           </div>
           <div class="panel-body">
             <template v-if="project.keyId == null">
               <p>
-                Submission data encryption is not enabled for this Project.
-                <doc-link to="central-encryption/">Learn more</doc-link>.
+                {{ $t('encryption.body.unencrypted[0]') }}
+                <doc-link to="central-encryption/">{{ $t('moreInfo.learnMore') }}</doc-link>
               </p>
               <p>
                 <button id="project-settings-enable-encryption-button"
                   type="button" class="btn btn-primary"
                   @click="showModal('enableEncryption')">
-                  Enable encryption&hellip;
+                  {{ $t('encryption.action.enableEncryption') }}&hellip;
                 </button>
               </p>
             </template>
             <template v-else>
               <p>
-                Submission data encryption is <strong>enabled</strong> for this
-                Project.
-                <doc-link to="central-encryption/">Learn more</doc-link>.
+                <i18n :tag="false" path="encryption.body.encrypted[0].full">
+                  <template #enabled>
+                    <strong>{{ $t('encryption.body.encrypted[0].enabled') }}</strong>
+                  </template>
+                </i18n>
+                &nbsp;
+                <doc-link to="central-encryption/">{{ $t('moreInfo.learnMore') }}</doc-link>
               </p>
-              <p>
-                In this version of ODK Central, you may not disable encryption
-                once it is turned on.
-              </p>
+              <p>{{ $t('encryption.body.encrypted[1]') }}</p>
             </template>
           </div>
         </div>
         <div class="panel panel-simple-danger">
           <div class="panel-heading">
-            <h1 class="panel-title">Danger Zone</h1>
+            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
           </div>
           <div class="panel-body">
             <template v-if="!project.archived">
               <p>
                 <button id="project-settings-archive-button" type="button"
                   class="btn btn-danger" @click="showModal('archive')">
-                  Archive this Project&hellip;
+                  {{ $t('dangerZone.action.archive') }}&hellip;
                 </button>
               </p>
             </template>
             <template v-else>
-              <p>This Project has been archived.</p>
-              <p>
-                In this version of ODK Central, you may not unarchive a Project.
-                However, the ability to unarchive a Project is planned for a
-                future release.
-              </p>
+              <p>{{ $t('dangerZone.archived[0]') }}</p>
+              <p>{{ $t('dangerZone.archived[1]') }}</p>
             </template>
           </div>
         </div>
@@ -128,6 +125,34 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "encryption": {
+      // This is a title shown above a section of the page.
+      "title": "Encryption",
+      "body": {
+        "unencrypted": [
+          "Submission data encryption is not enabled for this Project."
+        ],
+        "encrypted": [
+          {
+            "full": "Submission data encryption is {enabled} for this Project.",
+            "enabled": "enabled"
+          },
+          "In this version of ODK Central, you may not disable encryption once it is turned on."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Enable encryption"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Archive this Project"
+      },
+      "archived": [
+        "This Project has been archived.",
+        "In this version of ODK Central, you may not unarchive a Project. However, the ability to unarchive a Project is planned for a future release."
+      ]
+    },
     "alert": {
       "archive": "The Project “{name}” was archived."
     }

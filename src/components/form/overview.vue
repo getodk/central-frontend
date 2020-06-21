@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
       <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()" condensed>
           <template #heading>
-            <span>{{ $t('draft.any.title') }}</span>
+            <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
             <form-version-summary-item :version="formDraft.get()">
@@ -145,8 +145,6 @@ export default {
         "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
       },
       "any": {
-        // This is a title shown above a section of the page.
-        "title": "Your Current Draft",
         "versionCaption": {
           "full": "{draftVersion} of this Form.",
           "draftVersion": "Draft version"

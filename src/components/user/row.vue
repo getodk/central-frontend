@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRole"
-            :disabled="disabled" :title="selectTitle" aria-label="Sitewide Role"
+            :disabled="disabled" :title="selectTitle"
+            :aria-label="$t('field.sitewideRole')"
             @change="assignRole($event.target.value)">
             <option value="admin">{{ $t('role.admin') }}</option>
             <option value="">{{ $t('role.none') }}</option>
@@ -161,6 +162,9 @@ export default {
 {
   "en": {
     "cannotAssignRole": "You may not edit your own Sitewide Role.",
+    "field": {
+      "sitewideRole": "Sitewide Role"
+    },
     // An Administrator may retire other Web Users, but not their own account.
     "cannotRetire": "You may not retire yourself.",
     "action": {

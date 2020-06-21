@@ -126,6 +126,7 @@ const dataGetters = {
 
   projectRoles: ({ data: { roles } }) => {
     if (roles == null) return null;
+    // If you add a new role, make sure to also add a new i18n message.
     return [
       roles.find(role => role.system === 'manager'),
       roles.find(role => role.system === 'viewer')

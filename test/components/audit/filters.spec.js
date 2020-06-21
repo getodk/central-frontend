@@ -10,6 +10,16 @@ import { trigger } from '../../util/event';
 describe('AuditFilters', () => {
   beforeEach(mockLogin);
 
+  it('renders the action filter correctly', () =>
+    load('/system/audits', { component: true }, {}).then(component => {
+      const options = component.find('#audit-filters option');
+      // Test one category option and one action option.
+      options[0].text().trim().should.equal('(All Actions)');
+      options[0].hasClass('action-category').should.be.true();
+      options[2].text().trim().should.equal('Create');
+      options[2].hasClass('action-category').should.be.false();
+    }));
+
   it('initially specifies nonverbose for action', () =>
     load('/system/audits', { component: true }, {})
       .beforeEachResponse((component, config) => {

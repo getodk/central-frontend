@@ -14,20 +14,16 @@ except according to the terms contained in the LICENSE file.
     <div id="form-draft-testing-info" class="row">
       <div class="col-xs-8">
         <page-section condensed>
-          <template #heading><span>Draft Testing</span></template>
+          <template #heading><span>{{ $t('title') }}</span></template>
           <template #body>
+            <p>{{ $t('body[0]') }}</p>
             <p>
-              You can use the configuration code to the right to set up a mobile
-              device to download this Draft. If you fill a blank of the Draft
-              Form and upload it, the Submission will go only into this test
-              table below. You can preview and download the test Submissions
-              below.
-            </p>
-            <p>
-              When you publish this Draft Form, these test Submissions will be
-              permanently removed. Please see
-              <doc-link to="central-forms/#working-with-form-drafts">this article</doc-link>
-              for more information.
+              {{ $t('body[1]') }}
+              <i18n :tag="false" path="moreInfo.helpArticle.full">
+                <template #helpArticle>
+                  <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+                </template>
+              </i18n>
             </p>
           </template>
         </page-section>
@@ -112,3 +108,16 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Draft Testing",
+    "body": [
+      "You can use the configuration code to the right to set up a mobile device to download this Draft. If you fill a blank of the Draft Form and upload it, the Submission will go only into this test table below. You can preview and download the test Submissions below.",
+      "When you publish this Draft Form, these test Submissions will be permanently removed."
+    ]
+  }
+}
+</i18n>

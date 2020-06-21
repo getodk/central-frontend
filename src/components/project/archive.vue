@@ -12,20 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="project-archive" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template #title>Archiving Project</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <p>
-          You are about to archive the Project
-          &ldquo;{{ project != null ? project.name : '' }}&rdquo;. It will still
-          work as it does now, but it will be sorted to the bottom of the
-          Project List on the Central homepage.
-        </p>
-        <p>
-          <strong>This action cannot be undone</strong>, but the ability to
-          unarchive a Project is planned for a future release.
-        </p>
-        <p>Are you sure you wish to proceed?</p>
+        <p>{{ project != null ? $t('introduction[0]', project) : '' }}</p>
+        <i18n tag="p" path="introduction[1].full">
+          <template #noUndo>
+            <strong>{{ $t('introduction[1].noUndo') }}</strong>
+          </template>
+        </i18n>
+        <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -34,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>
@@ -85,3 +81,19 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Archiving Project",
+    "introduction": [
+      "You are about to archive the Project “{name}”. It will still work as it does now, but it will be sorted to the bottom of the Project List on the Central homepage.",
+      {
+        "full": "{noUndo}, but the ability to unarchive a Project is planned for a future release.",
+        "noUndo": "This action cannot be undone"
+      }
+    ]
+  }
+}
+</i18n>

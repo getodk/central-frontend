@@ -11,15 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <p id="audit-list-heading">
-      Here you will find a log of significant actions performed on this server.
-      Changes made to user, Project, or Form settings can be found here.
-    </p>
+    <p id="audit-list-heading">{{ $t('heading[0]') }}</p>
     <audit-filters :initial="initialFilters" @filter="fetchData"/>
     <audit-table :audits="audits"/>
     <loading :state="$store.getters.initiallyLoading(['audits'])"/>
     <p v-if="audits != null && audits.length === 0" class="empty-table-message">
-      There are no matching audit log entries.
+      {{ $t('emptyTable') }}
     </p>
   </div>
 </template>
@@ -73,3 +70,14 @@ export default {
   margin-bottom: 20px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "heading": [
+      "Here you will find a log of significant actions performed on this server. Changes made to user, Project, or Form settings can be found here."
+    ],
+    "emptyTable": "There are no matching audit log entries."
+  }
+}
+</i18n>

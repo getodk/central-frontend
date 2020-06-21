@@ -11,18 +11,23 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr>
-    <td class="display-name">{{ assignment.actor.displayName }}</td>
+    <td class="display-name">
+      <span :title="assignment.actor.displayName">
+        {{ assignment.actor.displayName }}
+      </span>
+    </td>
     <td>
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRoleId"
-            :disabled="disabled" :title="title" aria-label="Project Role"
+            :disabled="disabled" :title="selectTitle"
+            :aria-label="$t('field.projectRole')"
             @change="change($event.target.value)">
             <option v-for="role of $store.getters.projectRoles" :key="role.id"
               :value="role.id.toString()">
-              {{ role.name }}
+              {{ $t(`role.${role.system}`) }}
             </option>
-            <option value="">None</option>
+            <option value="">{{ $t('role.none') }}</option>
           </select>
           <span class="spinner-container">
             <spinner :state="awaitingResponse"/>
@@ -66,10 +71,10 @@ export default {
       return this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;
     },
-    title() {
+    selectTitle() {
       return this.assignment.actor.id === this.currentUser.id
-        ? 'You may not edit your own Project Role.'
-        : '';
+        ? this.$t('cannotAssignRole')
+        : null;
     }
   },
   methods: {
@@ -144,3 +149,14 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "cannotAssignRole": "You may not edit your own Project Role.",
+    "field": {
+      "projectRole": "Project Role"
+    }
+  }
+}
+</i18n>

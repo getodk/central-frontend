@@ -17,14 +17,19 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <p>{{ $t('body[0]') }}</p>
       <p>{{ $t('body[1]') }}</p>
-      <i18n tag="p" path="body[2].full">
-        <template #helpArticle>
-          <doc-link to="central-projects/">{{ $t('body[2].helpArticle') }}</doc-link>
-        </template>
-        <template #forumThread>
-          <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[2].forumThread') }}</a>
-        </template>
-      </i18n>
+      <p>
+        <i18n :tag="false" path="moreInfo.helpArticle.full">
+          <template #helpArticle>
+            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="body[2].full">
+          <template #forumThread>
+            <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[2].forumThread') }}</a>
+          </template>
+        </i18n>
+      </p>
     </template>
   </page-section>
 </template>
@@ -48,8 +53,7 @@ export default {
       "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project.",
       "Future releases of ODK Central will add more Project-centric features, including improvements to Form states and workflow, device state updates, Collect settings management, and more granular permissioning.",
       {
-        "full": "For more information, please see {helpArticle}, and if you have any feedback please visit {forumThread}.",
-        "helpArticle": "this help article",
+        "full": "If you have any feedback, please visit {forumThread}.",
         "forumThread": "this forum thread"
       }
     ]

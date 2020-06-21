@@ -17,8 +17,8 @@ except according to the terms contained in the LICENSE file.
       <thead>
         <tr>
           <th><!-- Row number --></th>
-          <th v-if="showsSubmitter">Submitted by</th>
-          <th>Submitted at</th>
+          <th v-if="showsSubmitter">{{ $t('header.submitterName') }}</th>
+          <th>{{ $t('header.submissionDate') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
               class="submission-table-field" :title="column.header">
               {{ column.header }}
             </th>
-            <th>Instance ID</th>
+            <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -216,3 +216,15 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      "submitterName": "Submitted by",
+      "submissionDate": "Submitted at",
+      "instanceId": "Instance ID"
+    }
+  }
+}
+</i18n>

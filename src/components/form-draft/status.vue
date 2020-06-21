@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-6">
         <page-section condensed>
           <template #heading>
-            <span>Draft Checklist</span>
+            <span>{{ $t('draftChecklist.title') }}</span>
           </template>
           <template #body>
             <form-draft-checklist status/>
@@ -26,16 +26,20 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-6">
         <page-section condensed>
           <template #heading>
-            <span>Your Current Draft</span>
+            <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
             <form-version-summary-item v-if="formDraft != null"
               :version="formDraft">
               <template #body>
-                <p><strong>Draft version</strong> of this Form.</p>
+                <i18n tag="p" path="currentDraft.versionCaption.full">
+                  <template #draftVersion>
+                    <strong>{{ $t('currentDraft.versionCaption.draftVersion') }}</strong>
+                  </template>
+                </i18n>
                 <button id="form-draft-status-upload-button" type="button"
                   class="btn btn-primary" @click="showModal('upload')">
-                  <span class="icon-upload"></span>Upload new definition&hellip;
+                  <span class="icon-upload"></span>{{ $t('currentDraft.action.upload') }}&hellip;
                 </button>
               </template>
             </form-version-summary-item>
@@ -43,16 +47,16 @@ except according to the terms contained in the LICENSE file.
         </page-section>
         <page-section condensed>
           <template #heading>
-            <span>Actions</span>
+            <span>{{ $t('actions.title') }}</span>
           </template>
           <template #body>
             <button id="form-draft-status-publish-button" type="button"
               class="btn btn-primary" @click="showModal('publish')">
-              <span class="icon-check"></span>Publish Draft&hellip;
+              <span class="icon-check"></span>{{ $t('actions.action.publish') }}&hellip;
             </button>
             <button id="form-draft-status-abandon-button" type="button"
               class="btn btn-danger" @click="showModal('abandon')">
-              <span class="icon-trash"></span>Abandon Draft&hellip;
+              <span class="icon-trash"></span>{{ $t('actions.action.abandon') }}&hellip;
             </button>
           </template>
         </page-section>
@@ -192,6 +196,27 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "draftChecklist": {
+      // This is a title shown above a section of the page.
+      "title": "Draft Checklist"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion} of this Form.",
+        "draftVersion": "Draft version"
+      },
+      "action": {
+        "upload": "Upload new definition"
+      }
+    },
+    "actions": {
+      // This is a title shown above a section of the page.
+      "title": "Actions",
+      "action": {
+        "publish": "Publish Draft",
+        "abandon": "Abandon Draft"
+      }
+    },
     "alert": {
       "upload": "Success! The new Form definition has been saved as your Draft.",
       "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.",

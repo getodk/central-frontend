@@ -5,11 +5,81 @@
 // tab: This is the text of a navigation tab.
 
 {
+  // This is the name of a user Role.
   "role": {
-    // This is shown when a user does not have a role.
+    // This is shown when a user does not have a Role.
     "none": "None",
-    // This is the name of a user role.
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "manager": "Project Manager",
+    "viewer": "Project Viewer"
+  },
+  "formState": {
+    // Form States control the lifecycle state of each Form. "Open" is one Form
+    // State.
+    "open": "Open",
+    // Form States control the lifecycle state of each Form. "Closing" is one
+    // Form State.
+    "closing": "Closing",
+    // Form States control the lifecycle state of each Form. "Closed" is one
+    // Form State.
+    "closed": "Closed"
+  },
+  "audit": {
+    // This is a category of actions performed on the server. It is shown when
+    // filtering the log of actions by type. Note that title case is used.
+    "category": {
+      "nonverbose": "(All Actions)",
+      "user": "Web User Actions",
+      "project": "Project Actions",
+      "form": "Form Actions"
+    },
+    "action": {
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action. Note that title case is used for types of actions.
+      "default": {
+        "create": "Create",
+        "update": "Update Details",
+        "delete": "Delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Web User. Note that title case is
+      // used for types of actions.
+      "assignment": {
+        "create": "Assign Role",
+        "delete": "Revoke Role"
+      },
+      // This is shown in the log of actions performed on the server. Note that
+      // title case is used for types of actions.
+      "backup": "Backup",
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Form. Note that title case is
+      // used for types of actions.
+      "form": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "update_draft_set": "Create or Update Draft",
+        "update_publish": "Publish Draft",
+        "update_draft_delete": "Abandon Draft",
+        "attachment_update": "Update Attachments",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Project. Note that title case is
+      // used for types of actions.
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Web User. Note that title case is
+      // used for types of actions.
+      "user": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "Retire"
+      }
+    }
   },
   "action": {
     "cancel": "Cancel",
@@ -26,9 +96,11 @@
     "ok": "Okay",
     "proceed": "Proceed",
     "resetPassword": "Reset password",
+    "save": "Save",
     "yesProceed": "Yes, proceed"
   },
   "field": {
+    "dateRange": "Date range",
     "displayName": "Display name",
     "email": "Email address",
     "name": "Name",
@@ -36,7 +108,8 @@
     "oldPassword": "Old password",
     "passphrase": "Passphrase",
     "password": "Password",
-    "passwordConfirm": "New password (confirm)"
+    "passwordConfirm": "New password (confirm)",
+    "type": "Type"
   },
   "header": {
     "actions": "Actions",
@@ -63,12 +136,35 @@
     "form": "{count} Form | {count} Forms",
     "submission": "{count} Submission | {count} Submissions"
   },
+  "moreInfo": {
+    "clickHere": {
+      "full": "For more information, {clickHere}.",
+      "clickHere": "click here"
+    },
+    "helpArticle": {
+      "full": "For more information, please see {helpArticle}.",
+      "helpArticle": "this help article"
+    },
+    // This is a link to more information.
+    "learnMore": "Learn more."
+  },
   "common": {
+    // Here we ask the user to confirm that they wish to complete an action that
+    // they have initiated.
+    "areYouSure": "Are you sure you wish to proceed?",
+    // This is a title shown above a section of the page.
+    "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
+    "form": "Form",
+    // This is shown if a search returned no results.
+    "noResults": "No results",
+    "project": "Project",
     // This is a title shown above a section of the page.
     "rightNow": "Right Now",
-    "success": "Success!"
+    "success": "Success!",
+    "user": "User",
+    "webUser": "Web User"
   },
   "presenter": {
     "Form": {
