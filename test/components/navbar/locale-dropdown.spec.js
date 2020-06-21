@@ -1,5 +1,6 @@
 import i18n from '../../../src/i18n';
 import { load } from '../../util/http';
+import { loadLocale } from '../../../src/util/i18n';
 import { trigger } from '../../util/event';
 import { wait } from '../../util/util';
 
@@ -18,6 +19,8 @@ describe('NavbarLocaleDropdown', () => {
     }));
 
   describe('after a locale selection', () => {
+    afterEach(() => loadLocale('en'));
+
     const selectLocale = () => load('/login')
       .afterResponses(app => {
         for (const a of app.find('#navbar-locale-dropdown .dropdown-menu a')) {

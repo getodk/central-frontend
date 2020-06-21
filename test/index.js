@@ -8,6 +8,7 @@ import { mount } from 'avoriaz';
 import 'should';
 
 import Blank from '../src/components/blank.vue';
+import i18n from '../src/i18n';
 import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
@@ -133,6 +134,15 @@ afterEach(() => {
   store.commit('resetAlert');
   store.commit('resetRequests');
   store.commit('clearData');
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VUE I18N
+
+afterEach(() => {
+  if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
 });
 
 

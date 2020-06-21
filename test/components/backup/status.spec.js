@@ -1,6 +1,7 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
+import DateTime from '../../../src/components/date-time.vue';
 import testData from '../../data';
-import { ago, formatDate } from '../../../src/util/date-time';
+import { ago } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mountAndMark } from '../../util/lifecycle';
 
@@ -53,9 +54,8 @@ describe('BackupStatus', () => {
       'Terminate…'
     );
 
-    const mrla = component.first('#backup-status-most-recently-logged-at');
     const { loggedAt } = testData.extendedAudits.last();
-    mrla.text().trim().should.equal(formatDate(loggedAt));
+    component.first(DateTime).getProp('iso').should.equal(loggedAt);
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {

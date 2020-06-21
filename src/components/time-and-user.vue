@@ -57,8 +57,8 @@ export default {
   "en": {
     // This shows the date and time at which a particular user completed an
     // action, for example: "2020/01/01 01:23 by Alice". {dateTime} may show a
-    // formatted date like "2020/01/01", or it may use a word like "Today" or
-    // "Yesterday".
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
     "text": "{dateTime} by {displayName}"
   }
 }

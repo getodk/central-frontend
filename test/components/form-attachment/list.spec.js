@@ -3,6 +3,7 @@ import pako from 'pako';
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentList from '../../../src/components/form-attachment/list.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
+import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
@@ -107,17 +108,12 @@ describe('FormAttachmentList', () => {
 
     describe('updatedAt', () => {
       it('formats updatedAt for an existing attachment', () => {
-        const attachment = testData.standardFormAttachments
+        const { updatedAt } = testData.standardFormAttachments
           .createPast(1, { exists: true })
           .last();
         return loadAttachments().then(component => {
-          const td = component.find('#form-attachment-list-table tbody td')[2];
-
-          td.first(DateTime).getProp('iso').should.equal(attachment.updatedAt);
-
-          const span = td.find('span');
-          span.length.should.equal(2);
-          span[1].should.be.hidden();
+          const row = component.first(FormAttachmentRow);
+          row.first(DateTime).getProp('iso').should.equal(updatedAt);
         });
       });
 

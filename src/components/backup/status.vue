@@ -202,8 +202,8 @@ export default {
       "Backup is working.",
       // {dateTime} shows the date and time at which the last backup completed,
       // for example: "2020/01/01 01:23". It may show a formatted date like
-      // "2020/01/01", or it may use a word like "today" or "yesterday".
-      // {dateTime} is formatted in bold.
+      // "2020/01/01", or it may use a word like "today", "yesterday", or
+      // "Sunday". {dateTime} is formatted in bold.
       "The last backup completed successfully {dateTime}."
     ],
     "action": {

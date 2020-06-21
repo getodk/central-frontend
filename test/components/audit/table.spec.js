@@ -1,5 +1,7 @@
+import AuditRow from '../../../src/components/audit/row.vue';
+import DateTime from '../../../src/components/date-time.vue';
 import testData from '../../data';
-import { ago, formatDate } from '../../../src/util/date-time';
+import { ago } from '../../../src/util/date-time';
 import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
@@ -46,20 +48,18 @@ describe('AuditTable', () => {
     mockLogin({ displayName: 'User 1' });
   });
 
-  it('renders loggedAt correctly', () =>
-    mockRoute('/system/audits')
-      .respondWithData(() => testData.extendedAudits
-        .createPast(1, {
-          actor: testData.extendedUsers.first(),
-          action: 'user.update',
-          actee: testData.toActor(testData.extendedUsers.first())
-        })
-        .sorted())
-      .afterResponse(app => {
-        const text = app.first('.audit-row td').text().trim();
-        const { loggedAt } = testData.extendedAudits.last();
-        text.should.equal(formatDate(loggedAt));
-      }));
+  it('renders loggedAt correctly', () => {
+    const { loggedAt } = testData.extendedAudits
+      .createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'user.update',
+        actee: testData.toActor(testData.extendedUsers.first())
+      })
+      .last();
+    return load('/system/audits').then(app => {
+      app.first(AuditRow).first(DateTime).getProp('iso').should.equal(loggedAt);
+    });
+  });
 
   describe('user target', () => {
     /*

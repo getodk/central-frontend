@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       :title="submission.__system.submitterName">
       {{ submission.__system.submitterName }}
     </td>
-    <td>{{ submissionDate }}</td>
+    <td><date-time :iso="submission.__system.submissionDate"/></td>
   </tr>
   <!-- The rest of the table -->
   <tr v-else
@@ -39,12 +39,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import SubmissionCell from './cell.vue';
-import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'SubmissionRow',
-  components: { SubmissionCell },
+  components: { DateTime, SubmissionCell },
   props: {
     baseUrl: {
       type: String,
@@ -62,11 +62,6 @@ export default {
     showsSubmitter: {
       type: Boolean,
       default: false
-    }
-  },
-  computed: {
-    submissionDate() {
-      return formatDate(this.submission.__system.submissionDate);
     }
   }
 };

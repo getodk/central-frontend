@@ -264,7 +264,7 @@ describe('util/request', () => {
     });
 
     describe('i18n', () => {
-      before(() => {
+      beforeEach(() => {
         i18n.setLocaleMessage('la', {
           problem: {
             '401_2': 'Message for locale: {message} ({code})'
@@ -280,7 +280,7 @@ describe('util/request', () => {
         });
         i18n.fallbackLocale = 'ett';
       });
-      after(() => {
+      afterEach(() => {
         i18n.fallbackLocale = 'en';
         i18n.locale = 'en';
         i18n.setLocaleMessage('la', {});

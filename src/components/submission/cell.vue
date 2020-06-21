@@ -27,6 +27,8 @@ except according to the terms contained in the LICENSE file.
 import { DateTime, Settings } from 'luxon';
 import { path } from 'ramda';
 
+import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
+
 const typeOptions = {
   barcode: { title: true },
   decimal: { htmlClass: true },
@@ -103,7 +105,7 @@ export default {
         // value as ISO 8601, but if the resulting DateTime is invalid, we
         // indicate that to the user.
         case 'date':
-          return DateTime.fromISO(rawValue).toFormat('yyyy/MM/dd');
+          return formatDate(DateTime.fromISO(rawValue));
         case 'time': {
           /* Collect does not allow the user to select a time value's associated
           time zone. However, Collect may add a time zone designator to the
@@ -118,7 +120,7 @@ export default {
           Settings.defaultZoneName = 'utc';
           const time = DateTime.fromISO(rawValue, { setZone: true });
           Settings.defaultZoneName = originalZoneName;
-          return time.toFormat('HH:mm:ss');
+          return formatTime(time);
         }
         // rawValue is an Edm.DateTimeOffset. Again, there may be differences
         // between ISO 8601 and the Edm.DateTimeOffset specification. However,
@@ -126,7 +128,7 @@ export default {
         // time value, we attempt to parse a dateTime value as ISO 8601,
         // indicating any failure to the user.
         case 'dateTime':
-          return DateTime.fromISO(rawValue).toFormat('yyyy/MM/dd HH:mm:ss');
+          return formatDateTime(DateTime.fromISO(rawValue));
 
         case 'geopoint': {
           const { coordinates } = rawValue;

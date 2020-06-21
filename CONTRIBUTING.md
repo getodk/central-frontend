@@ -107,6 +107,8 @@ We also define internationalization-related utilities in [`/src/util/i18n.js`](/
 
 In general in Frontend, we use kebab-case to name slots. However, when using component interpolation, name slots using camelCase. This seems a little more readable within locale messages. Also, if the slot corresponds to a message, this allows the slot and its message to have the same name.
 
+Note that while Vue I18n supports date/time localization, we use Luxon to manage DateTime objects, including for the limited date/time localization that Frontend implements.
+
 #### Transifex
 
 We use Transifex to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.

@@ -138,6 +138,21 @@ describe('router', () => {
         }));
   });
 
+  describe('preserveData', () => {
+    describe('project routes', () => {
+      it('preserves data if the user changes tabs', () => {
+        mockLogin();
+        testData.extendedProjects.createPast(1, { appUsers: 0 });
+        return load('/projects/1/app-users')
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .route('/projects/1/app-users')
+          .testNoRequest();
+      });
+    });
+  });
+
   describe('validateData', () => {
     describe('user without a sitewide role', () => {
       beforeEach(() => {

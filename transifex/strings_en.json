@@ -198,6 +198,16 @@
     }
   },
   "util": {
+    "dateTime": {
+      "today": {
+        "string": "today",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
+      },
+      "yesterday": {
+        "string": "yesterday",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
+      }
+    },
     "request": {
       "noRequest": {
         "string": "Something went wrong: there was no request."
@@ -429,7 +439,7 @@
         },
         "1": {
           "string": "The last backup completed successfully {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\" or \"yesterday\". {dateTime} is formatted in bold."
+          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
         }
       },
       "action": {
@@ -1894,7 +1904,7 @@
     "TimeAndUser": {
       "text": {
         "string": "{dateTime} by {displayName}",
-        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"Today\" or \"Yesterday\"."
+        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       }
     },
     "UserEditBasicDetails": {

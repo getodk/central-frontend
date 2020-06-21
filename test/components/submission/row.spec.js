@@ -1,6 +1,6 @@
+import DateTime from '../../../src/components/date-time.vue';
 import SubmissionRow from '../../../src/components/submission/row.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
@@ -50,9 +50,9 @@ describe('SubmissionRow', () => {
     });
 
     it('shows the submission date', () => {
-      const text = mountComponent({ rowNumber: 1 }).find('td')[1].text().trim();
+      const row = mountComponent({ rowNumber: 1 });
       const { createdAt } = testData.extendedSubmissions.last();
-      text.should.equal(formatDate(createdAt));
+      row.first(DateTime).getProp('iso').should.equal(createdAt);
     });
   });
 });

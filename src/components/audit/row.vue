@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="audit-row">
-    <td>{{ loggedAt }}</td>
+    <td><date-time :iso="audit.loggedAt"/></td>
     <td>
       <template v-if="actionInfo != null">
         {{ actionInfo.type[0] }}
@@ -44,9 +44,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/date-time';
 
 const ACTIONS = {
   'user.create': {
@@ -116,6 +116,7 @@ const ACTIONS = {
 
 export default {
   name: 'AuditRow',
+  components: { DateTime },
   mixins: [routes()],
   props: {
     audit: {
@@ -124,9 +125,6 @@ export default {
     }
   },
   computed: {
-    loggedAt() {
-      return formatDate(this.audit.loggedAt);
-    },
     actionInfo() {
       return ACTIONS[this.audit.action];
     },

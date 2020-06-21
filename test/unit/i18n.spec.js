@@ -1,3 +1,5 @@
+import { Settings } from 'luxon';
+
 import i18n from '../../src/i18n';
 import { i18nProps } from '../util/i18n';
 import { loadLocale } from '../../src/util/i18n';
@@ -6,6 +8,7 @@ describe('util/i18n', () => {
   describe('loadLocale()', () => {
     afterEach(() => {
       i18n.locale = 'en';
+      Settings.defaultLocale = 'en';
       document.querySelector('html').setAttribute('lang', 'en');
     });
 
@@ -13,6 +16,11 @@ describe('util/i18n', () => {
       loadLocale('es').then(() => {
         i18n.locale.should.equal('es');
         i18n.t('field.password').should.equal('Contraseña');
+      }));
+
+    it('changes the default locale for Luxon', () =>
+      loadLocale('es').then(() => {
+        Settings.defaultLocale.should.equal('es');
       }));
 
     it('changes the lang attribute', () =>
@@ -33,7 +41,7 @@ describe('util/i18n', () => {
   });
 
   describe('pluralization', () => {
-    before(() => {
+    beforeEach(() => {
       i18n.setLocaleMessage('la', {
         forms: '{count} Forma | {count} Formae',
         parts: '{name} est omnis divisa in partes {count}.',
@@ -46,7 +54,7 @@ describe('util/i18n', () => {
       });
       i18n.locale = 'la';
     });
-    after(() => {
+    afterEach(() => {
       i18n.locale = 'en';
       i18n.setLocaleMessage('la', {});
     });

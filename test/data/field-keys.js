@@ -17,7 +17,8 @@ export const extendedFieldKeys = dataStore({
       ? extendedProjects.first()
       : extendedProjects.createPast(1, { appUsers: 1 }).last(),
     displayName = faker.name.findName(),
-    token = faker.random.alphaNumeric(64)
+    token = faker.random.alphaNumeric(64),
+    lastUsed = undefined
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
     const createdBy = extendedUsers.first();
@@ -29,9 +30,9 @@ export const extendedFieldKeys = dataStore({
       projectId: project.id,
       displayName,
       token,
-      lastUsed: inPast && faker.random.boolean()
-        ? fakePastDate([createdAt])
-        : null,
+      lastUsed: lastUsed !== undefined
+        ? lastUsed
+        : (inPast && faker.random.boolean() ? fakePastDate([createdAt]) : null),
       createdBy: toActor(createdBy),
       createdAt,
       updatedAt: null

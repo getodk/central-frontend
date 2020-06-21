@@ -32,6 +32,8 @@ except according to the terms contained in the LICENSE file.
 import flatPickr from 'vue-flatpickr-component';
 import { DateTime } from 'luxon';
 
+import { flatPickrConfig, formatDate } from '../../util/date-time';
+
 export default {
   name: 'AuditFilters',
   components: { flatPickr },
@@ -76,10 +78,7 @@ export default {
       ];
     },
     flatPickrConfig() {
-      return {
-        mode: 'range',
-        dateFormat: 'Y/m/d'
-      };
+      return flatPickrConfig.range;
     }
   },
   watch: {
@@ -87,8 +86,8 @@ export default {
   },
   methods: {
     dateRangeToString(dateRange) {
-      const start = dateRange[0].toFormat('y/MM/dd');
-      const end = dateRange[1].toFormat('y/MM/dd');
+      const start = formatDate(dateRange[0]);
+      const end = formatDate(dateRange[1]);
       // If start === end, then when we set this.dateRangeString to the
       // following string, vue-flatpickr-component will set this.dateRangeString
       // to `start`. However, we cannot set this.dateRangeString to `start`

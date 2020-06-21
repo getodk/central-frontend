@@ -11,22 +11,62 @@ except according to the terms contained in the LICENSE file.
 */
 import { DateTime } from 'luxon';
 
+import i18n from '../i18n';
+
 export const ago = (duration) => DateTime.local().minus(duration);
 
-const formatDatePart = (dateTime) => {
-  const now = DateTime.local();
-  if (now.hasSame(dateTime, 'day')) return 'Today';
-  if (now.minus({ days: 1 }).hasSame(dateTime, 'day')) return 'Yesterday';
-  for (let i = 2; i <= 5; i += 1)
-    if (now.minus({ days: i }).hasSame(dateTime, 'day'))
-      return dateTime.toFormat('cccc');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FORMATTING
+
+// We don't expect the user to encounter an invalid DateTime, but if they do, we
+// return the string that Luxon returns for an invalid DateTime
+// ('Invalid DateTime').
+
+export const formatDate = (dateTime, relative = false) => {
+  if (!dateTime.isValid) return dateTime.toString();
+  if (relative) {
+    const now = DateTime.local();
+    // We may be able to use dateTime.toRelativeCalendar() once Safari supports
+    // Intl.RelativeTimeFormat.
+    if (now.hasSame(dateTime, 'day')) return i18n.t('util.dateTime.today');
+    if (now.minus({ days: 1 }).hasSame(dateTime, 'day'))
+      return i18n.t('util.dateTime.yesterday');
+    for (let i = 2; i <= 5; i += 1) {
+      if (now.minus({ days: i }).hasSame(dateTime, 'day')) {
+        // If keeping the Luxon and Vue I18n locales in sync becomes more
+        // challenging, we may want to move to Vue I18n for DateTime
+        // localization.
+        if (dateTime.locale !== i18n.locale)
+          throw new Error('dateTime has a different locale than i18n');
+        return dateTime.weekdayLong;
+      }
+    }
+  }
+  // If this changes, flatPickrConfig will need to change as well.
   return dateTime.toFormat('y/MM/dd');
 };
-export const formatDate = (isoString, blankString = '') => {
-  if (isoString == null) return blankString;
-  const dateTime = DateTime.fromISO(isoString);
-  if (!dateTime.isValid) throw new Error(dateTime.invalidReason);
-  const datePart = formatDatePart(dateTime);
-  const timePart = dateTime.toFormat('HH:mm');
-  return `${datePart} ${timePart}`;
+
+export const formatTime = (dateTime, seconds = true) => (dateTime.isValid
+  ? dateTime.toFormat(seconds ? 'HH:mm:ss' : 'HH:mm')
+  : dateTime.toString());
+
+export const formatDateTime = (dateTime, relative = false) => {
+  if (!dateTime.isValid) return dateTime.toString();
+  const date = formatDate(dateTime, relative);
+  const time = formatTime(dateTime, !relative);
+  return `${date} ${time}`;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FLATPICKR
+
+export const flatPickrConfig = {
+  range: {
+    mode: 'range',
+    dateFormat: 'Y/m/d'
+  }
 };
