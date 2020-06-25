@@ -12,10 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <p id="audit-list-heading">{{ $t('heading[0]') }}</p>
-    <audit-filters :initial="initialFilters" @filter="fetchData"/>
+    <audit-filters v-bind.sync="filters"/>
     <audit-table :audits="audits"/>
     <loading :state="$store.getters.initiallyLoading(['audits'])"/>
-    <p v-if="audits != null && audits.length === 0" class="empty-table-message">
+    <p v-show="audits != null && audits.length === 0"
+      class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
   </div>
@@ -36,21 +37,30 @@ export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable, Loading },
   mixins: [validateData({ update: false })],
-  computed: {
-    ...requestData(['audits']),
-    initialFilters() {
-      const today = DateTime.local().startOf('day');
-      return {
+  data() {
+    const today = DateTime.local().startOf('day');
+    return {
+      filters: {
         action: 'nonverbose',
         dateRange: [today, today]
-      };
+      }
+    };
+  },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['audits']),
+  watch: {
+    filters: {
+      handler: 'fetchData',
+      deep: true
     }
   },
   created() {
-    this.fetchData(this.initialFilters);
+    this.fetchData();
   },
   methods: {
-    fetchData({ action, dateRange }) {
+    fetchData() {
+      const { action, dateRange } = this.filters;
       this.$store.dispatch('get', [{
         key: 'audits',
         url: apiPaths.audits({

@@ -254,16 +254,6 @@ a {
   }
 }
 
-// The flatPickr input is readonly by default, but we do not want to style it as
-// readonly.
-.form-group .flatpickr-input[readonly] {
-  color: $color-input;
-
-  &::placeholder {
-    color: $color-text;
-  }
-}
-
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,34 @@ import i18n, { locales } from '../i18n';
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// FLATPICKR
+
+// Note that when we load a flatpickr locale, flatpickr itself may or may not be
+// imported yet. Thus, rather than using flatpickr immediately (for example, by
+// calling flatpickr.localize()), we simply store the locale for DateRangePicker
+// to use.
+
+// flatpickrLocales does not have a property for the fallback locale, because
+// DateRangePicker bundles that locale.
+export const flatpickrLocales = {};
+
+const loadFlatpickrLocale = (locale) => {
+  // flatpickr bundles the flatpickr locale for en.
+  if (flatpickrLocales[locale] != null || locale === 'en')
+    return Promise.resolve();
+  return import(
+    /* webpackExclude: /(default|index)\.js$/ */
+    /* webpackChunkName: "flatpickr-locale-[request]" */
+    `flatpickr/dist/l10n/${locale}.js`
+  )
+    .then(config => {
+      flatpickrLocales[locale] = config.default[locale];
+    });
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // loadLocale()
 
 // We bundle the messages for the fallback locale.
@@ -28,6 +56,17 @@ const setLocale = (locale) => {
   document.querySelector('html').setAttribute('lang', locale);
 };
 
+const loadMessages = (locale) => {
+  if (i18n.messages[locale] != null) return Promise.resolve();
+  return import(
+    /* webpackChunkName: "i18n-[request]" */
+    `../locales/${locale}.json`
+  )
+    .then(messages => {
+      i18n.setLocaleMessage(locale, messages);
+    });
+};
+
 // Loads a locale asynchronously.
 export const loadLocale = (locale) => {
   if (loaded.has(locale)) {
@@ -35,9 +74,8 @@ export const loadLocale = (locale) => {
     return Promise.resolve();
   }
   if (!locales.has(locale)) return Promise.reject();
-  return import(/* webpackChunkName: "lang-[request]" */ `../locales/${locale}.json`)
-    .then(messages => {
-      i18n.setLocaleMessage(locale, messages);
+  return Promise.all([loadMessages(locale), loadFlatpickrLocale(locale)])
+    .then(() => {
       loaded.add(locale);
       setLocale(locale);
     })

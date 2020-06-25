@@ -13,6 +13,7 @@
     "axios": "~0.18",
     "bootstrap": "~3",
     "core-js": "~3.6",
+    "flatpickr": "~4.6",
     "jquery": "~3",
     "luxon": "~1",
     "pako": "~1.0",

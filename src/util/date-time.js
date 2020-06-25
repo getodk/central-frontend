@@ -44,7 +44,7 @@ export const formatDate = (dateTime, relative = false) => {
       }
     }
   }
-  // If this changes, flatPickrConfig will need to change as well.
+  // If this changes, DateRangePicker will need to change as well.
   return dateTime.toFormat('y/MM/dd');
 };
 
@@ -57,16 +57,4 @@ export const formatDateTime = (dateTime, relative = false) => {
   const date = formatDate(dateTime, relative);
   const time = formatTime(dateTime, !relative);
   return `${date} ${time}`;
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// FLATPICKR
-
-export const flatPickrConfig = {
-  range: {
-    mode: 'range',
-    dateFormat: 'Y/m/d'
-  }
 };

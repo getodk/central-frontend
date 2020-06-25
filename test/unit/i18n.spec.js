@@ -1,8 +1,8 @@
 import { Settings } from 'luxon';
 
 import i18n from '../../src/i18n';
+import { flatpickrLocales, loadLocale } from '../../src/util/i18n';
 import { i18nProps } from '../util/i18n';
-import { loadLocale } from '../../src/util/i18n';
 
 describe('util/i18n', () => {
   describe('loadLocale()', () => {
@@ -18,14 +18,19 @@ describe('util/i18n', () => {
         i18n.t('field.password').should.equal('Contraseña');
       }));
 
+    it('changes the lang attribute', () =>
+      loadLocale('es').then(() => {
+        document.querySelector('html').getAttribute('lang').should.equal('es');
+      }));
+
     it('changes the default locale for Luxon', () =>
       loadLocale('es').then(() => {
         Settings.defaultLocale.should.equal('es');
       }));
 
-    it('changes the lang attribute', () =>
+    it('loads the flatpickr locale', () =>
       loadLocale('es').then(() => {
-        document.querySelector('html').getAttribute('lang').should.equal('es');
+        flatpickrLocales.es.weekdays.longhand[0].should.equal('Domingo');
       }));
 
     it('throws an error for a locale that is not defined', () => {

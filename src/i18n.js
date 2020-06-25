@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueI18n from 'vue-i18n';
+
 // Bundle en messages, since en is the fallback locale. Other locales are loaded
 // asynchronously.
 import fallbackMessages from './locales/en.json';

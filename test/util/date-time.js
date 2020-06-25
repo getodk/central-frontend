@@ -12,6 +12,8 @@ const setLuxonSetting = (name, value) => {
     } else if (typeof value === 'string') {
       const millis = DateTime.fromISO(value).toMillis();
       Settings[name] = () => millis;
+    } else if (value instanceof DateTime) {
+      Settings[name] = () => value.toMillis();
     } else {
       Settings[name] = value;
     }

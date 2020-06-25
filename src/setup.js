@@ -21,9 +21,6 @@ import './bootstrap';
 // Import global styles.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
-// vue-flatpickr-component requires flatpickr, so I think ESLint is just
-// confused here?
-// eslint-disable-next-line import/no-extraneous-dependencies
 import 'flatpickr/dist/flatpickr.css';
 import './assets/scss/app.scss';
 
