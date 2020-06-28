@@ -25,8 +25,8 @@
     "closed": "Closed"
   },
   "audit": {
-    // This is a category of actions performed on the server. It is shown when
-    // filtering the log of actions by type. Note that title case is used.
+    // This is a category of actions performed on the server. It is shown in a
+    // dropdown when filtering the log of actions by type.
     "category": {
       "nonverbose": "(All Actions)",
       "user": "Web User Actions",
@@ -35,25 +35,22 @@
     },
     "action": {
       // This is shown in the log of actions performed on the server. It is a
-      // type of action. Note that title case is used for types of actions.
+      // type of action.
       "default": {
         "create": "Create",
         "update": "Update Details",
         "delete": "Delete"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Web User. Note that title case is
-      // used for types of actions.
+      // type of action that can be taken on a Web User.
       "assignment": {
         "create": "Assign Role",
         "delete": "Revoke Role"
       },
-      // This is shown in the log of actions performed on the server. Note that
-      // title case is used for types of actions.
+      // This is shown in the log of actions performed on the server.
       "backup": "Backup",
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Form. Note that title case is
-      // used for types of actions.
+      // type of action that can be taken on a Form.
       "form": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -64,16 +61,14 @@
         "delete": "@:audit.action.default.delete"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Project. Note that title case is
-      // used for types of actions.
+      // type of action that can be taken on a Project.
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Web User. Note that title case is
-      // used for types of actions.
+      // type of action that can be taken on a Web User.
       "user": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",

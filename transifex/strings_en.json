@@ -35,72 +35,72 @@
     "category": {
       "nonverbose": {
         "string": "(All Actions)",
-        "developer_comment": "This is a category of actions performed on the server. It is shown when filtering the log of actions by type. Note that title case is used."
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
         "string": "Web User Actions",
-        "developer_comment": "This is a category of actions performed on the server. It is shown when filtering the log of actions by type. Note that title case is used."
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "project": {
         "string": "Project Actions",
-        "developer_comment": "This is a category of actions performed on the server. It is shown when filtering the log of actions by type. Note that title case is used."
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "form": {
         "string": "Form Actions",
-        "developer_comment": "This is a category of actions performed on the server. It is shown when filtering the log of actions by type. Note that title case is used."
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
     "action": {
       "default": {
         "create": {
           "string": "Create",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "update": {
           "string": "Update Details",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "delete": {
           "string": "Delete",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
       "assignment": {
         "create": {
           "string": "Assign Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         },
         "delete": {
           "string": "Revoke Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         }
       },
       "backup": {
         "string": "Backup",
-        "developer_comment": "This is shown in the log of actions performed on the server. Note that title case is used for types of actions."
+        "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "form": {
         "update_draft_set": {
           "string": "Create or Update Draft",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
           "string": "Publish Draft",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_delete": {
           "string": "Abandon Draft",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "attachment_update": {
           "string": "Update Attachments",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "user": {
         "delete": {
           "string": "Retire",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User. Note that title case is used for types of actions."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         }
       }
     }
