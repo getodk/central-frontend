@@ -211,18 +211,10 @@ a {
     &:focus {
       border-bottom-color: $color-action-foreground;
       box-shadow: none;
-
-      + .form-label {
-        color: $color-action-foreground;
-      }
     }
 
     &::placeholder {
       color: $color-text;
-    }
-
-    &:placeholder-shown + .form-label {
-      transform: translateY(-15px);
     }
 
     &[disabled], &[readonly] {
@@ -231,16 +223,6 @@ a {
       }
     }
   }
-
-  .form-label {
-    color: $color-input-inactive;
-    display: block;
-    font-size: 11px;
-    height: 0;
-    padding-left: 12px;
-    transform: translateY(2px);
-    transition: 0.15s transform, 0.15s color;
-  }
 }
 
 .radio label {
@@ -248,13 +230,7 @@ a {
 }
 
 .has-error {
-  .form-label,
-  .radio,
-  .checkbox,
-  &.radio label,
-  &.checkbox label {
-    color: $color-danger;
-  }
+  .radio, .checkbox, &.radio label, &.checkbox label { color: $color-danger; }
 
   .form-control {
     border-color: $color-danger;
@@ -262,10 +238,6 @@ a {
     &:focus {
       border-color: $color-danger-dark;
       box-shadow: none;
-
-      + .form-label {
-        color: $color-danger-dark;
-      }
     }
   }
 }
@@ -279,16 +251,6 @@ a {
     &, &:focus {
       box-shadow: 0 0 0 3px #ffef67;
     }
-  }
-}
-
-// The flatPickr input is readonly by default, but we do not want to style it as
-// readonly.
-.form-group .flatpickr-input[readonly] {
-  color: $color-input;
-
-  &::placeholder {
-    color: $color-text;
   }
 }
 

@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Base from './base';
+import i18n from '../i18n';
 
 const props = [
   'id',
@@ -29,6 +30,12 @@ export default class Project extends Base(props) {
   constructor(data) {
     super(data);
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
+  }
+
+  nameWithArchived() {
+    return this.archived
+      ? i18n.t('presenter.Project.nameWithArchived', this.object)
+      : this.name;
   }
 
   permits(verbOrVerbs) {

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <td :class="htmlClass" :title="title">
     <template v-if="column.binary === true">
       <a v-if="formattedValue !== ''" class="binary-link" :href="formattedValue"
-        target="_blank" title="File was submitted. Click to download.">
+        target="_blank" :title="$t('binaryLinkTitle')">
         <span class="icon-check"></span> <span class="icon-download"></span>
       </a>
     </template>
@@ -26,6 +26,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { DateTime, Settings } from 'luxon';
 import { path } from 'ramda';
+
+import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
 
 const typeOptions = {
   barcode: { title: true },
@@ -79,20 +81,22 @@ export default {
       }
       switch (this.column.type) {
         case 'int':
-          return rawValue.toLocaleString();
+          return this.$n(rawValue, 'default');
         // The ODK XForms specification seems to allow decimal values that
         // cannot be precisely stored as a Number. However, Collect limits
         // decimal input to 15 characters, resulting in only values that can be
         // precisely stored as a Number.
         case 'decimal': {
-          if (Number.isInteger(rawValue)) return rawValue.toLocaleString();
-          // Math.log() might be more performant?
+          if (Number.isInteger(rawValue)) return this.$n(rawValue, 'default');
+          // Non-integers outside this range are more than 15 characters
+          // (including the sign and decimal point).
+          if (rawValue >= 10000000000000 || rawValue <= -1000000000000)
+            return this.$n(rawValue, 'maximumFractionDigits1');
           const integerDigits = Math.floor(Math.abs(rawValue)).toString().length;
           const signCharacters = rawValue < 0 ? 1 : 0;
-          // 14, not 15, because the decimal point consumes a character. Using
-          // Math.max() just to be safe.
-          const maximumFractionDigits = Math.max(14 - integerDigits - signCharacters, 0);
-          return rawValue.toLocaleString(undefined, { maximumFractionDigits });
+          // 14, not 15, because the decimal point consumes a character.
+          const fractionDigits = 14 - integerDigits - signCharacters;
+          return this.$n(rawValue, `maximumFractionDigits${fractionDigits}`);
         }
 
         // There may be differences between ISO 8601 and the the ODK XForms
@@ -101,7 +105,7 @@ export default {
         // value as ISO 8601, but if the resulting DateTime is invalid, we
         // indicate that to the user.
         case 'date':
-          return DateTime.fromISO(rawValue).toFormat('yyyy/MM/dd');
+          return formatDate(DateTime.fromISO(rawValue));
         case 'time': {
           /* Collect does not allow the user to select a time value's associated
           time zone. However, Collect may add a time zone designator to the
@@ -116,7 +120,7 @@ export default {
           Settings.defaultZoneName = 'utc';
           const time = DateTime.fromISO(rawValue, { setZone: true });
           Settings.defaultZoneName = originalZoneName;
-          return time.toFormat('HH:mm:ss');
+          return formatTime(time);
         }
         // rawValue is an Edm.DateTimeOffset. Again, there may be differences
         // between ISO 8601 and the Edm.DateTimeOffset specification. However,
@@ -124,23 +128,23 @@ export default {
         // time value, we attempt to parse a dateTime value as ISO 8601,
         // indicating any failure to the user.
         case 'dateTime':
-          return DateTime.fromISO(rawValue).toFormat('yyyy/MM/dd HH:mm:ss');
+          return formatDateTime(DateTime.fromISO(rawValue));
 
-        case 'geopoint':
-          return rawValue
-            .coordinates
-            .map((coordinate, i) => {
-              // Limiting the number of decimal places helps ensure that the
-              // formatted value fits within the column width. For longitude and
-              // latitude, 7 decimal places provide precision of 0.011m at the
-              // equator.
-              const digits = i < 2 ? 7 : 1;
-              return coordinate.toLocaleString(undefined, {
-                minimumFractionDigits: digits,
-                maximumFractionDigits: digits
-              });
-            })
-            .join(' ');
+        case 'geopoint': {
+          const { coordinates } = rawValue;
+          // Limiting the number of decimal places helps ensure that the
+          // formatted value fits within the column width. For longitude and
+          // latitude, 7 fraction digits provide precision of 0.011m at the
+          // equator.
+          const lon = this.$n(coordinates[0], 'fractionDigits7');
+          const lat = this.$n(coordinates[1], 'fractionDigits7');
+          const altitude = coordinates.length > 2
+            ? this.$n(coordinates[2], 'fractionDigits1')
+            : null;
+          return altitude != null
+            ? `${lon} ${lat} ${altitude}`
+            : `${lon} ${lat}`;
+        }
 
         default:
           return rawValue;
@@ -195,3 +199,11 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "binaryLinkTitle": "File was submitted. Click to download."
+  }
+}
+</i18n>

@@ -16,21 +16,33 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { DateTime } from 'luxon';
 
-import { formatDate } from '../util/date-time';
+import { formatDateTime } from '../util/date-time';
 
 export default {
   name: 'DateTime',
   props: {
-    iso: String // eslint-disable-line vue/require-default-prop
+    iso: String, // eslint-disable-line vue/require-default-prop
+    blank: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
+    fromISO() {
+      return DateTime.fromISO(this.iso);
+    },
+    withLocale() {
+      return this.fromISO.locale === this.$i18n.locale
+        ? this.fromISO
+        : this.fromISO.setLocale(this.$i18n.locale);
+    },
     title() {
-      return this.iso != null
-        ? DateTime.fromISO(this.iso).toFormat('y/MM/dd HH:mm:ss')
-        : null;
+      return this.iso != null ? formatDateTime(this.fromISO) : null;
     },
     text() {
-      return formatDate(this.iso);
+      return this.iso != null
+        ? formatDateTime(this.withLocale, true)
+        : this.blank;
     }
   }
 };

@@ -46,10 +46,25 @@ of validateStatus). It also accepts the following options:
     `false` if not.
   - problemToAlert. If the request results in an error, request() shows an
     alert. By default, the alert message is the same as that of the Backend
-    Problem. However, if a function is specified for problemToAlert, request()
-    first passes the Problem to the function, which has the option to return a
-    different message. If the function returns `null` or `undefined`, the
-    Problem's message is used.
+    Problem. However, there are two ways to show a different message:
+
+    1. If a function is specified for problemToAlert, request() passes the
+       Problem to the function, which has the option to return a different
+       message. If the function returns `null` or `undefined`, the Problem's
+       message is used.
+    2. If (and only if) problemToAlert has not been specified, request() will
+       check whether the component has specified an i18n message for the Problem
+       code. For example:
+
+       <i18n lang="json5">
+       {
+         "en": {
+           "problem": {
+             "404_1": "Not found."
+           }
+         }
+       }
+       </i18n>
 
 Return Value
 ------------
@@ -62,7 +77,7 @@ If you call then() on the promise, note that the request will no longer be in
 progress when the then() callback is run (awaitingResponse will equal `false`).
 If you call catch() on the promise, your logic should not assume that the
 request resulted in an error. Before the then() or catch() callback is run, Vue
-will react to the change in `awaitingResponse` from `true` to `false`, running
+will react to the change in awaitingResponse from `true` to `false`, running
 watchers and updating the DOM.
 */
 function request({
@@ -93,7 +108,10 @@ function request({
         return error.response;
 
       logAxiosError(error);
-      const message = requestAlertMessage(error, problemToAlert);
+      const message = requestAlertMessage(error, {
+        problemToAlert,
+        component: this
+      });
       this.$store.commit('setAlert', { type: 'danger', message });
       throw error;
     })

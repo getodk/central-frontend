@@ -14,22 +14,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <a v-if="version.excelContentType == null" class="btn btn-primary"
     :href="defPath('xml')" :download="xmlFilename">
-    <span class="icon-arrow-circle-down"></span>Download XML
+    <span class="icon-arrow-circle-down"></span>{{ $t('action.downloadXForm') }}
   </a>
   <div v-else class="btn-group">
     <button :id="dropdownToggleId" type="button"
       class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">
       <span class="icon-arrow-circle-down"></span>
-      <span>Download</span>
+      <span>{{ $t('action.download') }}</span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" :aria-labelledby="dropdownToggleId">
       <li>
-        <a :href="defPath('xml')" :download="xmlFilename">As XForm (.xml)</a>
+        <a :href="defPath('xml')" :download="xmlFilename">{{ $t('format.xForm') }} (.xml)</a>
       </li>
       <li>
-        <a :href="defPath(excelExtension)">As XLSForm (.{{ excelExtension }})</a>
+        <a :href="defPath(excelExtension)">{{ $t('format.xlsForm') }} (.{{ excelExtension }})</a>
       </li>
     </ul>
   </div>
@@ -71,3 +71,18 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "downloadXForm": "Download XML"
+    },
+    // Here, the user selects the format that a Form should be downloaded as.
+    "format": {
+      "xForm": "As XForm",
+      "xlsForm": "As XLSForm"
+    }
+  }
+}
+</i18n>

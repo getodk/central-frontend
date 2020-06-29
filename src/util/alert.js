@@ -17,18 +17,20 @@ export class StoreAlert { // eslint-disable-line import/prefer-default-export
     this._store = store;
   }
 
-  get _storeState() { return this._store.state.alert; }
-  _commit(type, payload) { this._store.commit(type, payload); }
+  get _state() { return this._store.state.alert; }
+  get type() { return this._state.type; }
+  get message() { return this._state.message; }
+  get state() { return this._state.state; }
+  get at() { return this._state.at; }
 
-  get type() { return this._storeState.type; }
-  get message() { return this._storeState.message; }
-  get state() { return this._storeState.state; }
-  get at() { return this._storeState.at; }
+  _setAlert(type, message = undefined) {
+    this._store.commit('setAlert', { type, message });
+  }
 
-  success(message) { this._commit('setAlert', { type: 'success', message }); }
-  info(message) { this._commit('setAlert', { type: 'info', message }); }
-  warning(message) { this._commit('setAlert', { type: 'warning', message }); }
-  danger(message) { this._commit('setAlert', { type: 'danger', message }); }
+  success(message) { this._setAlert('success', message); }
+  info(message) { this._setAlert('info', message); }
+  warning(message) { this._setAlert('warning', message); }
+  danger(message) { this._setAlert('danger', message); }
 
-  blank(type = undefined) { this._commit('resetAlert', type); }
+  blank() { this._store.commit('resetAlert'); }
 }

@@ -89,6 +89,17 @@ export const transforms = {
 // RECONCILE DATA
 
 reconcileData.add(
+  'project', 'forms',
+  (project, forms, commit) => {
+    if (project.forms !== forms.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ forms: forms.length })
+      });
+    }
+  }
+);
+reconcileData.add(
   'formDraft', 'attachments',
   (formDraft, attachments, commit) => {
     if (formDraft.isDefined() && attachments.isEmpty())
@@ -115,6 +126,7 @@ const dataGetters = {
 
   projectRoles: ({ data: { roles } }) => {
     if (roles == null) return null;
+    // If you add a new role, make sure to also add a new i18n message.
     return [
       roles.find(role => role.system === 'manager'),
       roles.find(role => role.system === 'viewer')

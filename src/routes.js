@@ -397,12 +397,7 @@ const routes = [
   {
     path: '*',
     component: NotFound,
-    meta: {
-      requireLogin: false,
-      // Our testing assumes that navigating to NotFound will never send a
-      // request, even to restore the user's session.
-      restoreSession: false
-    }
+    meta: { restoreSession: false, requireLogin: false }
   }
 ];
 export default routes;

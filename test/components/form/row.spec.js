@@ -1,5 +1,6 @@
+import DateTime from '../../../src/components/date-time.vue';
+import FormRow from '../../../src/components/form/row.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -76,7 +77,7 @@ describe('FormRow', () => {
     testData.extendedForms.createPast(1, { submissions: 12345 });
     return load('/projects/1').then(app => {
       const text = app.first('.form-row-submissions').text().trim();
-      text.should.equal('12,345 submissions');
+      text.should.equal('12,345 Submissions');
     });
   });
 
@@ -88,24 +89,12 @@ describe('FormRow', () => {
     });
   });
 
-  describe('last modified date', () => {
-    beforeEach(mockLogin);
-
-    it('shows updatedAt if the form has been updated', () => {
-      testData.extendedForms
-        .createPast(1, { state: 'open' })
-        .updateState(-1, 'closed');
-      return load('/projects/1').then(app => {
-        const { updatedAt } = testData.extendedForms.last();
-        app.find('td')[2].text().trim().should.equal(formatDate(updatedAt));
-      });
-    });
-
-    it('shows createdAt if the form has not been updated', () => {
-      const { createdAt } = testData.extendedForms.createPast(1).last();
-      return load('/projects/1').then(app => {
-        app.find('td')[2].text().trim().should.equal(formatDate(createdAt));
-      });
+  it('shows publishedAt', () => {
+    mockLogin();
+    const { publishedAt } = testData.extendedForms.createPast(1).last();
+    return load('/projects/1').then(app => {
+      const row = app.first(FormRow);
+      row.first(DateTime).getProp('iso').should.equal(publishedAt);
     });
   });
 
@@ -123,7 +112,7 @@ describe('FormRow', () => {
         lastSubmission: now
       });
       return load('/projects/1').then(app => {
-        app.find('td')[3].text().trim().should.equal(formatDate(now));
+        app.first(FormRow).find(DateTime)[1].getProp('iso').should.equal(now);
       });
     });
 

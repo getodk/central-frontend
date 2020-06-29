@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="state" class="loading">Loading…</div>
+  <div v-show="state" class="loading">{{ $t('text') }}</div>
 </template>
 
 <script>
@@ -32,3 +32,11 @@ export default {
   text-align: center;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "text": "Loading…"
+  }
+}
+</i18n>

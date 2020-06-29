@@ -146,7 +146,7 @@ cycles: series can be chained. For example:
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     })
-    .request(component => trigger.click(component, '#navbar-users-link'))
+    .request(component => trigger.click(component, '#navbar-links-users'))
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
@@ -208,6 +208,8 @@ class MockHttp {
       ...options
     });
   }
+
+  modify(f) { return f(this); }
 
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
@@ -466,72 +468,50 @@ class MockHttp {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
-    return promise
-      // Check initial state, set globals, and set properties of this object
-      // that are used within the afterResponses() promise. `component` is the
-      // component that the previous promise mounted (if any).
-      .then(({ component }) => {
-        // Concurrent series could cause issues in at least two ways. First,
-        // Vue.prototype.$http might not be restored correctly. Second, if
-        // concurrent series use the single global router, that could cause
-        // issues.
-        if (inProgress) throw new Error('another series is in progress');
-        inProgress = true;
-        this._inProgress = true;
-        this._errorFromBeforeEachNav = null;
-        this._previousHttp = Vue.prototype.$http;
-        setHttp(this._http());
-        this._component = component;
-        /*
-        MockHttp uses two promises:
+    // Check initial state, set globals, and set properties of this object that
+    // are used within the afterResponses() promise. `component` is the
+    // component that the previous promise mounted (if any).
+    return promise.then(({ component }) => {
+      // Concurrent series could cause issues in at least two ways. First,
+      // Vue.prototype.$http might not be restored correctly. Second, if
+      // concurrent series use the single global router, that could cause
+      // issues.
+      if (inProgress) throw new Error('another series is in progress');
+      inProgress = true;
+      this._inProgress = true;
+      this._errorFromBeforeEachNav = null;
+      this._previousHttp = Vue.prototype.$http;
+      setHttp(this._http());
+      this._component = component;
+      /*
+      MockHttp uses two promises:
 
-          1. The first promise is chained on this._previousPromise and returned
-             by an after responses hook. Usually it is ultimately returned to
-             Mocha.
-          2. The second promise, stored in this._responseChain, holds the
-             responses, chained in order of request. this._responseChain is not
-             returned to Mocha, but rather to Frontend from $http.
+        1. The first promise is chained on this._previousPromise and returned by
+           an after responses hook. Usually it is ultimately returned to Mocha.
+        2. The second promise, stored in this._responseChain, holds the
+           responses, chained in order of request. this._responseChain is not
+           returned to Mocha, but rather to Frontend from $http.
 
-        The two promises are related: the first promise triggers one or more
-        requests; for which responses are returned to Frontend through the
-        second promise; then the first promise is returned to Mocha or whatever
-        else comes after the hook.
+      The two promises are related: the first promise triggers one or more
+      requests; for which responses are returned to Frontend through the second
+      promise; then the first promise is returned to Mocha or whatever else
+      comes after the hook.
 
-        It is because the second promise is returned to Frontend and not Mocha
-        that _tryBeforeEachNav(), _tryBeforeAnyResponse(), and
-        _tryBeforeEachResponse() catch any error even though they are called
-        within a promise chain. Those methods catch and store any error so that
-        the after responses hook is able to reject the first promise if
-        something unexpected happens in the second promise.
-        */
-        this._responsesPromise = Promise.resolve();
-        this._errorFromBeforeAnyResponse = null;
-        this._errorFromBeforeEachResponse = null;
-        this._errorFromResponse = null;
-        this._requestWithoutResponse = false;
-        this._responseWithoutRequest = this._responses.length !== 0;
-        this._requestResponseLog = [];
-      })
-      .then(() => {
-        if (this._route == null || this._mount == null) return undefined;
-        // If we are already at the specified route location, we need to
-        // navigate to a different location; otherwise the navigation will be
-        // aborted. Here, we navigate to a location that we also know will not
-        // send a request.
-        return new Promise((resolve, reject) => {
-          store.commit('setUnsavedChanges', false);
-          router.push(
-            `/_initialPromise${Vue.prototype.$uniqueId()}`,
-            () => {
-              store.commit('resetRouterState');
-              resolve();
-            },
-            () => {
-              reject(new Error('navigation aborted'));
-            }
-          );
-        });
-      });
+      It is because the second promise is returned to Frontend and not Mocha
+      that _tryBeforeEachNav(), _tryBeforeAnyResponse(), and
+      _tryBeforeEachResponse() catch any error even though they are called
+      within a promise chain. Those methods catch and store any error so that
+      the after responses hook is able to reject the first promise if something
+      unexpected happens in the second promise.
+      */
+      this._responsesPromise = Promise.resolve();
+      this._errorFromBeforeAnyResponse = null;
+      this._errorFromBeforeEachResponse = null;
+      this._errorFromResponse = null;
+      this._requestWithoutResponse = false;
+      this._responseWithoutRequest = this._responses.length !== 0;
+      this._requestResponseLog = [];
+    });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -668,11 +648,10 @@ class MockHttp {
         return.) */
         () => {
           Vue.nextTick(() => {
-            if (store.state.router.navigations.last.confirmed) {
+            if (store.state.router.lastNavigationWasConfirmed)
               resolve();
-            } else {
+            else
               reject(new Error('last navigation not confirmed'));
-            }
           });
         }
       );
@@ -932,5 +911,12 @@ export const load = (
   }
 
   return mockRoute(location, mountOptions)
+    .modify(series => {
+      const { matched } = router.resolve(location).route;
+      const { meta } = matched[matched.length - 1];
+      return meta.restoreSession && meta.requireAnonymity
+        ? series.restoreSession(false)
+        : series;
+    })
     .respondFor(location, respondForOptions);
 };

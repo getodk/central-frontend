@@ -12,44 +12,35 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="user-edit-password" class="panel panel-simple">
     <div class="panel-heading">
-      <h1 class="panel-title">Change Password</h1>
+      <h1 class="panel-title">{{ $t('title') }}</h1>
     </div>
     <div class="panel-body">
       <form v-if="user != null && user.id === currentUser.id"
         @submit.prevent="submit">
         <input :value="currentUser.email" autocomplete="username">
-        <label class="form-group">
-          <input id="user-edit-password-old-password" v-model="oldPassword"
-            type="password" class="form-control" placeholder="Old password *"
-            required autocomplete="current-password">
-          <span class="form-label">Old password *</span>
-        </label>
-        <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="user-edit-password-new-password" v-model="newPassword"
-            type="password" class="form-control" placeholder="New password *"
-            required autocomplete="new-password">
-          <span class="form-label">New password *</span>
-        </label>
-        <label :class="{ 'has-error': mismatch }" class="form-group">
-          <input id="user-edit-password-confirm" v-model="confirm"
-            type="password" class="form-control"
-            placeholder="New password (confirm) *" required
-            autocomplete="new-password">
-          <span class="form-label">New password (confirm) *</span>
-        </label>
+        <form-group id="user-edit-password-old-password" v-model="oldPassword"
+          type="password" :placeholder="$t('field.oldPassword')" required
+          autocomplete="current-password"/>
+        <form-group id="user-edit-password-new-password" v-model="newPassword"
+          type="password" :placeholder="$t('field.newPassword')" required
+          :has-error="mismatch" autocomplete="new-password"/>
+        <form-group id="user-edit-password-confirm" v-model="confirm"
+          type="password" :placeholder="$t('field.passwordConfirm')" required
+          :has-error="mismatch" autocomplete="new-password"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
-          Change password <spinner :state="awaitingResponse"/>
+          {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>
       <template v-else>
-        Only the owner of the account may directly set their own password.
+        {{ $t('cannotChange') }}
       </template>
     </div>
   </div>
 </template>
 
 <script>
+import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
@@ -58,7 +49,7 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditPassword',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     return {
@@ -82,13 +73,13 @@ export default {
     submit() {
       this.mismatch = this.newPassword !== this.confirm;
       if (this.mismatch) {
-        this.$alert().danger('Please check that your new passwords match.');
+        this.$alert().danger(this.$t('alert.mismatch'));
         return;
       }
       const data = { old: this.oldPassword, new: this.newPassword };
       this.put(apiPaths.password(this.user.id), data)
         .then(() => {
-          this.$alert().success('Success! Your password has been updated.');
+          this.$alert().success(this.$t('alert.success'));
 
           // The Chrome password manager does not realize that the form was
           // submitted. Should we navigate to a different page so that it does?
@@ -104,3 +95,20 @@ export default {
   display: none;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Change Password",
+    "action": {
+      "change": "Change password"
+    },
+    "cannotChange": "Only the owner of the account may directly set their own password.",
+    "alert": {
+      "mismatch": "Please check that your new passwords match.",
+      "success": "Success! Your password has been updated."
+    }
+  }
+}
+</i18n>

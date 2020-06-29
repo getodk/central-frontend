@@ -21,9 +21,9 @@ class Base {
     return this._data;
   }
 
-  // Unique ID for the object that can be used if the object has no other ID
-  // property. Typically used with v-for and v-bind:key. key() does not return a
-  // Backend Key object.
+  // Returns a unique ID for the object. This is particularly useful if the
+  // object has no other ID property. key() is typically used with v-for and
+  // v-bind:key. key() does _not_ return a Backend Key object.
   get key() {
     if (this._key != null) return this._key;
     key += 1;

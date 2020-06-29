@@ -25,9 +25,11 @@ module.exports = {
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true
     }],
+    'max-len': 'off',
     'no-confusing-arrow': ['error', { allowParens: true }],
     'no-console': 'error',
     'no-debugger': 'error',
+    'no-empty': ['error', { allowEmptyCatch: true }],
     'no-multiple-empty-lines': ['error', { max: 3 }],
     'no-nested-ternary': 'off',
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],

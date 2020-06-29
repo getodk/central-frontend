@@ -7,8 +7,6 @@ describe('NotFound', () => {
     mockRoute('/not-found')
       .testNoRequest());
 
-  // This might not be the ideal behavior, but this test documents the current
-  // behavior.
   it('does not restore the session if the user navigates away', () =>
     mockRoute('/not-found')
       .complete()

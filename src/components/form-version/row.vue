@@ -10,55 +10,44 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr>
+  <tr class="form-version-row">
     <td class="form-version-row-version">
       <span :title="version.versionOrBlank()">
         {{ version.versionOrBlank() }}
       </span>
     </td>
     <td>
-      <div><date-time :iso="version.publishedAt"/></div>
-      <div v-if="version.publishedBy != null"
-        class="form-version-row-published-by"
-        :title="version.publishedBy.displayName">
-        <router-link v-if="canRoute(publishedByPath)" :to="publishedByPath">
-          {{ version.publishedBy.displayName }}
-        </router-link>
-        <template v-else>
-          {{ version.publishedBy.displayName }}
-        </template>
-      </div>
+      <time-and-user :iso="version.publishedAt" :user="version.publishedBy"/>
     </td>
     <td><form-version-standard-buttons :version="version"/></td>
   </tr>
 </template>
 
 <script>
-import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import FormVersionStandardButtons from './standard-buttons.vue';
+import TimeAndUser from '../time-and-user.vue';
 import routes from '../../mixins/routes';
 
 export default {
   name: 'FormVersionRow',
-  components: { DateTime, FormVersionStandardButtons },
+  components: { FormVersionStandardButtons, TimeAndUser },
   mixins: [routes()],
   props: {
     version: {
       type: Form,
       required: true
     }
-  },
-  computed: {
-    publishedByPath() {
-      return this.userPath(this.version.publishedBy.id);
-    }
   }
 };
 </script>
 
 <style lang="scss">
-.form-version-row-version, .form-version-row-published-by {
+.table tbody .form-version-row td {
+  vertical-align: middle;
+}
+
+.form-version-row-version {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

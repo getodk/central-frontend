@@ -10,32 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" backdrop hideable @hide="$emit('hide')"
+  <modal :state="state" hideable backdrop @hide="$emit('hide')"
     @shown="$refs.passphrase.focus()">
-    <template #title>Decrypt and Download</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">
-        In order to download this data, you will need to provide your
-        passphrase. Your passphrase will be used only to decrypt your data for
-        download, after which I will forget it again.
-      </p>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input ref="passphrase" v-model="passphrase" type="password"
-            class="form-control" placeholder="Passphrase *" required
-            autocomplete="off">
-          <span class="form-label">Passphrase *</span>
-        </label>
+        <form-group ref="passphrase" v-model="passphrase" type="password"
+          :placeholder="$t('field.passphrase')" required autocomplete="off"/>
         <p v-if="managedKey != null && managedKey.hint != null"
           class="modal-introduction">
-          Hint: {{ managedKey.hint }}
+          {{ $t('hint', managedKey) }}
         </p>
         <div class="modal-actions">
           <button type="submit" class="btn btn-primary">
-            Download
+            {{ $t('action.download') }}
           </button>
           <button type="button" class="btn btn-link" @click="$emit('hide')">
-            Cancel
+            {{ $t('action.cancel') }}
           </button>
         </div>
       </form>
@@ -47,12 +39,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDecrypt',
-  components: { Modal },
+  components: { FormGroup, Modal },
   props: {
     state: {
       type: Boolean,
@@ -153,10 +147,9 @@ export default {
             } catch (e) {
               this.$logger.error('cannot parse Problem');
             }
-            if (problem != null) {
+            if (isProblem(problem)) {
               this.$logger.error(problem);
-              if (problem.message != null)
-                this.$alert().danger(problem.message);
+              this.$alert().danger(problem.message);
             }
             this.problemChecks = 0;
             this.timeoutId = null;
@@ -191,7 +184,7 @@ export default {
       // the result of the request if a Problem is returned: if a Problem is
       // returned, the iframe will change pages, but if the download is
       // successful, the iframe seems not to change.
-      this.$alert().info('Your data download should begin soon. If you have been waiting and it has not started, please try again.');
+      this.$alert().info(this.$t('alert.submit'));
 
       this.problemChecks = 300;
       if (this.timeoutId == null) this.scheduleProblemCheck();
@@ -199,3 +192,21 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Decrypt and Download",
+    "introduction": [
+      "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+    ],
+    // This text is shown if there is a passphrase hint. {hint} is the
+    // passphrase hint.
+    "hint": "Hint: {hint}",
+    "alert": {
+      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+    }
+  }
+}
+</i18n>

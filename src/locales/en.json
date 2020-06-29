@@ -1,0 +1,195 @@
+// action: This is the text for an action, for example, the text of a button.
+// field: This is the text of a form field.
+// header: This is the text of a table column header.
+
+// tab: This is the text of a navigation tab.
+
+{
+  // This is the name of a user Role.
+  "role": {
+    // This is shown when a user does not have a Role.
+    "none": "None",
+    "admin": "Administrator",
+    "manager": "Project Manager",
+    "viewer": "Project Viewer"
+  },
+  "formState": {
+    // Form States control the lifecycle state of each Form. "Open" is one Form
+    // State.
+    "open": "Open",
+    // Form States control the lifecycle state of each Form. "Closing" is one
+    // Form State.
+    "closing": "Closing",
+    // Form States control the lifecycle state of each Form. "Closed" is one
+    // Form State.
+    "closed": "Closed"
+  },
+  "audit": {
+    // This is a category of actions performed on the server. It is shown in a
+    // dropdown when filtering the log of actions by type.
+    "category": {
+      "nonverbose": "(All Actions)",
+      "user": "Web User Actions",
+      "project": "Project Actions",
+      "form": "Form Actions"
+    },
+    "action": {
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action.
+      "default": {
+        "create": "Create",
+        "update": "Update Details",
+        "delete": "Delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Web User.
+      "assignment": {
+        "create": "Assign Role",
+        "delete": "Revoke Role"
+      },
+      // This is shown in the log of actions performed on the server.
+      "backup": "Backup",
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Form.
+      "form": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "update_draft_set": "Create or Update Draft",
+        "update_publish": "Publish Draft",
+        "update_draft_delete": "Abandon Draft",
+        "attachment_update": "Update Attachments",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Project.
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Web User.
+      "user": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "Retire"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "create": "Create",
+    "done": "Done",
+    "download": "Download",
+    "editProfile": "Edit profile",
+    "logIn": "Log in",
+    "looksGood": "Looks good, proceed",
+    "neverMind": "Never mind, cancel",
+    "next": "Next",
+    "noCancel": "No, cancel",
+    "ok": "Okay",
+    "proceed": "Proceed",
+    "resetPassword": "Reset password",
+    "save": "Save",
+    "yesProceed": "Yes, proceed"
+  },
+  "field": {
+    "dateRange": "Date range",
+    "displayName": "Display name",
+    "email": "Email address",
+    "name": "Name",
+    "newPassword": "New password",
+    "oldPassword": "Old password",
+    "passphrase": "Passphrase",
+    "password": "Password",
+    "passwordConfirm": "New password (confirm)",
+    "type": "Type"
+  },
+  "header": {
+    "actions": "Actions",
+    // This is the text of a table column header. The column shows who created
+    // the resource and possibly also when they did so.
+    "created": "Created",
+    "createdBy": "Created by",
+    "displayName": "Display Name",
+    "email": "Email Address",
+    "lastSubmission": "Latest Submission",
+    "name": "Name",
+    "type": "Type"
+  },
+  "plural": {
+    "appUser": "App User | App Users",
+    "form": "Form | Forms",
+    "project": "Project | Projects",
+    "submission": "Submission | Submissions",
+    "webUser": "Web User | Web Users"
+  },
+  // This text appears on its own and is not part of a longer sentence.
+  "count": {
+    "appUser": "{count} App User | {count} App Users",
+    "form": "{count} Form | {count} Forms",
+    "submission": "{count} Submission | {count} Submissions"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "For more information, {clickHere}.",
+      "clickHere": "click here"
+    },
+    "helpArticle": {
+      "full": "For more information, please see {helpArticle}.",
+      "helpArticle": "this help article"
+    },
+    // This is a link to more information.
+    "learnMore": "Learn more."
+  },
+  "common": {
+    // Here we ask the user to confirm that they wish to complete an action that
+    // they have initiated.
+    "areYouSure": "Are you sure you wish to proceed?",
+    // This is a title shown above a section of the page.
+    "currentDraft": "Your Current Draft",
+    // This is a title shown above a section of the page.
+    "dangerZone": "Danger Zone",
+    "form": "Form",
+    // This is shown if a search returned no results.
+    "noResults": "No results",
+    "project": "Project",
+    // This is a title shown above a section of the page.
+    "rightNow": "Right Now",
+    "success": "Success!",
+    "user": "User",
+    "webUser": "Web User"
+  },
+  "presenter": {
+    "Form": {
+      // This is shown for a Form with a blank version name.
+      "blankVersion": "(blank)"
+    },
+    "Project": {
+      // {name} is the name of a Project. We append "(archived)" to the name if
+      // the Project is archived.
+      "nameWithArchived": "{name} (archived)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      // This will be part of a longer string that shows the date and time, for
+      // example: "today 01:23". The string may appear on its own or be part of
+      // a sentence.
+      "today": "today",
+      // This will be part of a longer string that shows the date and time, for
+      // example: "yesterday 01:23". The string may appear on its own or be part
+      // of a sentence.
+      "yesterday": "yesterday"
+    },
+    "request": {
+      "noRequest": "Something went wrong: there was no request.",
+      "noResponse": "Something went wrong: there was no response to your request.",
+      "errorNotProblem": "Something went wrong: the server returned an invalid error."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Are you sure you want to leave this page? Your changes might not be saved."
+  }
+}

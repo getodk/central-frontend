@@ -1,5 +1,7 @@
+import AuditRow from '../../../src/components/audit/row.vue';
+import DateTime from '../../../src/components/date-time.vue';
 import testData from '../../data';
-import { ago, formatDate } from '../../../src/util/date-time';
+import { ago } from '../../../src/util/date-time';
 import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
@@ -19,11 +21,10 @@ const assertTriple = (type, initiator, target) => (app) => {
 
   td[2].hasClass('initiator').should.be.true();
   if (initiator != null) {
-    td[2].text().trim().should.equal(initiator.text);
-
     const a = td[2].first('a');
-    a.getAttribute('href').should.equal(`#${initiator.href}`);
+    a.text().trim().should.equal(initiator.text);
     a.getAttribute('title').should.equal(initiator.text);
+    a.getAttribute('href').should.equal(`#${initiator.href}`);
   } else {
     td[2].text().trim().should.equal('');
     td[2].find('a').length.should.equal(0);
@@ -46,20 +47,18 @@ describe('AuditTable', () => {
     mockLogin({ displayName: 'User 1' });
   });
 
-  it('renders loggedAt correctly', () =>
-    mockRoute('/system/audits')
-      .respondWithData(() => testData.extendedAudits
-        .createPast(1, {
-          actor: testData.extendedUsers.first(),
-          action: 'user.update',
-          actee: testData.toActor(testData.extendedUsers.first())
-        })
-        .sorted())
-      .afterResponse(app => {
-        const text = app.first('.audit-row td').text().trim();
-        const { loggedAt } = testData.extendedAudits.last();
-        text.should.equal(formatDate(loggedAt));
-      }));
+  it('renders loggedAt correctly', () => {
+    const { loggedAt } = testData.extendedAudits
+      .createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'user.update',
+        actee: testData.toActor(testData.extendedUsers.first())
+      })
+      .last();
+    return load('/system/audits').then(app => {
+      app.first(AuditRow).first(DateTime).getProp('iso').should.equal(loggedAt);
+    });
+  });
 
   describe('user target', () => {
     /*
@@ -104,22 +103,20 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () =>
-        mockRoute('/system/audits')
-          .respondWithData(() => testData.extendedAudits
-            .createPast(1, {
-              actor: testData.extendedUsers.first(),
-              action,
-              actee: testData.standardProjects
-                .createPast(1, { name: 'My Project' })
-                .last()
-            })
-            .sorted())
-          .afterResponse(assertTriple(
-            type,
-            { text: 'User 1', href: '/users/1/edit' },
-            { text: 'My Project', href: '/projects/1' }
-          )));
+      it(`renders a ${action} audit correctly`, () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.standardProjects
+            .createPast(1, { name: 'My Project' })
+            .last()
+        });
+        return load('/system/audits').then(assertTriple(
+          type,
+          { text: 'User 1', href: '/users/1/edit' },
+          { text: 'My Project', href: '/projects/1' }
+        ));
+      });
     }
   });
 
@@ -200,22 +197,50 @@ describe('AuditTable', () => {
         .sorted())
       .afterResponses(assertTriple(['Backup'], null, null)));
 
-  it('renders an audit with an unknown action correctly', () =>
-    mockRoute('/system/audits')
-      .respondWithData(() => testData.extendedAudits
-        .createPast(1, {
-          actor: testData.extendedUsers.first(),
-          action: 'unknown',
-          actee: testData.toActor(testData.extendedUsers
-            .createPast(1, { displayName: 'User 2' })
-            .last())
-        })
-        .sorted())
-      .afterResponse(assertTriple(
-        ['unknown'],
-        { text: 'User 1', href: '/users/1/edit' },
-        null
-      )));
+  it('renders an audit with an unknown action correctly', () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'unknown',
+      actee: testData.toActor(testData.extendedUsers
+        .createPast(1, { displayName: 'User 2' })
+        .last())
+    });
+    return load('/system/audits').then(assertTriple(
+      ['unknown'],
+      { text: 'User 1', href: '/users/1/edit' },
+      null
+    ));
+  });
+
+  it('renders an audit with an unknown category correctly', () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'something.unknown',
+      actee: testData.toActor(testData.extendedUsers
+        .createPast(1, { displayName: 'User 2' })
+        .last())
+    });
+    return load('/system/audits').then(assertTriple(
+      ['something.unknown'],
+      { text: 'User 1', href: '/users/1/edit' },
+      null
+    ));
+  });
+
+  it('renders an audit with an unknown action for its category', () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'project.unknown',
+      actee: testData.standardProjects
+        .createPast(1, { name: 'My Project' })
+        .last()
+    });
+    return load('/system/audits').then(assertTriple(
+      ['project.unknown'],
+      { text: 'User 1', href: '/users/1/edit' },
+      { text: 'My Project', href: '/projects/1' }
+    ));
+  });
 
   it('renders details correctly', () =>
     mockRoute('/system/audits')

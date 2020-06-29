@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Base from './base';
+import i18n from '../i18n';
 
 // This presenter class is used for forms and form versions (primary, draft, and
 // archived).
@@ -41,7 +42,9 @@ export default class Form extends Base(props) {
 
   versionOrBlank() {
     if (this.version == null) return null;
-    return this.version !== '' ? this.version : '(blank)';
+    return this.version !== ''
+      ? this.version
+      : i18n.t('presenter.Form.blankVersion');
   }
 
   updatedOrCreatedAt() {

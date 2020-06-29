@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <form-overview-right-now v-if="form != null"/>
         <page-section condensed>
           <template #heading>
-            <span>Checklist</span>
+            <span>{{ $t('checklist') }}</span>
           </template>
           <template #body>
             <form-checklist/>
@@ -27,12 +27,16 @@ except according to the terms contained in the LICENSE file.
       <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()" condensed>
           <template #heading>
-            <span>Your Current Draft</span>
+            <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
             <form-version-summary-item :version="formDraft.get()">
               <template #body>
-                <p><strong>Draft version</strong> of this Form.</p>
+                <i18n tag="p" path="draft.any.versionCaption.full">
+                  <template #draftVersion>
+                    <strong>{{ $t('draft.any.versionCaption.draftVersion') }}</strong>
+                  </template>
+                </i18n>
               </template>
             </form-version-summary-item>
             <form-draft-checklist/>
@@ -40,14 +44,10 @@ except according to the terms contained in the LICENSE file.
         </page-section>
         <page-section v-else condensed>
           <template #heading>
-            <span>No Current Draft</span>
+            <span>{{ $t('draft.none.title') }}</span>
           </template>
           <template #body>
-            <p>
-              There is not currently a Draft version of this Form. If you want
-              to make changes to the Form or its Media Files, start by creating
-              a Draft using the button above.
-            </p>
+            <p>{{ $t('draft.none.body') }}</p>
           </template>
         </page-section>
       </div>
@@ -132,3 +132,25 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "checklist": "Checklist",
+    "draft": {
+      "none": {
+        // This is a title shown above a section of the page.
+        "title": "No Current Draft",
+        "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
+      },
+      "any": {
+        "versionCaption": {
+          "full": "{draftVersion} of this Form.",
+          "draftVersion": "Draft version"
+        }
+      }
+    }
+  }
+}
+</i18n>

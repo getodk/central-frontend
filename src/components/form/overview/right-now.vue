@@ -12,26 +12,29 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section id="form-overview-right-now" condensed>
     <template #heading>
-      <span>Right Now</span>
+      <span>{{ $t('common.rightNow') }}</span>
     </template>
     <template #body>
       <form-version-summary-item :version="form">
         <template #body>
-          <p><strong>Published version</strong> of this Form.</p>
+          <i18n tag="p" path="version.full">
+            <template #publishedVersion>
+              <strong>{{ $t('version.publishedVersion') }}</strong>
+            </template>
+          </i18n>
         </template>
       </form-version-summary-item>
       <summary-item :route-to="formPath('submissions')" icon="inbox">
         <template #heading>
-          {{ form.submissions.toLocaleString() }}
+          {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <template v-if="form.submissions === 1">
-            <strong>Submission</strong> has been saved for this Form.
-          </template>
-          <template v-else>
-            <strong>Submissions</strong> have been saved for this Form.
-          </template>
+          <i18n tag="p" :path="$tcPath('submissions.full', form.submissions)">
+            <template #submissions>
+              <strong>{{ $tc('submissions.submissions', form.submissions) }}</strong>
+            </template>
+          </i18n>
         </template>
       </summary-item>
     </template>
@@ -54,3 +57,22 @@ export default {
   computed: requestData(['form'])
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "version": {
+      "full": "{publishedVersion} of this Form.",
+      "publishedVersion": "Published version"
+    },
+    "submissions": {
+      // The count of Submissions is shown separately above this text.
+      "full": [
+        "{submissions} has been saved for this Form.",
+        "{submissions} have been saved for this Form."
+      ],
+      "submissions": "Submission | Submissions"
+    }
+  }
+}
+</i18n>

@@ -1,12 +1,14 @@
+// Importing src/setup.js first, because the import statements below may import
+// some of the same modules as src/setup.js, and in some cases, the order in
+// which src/setup.js imports modules matters.
+import '../src/setup';
+
 import Vue from 'vue';
 import { mount } from 'avoriaz';
 import 'should';
 
-// Importing src/setup.js first, because other import statements below may
-// import some of the same modules as src/setup.js, and in some cases, the order
-// in which src/setup.js imports modules matters.
-import '../src/setup';
 import Blank from '../src/components/blank.vue';
+import i18n from '../src/i18n';
 import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
@@ -42,6 +44,22 @@ Vue.prototype.$logger = { log: noop, error: noop };
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// DESTROY COMPONENT
+
+afterEach(() => {
+  destroyMarkedComponent();
+
+  const afterScript = document.querySelector('body > script:last-of-type + *');
+  if (afterScript != null) {
+    // eslint-disable-next-line no-console
+    console.log(`Unexpected element: ${afterScript.outerHTML}`);
+    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+  }
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // ROUTER
 
 /*
@@ -73,7 +91,36 @@ destroy the component. This approach is admittedly fragile, relying on
 undocumented VueRouter behavior, and it may need to change with updates to the
 vue-router package.
 */
+store.commit('setSendInitialRequests', false);
 mount(Blank, { router });
+store.commit('setSendInitialRequests', true);
+
+let lastRoute = null;
+afterEach(() => {
+  if (router.currentRoute === lastRoute) {
+    store.commit('resetRouterState');
+    return undefined;
+  }
+
+  return new Promise((resolve, reject) => {
+    store.commit('setUnsavedChanges', false);
+    const random = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    // If the next test that uses the router tries to navigate to the current
+    // location, the navigation will be aborted. To prevent that, we navigate to
+    // a unique location before the next test.
+    router.push(
+      `/not-found/${random}`,
+      () => {
+        store.commit('resetRouterState');
+        lastRoute = router.currentRoute;
+        resolve();
+      },
+      () => {
+        reject(new Error('navigation aborted'));
+      }
+    );
+  });
+});
 
 initNavGuards();
 afterEach(clearNavGuards);
@@ -81,32 +128,30 @@ afterEach(clearNavGuards);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DESTROY COMPONENT
+// VUEX
 
 afterEach(() => {
-  destroyMarkedComponent();
-
-  const afterScript = $('body > script:last-of-type + *');
-  if (afterScript.length > 0) {
-    // eslint-disable-next-line no-console
-    console.log(`Unexpected element: ${afterScript[0].outerHTML}`);
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
-  }
+  store.commit('resetAlert');
+  store.commit('resetRequests');
+  store.commit('clearData');
 });
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// VUEX
+// VUE I18N
 
-// Reset the store.
 afterEach(() => {
-  store.commit('resetAlert');
-  store.commit('resetRequests');
-  store.commit('clearData');
+  if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
+});
 
-  // We do not reset the router state, because mockHttp() does that. (Though
-  // perhaps it would be better to move that code here?)
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LOCAL STORAGE
+
+afterEach(() => {
+  localStorage.clear();
 });
 
 
@@ -114,81 +159,7 @@ afterEach(() => {
 ////////////////////////////////////////////////////////////////////////////////
 // TEST DATA
 
-// Seed the test data.
-beforeEach(() => {
-  // Only creating roles that we currently use in Frontend.
-  testData.standardRoles
-    .createPast(1, {
-      name: 'Administrator',
-      system: 'admin',
-      // This is not the full list of verbs used in Backend, but it should be
-      // the full list used in Frontend.
-      verbs: [
-        'assignment.create',
-        'assignment.list',
-        'assignment.delete',
-        'audit.read',
-        'backup.create',
-        'backup.terminate',
-        'config.read',
-        'field_key.create',
-        'field_key.list',
-        'form.create',
-        'form.list',
-        'form.read',
-        'form.update',
-        'form.delete',
-        'project.create',
-        'project.update',
-        'submission.list',
-        'submission.read',
-        'user.create',
-        'user.list',
-        'user.read',
-        'user.update',
-        'user.delete',
-        'user.password.invalidate'
-      ]
-    })
-    .createPast(1, {
-      name: 'App User',
-      system: 'app-user',
-      verbs: [
-        'form.read',
-        'submission.create'
-      ]
-    })
-    .createPast(1, {
-      name: 'Project Manager',
-      system: 'manager',
-      verbs: [
-        'assignment.create',
-        'assignment.list',
-        'assignment.delete',
-        'field_key.create',
-        'field_key.list',
-        'form.create',
-        'form.list',
-        'form.read',
-        'form.update',
-        'form.delete',
-        'project.update',
-        'submission.list',
-        'submission.read'
-      ]
-    })
-    .createPast(1, {
-      name: 'Project Viewer',
-      system: 'viewer',
-      verbs: [
-        'form.list',
-        'form.read',
-        'submission.list',
-        'submission.read'
-      ]
-    });
-});
-
+beforeEach(testData.seed);
 afterEach(testData.reset);
 
 

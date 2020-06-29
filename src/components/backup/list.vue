@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         @terminate="showModal('terminate')"/>
       <page-section v-if="audits.length !== 0">
         <template #heading>
-          <span>Latest Backups</span>
+          <span>{{ $t('auditsTitle') }}</span>
         </template>
         <template #body>
           <audit-table :audits="audits"/>
@@ -101,11 +101,11 @@ export default {
     afterCreate() {
       this.fetchData();
       this.hideModal('newBackup');
-      this.$alert().success('Success! Automatic backups are now configured.');
+      this.$alert().success(this.$t('alert.create'));
     },
     afterTerminate() {
       this.hideModal('terminate');
-      this.$alert().success('Your automatic backups were terminated. I recommend you set up a new one as soon as possible.');
+      this.$alert().success(this.$t('alert.terminate'));
       this.$store.commit('setData', {
         key: 'backupsConfig',
         value: Option.none()
@@ -114,3 +114,16 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "auditsTitle": "Latest Backups",
+    "alert": {
+      "create": "Success! Automatic backups are now configured.",
+      "terminate": "Your automatic backups were terminated. It is recommended that you set up a new one as soon as possible."
+    }
+  }
+}
+</i18n>

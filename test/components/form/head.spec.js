@@ -123,7 +123,7 @@ describe('FormHead', () => {
         tabs.length.should.equal(4);
         for (const tab of tabs) {
           tab.hasClass('disabled').should.be.false();
-          tab.getAttribute('title').should.equal('');
+          tab.hasAttribute('title').should.be.false();
         }
       });
     });

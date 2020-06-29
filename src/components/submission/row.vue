@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <!-- The frozen columns of the table -->
   <tr v-if="fieldColumns == null">
-    <td class="row-number">{{ rowNumber }}</td>
+    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="showsSubmitter" class="submitter-name"
       :title="submission.__system.submitterName">
       {{ submission.__system.submitterName }}
     </td>
-    <td>{{ submissionDate }}</td>
+    <td><date-time :iso="submission.__system.submissionDate"/></td>
   </tr>
   <!-- The rest of the table -->
   <tr v-else
@@ -29,8 +29,7 @@ except according to the terms contained in the LICENSE file.
     <template v-else-if="fieldColumns.length !== 0">
       <td class="encrypted-data" :colspan="fieldColumns.length">
         <span class="icon-lock"></span>
-        <span class="encryption-message">Data preview is not available due to
-          encryption.</span>
+        <span class="encryption-message">{{ $t('encryptionMessage') }}</span>
         <span class="encryption-overlay"></span>
       </td>
     </template>
@@ -39,12 +38,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import SubmissionCell from './cell.vue';
-import { formatDate } from '../../util/date-time';
 
 export default {
   name: 'SubmissionRow',
-  components: { SubmissionCell },
+  components: { DateTime, SubmissionCell },
   props: {
     baseUrl: {
       type: String,
@@ -62,11 +61,6 @@ export default {
     showsSubmitter: {
       type: Boolean,
       default: false
-    }
-  },
-  computed: {
-    submissionDate() {
-      return formatDate(this.submission.__system.submissionDate);
     }
   }
 };
@@ -136,3 +130,11 @@ $icon-lock-margin-right: 12px;
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "encryptionMessage": "Data preview is not available due to encryption."
+  }
+}
+</i18n>

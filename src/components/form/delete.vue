@@ -12,23 +12,24 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="form-delete" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
-    <template #title>Delete Form</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <p>
-          Are you sure you want to delete the Form
-          <strong>{{ form.nameOrId() }}</strong> and all of its Submissions?
-        </p>
-        <p>This action cannot be undone.</p>
+        <i18n tag="p" path="introduction[0]">
+          <template #name>
+            <strong>{{ form.nameOrId() }}</strong>
+          </template>
+        </i18n>
+        <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
-        <button :disabled="awaitingResponse" type="button"
-          class="btn btn-danger" @click="del">
-          Yes, proceed <spinner :state="awaitingResponse"/>
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="del">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
-          No, cancel
+          {{ $t('action.noCancel') }}
         </button>
       </div>
     </template>
@@ -70,3 +71,16 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Delete Form",
+    "introduction": [
+      "Are you sure you want to delete the Form {name} and all of its Submissions?",
+      "This action cannot be undone."
+    ]
+  }
+}
+</i18n>

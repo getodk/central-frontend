@@ -12,23 +12,23 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section>
     <template #heading>
-      <span>About Projects</span>
+      <span>{{ $t('title') }}</span>
     </template>
     <template #body>
+      <p>{{ $t('body[0]') }}</p>
+      <p>{{ $t('body[1]') }}</p>
       <p>
-        Any Forms you create in this Project will only be visible on data
-        collection devices to App Users who are a part of this Project.
-      </p>
-      <p>
-        Future releases of ODK Central will add more Project-centric features,
-        including improvements to Form states and workflow, device state
-        updates, Collect settings management, and more granular permissioning.
-      </p>
-      <p>
-        For more information, please see
-        <doc-link to="central-projects/">this help article</doc-link>, and if
-        you have any feedback please visit
-        <a href="https://forum.getodk.org/t/-/19677" target="_blank">this forum thread</a>.
+        <i18n :tag="false" path="moreInfo.helpArticle.full">
+          <template #helpArticle>
+            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="body[2].full">
+          <template #forumThread>
+            <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[2].forumThread') }}</a>
+          </template>
+        </i18n>
       </p>
     </template>
   </page-section>
@@ -43,3 +43,20 @@ export default {
   components: { DocLink, PageSection }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "About Projects",
+    "body": [
+      "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project.",
+      "Future releases of ODK Central will add more Project-centric features, including improvements to Form states and workflow, device state updates, Collect settings management, and more granular permissioning.",
+      {
+        "full": "If you have any feedback, please visit {forumThread}.",
+        "forumThread": "this forum thread"
+      }
+    ]
+  }
+}
+</i18n>

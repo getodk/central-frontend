@@ -11,29 +11,17 @@ except according to the terms contained in the LICENSE file.
 */
 export default {
   state: {
+    // We define this property because we need to access the current route
+    // elsewhere in the store. An alternative might be to import the router and
+    // use router.currentRoute. However, that is not possible, because the
+    // router itself imports the store: we would have a circular dependency.
+    // Instead, we have the router import the store, then save the current route
+    // here as well.
     currentRoute: null,
-    navigations: {
-      first: {
-        triggered: false,
-        /* Suppose that during a navigation, a navigation guard uses
-        next(location) to redirect the user to a different location, and that
-        that redirect navigation is confirmed. According to the standard Vue
-        router terminology, the first navigation is considered aborted, not
-        confirmed, even though it ultimately resulted in a confirmed navigation.
-        For the `confirmed` property, we mean "confirmed" in a looser sense: if
-        a navigation ultimately resulted in a confirmed navigation, the
-        `confirmed` property is `true` even if a navigation was aborted along
-        the way. */
-        confirmed: false
-      },
-      last: {
-        triggered: false,
-        // `false` could mean that no navigation has ever been triggered, that the
-        // latest navigation is in progress, or that the latest navigation was
-        // ultimately aborted.
-        confirmed: false
-      }
-    },
+    anyNavigationConfirmed: false,
+    // Used for testing.
+    lastNavigationWasConfirmed: false,
+    sendInitialRequests: true,
     unsavedChanges: false
   },
   mutations: {
@@ -41,24 +29,25 @@ export default {
     setCurrentRoute(state, route) {
       state.currentRoute = route;
     },
-    triggerNavigation({ navigations }, key) {
-      navigations[key].triggered = true;
-      navigations[key].confirmed = false;
+    triggerNavigation(state) {
+      state.lastNavigationWasConfirmed = false;
     },
-    confirmNavigation({ navigations }, key) {
-      navigations[key].confirmed = true;
+    confirmNavigation(state) {
+      state.anyNavigationConfirmed = true;
+      state.lastNavigationWasConfirmed = true;
     },
-    resetRouterState(state) {
-      state.currentRoute = null;
-      const { navigations } = state;
-      navigations.first.triggered = false;
-      navigations.first.confirmed = false;
-      navigations.last.triggered = false;
-      navigations.last.confirmed = false;
-      state.unsavedChanges = false;
+    setSendInitialRequests(state, sendInitialRequests) {
+      state.sendInitialRequests = sendInitialRequests;
     },
     setUnsavedChanges(state, unsavedChanges) {
       state.unsavedChanges = unsavedChanges;
+    },
+    resetRouterState(state) {
+      state.currentRoute = null;
+      state.sendInitialRequests = true;
+      state.anyNavigationConfirmed = false;
+      state.lastNavigationWasConfirmed = false;
+      state.unsavedChanges = false;
     }
     /* eslint-enable no-param-reassign */
   }

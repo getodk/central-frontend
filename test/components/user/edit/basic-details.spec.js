@@ -1,7 +1,7 @@
 import testData from '../../../data';
 import { fillForm, submitForm } from '../../../util/event';
+import { load, mockRoute } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
-import { mockRoute } from '../../../util/http';
 
 describe('UserEditBasicDetails', () => {
   beforeEach(() => {
@@ -59,8 +59,7 @@ describe('UserEditBasicDetails', () => {
       }));
 
   it("updates the user's display name after a successful submit", () =>
-    mockRoute('/account/edit')
-      .respondWithData(() => testData.standardUsers.last())
+    load('/account/edit')
       .complete()
       .request(app => submitForm(app, '#user-edit-basic-details form', [
         ['input[type="text"]', 'New Name']
@@ -70,7 +69,7 @@ describe('UserEditBasicDetails', () => {
         return testData.standardUsers.last();
       })
       .afterResponse(app => {
-        app.first('.dropdown-toggle').text().trim().should.equal('New Name');
+        app.first('#navbar-actions > a').text().trim().should.equal('New Name');
         app.first('#page-head-title').text().trim().should.equal('New Name');
       }));
 });

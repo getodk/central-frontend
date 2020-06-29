@@ -15,35 +15,28 @@ component that each user is assigned at most one role and that the only roles
 are Project Manager and Project Viewer. -->
 <template>
   <div id="project-user-list">
-    <p id="project-user-list-heading">
-      The assigned Project Managers for this Project will be able to perform any
-      administrative or auditing task related to this Project. Sitewide
-      Administrators are automatically considered Managers of every Project.
-      Project Viewers can access and download all Form data in this Project, but
-      cannot make any changes to settings or data. To learn more about Projects,
-      Managers and Viewers, please see
-      <doc-link to="central-projects/#project-managers">this article</doc-link>.
-    </p>
+    <i18n id="project-user-list-heading" tag="p" path="heading[0].full">
+      <template #article>
+        <doc-link to="central-projects/#project-managers">{{ $t('heading[0].article') }}</doc-link>
+      </template>
+    </i18n>
 
     <form id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
       <button v-show="q != '' && !searchDisabled" type="button" class="close"
-        aria-label="Clear search" @click="clearSearch">
+        :aria-label="$t('action.clearSearch')" @click="clearSearch">
         <span aria-hidden="true">&times;</span>
       </button>
-      <label class="form-group">
-        <input class="form-control" :value="q" :placeholder="searchLabel"
-          :disabled="searchDisabled" @change="changeQ($event.target.value)">
-        <span class="form-label">{{ searchLabel }}</span>
-      </label>
+      <form-group :value="q" :placeholder="searchLabel"
+        :disabled="searchDisabled" autocomplete="off" @change="changeQ"/>
     </form>
 
     <table class="table">
       <thead>
         <tr>
-          <th>User</th>
-          <th>Project Role</th>
+          <th>{{ $t('header.user') }}</th>
+          <th>{{ $t('header.projectRole') }}</th>
         </tr>
       </thead>
       <tbody v-if="roles != null && tableAssignments != null">
@@ -62,6 +55,7 @@ are Project Manager and Project Viewer. -->
 
 <script>
 import DocLink from '../../doc-link.vue';
+import FormGroup from '../../form-group.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
 import validateData from '../../../mixins/validate-data';
@@ -71,7 +65,7 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow },
+  components: { DocLink, FormGroup, Loading, ProjectUserRow },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -115,8 +109,8 @@ export default {
     },
     searchLabel() {
       return this.currentUser.can('user.list')
-        ? 'Search for a user…'
-        : 'Enter exact user email address…';
+        ? this.$t('field.q.canList')
+        : this.$t('field.q.cannotList');
     },
     // The assignments to show in the table
     tableAssignments() {
@@ -126,11 +120,9 @@ export default {
     },
     emptyMessage() {
       if (!this.dataExists || this.$store.getters.loading('users')) return '';
-      if (this.searchAssignments != null)
-        return this.searchAssignments.length === 0 ? 'No results' : '';
-      return this.projectAssignments.length === 0
-        ? 'There are no users assigned to this Project yet. To add one, search for a user above.'
-        : '';
+      return this.searchAssignments != null
+        ? (this.searchAssignments.length === 0 ? this.$t('common.noResults') : '')
+        : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
     }
   },
   watch: {
@@ -224,11 +216,14 @@ export default {
 
       // Show the alert.
       if (deleteWithoutPost) {
-        this.$alert().danger(`Something went wrong. "${actor.displayName}" has been removed from the Project.`);
+        this.$alert().danger(this.$t('alert.unassignWithoutReassign', actor));
+      } else if (role != null) {
+        this.$alert().success(this.$t('alert.assignRole', {
+          displayName: actor.displayName,
+          roleName: this.$t(`role.${role.system}`)
+        }));
       } else {
-        this.$alert().success(role != null
-          ? `Success! "${actor.displayName}" has been given a Role of "${role.name}" on this Project.`
-          : `Success! "${actor.displayName}" has been removed from this Project.`);
+        this.$alert().success(this.$t('alert.unassignRole', actor));
       }
     }
   }
@@ -272,3 +267,35 @@ export default {
   table-layout: fixed;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "heading": [
+      {
+        "full": "The assigned Project Managers for this Project will be able to perform any administrative or auditing task related to this Project. Sitewide Administrators are automatically considered Managers of every Project. Project Viewers can access and download all Form data in this Project, but cannot make any changes to settings or data. To learn more about Projects, Managers and Viewers, please see {article}.",
+        "article": "this article"
+      }
+    ],
+    "action": {
+      "clearSearch": "Clear search"
+    },
+    "field": {
+      "q": {
+        "canList": "Search for a user…",
+        "cannotList": "Enter exact user email address…"
+      }
+    },
+    "header": {
+      "user": "User",
+      "projectRole": "Project Role"
+    },
+    "emptyTable": "There are no users assigned to this Project yet. To add one, search for a user above.",
+    "alert": {
+      "unassignWithoutReassign": "Something went wrong. “{displayName}” has been removed from the Project.",
+      "assignRole": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project.",
+      "unassignRole": "Success! “{displayName}” has been removed from this Project."
+    }
+  }
+}
+</i18n>

@@ -1,14 +1,7 @@
 import should from 'should';
 
 import Alert from '../src/components/alert.vue';
-
-// Returns the element for an object that may be an avoriaz wrapper.
-const unwrapElement = (elementOrWrapper) => {
-  if (elementOrWrapper.isVueComponent === true) return elementOrWrapper.vm.$el;
-  return elementOrWrapper.element != null
-    ? elementOrWrapper.element
-    : elementOrWrapper;
-};
+import { unwrapElement } from './util/util';
 
 should.Assertion.add('visible', function visible() {
   this.params = { operator: 'to be visible' };

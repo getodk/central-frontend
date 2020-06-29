@@ -12,14 +12,15 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="user-home">
     <page-head>
-      <template slot="title">User Settings</template>
-      <template slot="tabs">
+      <template #title>{{ $t('title') }}</template>
+      <template #tabs>
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Web Users</router-link>
+          <router-link :to="tabPath('')">{{ $t('tab.users') }}</router-link>
         </li>
         <li class="disabled" role="presentation">
           <a href="#">
-            Role Settings <span class="coming-soon">(coming soon)</span>
+            {{ $t('tab.roles') }}
+            <span class="coming-soon">{{ $t('comingSoon') }}</span>
           </a>
         </li>
       </template>
@@ -55,3 +56,19 @@ export default {
   font-size: 10px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown as the title at the top of the page.
+    "title": "User Settings",
+    "tab": {
+      "users": "Web Users",
+      "roles": "Role Settings"
+    },
+    // This is shown within a disabled navigation tab to indicate that the
+    // functionality is not yet implemented, but will be soon.
+    "comingSoon": "(coming soon)"
+  }
+}
+</i18n>

@@ -14,65 +14,71 @@ except according to the terms contained in the LICENSE file.
     <span id="backup-status-icon" :class="iconClass"></span>
 
     <template v-if="status === 'notConfigured'">
-      <p>Backups are not configured.</p>
-      <p>
-        <strong>The data server has not been set up to automatically back up
-        its data anywhere.</strong>
-      </p>
-      <p>
-        Unless you have set up some other form of data backup that I
-        don&rsquo;t know about, it is <strong>strongly recommended</strong>
-        that you do this now. If you are not sure, it is best to do it just to
-        be safe.
-      </p>
-      <p>
-        Automatic data backups happen through this system once a day. All your
-        data is encrypted with a password you provide so that only you can
-        unlock it.
-      </p>
+      <p>{{ $t('notConfigured[0]') }}</p>
+      <p><strong>{{ $t('notConfigured[1]') }}</strong></p>
+      <i18n tag="p" path="notConfigured[2].full">
+        <template #recommended>
+          <strong>{{ $t('notConfigured[2].recommended') }}</strong>
+        </template>
+      </i18n>
+      <p>{{ $t('notConfigured[3]') }}</p>
     </template>
     <template v-else-if="status === 'neverRun'">
-      <p>The configured backup has not yet run.</p>
+      <p>{{ $t('neverRun[0]') }}</p>
+      <p>{{ $t('neverRun[1]') }}</p>
       <p>
-        If you have configured backups within the last couple of days, this is
-        normal. Otherwise, something has gone wrong.
-      </p>
-      <p>
-        In that case, the most likely fixes are to <strong>terminate</strong>
-        the connection and set it up again, or to restart the service. If you
-        are having trouble, please try the
-        <a href="https://forum.getodk.org/" target="_blank">community forum</a>.
+        <i18n :tag="false" path="neverRun[2].full">
+          <template #terminate>
+            <strong>{{ $t('neverRun[2].terminate') }}</strong>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="getHelp.full">
+          <template #forum>
+            <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
+          </template>
+        </i18n>
       </p>
     </template>
     <template v-else-if="status === 'somethingWentWrong'">
-      <p>Something is wrong!</p>
+      <p>{{ $t('somethingWentWrong[0]') }}</p>
+      <i18n tag="p" path="somethingWentWrong[1].full">
+        <template #moreThanThreeDaysAgo>
+          <strong>{{ $t('somethingWentWrong[1].moreThanThreeDaysAgo') }}</strong>
+        </template>
+      </i18n>
       <p>
-        The latest backup that completed successfully was <strong>more than
-        three days ago.</strong>
-      </p>
-      <p>
-        The most likely fixes are to <strong>terminate</strong> the connection
-        and set it up again, or to restart the service. If you are having
-        trouble, please try the
-        <a href="https://forum.getodk.org/" target="_blank">community forum</a>.
+        <i18n :tag="false" path="somethingWentWrong[2].full">
+          <template #terminate>
+            <strong>{{ $t('somethingWentWrong[2].terminate') }}</strong>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="getHelp.full">
+          <template #forum>
+            <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
+          </template>
+        </i18n>
       </p>
     </template>
     <template v-else>
-      <p>Backup is working.</p>
-      <p>
-        The last backup completed successfully
-        <strong id="backup-status-most-recently-logged-at">
-        {{ mostRecentlyLoggedAt }}</strong>.
-      </p>
+      <p>{{ $t('success[0]') }}</p>
+      <i18n tag="p" path="success[1]">
+        <template #dateTime>
+          <strong id="backup-status-most-recently-logged-at">
+            <date-time :iso="auditsForBackupsConfig[0].loggedAt"/>
+          </strong>
+        </template>
+      </i18n>
     </template>
 
     <button v-if="status === 'notConfigured'" type="button"
       class="btn btn-primary" @click="$emit('create')">
-      <span class="icon-plus-circle"></span>Set up now&hellip;
+      <span class="icon-plus-circle"></span>{{ $t('action.setUp') }}&hellip;
     </button>
     <button v-else type="button" class="btn btn-primary"
       @click="$emit('terminate')">
-      <span class="icon-times-circle"></span>Terminate&hellip;
+      <span class="icon-times-circle"></span>{{ $t('action.terminate') }}&hellip;
     </button>
   </div>
 </template>
@@ -81,11 +87,13 @@ except according to the terms contained in the LICENSE file.
 import { DateTime } from 'luxon';
 import { mapGetters } from 'vuex';
 
-import { ago, formatDate } from '../../util/date-time';
+import DateTimeComponent from '../date-time.vue';
+import { ago } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupStatus',
+  components: { DateTime: DateTimeComponent },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -115,9 +123,6 @@ export default {
         default: // 'somethingWentWrong'
           return 'icon-times-circle';
       }
-    },
-    mostRecentlyLoggedAt() {
-      return formatDate(this.auditsForBackupsConfig[0].loggedAt);
     }
   }
 };
@@ -157,3 +162,54 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "getHelp": {
+      "full": "If you are having trouble, please try the {forum}.",
+      "forum": "community forum"
+    },
+    "notConfigured": [
+      "Backups are not configured.",
+      "The data server has not been set up to automatically back up its data anywhere.",
+      {
+        "full": "Unless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe.",
+        "recommended": "strongly recommended"
+      },
+      "Automatic data backups happen through this system once a day. All your data is encrypted with a password you provide so that only you can unlock it."
+    ],
+    "neverRun": [
+      "The configured backup has not yet run.",
+      "If you have configured backups within the last couple of days, this is normal. Otherwise, something has gone wrong.",
+      {
+        "full": "In that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
+        "terminate": "terminate"
+      }
+    ],
+    "somethingWentWrong": [
+      "Something is wrong!",
+      {
+        "full": "The latest backup that completed successfully was {moreThanThreeDaysAgo}.",
+        "moreThanThreeDaysAgo": "more than three days ago"
+      },
+      {
+        "full": "The most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
+        "terminate": "terminate"
+      }
+    ],
+    "success": [
+      "Backup is working.",
+      // {dateTime} shows the date and time at which the last backup completed,
+      // for example: "2020/01/01 01:23". It may show a formatted date like
+      // "2020/01/01", or it may use a word like "today", "yesterday", or
+      // "Sunday". {dateTime} is formatted in bold.
+      "The last backup completed successfully {dateTime}."
+    ],
+    "action": {
+      "setUp": "Set up now",
+      "terminate": "Terminate"
+    }
+  }
+}
+</i18n>

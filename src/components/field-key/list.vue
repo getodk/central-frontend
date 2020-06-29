@@ -12,29 +12,32 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <div class="heading-with-button">
-      <button type="button" class="btn btn-primary"
-        @click="showModal('newFieldKey')">
-        <span class="icon-plus-circle"></span>Create App User&hellip;
+      <button id="field-key-list-create-button" type="button"
+        class="btn btn-primary" @click="showModal('newFieldKey')">
+        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <p>
-        App Users in this Project only will be able to download and use Forms
-        within this Project. When you create a new App User, it will not have
-        access to any Forms at first. To set the Forms each App User may access,
-        use the
-        <router-link :to="projectPath('form-access')">Form Access</router-link>
-        tab. Multiple devices can use the same App User profile without problem.
-        For more information,
-        <doc-link to="central-users/#managing-app-users">click here</doc-link>.
+        <i18n :tag="false" path="heading.full">
+          <template #formAccess>
+            <router-link :to="projectPath('form-access')">{{ $t('heading.formAccess') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-users/#managing-app-users">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n>
       </p>
     </div>
     <table id="field-key-list-table" class="table">
       <thead>
         <tr>
-          <th>Nickname</th>
-          <th>Created</th>
-          <th>Last Used</th>
-          <th>Configure Client</th>
-          <th>Actions</th>
+          <th>{{ $t('header.displayName') }}</th>
+          <th>{{ $t('header.created') }}</th>
+          <th>{{ $t('header.lastUsed') }}</th>
+          <th>{{ $t('header.configureClient') }}</th>
+          <th>{{ $t('header.actions') }} </th>
         </tr>
       </thead>
       <tbody v-if="fieldKeys != null">
@@ -50,8 +53,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
     <p v-if="fieldKeys != null && fieldKeys.length === 0"
       class="empty-table-message">
-      There are no App Users yet. You will need to create some to download Forms
-      and submit data from your device.
+      {{ $t('emptyTable') }}
     </p>
 
     <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
@@ -72,13 +74,11 @@ import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
-const POPOVER_CONTENT_TEMPLATE = `
+const popoverContentTemplate = `
   <div id="field-key-list-popover-content">
     <div class="field-key-list-img-container"></div>
     <div>
-      <a href="https://docs.getodk.org/collect-import-export/" target="_blank">
-        What’s this?
-      </a>
+      <a href="https://docs.getodk.org/collect-import-export/" target="_blank"></a>
     </div>
   </div>
 `;
@@ -152,10 +152,11 @@ export default {
       this.hidePopover();
     },
     popoverContent(fieldKey) {
-      const $content = $(POPOVER_CONTENT_TEMPLATE);
+      const $content = $(popoverContentTemplate);
       $content
         .find('.field-key-list-img-container')
         .append(fieldKey.qrCodeHtml());
+      $content.find('a').text(this.$t('qrCodeHelp'));
       return $content[0].outerHTML;
     },
     enablePopover(fieldKey, $popoverLink) {
@@ -185,13 +186,13 @@ export default {
     afterCreate(fieldKey) {
       this.$emit('fetch-field-keys');
       this.hideModal('newFieldKey');
-      this.$alert().success(`The App User "${fieldKey.displayName}" was created successfully.`);
+      this.$alert().success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
       this.$emit('fetch-field-keys');
       this.hideModal('revoke');
-      this.$alert().success(`Access was revoked for the App User "${fieldKey.displayName}".`);
+      this.$alert().success(this.$t('alert.revoke', fieldKey));
       this.highlighted = null;
     }
   }
@@ -227,3 +228,29 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "create": "Create App User"
+    },
+    "heading": {
+      "full": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem.",
+      "formAccess": "Form Access"
+    },
+    "header": {
+      "lastUsed": "Last Used",
+      // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
+      "configureClient": "Configure Client"
+    },
+    // Linked to a help file about QR codes to configure data collection clients.
+    "qrCodeHelp": "What’s this?",
+    "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
+    "alert": {
+      "create": "The App User “{displayName}” was created successfully.",
+      "revoke": "Access was revoked for the App User “{displayName}”."
+    }
+  }
+}
+</i18n>

@@ -11,61 +11,53 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="field-key-new" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="hideOrComplete" @shown="focusNicknameInput">
-    <template #title>Create App User</template>
+    backdrop @hide="hideOrComplete" @shown="focusInput">
+    <template #title>{{ $t('title') }}</template>
     <template #body>
-      <template v-if="step === 1">
-        <p class="modal-introduction">
-          This user will not have access to any Forms at first. You will be able
-          to assign Forms after the user is created.
-        </p>
+      <template v-if="step === 0">
+        <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
         <form @submit.prevent="submit">
-          <label class="form-group">
-            <input ref="nickname" v-model.trim="nickname"
-              :disabled="awaitingResponse" class="form-control"
-              placeholder="Nickname *" required>
-            <span class="form-label">Nickname *</span>
-          </label>
+          <form-group ref="displayName" v-model.trim="displayName"
+            :placeholder="$t('field.displayName')" required autocomplete="off"/>
           <div class="modal-actions">
             <button :disabled="awaitingResponse" type="submit"
               class="btn btn-primary">
-              Create <spinner :state="awaitingResponse"/>
+              {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
             </button>
             <button :disabled="awaitingResponse" type="button"
               class="btn btn-link" @click="hideOrComplete">
-              Cancel
+              {{ $t('action.cancel') }}
             </button>
           </div>
         </form>
       </template>
       <template v-else>
-        <div class="modal-introduction step-2">
+        <div id="field-key-new-success" class="modal-introduction">
           <p>
-            <span class="icon-check-circle"></span><strong>Success!</strong>
-            The App User &ldquo;{{ created.displayName }}&rdquo; has been
-            created.
+            <span class="icon-check-circle"></span>
+            <strong>{{ $t('common.success') }}</strong>
+            {{ $t('success[0]', created) }}
           </p>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="created.qrCodeHtml()"></p>
-          <p>
-            You can configure a mobile device for
-            &ldquo;{{ created.displayName }}&rdquo; right now by
-            <doc-link to="collect-import-export/">scanning the code above</doc-link>
-            into their app. Or you can do it later from the App Users table by
-            clicking &ldquo;See code.&rdquo;
-          </p>
-          <p>
-            You may wish to visit this Project&rsquo;s
-            <a href="#" @click="navigateToFormAccess">Form Access settings</a>
-            to give this user access to Forms.
-          </p>
+          <i18n tag="p" path="success[1].full">
+            <template #displayName>{{ created.displayName }}</template>
+            <template #scanningCode>
+              <doc-link to="collect-import-export/">{{ $t('success[1].scanningCode') }}</doc-link>
+            </template>
+          </i18n>
+          <i18n tag="p" path="success[2].full">
+            <template #formAccessSettings>
+              <a href="#" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
+            </template>
+          </i18n>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="complete">
-            Done
+            {{ $t('action.done' ) }}
           </button>
           <button type="button" class="btn btn-link" @click="createAnother">
-            Create another
+            {{ $t('action.createAnother') }}
           </button>
         </div>
       </template>
@@ -76,6 +68,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import FieldKey from '../../presenters/field-key';
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -86,7 +79,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request(), routes()],
   props: {
     state: {
@@ -98,37 +91,38 @@ export default {
     return {
       awaitingResponse: false,
       // There are two steps/screens in the app user creation process. `step`
-      // indicates the current step. Note that it is 1-indexed.
-      step: 1,
-      nickname: '',
+      // indicates the current step.
+      step: 0,
+      displayName: '',
       created: null
     };
   },
   computed: requestData(['project']),
   watch: {
     state(state) {
-      if (state) return;
-      this.step = 1;
-      this.nickname = '';
-      this.created = null;
+      if (!state) {
+        this.step = 0;
+        this.displayName = '';
+        this.created = null;
+      }
     }
   },
   methods: {
-    focusNicknameInput() {
-      this.$refs.nickname.focus();
+    focusInput() {
+      this.$refs.displayName.focus();
     },
     submit() {
       this.request({
         method: 'POST',
         url: apiPaths.fieldKeys(this.project.id),
-        data: { displayName: this.nickname }
+        data: { displayName: this.displayName }
       })
         .then(({ data }) => {
           // Reset the form.
           this.$alert().blank();
-          this.nickname = '';
+          this.displayName = '';
 
-          this.step = 2;
+          this.step = 1;
           this.created = new FieldKey(data);
         })
         .catch(noop);
@@ -148,10 +142,10 @@ export default {
       this.$router.push(this.projectPath('form-access'));
     },
     createAnother() {
-      this.step = 1;
+      this.step = 0;
       // We do not reset this.created, because it will still be used once the
       // modal is hidden.
-      this.$nextTick(this.focusNicknameInput);
+      this.$nextTick(this.focusInput);
     }
   }
 };
@@ -160,7 +154,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#field-key-new .modal-introduction.step-2 {
+#field-key-new-success {
   text-align: center;
 
   .icon-check-circle {
@@ -176,3 +170,30 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Create App User",
+    "introduction": [
+      "This user will not have access to any Forms at first. You will be able to assign Forms after the user is created."
+    ],
+    "success": [
+      "The App User “{displayName}” has been created.",
+      {
+        "full": "You can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”",
+        "scanningCode": "scanning the code above"
+      },
+      {
+        "full": "You may wish to visit this Project’s {formAccessSettings} to give this user access to Forms.",
+        "formAccessSettings": "Form Access settings"
+      }
+    ],
+    "action": {
+      // This is the text of a button that is used to create another App User.
+      "createAnother": "Create another"
+    }
+  }
+}
+</i18n>

@@ -1,39 +1,31 @@
 import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import testData from '../../data';
 import { collectQrData } from '../../util/collect-qr';
-import { load, mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { submitForm, trigger } from '../../util/event';
 
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
 
-  describe('modal', () => {
-    it('shows the modal after the create button is clicked', () =>
-      mockRoute('/projects/1/app-users')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponses(app => {
-          app.first(FieldKeyNew).getProp('state').should.be.false();
-          return trigger.click(app, '.heading-with-button button');
-        })
-        .then(app => {
-          app.first(FieldKeyNew).getProp('state').should.be.true();
-        }));
+  it('toggles the modal', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
+    testData.extendedFieldKeys.createPast(1);
+    return load('/projects/1/app-users').testModalToggles(
+      FieldKeyNew,
+      '#field-key-list-create-button',
+      '.btn-link'
+    );
+  });
 
-    it('focuses the nickname input after the create button is clicked', () =>
-      mockRoute('/projects/1/app-users', { attachToDocument: true })
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-        .respondWithData(() =>
-          testData.extendedFieldKeys.createPast(1).sorted())
-        .afterResponses(app =>
-          trigger.click(app, '.heading-with-button button'))
-        .then(app => {
-          app.first('#field-key-new input').should.be.focused();
-        }));
+  it('focuses the input', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
+    testData.extendedFieldKeys.createPast(1);
+    return load('/projects/1/app-users', { attachToDocument: true }, {})
+      .then(trigger.click('#field-key-list-create-button'))
+      .then(app => {
+        app.first('#field-key-new input').should.be.focused();
+      });
   });
 
   it('implements some standard button things', () =>
@@ -117,21 +109,21 @@ describe('FieldKeyNew', () => {
     describe('after the "Create another" button is clicked', () => {
       it('does not hide the modal', () =>
         submit()
-          .afterResponse(app => trigger.click(app, '#field-key-new .btn-link'))
+          .then(trigger.click('#field-key-new .btn-link'))
           .then(app => {
             app.first(FieldKeyNew).getProp('state').should.be.true();
           }));
 
-      it('shows a blank nickname input', () =>
+      it('shows a blank input', () =>
         submit()
-          .afterResponse(app => trigger.click(app, '#field-key-new .btn-link'))
+          .then(trigger.click('#field-key-new .btn-link'))
           .then(app => {
             app.first('#field-key-new input').element.value.should.equal('');
           }));
 
-      it('focuses the nickname input', () =>
+      it('focuses the input', () =>
         submit()
-          .afterResponse(app => trigger.click(app, '#field-key-new .btn-link'))
+          .then(trigger.click('#field-key-new .btn-link'))
           .then(app => {
             app.first('#field-key-new input').should.be.focused();
           }));

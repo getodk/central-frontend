@@ -11,22 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="user-edit-basic-details" class="panel panel-simple">
-    <div class="panel-heading"><h1 class="panel-title">Basic Details</h1></div>
+    <div class="panel-heading">
+      <h1 class="panel-title">{{ $t('title') }}</h1>
+    </div>
     <div class="panel-body">
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input v-model.trim="email" type="email" class="form-control"
-            placeholder="Email address *" required autocomplete="off">
-          <span class="form-label">Email address *</span>
-        </label>
-        <label class="form-group">
-          <input v-model.trim="displayName" type="text" class="form-control"
-            placeholder="Display name *" required>
-          <span class="form-label">Display name *</span>
-        </label>
+        <form-group v-model.trim="email" type="email"
+          :placeholder="$t('field.email')" required autocomplete="off"/>
+        <form-group v-model.trim="displayName" type="text"
+          :placeholder="$t('field.displayName')" required autocomplete="off"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
-          Update details <spinner :state="awaitingResponse"/>
+          {{ $t('action.update') }}<spinner :state="awaitingResponse"/>
         </button>
       </form>
     </div>
@@ -34,6 +30,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
@@ -42,7 +39,7 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditBasicDetails',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     const { email, displayName } = this.$store.state.request.data.user;
@@ -71,10 +68,25 @@ export default {
               value: this.currentUser.with(response.data)
             });
           }
-          this.$alert().success('User details saved!');
+          this.$alert().success(this.$t('alert.success'));
         })
         .catch(noop);
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Basic Details",
+    "action": {
+      "update": "Update details"
+    },
+    "alert": {
+      "success": "User details saved!"
+    }
+  }
+}
+</i18n>

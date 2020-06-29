@@ -10,14 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div :aria-labelledby="titleId" :data-backdrop="bsBackdrop" class="modal"
-    tabindex="-1" role="dialog" data-keyboard="false" @keydown.esc="hideIfCan"
-    @mousedown="modalMousedown" @click="modalClick" @focusout="refocus">
+  <div class="modal" tabindex="-1" :data-backdrop="bsBackdrop"
+    data-keyboard="false" role="dialog" :aria-labelledby="titleId"
+    @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
+    @focusout="refocus">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button :disabled="!hideable" type="button" class="close"
-            aria-label="Close" @click="hideIfCan">
+          <button type="button" class="close" :disabled="!hideable"
+            :aria-label="$t('action.close')" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
@@ -34,6 +35,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Alert from './alert.vue';
 
+let id = 0;
+
 export default {
   name: 'Modal',
   components: { Alert },
@@ -42,19 +45,19 @@ export default {
       type: Boolean,
       default: false
     },
-    backdrop: {
-      type: Boolean,
-      default: false
-    },
     // Indicates whether the user is able to hide the modal by clicking ×,
     // pressing escape, or clicking outside the modal.
     hideable: {
       type: Boolean,
       default: false
+    },
+    backdrop: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    const id = this.$uniqueId();
+    id += 1;
     return {
       titleId: `modal-title${id}`,
       mousedownOutsideDialog: false

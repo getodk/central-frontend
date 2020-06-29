@@ -13,29 +13,37 @@ except according to the terms contained in the LICENSE file.
   <div>
     <page-head v-show="project != null">
       <template v-if="project != null" #title>
-        {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+        {{ project.nameWithArchived() }}
       </template>
       <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
         the project overview. -->
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Overview</router-link>
+          <router-link :to="tabPath('')">{{ $t('tab.overview') }}</router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
-          <router-link :to="tabPath('users')">Project Roles</router-link>
+          <router-link :to="tabPath('users')">
+            {{ $t('tab.users') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('app-users'))" :class="tabClass('app-users')"
           role="presentation">
-          <router-link :to="tabPath('app-users')">App Users</router-link>
+          <router-link :to="tabPath('app-users')">
+            {{ $t('tab.appUsers') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('form-access'))"
           :class="tabClass('form-access')" role="presentation">
-          <router-link :to="tabPath('form-access')">Form Access</router-link>
+          <router-link :to="tabPath('form-access')">
+            {{ $t('tab.formAccess') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
           role="presentation">
-          <router-link :to="tabPath('settings')">Settings</router-link>
+          <router-link :to="tabPath('settings')">
+            {{ $t('tab.settings') }}
+          </router-link>
         </li>
       </template>
     </page-head>
@@ -78,7 +86,6 @@ export default {
     }
   },
   methods: {
-    // Note that we do not keep project.forms and forms.length in sync.
     fetchForms(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'forms',
@@ -105,3 +112,17 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "tab": {
+      "overview": "Overview",
+      "users": "Project Roles",
+      "appUsers": "App Users",
+      "formAccess": "Form Access",
+      "settings": "Settings"
+    }
+  }
+}
+</i18n>

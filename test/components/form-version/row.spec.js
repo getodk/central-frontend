@@ -1,14 +1,17 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 import FormVersionStandardButtons from '../../../src/components/form-version/standard-buttons.vue';
+import TimeAndUser from '../../../src/components/time-and-user.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('FormVersionRow', () => {
-  describe('version string', () => {
-    beforeEach(mockLogin);
+  beforeEach(() => {
+    mockLogin({ displayName: 'Alice' });
+  });
 
+  describe('version string', () => {
     it('shows the version string', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/versions').then(app => {
@@ -28,43 +31,27 @@ describe('FormVersionRow', () => {
     });
   });
 
-  it('shows publishedAt', () => {
-    mockLogin();
-    const form = testData.extendedForms.createPast(1).last();
-    return load('/projects/1/forms/f/versions').then(app => {
-      const dateTime = app.first(FormVersionRow).first(DateTime);
-      dateTime.getProp('iso').should.equal(form.publishedAt);
-    });
-  });
-
-  describe('publishedBy', () => {
-    it('renders a link for an administrator', () => {
-      mockLogin({ displayName: 'Alice' });
-      testData.extendedForms.createPast(1);
+  describe('published', () => {
+    it('shows publishedAt', () => {
+      const form = testData.extendedForms.createPast(1).last();
       return load('/projects/1/forms/f/versions').then(app => {
-        const div = app.first('.form-version-row-published-by');
-        div.getAttribute('title').should.equal('Alice');
-        const a = div.first('a');
-        a.text().trim().should.equal('Alice');
-        a.getAttribute('href').should.equal('#/users/1/edit');
+        const dateTime = app.first(FormVersionRow).first(DateTime);
+        dateTime.getProp('iso').should.equal(form.publishedAt);
       });
     });
 
-    it('only shows text for a project manager', () => {
-      mockLogin({ displayName: 'Bob', role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
+    it('shows publishedBy', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/versions').then(app => {
-        const div = app.first('.form-version-row-published-by');
-        div.find('a').length.should.equal(0);
-        div.text().trim().should.equal('Bob');
-        div.getAttribute('title').should.equal('Bob');
+        const component = app.first(FormVersionRow).first(TimeAndUser);
+        const user = component.getProp('user');
+        user.id.should.equal(testData.extendedUsers.first().id);
+        user.displayName.should.equal('Alice');
       });
     });
   });
 
   it('shows standard form definition buttons', () => {
-    mockLogin();
     testData.extendedForms.createPast(1);
     return load('/projects/1/forms/f/versions').then(app => {
       const row = app.first(FormVersionRow);

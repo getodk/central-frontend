@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
 
 ### Vue
 
-We use Vue.js along with Vue Router and Vuex.
+We use Vue.js along with Vue Router, Vuex, and Vue CLI.
 
 ### jQuery
 
@@ -38,7 +38,17 @@ ODK Central Frontend uses Bootstrap 3. (However, we are considering [moving to B
 
 Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use most of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing one, you may find it useful to base the new component off the existing one.
 
-We use some, but not all, of Bootstrap's jQuery plugins. We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
+We use some, but not all, of Bootstrap's jQuery plugins ([`/src/bootstrap.js`](/src/bootstrap.js)). We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
+
+### Global Utilities
+
+We define a number of global utilities as properties on `Vue.prototype`: see [`/src/setup.js`](/src/setup.js). In general, we try to minimize the number of global utilities: do not define a global utility simply to avoid importing to components. However, there are a few occasions in which a global utility may be useful:
+
+- The utility accesses the component using `this` (example: `$alert()`).
+- The utility is used in templates, which do not have direct access to imports.
+- We mock or otherwise modify the utility in testing (examples: `$http`, `$logger`).
+
+If a utility is used in a limited number of components, consider using a mixin instead of defining a global utility.
 
 ### HTTP Requests
 
@@ -62,7 +72,7 @@ We specify a name for every component, which facilitates the use of the Vue devt
 
 If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
 
-In general, we try not to use component names to drive logic. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
+In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
 
 #### Naming Conventions
 
@@ -87,6 +97,83 @@ We support a number of route meta fields, which we document in [`/src/routes.js`
 
 We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
+### Internationalization
+
+We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
+
+ODK Central Frontend uses the translations stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a BCP 47 language tag, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and `en.json` is bundled with Frontend; other files are loaded asynchronously as needed. We also make ample use of single file component `i18n` custom blocks.
+
+We also define internationalization-related utilities in [`/src/util/i18n.js`](/src/util/i18n.js).
+
+In general in Frontend, we use kebab-case to name slots. However, when using component interpolation, name slots using camelCase. This seems a little more readable within locale messages. Also, if the slot corresponds to a message, this allows the slot and its message to have the same name.
+
+Note that while Vue I18n supports date/time localization, we use Luxon to manage DateTime objects, including for the limited date/time localization that Frontend implements.
+
+#### Transifex
+
+We use Transifex to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
+
+`strings_en.json` is formatted as Transifex [structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of structured JSON is that it supports developer comments. However, structured JSON is a different format from the JSON that Vue I18n expects.
+
+We use a script to convert Vue I18n JSON to structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json` and in single file component `i18n` custom blocks, then converts that JSON to a single structured JSON file, `strings_en.json`. Run `restructure.js` from the root directory of the repository.
+
+`restructure.js` adds developer comments to `strings_en.json` by reading JSON5 comments. To use JSON5 comments in a single file component, specify `lang="json5"` for the `i18n` custom block. For example:
+
+```html
+<i18n lang="json5">
+{
+  // Some comment about the "hello" message
+  // Multiple comments are combined.
+  "hello": "Hello, world!",
+  // This comment will be added for each of the messages within "fruit".
+  fruit: {
+  	"apple": "Apple",
+  	"banana": "Banana"
+  }
+}
+</i18n>
+```
+
+Also note about comments:
+
+- You can use comments in `/src/locales/en.json`, which is parsed as JSON5.
+- If you add a comment about a specific key to the top of `/src/locales/en.json`, that comment will be added for the key whether it appears in `en.json` or a single file component `i18n` custom block.
+- `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
+- Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
+
+Before each release, we pull all translations from Transifex and save them in [`/transifex/`](/transifex/). We convert the structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json`.
+
+To summarize the workflow:
+
+- Use Vue I18n as you normally would, adding messages to `/src/locales/en.json` and to single file component `i18n` custom blocks.
+- Add any developer comments to the Vue I18n JSON.
+- Run `restructure.js` to generate `strings_en.json`.
+- `strings_en.json` is automatically pulled into Transifex.
+- Before a release, pull all translations from Transifex.
+- Convert those translations to Vue I18n JSON by running `destructure.js`.
+
+Finally, also note:
+
+- While Vue I18n allows English messages to have three forms (zero, one, multiple), Transifex only allows them to have two (one, other).
+- We use a Transifex [translation check](https://docs.transifex.com/translation-checks/setting-translation-checks#checking-for-custom-variables) to ensure that the variables in each English message also appear in the message's translations (and that the translations only use variables that are in the English message).
+- For this and [other reasons](https://docs.transifex.com/formats/introduction#plurals), if a message uses a count variable, do not leave it out from the singular form of the message. For example, instead of `"1 apple | {count} apples"`, specify `"{count} apple | {count} apples"`.
+- Do not use HTML in messages: use component interpolation instead.
+
+For more background on Transifex, see these articles:
+
+- [Introduction to File Formats](https://docs.transifex.com/formats/introduction)
+- [Working with Plurals and Genders](https://docs.transifex.com/localization-tips-workflows/plurals-and-genders)
+
+#### Adding a New Locale
+
+To add a new locale to ODK Central Frontend:
+
+1. Add the locale to Transifex.
+2. Add the locale to `locales` in [`/src/i18n.js`](/src/i18n.js).
+3. Check that there is a flatpickr config for the locale. If there isn't one, create a GitHub issue in this repository or contact us on Slack.
+
+Note that right now, the router will use the user's preferred language to load the locale, but it will only use the first subtag of the language. If/when we add a locale with multiple subtags, we will need to update the router.
+
 ### Styles
 
 ODK Central Frontend uses Sass.
@@ -105,7 +192,7 @@ Instead of scoped CSS, use `id` and `class` attributes to style components:
 
 #### Icons
 
-We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts`](/public/fonts), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css).
+We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts/`](/public/fonts/), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css).
 
 To update the icons:
 

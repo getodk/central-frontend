@@ -12,13 +12,17 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <page-head>
-      <template #title>System Management</template>
+      <template #title>{{ $t('title') }}</template>
       <template #tabs>
         <li :class="tabClass('backups')" role="presentation">
-          <router-link :to="tabPath('backups')">Backups</router-link>
+          <router-link :to="tabPath('backups')">
+            {{ $t('tab.backups') }}
+          </router-link>
         </li>
         <li :class="tabClass('audits')" role="presentation">
-          <router-link :to="tabPath('audits')">Server Audit Logs</router-link>
+          <router-link :to="tabPath('audits')">
+            {{ $t('tab.audits') }}
+          </router-link>
         </li>
       </template>
     </page-head>
@@ -44,3 +48,16 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title of the page for managing backups, audit logs, and other system-level functions.
+    "title": "System Management",
+    "tab": {
+      "backups": "Backups",
+      "audits": "Server Audit Logs"
+    }
+  }
+}
+</i18n>

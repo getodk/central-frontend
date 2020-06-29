@@ -1,5 +1,7 @@
 import { mount as avoriazMount } from 'avoriaz';
 
+import Root from './lifecycle/root.vue';
+import i18n from '../../src/i18n';
 import store from '../../src/store';
 import { transforms } from '../../src/store/modules/request/keys';
 
@@ -10,17 +12,18 @@ import { transforms } from '../../src/store/modules/request/keys';
 
 let componentToDestroy = null;
 
-export const markComponentForDestruction = (component) => {
+const markComponentToDestroy = (component) => {
   if (componentToDestroy != null)
-    throw new Error('another component has already been marked for destruction and has not been destroyed yet');
+    throw new Error('a component has already been marked');
   componentToDestroy = component;
 };
 
 export const destroyMarkedComponent = () => {
   if (componentToDestroy == null) return;
-  componentToDestroy.vm.$destroy();
-  if (componentToDestroy.vm.$el.parentNode != null)
-    $(componentToDestroy.vm.$el).remove();
+  const { vm } = componentToDestroy;
+  vm.$destroy();
+  const { $el } = vm;
+  if ($el.parentNode != null) $el.parentNode.removeChild($el);
   componentToDestroy = null;
 };
 
@@ -53,11 +56,33 @@ const setRequestData = (data) => {
 };
 
 export const mount = (component, options = {}) => {
+  // If the component uses a single file component i18n custom block, then its
+  // $i18n property will be different from the root VueI18n object. Because most
+  // components with an i18n custom block assume access to the root VueI18n
+  // object, we will wrap the component in another component (Root), which will
+  // be the root component and whose $i18n property will be the root VueI18n
+  // object.
+  if (component.__i18n != null) {
+    const { propsData, attachToDocument, requestData, ...rest } = options;
+    if (Object.keys(rest).length !== 0) {
+      // Some mount() options, for example, `slots`, will not work with the
+      // current strategy to use Root.
+      throw new Error('unknown or unsupported option');
+    }
+    const root = mount(Root, {
+      propsData: { component, props: options.propsData },
+      attachToDocument,
+      requestData
+    });
+    return root.first(component);
+  }
+
   const { requestData, ...mountOptions } = options;
   if (requestData != null) setRequestData(requestData);
   mountOptions.store = store;
+  mountOptions.i18n = i18n;
   const wrapper = avoriazMount(component, mountOptions);
-  markComponentForDestruction(wrapper);
+  markComponentToDestroy(wrapper);
   return wrapper;
 };
 
