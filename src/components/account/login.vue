@@ -24,12 +24,12 @@ except according to the terms contained in the LICENSE file.
               :placeholder="$t('field.password')" required
               autocomplete="current-password"/>
             <div class="panel-footer">
-              <button :disabled="disabled" type="submit"
-                class="btn btn-primary">
+              <button type="submit" class="btn btn-primary"
+                :disabled="disabled">
                 {{ $t('action.logIn') }} <spinner :state="disabled"/>
               </button>
-              <router-link :to="resetPasswordLocation" :disabled="disabled"
-                tag="button" type="button" class="btn btn-link">
+              <router-link to="/reset-password" tag="button" type="button"
+                class="btn btn-link" :disabled="disabled">
                 {{ $t('action.resetPassword') }}
               </router-link>
             </div>
@@ -44,7 +44,6 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
-import { noop } from '../../util/util';
 
 export default {
   name: 'AccountLogin',
@@ -57,36 +56,33 @@ export default {
       password: ''
     };
   },
-  computed: {
-    resetPasswordLocation() {
-      return {
-        path: '/reset-password',
-        query: Object.assign({}, this.$route.query)
-      };
-    }
-  },
   mounted() {
     this.$refs.email.focus();
   },
   beforeRouteLeave(to, from, next) {
-    if (this.disabled) {
+    if (this.disabled)
       next(false);
-    } else {
+    else
       next();
-    }
   },
   methods: {
-    nextPath() {
-      const { next } = this.$route.query;
-      if (next == null) return '/';
-      const link = document.createElement('a');
-      link.href = next;
-      return link.host === window.location.host ? link.pathname : '/';
-    },
-    routeToNext() {
-      const query = Object.assign({}, this.$route.query);
-      delete query.next;
-      this.$router.push({ path: this.nextPath(), query });
+    navigateToNext(
+      next,
+      internal,
+      external = (url) => window.location.replace(url)
+    ) {
+      if (typeof next !== 'string') return internal('/');
+      let url;
+      try {
+        url = new URL(next, window.location.origin);
+      } catch (e) {
+        return internal('/');
+      }
+      if (url.origin !== window.location.origin || url.pathname === '/login')
+        return internal('/');
+
+      if (url.pathname.startsWith('/enketo/')) return external(url.href);
+      return internal(url.pathname + url.search + url.hash);
     },
     submit() {
       this.disabled = true;
@@ -104,13 +100,16 @@ export default {
             this.$store.commit('setData', { key: 'session', value: data });
           }
         }]))
-        .finally(() => {
-          this.disabled = false;
-        })
         .then(() => {
-          this.routeToNext();
+          this.disabled = false;
+          this.navigateToNext(
+            this.$route.query.next,
+            (location) => this.$router.replace(location)
+          );
         })
-        .catch(noop);
+        .catch(() => {
+          this.disabled = false;
+        });
     }
   }
 };

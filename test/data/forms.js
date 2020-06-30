@@ -62,6 +62,7 @@ const forms = dataStore({
       : extendedProjects.createPast(1, { forms: 1 }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
+    enketoId = null,
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
@@ -80,6 +81,7 @@ const forms = dataStore({
       projectId: project.id,
       xmlFormId,
       name,
+      enketoId,
       state,
       createdAt: inPast
         ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
@@ -191,6 +193,7 @@ const formProps = [
   'projectId',
   'xmlFormId',
   'name',
+  'enketoId',
   'state',
   'createdAt',
   'updatedAt',

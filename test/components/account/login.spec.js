@@ -1,17 +1,13 @@
+import sinon from 'sinon';
+
+import AccountLogin from '../../../src/components/account/login.vue';
 import testData from '../../data';
-import { mockRoute } from '../../util/http';
-import { mockRouteThroughLogin, submitLoginForm } from '../../util/session';
-import { trigger } from '../../util/event';
+import { load, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { submitForm } from '../../util/event';
 
 describe('AccountLogin', () => {
   describe('routing', () => {
-    it('redirects to /login if anonymous user navigates to /account/edit', () =>
-      mockRoute('/account/edit')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
     it('does not redirect if user navigates to /account-edit, then session is restored', () =>
       mockRoute('/account/edit')
         .restoreSession(true)
@@ -19,65 +15,146 @@ describe('AccountLogin', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/account/edit');
         }));
-
-    it('redirects to / if the user logs in, then navigates to /login', () =>
-      mockRouteThroughLogin('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .complete()
-        .route('/login')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-
-    it('redirects to / if user navigates to /login, then session is restored', () =>
-      mockRoute('/login')
-        .restoreSession(true)
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
   });
 
-  it('changes the next query parameter after .navbar-brand is clicked', () =>
-    mockRoute('/login')
-      .restoreSession(false)
-      .afterResponse(app => trigger.click(app, '.navbar-brand'))
-      .then(app => {
-        app.vm.$route.fullPath.should.equal('/login?next=%2F');
-      }));
-
   it('focuses the first input', () =>
-    mockRoute('/login', { attachToDocument: true })
+    load('/login', { attachToDocument: true }, {})
       .restoreSession(false)
-      .afterResponse(app => {
+      .afterResponses(app => {
         app.first('#account-login input[type="email"]').should.be.focused();
       }));
 
   it('implements some standard button things', () =>
-    mockRoute('/login')
+    load('/login')
       .restoreSession(false)
       .complete()
-      .request(app => submitLoginForm(app, 'test@email.com'))
+      .request(app => submitForm(app, '#account-login form', [
+        ['input[type="email"]', 'test@email.com'],
+        ['input[type="password"]', 'password']
+      ]))
       .standardButton());
 
   it('shows a danger alert for incorrect credentials', () =>
-    mockRoute('/login')
+    load('/login')
       .restoreSession(false)
       .complete()
-      .request(app => submitLoginForm(app, 'test@email.com'))
+      .request(app => submitForm(app, '#account-login form', [
+        ['input[type="email"]', 'test@email.com'],
+        ['input[type="password"]', 'password']
+      ]))
       .respondWithProblem(401.2)
       .afterResponse(app => {
         app.should.alert('danger', 'Incorrect email address and/or password.');
       }));
 
-  it('navigates to /reset-password after reset password button is clicked', () =>
-    mockRoute('/login')
-      .restoreSession(false)
-      .afterResponses(app => trigger.click(app, '.panel-footer .btn-link'))
-      .then(app => {
-        app.vm.$route.path.should.equal('/reset-password');
-      }));
+  describe('next query param', () => {
+    const navigateToNext = (next) => {
+      const internal = sinon.fake();
+      const external = sinon.fake();
+      AccountLogin.methods.navigateToNext(next, internal, external);
+      return { internal, external };
+    };
+
+    it('uses the param to redirect the user', () => {
+      navigateToNext('/users').internal.calledWith('/users').should.be.true();
+    });
+
+    it('passes through query params and hash', () => {
+      const { internal } = navigateToNext('/users?x=y#z');
+      internal.calledWith('/users?x=y#z').should.be.true();
+    });
+
+    it('allows the param to be an absolute URL', () => {
+      const { internal } = navigateToNext(`${window.location.origin}/users`);
+      internal.calledWith('/users').should.be.true();
+    });
+
+    it('redirects the user to Enketo', () => {
+      const { external } = navigateToNext('/enketo/abc');
+      external.calledWith(`${window.location.origin}/enketo/abc`).should.be.true();
+    });
+
+    it('passes query params and hash to Enketo', () => {
+      const { external } = navigateToNext('/enketo/abc?x=y#z');
+      external.calledWith(`${window.location.origin}/enketo/abc?x=y#z`).should.be.true();
+    });
+
+    it('redirects the user to / if there is no param', () => {
+      navigateToNext(undefined).internal.calledWith('/').should.be.true();
+    });
+
+    it('redirects the user to / if there are multiple params', () => {
+      const { internal } = navigateToNext(['/users', '/account/edit']);
+      internal.calledWith('/').should.be.true();
+    });
+
+    it('redirects the user to / if the param is /login', () => {
+      navigateToNext('/login').internal.calledWith('/').should.be.true();
+
+      const { internal } = navigateToNext('/login?next=%2Fusers');
+      internal.calledWith('/').should.be.true();
+    });
+
+    it('does not redirect the user away from Central', () => {
+      const { internal, external } = navigateToNext('https://www.google.com/');
+      internal.calledWith('/').should.be.true();
+      external.called.should.be.false();
+    });
+
+    it('uses the param after the user submits the form', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+      return load('/login?next=%2Fusers')
+        .restoreSession(false)
+        .complete()
+        .request(app => submitForm(app, '#account-login form', [
+          ['input[type="email"]', 'test@email.com'],
+          ['input[type="password"]', 'password']
+        ]))
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondFor('/users')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/users');
+        });
+    });
+
+    it('does not redirect user to a route to which they do not have access', () => {
+      testData.extendedUsers.createPast(1, {
+        email: 'test@email.com',
+        role: 'none'
+      });
+      return load('/login?next=%2Fusers')
+        .restoreSession(false)
+        .complete()
+        .request(app => submitForm(app, '#account-login form', [
+          ['input[type="email"]', 'test@email.com'],
+          ['input[type="password"]', 'password']
+        ]))
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondFor('/', { users: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it("does not use the param if the user's session is restored", () =>
+      load('/login?next=%2Fusers')
+        .restoreSession(true)
+        .respondFor('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
+
+    it('does not use the param if a logged in user navigates to /login', () => {
+      mockLogin();
+      return load('/account/edit')
+        .complete()
+        .route('/login?next=%2Fusers')
+        .respondFor('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+  });
 });

@@ -31,7 +31,8 @@
       "nonverbose": "(All Actions)",
       "user": "Web User Actions",
       "project": "Project Actions",
-      "form": "Form Actions"
+      "form": "Form Actions",
+      "upgrade": "Server Upgrade"
     },
     "action": {
       // This is shown in the log of actions performed on the server. It is a
@@ -66,6 +67,12 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that the server performs when it is upgraded.
+      "upgrade": {
+        "process_form": "Process Form",
+        "process_form_draft": "Process Form Draft"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Web User.

@@ -2,27 +2,11 @@ import Spinner from '../../../src/components/spinner.vue';
 import UserRow from '../../../src/components/user/row.vue';
 import testData from '../../data';
 import { load, mockRoute } from '../../util/http';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
 describe('UserList', () => {
   describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/users')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
-
     it('redirects a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/users')

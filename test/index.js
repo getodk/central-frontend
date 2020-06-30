@@ -4,6 +4,7 @@
 import '../src/setup';
 
 import Vue from 'vue';
+import sinon from 'sinon';
 import { mount } from 'avoriaz';
 import 'should';
 
@@ -143,6 +144,15 @@ afterEach(() => {
 
 afterEach(() => {
   if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SINON
+
+afterEach(() => {
+  sinon.restore();
 });
 
 

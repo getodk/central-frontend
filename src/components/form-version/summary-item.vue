@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span :class="versionClass" :title="version.versionOrBlank()">
         {{ version.versionOrBlank() }}
       </span>
-      <span><form-version-standard-buttons :version="version"/></span>
+      <span><form-version-standard-buttons :version="version" preview/></span>
     </template>
     <template #body>
       <slot name="body"></slot>

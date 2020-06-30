@@ -25,9 +25,9 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="acteeSpecies != null" :to="acteePath"
-        :title="acteeTitle">
-        {{ acteeTitle }}
+      <router-link v-if="target != null" :to="target.path"
+        :title="target.title">
+        {{ target.title }}
       </router-link>
     </td>
     <td class="details">
@@ -45,24 +45,33 @@ import i18n from '../../i18n';
 import routes from '../../mixins/routes';
 import { auditActionMessage } from '../../util/i18n';
 
+const typeByCategory = {
+  user: i18n.t('common.user'),
+  assignment: i18n.t('common.user'),
+  project: i18n.t('common.project'),
+  form: i18n.t('common.form'),
+  upgrade: i18n.t('audit.category.upgrade')
+};
+
 const acteeSpeciesByCategory = {
   user: {
-    title: () => i18n.t('common.user'),
-    acteeTitle: ({ displayName }) => displayName,
-    acteePath: ({ id }, vm) => vm.userPath(id)
+    title: ({ displayName }) => displayName,
+    path: ({ id }, vm) => vm.userPath(id)
   },
   project: {
-    title: () => i18n.t('common.project'),
-    acteeTitle: ({ name }) => name,
-    acteePath: ({ id }, vm) => vm.projectPath(id)
+    title: ({ name }) => name,
+    path: ({ id }, vm) => vm.projectPath(id)
   },
   form: {
-    title: () => i18n.t('common.form'),
-    acteeTitle: (form) => new Form(form).nameOrId(),
-    acteePath: (form, vm) => vm.primaryFormPath(form)
+    title: (form) => new Form(form).nameOrId(),
+    path: (form, vm) => vm.primaryFormPath(form)
   }
 };
 acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
+// Presumably at some point, the actee of an upgrade audit might not be a form,
+// at which point we will have to update this component (perhaps we would use
+// the full action or a prefix instead of the category).
+acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
@@ -79,27 +88,22 @@ export default {
       const index = this.audit.action.indexOf('.');
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
-    acteeSpecies() {
-      return this.category != null
-        ? acteeSpeciesByCategory[this.category]
-        : null;
-    },
     type() {
       const actionMessage = auditActionMessage(this.audit.action);
       if (actionMessage == null) return [this.audit.action];
-      return this.acteeSpecies != null
-        ? [this.acteeSpecies.title(), actionMessage]
+      return this.category != null
+        ? [typeByCategory[this.category], actionMessage]
         : [actionMessage];
     },
-    acteePath() {
-      return this.acteeSpecies != null
-        ? this.acteeSpecies.acteePath(this.audit.actee, this)
-        : null;
-    },
-    acteeTitle() {
-      return this.acteeSpecies != null
-        ? this.acteeSpecies.acteeTitle(this.audit.actee)
-        : null;
+    target() {
+      if (this.category == null) return null;
+      const species = acteeSpeciesByCategory[this.category];
+      if (species == null) return null;
+      const { actee } = this.audit;
+      return {
+        path: species.path(actee, this),
+        title: species.title(actee)
+      };
     },
     details() {
       return this.audit.details != null

@@ -1,24 +1,10 @@
 import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 
 describe('UserEdit', () => {
   describe('navigating to /account/edit', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/account/edit')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/account/edit')
-        .respondWithData(() => testData.standardUsers.last())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/account/edit');
-        }));
-
     it('does not redirect a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/account/edit')
@@ -30,20 +16,6 @@ describe('UserEdit', () => {
   });
 
   describe('navigating to /users/:id/edit', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/users/2/edit')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/users/2/edit')
-        .respondWithData(() => testData.standardUsers.createPast(1).last())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users/2/edit');
-        }));
-
     it('redirects a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/users/2/edit')

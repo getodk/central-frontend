@@ -1,21 +1,9 @@
 import testData from '../../data';
 import { mockRoute } from '../../util/http';
-import { mockRouteThroughLogin } from '../../util/session';
-import { submitForm, trigger } from '../../util/event';
+import { submitForm } from '../../util/event';
 
 describe('AccountResetPassword', () => {
   describe('routing', () => {
-    it('redirects if the user logs in, then navigates to /reset-password', () =>
-      mockRouteThroughLogin('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .complete()
-        .route('/reset-password')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-
     it('redirects if user navigates to /reset-password, then session is restored', () =>
       mockRoute('/reset-password')
         .restoreSession(true)
@@ -64,10 +52,4 @@ describe('AccountResetPassword', () => {
       app.should.alert('success');
     });
   });
-
-  it('navigates to login if the cancel button is clicked', () =>
-    mockRoute('/reset-password')
-      .restoreSession(false)
-      .afterResponse(app => trigger.click(app.first('.panel-footer .btn-link'))
-        .then(() => app.vm.$route.path.should.equal('/login'))));
 });
