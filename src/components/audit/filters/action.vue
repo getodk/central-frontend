@@ -54,10 +54,7 @@ const options = [
   actionOption('form.update.publish'),
   actionOption('form.update.draft.delete'),
   actionOption('form.attachment.update'),
-  actionOption('form.delete'),
-  categoryOption('upgrade'),
-  actionOption('upgrade.process.form'),
-  actionOption('upgrade.process.form.draft')
+  actionOption('form.delete')
 ];
 
 export default {

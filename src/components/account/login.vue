@@ -68,7 +68,9 @@ export default {
   methods: {
     navigateToNext(
       next,
+      // Function that redirects within Frontend
       internal,
+      // Function that redirects outside Frontend
       external = (url) => window.location.replace(url)
     ) {
       if (typeof next !== 'string') return internal('/');

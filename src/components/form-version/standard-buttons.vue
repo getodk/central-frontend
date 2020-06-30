@@ -13,6 +13,18 @@ except according to the terms contained in the LICENSE file.
 <!-- Standard form definition buttons -->
 <template>
   <span class="form-version-standard-buttons">
+    <template v-if="preview">
+      <a v-if="version.enketoId != null" class="preview-button btn btn-primary"
+        :href="previewUrl" target="_blank">
+        <span class="icon-eye"></span>{{ $t('action.preview') }}
+      </a>
+      <button v-else type="button"
+        class="preview-button btn btn-primary" disabled
+        :title="$t('previewDisabled')">
+        <span class="icon-eye"></span>{{ $t('action.preview') }}
+      </button>
+    </template>
+
     <a v-if="version.excelContentType == null" class="btn btn-primary"
       :href="defPath('xml')" :download="xmlFilename">
       <span class="icon-arrow-circle-down"></span>{{ $t('action.downloadXForm') }}
@@ -34,18 +46,6 @@ except according to the terms contained in the LICENSE file.
         </li>
       </ul>
     </div>
-
-    <template v-if="preview">
-      <a v-if="version.enketoId != null" class="preview-button btn btn-primary"
-        :href="previewUrl" target="_blank">
-        <span class="icon-eye"></span>{{ $t('action.preview') }}
-      </a>
-      <button v-else type="button"
-        class="preview-button btn btn-primary disabled"
-        :title="$t('previewDisabled')">
-        <span class="icon-eye"></span>{{ $t('action.preview') }}
-      </button>
-    </template>
   </span>
 </template>
 
@@ -66,6 +66,11 @@ export default {
     }
   },
   computed: {
+    previewUrl() {
+      // enketoId probably doesn't need to be encoded, but there is also little
+      // harm.
+      return `/enketo/preview/${encodeURIComponent(this.version.enketoId)}`;
+    },
     xmlFilename() {
       return `${this.version.xmlFormId}.xml`;
     },
@@ -77,10 +82,6 @@ export default {
       return this.version.excelContentType === 'application/vnd.ms-excel'
         ? 'xls'
         : 'xlsx';
-    },
-    previewUrl() {
-      // TODO. Does enketoId need to be encoded?
-      return `/enketo/preview/${encodeURIComponent(this.version.enketoId)}`;
     }
   },
   methods: {
@@ -96,7 +97,7 @@ export default {
 
 <style lang="scss">
 .form-version-standard-buttons .preview-button {
-  margin-left: 5px;
+  margin-right: 5px;
 }
 </style>
 
