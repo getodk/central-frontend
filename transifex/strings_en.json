@@ -1586,6 +1586,17 @@
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
         }
       },
+      "stateCaption": {
+        "open": {
+          "string": "This Form is downloadable and is accepting Submissions."
+        },
+        "closing": {
+          "string": "This Form is not downloadable but still accepts Submissions."
+        },
+        "closed": {
+          "string": "This Form is not downloadable and does not accept Submissions."
+        }
+      },
       "submissions": {
         "full": {
           "string": "{count, plural, one {{submissions} has been saved for this Form.} other {{submissions} have been saved for this Form.}}",
