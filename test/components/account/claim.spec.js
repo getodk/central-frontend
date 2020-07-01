@@ -1,24 +1,9 @@
-import testData from '../../data';
 import { mockRoute } from '../../util/http';
-import { mockRouteThroughLogin } from '../../util/session';
 import { submitForm } from '../../util/event';
 
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 
 describe('AccountClaim', () => {
-  describe('routing', () => {
-    it('redirects if the user logs in, then navigates to /account-claim', () =>
-      mockRouteThroughLogin('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .complete()
-        .route(LOCATION)
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-  });
-
   it('focuses the input', () =>
     mockRoute(LOCATION, { attachToDocument: true })
       .then(app => app.first('input[type="password"]').should.be.focused()));

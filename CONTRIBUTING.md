@@ -184,8 +184,9 @@ Frontend does not use Vue scoped CSS. Scoped CSS seems a little ✨magical✨, m
 
 Instead of scoped CSS, use `id` and `class` attributes to style components:
 
-- To avoid conflicts, prefix the value of an `id` attribute with the component's name (in kebab case).
-- Do the same for any `class` attribute. (The exception to this is if a class is always selected in combination with an id. For example, if a component named `ProjectOverview` uses a class for some links, the class can be `styled-link` instead of `project-overview-styled-link` if it is selected as `#project-overview .styled-link`.)
+- To avoid conflicts, prefix the value of an `id` or `class` attribute with the component's name (in kebab case).
+- Do the same for any `class` attribute.
+  - The exception to this is if the class is used in combination with an id or with another class that is prefixed with a component's name. For example, if a component named `ProjectOverview` uses a class for some links, the class can be `styled-link` instead of `project-overview-styled-link` if the links are selected as `#project-overview .styled-link`.
 - If the root element of a component has an `id` or `class` attribute, its value should be the same as the component's name (in kebab case).
 
 ### Assets

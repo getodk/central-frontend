@@ -4,7 +4,7 @@ import i18n from '../src/i18n';
 import testData from './data';
 import { load, mockRoute } from './util/http';
 import { loadLocale } from '../src/util/i18n';
-import { mockLogin, mockRouteThroughLogin } from './util/session';
+import { mockLogin } from './util/session';
 import { trigger } from './util/event';
 
 describe('router', () => {
@@ -27,35 +27,44 @@ describe('router', () => {
 
     it("loads the user's preferred language", () => {
       setLanguage('es');
-      return load('/login').then(() => {
-        i18n.locale.should.equal('es');
-      });
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
     });
 
     it('loads a less specific locale', () => {
       setLanguage('es-ES');
-      return load('/login').then(() => {
-        i18n.locale.should.equal('es');
-      });
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
     });
 
     it('falls back to en for a locale that is not defined', () => {
       setLanguage('la');
-      return load('/login').then(() => {
-        i18n.locale.should.equal('en');
-      });
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('en');
+        });
     });
 
     it('loads the locale saved to local storage', () => {
       localStorage.setItem('locale', 'es');
-      return load('/login').then(() => {
-        i18n.locale.should.equal('es');
-      });
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
     });
 
     it('only loads the locale before the first navigation', () => {
       setLanguage('es');
       return load('/login')
+        .restoreSession(false)
         .afterResponses(() => {
           setLanguage('en');
         })
@@ -66,41 +75,9 @@ describe('router', () => {
     });
   });
 
-  describe('use of next query param after login', () => {
-    it('redirects the user to / if there is no param', () =>
-      mockRouteThroughLogin('/login')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-
-    it('uses the param to redirect the user', () =>
-      mockRouteThroughLogin('/login?next=%2Fusers')
-        .respondWithData(() => testData.extendedProjects.createPast(1))
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
-
-    it('does not redirect the user to a route to which they do not have access', () =>
-      mockRouteThroughLogin('/login?next=%2Fusers', {}, { role: 'none' })
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-
-    it('does not redirect the user away from Frontend', () =>
-      mockRouteThroughLogin('/login?next=https%3A%2F%2Fwww.google.com%2F')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-  });
-
   describe('requireLogin', () => {
     const paths = [
+      '/',
       '/projects/1',
       '/projects/1/users',
       '/projects/1/app-users',
@@ -113,6 +90,11 @@ describe('router', () => {
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
       '/projects/1/forms/f/draft/testing',
+      '/users',
+      // The redirect should pass through the query string and hash.
+      '/users?x=y#z',
+      '/users/2/edit',
+      '/account/edit',
       '/system/backups',
       '/system/audits'
     ];
@@ -127,15 +109,27 @@ describe('router', () => {
             $route.query.next.should.equal(path);
           }));
     }
+  });
 
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
+  describe('requireAnonymity', () => {
+    const paths = [
+      '/login',
+      '/reset-password',
+      `/account/claim?token=${'a'.repeat(64)}`
+    ];
+
+    for (const path of paths) {
+      it(`redirects a logged in user navigating to ${path}`, () => {
+        mockLogin();
+        return load('/account/edit')
+          .complete()
+          .route(path)
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+    }
   });
 
   describe('preserveData', () => {

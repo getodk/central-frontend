@@ -94,12 +94,10 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
   const { meta } = to.matched[to.matched.length - 1];
   if (meta.requireLogin) {
-    if (store.getters.loggedIn) {
+    if (store.getters.loggedIn)
       next();
-    } else {
-      const query = { ...to.query, next: to.path };
-      next({ path: '/login', query });
-    }
+    else
+      next({ path: '/login', query: { next: to.fullPath } });
   } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
     if (store.getters.loggedIn)
       next('/');

@@ -16,15 +16,27 @@ const mountComponent = ({ value = 'nonverbose', parent = false } = {}) => {
 };
 
 describe('AuditFiltersAction', () => {
-  it('shows the correct options', () => {
-    const options = mountComponent().find('option');
-    // Test one category option and one action option.
-    options[0].text().trim().should.equal('(All Actions)');
-    options[0].getAttribute('value').should.equal('nonverbose');
-    options[0].hasClass('audit-filters-action-category').should.be.true();
-    options[2].text().should.containEql('\u00a0\u00a0\u00a0Create');
-    options[2].getAttribute('value').should.equal('user.create');
-    options[2].hasAttribute('class').should.be.false();
+  describe('options', () => {
+    it('renders a category option correctly', () => {
+      const option = mountComponent().first('option');
+      option.text().trim().should.equal('(All Actions)');
+      option.getAttribute('value').should.equal('nonverbose');
+      option.hasClass('audit-filters-action-category').should.be.true();
+    });
+
+    it('renders an action option correctly', () => {
+      const option = mountComponent().find('option')[2];
+      option.text().should.containEql('\u00a0\u00a0\u00a0Create');
+      option.getAttribute('value').should.equal('user.create');
+      option.hasAttribute('class').should.be.false();
+    });
+
+    it('renders option correctly for an action with multiple periods', () => {
+      const option = mountComponent().find('option')[14];
+      option.text().should.containEql('\u00a0\u00a0\u00a0Create or Update Draft');
+      option.getAttribute('value').should.equal('form.update.draft.set');
+      option.hasAttribute('class').should.be.false();
+    });
   });
 
   it('sets the value of the select element to the value prop', () => {

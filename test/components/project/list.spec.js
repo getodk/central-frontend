@@ -1,25 +1,10 @@
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
+import { mockLogin } from '../../util/session';
 import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
 
 describe('ProjectList', () => {
   describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-
     it('does not redirect a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/')

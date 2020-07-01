@@ -21,6 +21,7 @@ const props = [
   'name',
   'version',
   'keyId',
+  'enketoId',
   'state',
   'publishedAt',
   'createdAt',

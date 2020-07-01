@@ -25,8 +25,8 @@ except according to the terms contained in the LICENSE file.
               :placeholder="$t('field.newPassword')" required
               autocomplete="new-password"/>
             <div class="panel-footer">
-              <button :disabled="awaitingResponse" type="submit"
-                class="btn btn-primary">
+              <button type="submit" class="btn btn-primary"
+                :disabled="awaitingResponse">
                 {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
               </button>
             </div>
@@ -60,7 +60,7 @@ export default {
     submit() {
       const headers = {};
       const { token } = this.$route.query;
-      if (token != null) headers.Authorization = `Bearer ${token}`;
+      if (typeof token === 'string') headers.Authorization = `Bearer ${token}`;
       this.request({
         method: 'POST',
         url: '/users/reset/verify',

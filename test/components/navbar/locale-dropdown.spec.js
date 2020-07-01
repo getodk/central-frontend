@@ -6,22 +6,27 @@ import { wait } from '../../util/util';
 
 describe('NavbarLocaleDropdown', () => {
   it('shows the current locale', () =>
-    load('/login').then(app => {
-      const toggle = app.first('#navbar-locale-dropdown .dropdown-toggle');
-      toggle.text().trim().should.equal('en');
-    }));
+    load('/login')
+      .restoreSession(false)
+      .afterResponses(app => {
+        const toggle = app.first('#navbar-locale-dropdown .dropdown-toggle');
+        toggle.text().trim().should.equal('en');
+      }));
 
   it('shows a menu item for each locale', () =>
-    load('/login').then(app => {
-      const text = app.find('#navbar-locale-dropdown .dropdown-menu a')
-        .map(a => a.text().trim());
-      text.should.eql(['English', 'Español']);
-    }));
+    load('/login')
+      .restoreSession(false)
+      .afterResponses(app => {
+        const text = app.find('#navbar-locale-dropdown .dropdown-menu a')
+          .map(a => a.text().trim());
+        text.should.eql(['English', 'Español']);
+      }));
 
   describe('after a locale selection', () => {
     afterEach(() => loadLocale('en'));
 
     const selectLocale = () => load('/login')
+      .restoreSession(false)
       .afterResponses(app => {
         for (const a of app.find('#navbar-locale-dropdown .dropdown-menu a')) {
           if (a.text().trim() === 'Español')

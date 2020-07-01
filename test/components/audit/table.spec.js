@@ -6,7 +6,7 @@ import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
-const assertTriple = (type, initiator, target) => (app) => {
+const testTypeAndTarget = (type, target) => (app) => {
   const td = app.find('.audit-row td');
 
   td[1].text().trim().iTrim().should.equal(type.join(' '));
@@ -18,17 +18,6 @@ const assertTriple = (type, initiator, target) => (app) => {
     icons.length.should.equal(1);
   else
     throw new Error();
-
-  td[2].hasClass('initiator').should.be.true();
-  if (initiator != null) {
-    const a = td[2].first('a');
-    a.text().trim().should.equal(initiator.text);
-    a.getAttribute('title').should.equal(initiator.text);
-    a.getAttribute('href').should.equal(`#${initiator.href}`);
-  } else {
-    td[2].text().trim().should.equal('');
-    td[2].find('a').length.should.equal(0);
-  }
 
   td[3].hasClass('target').should.be.true();
   if (target != null) {
@@ -87,9 +76,8 @@ describe('AuditTable', () => {
                 .last())
             })
             .sorted())
-          .afterResponse(assertTriple(
+          .afterResponse(testTypeAndTarget(
             type,
-            { text: 'User 1', href: '/users/1/edit' },
             { text: 'User 2', href: '/users/2/edit' }
           )));
     }
@@ -111,9 +99,8 @@ describe('AuditTable', () => {
             .createPast(1, { name: 'My Project' })
             .last()
         });
-        return load('/system/audits').then(assertTriple(
+        return load('/system/audits').then(testTypeAndTarget(
           type,
-          { text: 'User 1', href: '/users/1/edit' },
           { text: 'My Project', href: '/projects/1' }
         ));
       });
@@ -128,7 +115,9 @@ describe('AuditTable', () => {
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
-      ['form.delete', ['Form', 'Delete']]
+      ['form.delete', ['Form', 'Delete']],
+      ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
+      ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]
     ];
 
     for (const [action, type] of cases) {
@@ -140,9 +129,8 @@ describe('AuditTable', () => {
             .createPast(1, { name: 'My Form' })
             .last()
         });
-        return load('/system/audits').then(assertTriple(
+        return load('/system/audits').then(testTypeAndTarget(
           type,
-          { text: 'User 1', href: '/users/1/edit' },
           { text: 'My Form', href: '/projects/1/forms/f' }
         ));
       });
@@ -195,51 +183,79 @@ describe('AuditTable', () => {
           loggedAt: ago({ days: 1 }).toISO()
         })
         .sorted())
-      .afterResponses(assertTriple(['Backup'], null, null)));
+      .afterResponses(testTypeAndTarget(['Backup'], null)));
 
   it('renders an audit with an unknown action correctly', () => {
     testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
       action: 'unknown',
       actee: testData.toActor(testData.extendedUsers
         .createPast(1, { displayName: 'User 2' })
         .last())
     });
-    return load('/system/audits').then(assertTriple(
+    return load('/system/audits').then(testTypeAndTarget(
       ['unknown'],
-      { text: 'User 1', href: '/users/1/edit' },
       null
     ));
   });
 
   it('renders an audit with an unknown category correctly', () => {
     testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
       action: 'something.unknown',
       actee: testData.toActor(testData.extendedUsers
         .createPast(1, { displayName: 'User 2' })
         .last())
     });
-    return load('/system/audits').then(assertTriple(
+    return load('/system/audits').then(testTypeAndTarget(
       ['something.unknown'],
-      { text: 'User 1', href: '/users/1/edit' },
       null
     ));
   });
 
   it('renders an audit with an unknown action for its category', () => {
     testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
       action: 'project.unknown',
       actee: testData.standardProjects
         .createPast(1, { name: 'My Project' })
         .last()
     });
-    return load('/system/audits').then(assertTriple(
+    return load('/system/audits').then(testTypeAndTarget(
       ['project.unknown'],
-      { text: 'User 1', href: '/users/1/edit' },
       { text: 'My Project', href: '/projects/1' }
     ));
+  });
+
+  describe('initiator', () => {
+    it('renders correctly for an audit with an actor', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'user.create',
+        actee: testData.toActor(testData.extendedUsers
+          .createPast(1, { displayName: 'User 2' })
+          .last())
+      });
+      return load('/system/audits').then(app => {
+        const td = app.find('.audit-row td')[2];
+        td.hasClass('initiator').should.be.true();
+        const a = td.first('a');
+        a.text().trim().should.equal('User 1');
+        a.getAttribute('title').should.equal('User 1');
+        a.getAttribute('href').should.equal('#/users/1/edit');
+      });
+    });
+
+    it('renders correctly for an audit without an actor', () => {
+      testData.extendedAudits.createPast(1, {
+        action: 'upgrade.process.form',
+        actee: testData.standardForms
+          .createPast(1, { name: 'My Form' })
+          .last()
+      });
+      return load('/system/audits').then(app => {
+        const td = app.find('.audit-row td')[2];
+        td.text().trim().should.equal('');
+        td.find('a').length.should.equal(0);
+      });
+    });
   });
 
   it('renders details correctly', () =>

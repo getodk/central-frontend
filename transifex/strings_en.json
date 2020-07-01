@@ -48,6 +48,10 @@
       "form": {
         "string": "Form Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "upgrade": {
+        "string": "Server Upgrade",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
     "action": {
@@ -95,6 +99,16 @@
         "attachment_update": {
           "string": "Update Attachments",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        }
+      },
+      "upgrade": {
+        "process_form": {
+          "string": "Process Form",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_draft": {
+          "string": "Process Form Draft",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
       "user": {
@@ -1625,6 +1639,10 @@
         "downloadXForm": {
           "string": "Download XML",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "preview": {
+          "string": "Preview",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "format": {
@@ -1636,6 +1654,9 @@
           "string": "As XLSForm",
           "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
         }
+      },
+      "previewDisabled": {
+        "string": "Preview has not finished processing for this Form. Please refresh later and try again."
       }
     },
     "FormVersionTable": {

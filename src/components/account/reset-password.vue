@@ -21,11 +21,11 @@ except according to the terms contained in the LICENSE file.
             <form-group ref="email" v-model.trim="email" type="email"
               :placeholder="$t('field.email')" required autocomplete="off"/>
             <div class="panel-footer">
-              <button :disabled="awaitingResponse" type="submit"
-                class="btn btn-primary">
+              <button type="submit" class="btn btn-primary"
+                :disabled="awaitingResponse">
                 {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
               </button>
-              <router-link :to="loginLocation" tag="button" type="button"
+              <router-link to="/login" tag="button" type="button"
                 class="btn btn-link">
                 {{ $t('action.cancel') }}
               </router-link>
@@ -53,14 +53,6 @@ export default {
       email: ''
     };
   },
-  computed: {
-    loginLocation() {
-      return {
-        path: '/login',
-        query: Object.assign({}, this.$route.query)
-      };
-    }
-  },
   mounted() {
     this.$refs.email.focus();
   },
@@ -68,7 +60,7 @@ export default {
     submit() {
       this
         .post('/users/reset/initiate', { email: this.email })
-        .then(() => this.$router.push(this.loginLocation, () => {
+        .then(() => this.$router.push('/login', () => {
           this.$alert().success(this.$t('alert.success', {
             email: this.email
           }));

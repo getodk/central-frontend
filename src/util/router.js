@@ -10,9 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-// These functions are defined here rather than in src/router.js in order to
-// avoid dependency cycles.
-
 /*
 preservesData() returns `true` if the data for `key` should not be cleared when
 the route changes from `from` to `to`. Otherwise it returns `false`.

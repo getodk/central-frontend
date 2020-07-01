@@ -60,15 +60,6 @@ component:
       ['input[type="email"]', 'example@getodk.org']
     ]));
 
-If you already have a mounted component, you can skip mockHttp().mount():
-
-  const component = mount(App, { router });
-
-  ...
-
-  mockHttp()
-    .request(() => submitLoginForm(component, 'example@getodk.org'));
-
 After specifying the request, specify the response as a callback:
 
   mockHttp()
@@ -80,7 +71,10 @@ specify all the responses, in order of the request:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@getodk.org'))
+    .request(component => submitForm(component, '#account-login form', [
+      ['input[type="email"]', 'example@getodk.org'],
+      ['input[type="password"]', 'password']
+    ]))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
       .createPast(1, { email: 'example@getodk.org' })
@@ -136,7 +130,10 @@ cycles: series can be chained. For example:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@getodk.org'))
+    .request(component => submitForm(component, '#account-login form', [
+      ['input[type="email"]', 'example@getodk.org'],
+      ['input[type="password"]', 'password']
+    ]))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
       .createPast(1, { email: 'example@getodk.org' })
@@ -911,12 +908,5 @@ export const load = (
   }
 
   return mockRoute(location, mountOptions)
-    .modify(series => {
-      const { matched } = router.resolve(location).route;
-      const { meta } = matched[matched.length - 1];
-      return meta.restoreSession && meta.requireAnonymity
-        ? series.restoreSession(false)
-        : series;
-    })
     .respondFor(location, respondForOptions);
 };
