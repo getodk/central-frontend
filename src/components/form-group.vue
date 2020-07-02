@@ -10,16 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- TODO. Add unit tests. -->
 <!-- Use this component for a .form-group element with a label. (Use HTML for a
 .form-group element without a label.) -->
 <template>
   <label class="form-group" :class="{ 'has-error': hasError }">
+    <slot name="before"></slot>
     <input ref="input" v-bind="$attrs" class="form-control" :value="value"
       :placeholder="`${placeholder}${star}`" :required="required"
       :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
       @change="$emit('change', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <slot name="after"></slot>
   </label>
 </template>
 
