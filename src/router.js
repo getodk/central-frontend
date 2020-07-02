@@ -16,7 +16,6 @@ import i18n from './i18n';
 import routes from './routes';
 import store from './store';
 import { keys as requestKeys } from './store/modules/request/keys';
-import { loadLocale } from './util/i18n';
 import { noop } from './util/util';
 import { preservesData } from './util/router';
 
@@ -44,6 +43,7 @@ router.afterEach(to => {
 ////////////////////////////////////////////////////////////////////////////////
 // INITIAL REQUESTS
 
+// eslint-disable-next-line no-unused-vars
 const initialLocale = () => {
   try {
     const locale = localStorage.getItem('locale');
@@ -75,7 +75,7 @@ router.beforeEach((to, from, next) => {
   }
 
   Promise.all([
-    loadLocale(initialLocale()).catch(noop),
+    // loadLocale(initialLocale()).catch(noop),
     restoreSession(to).catch(noop)
   ])
     .then(() => {
