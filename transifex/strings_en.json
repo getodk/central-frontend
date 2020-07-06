@@ -2450,18 +2450,19 @@
       },
       "loading": {
         "withoutCount": {
-          "string": "Loading Submissions…"
+          "string": "Loading Submissions…",
+          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
           "string": "{count, plural, one {Loading {count} Submission…} other {Loading {count} Submissions…}}"
         },
         "first": {
           "string": "Loading the first {top} of {count} Submissions…",
-          "developer_comment": "{top} is a number."
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "middle": {
           "string": "Loading {top} more of {count} remaining Submissions…",
-          "developer_comment": "{top} is a number."
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "last": {
           "multiple": {

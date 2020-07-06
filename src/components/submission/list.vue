@@ -341,11 +341,12 @@ export default {
     },
     "analyzeDisabled": "OData access is unavailable due to Form encryption",
     "loading": {
+      // This text is shown when the number of Submissions loading is unknown.
       "withoutCount": "Loading Submissions…",
       "all": "Loading {count} Submission… | Loading {count} Submissions…",
-      // {top} is a number.
+      // {top} and {count} are both numbers that are at least 250.
       "first": "Loading the first {top} of {count} Submissions…",
-      // {top} is a number.
+      // {top} and {count} are both numbers that are at least 250.
       "middle": "Loading {top} more of {count} remaining Submissions…",
       "last": {
         "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
