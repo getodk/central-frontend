@@ -20,9 +20,8 @@ const moveToStep1 = (component) => {
     .respondWithData(() => testData.standardAudits.sorted())
     .afterResponses(wrapper => trigger.click(wrapper, '#backup-status button'));
 };
-// For step 1, fills the form and clicks the Next button.
-const next1 = (wrapper) =>
-  submitForm(wrapper, '#backup-new form', [['input', '']]);
+// For step 1, submits the form.
+const next1 = trigger.submit('#backup-new form');
 // For step 2, clicks the Next button.
 const next2 = (wrapper) =>
   trigger.click(wrapper.first('#backup-new .btn-primary'))
