@@ -9,6 +9,9 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "test": "karma start"
   },
+  "gitHooks": {
+    "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
+  },
   "dependencies": {
     "axios": "~0.18",
     "bootstrap": "~3",
