@@ -58,15 +58,15 @@ except according to the terms contained in the LICENSE file.
               <a href="https://dbca-wa.github.io/ruODK/" target="_blank" rel="noopener">ruODK</a>
             </template>
             <template #oData>
-              <a href="https://dbca-wa.github.io/ruODK/articles/odata.html" target="_blank" rel="noopener">OData</a>
+              <a href="https://dbca-wa.github.io/ruODK/articles/odata-api.html" target="_blank" rel="noopener">OData</a>
             </template>
             <template #restful>
-              <a href="https://dbca-wa.github.io/ruODK/articles/api.html" target="_blank" rel="noopener">{{ $t('help.r[0].restful') }}</a>
+              <a href="https://dbca-wa.github.io/ruODK/articles/restful-api.html" target="_blank" rel="noopener">{{ $t('help.r[0].restful') }}</a>
             </template>
           </i18n>
           <i18n tag="p" path="help.r[1].full">
             <template #here>
-              <a href="https://github.com/dbca-wa/ruODK/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener">{{ $t('help.r[1].here') }}</a>
+              <a href="https://dbca-wa.github.io/ruODK/CONTRIBUTING.html" target="_blank" rel="noopener">{{ $t('help.r[1].here') }}</a>
             </template>
           </i18n>
         </template>
