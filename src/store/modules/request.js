@@ -14,10 +14,23 @@ except according to the terms contained in the LICENSE file.
 
 import Vue from 'vue';
 import { mapState } from 'vuex';
+import { pick } from 'ramda';
 
+import Option from '../../util/option';
 import reconcileData from './request/reconcile';
+import { Presenter } from '../../presenters/base';
 import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
+
+const updateData = (oldData, newData, props) => {
+  if (oldData == null) throw new Error('data does not exist');
+  if (oldData instanceof Option) {
+    if (oldData.isEmpty()) throw new Error('data is an empty Option');
+    return Option.of(updateData(oldData.get(), newData, props));
+  }
+  if (oldData instanceof Presenter) return oldData.with(pick(props, newData));
+  return { ...oldData, ...pick(props, newData) };
+};
 
 export default {
   state: {
@@ -116,8 +129,9 @@ export default {
     setData({ data }, { key, value }) {
       data[key] = value;
     },
-    setDataProp({ data }, { key, prop, value, optional = false }) {
-      Vue.set(!optional ? data[key] : data[key].get(), prop, value);
+    setDataProp({ data }, { key, prop, value }) {
+      const target = data[key] instanceof Option ? data[key].get() : data[key];
+      Vue.set(target, prop, value);
     },
     clearData({ data }, key = undefined) {
       if (key != null) {
@@ -183,6 +197,9 @@ export default {
       Existing Data
       -------------
 
+      TODO
+      - update (optional)
+
       - resend (default: true)
 
         By default, get() sends a request for every config object specified,
@@ -204,7 +221,7 @@ export default {
         should be cleared before the request is sent. Specify `false` for a
         background refresh. Note that by default, the data is cleared for all
         keys whenever the route changes. (There are exceptions to this, however:
-        see the preserveData meta field in router.js for more information.)
+        see the preserveData meta field for more information.)
 
     Canceled Requests
     -----------------
@@ -249,9 +266,13 @@ export default {
           success,
 
           // Existing data
-          resend = true,
-          clear = true
+          update = undefined,
+          clear = update == null,
+          resend = true
         } = config;
+
+        if (clear && update != null)
+          throw new Error('cannot clear data to be updated');
 
         /*
         We need to handle three cases:
@@ -274,15 +295,15 @@ export default {
              will refresh the data, canceling the last request if it is still in
              progress.
         */
+        const { data } = state;
         const requestsForKey = state.requests[key];
         const lastRequest = requestsForKey.last;
-        if (!resend && (state.data[key] != null ||
-          lastRequest.state === 'loading'))
+        if (!resend && (data[key] != null || lastRequest.state === 'loading'))
           return Promise.resolve();
-        if ((state.data[key] == null && lastRequest.state === 'loading') ||
-          state.data[key] != null) {
+        if ((data[key] == null && lastRequest.state === 'loading') ||
+          data[key] != null) {
           if (lastRequest.state === 'loading') commit('cancelRequest', key);
-          if (state.data[key] != null && clear) commit('clearData', key);
+          if (data[key] != null && clear) commit('clearData', key);
         }
         const { cancelId } = requestsForKey;
 
@@ -290,7 +311,7 @@ export default {
         baseConfig.headers = extended
           ? { ...headers, 'X-Extended-Metadata': 'true' }
           : headers;
-        const token = getters.loggedIn ? state.data.session.token : null;
+        const token = getters.loggedIn ? data.session.token : null;
         const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
 
         const promise = Vue.prototype.$http.request(axiosConfig)
@@ -320,13 +341,23 @@ export default {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
             commit('setRequestState', { key, state: 'success' });
-            const transform = transforms[key];
-            const transformed = transform != null
-              ? transform(response)
-              : response.data;
-            commit('setData', { key, value: transformed });
-            reconcileData.reconcile(key, state.data, commit);
-            if (success != null) success(state.data);
+
+            if (update == null) {
+              const transform = transforms[key];
+              const transformed = transform != null
+                ? transform(response)
+                : response.data;
+              commit('setData', { key, value: transformed });
+            } else {
+              commit('setData', {
+                key,
+                value: updateData(data[key], response.data, update)
+              });
+            }
+
+            reconcileData.reconcile(key, data, commit);
+
+            if (success != null) success(data);
           });
         commit('createRequest', { key, promise });
         return promise;

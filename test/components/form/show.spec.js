@@ -67,9 +67,7 @@ describe('FormShow', () => {
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
       const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(1);
-        })
+        .complete()
         .request(runAll)
         .beforeEachResponse((_, { method, url, headers }) => {
           method.should.equal('GET');
@@ -83,8 +81,8 @@ describe('FormShow', () => {
         .afterResponse(app => {
           const { formDraft } = app.vm.$store.state.request.data;
           formDraft.get().enketoId.should.equal('xyz');
-          app.first(FormShow).data().calls.should.eql({});
-        });
+        })
+        .testNoRequest(runAll);
     });
 
     it('continues to fetch the enketoId if the draft does not have one', () => {
@@ -110,42 +108,11 @@ describe('FormShow', () => {
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
       const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(1);
-        })
+        .complete()
         .request(runAll)
         .respondWithProblem()
-        .afterResponse(app => {
-          app.first(FormShow).data().calls.should.eql({});
-        });
-    });
-
-    it('stops fetching enketoId if a new draft is uploaded', () => {
-      testData.extendedForms.createPast(1, {
-        draft: true,
-        version: 'v1',
-        enketoId: null
-      });
-      const { runAll } = fakeSetTimeout();
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(1);
-        })
-        .request(runAll)
-        .respondWithData(() => {
-          testData.extendedFormDrafts.publish(-1);
-          testData.extendedFormVersions.createNew({
-            draft: true,
-            version: 'v2',
-            enketoId: 'xyz'
-          });
-          return testData.standardFormDrafts.last();
-        })
-        .afterResponse(app => {
-          const { formDraft } = app.vm.$store.state.request.data;
-          should.not.exist(formDraft.get().enketoId);
-          app.first(FormShow).data().calls.should.eql({});
-        });
+        .complete()
+        .testNoRequest(runAll);
     });
 
     it('does not fetch enketoId if a new request for draft is sent', () => {
@@ -154,10 +121,7 @@ describe('FormShow', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(app => {
-          const formShow = app.first(FormShow);
-          formShow.vm.fetchDraft();
-
-          formShow.data().calls.should.eql({});
+          app.first(FormShow).vm.fetchDraft();
           runAll();
         })
         // There should be only two responses, not three.
@@ -227,9 +191,7 @@ describe('FormShow', () => {
       });
       const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(1);
-        })
+        .complete()
         .request(runAll)
         .beforeEachResponse((_, { method, url, headers }) => {
           method.should.equal('GET');
@@ -243,8 +205,8 @@ describe('FormShow', () => {
         .afterResponse(app => {
           const { form } = app.vm.$store.state.request.data;
           form.enketoId.should.equal('xyz');
-          app.first(FormShow).data().calls.should.eql({});
-        });
+        })
+        .testNoRequest(runAll);
     });
 
     it('continues to fetch the enketoId if the form does not have one', () => {
@@ -276,14 +238,11 @@ describe('FormShow', () => {
       });
       const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(1);
-        })
+        .complete()
         .request(runAll)
         .respondWithProblem()
-        .afterResponse(app => {
-          app.first(FormShow).data().calls.should.eql({});
-        });
+        .complete()
+        .testNoRequest(runAll);
     });
 
     it('does not fetch enketoId if a new request for form is sent', () => {
@@ -295,10 +254,7 @@ describe('FormShow', () => {
       return load('/projects/1/forms/f')
         .complete()
         .request(app => {
-          const formShow = app.first(FormShow);
-          formShow.vm.fetchForm();
-
-          formShow.data().calls.should.eql({});
+          app.first(FormShow).vm.fetchForm();
           runAll();
         })
         // There should be only one response, not two.
@@ -313,9 +269,7 @@ describe('FormShow', () => {
       testData.extendedFormDrafts.createPast(1, { draft: true, enketoId: null });
       const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
-        .afterResponses(app => {
-          Object.keys(app.first(FormShow).data().calls).length.should.equal(2);
-        })
+        .complete()
         .request(runAll)
         .respondWithData(() => {
           testData.extendedFormVersions.updateEnketoId(0, 'xyz');
@@ -329,8 +283,8 @@ describe('FormShow', () => {
           const { form, formDraft } = app.vm.$store.state.request.data;
           form.enketoId.should.equal('xyz');
           formDraft.get().enketoId.should.equal('abc');
-          app.first(FormShow).data().calls.should.eql({});
-        });
+        })
+        .testNoRequest(runAll);
     });
   });
 });

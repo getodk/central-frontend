@@ -38,27 +38,20 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 reconcileData.add(
   'form', 'formDraft',
   (form, formDraft, commit) => {
-    if (form.publishedAt == null) {
-      if (formDraft.isEmpty()) {
-        if (form.enketoId != null) {
-          commit('setData', {
-            key: 'form',
-            value: form.with({ enketoId: null })
-          });
-        }
-      } else {
-        const { enketoId } = formDraft.get();
-        if (form.enketoId !== enketoId) {
-          commit('setData', {
-            key: 'form',
-            value: form.with({ enketoId })
-          });
-        }
+    // Note the unlikely possibility that
+    // form.publishedAt == null && formDraft.isEmpty(). In that case,
+    // the user will be redirected to /.
+    if (form.publishedAt == null && formDraft.isDefined()) {
+      const { enketoId } = formDraft.get();
+      if (form.enketoId !== enketoId) {
+        commit('setData', {
+          key: 'form',
+          value: form.with({ enketoId })
+        });
       }
     }
   }
@@ -72,60 +65,8 @@ reconcileData.add(
       commit('setData', { key: 'attachments', value: Option.none() });
   }
 );
-/* If the form does not have an enketoId, we wait, then send a second request
-for the form in order to check for an enketoId. We store the entire form from
-the second request, not just its enketoId, because we also check that the form
-from the second request matches the form from the first. We only update
-enketoId, not other properties, because updating other properties could result
-in more complexity / unexpected behavior. */
-reconcileData.add(
-  'form', 'formWithEnketoId',
-  (form, formWithEnketoId, commit) => {
-    if (form.enketoId == null && formWithEnketoId.enketoId != null) {
-      commit('setData', {
-        key: 'form',
-        value: form.with({ enketoId: formWithEnketoId.enketoId })
-      });
-    }
-  }
-);
-reconcileData.add(
-  'formDraft', 'draftWithEnketoId',
-  (draftOption, draftWithEnketoId, commit) => {
-    if (draftOption.isEmpty()) {
-      commit('clearData', 'draftWithEnketoId');
-      return;
-    }
-    const formDraft = draftOption.get();
-    if (draftWithEnketoId.version !== formDraft.version ||
-      // A new draft could have been uploaded with the same version, so we also
-      // check sha256.
-      draftWithEnketoId.sha256 !== formDraft.sha256) {
-      commit('clearData', 'draftWithEnketoId');
-    } else if (formDraft.enketoId == null &&
-      draftWithEnketoId.enketoId != null) {
-      commit('setData', {
-        key: 'formDraft',
-        value: Option.of(formDraft.with({
-          enketoId: draftWithEnketoId.enketoId
-        }))
-      });
-    }
-  }
-);
-reconcileData.add(
-  'form', 'draftWithEnketoId',
-  (form, draftWithEnketoId, commit) => {
-    if (form.publishedAt == null && form.enketoId == null &&
-      draftWithEnketoId.enketoId != null) {
-      commit('setData', {
-        key: 'form',
-        value: form.with({ enketoId: draftWithEnketoId.enketoId })
-      });
-    }
-  }
-);
-// We do not reconcile `formVersions` and `form` (for example, form.version).
+
+const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
@@ -148,22 +89,11 @@ export default {
     };
   },
   computed: {
-    ...requestData(['formWithEnketoId', 'draftWithEnketoId']),
     initiallyLoading() {
-      return this.$store.getters.initiallyLoading([
-        'project',
-        'form',
-        'formDraft',
-        'attachments'
-      ]);
+      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
     dataExists() {
-      return this.$store.getters.dataExists([
-        'project',
-        'form',
-        'formDraft',
-        'attachments'
-      ]);
+      return this.$store.getters.dataExists(REQUEST_KEYS);
     }
   },
   watch: {
@@ -174,19 +104,16 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchEnketoId(key, url) {
+    fetchEnketoId(callName, requestKey, url) {
       this.callWait(
-        key,
+        callName,
         () => new Promise((resolve, reject) => {
           this.$store.dispatch('get', [{
-            key,
+            key: requestKey,
             url,
-            success: ({ [key]: versionWithEnketoId }) => {
-              // Cleared during reconciliation
-              const invalid = versionWithEnketoId == null;
-              // We no longer need to store the data.
-              if (!invalid) this.$store.commit('clearData', key);
-              resolve(invalid || versionWithEnketoId.enketoId != null);
+            update: ['enketoId'],
+            success: (data) => {
+              resolve(Option.of(data[requestKey]).get().enketoId != null);
             },
             alert: false
           }]).catch(reject);
@@ -201,11 +128,7 @@ export default {
       );
     },
     fetchForm() {
-      if (this.formWithEnketoId != null)
-        this.$store.commit('clearData', 'formWithEnketoId');
-      this.$store.commit('cancelRequest', 'formWithEnketoId');
-      this.cancelCall('formWithEnketoId');
-
+      this.cancelCall('fetchEnketoIdForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.$store.dispatch('get', [{
         key: 'form',
@@ -223,18 +146,12 @@ export default {
           // something else has probably gone wrong.
           if (Date.now() - DateTime.fromISO(publishedAt).toMillis() > 900000)
             return;
-          this.fetchEnketoId('formWithEnketoId', url);
+          this.fetchEnketoId('fetchEnketoIdForForm', 'form', url);
         }
       }]).catch(noop);
     },
     fetchDraft() {
-      // Clear this.draftWithEnketoId so that it is not reconciled with the
-      // form.
-      if (this.draftWithEnketoId != null)
-        this.commit('clearData', 'draftWithEnketoId');
-      this.$store.commit('cancelRequest', 'draftWithEnketoId');
-      this.cancelCall('draftWithEnketoId');
-
+      this.cancelCall('fetchEnketoIdForDraft');
       const draftUrl = apiPaths.formDraft(this.projectId, this.xmlFormId);
       this.$store.dispatch('get', [
         {
@@ -244,8 +161,11 @@ export default {
           fulfillProblem: ({ code }) => code === 404.1,
           success: ({ formDraft }) => {
             formDraft.ifDefined(({ enketoId }) => {
-              if (enketoId == null)
-                this.fetchEnketoId('draftWithEnketoId', draftUrl);
+              if (enketoId == null) {
+                // We do not check that the form draft has not changed, for
+                // example, by another user concurrently modifying the draft.
+                this.fetchEnketoId('fetchEnketoIdForDraft', 'formDraft', draftUrl);
+              }
             });
           }
         },

@@ -38,11 +38,9 @@ export const keys = [
   'form',
   // Fields for a single form version (the primary version or otherwise)
   'fields',
-  'formWithEnketoId',
   'formActors',
   'formVersions',
   'formDraft',
-  'draftWithEnketoId',
   // Form draft attachments
   'attachments',
   // A single chunk of submissions OData for a single form version
@@ -62,7 +60,7 @@ export const keys = [
 
 // Define functions to transform responses.
 
-const optional = (transform = undefined) => (response) => (response.status === 200
+const option = (transform = undefined) => (response) => (response.status === 200
   ? Option.of(transform != null ? transform(response) : response.data)
   : Option.none());
 
@@ -80,15 +78,13 @@ export const transforms = {
   project: ({ data }) => new Project(data),
   forms: formPresenters,
   form: formPresenter,
-  formWithEnketoId: formPresenter,
   formVersions: formPresenters,
-  formDraft: optional(formPresenter),
-  draftWithEnketoId: formPresenter,
-  attachments: optional(({ data }) =>
+  formDraft: option(formPresenter),
+  attachments: option(({ data }) =>
     data.map(attachment => new FormAttachment(attachment))),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
-  backupsConfig: optional(),
+  backupsConfig: option(),
   audits: ({ data }) => data.map(audit => new Audit(audit))
 };
 

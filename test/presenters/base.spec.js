@@ -1,8 +1,8 @@
-import Base from '../../src/presenters/base';
+import { presenterClass } from '../../src/presenters/base';
 
-class Point extends Base(['x', 'y']) {}
+class Point extends presenterClass(['x', 'y']) {}
 
-describe('Base', () => {
+describe('presenterClass()', () => {
   it('returns each known property', () => {
     const point = new Point({ x: 0, y: 1 });
     point.x.should.equal(0);

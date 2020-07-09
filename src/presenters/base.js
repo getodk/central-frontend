@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 let key = 0;
 
-class Base {
+export class Presenter {
   constructor(data) {
     this._data = data;
   }
@@ -36,8 +36,8 @@ class Base {
   }
 }
 
-export default (props) => {
-  const klass = class extends Base {};
+export const presenterClass = (props) => {
+  const klass = class extends Presenter {};
 
   // Add a getter for each property of the underlying data.
   for (const name of props) {

@@ -335,8 +335,7 @@ export default {
       this.$store.commit('setDataProp', {
         key: 'attachments',
         prop: index,
-        value: updatedAttachment,
-        optional: true
+        value: updatedAttachment
       });
     },
     uploadFiles() {
