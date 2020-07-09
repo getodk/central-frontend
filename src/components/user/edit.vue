@@ -34,10 +34,23 @@ import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
+import reconcileData from '../../store/modules/request/reconcile';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+reconcileData.add(
+  'user', 'currentUser',
+  (user, currentUser, commit) => {
+    if (user.id === currentUser.id) {
+      commit('setData', {
+        key: 'currentUser',
+        value: currentUser.with(user.object)
+      });
+    }
+  }
+);
 
 export default {
   name: 'UserEdit',
@@ -85,17 +98,9 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'user',
-        url: apiPaths.user(this.id),
-        success: ({ currentUser }) => {
-          if (this.user.id !== currentUser.id) return;
-          this.$store.commit('setData', {
-            key: 'currentUser',
-            value: currentUser.with(this.user.object)
-          });
-        }
-      }]).catch(noop);
+      this.$store.dispatch('get', [
+        { key: 'user', url: apiPaths.user(this.id) }
+      ]).catch(noop);
     }
   }
 };

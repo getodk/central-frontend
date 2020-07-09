@@ -41,12 +41,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import callWait from '../../mixins/call-wait';
 import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
+  mixins: [callWait()],
   props: {
     state: {
       type: Boolean,
@@ -64,22 +66,16 @@ export default {
   },
   data() {
     return {
-      passphrase: '',
-      // The number of times the iframe will be checked for a Problem after the
-      // iframe form is submitted
-      problemChecks: 0,
-      timeoutId: null
+      calls: {},
+      passphrase: ''
     };
   },
   computed: requestData(['session']),
   watch: {
     state() {
-      if (this.state) return;
-      this.passphrase = '';
-      this.problemChecks = 0;
-      if (this.timeoutId != null) {
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
+      if (!this.state) {
+        this.passphrase = '';
+        this.cancelCall('checkForProblem');
       }
     }
   },
@@ -127,41 +123,33 @@ export default {
       passphraseInput.value = this.passphrase;
       csrf.value = this.session.csrf;
     },
-    // scheduleProblemCheck() checks the iframe for a Problem after waiting. We
-    // check for a Problem in this way, because when the iframe form is
-    // submitted, it is not an AJAX request, so there is not another way to know
-    // whether a Problem was returned (I think).
+    checkForProblem() {
+      const doc = this.$refs.iframe.contentWindow.document;
+      // If Backend returns a Problem, the iframe changes pages. However, if the
+      // form submission is successful, it seems that the iframe does not change
+      // pages, and the form remains on the page.
+      if (doc.querySelector('form') != null || doc.body == null)
+        return false;
+      let problem;
+      try {
+        // Note that the Problem may be wrapped in another element, for example,
+        // a <pre> element.
+        problem = JSON.parse(doc.body.textContent);
+      } catch (e) {
+        this.$logger.error('cannot parse Problem');
+      }
+      if (isProblem(problem)) {
+        this.$logger.error(problem);
+        this.$alert().danger(problem.message);
+      }
+      return true;
+    },
     scheduleProblemCheck() {
-      this.timeoutId = setTimeout(
-        () => {
-          const doc = this.$refs.iframe.contentWindow.document;
-          // If Backend returns a Problem, the iframe changes pages. However, if
-          // the form submission is successful, it seems that the iframe does
-          // not change pages, and the form remains on the page.
-          if (doc.querySelector('form') == null && doc.body != null) {
-            let problem;
-            try {
-              // Note that the Problem may be wrapped in another element, for
-              // example, a <pre> element.
-              problem = JSON.parse(doc.body.textContent);
-            } catch (e) {
-              this.$logger.error('cannot parse Problem');
-            }
-            if (isProblem(problem)) {
-              this.$logger.error(problem);
-              this.$alert().danger(problem.message);
-            }
-            this.problemChecks = 0;
-            this.timeoutId = null;
-          } else {
-            this.problemChecks -= 1;
-            if (this.problemChecks > 0)
-              this.scheduleProblemCheck();
-            else
-              this.timeoutId = null;
-          }
-        },
-        this.delayBetweenChecks
+      this.cancelCall('checkForProblem');
+      this.callWait(
+        'checkForProblem',
+        () => this.checkForProblem(),
+        (tries) => (tries < 300 ? this.delayBetweenChecks : null)
       );
     },
     submit() {
@@ -176,9 +164,9 @@ export default {
       this.replaceIframeBody();
       const form = iframeDoc.body.querySelector('form');
       form.submit();
-      // Make sure that the passphrase is no longer in the DOM. (This might not
-      // be necessary -- not sure.)
-      form.querySelector('input').value = '';
+      // Clear the form so that the inputs' values are no longer in the DOM.
+      for (const input of form.querySelectorAll('input'))
+        input.value = '';
 
       // Because the form submission is not an AJAX request, we will only know
       // the result of the request if a Problem is returned: if a Problem is
@@ -186,8 +174,7 @@ export default {
       // successful, the iframe seems not to change.
       this.$alert().info(this.$t('alert.submit'));
 
-      this.problemChecks = 300;
-      if (this.timeoutId == null) this.scheduleProblemCheck();
+      this.scheduleProblemCheck();
     }
   }
 };

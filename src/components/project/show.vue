@@ -63,11 +63,35 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import reconcileData from '../../store/modules/request/reconcile';
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+reconcileData.add(
+  'project', 'forms',
+  (project, forms, commit) => {
+    if (project.forms !== forms.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ forms: forms.length })
+      });
+    }
+  }
+);
+reconcileData.add(
+  'project', 'fieldKeys',
+  (project, fieldKeys, commit) => {
+    if (project.appUsers !== fieldKeys.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ appUsers: fieldKeys.length })
+      });
+    }
+  }
+);
 
 export default {
   name: 'ProjectShow',
@@ -99,14 +123,7 @@ export default {
         key: 'fieldKeys',
         url: apiPaths.fieldKeys(this.projectId),
         extended: true,
-        resend,
-        success: ({ project, fieldKeys }) => {
-          if (project == null || project.appUsers === fieldKeys.length) return;
-          this.$store.commit('setData', {
-            key: 'project',
-            value: project.with({ appUsers: fieldKeys.length })
-          });
-        }
+        resend
       }]).catch(noop);
     }
   }

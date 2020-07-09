@@ -66,8 +66,8 @@ export default {
       1. There is at least one key for which there is no data and for which a
          request is in progress. (This condition is not satisfied if there is
          already data for the key, and the data is simply being refreshed.)
-      2. There is no key for which the last request for the key resulted in an
-         error.
+      2. There is no key for which the last request for the key was
+         unsuccessful.
 
     Otherwise it returns `false`.
     */
@@ -159,6 +159,9 @@ export default {
         Problem. (Any error response that is not a Problem is automatically
         considered unsuccessful.) fulfillProblem should return `true` if the
         response should be considered successful and `false` if not.
+      - alert (default: true). Specify `true` to show an alert for an
+        unsuccessful response and to log it. Specify `false` not to display an
+        unsuccessful response.
       - success (optional)
 
         Callback to run if the request is successful and is not canceled. get()
@@ -220,8 +223,7 @@ export default {
     ------------
 
     get() returns a promise. The promise will be rejected if any of the requests
-    results in an error or is canceled. Otherwise the promise should be
-    fulfilled.
+    is unsuccessful or is canceled. Otherwise the promise should be fulfilled.
 
     If you call then() on the promise, note that the `state` of each request
     will be 'success' when the then() callback is run, not 'loading'. If you
@@ -231,7 +233,7 @@ export default {
     and updating the DOM.
     */
     get({ state, getters, commit }, configs) {
-      let firstError = true;
+      let alerted = false;
       return Promise.all(configs.map(config => {
         const {
           key,
@@ -243,6 +245,7 @@ export default {
 
           // Response handling
           fulfillProblem = undefined,
+          alert = true,
           success,
 
           // Existing data
@@ -300,15 +303,17 @@ export default {
               fulfillProblem(error.response.data))
               return error.response;
 
-            logAxiosError(error);
-            if (firstError) {
-              const message = requestAlertMessage(error);
-              commit('setAlert', { type: 'danger', message });
+            if (alert) {
+              logAxiosError(error);
+              if (!alerted) {
+                const message = requestAlertMessage(error);
+                commit('setAlert', { type: 'danger', message });
+                alerted = true;
+              }
             }
 
             commit('setRequestState', { key, state: 'error' });
 
-            firstError = false;
             throw error;
           })
           .then(response => {

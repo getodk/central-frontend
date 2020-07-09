@@ -224,6 +224,9 @@ const routes = [
           }
         ]
       },
+      // Note the unlikely possibility that
+      // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
+      // will be unable to navigate to a form route.
       {
         path: 'forms/:xmlFormId',
         component: FormShow,
