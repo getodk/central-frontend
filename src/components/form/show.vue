@@ -191,12 +191,11 @@ export default {
             alert: false
           }]).catch(reject);
         }),
-        // Wait for up to a total of about 3 minutes, not including request
-        // time.
+        // Wait for up to a total of 10 minutes, not including request time.
         (tries) => {
-          if (tries < 6) return 1000;
-          if (tries < 24) return 3000;
-          if (tries < 40) return 8000;
+          if (tries < 20) return 3000;
+          if (tries < 50) return 8000;
+          if (tries < 70) return 15000;
           return null;
         }
       );
