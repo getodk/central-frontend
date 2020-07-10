@@ -121,7 +121,7 @@ export default {
       "xlsForm": "As XLSForm"
     },
     "previewDisabled": "Preview has not finished processing for this Form. Please refresh later and try again.",
-    "previewDisabledUnlessOpen": "In this version of ODK Central, preview is only available for Open Forms."
+    "previewDisabledUnlessOpen": "In this version of ODK Central, preview is only available for Forms in the Open state."
   }
 }
 </i18n>

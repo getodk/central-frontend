@@ -180,7 +180,7 @@ describe('FormVersionStandardButtons', () => {
         const component = mountComponent({ version: form, preview: true });
         const button = component.first('.preview-button');
         button.should.be.disabled();
-        button.getAttribute('title').should.equal('In this version of ODK Central, preview is only available for Open Forms.');
+        button.getAttribute('title').should.equal('In this version of ODK Central, preview is only available for Forms in the Open state.');
       });
 
       it('does not disable the button for a draft', () => {
