@@ -428,6 +428,29 @@ describe('FormNew', () => {
           steps[2].getProp('stage').should.equal('current');
         });
     });
+
+    it('updates the form enketoId', () => {
+      testData.extendedForms.createPast(1, { draft: true, enketoId: null });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await trigger.click(app, '#form-draft-status-upload-button');
+          await upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createPast(1, {
+            draft: true,
+            enketoId: 'xyz'
+          });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          const { form } = app.vm.$store.state.request.data;
+          form.enketoId.should.equal('xyz');
+        });
+    });
   });
 
   describe('custom alert messages', () => {

@@ -26,20 +26,52 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { DateTime } from 'luxon';
+
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
+import Option from '../../util/option';
 import PageBody from '../page/body.vue';
+import callWait from '../../mixins/call-wait';
+import reconcileData from '../../store/modules/request/reconcile';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+
+reconcileData.add(
+  'form', 'formDraft',
+  (form, formDraft, commit) => {
+    // Note the unlikely possibility that
+    // form.publishedAt == null && formDraft.isEmpty(). In that case,
+    // the user will be redirected to /.
+    if (form.publishedAt == null && formDraft.isDefined()) {
+      const { enketoId } = formDraft.get();
+      if (form.enketoId !== enketoId) {
+        commit('setData', {
+          key: 'form',
+          value: form.with({ enketoId })
+        });
+      }
+    }
+  }
+);
+reconcileData.add(
+  'formDraft', 'attachments',
+  (formDraft, attachments, commit) => {
+    if (formDraft.isDefined() && attachments.isEmpty())
+      commit('setData', { key: 'formDraft', value: Option.none() });
+    else if (formDraft.isEmpty() && attachments.isDefined())
+      commit('setData', { key: 'attachments', value: Option.none() });
+  }
+);
 
 const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
-  mixins: [request(), routes()],
+  mixins: [callWait(), request(), routes()],
   props: {
     projectId: {
       type: String,
@@ -52,6 +84,7 @@ export default {
   },
   data() {
     return {
+      calls: {},
       awaitingResponse: false
     };
   },
@@ -71,20 +104,70 @@ export default {
     this.fetchData();
   },
   methods: {
+    fetchEnketoId(callName, requestKey, url) {
+      this.callWait(
+        callName,
+        () => new Promise((resolve, reject) => {
+          this.$store.dispatch('get', [{
+            key: requestKey,
+            url,
+            update: ['enketoId'],
+            success: (data) => {
+              resolve(Option.of(data[requestKey]).get().enketoId != null);
+            },
+            alert: false
+          }]).catch(reject);
+        }),
+        // Wait for up to a total of 10 minutes, not including request time.
+        (tries) => {
+          if (tries < 20) return 3000;
+          if (tries < 50) return 8000;
+          if (tries < 70) return 15000;
+          return null;
+        }
+      );
+    },
     fetchForm() {
+      this.cancelCall('fetchEnketoIdForForm');
+      const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.$store.dispatch('get', [{
         key: 'form',
-        url: apiPaths.form(this.projectId, this.xmlFormId),
-        extended: true
+        url,
+        extended: true,
+        success: ({ form }) => {
+          if (form.enketoId != null) return;
+          const { publishedAt } = form;
+          // The enketoId of a form without a published version is the same as
+          // the enketoId of the form draft. If a form without a published
+          // version does not have an enketoId, we do not fetch its enketoId,
+          // because we will already fetch the enketoId of the draft.
+          if (publishedAt == null) return;
+          // If Enketo hasn't finished processing the form in 15 minutes,
+          // something else has probably gone wrong.
+          if (Date.now() - DateTime.fromISO(publishedAt).toMillis() > 900000)
+            return;
+          this.fetchEnketoId('fetchEnketoIdForForm', 'form', url);
+        }
       }]).catch(noop);
     },
     fetchDraft() {
+      this.cancelCall('fetchEnketoIdForDraft');
+      const draftUrl = apiPaths.formDraft(this.projectId, this.xmlFormId);
       this.$store.dispatch('get', [
         {
           key: 'formDraft',
-          url: apiPaths.formDraft(this.projectId, this.xmlFormId),
+          url: draftUrl,
           extended: true,
-          fulfillProblem: ({ code }) => code === 404.1
+          fulfillProblem: ({ code }) => code === 404.1,
+          success: ({ formDraft }) => {
+            formDraft.ifDefined(({ enketoId }) => {
+              if (enketoId == null) {
+                // We do not check that the form draft has not changed, for
+                // example, by another user concurrently modifying the draft.
+                this.fetchEnketoId('fetchEnketoIdForDraft', 'formDraft', draftUrl);
+              }
+            });
+          }
         },
         {
           key: 'attachments',

@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Base from './base';
+import { presenterClass } from './base';
 
 const props = [
   'acteeId',
@@ -22,4 +22,4 @@ const props = [
   'actor'
 ];
 
-export default class Audit extends Base(props) {}
+export default class Audit extends presenterClass(props) {}

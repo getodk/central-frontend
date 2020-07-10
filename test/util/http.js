@@ -9,6 +9,7 @@ import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
 import { mount as lifecycleMount } from './lifecycle';
 import { trigger } from './event';
+import { wait, waitUntil } from './util';
 
 
 
@@ -443,10 +444,11 @@ class MockHttp {
         this._checkStateBeforeRequest();
         return this._request(this._component);
       })
-      // Using finally() rather than then() so that even if the promise is
-      // rejected, we know that any responses will be processed by the end of
-      // the promise.
-      .finally(() => this._waitOnWork(pollWork))
+      // Wait for any responses to be processed.
+      .finally(wait)
+      .finally(() => (pollWork != null
+        ? waitUntil(() => pollWork(this._component))
+        : undefined))
       .finally(() => this._restoreHttp())
       .then(() => this._checkStateAfterWait())
       .then(() => callback(this._component))
@@ -684,26 +686,6 @@ class MockHttp {
     }
   }
 
-  /* _waitOnWork() waits for Frontend to complete any ongoing work, for example,
-  processing the response to a request. _waitOnWork() first uses setTimeout() to
-  resolve pending promises: see
-  https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html.
-  Then, if _waitOnWork() receives a callback, it will repeatedly run the
-  callback until the callback returns a truthy value (or until Karma times
-  out). */
-  _waitOnWork(callback = undefined) {
-    return new Promise(resolve => {
-      const wait = () => {
-        if (callback == null || callback(this._component)) {
-          resolve();
-        } else {
-          setTimeout(wait, 10);
-        }
-      };
-      setTimeout(wait);
-    });
-  }
-
   _restoreHttp() {
     // If this._previousPromise was rejected, the current series did not set
     // $http, and we do not need to restore it. We can check for that case by
@@ -821,7 +803,7 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // PROMISE METHODS
 
-  promise() {
+  toPromise() {
     const anySetup = this._route != null ||
       this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
@@ -835,9 +817,9 @@ class MockHttp {
 
   // The inclusion of these methods means that we can return a MockHttp to Mocha
   // in lieu of a Promise.
-  then(p1, p2) { return this.promise().then(p1, p2); }
-  catch(onRejected) { return this.promise().catch(onRejected); }
-  finally(onFinally) { return this.promise().finally(onFinally); }
+  then(p1, p2) { return this.toPromise().then(p1, p2); }
+  catch(onRejected) { return this.toPromise().catch(onRejected); }
+  finally(onFinally) { return this.toPromise().finally(onFinally); }
 }
 
 Object.assign(MockHttp.prototype, commonTests);

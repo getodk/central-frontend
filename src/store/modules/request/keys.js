@@ -16,7 +16,6 @@ import FormAttachment from '../../../presenters/form-attachment';
 import Option from '../../../util/option';
 import Project from '../../../presenters/project';
 import User from '../../../presenters/user';
-import reconcileData from './reconcile';
 
 // Each type of response data that the `request` module manages is associated
 // with a key. Each key tends to correspond to a single Backend endpoint.
@@ -60,60 +59,34 @@ export const keys = [
 // TRANSFORM RESPONSES
 
 // Define functions to transform responses.
-const optional = (transform = undefined) => (response) => (response.status === 200
+
+const option = (transform = undefined) => (response) => (response.status === 200
   ? Option.of(transform != null ? transform(response) : response.data)
   : Option.none());
+
+const userPresenter = ({ data }) => new User(data);
+const formPresenters = ({ data }) => data.map(form => new Form(form));
+const formPresenter = ({ data }) => new Form(data);
+
 export const transforms = {
-  currentUser: ({ data }) => new User(data),
+  currentUser: userPresenter,
 
   users: ({ data }) => data.map(user => new User(user)),
-  user: ({ data }) => new User(data),
+  user: userPresenter,
 
   projects: ({ data }) => data.map(project => new Project(project)),
   project: ({ data }) => new Project(data),
-  forms: ({ data }) => data.map(form => new Form(form)),
-  form: ({ data }) => new Form(data),
-  formVersions: ({ data }) => data.map(version => new Form(version)),
-  formDraft: optional(({ data }) => new Form(data)),
-  attachments: optional(({ data }) =>
+  forms: formPresenters,
+  form: formPresenter,
+  formVersions: formPresenters,
+  formDraft: option(formPresenter),
+  attachments: option(({ data }) =>
     data.map(attachment => new FormAttachment(attachment))),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
-  backupsConfig: optional(),
+  backupsConfig: option(),
   audits: ({ data }) => data.map(audit => new Audit(audit))
 };
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// RECONCILE DATA
-
-reconcileData.add(
-  'project', 'forms',
-  (project, forms, commit) => {
-    if (project.forms !== forms.length) {
-      commit('setData', {
-        key: 'project',
-        value: project.with({ forms: forms.length })
-      });
-    }
-  }
-);
-reconcileData.add(
-  'formDraft', 'attachments',
-  (formDraft, attachments, commit) => {
-    if (formDraft.isDefined() && attachments.isEmpty())
-      commit('setData', { key: 'formDraft', value: Option.none() });
-    else if (formDraft.isEmpty() && attachments.isDefined())
-      commit('setData', { key: 'attachments', value: Option.none() });
-  }
-);
-
-/*
-We do not reconcile the following data:
-
-  - `formVersions` and `form` (for example, form.version)
-*/
 
 
 

@@ -280,7 +280,7 @@ export default {
         reader.readAsText(file);
       });
     },
-    // uploadFile() may mutate `updateAttachments`.
+    // uploadFile() may mutate `updatedAttachments`.
     uploadFile({ attachment, file }, updatedAttachments) {
       // We decrement uploadStatus.remaining here rather than after the POST so
       // that uploadStatus.remaining and uploadStatus.current continue to be in
@@ -335,8 +335,7 @@ export default {
       this.$store.commit('setDataProp', {
         key: 'attachments',
         prop: index,
-        value: updatedAttachment,
-        optional: true
+        value: updatedAttachment
       });
     },
     uploadFiles() {

@@ -1,6 +1,6 @@
 import FieldKeyRevoke from '../../../src/components/field-key/revoke.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
@@ -59,37 +59,33 @@ describe('FieldKeyRevoke', () => {
   });
 
   describe('after a successful response', () => {
-    let app;
-    beforeEach(() => mockRoute('/projects/1/app-users')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { appUsers: 2 }).last())
-      .respondWithData(() => testData.extendedFieldKeys
-        .createPast(2)
-        .sorted())
-      .afterResponses(component => {
-        app = component;
-      })
-      .request(() =>
-        trigger.click(app, '#field-key-list-table .dropdown-menu a')
-          .then(() => trigger.click(app, '#field-key-revoke .btn-danger'))
-          .then(() => {
-            testData.extendedFieldKeys.update(
-              testData.extendedFieldKeys.sorted()[0],
-              { token: null }
-            );
-          }))
-      .respondWithSuccess()
-      .respondWithData(() => testData.extendedFieldKeys.sorted()));
+    const revoke = () => {
+      testData.extendedProjects.createPast(1, { appUsers: 2 });
+      testData.extendedFieldKeys.createPast(2);
+      return load('/projects/1/app-users')
+        .complete()
+        .request(async (app) => {
+          await trigger.click(app, '#field-key-list-table .dropdown-menu a');
+          await trigger.click(app, '#field-key-revoke .btn-danger');
+          testData.extendedFieldKeys.update(0, { token: null });
+        })
+        .respondWithSuccess()
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .toPromise();
+    };
 
-    it('modal hides', () => {
+    it('hides the modal', async () => {
+      const app = await revoke();
       app.first(FieldKeyRevoke).getProp('state').should.be.false();
     });
 
-    it('success message is shown', () => {
+    it('shows a success alert', async () => {
+      const app = await revoke();
       app.should.alert('success');
     });
 
-    it('list is updated', () => {
+    it('updates the list', async () => {
+      const app = await revoke();
       const tr = app.find('#field-key-list-table tbody tr');
       tr.length.should.equal(2);
       tr[0].find('td')[3].find('a').length.should.equal(1);
