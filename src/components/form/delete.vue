@@ -64,6 +64,9 @@ export default {
     del() {
       this.delete(apiPaths.form(this.form.projectId, this.form.xmlFormId))
         .then(() => {
+          // project.forms and project.lastSubmission may now be out-of-date. If
+          // the user navigates to ProjectOverview, project.forms should be
+          // updated. project.lastSubmission is not used within ProjectShow.
           this.$emit('success', this.form);
         })
         .catch(noop);
