@@ -153,23 +153,47 @@ describe('FormVersionStandardButtons', () => {
       });
     });
 
-    it('renders button correctly if form version has an enketoId', () => {
+    it('renders the button correctly for an open form with an enketoId', () => {
       const form = testData.extendedForms
-        .createPast(1, { enketoId: 'xyz' })
+        .createPast(1, { enketoId: 'xyz', state: 'open' })
         .last();
       const component = mountComponent({ version: form, preview: true });
       const a = component.first('.preview-button');
       a.getAttribute('href').should.equal('/enketo/preview/xyz');
     });
 
-    it('renders button correctly if form version does not have enketoId', () => {
+    it('renders the button correctly for a form without an enketoId', () => {
       const form = testData.extendedForms
-        .createPast(1, { enketoId: null })
+        .createPast(1, { enketoId: null, state: 'open' })
         .last();
       const component = mountComponent({ version: form, preview: true });
       const button = component.first('.preview-button');
       button.should.be.disabled();
       button.getAttribute('title').should.equal('Preview has not finished processing for this Form. Please refresh later and try again.');
+    });
+
+    describe('form is not open', () => {
+      it('renders button correctly for a form with a published version', () => {
+        const form = testData.extendedForms
+          .createPast(1, { enketoId: 'xyz', state: 'closing' })
+          .last();
+        const component = mountComponent({ version: form, preview: true });
+        const button = component.first('.preview-button');
+        button.should.be.disabled();
+        button.getAttribute('title').should.equal('In this version of ODK Central, preview is only available for Forms in the Open state.');
+      });
+
+      it('does not disable the button for a draft', () => {
+        testData.extendedForms.createPast(1, {
+          draft: true,
+          enketoId: 'xyz',
+          state: 'closing'
+        });
+        const draft = testData.extendedFormDrafts.last();
+        const component = mountComponent({ version: draft, preview: true });
+        const button = component.first('.preview-button');
+        button.should.not.be.disabled();
+      });
     });
   });
 });
