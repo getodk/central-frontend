@@ -197,9 +197,14 @@ export default {
       Existing Data
       -------------
 
-      TODO
-      - update (optional)
-
+      - update (optional). By default, any existing data is completely replaced
+        by the response data. To update only select properties of existing data,
+        specify an array of property names for `update`.
+      - clear (default: true). Specify `true` if any existing data for the key
+        should be cleared before the request is sent. Specify `false` for a
+        background refresh. Note that by default, the data is cleared for all
+        keys whenever the route changes. (There are exceptions to this, however:
+        see the preserveData meta field for more information.)
       - resend (default: true)
 
         By default, get() sends a request for every config object specified,
@@ -216,12 +221,6 @@ export default {
         tab, then back to the original tab will destroy and recreate the
         component. However, in that case, we usually do not need to send a new
         request for the data that the component needs.
-
-      - clear (default: true). Specify `true` if any existing data for the key
-        should be cleared before the request is sent. Specify `false` for a
-        background refresh. Note that by default, the data is cleared for all
-        keys whenever the route changes. (There are exceptions to this, however:
-        see the preserveData meta field for more information.)
 
     Canceled Requests
     -----------------
