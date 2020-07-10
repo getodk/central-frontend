@@ -162,6 +162,45 @@ describe('FormShow', () => {
           formDraft.get().enketoId.should.equal('abc');
         });
     });
+
+    describe('route change', () => {
+      it('continues to fetch enketoId as user navigates within form', () => {
+        testData.extendedForms.createPast(1, { draft: true, enketoId: null });
+        testData.standardFormAttachments.createPast(1);
+        const { runAll } = fakeSetTimeout();
+        return load('/projects/1/forms/f/draft')
+          .complete()
+          .route('/projects/1/forms/f/draft/attachments')
+          .complete()
+          .request(runAll)
+          .respondWithData(() => testData.standardFormDrafts.last());
+      });
+
+      it('stops fetching enketoId if user navigates to a form draft with an enketoId', () => {
+        testData.extendedForms
+          .createPast(1, { xmlFormId: 'f', draft: true, enketoId: null })
+          .createPast(1, { xmlFormId: 'f2', draft: true, enketoId: 'xyz' });
+        const { runAll } = fakeSetTimeout();
+        return load('/projects/1/forms/f/draft', {}, {
+          form: () => testData.extendedForms.first(),
+          formDraft: () => testData.extendedFormDrafts.first()
+        })
+          .complete()
+          .load('/projects/1/forms/f2/draft', { project: false })
+          .complete()
+          .testNoRequest(runAll);
+      });
+
+      it('stops fetching enketoId if user navigates somewhere other than a form route', () => {
+        testData.extendedForms.createPast(1, { draft: true, enketoId: null });
+        const { runAll } = fakeSetTimeout();
+        return load('/projects/1/forms/f/draft')
+          .complete()
+          .load('/account/edit')
+          .complete()
+          .testNoRequest(runAll);
+      });
+    });
   });
 
   describe('form enketoId', () => {

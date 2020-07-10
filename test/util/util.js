@@ -23,16 +23,24 @@ export const waitUntil = (f) => new Promise(resolve => {
 });
 
 export const fakeSetTimeout = () => {
-  const callbacks = [];
+  const callbacks = new Map();
+  let currentId = 0;
   sinon.replace(window, 'setTimeout', sinon.fake(callback => {
-    callbacks.push(callback);
+    currentId += 1;
+    callbacks.set(currentId, callback);
+    return currentId;
+  }));
+  sinon.replace(window, 'clearTimeout', sinon.fake(id => {
+    callbacks.delete(id);
   }));
   return {
     runAll: () => {
-      while (callbacks.length !== 0) {
-        const callback = callbacks[0];
+      // Looping in this way, because a callback may itself call setTimeout() or
+      // clearTimeout().
+      while (callbacks.size !== 0) {
+        const [id, callback] = callbacks.entries().next().value;
+        callbacks.delete(id);
         callback();
-        callbacks.shift();
       }
     }
   };
