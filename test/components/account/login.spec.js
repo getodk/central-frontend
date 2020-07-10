@@ -156,5 +156,25 @@ describe('AccountLogin', () => {
           app.vm.$route.path.should.equal('/');
         });
     });
+
+    it('does not re-enable buttons before an external redirect', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+      return load('/login?next=%2Fenketo%2Fxyz')
+        .restoreSession(false)
+        .complete()
+        .request(app => {
+          const accountLogin = app.first(AccountLogin);
+          sinon.replace(accountLogin.vm, 'navigateToNext', sinon.fake(() => {
+            accountLogin.first('.btn-primary').should.be.disabled();
+            accountLogin.first('.btn-link').should.be.disabled();
+          }));
+          return submitForm(accountLogin, 'form', [
+            ['input[type="email"]', 'test@email.com'],
+            ['input[type="password"]', 'password']
+          ]);
+        })
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first());
+    });
   });
 });
