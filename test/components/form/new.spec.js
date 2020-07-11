@@ -502,20 +502,19 @@ describe('FormNew', () => {
           modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
         }));
 
-    it('shows a message for an xmlFormId mismatch', () =>
-      mockHttp()
+    it('shows a message for an xmlFormId mismatch', () => {
+      const project = testData.extendedProjects
+        .createPast(1, { forms: 1 })
+        .last();
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'expected_id',
+        draft: true
+      });
+      const formDraft = testData.extendedFormDrafts.last();
+      return mockHttp()
         .mount(FormNew, {
           propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects
-              .createPast(1, { forms: 1 })
-              .last(),
-            form: testData.extendedForms
-              .createPast(1, { xmlFormId: 'expected_id', draft: true })
-              .last(),
-            formDraft: testData.extendedFormDrafts.last(),
-            attachments: []
-          }
+          requestData: { project, formDraft }
         })
         .request(modal => selectFileByInput(modal, xlsForm())
           .then(trigger.click('#form-new-upload-button')))
@@ -529,7 +528,8 @@ describe('FormNew', () => {
             'danger',
             'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
           );
-        }));
+        });
+    });
   });
 
   describe('XLSForm warnings', () => {

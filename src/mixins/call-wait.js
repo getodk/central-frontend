@@ -36,7 +36,9 @@ The first function may return a promise. The promise should resolve to `true` or
 `false`. If the promise is rejected, the component will stop checking the
 condition.
 
-To cancel an upcoming check, use cancelCall() or cancelCalls().
+To cancel an upcoming check, use cancelCall() or cancelCalls(). If an upcoming
+check should be canceled after a route update, it is the component's
+responsibility to do so.
 
 The mixin factory does not take any options.
 
@@ -49,9 +51,6 @@ The component using this mixin must define the following data property:
 
 // @vue/component
 const mixin = {
-  watch: {
-    $route: 'cancelCalls'
-  },
   beforeDestroy() {
     this.cancelCalls();
   },

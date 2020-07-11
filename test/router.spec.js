@@ -360,7 +360,8 @@ describe('router', () => {
           load('/projects/1/forms/f2/draft', {}, {
             form: () => testData.extendedForms.first(),
             formDraft: () => testData.extendedFormDrafts.first(),
-            attachments: () => []
+            attachments: () => [],
+            formVersions: () => []
           })
             .complete()
             .load('/projects/1/forms/f/draft', { project: false })
@@ -399,7 +400,8 @@ describe('router', () => {
         load('/projects/1/forms/f2/draft', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: 404.1
+          attachments: 404.1,
+          formVersions: () => []
         })
           .respondFor('/')
           .afterResponses(app => {
