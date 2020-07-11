@@ -71,7 +71,7 @@ export default {
       // Function that redirects within Frontend
       internal,
       // Function that redirects outside Frontend
-      external = (url) => window.location.replace(url)
+      external
     ) {
       if (typeof next !== 'string') return internal('/');
       let url;
@@ -103,10 +103,19 @@ export default {
           }
         }]))
         .then(() => {
-          this.disabled = false;
           this.navigateToNext(
             this.$route.query.next,
-            (location) => this.$router.replace(location)
+            (location) => {
+              // We only set this.disabled to `false` before redirecting within
+              // Frontend. If we also set this.disabled before redirecting
+              // outside Frontend, there might be a moment before the user is
+              // redirected when buttons are re-enabled.
+              this.disabled = false;
+              this.$router.replace(location);
+            },
+            (url) => {
+              window.location.replace(url);
+            }
           );
         })
         .catch(() => {
