@@ -203,7 +203,8 @@ export default {
             this.$alert().blank();
             this.warnings = data.details.warnings;
           } else {
-            // The `forms` property of the project may now be out-of-date.
+            // project.forms may now be out-of-date. However, if the user
+            // navigates to the project overview, it should be updated.
             this.$emit('success', new Form(data));
           }
         })
