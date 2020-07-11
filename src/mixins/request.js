@@ -93,9 +93,8 @@ function request({
 
   if (this.awaitingResponse != null) this.awaitingResponse = true;
 
-  const token = this.$store.getters.loggedIn
-    ? this.$store.state.request.data.session.token
-    : null;
+  const { session } = this.$store.state.request.data;
+  const token = session != null ? session.token : null;
   const { currentRoute } = this.$store.state.router;
   return this.$http.request(configForPossibleBackendRequest(axiosConfig, token))
     .catch(error => {

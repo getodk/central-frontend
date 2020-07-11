@@ -24,10 +24,10 @@ except according to the terms contained in the LICENSE file.
         <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
       <div id="navbar-collapse" class="collapse navbar-collapse">
-        <navbar-links v-if="currentUser != null"/>
+        <navbar-links v-if="loggedIn"/>
         <ul class="nav navbar-nav navbar-right">
           <navbar-locale-dropdown v-show="false"/>
-          <navbar-actions/>
+          <navbar-actions :logged-in="loggedIn"/>
         </ul>
       </div>
     </div>
@@ -43,9 +43,20 @@ import { requestData } from '../store/modules/request';
 export default {
   name: 'Navbar',
   components: { NavbarActions, NavbarLinks, NavbarLocaleDropdown },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['currentUser'])
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['session']),
+    /* Usually once the user has a session (either after their session has been
+    restored or after they have logged in), we render a fuller navbar. However,
+    if after logging in, the user is redirected to a lazy-loaded route or
+    outside Frontend, they will remain on /login until they are redirected. In
+    that case, we do not render the fuller navbar until the user is
+    redirected. */
+    loggedIn() {
+      return this.session != null && this.$route.path !== '/login';
+    }
+  }
 };
 </script>
 

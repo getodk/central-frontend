@@ -248,7 +248,7 @@ export default {
     will react to the changes to the store state, for example, running watchers
     and updating the DOM.
     */
-    get({ state, getters, commit }, configs) {
+    get({ state, commit }, configs) {
       let alerted = false;
       return Promise.all(configs.map(config => {
         const {
@@ -310,7 +310,8 @@ export default {
         baseConfig.headers = extended
           ? { ...headers, 'X-Extended-Metadata': 'true' }
           : headers;
-        const token = getters.loggedIn ? data.session.token : null;
+        const { session } = data;
+        const token = session != null ? session.token : null;
         const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
 
         const promise = Vue.prototype.$http.request(axiosConfig)

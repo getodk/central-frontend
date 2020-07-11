@@ -108,8 +108,8 @@ export default {
             (location) => {
               // We only set this.disabled to `false` before redirecting within
               // Frontend. If we also set this.disabled before redirecting
-              // outside Frontend, there might be a moment before the user is
-              // redirected when buttons are re-enabled.
+              // outside Frontend, the buttons might be re-enabled before the
+              // external page is loaded.
               this.disabled = false;
               this.$router.replace(location);
             },

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <li v-if="$store.getters.loggedOut" id="navbar-actions">
+  <li v-if="!loggedIn" id="navbar-actions">
     <a href="#" @click.prevent>
       <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
     </a>
@@ -46,6 +46,12 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'NavbarActions',
   mixins: [request()],
+  props: {
+    loggedIn: {
+      type: Boolean,
+      default: false
+    }
+  },
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['currentUser', 'session']),
