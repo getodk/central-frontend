@@ -157,24 +157,27 @@ describe('AccountLogin', () => {
         });
     });
 
-    it('does not re-enable buttons before an external redirect', () => {
+    it('does not update Frontend before an external redirect', () => {
       testData.extendedUsers.createPast(1, { email: 'test@email.com' });
       return load('/login?next=%2Fenketo%2Fxyz')
         .restoreSession(false)
         .complete()
         .request(app => {
           const accountLogin = app.first(AccountLogin);
-          sinon.replace(accountLogin.vm, 'navigateToNext', sinon.fake(() => {
-            accountLogin.first('.btn-primary').should.be.disabled();
-            accountLogin.first('.btn-link').should.be.disabled();
-          }));
+          sinon.replace(accountLogin.vm, 'navigateToNext', sinon.fake());
           return submitForm(accountLogin, 'form', [
             ['input[type="email"]', 'test@email.com'],
             ['input[type="password"]', 'password']
           ]);
         })
         .respondWithData(() => testData.sessions.createNew())
-        .respondWithData(() => testData.extendedUsers.first());
+        .respondWithData(() => testData.extendedUsers.first())
+        .afterResponses(app => {
+          app.find('#navbar-links').length.should.equal(0);
+          app.first('#navbar-actions a').text().trim().should.equal('Not logged in');
+          app.first('#account-login .btn-primary').should.be.disabled();
+          app.first('#account-login .btn-link').should.be.disabled();
+        });
     });
   });
 });

@@ -1,12 +1,12 @@
-import { load, mockRoute } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
 describe('NavbarActions', () => {
-  it('indicates that the user is logged out', () =>
-    mockRoute('/login')
+  it('indicates if the user is not logged in', () =>
+    load('/login')
       .restoreSession(false)
-      .afterResponse(app => {
+      .afterResponses(app => {
         const text = app.first('#navbar-actions > a').text().trim();
         text.should.equal('Not logged in');
       }));

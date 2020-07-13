@@ -93,13 +93,14 @@ router.beforeEach((to, from, next) => {
 // Implements the requireLogin and requireAnonymity meta fields.
 router.beforeEach((to, from, next) => {
   const { meta } = to.matched[to.matched.length - 1];
+  const { session } = store.state.request.data;
   if (meta.requireLogin) {
-    if (store.getters.loggedIn)
+    if (session != null)
       next();
     else
       next({ path: '/login', query: { next: to.fullPath } });
   } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
-    if (store.getters.loggedIn)
+    if (session != null)
       next('/');
     else
       next();

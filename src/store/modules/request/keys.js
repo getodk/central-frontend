@@ -94,9 +94,6 @@ export const transforms = {
 // GETTERS
 
 const dataGetters = {
-  loggedIn: ({ data: { session } }) => session != null && session.token != null,
-  loggedOut: (state, getters) => !getters.loggedIn,
-
   projectRoles: ({ data: { roles } }) => {
     if (roles == null) return null;
     // If you add a new role, make sure to also add a new i18n message.
