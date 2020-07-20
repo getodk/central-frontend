@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     ...requestData(REQUEST_KEYS),
-    ...mapGetters(['fieldKeysWithToken']),
+    ...mapGetters(['rolesBySystem', 'fieldKeysWithToken']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(REQUEST_KEYS);
     },
@@ -137,7 +137,7 @@ export default {
           const changes = this.changesByForm[form.xmlFormId];
 
           const assignments = [];
-          const roleId = this.roles.find(role => role.system === 'app-user').id;
+          const roleId = this.rolesBySystem['app-user'].id;
           for (const fieldKey of this.fieldKeysWithToken) {
             if (changes.current.fieldKeyAccess[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, roleId });

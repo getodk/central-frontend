@@ -11,7 +11,8 @@
     "none": "None",
     "admin": "Administrator",
     "manager": "Project Manager",
-    "viewer": "Project Viewer"
+    "viewer": "Project Viewer",
+    "formfill": "Data Collector"
   },
   "formState": {
     // Form States control the lifecycle state of each Form. "Open" is one Form

@@ -73,5 +73,14 @@ export default () => {
         'submission.list',
         'submission.read'
       ]
+    })
+    .createPast(1, {
+      name: 'Data Collector',
+      system: 'formfill',
+      verbs: [
+        'form.list',
+        'form.read',
+        'submission.create'
+      ]
     });
 };

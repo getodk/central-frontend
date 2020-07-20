@@ -94,12 +94,22 @@ export const transforms = {
 // GETTERS
 
 const dataGetters = {
-  projectRoles: ({ data: { roles } }) => {
+  rolesBySystem: ({ data: { roles } }) => {
     if (roles == null) return null;
+    // Using Object.create(null) in case there is a role whose `system` property
+    // is '__proto__'.
+    const bySystem = Object.create(null);
+    for (const role of roles)
+      bySystem[role.system] = role;
+    return bySystem;
+  },
+  projectRoles: (_, { rolesBySystem }) => {
+    if (rolesBySystem == null) return null;
     // If you add a new role, make sure to also add a new i18n message.
     return [
-      roles.find(role => role.system === 'manager'),
-      roles.find(role => role.system === 'viewer')
+      rolesBySystem.manager,
+      rolesBySystem.viewer,
+      rolesBySystem.formfill
     ];
   },
 

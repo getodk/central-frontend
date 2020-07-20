@@ -111,7 +111,12 @@ describe('ProjectUserList', () => {
       return load('/projects/1/users').then(app => {
         const options = app.find('#project-user-list tbody tr option');
         const text = options.map(option => option.text().trim());
-        text.should.eql(['Project Manager', 'Project Viewer', 'None']);
+        text.should.eql([
+          'Project Manager',
+          'Project Viewer',
+          'Data Collector',
+          'None'
+        ]);
         const standardRoles = testData.standardRoles.sorted();
         options[0].getAttribute('value').should.equal(
           standardRoles.find(role => role.system === 'manager').id.toString()

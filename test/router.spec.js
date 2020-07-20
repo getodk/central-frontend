@@ -212,6 +212,11 @@ describe('router', () => {
               }));
         });
 
+        it('does not redirect the user from the project overview', async () => {
+          const app = await load('/projects/1');
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+
         it('redirects the user from .../users', () =>
           load('/projects/1/users', {}, { projectAssignments: 403.1 })
             .respondFor('/', { users: false })
@@ -245,6 +250,16 @@ describe('router', () => {
               app.vm.$route.path.should.equal('/');
             }));
 
+        it('does not redirect the user from .../versions', async () => {
+          const app = await load('/projects/1/forms/f/versions');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/versions');
+        });
+
+        it('does not redirect the user from .../submissions', async () => {
+          const app = await load('/projects/1/forms/f/submissions');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        });
+
         it('redirects the user from .../settings', () =>
           load('/projects/1/forms/f/settings')
             .respondFor('/', { users: false })
@@ -265,6 +280,65 @@ describe('router', () => {
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
+
+        it('does not redirect the user from .../draft/testing', async () => {
+          const app = await load('/projects/1/forms/f/draft/testing');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
+        });
+      });
+    });
+
+    describe('Data Collector', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+        testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
+        testData.extendedForms.createPast(1);
+        testData.extendedFormVersions.createPast(1, { draft: true });
+        testData.standardFormAttachments.createPast(1);
+      });
+
+      describe('project routes', () => {
+        it('does not redirect the user from the project overview', async () => {
+          const app = await load('/projects/1');
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+
+        for (const path of [
+          '/projects/1/users',
+          '/projects/1/app-users',
+          '/projects/1/form-access',
+          '/projects/1/settings'
+        ]) {
+          it(`redirects the user from ${path}`, () =>
+            load('/projects/1')
+              .complete()
+              .route(path)
+              .respondFor('/', { users: false })
+              .afterResponses(app => {
+                app.vm.$route.path.should.equal('/');
+              }));
+        }
+      });
+
+      describe('form routes', () => {
+        for (const path of [
+          '/projects/1/forms/f',
+          '/projects/1/forms/f/versions',
+          '/projects/1/forms/f/submissions',
+          '/projects/1/forms/f/settings',
+          '/projects/1/forms/f/draft',
+          '/projects/1/forms/f/draft/attachments',
+          '/projects/1/forms/f/draft/testing'
+        ]) {
+          it(`redirects the user from ${path}`, () =>
+            load('/projects/1')
+              .complete()
+              .route(path)
+              .respondFor('/', { users: false })
+              .afterResponses(app => {
+                app.vm.$route.path.should.equal('/');
+              }));
+        }
       });
     });
 

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <!-- Although Backend supports more complex use cases, we assume in this
 component that each user is assigned at most one role and that the only roles
-are Project Manager and Project Viewer. -->
+are Project Manager, Project Viewer, and Data Collector. -->
 <template>
   <div id="project-user-list">
     <i18n id="project-user-list-heading" tag="p" path="heading[0].full">
