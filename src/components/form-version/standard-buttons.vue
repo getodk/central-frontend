@@ -13,18 +13,7 @@ except according to the terms contained in the LICENSE file.
 <!-- Standard form definition buttons -->
 <template>
   <span class="form-version-standard-buttons">
-    <template v-if="preview">
-      <a v-if="previewDisabledTitle == null"
-        class="preview-button btn btn-primary" :href="previewUrl"
-        target="_blank">
-        <span class="icon-eye"></span>{{ $t('action.preview') }}
-      </a>
-      <button v-else type="button"
-        class="preview-button btn btn-primary" disabled
-        :title="previewDisabledTitle">
-        <span class="icon-eye"></span>{{ $t('action.preview') }}
-      </button>
-    </template>
+    <enketo-preview v-if="preview" :form-version="version"/>
 
     <a v-if="version.excelContentType == null" class="btn btn-primary"
       :href="defPath('xml')" :download="xmlFilename">
@@ -51,11 +40,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import EnketoPreview from '../enketo/preview.vue';
 import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
 
 export default {
   name: 'FormVersionStandardButtons',
+  components: { EnketoPreview },
   props: {
     version: {
       type: Form,
@@ -67,17 +58,6 @@ export default {
     }
   },
   computed: {
-    previewDisabledTitle() {
-      if (this.version.enketoId == null) return this.$t('previewDisabled');
-      return this.version.publishedAt != null && this.version.state !== 'open'
-        ? this.$t('previewDisabledUnlessOpen')
-        : null;
-    },
-    previewUrl() {
-      // enketoId probably doesn't need to be encoded, but there is also little
-      // harm.
-      return `/enketo/preview/${encodeURIComponent(this.version.enketoId)}`;
-    },
     xmlFilename() {
       return `${this.version.xmlFormId}.xml`;
     },
@@ -103,7 +83,7 @@ export default {
 </script>
 
 <style lang="scss">
-.form-version-standard-buttons .preview-button {
+.form-version-standard-buttons .enketo-preview {
   margin-right: 5px;
 }
 </style>
@@ -112,16 +92,13 @@ export default {
 {
   "en": {
     "action": {
-      "downloadXForm": "Download XML",
-      "preview": "Preview"
+      "downloadXForm": "Download XML"
     },
     // Here, the user selects the format that a Form should be downloaded as.
     "format": {
       "xForm": "As XForm",
       "xlsForm": "As XLSForm"
-    },
-    "previewDisabled": "Preview has not finished processing for this Form. Please refresh later and try again.",
-    "previewDisabledUnlessOpen": "In this version of ODK Central, preview is only available for Forms in the Open state."
+    }
   }
 }
 </i18n>

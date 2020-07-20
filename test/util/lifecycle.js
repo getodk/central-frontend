@@ -55,6 +55,13 @@ const setRequestData = (data) => {
   }
 };
 
+const optionsSupportedWithI18n = new Set([
+  'propsData',
+  'slots',
+  'attachToDocument',
+  'requestData'
+]);
+
 export const mount = (component, options = {}) => {
   // If the component uses a single file component i18n custom block, then its
   // $i18n property will be different from the root VueI18n object. Because most
@@ -63,16 +70,16 @@ export const mount = (component, options = {}) => {
   // be the root component and whose $i18n property will be the root VueI18n
   // object.
   if (component.__i18n != null) {
-    const { propsData, attachToDocument, requestData, ...rest } = options;
-    if (Object.keys(rest).length !== 0) {
-      // Some mount() options, for example, `slots`, will not work with the
-      // current strategy to use Root.
-      throw new Error('unknown or unsupported option');
+    for (const name of Object.keys(options)) {
+      if (!optionsSupportedWithI18n.has(name)) {
+        // Some mount() options will not work with the current strategy to use
+        // Root.
+        throw new Error('unknown or unsupported option');
+      }
     }
     const root = mount(Root, {
-      propsData: { component, props: options.propsData },
-      attachToDocument,
-      requestData
+      ...options,
+      propsData: { component, props: options.propsData }
     });
     return root.first(component);
   }

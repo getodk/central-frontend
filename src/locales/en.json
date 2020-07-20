@@ -87,6 +87,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "create": "Create",
+    // This is the text of a button that is used to fill out a new Submission.
+    "createSubmission": "New",
     "done": "Done",
     "download": "Download",
     "editProfile": "Edit profile",
@@ -164,6 +166,8 @@
     "project": "Project",
     // This is a title shown above a section of the page.
     "rightNow": "Right Now",
+    // This text appears on its own and is not part of a longer sentence.
+    "submissions": "Submissions",
     "success": "Success!",
     "user": "User",
     "webUser": "Web User"

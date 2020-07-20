@@ -132,6 +132,10 @@
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "createSubmission": {
+      "string": "New",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission."
+    },
     "done": {
       "string": "Done",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -344,6 +348,10 @@
     "rightNow": {
       "string": "Right Now",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "submissions": {
+      "string": "Submissions",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "success": {
       "string": "Success!"
@@ -672,6 +680,32 @@
         },
         "1": {
           "string": "You will have to reconfigure them again from scratch to start them again, and this action cannot be undone."
+        }
+      }
+    },
+    "EnketoFill": {
+      "disabled": {
+        "processing": {
+          "string": "Web Form is not available yet. It has not finished being processed. Please refresh later and try again."
+        },
+        "notOpen": {
+          "string": "This Form is not accepting new Submissions right now."
+        }
+      }
+    },
+    "EnketoPreview": {
+      "action": {
+        "preview": {
+          "string": "Preview",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "disabled": {
+        "processing": {
+          "string": "Preview has not finished processing for this Form. Please refresh later and try again."
+        },
+        "notOpen": {
+          "string": "In this version of ODK Central, preview is only available for Forms in the Open state."
         }
       }
     },
@@ -1398,10 +1432,6 @@
             "string": "Versions",
             "developer_comment": "This is the text of a navigation tab."
           },
-          "submissions": {
-            "string": "Submissions",
-            "developer_comment": "This is the text of a navigation tab."
-          },
           "settings": {
             "string": "Settings",
             "developer_comment": "This is the text of a navigation tab."
@@ -1650,10 +1680,6 @@
         "downloadXForm": {
           "string": "Download XML",
           "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "preview": {
-          "string": "Preview",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "format": {
@@ -1665,12 +1691,6 @@
           "string": "As XLSForm",
           "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
         }
-      },
-      "previewDisabled": {
-        "string": "Preview has not finished processing for this Form. Please refresh later and try again."
-      },
-      "previewDisabledUnlessOpen": {
-        "string": "In this version of ODK Central, preview is only available for Forms in the Open state."
       }
     },
     "FormVersionTable": {
