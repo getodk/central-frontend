@@ -33,11 +33,11 @@ export default {
   },
   computed: {
     disabledTitle() {
-      if (this.formVersion.enketoId == null)
-        return this.$t('disabled.processing');
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');
+      if (this.formVersion.enketoId == null)
+        return this.$t('disabled.processing');
       return null;
     },
     href() {
