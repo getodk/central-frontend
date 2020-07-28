@@ -250,7 +250,10 @@ const routes = [
             props: true,
             meta: {
               validateData: {
-                project: (project) => project.permits('form.read'),
+                project: (project) =>
+                  // Including submission.list in order to exclude Data
+                  // Collectors.
+                  project.permits(['form.read', 'submission.list']),
                 form: (form) => form.publishedAt != null
               }
             }

@@ -15,6 +15,10 @@
     "viewer": {
       "string": "Project Viewer",
       "developer_comment": "This is the name of a user Role."
+    },
+    "formfill": {
+      "string": "Data Collector",
+      "developer_comment": "This is the name of a user Role."
     }
   },
   "formState": {

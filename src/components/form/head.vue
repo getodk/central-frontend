@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
                   {{ $t('formNav.tab.overview') }}
                 </router-link>
               </li>
-              <!-- No v-if, because everyone with access to the project should
+              <!-- No v-if, because anyone who can navigate to the form should
               be able to navigate to .../versions and .../submissions. -->
               <li :class="formTabClass('versions')" :title="formTabTitle"
                 role="presentation">

@@ -78,8 +78,9 @@ const mixin = {
     primaryFormPath(form) {
       if (form.publishedAt != null) {
         const path = this.formPath(form.projectId, form.xmlFormId);
-        // Project viewers can't navigate to the form overview, but everyone
-        // should be able to navigate to .../submissions.
+        // A project viewer can't navigate to the form overview, but anyone who
+        // can navigate to the form should be able to navigate to
+        // .../submissions.
         return this.canRoute(path) ? path : `${path}/submissions`;
       } else { // eslint-disable-line no-else-return
         const path = this.formPath(form.projectId, form.xmlFormId, 'draft');
