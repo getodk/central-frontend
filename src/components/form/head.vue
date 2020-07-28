@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
               <li :class="formTabClass('submissions')" :title="formTabTitle"
                 role="presentation">
                 <router-link :to="tabPath('submissions')">
-                  {{ $t('formNav.tab.submissions') }}
+                  {{ $t('common.submissions') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
@@ -276,7 +276,6 @@ body {
       "tab": {
         "overview": "Overview",
         "versions": "Versions",
-        "submissions": "Submissions",
         "settings": "Settings"
       },
       // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.

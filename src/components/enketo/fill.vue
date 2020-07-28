@@ -1,0 +1,59 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <a v-if="disabledTitle == null" class="enketo-fill btn btn-primary"
+    :href="href" target="_blank">
+    <slot></slot>
+  </a>
+  <button v-else type="button" class="enketo-fill btn btn-primary" disabled
+    :title="disabledTitle">
+    <slot></slot>
+  </button>
+</template>
+
+<script>
+import Form from '../../presenters/form';
+
+export default {
+  name: 'EnketoFill',
+  props: {
+    formVersion: {
+      type: Form,
+      required: true
+    }
+  },
+  computed: {
+    disabledTitle() {
+      if (this.formVersion.publishedAt != null &&
+        this.formVersion.state !== 'open')
+        return this.$t('disabled.notOpen');
+      if (this.formVersion.enketoId == null)
+        return this.$t('disabled.processing');
+      return null;
+    },
+    href() {
+      return `/enketo/${encodeURIComponent(this.formVersion.enketoId)}`;
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "disabled": {
+      "processing": "Web Form is not available yet. It has not finished being processed. Please refresh later and try again.",
+      "notOpen": "This Form is not accepting new Submissions right now."
+    }
+  }
+}
+</i18n>

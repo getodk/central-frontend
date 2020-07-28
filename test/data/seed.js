@@ -25,6 +25,7 @@ export default () => {
         'form.delete',
         'project.create',
         'project.update',
+        'submission.create',
         'submission.list',
         'submission.read',
         'user.create',
@@ -58,6 +59,7 @@ export default () => {
         'form.update',
         'form.delete',
         'project.update',
+        'submission.create',
         'submission.list',
         'submission.read'
       ]

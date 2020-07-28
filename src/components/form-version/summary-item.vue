@@ -52,16 +52,20 @@ export default {
 @import '../../assets/scss/variables';
 
 .form-version-summary-item-version {
+  $buttons-margin-left: 12px;
+  // Approximate width
+  $buttons-width: 210px;
+
   display: inline-block;
   font-family: $font-family-monospace;
-  max-width: calc(100% - 131px);
+  max-width: calc(100% - #{$buttons-width + $buttons-margin-left});
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   + span {
     bottom: 10px;
-    margin-left: 12px;
+    margin-left: $buttons-margin-left;
     position: relative;
   }
 }

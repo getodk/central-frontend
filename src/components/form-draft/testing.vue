@@ -14,7 +14,14 @@ except according to the terms contained in the LICENSE file.
     <div id="form-draft-testing-info" class="row">
       <div class="col-xs-8">
         <page-section condensed>
-          <template #heading><span>{{ $t('title') }}</span></template>
+          <template #heading>
+            <span>{{ $t('title') }}</span>
+            <enketo-fill
+              v-if="dataExists && project.permits('submission.create')"
+              :form-version="formDraft">
+              <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+            </enketo-fill>
+          </template>
           <template #body>
             <p>{{ $t('body[0]') }}</p>
             <p>
@@ -41,6 +48,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import EnketoFill from '../enketo/fill.vue';
 import FloatRow from '../float-row.vue';
 import Option from '../../util/option';
 import PageSection from '../page/section.vue';
@@ -53,7 +61,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
-  components: { DocLink, FloatRow, PageSection, SubmissionList },
+  components: { DocLink, EnketoFill, FloatRow, PageSection, SubmissionList },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -68,7 +76,10 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData([{ key: 'formDraft', getOption: true }]),
+    ...requestData(['project', { key: 'formDraft', getOption: true }]),
+    dataExists() {
+      return this.$store.getters.dataExists(['project', 'formDraft']);
+    },
     qrCodeHtml() {
       const url = apiPaths.serverUrlForFormDraft(
         this.formDraft.draftToken,
