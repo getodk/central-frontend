@@ -70,13 +70,13 @@ describe('AccountLogin', () => {
     });
 
     it('redirects the user to Enketo', () => {
-      const { external } = navigateToNext('/enketo/abc');
-      external.calledWith(`${window.location.origin}/enketo/abc`).should.be.true();
+      const { external } = navigateToNext('/_/abc');
+      external.calledWith(`${window.location.origin}/_/abc`).should.be.true();
     });
 
     it('passes query params and hash to Enketo', () => {
-      const { external } = navigateToNext('/enketo/abc?x=y#z');
-      external.calledWith(`${window.location.origin}/enketo/abc?x=y#z`).should.be.true();
+      const { external } = navigateToNext('/_/abc?x=y#z');
+      external.calledWith(`${window.location.origin}/_/abc?x=y#z`).should.be.true();
     });
 
     it('redirects the user to / if there is no param', () => {
@@ -159,7 +159,7 @@ describe('AccountLogin', () => {
 
     it('does not update Frontend before an external redirect', () => {
       testData.extendedUsers.createPast(1, { email: 'test@email.com' });
-      return load('/login?next=%2Fenketo%2Fxyz')
+      return load('/login?next=%2F_%2Fxyz')
         .restoreSession(false)
         .complete()
         .request(app => {
