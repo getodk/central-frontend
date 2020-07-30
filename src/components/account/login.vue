@@ -83,7 +83,8 @@ export default {
       if (url.origin !== window.location.origin || url.pathname === '/login')
         return internal('/');
 
-      if (url.pathname.startsWith('/enketo/')) return external(url.href);
+      // Enketo
+      if (url.pathname.startsWith('/_/')) return external(url.href);
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {

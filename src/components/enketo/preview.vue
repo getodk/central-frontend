@@ -43,7 +43,7 @@ export default {
     href() {
       // enketoId probably doesn't need to be encoded, but there is also little
       // harm.
-      return `/enketo/preview/${encodeURIComponent(this.formVersion.enketoId)}`;
+      return `/_/preview/${encodeURIComponent(this.formVersion.enketoId)}`;
     }
   }
 };

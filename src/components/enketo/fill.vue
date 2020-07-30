@@ -41,7 +41,7 @@ export default {
       return null;
     },
     href() {
-      return `/enketo/${encodeURIComponent(this.formVersion.enketoId)}`;
+      return `/_/${encodeURIComponent(this.formVersion.enketoId)}`;
     }
   }
 };
