@@ -165,17 +165,6 @@ export default {
         this.keys.length !== 0;
     }
   },
-  watch: {
-    $route() {
-      this.submissions = null;
-      this.instanceIds = new Set();
-      this.originalCount = null;
-      this.chunkCount = 0;
-      this.message = null;
-
-      this.fetchInitialData();
-    }
-  },
   created() {
     this.fetchInitialData();
   },

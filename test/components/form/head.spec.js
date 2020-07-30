@@ -248,11 +248,11 @@ describe('FormHead', () => {
       it('shows a loading message during the request', () =>
         load('/projects/1/forms/f')
           .complete()
-          .request(app => trigger.click(app, '#form-head-create-draft-button'))
+          .request(trigger.click('#form-head-create-draft-button'))
           .beforeAnyResponse(app => {
             app.first(Loading).should.be.visible();
             app.first(FormHead).should.be.hidden();
-            app.first(FormOverview).vm.$el.parentNode.should.be.hidden();
+            app.first(FormOverview).should.be.hidden();
           })
           .respondWithSuccess()
           .respondFor('/projects/1/forms/f/draft', {

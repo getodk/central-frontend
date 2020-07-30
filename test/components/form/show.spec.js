@@ -1,3 +1,4 @@
+import FormOverview from '../../../src/components/form/overview.vue';
 import FormShow from '../../../src/components/form/show.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
@@ -32,6 +33,27 @@ describe('FormShow', () => {
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
         }));
+  });
+
+  it('re-renders the router view after a route change', () => {
+    testData.extendedForms
+      .createPast(1, { xmlFormId: 'f1' })
+      .createPast(1, { xmlFormId: 'f2' });
+    let vm;
+    return load('/projects/1/forms/f1', {}, {
+      form: () => testData.extendedForms.first()
+    })
+      .afterResponses(app => {
+        // eslint-disable-next-line prefer-destructuring
+        vm = app.first(FormOverview).vm;
+      })
+      .load('/projects/1/forms/f2', {
+        project: false,
+        form: () => testData.extendedForms.last()
+      })
+      .afterResponses(app => {
+        app.first(FormOverview).vm.should.not.equal(vm);
+      });
   });
 
   it('shows a loading message until all responses are received', () =>

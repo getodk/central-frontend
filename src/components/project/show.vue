@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> is immediately created and can send its own requests
       even before the server has responded to ProjectHome's request for the
       project. -->
-      <router-view v-show="project != null"
+      <router-view v-show="project != null" :key="$route.path"
         @fetch-project="$emit('fetch-project')" @fetch-forms="fetchForms"
         @fetch-field-keys="fetchFieldKeys"/>
     </page-body>

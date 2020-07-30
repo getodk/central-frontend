@@ -12,40 +12,42 @@ except according to the terms contained in the LICENSE file.
 
 /*
 A component whose associated route has a validateData meta field must use this
-mixin. See src/router.js for more information.
+mixin: see the validateData meta field for more information.
 
 The mixin factory accepts the following option:
 
-  - update (default: true). By default, the mixin defines a beforeRouteUpdate
-    navigation guard in addition to a beforeRouteEnter guard. To skip the
-    beforeRouteUpdate guard, specify `update` as `false`.
+  - update (default: false). `true` to define a beforeRouteUpdate navigation
+    guard in addition to a beforeRouteEnter guard; `false` to skip the
+    beforeRouteUpdate guard.
 */
 
 import store from '../store';
 import { canRoute } from '../util/router';
 
-export default ({ update = true } = {}) => {
-  // @vue/component
-  const mixin = {
-    beforeRouteEnter: (to, from, next) => {
-      if (canRoute(to, from, store))
-        next();
-      else
-        next('/');
-    },
-    created() {
-      // this.$route is `null` in some tests.
-      if (this.$route == null) return;
-      const { matched } = this.$route;
-      const { validateData } = matched[matched.length - 1].meta;
-      for (const [key, validator] of validateData) {
-        // eslint-disable-next-line func-names
-        this.$watch(`$store.state.request.data.${key}`, function(value) {
-          if (value != null && !validator(value)) this.$router.push('/');
-        });
-      }
+// @vue/component
+const withoutUpdate = {
+  beforeRouteEnter: (to, from, next) => {
+    if (canRoute(to, from, store))
+      next();
+    else
+      next('/');
+  },
+  created() {
+    // this.$route is `null` in some tests.
+    if (this.$route == null) return;
+    const { matched } = this.$route;
+    const { validateData } = matched[matched.length - 1].meta;
+    for (const [key, validator] of validateData) {
+      // eslint-disable-next-line func-names
+      this.$watch(`$store.state.request.data.${key}`, function(value) {
+        if (value != null && !validator(value)) this.$router.push('/');
+      });
     }
-  };
-  if (update) mixin.beforeRouteUpdate = mixin.beforeRouteEnter;
-  return mixin;
+  }
 };
+
+const withUpdate = { ...withoutUpdate };
+withUpdate.beforeRouteUpdate = withUpdate.beforeRouteEnter;
+
+export default ({ update = false } = {}) =>
+  (update ? withUpdate : withoutUpdate);

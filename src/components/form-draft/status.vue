@@ -131,9 +131,6 @@ export default {
     'formVersions',
     { key: 'formDraft', getOption: true }
   ]),
-  watch: {
-    $route: 'fetchData'
-  },
   created() {
     this.fetchData();
   },

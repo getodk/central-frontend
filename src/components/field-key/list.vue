@@ -110,11 +110,6 @@ export default {
   },
   computed: requestData(['fieldKeys']),
   watch: {
-    projectId() {
-      this.$emit('fetch-field-keys');
-      this.highlighted = null;
-      this.hidePopover();
-    },
     fieldKeys() {
       this.enabledPopoverLinks = new Set();
       this.revoke.fieldKey = null;

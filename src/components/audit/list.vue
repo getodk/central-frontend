@@ -36,7 +36,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable, Loading },
-  mixins: [validateData({ update: false })],
+  mixins: [validateData()],
   data() {
     const today = DateTime.local().startOf('day');
     return {

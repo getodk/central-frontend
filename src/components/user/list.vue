@@ -81,7 +81,7 @@ export default {
     UserRetire,
     UserRow
   },
-  mixins: [modal(), validateData({ update: false })],
+  mixins: [modal(), validateData()],
   data() {
     return {
       // The ids of the users who are administrators

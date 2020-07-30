@@ -140,17 +140,6 @@ export default {
       return this.uploadStatus.total !== 0;
     }
   },
-  watch: {
-    // Reset the component if it is reused after a route change.
-    $route() {
-      this.countOfFilesOverDropZone = 0;
-      this.dragoverAttachment = null;
-      this.plannedUploads = [];
-      this.unmatchedFiles = [];
-      this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
-      this.updatedAttachments = [];
-    }
-  },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
     // FILE INPUT
