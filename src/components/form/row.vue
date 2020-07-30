@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ form.nameOrId() }}</span><span class="icon-angle-right"></span>
       </link-if-can>
     </td>
-    <td v-if="expanded">
+    <td v-if="columns.has('idAndVersion')" class="id-and-version">
       <div class="form-id">
         <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
       </div>
@@ -24,24 +24,24 @@ except according to the terms contained in the LICENSE file.
         <span :title="form.version">{{ form.version }}</span>
       </div>
     </td>
-    <td class="submissions">
+    <td v-if="columns.has('submissions')" class="submissions">
       <div>
-        <link-if-can :to="submissionsPath">
+        <router-link :to="submissionsPath">
           <span>{{ $tcn('count.submission', form.submissions) }}</span>
           <span class="icon-angle-right"></span>
-        </link-if-can>
+        </router-link>
       </div>
       <div v-if="form.lastSubmission != null">
-        <link-if-can :to="submissionsPath">
+        <router-link :to="submissionsPath">
           <i18n :tag="false" path="lastSubmission">
             <template #dateTime>
               <date-time :iso="form.lastSubmission"/>
             </template>
           </i18n>
-        </link-if-can>
+        </router-link>
       </div>
     </td>
-    <td v-if="expanded">
+    <td v-if="columns.has('actions')" class="actions">
       <enketo-preview v-if="project.permits('project.update')"
         :form-version="form"/>
       <enketo-fill v-else :form-version="form">
@@ -69,9 +69,9 @@ export default {
       type: Form,
       required: true
     },
-    expanded: {
-      type: Boolean,
-      default: false
+    columns: {
+      type: Set,
+      required: true
     }
   },
   computed: {

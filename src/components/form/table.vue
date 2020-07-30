@@ -10,20 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table class="table">
+  <table v-if="project != null" class="table">
     <thead>
       <tr>
         <th>{{ $t('header.name') }}</th>
-        <th v-if="expanded">
+        <th v-if="columns.has('idAndVersion')">
           {{ $t('header.idAndVersion') }}
         </th>
-        <th>{{ $t('common.submissions') }}</th>
-        <th v-if="expanded">{{ $t('header.actions') }}</th>
+        <th v-if="columns.has('submissions')">
+          {{ $t('common.submissions') }}
+        </th>
+        <th v-if="columns.has('actions')">{{ $t('header.actions') }}</th>
       </tr>
     </thead>
-    <tbody v-if="dataExists">
-      <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"
-        :expanded="expanded"/>
+    <tbody v-if="forms != null">
+      <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
+        :columns="columns"/>
     </tbody>
   </table>
 </template>
@@ -32,21 +34,28 @@ except according to the terms contained in the LICENSE file.
 import FormRow from './row.vue';
 import { requestData } from '../../store/modules/request';
 
-const requestKeys = ['project', 'forms'];
-
 export default {
   name: 'FormTable',
   components: { FormRow },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(requestKeys),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
+    ...requestData(['project', 'forms']),
+    columns() {
+      const columns = new Set(['name']);
+      // Hide columns from a project viewer.
+      if (this.project.permits('project.update') ||
+        this.project.permits('submission.create'))
+        columns.add('idAndVersion').add('actions');
+      // Hide the Submissions column from a Data Collector.
+      if (this.project.permits('submission.list')) columns.add('submissions');
+      return columns;
     },
-    expanded() {
-      return this.project != null && (this.project.permits('project.update') ||
-        this.project.permits('submission.create'));
+    formsToShow() {
+      // Hide any form without a published version from a Data Collector.
+      return this.project.permits('submission.list')
+        ? this.forms
+        : this.forms.filter(form => form.publishedAt != null);
     }
   }
 };
@@ -58,7 +67,7 @@ export default {
     "header": {
       // This is the text of a column header in a table of Forms. The column
       // shows the ID of each Form, as well as the name of its primary version.
-      "idAndVersion": "ID/Version"
+      "idAndVersion": "ID and Version"
     }
   }
 }
