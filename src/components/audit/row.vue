@@ -30,17 +30,14 @@ except according to the terms contained in the LICENSE file.
         {{ target.title }}
       </router-link>
     </td>
-    <td class="details">
-      <!-- Adding a <div> to work around a Firefox bug: see
-      https://bugzilla.mozilla.org/show_bug.cgi?id=386970. -->
-      <div ref="details" @click="selectDetails">{{ details }}</div>
-    </td>
+    <td><selectable>{{ details }}</selectable></td>
   </tr>
 </template>
 
 <script>
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
+import Selectable from '../selectable.vue';
 import i18n from '../../i18n';
 import routes from '../../mixins/routes';
 import { auditActionMessage } from '../../util/i18n';
@@ -75,7 +72,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { DateTime },
+  components: { DateTime, Selectable },
   mixins: [routes()],
   props: {
     audit: {
@@ -110,22 +107,11 @@ export default {
         ? JSON.stringify(this.audit.details)
         : '';
     }
-  },
-  methods: {
-    selectDetails() {
-      if (this.audit.details == null) return;
-      const selection = window.getSelection();
-      // Select the entire JSON unless the user has selected specific text.
-      if (selection.isCollapsed)
-        selection.selectAllChildren(this.$refs.details);
-    }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 .audit-row {
   .table tbody & td {
     vertical-align: middle;
@@ -139,12 +125,6 @@ export default {
   .initiator, .target {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .details div {
-    font-family: $font-family-monospace;
-    overflow-x: auto;
     white-space: nowrap;
   }
 }

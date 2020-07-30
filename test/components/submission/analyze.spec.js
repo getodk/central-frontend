@@ -2,9 +2,9 @@ import Form from '../../../src/presenters/form';
 import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/lifecycle';
+import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 const clickTab = (wrapper, tabText) => {
@@ -92,36 +92,22 @@ describe('SubmissionAnalyze', () => {
       );
   });
 
-  it('selects the OData URL upon click', () => {
-    const form = testData.extendedForms
-      .createPast(1, { submissions: 1 })
-      .last();
-    testData.extendedSubmissions.createPast(1);
-
-    const path = `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}/submissions`;
-    return mockRoute(path, { attachToDocument: true })
-      .respondWithData(() => testData.extendedProjects.last())
-      .respondWithData(() => testData.extendedForms.last())
-      .respondWithProblem(404.1) // formDraft
-      .respondWithProblem(404.1) // attachments
-      .respondWithData(() => testData.standardKeys.sorted())
-      .respondWithData(() => testData.extendedForms.last()._fields)
-      .respondWithData(testData.submissionOData)
-      .afterResponses(app =>
-        trigger.click(app, '#submission-list-analyze-button'))
-      .then(app => trigger.click(app, '#submission-analyze-odata-url'))
-      .then(() => {
-        const selection = window.getSelection();
-        const url = document.querySelector('#submission-analyze-odata-url');
-        selection.anchorNode.should.equal(url);
-        selection.focusNode.should.equal(url);
-      });
+  it('selects the OData URL after it is clicked', async () => {
+    const modal = mount(SubmissionAnalyze, {
+      propsData: { state: true, baseUrl: '/v1/projects/1/forms/f' },
+      attachToDocument: true
+    });
+    const selectable = modal.first('.selectable');
+    await trigger.click(selectable);
+    const selection = window.getSelection();
+    selection.anchorNode.should.equal(selectable.element);
+    selection.focusNode.should.equal(selectable.element);
   });
 
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
-      modal = mountAndMark(SubmissionAnalyze, {
+      modal = mount(SubmissionAnalyze, {
         propsData: { state: true, baseUrl: '/v1/projects/1/forms/f' }
       });
     });

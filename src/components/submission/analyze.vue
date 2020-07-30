@@ -39,7 +39,9 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
       </div>
-      <div id="submission-analyze-odata-url" ref="oDataUrl" class="modal-introduction" @click="selectUrl">{{ oDataUrl }}</div>
+      <div id="submission-analyze-odata-url" class="modal-introduction">
+        <selectable>{{ oDataUrl }}</selectable>
+      </div>
       <div id="submission-analyze-tool-help" class="modal-introduction">
         <i18n v-if="tool === 'microsoft'" tag="p" path="help.microsoft.full">
           <template #pageForExcel>
@@ -89,10 +91,11 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Modal from '../modal.vue';
+import Selectable from '../selectable.vue';
 
 export default {
   name: 'SubmissionAnalyze',
-  components: { Modal },
+  components: { Modal, Selectable },
   props: {
     baseUrl: {
       type: String,
@@ -124,12 +127,6 @@ export default {
     },
     setTool(tool) {
       this.tool = tool;
-    },
-    selectUrl() {
-      const selection = window.getSelection();
-      // Select the entire URL unless the user has selected specific text.
-      if (selection.isCollapsed)
-        selection.selectAllChildren(this.$refs.oDataUrl);
     }
   }
 };
@@ -158,11 +155,8 @@ export default {
 
   #submission-analyze-odata-url {
     background-color: $color-subpanel-background;
-    font-family: $font-family-monospace;
     margin-bottom: 10px;
-    overflow-x: auto;
     padding: 12px $padding-modal-body;
-    white-space: nowrap;
   }
 
   #submission-analyze-tool-help {

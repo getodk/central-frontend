@@ -269,7 +269,7 @@ describe('AuditTable', () => {
         })
         .sorted())
       .afterResponse(app => {
-        app.first('.audit-row .details').text().should.equal('{"some":"json"}');
+        app.first('.audit-row .selectable').text().should.equal('{"some":"json"}');
       }));
 
   it('selects details after they are clicked', () =>
@@ -282,10 +282,10 @@ describe('AuditTable', () => {
           details: { some: 'json' }
         })
         .sorted())
-      .afterResponse(app => trigger.click(app, '.audit-row .details div'))
+      .afterResponse(trigger.click('.audit-row .selectable'))
       .then(() => {
         const selection = window.getSelection();
-        const details = document.querySelector('.audit-row .details div');
+        const details = document.querySelector('.audit-row .selectable');
         selection.anchorNode.should.equal(details);
         selection.focusNode.should.equal(details);
       }));
