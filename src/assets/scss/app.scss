@@ -163,6 +163,8 @@ a {
       text-decoration: none;
     }
   }
+
+  > .icon-angle-right:last-child { color: $color-accent-primary; }
 }
 
 .btn-link {

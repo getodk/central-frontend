@@ -56,7 +56,7 @@ describe('ProjectRow', () => {
         archived: true
       });
       return load('/').then(app => {
-        const text = app.first('.project-row-name a').text().trim();
+        const text = app.first('.project-row .name a').text().trim();
         text.should.equal('My Project (archived)');
       });
     });

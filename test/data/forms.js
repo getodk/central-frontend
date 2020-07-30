@@ -57,9 +57,13 @@ const forms = dataStore({
     id,
     lastCreatedAt,
 
+    submissions = undefined,
+    lastSubmission = submissions != null && submissions !== 0
+      ? new Date().toISOString()
+      : undefined,
     project = extendedProjects.size !== 0
       ? extendedProjects.first()
-      : extendedProjects.createPast(1, { forms: 1 }).last(),
+      : extendedProjects.createPast(1, { forms: 1, lastSubmission }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
     state = !inPast
@@ -91,7 +95,7 @@ const forms = dataStore({
       // of access during testing.
       _fields: fields
     };
-    const versionOptions = { ...rest, form, draft };
+    const versionOptions = { ...rest, form, draft, submissions, lastSubmission };
     if (inPast)
       formVersions.createPast(1, versionOptions);
     else
@@ -127,7 +131,7 @@ formVersions = dataStore({
     draft = false,
     publishedAt = undefined,
     excelContentType = null,
-    submissions = 0,
+    submissions = undefined,
     lastSubmission = undefined,
     publishedBy = undefined,
     draftToken = draft ? faker.random.alphaNumeric(64) : null
@@ -141,9 +145,6 @@ formVersions = dataStore({
       enketoId,
       // Extended form, extended form version, and extended form draft
       excelContentType,
-      // Extended form and extended form draft
-      // This property does not necessarily match testData.extendedSubmissions.
-      submissions,
       // Extended form version
       publishedBy: publishedBy != null
         ? toActor(publishedBy)
@@ -162,11 +163,20 @@ formVersions = dataStore({
       if (!draft) result.publishedAt = result.createdAt;
     }
 
-    // This property does not necessarily match testData.extendedProjects or
-    // testData.extendedSubmissions.
-    result.lastSubmission = lastSubmission != null
-      ? lastSubmission
-      : (submissions !== 0 ? fakePastDate([result.createdAt]) : null);
+    if (submissions != null) {
+      // This property does not necessarily match testData.extendedSubmissions.
+      result.submissions = submissions;
+      // This property does not necessarily match testData.extendedProjects or
+      // testData.extendedSubmissions.
+      result.lastSubmission = lastSubmission != null
+        ? lastSubmission
+        : (submissions !== 0 ? new Date().toISOString() : null);
+    } else if (lastSubmission != null) {
+      result.submissions = 1;
+      result.lastSubmission = lastSubmission;
+    } else {
+      result.submissions = 0;
+    }
 
     return result;
   },

@@ -11,44 +11,79 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="form-row">
-    <td>
-      <div>
-        <router-link :to="primaryFormPath(form)" class="form-row-name">
-          {{ form.nameOrId() }} <span class="icon-angle-right"></span>
-        </router-link>
-      </div>
-      <div v-if="form.name != null" class="form-row-form-id">
-        {{ form.xmlFormId }}
-      </div>
-      <div class="form-row-submissions">
-        {{ $tcn('count.submission', form.submissions) }}
-      </div>
-    </td>
-    <td class="form-row-created-by">
-      <link-if-can v-if="form.createdBy != null"
-        :to="userPath(form.createdBy.id)" :title="form.createdBy.displayName">
-        {{ form.createdBy.displayName }}
+    <td class="name">
+      <link-if-can :to="primaryFormPath(form)">
+        <span>{{ form.nameOrId() }}</span><span class="icon-angle-right"></span>
       </link-if-can>
     </td>
-    <td><date-time :iso="form.publishedAt"/></td>
-    <td><date-time :iso="form.lastSubmission"/></td>
+    <td v-if="expanded">
+      <div class="form-id">
+        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
+      </div>
+      <div v-if="form.version != null && form.version !== ''" class="version">
+        <span :title="form.version">{{ form.version }}</span>
+      </div>
+    </td>
+    <td class="submissions">
+      <div>
+        <link-if-can :to="submissionsPath">
+          <span>{{ $tcn('count.submission', form.submissions) }}</span>
+          <span class="icon-angle-right"></span>
+        </link-if-can>
+      </div>
+      <div v-if="form.lastSubmission != null">
+        <link-if-can :to="submissionsPath">
+          <i18n :tag="false" path="lastSubmission">
+            <template #dateTime>
+              <date-time :iso="form.lastSubmission"/>
+            </template>
+          </i18n>
+        </link-if-can>
+      </div>
+    </td>
+    <td v-if="expanded">
+      <enketo-preview v-if="project.permits('project.update')"
+        :form-version="form"/>
+      <enketo-fill v-else :form-version="form">
+        <span class="icon-edit"></span>{{ $t('action.fill') }}
+      </enketo-fill>
+    </td>
   </tr>
 </template>
 
 <script>
 import DateTime from '../date-time.vue';
-import Form from '../../presenters/form';
+import EnketoFill from '../enketo/fill.vue';
+import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
+import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormRow',
-  components: { DateTime, LinkIfCan },
+  components: { DateTime, EnketoFill, EnketoPreview, LinkIfCan },
   mixins: [routes()],
   props: {
     form: {
       type: Form,
       required: true
+    },
+    expanded: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    // The component assumes that this data will exist when the component is
+    // created.
+    ...requestData(['project']),
+    submissionsPath() {
+      return this.formPath(
+        this.form.projectId,
+        this.form.xmlFormId,
+        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+      );
     }
   }
 };
@@ -57,34 +92,59 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-.table tbody .form-row td {
-  vertical-align: middle;
-}
+.form-row {
+  .table tbody & td { vertical-align: middle; }
 
-.form-row-name {
-  font-size: 30px;
+  .name {
+    .link-if-can { font-size: 30px; }
 
-  &, &:hover, &:focus {
-    color: inherit;
-    text-decoration: none;
+    a {
+      &, &:hover, &:focus {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .icon-angle-right {
+        font-size: 20px;
+        margin-left: 12px;
+        vertical-align: 2px;
+      }
+    }
   }
 
-  .icon-angle-right:first-child {
-    color: $color-accent-primary;
-    font-size: 20px;
-    margin-left: 3px;
-    margin-right: 0;
-    vertical-align: 2px;
+  .form-id, .version {
+    font-family: $font-family-monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-}
 
-.form-row-form-id {
-  font-size: 18px;
-}
+  .version { color: #888; }
 
-.form-row-created-by {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  .submissions {
+    a {
+      &, &:hover, &:focus {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    .icon-angle-right { margin-left: 6px; }
+  }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This text shows when the last Submission was received. {dateTime} shows
+    // the date and time, for example: "2020/01/01 01:23". It may show a
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
+    "lastSubmission": "(last {dateTime})",
+    "action": {
+      "fill": "Fill Form"
+    }
+  }
+}
+</i18n>

@@ -14,13 +14,16 @@ except according to the terms contained in the LICENSE file.
     <thead>
       <tr>
         <th>{{ $t('header.name') }}</th>
-        <th>{{ $t('header.createdBy') }}</th>
-        <th>{{ $t('header.publishedAt') }}</th>
-        <th>{{ $t('header.lastSubmission') }}</th>
+        <th v-if="expanded">
+          {{ $t('header.idAndVersion') }}
+        </th>
+        <th>{{ $t('common.submissions') }}</th>
+        <th v-if="expanded">{{ $t('header.actions') }}</th>
       </tr>
     </thead>
-    <tbody v-if="forms != null">
-      <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
+    <tbody v-if="dataExists">
+      <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"
+        :expanded="expanded"/>
     </tbody>
   </table>
 </template>
@@ -29,12 +32,23 @@ except according to the terms contained in the LICENSE file.
 import FormRow from './row.vue';
 import { requestData } from '../../store/modules/request';
 
+const requestKeys = ['project', 'forms'];
+
 export default {
   name: 'FormTable',
   components: { FormRow },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['forms'])
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(requestKeys),
+    dataExists() {
+      return this.$store.getters.dataExists(requestKeys);
+    },
+    expanded() {
+      return this.project != null && (this.project.permits('project.update') ||
+        this.project.permits('submission.create'));
+    }
+  }
 };
 </script>
 
@@ -42,7 +56,9 @@ export default {
 {
   "en": {
     "header": {
-      "publishedAt": "Last Published"
+      // This is the text of a column header in a table of Forms. The column
+      // shows the ID of each Form, as well as the name of its primary version.
+      "idAndVersion": "ID/Version"
     }
   }
 }
