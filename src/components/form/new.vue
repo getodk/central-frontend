@@ -89,10 +89,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormNew',
   components: { DocLink, Modal, Spinner },
-  mixins: [
-    dropZone({ keepAlive: false, eventNamespace: 'form-new' }),
-    request()
-  ],
+  mixins: [dropZone(), request()],
   props: {
     state: {
       type: Boolean,
@@ -101,7 +98,7 @@ export default {
   },
   data() {
     return {
-      fileIsOverDropZone: false,
+      dragDepth: 0,
       awaitingResponse: false,
       file: null,
       warnings: null

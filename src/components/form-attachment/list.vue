@@ -76,20 +76,14 @@ export default {
     FormAttachmentRow,
     FormAttachmentUploadFiles
   },
-  mixins: [
-    dropZone({ keepAlive: false, eventNamespace: 'form-attachment-list' }),
-    modal(),
-    request(),
-    validateData()
-  ],
+  mixins: [dropZone(), modal(), request(), validateData()],
   data() {
     return {
+      dragDepth: 0,
       /*
       Most properties fall into exactly one of four groups:
 
         1. Properties set on dragenter and reset on dragleave or drop
-           - fileIsOverDropZone. Indicates whether there is a file over the drop
-             zone. Its value is managed by the dropZone mixin.
            - countOfFilesOverDropZone. The number of files over the drop zone.
            - dragoverAttachment. Only applicable for
              countOfFilesOverDropZone === 1. When the user drags a single file
@@ -116,7 +110,6 @@ export default {
            - updatedAttachments. An array of the attachments for which files
              were successfully uploaded.
       */
-      fileIsOverDropZone: false,
       countOfFilesOverDropZone: 0,
       dragoverAttachment: null,
       plannedUploads: [],
