@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
 
     <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
       @success="afterCreate"/>
-    <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
+    <field-key-revoke v-bind="revoke" @hide="hideRevoke"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -95,29 +95,24 @@ export default {
   },
   data() {
     return {
+      // The id of the highlighted app user
       highlighted: null,
       enabledPopoverLinks: new Set(),
       // The <a> element whose popover is currently shown.
       popoverLink: null,
+      // Modals
       newFieldKey: {
         state: false
       },
       revoke: {
-        fieldKey: null,
-        state: false
+        state: false,
+        fieldKey: null
       }
     };
   },
   computed: requestData(['fieldKeys']),
-  watch: {
-    fieldKeys() {
-      this.enabledPopoverLinks = new Set();
-      this.revoke.fieldKey = null;
-      this.hidePopover();
-    }
-  },
   created() {
-    this.$emit('fetch-field-keys', false);
+    this.fetchData(false);
   },
   mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -127,6 +122,11 @@ export default {
     $('body').off('.field-key-list');
   },
   methods: {
+    fetchData(resend) {
+      this.$emit('fetch-field-keys', resend);
+      this.highlighted = null;
+      this.enabledPopoverLinks = new Set();
+    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -178,17 +178,20 @@ export default {
       this.revoke.fieldKey = fieldKey;
       this.showModal('revoke');
     },
+    hideRevoke() {
+      this.hideModal('revoke');
+      this.revoke.fieldKey = null;
+    },
     afterCreate(fieldKey) {
-      this.$emit('fetch-field-keys');
+      this.fetchData(true);
       this.hideModal('newFieldKey');
       this.$alert().success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
-      this.$emit('fetch-field-keys');
-      this.hideModal('revoke');
+      this.fetchData(true);
+      this.hideRevoke();
       this.$alert().success(this.$t('alert.revoke', fieldKey));
-      this.highlighted = null;
     }
   }
 };
@@ -203,10 +206,6 @@ export default {
   th:nth-child(5) {
     width: $padding-left-table-data + $padding-right-table-data +
       $min-width-dropdown-menu;
-  }
-
-  td {
-    vertical-align: middle;
   }
 }
 

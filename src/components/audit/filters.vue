@@ -40,10 +40,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #audit-filters {
   .icon-filter {
     color: #999;
-    margin-right: 6px;
+    margin-right: $margin-right-icon;
   }
 
   .form-group {

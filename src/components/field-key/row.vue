@@ -10,8 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="{ success: fieldKey.id === highlighted }">
-    <td>{{ fieldKey.displayName }}</td>
+  <tr class="field-key-row" :class="{ success: fieldKey.id === highlighted }">
+    <td class="display-name">
+      <span :title="fieldKey.displayName">{{ fieldKey.displayName }}</span>
+    </td>
     <td>
       <time-and-user :iso="fieldKey.createdAt" :user="fieldKey.createdBy"/>
     </td>
@@ -76,10 +78,24 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.field-key-row {
+  .table tbody & td { vertical-align: middle; }
+
+  .display-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {
+    // This is the text for an action, for example, the text of a button.
     "seeCode": "See code",
+    // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
     "action": {
       "revokeAccess": "Revoke access"

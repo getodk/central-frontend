@@ -25,20 +25,31 @@ export const dataTransfer = (files) => {
 
 export const trigger = {};
 
-// Simple events
-for (const eventName of ['click', 'submit']) {
-  // Triggers an event, then waits a tick for the DOM to update.
-  trigger[eventName] = (...args) => {
-    if (args.length === 0) throw new Error('wrapper or selector required');
-    if (typeof args[0] === 'string')
-      return (wrapper) => trigger[eventName](wrapper, args[0]);
-    const [wrapper, selector] = args;
-    const target = selector == null ? wrapper : wrapper.first(selector);
-    target.trigger(eventName);
-    const nextTick = Vue.nextTick();
-    return selector == null ? nextTick : nextTick.then(() => wrapper);
-  };
-}
+/*
+trigger.click() triggers a click event, then waits a tick for the DOM to update.
+For example:
+
+  // Specify an Avoriaz wrapper.
+  trigger.click(wrapper);
+
+  // To trigger a click on a descendant element, specify a selector.
+  trigger.click(wrapper, 'button');
+
+  // If the wrapper is omitted, trigger.click() returns a function that expects
+  // the wrapper.
+  const clickButton = trigger.click('button');
+  return clickButton(wrapper);
+*/
+trigger.click = (...args) => {
+  if (args.length === 0) throw new Error('invalid arguments');
+  if (typeof args[0] === 'string')
+    return (wrapper) => trigger.click(wrapper, ...args);
+  const [wrapper, selector] = args;
+  const target = selector == null ? wrapper : wrapper.first(selector);
+  target.trigger('click');
+  const nextTick = Vue.nextTick();
+  return selector == null ? nextTick : nextTick.then(() => wrapper);
+};
 
 // Define methods for events that change the value of an <input> or <select>
 // element. Many tests will use trigger.changeValue(), but if a component uses
@@ -76,46 +87,97 @@ trigger.uncheck = (wrapper, selector = null) => {
 };
 
 /*
-trigger.fillForm(wrapper, selectorsAndValues) fills a form (whether an actual
-form element or something else). It sets the `value` property of one or more
-fields, triggering an input event for each.
+trigger.fillForm() fills one or more form fields. It is designed to work with
+v-model. For example:
 
-`wrapper` is an Avoriaz wrapper that wraps the form or a DOM node or Vue
-component that contains the form. selectorsAndValues is an array of
-[selector, value] arrays that specify how to select each field, as well as the
-field's value.
-
-trigger.fillForm() returns a promise that resolves to the wrapper.
-
-For example:
-
-  trigger.fillForm(component, [
-    ['input[type="email"]', 'email@getodk.org'],
-    ['input[type="password"]', 'password']
+  // First specify an Avoriaz wrapper that wraps a DOM node or Vue component
+  // that contains the fields. Then for each field, specify how to select the
+  // field, as well as the field's value. trigger.fillForm() returns a promise
+  // that resolves to the wrapper.
+  trigger.fillForm(wrapper, [
+    ['input[type="text"]', 'Some text'],
+    ['input[type="checkbox"]', true],
+    ['select', 'some_option']
   ]);
+
+  // If the wrapper is omitted, trigger.fillForm() returns a function that
+  // expects the wrapper.
+  const fillInput = trigger.fillForm([
+    ['input[type="text"]', 'Some text']
+  ]);
+  fillInput(wrapper);
 */
-trigger.fillForm = (wrapper, selectorsAndValues) => selectorsAndValues.reduce(
-  (acc, [selector, value]) =>
-    // Using trigger.input() rather than trigger.changeValue() so that
-    // trigger.fillForm() works with v-model.
-    acc.then(() => trigger.input(wrapper, selector, value)),
-  Promise.resolve()
-);
+trigger.fillForm = (...args) => {
+  if (args.length === 0) throw new Error('invalid arguments');
+  if (Array.isArray(args[0]))
+    return (wrapper) => trigger.fillForm(wrapper, ...args);
+  const [wrapper, selectorsAndValues] = args;
+  const promise = selectorsAndValues.reduce(
+    (acc, [selector, value]) => acc.then(() => {
+      const field = wrapper.first(selector);
+      const { tagName } = unwrapElement(field);
+      if (tagName === 'INPUT') {
+        const type = field.hasAttribute('type')
+          ? field.getAttribute('type')
+          : 'text';
+        if (type === 'checkbox' || type === 'radio') {
+          if (value === true) return trigger.check(field);
+          if (value === false) return trigger.uncheck(field);
+          throw new Error('invalid value');
+        }
+        return trigger.input(field, value);
+      }
+      if (tagName === 'SELECT') return trigger.changeValue(field, value);
+      throw new Error('unsupported element');
+    }),
+    Promise.resolve()
+  );
+  return promise.then(() => wrapper);
+};
 // Deprecated: use trigger.fillForm() instead.
 export const { fillForm } = trigger;
 
-// trigger.submitForm(wrapper, formSelector, fieldSelectorsAndValues) fills a
-// form using fillForm(), then submits the form. `wrapper` is an Avoriaz wrapper
-// that contains the form. submitForm() returns a promise that resolves to
-// `wrapper`.
-trigger.submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
-  const form = wrapper.first(formSelector);
-  return trigger.fillForm(form, fieldSelectorsAndValues)
-    .then(() => trigger.submit(form))
+/*
+trigger.submit() submits a form. For example:
+
+  // Triggers a submit event on a form element. `wrapper` is an Avoriaz wrapper.
+  // trigger.submit() returns a promise that resolves to the wrapper.
+  trigger.submit(wrapper);
+
+  // You can also specify a selector for the form.
+  trigger.submit(wrapper, 'form');
+
+  // If the last argument is an array, trigger.submit() will call
+  // trigger.fillForm().
+  trigger.submit(wrapper, [
+    ['input[type="text"]', 'Some text']
+  ]);
+
+  // If the wrapper is omitted, trigger.submit() returns a function that expects
+  // the wrapper.
+  const submitForm = trigger.submit('form');
+  submitForm(wrapper);
+*/
+trigger.submit = (...args) => {
+  if (args.length === 0) throw new Error('invalid arguments');
+  if (typeof args[0] === 'string' || Array.isArray(args[0]))
+    return (wrapper) => trigger.submit(wrapper, ...args);
+  if (args.length === 2 && Array.isArray(args[1]))
+    return trigger.submit(args[0], null, args[1]);
+  const [wrapper, formSelector, fieldSelectorsAndValues] = args;
+  const form = formSelector != null ? wrapper.first(formSelector) : wrapper;
+  const promise = fieldSelectorsAndValues != null
+    ? trigger.fillForm(form, fieldSelectorsAndValues)
+    : Promise.resolve();
+  return promise
+    .then(() => {
+      form.trigger('submit');
+      return Vue.nextTick();
+    })
     .then(() => wrapper);
 };
-// Deprecated: use trigger.submitForm() instead.
-export const { submitForm } = trigger;
+// Deprecated: use trigger.submit() instead.
+export const submitForm = trigger.submit;
 
 // Drag events
 for (const eventName of ['dragenter', 'dragover', 'dragleave', 'drop']) {

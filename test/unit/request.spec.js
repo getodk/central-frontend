@@ -128,6 +128,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
     });
 
+    it('publicLinks', () => {
+      const path = apiPaths.publicLinks(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/public-links');
+    });
+
     it('fieldKeys', () => {
       apiPaths.fieldKeys(1).should.equal('/v1/projects/1/app-users');
     });

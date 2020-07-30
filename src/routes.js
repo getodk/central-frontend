@@ -31,6 +31,7 @@ import ProjectOverview from './components/project/overview.vue';
 import ProjectSettings from './components/project/settings.vue';
 import ProjectShow from './components/project/show.vue';
 import ProjectUserList from './components/project/user/list.vue';
+import PublicLinkList from './components/public-link/list.vue';
 import SystemHome from './components/system/home.vue';
 import UserEdit from './components/user/edit.vue';
 import UserHome from './components/user/home.vue';
@@ -268,6 +269,24 @@ const routes = [
                   'form.read',
                   'submission.list',
                   'submission.read'
+                ]),
+                form: (form) => form.publishedAt != null
+              }
+            }
+          },
+          {
+            path: 'public-links',
+            component: PublicLinkList,
+            props: true,
+            meta: {
+              validateData: {
+                // We do not check whether the user can revoke the public link,
+                // since the actee of that assignment is the public link, not
+                // the project.
+                project: (project) => project.permits([
+                  'form.read',
+                  'public_link.list',
+                  'public_link.create'
                 ]),
                 form: (form) => form.publishedAt != null
               }
@@ -528,6 +547,7 @@ preserveDataForKey({
     'FormOverview',
     'FormVersionList',
     'FormSubmissions',
+    'PublicLinkList',
     'FormSettings',
     'FormDraftStatus',
     'FormAttachmentList',
@@ -549,6 +569,7 @@ preserveDataForKey({
     'FormOverview',
     'FormVersionList',
     'FormSubmissions',
+    'PublicLinkList',
     'FormSettings',
     'FormDraftStatus',
     'FormAttachmentList',

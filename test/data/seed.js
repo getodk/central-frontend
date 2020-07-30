@@ -25,6 +25,8 @@ export default () => {
         'form.delete',
         'project.create',
         'project.update',
+        'public_link.create',
+        'public_link.list',
         'submission.create',
         'submission.list',
         'submission.read',
@@ -59,6 +61,8 @@ export default () => {
         'form.update',
         'form.delete',
         'project.update',
+        'public_link.create',
+        'public_link.list',
         'submission.create',
         'submission.list',
         'submission.read'

@@ -26,6 +26,7 @@ const defaults = {
     : { problem: 404.1 }),
   submissionsChunk: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
+  publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
   backupsConfig: () => (testData.standardBackupsConfigs.size !== 0
@@ -66,6 +67,7 @@ const mapsByComponent = {
   FormOverview: mapKeys(['formActors']),
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  PublicLinkList: mapKeys(['publicLinks']),
   FormSettings: new Map(),
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),

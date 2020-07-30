@@ -49,7 +49,7 @@ p {
   vertical-align: -1px;
 
   .btn > &:first-child, a > &:first-child {
-    margin-right: 6px;
+    margin-right: $margin-right-icon;
     + .caret { margin-left: 0; }
   }
 

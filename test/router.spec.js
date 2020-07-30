@@ -83,6 +83,7 @@ describe('router', () => {
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
       '/projects/1/forms/f/submissions',
+      '/projects/1/forms/f/public-links',
       '/projects/1/forms/f/settings',
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
@@ -130,17 +131,166 @@ describe('router', () => {
   });
 
   describe('preserveData', () => {
-    describe('project routes', () => {
-      it('preserves data if the user changes tabs', () => {
-        mockLogin();
+    beforeEach(mockLogin);
+
+    const dataExists = (keys) => (app) => {
+      for (const key of keys)
+        should.exist(app.vm.$store.state.request.data[key]);
+    };
+
+    describe('navigating between project routes', () => {
+      beforeEach(() => {
         testData.extendedProjects.createPast(1, { appUsers: 0 });
-        return load('/projects/1/app-users')
+      });
+
+      it('preserves data while navigating to/from the project overview', () =>
+        // Load .../form-access, which requests all the data that the project
+        // overview uses.
+        load('/projects/1/form-access')
+          .complete()
+          .route('/projects/1')
+          .complete()
+          .route('/projects/1/form-access')
+          .then(dataExists(['project', 'forms'])));
+
+      describe('navigating to/from .../users', () => {
+        it('preserves project', () =>
+          load('/projects/1/settings')
+            .complete()
+            .load('/projects/1/users', { project: false })
+            .complete()
+            .route('/projects/1/settings')
+            .then(dataExists(['project'])));
+
+        it('preserves roles', () =>
+          load('/projects/1/form-access')
+            .complete()
+            .load('/projects/1/users', { project: false, roles: false })
+            .complete()
+            .route('/projects/1/form-access')
+            .then(dataExists(['roles'])));
+
+        // Only .../users uses projectAssignments, but we test that the data is
+        // preserved if the user navigates away, then back.
+        it('preserves projectAssignments', () =>
+          load('/projects/1/users')
+            .complete()
+            .route('/projects/1/settings')
+            .complete()
+            .route('/projects/1/users')
+            .then(dataExists(['projectAssignments'])));
+      });
+
+      it('preserves data while navigating to/from .../app-users', () =>
+        load('/projects/1/form-access')
+          .complete()
+          .route('/projects/1/app-users')
+          .complete()
+          .route('/projects/1/form-access')
+          .then(dataExists(['project', 'fieldKeys'])));
+
+      describe('navigating to/from .../form-access', () => {
+        it('preserves project', () =>
+          load('/projects/1/settings')
+            .complete()
+            .load('/projects/1/form-access', { project: false })
+            .complete()
+            .route('/projects/1/settings')
+            .then(dataExists(['project'])));
+
+        it('preserves roles', () =>
+          load('/projects/1/users')
+            .complete()
+            .load('/projects/1/form-access', { project: false, roles: false })
+            .complete()
+            .route('/projects/1/users')
+            .then(dataExists(['roles'])));
+
+        it('preserves forms', () =>
+          load('/projects/1')
+            .complete()
+            .load('/projects/1/form-access', { project: false, forms: false })
+            .complete()
+            .route('/projects/1')
+            .then(dataExists(['forms'])));
+
+        it('preserves fieldKeys', () =>
+          load('/projects/1/app-users')
+            .complete()
+            .load('/projects/1/form-access', { project: false, fieldKeys: false })
+            .complete()
+            .route('/projects/1/app-users')
+            .then(dataExists(['fieldKeys'])));
+
+        it('preserves formSummaryAssignments', () =>
+          load('/projects/1/form-access')
+            .complete()
+            .route('/projects/1/settings')
+            .complete()
+            .route('/projects/1/form-access')
+            .then(dataExists(['formSummaryAssignments'])));
+      });
+
+      it('preserves data while navigating to/from .../settings', () =>
+        load('/projects/1')
           .complete()
           .route('/projects/1/settings')
           .complete()
-          .route('/projects/1/app-users')
-          .testNoRequest();
+          .route('/projects/1')
+          .then(dataExists(['project'])));
+    });
+
+    describe('navigating between form routes', () => {
+      beforeEach(() => {
+        testData.extendedForms.createPast(1);
+        testData.extendedFormVersions.createPast(1, { draft: true });
+        testData.standardFormAttachments.createPast(1);
       });
+
+      describe('navigating to/from .../public-links', () => {
+        it('preserves data that FormShow uses', () =>
+          load('/projects/1/forms/f/settings')
+            .complete()
+            .load('/projects/1/forms/f/public-links', {
+              project: false,
+              form: false,
+              formDraft: false,
+              attachments: false
+            })
+            .complete()
+            .route('/projects/1/forms/f/settings')
+            .then(dataExists(['project', 'form', 'formDraft', 'attachments'])));
+
+        it('preserves publicLinks', () =>
+          load('/projects/1/forms/f/public-links')
+            .complete()
+            .route('/projects/1/forms/f/settings')
+            .complete()
+            .route('/projects/1/forms/f/public-links')
+            .then(dataExists(['publicLinks'])));
+      });
+    });
+
+    describe('navigating between project and form routes', () => {
+      beforeEach(() => {
+        testData.extendedForms.createPast(1);
+      });
+
+      it('preserves project while navigating to/from a form route', () =>
+        load('/projects/1/settings')
+          .complete()
+          .load('/projects/1/forms/f/settings', { project: false })
+          .complete()
+          .route('/projects/1/settings')
+          .then(dataExists(['project'])));
+
+      it('preserves project while navigating to/from a project route', () =>
+        load('/projects/1/forms/f/settings')
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .load('/projects/1/forms/f/settings', { project: false })
+          .then(dataExists(['project'])));
     });
   });
 
@@ -257,6 +407,13 @@ describe('router', () => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
         });
 
+        it('redirects the user from .../public-links', () =>
+          load('/projects/1/forms/f/public-links')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+
         it('redirects the user from .../settings', () =>
           load('/projects/1/forms/f/settings')
             .respondFor('/', { users: false })
@@ -322,6 +479,7 @@ describe('router', () => {
           '/projects/1/forms/f',
           '/projects/1/forms/f/versions',
           '/projects/1/forms/f/submissions',
+          '/projects/1/forms/f/public-links',
           '/projects/1/forms/f/settings',
           '/projects/1/forms/f/draft',
           '/projects/1/forms/f/draft/attachments',
@@ -388,6 +546,13 @@ describe('router', () => {
 
       it('redirects the user from .../submissions', () =>
         load('/projects/1/forms/f/submissions')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects the user from .../public-links', () =>
+        load('/projects/1/forms/f/public-links')
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');

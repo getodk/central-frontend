@@ -45,6 +45,7 @@ export const keys = [
   'attachments',
   // A single chunk of submissions OData for a single form version
   'submissionsChunk',
+  'publicLinks',
   // Encryption keys for a single form version
   'keys',
   'fieldKeys',

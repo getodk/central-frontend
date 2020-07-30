@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <tr>
           <th>{{ $t('header.form') }}</th>
           <th>
-            {{ $t('header.state') }}
+            <span>{{ $t('header.state') }}</span>
             <button type="button" class="btn btn-link"
               @click="$emit('show-states')">
               <span class="icon-question-circle"></span>
@@ -127,13 +127,9 @@ export default {
       &:nth-child(2) {
         width: $state-width;
 
-        .btn-link {
-          padding: 0;
-
-          .icon-question-circle {
-            margin-right: 0;
-          }
-        }
+        > span:first-child { margin-right: 5px; }
+        .btn-link { padding: 0; }
+        .icon-question-circle { margin-right: 0; }
       }
     }
   }

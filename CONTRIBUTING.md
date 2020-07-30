@@ -83,7 +83,7 @@ Most components are named according to the combination of a resource and an acti
 * `Row`. A row of a `*Table` component.
 * `Show`. A component that shows a single resource of a particular type.
 * `Home`. A parent component of related components, for example, `SystemHome`.
-* `New`. A modal used to create a new resource of a particular type.
+* `Create` (or `New`). A modal used to create a new resource of a particular type.
 * `Edit`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 

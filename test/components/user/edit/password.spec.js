@@ -103,12 +103,12 @@ describe('UserEditPassword', () => {
           requestData: { user: testData.standardUsers.first() }
         })
         .request(async (component) => {
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-old-password', 'x'],
             ['#user-edit-password-new-password', 'y'],
             ['#user-edit-password-confirm', 'z']
           ]);
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-confirm', 'y']
           ]);
         })

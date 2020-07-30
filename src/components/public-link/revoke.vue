@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -10,18 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="field-key-revoke" :state="state" :hideable="!awaitingResponse"
+  <modal id="public-link-revoke" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" path="introduction[0]">
-          <template #displayName>
-            <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>
-          </template>
-        </i18n>
-        <p>{{ $t('introduction[1]') }}</p>
-        <p>{{ $t('introduction[2]') }}</p>
+        <p>{{ $t('introduction[0]') }}</p>
+        <p><strong>{{ $t('common.areYouSure') }}</strong></p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -45,7 +40,7 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
-  name: 'FieldKeyRevoke',
+  name: 'PublicLinkRevoke',
   components: { Modal, Spinner },
   mixins: [request()],
   props: {
@@ -53,7 +48,7 @@ export default {
       type: Boolean,
       default: false
     },
-    fieldKey: Object // eslint-disable-line vue/require-default-prop
+    publicLink: Object // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {
@@ -64,10 +59,10 @@ export default {
     revoke() {
       this.request({
         method: 'DELETE',
-        url: apiPaths.session(this.fieldKey.token)
+        url: apiPaths.session(this.publicLink.token)
       })
         .then(() => {
-          this.$emit('success', this.fieldKey);
+          this.$emit('success', this.publicLink);
         })
         .catch(noop);
     }
@@ -79,12 +74,9 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Revoke User Access",
+    "title": "Revoke Public Access Link",
     "introduction": [
-      // {displayName} is formatted in bold.
-      "Are you sure you want to revoke access from the App User {displayName}?",
-      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions.",
-      "This action cannot be undone."
+      "You are about to revoke this Public Access Link. This means all attempts to submit data using the link will be denied, including records that have already been started."
     ]
   }
 }

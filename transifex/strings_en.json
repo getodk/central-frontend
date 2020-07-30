@@ -53,6 +53,18 @@
         "string": "Form Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "field_key": {
+        "string": "App User Actions",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "public_link": {
+        "string": "Public Access Link Actions",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "session": {
+        "string": "Session Actions",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "upgrade": {
         "string": "Server Upgrade",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -300,6 +312,40 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
+  "resource": {
+    "appUser": {
+      "string": "App User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "form": {
+      "string": "Form",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "project": {
+      "string": "Project",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLink": {
+      "string": "Public Access Link",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "user": {
+      "string": "User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUser": {
+      "string": "Web User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "session": {
+      "string": "Session",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submissions": {
+      "string": "Submissions",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
   "moreInfo": {
     "clickHere": {
       "full": {
@@ -339,32 +385,22 @@
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
     },
-    "form": {
-      "string": "Form"
+    "no": {
+      "string": "No"
     },
     "noResults": {
       "string": "No results",
       "developer_comment": "This is shown if a search returned no results."
     },
-    "project": {
-      "string": "Project"
-    },
     "rightNow": {
       "string": "Right Now",
       "developer_comment": "This is a title shown above a section of the page."
     },
-    "submissions": {
-      "string": "Submissions",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence."
-    },
     "success": {
       "string": "Success!"
     },
-    "user": {
-      "string": "User"
-    },
-    "webUser": {
-      "string": "Web User"
+    "yes": {
+      "string": "Yes"
     }
   },
   "presenter": {
@@ -818,10 +854,12 @@
     },
     "FieldKeyRow": {
       "seeCode": {
-        "string": "See code"
+        "string": "See code",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
       },
       "accessRevoked": {
-        "string": "Access revoked"
+        "string": "Access revoked",
+        "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
         "revokeAccess": {
@@ -1434,6 +1472,10 @@
           },
           "versions": {
             "string": "Versions",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "publicLinks": {
+            "string": "Public Access",
             "developer_comment": "This is the text of a navigation tab."
           },
           "settings": {
@@ -2352,6 +2394,84 @@
         "projectRole": {
           "string": "Project Role",
           "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "PublicLinkCreate": {
+      "title": {
+        "string": "Create Public Access Link",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "field": {
+        "multiple": {
+          "string": "Multiple responses",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "multipleHelp": {
+        "string": "Allow this Form to be submitted more than once from the same device."
+      }
+    },
+    "PublicLinkList": {
+      "action": {
+        "create": {
+          "string": "Create Public Access Link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "emptyTable": {
+        "string": "There are no Public Access Links for this Form."
+      },
+      "alert": {
+        "create": {
+          "string": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it."
+        },
+        "revoke": {
+          "string": "The Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
+        }
+      }
+    },
+    "PublicLinkRevoke": {
+      "title": {
+        "string": "Revoke Public Access Link",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "You are about to revoke this Public Access Link. This means all attempts to submit data using the link will be denied, including records that have already been started."
+        }
+      }
+    },
+    "PublicLinkRow": {
+      "action": {
+        "revoke": {
+          "string": "Revoke",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "revoked": {
+        "string": "Revoked",
+        "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
+      },
+      "unavailable": {
+        "text": {
+          "string": "Not available yet",
+          "developer_comment": "This text is shown for a Public Access Link that is not available yet."
+        },
+        "title": {
+          "string": "Public Link is not available yet. It has not finished being processed. Please refresh later and try again."
+        }
+      }
+    },
+    "PublicLinkTable": {
+      "header": {
+        "multiple": {
+          "string": "Multiple Responses",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "accessLink": {
+          "string": "Access Link",
+          "developer_comment": "This is the text of a table column header."
         }
       }
     },

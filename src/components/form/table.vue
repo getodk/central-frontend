@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <th v-if="expanded">
           {{ $t('header.idAndVersion') }}
         </th>
-        <th>{{ $t('common.submissions') }}</th>
+        <th>{{ $t('resource.submissions') }}</th>
         <th v-if="expanded">{{ $t('header.actions') }}</th>
       </tr>
     </thead>

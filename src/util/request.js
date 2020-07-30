@@ -77,6 +77,7 @@ export const apiPaths = {
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
+  publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,

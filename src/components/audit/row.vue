@@ -25,10 +25,13 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="target != null" :to="target.path"
-        :title="target.title">
-        {{ target.title }}
-      </router-link>
+      <template v-if="target != null">
+        <router-link v-if="target.path != null" :to="target.path"
+          :title="target.title">
+          {{ target.title }}
+        </router-link>
+        <span v-else :title="target.title">{{ target.title }}</span>
+      </template>
     </td>
     <td><selectable>{{ details }}</selectable></td>
   </tr>
@@ -43,16 +46,23 @@ import routes from '../../mixins/routes';
 import { auditActionMessage } from '../../util/i18n';
 
 const typeByCategory = {
-  user: i18n.t('common.user'),
-  assignment: i18n.t('common.user'),
-  project: i18n.t('common.project'),
-  form: i18n.t('common.form'),
+  session: i18n.t('resource.session'),
+  user: i18n.t('resource.user'),
+  assignment: i18n.t('resource.user'),
+  project: i18n.t('resource.project'),
+  form: i18n.t('resource.form'),
+  public_link: i18n.t('resource.publicLink'),
+  field_key: i18n.t('resource.appUser'),
   upgrade: i18n.t('audit.category.upgrade')
 };
 
+const getDisplayName = ({ displayName }) => displayName;
 const acteeSpeciesByCategory = {
+  session: {
+    title: getDisplayName
+  },
   user: {
-    title: ({ displayName }) => displayName,
+    title: getDisplayName,
     path: ({ id }, vm) => vm.userPath(id)
   },
   project: {
@@ -62,6 +72,12 @@ const acteeSpeciesByCategory = {
   form: {
     title: (form) => new Form(form).nameOrId(),
     path: (form, vm) => vm.primaryFormPath(form)
+  },
+  public_link: {
+    title: getDisplayName
+  },
+  field_key: {
+    title: getDisplayName
   }
 };
 acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
@@ -97,10 +113,9 @@ export default {
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
       const { actee } = this.audit;
-      return {
-        path: species.path(actee, this),
-        title: species.title(actee)
-      };
+      const result = { title: species.title(actee) };
+      if (species.path != null) result.path = species.path(actee, this);
+      return result;
     },
     details() {
       return this.audit.details != null

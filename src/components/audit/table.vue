@@ -42,10 +42,6 @@ export default {
 #audit-table {
   table-layout: fixed;
 }
-
-#audit-table th.details {
-  width: 33.33333333%;
-}
 </style>
 
 <i18n lang="json5">

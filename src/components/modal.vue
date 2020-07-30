@@ -198,11 +198,8 @@ export default {
     .modal-body {
       padding: $padding-modal-body;
 
-      .modal-introduction {
-        font-size: 14px;
-        line-height: 1.2;
-        margin-bottom: 18px;
-      }
+      .modal-introduction, .help-block { line-height: 1.2; }
+      .modal-introduction { margin-bottom: 18px; }
 
       .form-group .form-control {
         background-color: $color-panel-input-background;

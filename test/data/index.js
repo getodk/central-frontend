@@ -7,6 +7,7 @@ import * as FormAttachments from './form-attachments';
 import * as Forms from './forms';
 import * as Keys from './keys';
 import * as Projects from './projects';
+import * as PublicLinks from './public-links';
 import * as Roles from './roles';
 import * as Sessions from './sessions';
 import * as Submissions from './submissions';
@@ -25,6 +26,7 @@ const testData = Object.assign(
   Forms,
   Keys,
   Projects,
+  PublicLinks,
   Roles,
   Sessions,
   Submissions,
