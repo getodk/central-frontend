@@ -1,8 +1,8 @@
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import testData from '../../data';
+import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
 
 describe('ProjectShow', () => {
   it('requires projectId route param to be integer', () =>
@@ -55,16 +55,25 @@ describe('ProjectShow', () => {
       });
   });
 
-  it('only shows the Overview tab to a project viewer', () => {
-    mockLogin({ role: 'none' });
-    return mockRoute('/projects/1')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { role: 'viewer' }).last())
-      .respondWithData(() => testData.extendedForms.sorted())
-      .afterResponses(app => {
-        const tabs = app.find('#page-head-tabs a');
-        tabs.length.should.equal(1);
-        tabs[0].text().should.equal('Overview');
+  describe('tabs', () => {
+    it('shows the tabs to an administrator', async () => {
+      mockLogin({ role: 'admin' });
+      testData.extendedProjects.createPast(1);
+      const app = await load('/projects/1', { attachToDocument: true }, {});
+      const li = app.find('#page-head-tabs li');
+      li.length.should.be.above(1);
+      li[0].should.be.visible(true);
+    });
+
+    for (const role of ['viewer', 'formfill']) {
+      it(`does not show the tabs to a ${role}`, async () => {
+        mockLogin({ role: 'none' });
+        testData.extendedProjects.createPast(1, { role });
+        const app = await load('/projects/1', { attachToDocument: true }, {});
+        const li = app.find('#page-head-tabs li');
+        li.length.should.equal(1);
+        li[0].should.be.hidden(true);
       });
+    }
   });
 });

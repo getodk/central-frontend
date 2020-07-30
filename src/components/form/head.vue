@@ -215,6 +215,8 @@ body {
   }
 
   .nav-tabs > li {
+    // It might be simpler to move this margin to the .nav-tabs element so that
+    // fewer elements have margin.
     margin-top: $tab-li-margin-top;
   }
 }
