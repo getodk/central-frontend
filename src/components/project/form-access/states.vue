@@ -12,30 +12,38 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="project-form-access-states" :state="state" hideable backdrop
     @hide="$emit('hide')">
-    <template #title>Form States</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <p>
-          Form States control the lifecycle state of each Form. Usually, but not
-          always, a Form will start Open and proceed through Closing to Closed
-          when it is no longer needed.
-        </p>
-        <p>
-          <strong>Open</strong> Forms are available to download on mobile
-          devices, and will accept new Submissions.
-        </p>
-        <p>
-          <strong>Closing</strong> Forms will accept new Submissions, but are
-          <em>not</em> available to download on mobile devices.
-        </p>
-        <p>
-          <strong>Closed</strong> Forms are <em>not</em> available to download
-          on mobile devices, and will <em>not</em> accept new Submissions.
-        </p>
+        <p>{{ $t('introduction[0]') }}</p>
+        <i18n tag="p" path="introduction[1].full">
+          <template #open>
+            <strong>{{ $t('introduction[1].open') }}</strong>
+          </template>
+        </i18n>
+        <i18n tag="p" path="introduction[2].full">
+          <template #closing>
+            <strong>{{ $t('introduction[2].closing') }}</strong>
+          </template>
+          <template #not>
+            <em>{{ $t('introduction[2].not') }}</em>
+          </template>
+        </i18n>
+        <i18n tag="p" path="introduction[3].full">
+          <template #closed>
+            <strong>{{ $t('introduction[3].closed') }}</strong>
+          </template>
+          <template #not1>
+            <em>{{ $t('introduction[3].not1') }}</em>
+          </template>
+          <template #not2>
+            <em>{{ $t('introduction[3].not2') }}</em>
+          </template>
+        </i18n>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
-          Okay
+          {{ $t('action.ok') }}
         </button>
       </div>
     </template>
@@ -64,3 +72,30 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Form States",
+    "introduction": [
+      "Form States control the lifecycle state of each Form. Usually, but not always, a Form will start Open and proceed through Closing to Closed when it is no longer needed.",
+      {
+        "full": "{open} Forms are available to download on mobile devices, and will accept new Submissions.",
+        "open": "Open"
+      },
+      {
+        "full": "{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices.",
+        "closing": "Closing",
+        "not": "not"
+      },
+      {
+        "full": "{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions.",
+        "closed": "Closed",
+        "not1": "not",
+        "not2": "not"
+      }
+    ]
+  }
+}
+</i18n>

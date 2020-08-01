@@ -112,7 +112,7 @@ describe('SubmissionAnalyze', () => {
       .then(app => trigger.click(app, '#submission-analyze-odata-url'))
       .then(() => {
         const selection = window.getSelection();
-        const url = $('#submission-analyze-odata-url')[0];
+        const url = document.querySelector('#submission-analyze-odata-url');
         selection.anchorNode.should.equal(url);
         selection.focusNode.should.equal(url);
       });

@@ -12,71 +12,62 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="dataExists">
     <checklist-step v-if="form.publishedAt == null" stage="complete">
-      <template #title>Upload initial Form definition</template>
+      <template #title>{{ $t('steps[0].title') }}</template>
       <p>
-        <strong>Great work!</strong> Your Form design has been loaded
-        successfully.
+        <strong>{{ $t('steps[0].body[0]') }}</strong>
+        {{ $t('steps[0].body[1]') }}
       </p>
     </checklist-step>
     <checklist-step stage="current">
-      <template #title>Upload revised Form definition (optional)</template>
-      <p>
-        <template v-if="status">
-          If you have made changes to the Form itself, including question text
-          or logic rules, now is the time to upload the new XML or XLSForm using
-          the button to the right.
-        </template>
-        <template v-else>
-          If you have made changes to the Form itself, including question text
-          or logic rules, now is the time to
-          <router-link :to="formPath('draft')">upload</router-link> the new XML
-          or XLSForm.
-        </template>
+      <template #title>{{ $t('steps[1].title') }}</template>
+      <p v-if="status">
+        {{ $t('steps[1].body[0].status') }}
       </p>
+      <i18n v-else tag="p" path="steps[1].body[0].link.full">
+        <template #upload>
+          <router-link :to="formPath('draft')">{{ $t('steps[1].body[0].link.upload') }}</router-link>
+        </template>
+      </i18n>
     </checklist-step>
     <checklist-step v-if="attachments.length !== 0"
       :stage="missingAttachmentCount === 0 ? 'complete' : 'current'">
-      <template #title>Upload Form Media Files</template>
+      <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        Your Form design references files that we need in order to present your
-        Form. You can upload new or updated copies of these for distribution
-        under the
-        <router-link :to="formPath('draft/attachments')">Media Files</router-link>
-        tab.
-        <doc-link to="central-forms/#forms-with-attachments">
-          Click here to find out more.
-        </doc-link>
+        <i18n :tag="false" path="steps[2].body[0].full">
+          <template #mediaFiles>
+            <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <doc-link to="central-forms/#forms-with-attachments">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step
       :stage="formDraft.submissions !== 0 ? 'complete' : 'current'">
-      <template #title>Test the Form on your mobile device</template>
+      <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        It&rsquo;s a good idea to test the Form to be sure it (still) works the
-        way you expect. Using the
-        <router-link :to="formPath('draft/testing')">test QR code</router-link>,
-        you can make a test Submission that won&rsquo;t affect your real data.
-        <doc-link to="central-forms/#working-with-form-drafts">
-          Click here to find out more.
-        </doc-link>
+        <i18n :tag="false" path="steps[3].body[0].full">
+          <template #testQrCode>
+            <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].testQrCode') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step stage="current">
-      <template #title>Publish the Draft</template>
+      <template #title>{{ $t('steps[4].title') }}</template>
       <p>
         <template v-if="status">
-          When you are sure your Draft is ready and you wish to roll it out to
-          your devices in the field, you can publish it using the button to the
-          right.
+          {{ $t('steps[4].body[0].status') }}
         </template>
-        <template v-else>
-          When you are sure your Draft is ready and you wish to roll it out to
-          your devices in the field, you can
-          <router-link :to="formPath('draft')">publish</router-link> it.
-        </template>
-        <doc-link to="central-forms/#working-with-form-drafts">
-          Click here to find out more.
-        </doc-link>
+        <i18n v-else :tag="false" path="steps[4].body[0].link.full">
+          <template #publish>
+            <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
   </div>
@@ -120,3 +111,69 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "clickForInfo": "Click here to find out more.",
+    "steps": [
+      {
+        // This is the title of a checklist item.
+        "title": "Upload initial Form definition",
+        "body": [
+          "Great work!",
+          "Your Form design has been loaded successfully."
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Upload revised Form definition (optional)",
+        "body": [
+          {
+            // This refers to changes to the form definition as opposed to just the media associated with the Form.
+            "status": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
+            "link": {
+              // This refers to changes to the form definition as opposed to just the media associated with the Form.
+              "full": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
+              "upload": "upload"
+            }
+          }
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Upload Form Media Files",
+        "body": [
+          {
+            "full": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
+            "mediaFiles": "Media Files"
+          }
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Test the Form on your mobile device",
+        "body": [
+          {
+            "full": "It’s a good idea to test the Form to be sure it (still) works the way you expect. Using the {testQrCode}, you can make a test Submission that won’t affect your real data.",
+            "testQrCode": "test QR code"
+          }
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Publish the Draft",
+        "body": [
+          {
+            "status": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can publish it using the button to the right.",
+            "link": {
+              "full": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it.",
+              "publish": "publish"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+</i18n>

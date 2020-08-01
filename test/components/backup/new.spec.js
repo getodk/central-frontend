@@ -20,9 +20,8 @@ const moveToStep1 = (component) => {
     .respondWithData(() => testData.standardAudits.sorted())
     .afterResponses(wrapper => trigger.click(wrapper, '#backup-status button'));
 };
-// For step 1, fills the form and clicks the Next button.
-const next1 = (wrapper) =>
-  submitForm(wrapper, '#backup-new form', [['input', '']]);
+// For step 1, submits the form.
+const next1 = trigger.submit('#backup-new form');
 // For step 2, clicks the Next button.
 const next2 = (wrapper) =>
   trigger.click(wrapper.first('#backup-new .btn-primary'))
@@ -95,4 +94,15 @@ describe('BackupNew', () => {
     it('shows a success alert', () =>
       completeSetup(App).then(app => app.should.alert('success')));
   });
+
+  it('shows a custom alert message', () =>
+    moveToStep3(BackupNew)
+      .request(next3)
+      .respondWithProblem({ code: 500.1, message: 'Failed: BackupNew.' })
+      .afterResponse(modal => {
+        modal.should.alert(
+          'danger',
+          'Failed: BackupNew. Please try again, and go to the community forum if the problem continues.'
+        );
+      }));
 });

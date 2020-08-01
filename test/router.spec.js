@@ -1,46 +1,83 @@
 import FormAttachmentList from '../src/components/form-attachment/list.vue';
 import SubmissionList from '../src/components/submission/list.vue';
+import i18n from '../src/i18n';
 import testData from './data';
 import { load, mockRoute } from './util/http';
-import { mockLogin, mockRouteThroughLogin } from './util/session';
+import { loadLocale } from '../src/util/i18n';
+import { mockLogin } from './util/session';
 import { trigger } from './util/event';
 
 describe('router', () => {
-  describe('use of next query param after login', () => {
-    it('redirects the user to / if there is no param', () =>
-      mockRouteThroughLogin('/login')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
+  describe.skip('i18n', () => {
+    before(() => {
+      const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
+      has.should.be.false();
+    });
+    afterEach(() => {
+      delete navigator.language;
+      return loadLocale('en');
+    });
 
-    it('uses the param to redirect the user', () =>
-      mockRouteThroughLogin('/login?next=%2Fusers')
-        .respondWithData(() => testData.extendedProjects.createPast(1))
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
+    const setLanguage = (locale) => {
+      Object.defineProperty(navigator, 'language', {
+        value: locale,
+        configurable: true
+      });
+    };
 
-    it('does not redirect the user to a route to which they do not have access', () =>
-      mockRouteThroughLogin('/login?next=%2Fusers', {}, { role: 'none' })
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
+    it("loads the user's preferred language", () => {
+      setLanguage('es');
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
 
-    it('does not redirect the user away from Frontend', () =>
-      mockRouteThroughLogin('/login?next=https%3A%2F%2Fwww.google.com%2F')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
+    it('loads a less specific locale', () => {
+      setLanguage('es-ES');
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
+
+    it('falls back to en for a locale that is not defined', () => {
+      setLanguage('la');
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('en');
+        });
+    });
+
+    it('loads the locale saved to local storage', () => {
+      localStorage.setItem('locale', 'es');
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
+
+    it('only loads the locale before the first navigation', () => {
+      setLanguage('es');
+      return load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          setLanguage('en');
+        })
+        .route('/reset-password')
+        .then(() => {
+          i18n.locale.should.equal('es');
+        });
+    });
   });
 
   describe('requireLogin', () => {
     const paths = [
+      '/',
       '/projects/1',
       '/projects/1/users',
       '/projects/1/app-users',
@@ -53,6 +90,11 @@ describe('router', () => {
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
       '/projects/1/forms/f/draft/testing',
+      '/users',
+      // The redirect should pass through the query string and hash.
+      '/users?x=y#z',
+      '/users/2/edit',
+      '/account/edit',
       '/system/backups',
       '/system/audits'
     ];
@@ -67,15 +109,42 @@ describe('router', () => {
             $route.query.next.should.equal(path);
           }));
     }
+  });
 
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
+  describe('requireAnonymity', () => {
+    const paths = [
+      '/login',
+      '/reset-password',
+      `/account/claim?token=${'a'.repeat(64)}`
+    ];
+
+    for (const path of paths) {
+      it(`redirects a logged in user navigating to ${path}`, () => {
+        mockLogin();
+        return load('/account/edit')
+          .complete()
+          .route(path)
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+    }
+  });
+
+  describe('preserveData', () => {
+    describe('project routes', () => {
+      it('preserves data if the user changes tabs', () => {
+        mockLogin();
+        testData.extendedProjects.createPast(1, { appUsers: 0 });
+        return load('/projects/1/app-users')
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .route('/projects/1/app-users')
+          .testNoRequest();
+      });
+    });
   });
 
   describe('validateData', () => {
@@ -143,6 +212,11 @@ describe('router', () => {
               }));
         });
 
+        it('does not redirect the user from the project overview', async () => {
+          const app = await load('/projects/1');
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+
         it('redirects the user from .../users', () =>
           load('/projects/1/users', {}, { projectAssignments: 403.1 })
             .respondFor('/', { users: false })
@@ -176,6 +250,16 @@ describe('router', () => {
               app.vm.$route.path.should.equal('/');
             }));
 
+        it('does not redirect the user from .../versions', async () => {
+          const app = await load('/projects/1/forms/f/versions');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/versions');
+        });
+
+        it('does not redirect the user from .../submissions', async () => {
+          const app = await load('/projects/1/forms/f/submissions');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        });
+
         it('redirects the user from .../settings', () =>
           load('/projects/1/forms/f/settings')
             .respondFor('/', { users: false })
@@ -196,6 +280,65 @@ describe('router', () => {
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
+
+        it('does not redirect the user from .../draft/testing', async () => {
+          const app = await load('/projects/1/forms/f/draft/testing');
+          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
+        });
+      });
+    });
+
+    describe('Data Collector', () => {
+      beforeEach(() => {
+        mockLogin({ role: 'none' });
+        testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
+        testData.extendedForms.createPast(1);
+        testData.extendedFormVersions.createPast(1, { draft: true });
+        testData.standardFormAttachments.createPast(1);
+      });
+
+      describe('project routes', () => {
+        it('does not redirect the user from the project overview', async () => {
+          const app = await load('/projects/1');
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+
+        for (const path of [
+          '/projects/1/users',
+          '/projects/1/app-users',
+          '/projects/1/form-access',
+          '/projects/1/settings'
+        ]) {
+          it(`redirects the user from ${path}`, () =>
+            load('/projects/1')
+              .complete()
+              .route(path)
+              .respondFor('/', { users: false })
+              .afterResponses(app => {
+                app.vm.$route.path.should.equal('/');
+              }));
+        }
+      });
+
+      describe('form routes', () => {
+        for (const path of [
+          '/projects/1/forms/f',
+          '/projects/1/forms/f/versions',
+          '/projects/1/forms/f/submissions',
+          '/projects/1/forms/f/settings',
+          '/projects/1/forms/f/draft',
+          '/projects/1/forms/f/draft/attachments',
+          '/projects/1/forms/f/draft/testing'
+        ]) {
+          it(`redirects the user from ${path}`, () =>
+            load('/projects/1')
+              .complete()
+              .route(path)
+              .respondFor('/', { users: false })
+              .afterResponses(app => {
+                app.vm.$route.path.should.equal('/');
+              }));
+        }
       });
     });
 
@@ -291,7 +434,8 @@ describe('router', () => {
           load('/projects/1/forms/f2/draft', {}, {
             form: () => testData.extendedForms.first(),
             formDraft: () => testData.extendedFormDrafts.first(),
-            attachments: () => []
+            attachments: () => [],
+            formVersions: () => []
           })
             .complete()
             .load('/projects/1/forms/f/draft', { project: false })
@@ -330,7 +474,8 @@ describe('router', () => {
         load('/projects/1/forms/f2/draft', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: 404.1
+          attachments: 404.1,
+          formVersions: () => []
         })
           .respondFor('/')
           .afterResponses(app => {
@@ -443,14 +588,12 @@ describe('router', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() =>
           testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app => {
-          const files = [new File([''], 'a')];
-          return trigger.dragAndDrop(app, FormAttachmentList, { files })
+        .afterResponses(app =>
+          trigger.dragAndDrop(app, FormAttachmentList, [new File([''], 'a')])
             .then(() => {
               const { unmatchedFiles } = app.first(FormAttachmentList).data();
               unmatchedFiles.length.should.equal(1);
-            });
-        })
+            }))
         .route('/projects/1/forms/f2/draft/attachments')
         .respondWithData(() => testData.extendedForms
           .createPast(1, { xmlFormId: 'f2', draft: true })

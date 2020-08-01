@@ -11,85 +11,42 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-overview">
-    <loading :state="initiallyLoading"/>
-    <template v-if="dataExists">
-      <div v-if="rendersTopRow" class="row">
-        <div class="col-xs-6">
-          <project-overview-about/>
-        </div>
-        <div class="col-xs-6">
-          <project-overview-right-now @scroll-to-forms="scrollToForms"/>
-        </div>
+    <div v-if="rendersTopRow" class="row">
+      <div class="col-xs-6">
+        <project-overview-about/>
       </div>
-      <page-section id="project-overview-forms">
-        <template #heading>
-          <span>Forms</span>
-          <button v-if="project.permits('form.create')"
-            id="project-overview-new-form-button" type="button"
-            class="btn btn-primary" @click="showModal('newForm')">
-            <span class="icon-plus-circle"></span>New&hellip;
-          </button>
-        </template>
-        <template #body>
-          <form-table/>
-          <p v-if="forms.length === 0" class="empty-table-message">
-            There are no Forms to show.
-          </p>
-        </template>
-      </page-section>
-    </template>
-    <form-new v-bind="newForm" @hide="hideModal('newForm')"
-      @success="afterCreate"/>
+      <div class="col-xs-6">
+        <project-overview-right-now @scroll-to-forms="scrollToForms"/>
+      </div>
+    </div>
+    <form-list/>
   </div>
 </template>
 
 <script>
-import FormNew from '../form/new.vue';
-import FormTable from '../form/table.vue';
-import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
+import FormList from '../form/list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
-import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['project', 'forms'];
-
 export default {
   name: 'ProjectOverview',
-  components: {
-    FormNew,
-    FormTable,
-    Loading,
-    PageSection,
-    ProjectOverviewAbout,
-    ProjectOverviewRightNow
-  },
-  mixins: [modal(), routes(), validateData()],
+  components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
+  mixins: [routes(), validateData()],
   props: {
     projectId: {
       type: String,
       required: true
     }
   },
-  data() {
-    return {
-      newForm: {
-        state: false
-      }
-    };
-  },
   computed: {
-    ...requestData(REQUEST_KEYS),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    },
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['project']),
     rendersTopRow() {
+      if (this.project == null) return false;
       // The text of ProjectOverviewAbout implies that the user can form.create.
       if (!this.project.permits('form.create')) return false;
       // ProjectOverviewRightNow links to .../app-users.
@@ -106,21 +63,15 @@ export default {
   },
   methods: {
     scrollToForms() {
-      const scrollTop = Math.round($('#project-overview-forms').offset().top);
+      const scrollTop = Math.round($('#form-list').offset().top);
       $('html, body').animate({ scrollTop });
-    },
-    afterCreate(form) {
-      const path = this.formPath(form.projectId, form.xmlFormId, 'draft');
-      this.$router.push(path, () => {
-        this.$alert().success(`Your new Form "${form.nameOrId()}" has been created as a Draft. Take a look at the checklist below, and when you feel it's ready, you can publish the Form for use.`);
-      });
     }
   }
 };
 </script>
 
 <style lang="scss">
-#project-overview .row, #project-overview-forms {
+#project-overview > .row {
   margin-top: 10px;
 }
 </style>

@@ -12,32 +12,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="user-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')" @shown="focusEmailInput">
-    <template slot="title">Create Web User</template>
-    <template slot="body">
-      <p class="modal-introduction">
-        Once you create this account, the email address you provide will be sent
-        instructions on how to set a password and proceed.
-      </p>
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input ref="email" v-model.trim="email" type="email"
-            class="form-control" placeholder="Email address *" required
-            autocomplete="off">
-          <span class="form-label">Email address *</span>
-        </label>
-        <label class="form-group">
-          <input v-model.trim="displayName" type="text" class="form-control"
-            placeholder="Display name">
-          <span class="form-label">Display name</span>
-        </label>
+        <form-group ref="email" v-model.trim="email" type="email"
+          :placeholder="$t('field.email')" required autocomplete="off"/>
+        <form-group v-model.trim="displayName" type="text"
+          :placeholder="$t('field.displayName')" autocomplete="off"/>
         <div class="modal-actions">
           <button :disabled="awaitingResponse" type="submit"
             class="btn btn-primary">
-            Create <spinner :state="awaitingResponse"/>
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
           <button :disabled="awaitingResponse" type="button"
             class="btn btn-link" @click="$emit('hide')">
-            Cancel
+            {{ $t('action.cancel') }}
           </button>
         </div>
       </form>
@@ -46,6 +36,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -53,7 +44,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'UserNew',
-  components: { Modal, Spinner },
+  components: { FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -91,3 +82,15 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Create Web User",
+    "introduction": [
+      "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+    ]
+  }
+}
+</i18n>

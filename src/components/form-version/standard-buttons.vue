@@ -12,39 +12,49 @@ except according to the terms contained in the LICENSE file.
 
 <!-- Standard form definition buttons -->
 <template>
-  <a v-if="version.excelContentType == null" class="btn btn-primary"
-    :href="defPath('xml')" :download="xmlFilename">
-    <span class="icon-arrow-circle-down"></span>Download XML
-  </a>
-  <div v-else class="btn-group">
-    <button :id="dropdownToggleId" type="button"
-      class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="icon-arrow-circle-down"></span>
-      <span>Download</span>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" :aria-labelledby="dropdownToggleId">
-      <li>
-        <a :href="defPath('xml')" :download="xmlFilename">As XForm (.xml)</a>
-      </li>
-      <li>
-        <a :href="defPath(excelExtension)">As XLSForm (.{{ excelExtension }})</a>
-      </li>
-    </ul>
-  </div>
+  <span class="form-version-standard-buttons">
+    <enketo-preview v-if="preview" :form-version="version"/>
+
+    <a v-if="version.excelContentType == null" class="btn btn-primary"
+      :href="defPath('xml')" :download="xmlFilename">
+      <span class="icon-arrow-circle-down"></span>{{ $t('action.downloadXForm') }}
+    </a>
+    <div v-else class="btn-group">
+      <button :id="dropdownToggleId" type="button"
+        class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <span class="icon-arrow-circle-down"></span>
+        <span>{{ $t('action.download') }}</span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" :aria-labelledby="dropdownToggleId">
+        <li>
+          <a :href="defPath('xml')" :download="xmlFilename">{{ $t('format.xForm') }} (.xml)</a>
+        </li>
+        <li>
+          <a :href="defPath(excelExtension)">{{ $t('format.xlsForm') }} (.{{ excelExtension }})</a>
+        </li>
+      </ul>
+    </div>
+  </span>
 </template>
 
 <script>
+import EnketoPreview from '../enketo/preview.vue';
 import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
 
 export default {
   name: 'FormVersionStandardButtons',
+  components: { EnketoPreview },
   props: {
     version: {
       type: Form,
       required: true
+    },
+    preview: {
+      type: Boolean,
+      required: false
     }
   },
   computed: {
@@ -71,3 +81,24 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.form-version-standard-buttons .enketo-preview {
+  margin-right: 5px;
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "downloadXForm": "Download XML"
+    },
+    // Here, the user selects the format that a Form should be downloaded as.
+    "format": {
+      "xForm": "As XForm",
+      "xlsForm": "As XLSForm"
+    }
+  }
+}
+</i18n>

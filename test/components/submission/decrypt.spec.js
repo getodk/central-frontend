@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import Form from '../../../src/presenters/form';
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
@@ -192,17 +194,17 @@ describe('SubmissionDecrypt', () => {
       return wait(200)
         .then(() => {
           modal.vm.replaceIframeBody();
-          modal.setData({ problemChecks: 300 });
+          const spy = sinon.spy(modal.vm, 'checkForProblem');
           modal.vm.scheduleProblemCheck();
           // Wait for a Problem check.
           return wait(200)
             .then(() => {
-              const checks = modal.data().problemChecks;
-              checks.should.be.within(2, 299);
+              spy.called.should.be.true();
+              const checks = spy.callCount;
               // Wait for another Problem check.
               return wait(200).then(() => {
-                modal.data().problemChecks.should.be.within(1, checks - 1);
-                clearTimeout(modal.data().timeoutId);
+                spy.callCount.should.be.above(checks);
+                modal.vm.cancelCalls();
               });
             });
         });
@@ -214,7 +216,7 @@ describe('SubmissionDecrypt', () => {
     it('shows an info alert', () =>
       submitDecryptForm('/blank.html').then(modal => {
         modal.should.alert('info');
-        clearTimeout(modal.data().timeoutId);
+        modal.vm.cancelCalls();
       }));
   });
 });

@@ -10,12 +10,5 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+// eslint-disable-next-line import/prefer-default-export
 export const noop = () => {};
-
-export const uniqueSequence = () => {
-  let id = 0;
-  return () => {
-    id += 1;
-    return id;
-  };
-};

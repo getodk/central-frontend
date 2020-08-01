@@ -13,29 +13,37 @@ except according to the terms contained in the LICENSE file.
   <div>
     <page-head v-show="project != null">
       <template v-if="project != null" #title>
-        {{ project.name }} {{ project.archived ? '(archived)' : '' }}
+        {{ project.nameWithArchived() }}
       </template>
       <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
         the project overview. -->
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">Overview</router-link>
+          <router-link :to="tabPath('')">{{ $t('tab.overview') }}</router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
-          <router-link :to="tabPath('users')">Project Roles</router-link>
+          <router-link :to="tabPath('users')">
+            {{ $t('tab.users') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('app-users'))" :class="tabClass('app-users')"
           role="presentation">
-          <router-link :to="tabPath('app-users')">App Users</router-link>
+          <router-link :to="tabPath('app-users')">
+            {{ $t('tab.appUsers') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('form-access'))"
           :class="tabClass('form-access')" role="presentation">
-          <router-link :to="tabPath('form-access')">Form Access</router-link>
+          <router-link :to="tabPath('form-access')">
+            {{ $t('tab.formAccess') }}
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
           role="presentation">
-          <router-link :to="tabPath('settings')">Settings</router-link>
+          <router-link :to="tabPath('settings')">
+            {{ $t('tab.settings') }}
+          </router-link>
         </li>
       </template>
     </page-head>
@@ -55,11 +63,35 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import reconcileData from '../../store/modules/request/reconcile';
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+reconcileData.add(
+  'project', 'forms',
+  (project, forms, commit) => {
+    if (project.forms !== forms.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ forms: forms.length })
+      });
+    }
+  }
+);
+reconcileData.add(
+  'project', 'fieldKeys',
+  (project, fieldKeys, commit) => {
+    if (project.appUsers !== fieldKeys.length) {
+      commit('setData', {
+        key: 'project',
+        value: project.with({ appUsers: fieldKeys.length })
+      });
+    }
+  }
+);
 
 export default {
   name: 'ProjectShow',
@@ -78,7 +110,6 @@ export default {
     }
   },
   methods: {
-    // Note that we do not keep project.forms and forms.length in sync.
     fetchForms(resend = undefined) {
       this.$store.dispatch('get', [{
         key: 'forms',
@@ -92,16 +123,23 @@ export default {
         key: 'fieldKeys',
         url: apiPaths.fieldKeys(this.projectId),
         extended: true,
-        resend,
-        success: ({ project, fieldKeys }) => {
-          if (project == null || project.appUsers === fieldKeys.length) return;
-          this.$store.commit('setData', {
-            key: 'project',
-            value: project.with({ appUsers: fieldKeys.length })
-          });
-        }
+        resend
       }]).catch(noop);
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "tab": {
+      "overview": "Overview",
+      "users": "Project Roles",
+      "appUsers": "App Users",
+      "formAccess": "Form Access",
+      "settings": "Settings"
+    }
+  }
+}
+</i18n>

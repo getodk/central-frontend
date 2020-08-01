@@ -1,33 +1,21 @@
 import Vue from 'vue';
 
+import { unwrapElement } from './util';
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// CREATING EVENTS
+// dataTransfer()
 
 export const dataTransfer = (files) => {
   const dt = new DataTransfer();
   for (const file of files) {
-    // DataTransferItemList is not supported in IE. MDN indicates that
-    // DataTransferItemList.prototype.add() is not supported even in Chrome, but
-    // another source seems to imply that it is, and I am not encountering any
-    // issues using it in Headless Chrome.
+    // MDN indicates that DataTransferItemList.prototype.add() is not supported
+    // in Chrome, but another source seems to imply that it is. I am not
+    // encountering any issues using it in Headless Chrome.
     dt.items.add(file);
   }
   return dt;
-};
-
-const dragEvent = (type, { target, files, ie = false }) => {
-  const dt = !ie
-    ? dataTransfer(files)
-    /* This object does not have all the properties of a DataTransfer object,
-    and its `files` property is an Array, not a FileList. However, I think the
-    only code that will use the object will be jQuery and Central: I think the
-    object will never actually be passed to the browser's drag functionality. We
-    can add more properties to the object as we need them for testing. */
-    : { files, types: ['Files'], dropEffect: 'none' };
-  const originalEvent = $.Event(type, { dataTransfer: dt });
-  return $.Event(type, { target, originalEvent });
 };
 
 
@@ -37,8 +25,8 @@ const dragEvent = (type, { target, files, ie = false }) => {
 
 export const trigger = {};
 
-const simpleEventNames = ['click', 'submit'];
-for (const eventName of simpleEventNames) {
+// Simple events
+for (const eventName of ['click', 'submit']) {
   // Triggers an event, then waits a tick for the DOM to update.
   trigger[eventName] = (...args) => {
     if (args.length === 0) throw new Error('wrapper or selector required');
@@ -52,19 +40,22 @@ for (const eventName of simpleEventNames) {
   };
 }
 
-// Changes the value of an <input> or <select> element, triggering a change
-// event. This probably does not work with v-model: consider using fillForm()
-// instead.
-trigger.changeValue = (wrapper, ...args) => {
-  if (args.length === 0) throw new Error('value required');
-  if (args.length === 1) return trigger.changeValue(wrapper, null, args[0]);
-  const [selector, value] = args;
-  const target = selector == null ? wrapper : wrapper.first(selector);
-  if (target.element.value === value) throw new Error('no change');
-  target.element.value = value;
-  target.trigger('change');
-  return Vue.nextTick().then(() => wrapper);
-};
+// Define methods for events that change the value of an <input> or <select>
+// element. Many tests will use trigger.changeValue(), but if a component uses
+// v-model, the test will probably use either trigger.input(),
+// trigger.fillForm(), or trigger.submitForm().
+for (const [name, event] of [['changeValue', 'change'], ['input', 'input']]) {
+  trigger[name] = (wrapper, ...args) => {
+    if (args.length === 0) throw new Error('value required');
+    if (args.length === 1) return trigger[name](wrapper, null, args[0]);
+    const [selector, value] = args;
+    const target = selector == null ? wrapper : wrapper.first(selector);
+    if (target.element.value === value) throw new Error('no change');
+    target.element.value = value;
+    target.trigger(event);
+    return Vue.nextTick().then(() => wrapper);
+  };
+}
 
 // Checks a checkbox or radio input, triggering a change event.
 trigger.check = (wrapper, selector = null) => {
@@ -84,27 +75,60 @@ trigger.uncheck = (wrapper, selector = null) => {
   return Vue.nextTick().then(() => wrapper);
 };
 
-const normalizeTriggerDragEventArgs = (args) => {
-  if (args.length === 0) throw new Error('files or event options required');
-  if (args.length === 1)
-    return normalizeTriggerDragEventArgs([undefined, args[0]]);
-  const [selector, filesOrEventOptions] = args;
-  const eventOptions = Array.isArray(filesOrEventOptions)
-    ? { files: filesOrEventOptions }
-    : filesOrEventOptions;
-  return { selector, eventOptions };
-};
+/*
+trigger.fillForm(wrapper, selectorsAndValues) fills a form (whether an actual
+form element or something else). It sets the `value` property of one or more
+fields, triggering an input event for each.
 
-const dragEventNames = ['dragenter', 'dragover', 'dragleave', 'drop'];
-for (const eventName of dragEventNames) {
+`wrapper` is an Avoriaz wrapper that wraps the form or a DOM node or Vue
+component that contains the form. selectorsAndValues is an array of
+[selector, value] arrays that specify how to select each field, as well as the
+field's value.
+
+trigger.fillForm() returns a promise that resolves to the wrapper.
+
+For example:
+
+  trigger.fillForm(component, [
+    ['input[type="email"]', 'email@getodk.org'],
+    ['input[type="password"]', 'password']
+  ]);
+*/
+trigger.fillForm = (wrapper, selectorsAndValues) => selectorsAndValues.reduce(
+  (acc, [selector, value]) =>
+    // Using trigger.input() rather than trigger.changeValue() so that
+    // trigger.fillForm() works with v-model.
+    acc.then(() => trigger.input(wrapper, selector, value)),
+  Promise.resolve()
+);
+// Deprecated: use trigger.fillForm() instead.
+export const { fillForm } = trigger;
+
+// trigger.submitForm(wrapper, formSelector, fieldSelectorsAndValues) fills a
+// form using fillForm(), then submits the form. `wrapper` is an Avoriaz wrapper
+// that contains the form. submitForm() returns a promise that resolves to
+// `wrapper`.
+trigger.submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
+  const form = wrapper.first(formSelector);
+  return trigger.fillForm(form, fieldSelectorsAndValues)
+    .then(() => trigger.submit(form))
+    .then(() => wrapper);
+};
+// Deprecated: use trigger.submitForm() instead.
+export const { submitForm } = trigger;
+
+// Drag events
+for (const eventName of ['dragenter', 'dragover', 'dragleave', 'drop']) {
   trigger[eventName] = (wrapper, ...args) => {
-    const { selector, eventOptions } = normalizeTriggerDragEventArgs(args);
-    const targetWrapper = selector == null ? wrapper : wrapper.first(selector);
-    const target = targetWrapper.isVueComponent
-      ? targetWrapper.vm.$el
-      : targetWrapper.element;
-    const event = dragEvent(eventName, { ...eventOptions, target });
-    $(target).trigger(event);
+    if (args.length === 0) throw new Error('files required');
+    if (args.length === 1) return trigger[eventName](wrapper, null, args[0]);
+    const [selector, files] = args;
+    const target = selector == null ? wrapper : wrapper.first(selector);
+    const targetElement = unwrapElement(target);
+    $(targetElement).trigger($.Event(eventName, {
+      target: targetElement,
+      originalEvent: $.Event(eventName, { dataTransfer: dataTransfer(files) })
+    }));
     const nextTick = Vue.nextTick();
     return selector == null ? nextTick : nextTick.then(() => wrapper);
   };
@@ -117,51 +141,3 @@ for (const eventName of dragEventNames) {
 trigger.dragAndDrop = (...args) => trigger.dragenter(...args)
   .then(() => trigger.dragover(...args))
   .then(() => trigger.drop(...args));
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// TRIGGERING A SERIES OF EVENTS
-
-/*
-fillForm(wrapper, selectorsAndValues) fills a form (whether an actual <form>
-element or something else). It sets the `value` property of one or more fields,
-triggering an input event for each.
-
-`wrapper` is an Avoriaz wrapper that wraps the form or a DOM node or Vue
-component that contains the form. selectorsAndValues is an array of
-[selector, value] arrays that specify how to select each field, as well as the
-field's value.
-
-fillForm() returns a promise that resolves to the wrapper.
-
-For example:
-
-  fillForm(component, [
-    ['input[type="email"]', 'email@getodk.org'],
-    ['input[type="password"]', 'password']
-  ]);
-*/
-export const fillForm = (wrapper, selectorsAndValues) => {
-  const promise = selectorsAndValues.reduce(
-    (acc, [selector, value]) => acc.then(() => {
-      const field = wrapper.first(selector);
-      field.element.value = value;
-      // If there is a v-model attribute, prompt it to sync.
-      field.trigger('input');
-      return Vue.nextTick();
-    }),
-    Promise.resolve()
-  );
-  return promise.then(() => wrapper);
-};
-
-// submitForm(wrapper, formSelector, fieldSelectorsAndValues) fills a form using
-// fillForm(), then submits the form. `wrapper` is an Avoriaz wrapper that
-// contains the form. submitForm() returns a promise that resolves to `wrapper`.
-export const submitForm = (wrapper, formSelector, fieldSelectorsAndValues) => {
-  const form = wrapper.first(formSelector);
-  return fillForm(form, fieldSelectorsAndValues)
-    .then(() => trigger.submit(form))
-    .then(() => wrapper);
-};

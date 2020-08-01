@@ -9,6 +9,7 @@ import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
 import { mount as lifecycleMount } from './lifecycle';
 import { trigger } from './event';
+import { wait, waitUntil } from './util';
 
 
 
@@ -60,15 +61,6 @@ component:
       ['input[type="email"]', 'example@getodk.org']
     ]));
 
-If you already have a mounted component, you can skip mockHttp().mount():
-
-  const component = mount(App, { router });
-
-  ...
-
-  mockHttp()
-    .request(() => submitLoginForm(component, 'example@getodk.org'));
-
 After specifying the request, specify the response as a callback:
 
   mockHttp()
@@ -80,7 +72,10 @@ specify all the responses, in order of the request:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@getodk.org'))
+    .request(component => submitForm(component, '#account-login form', [
+      ['input[type="email"]', 'example@getodk.org'],
+      ['input[type="password"]', 'password']
+    ]))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
       .createPast(1, { email: 'example@getodk.org' })
@@ -136,7 +131,10 @@ cycles: series can be chained. For example:
 
   mockHttp()
     .mount(App, { router })
-    .request(component => submitLoginForm(component, 'example@getodk.org'))
+    .request(component => submitForm(component, '#account-login form', [
+      ['input[type="email"]', 'example@getodk.org'],
+      ['input[type="password"]', 'password']
+    ]))
     .respondWithData(() => testData.sessions.createNew())
     .respondWithData(() => testData.extendedUsers
       .createPast(1, { email: 'example@getodk.org' })
@@ -146,7 +144,7 @@ cycles: series can be chained. For example:
     .afterResponses(component => {
       component.find('#project-list-table tbody tr').length.should.equal(3);
     })
-    .request(component => trigger.click(component, '#navbar-users-link'))
+    .request(component => trigger.click(component, '#navbar-links-users'))
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
       component.find('#user-list-table tbody tr').length.should.equal(1);
@@ -208,6 +206,8 @@ class MockHttp {
       ...options
     });
   }
+
+  modify(f) { return f(this); }
 
   //////////////////////////////////////////////////////////////////////////////
   // ROUTING
@@ -444,10 +444,11 @@ class MockHttp {
         this._checkStateBeforeRequest();
         return this._request(this._component);
       })
-      // Using finally() rather than then() so that even if the promise is
-      // rejected, we know that any responses will be processed by the end of
-      // the promise.
-      .finally(() => this._waitOnWork(pollWork))
+      // Wait for any responses to be processed.
+      .finally(wait)
+      .finally(() => (pollWork != null
+        ? waitUntil(() => pollWork(this._component))
+        : undefined))
       .finally(() => this._restoreHttp())
       .then(() => this._checkStateAfterWait())
       .then(() => callback(this._component))
@@ -466,72 +467,50 @@ class MockHttp {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
-    return promise
-      // Check initial state, set globals, and set properties of this object
-      // that are used within the afterResponses() promise. `component` is the
-      // component that the previous promise mounted (if any).
-      .then(({ component }) => {
-        // Concurrent series could cause issues in at least two ways. First,
-        // Vue.prototype.$http might not be restored correctly. Second, if
-        // concurrent series use the single global router, that could cause
-        // issues.
-        if (inProgress) throw new Error('another series is in progress');
-        inProgress = true;
-        this._inProgress = true;
-        this._errorFromBeforeEachNav = null;
-        this._previousHttp = Vue.prototype.$http;
-        setHttp(this._http());
-        this._component = component;
-        /*
-        MockHttp uses two promises:
+    // Check initial state, set globals, and set properties of this object that
+    // are used within the afterResponses() promise. `component` is the
+    // component that the previous promise mounted (if any).
+    return promise.then(({ component }) => {
+      // Concurrent series could cause issues in at least two ways. First,
+      // Vue.prototype.$http might not be restored correctly. Second, if
+      // concurrent series use the single global router, that could cause
+      // issues.
+      if (inProgress) throw new Error('another series is in progress');
+      inProgress = true;
+      this._inProgress = true;
+      this._errorFromBeforeEachNav = null;
+      this._previousHttp = Vue.prototype.$http;
+      setHttp(this._http());
+      this._component = component;
+      /*
+      MockHttp uses two promises:
 
-          1. The first promise is chained on this._previousPromise and returned
-             by an after responses hook. Usually it is ultimately returned to
-             Mocha.
-          2. The second promise, stored in this._responseChain, holds the
-             responses, chained in order of request. this._responseChain is not
-             returned to Mocha, but rather to Frontend from $http.
+        1. The first promise is chained on this._previousPromise and returned by
+           an after responses hook. Usually it is ultimately returned to Mocha.
+        2. The second promise, stored in this._responseChain, holds the
+           responses, chained in order of request. this._responseChain is not
+           returned to Mocha, but rather to Frontend from $http.
 
-        The two promises are related: the first promise triggers one or more
-        requests; for which responses are returned to Frontend through the
-        second promise; then the first promise is returned to Mocha or whatever
-        else comes after the hook.
+      The two promises are related: the first promise triggers one or more
+      requests; for which responses are returned to Frontend through the second
+      promise; then the first promise is returned to Mocha or whatever else
+      comes after the hook.
 
-        It is because the second promise is returned to Frontend and not Mocha
-        that _tryBeforeEachNav(), _tryBeforeAnyResponse(), and
-        _tryBeforeEachResponse() catch any error even though they are called
-        within a promise chain. Those methods catch and store any error so that
-        the after responses hook is able to reject the first promise if
-        something unexpected happens in the second promise.
-        */
-        this._responsesPromise = Promise.resolve();
-        this._errorFromBeforeAnyResponse = null;
-        this._errorFromBeforeEachResponse = null;
-        this._errorFromResponse = null;
-        this._requestWithoutResponse = false;
-        this._responseWithoutRequest = this._responses.length !== 0;
-        this._requestResponseLog = [];
-      })
-      .then(() => {
-        if (this._route == null || this._mount == null) return undefined;
-        // If we are already at the specified route location, we need to
-        // navigate to a different location; otherwise the navigation will be
-        // aborted. Here, we navigate to a location that we also know will not
-        // send a request.
-        return new Promise((resolve, reject) => {
-          store.commit('setUnsavedChanges', false);
-          router.push(
-            `/_initialPromise${Vue.prototype.$uniqueId()}`,
-            () => {
-              store.commit('resetRouterState');
-              resolve();
-            },
-            () => {
-              reject(new Error('navigation aborted'));
-            }
-          );
-        });
-      });
+      It is because the second promise is returned to Frontend and not Mocha
+      that _tryBeforeEachNav(), _tryBeforeAnyResponse(), and
+      _tryBeforeEachResponse() catch any error even though they are called
+      within a promise chain. Those methods catch and store any error so that
+      the after responses hook is able to reject the first promise if something
+      unexpected happens in the second promise.
+      */
+      this._responsesPromise = Promise.resolve();
+      this._errorFromBeforeAnyResponse = null;
+      this._errorFromBeforeEachResponse = null;
+      this._errorFromResponse = null;
+      this._requestWithoutResponse = false;
+      this._responseWithoutRequest = this._responses.length !== 0;
+      this._requestResponseLog = [];
+    });
   }
 
   // Returns a function that responds with each of the specified responses in
@@ -668,11 +647,10 @@ class MockHttp {
         return.) */
         () => {
           Vue.nextTick(() => {
-            if (store.state.router.navigations.last.confirmed) {
+            if (store.state.router.lastNavigationWasConfirmed)
               resolve();
-            } else {
+            else
               reject(new Error('last navigation not confirmed'));
-            }
           });
         }
       );
@@ -706,26 +684,6 @@ class MockHttp {
       for (const entry of this._requestResponseLog)
         console.log(entry); // eslint-disable-line no-console
     }
-  }
-
-  /* _waitOnWork() waits for Frontend to complete any ongoing work, for example,
-  processing the response to a request. _waitOnWork() first uses setTimeout() to
-  resolve pending promises: see
-  https://vue-test-utils.vuejs.org/en/guides/testing-async-components.html.
-  Then, if _waitOnWork() receives a callback, it will repeatedly run the
-  callback until the callback returns a truthy value (or until Karma times
-  out). */
-  _waitOnWork(callback = undefined) {
-    return new Promise(resolve => {
-      const wait = () => {
-        if (callback == null || callback(this._component)) {
-          resolve();
-        } else {
-          setTimeout(wait, 10);
-        }
-      };
-      setTimeout(wait);
-    });
   }
 
   _restoreHttp() {
@@ -845,7 +803,7 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // PROMISE METHODS
 
-  promise() {
+  toPromise() {
     const anySetup = this._route != null ||
       this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
@@ -859,9 +817,9 @@ class MockHttp {
 
   // The inclusion of these methods means that we can return a MockHttp to Mocha
   // in lieu of a Promise.
-  then(p1, p2) { return this.promise().then(p1, p2); }
-  catch(onRejected) { return this.promise().catch(onRejected); }
-  finally(onFinally) { return this.promise().finally(onFinally); }
+  then(p1, p2) { return this.toPromise().then(p1, p2); }
+  catch(onRejected) { return this.toPromise().catch(onRejected); }
+  finally(onFinally) { return this.toPromise().finally(onFinally); }
 }
 
 Object.assign(MockHttp.prototype, commonTests);

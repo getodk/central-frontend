@@ -13,29 +13,24 @@ except according to the terms contained in the LICENSE file.
   <div id="account-login" class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
-        <div class="panel-heading"><h1 class="panel-title">Log in</h1></div>
+        <div class="panel-heading">
+          <h1 class="panel-title">{{ $t('title') }}</h1>
+        </div>
         <div class="panel-body">
           <form @submit.prevent="submit">
-            <label class="form-group">
-              <input ref="email" v-model.trim="email" type="email"
-                class="form-control" placeholder="Email address *" required
-                autocomplete="off">
-              <span class="form-label">Email address *</span>
-            </label>
-            <label class="form-group">
-              <input v-model="password" type="password" class="form-control"
-                placeholder="Password *" required
-                autocomplete="current-password">
-              <span class="form-label">Password *</span>
-            </label>
+            <form-group ref="email" v-model.trim="email" type="email"
+              :placeholder="$t('field.email')" required autocomplete="off"/>
+            <form-group v-model="password" type="password"
+              :placeholder="$t('field.password')" required
+              autocomplete="current-password"/>
             <div class="panel-footer">
-              <button :disabled="disabled" type="submit"
-                class="btn btn-primary">
-                Log in <spinner :state="disabled"/>
+              <button type="submit" class="btn btn-primary"
+                :disabled="disabled">
+                {{ $t('action.logIn') }} <spinner :state="disabled"/>
               </button>
-              <router-link :to="resetPasswordLocation" :disabled="disabled"
-                tag="button" type="button" class="btn btn-link">
-                Reset password
+              <router-link to="/reset-password" tag="button" type="button"
+                class="btn btn-link" :disabled="disabled">
+                {{ $t('action.resetPassword') }}
               </router-link>
             </div>
           </form>
@@ -46,13 +41,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
-import { noop } from '../../util/util';
 
 export default {
   name: 'AccountLogin',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     return {
@@ -61,46 +56,43 @@ export default {
       password: ''
     };
   },
-  computed: {
-    resetPasswordLocation() {
-      return {
-        path: '/reset-password',
-        query: Object.assign({}, this.$route.query)
-      };
-    }
-  },
   mounted() {
     this.$refs.email.focus();
   },
   beforeRouteLeave(to, from, next) {
-    if (this.disabled) {
+    if (this.disabled)
       next(false);
-    } else {
+    else
       next();
-    }
   },
   methods: {
-    nextPath() {
-      const { next } = this.$route.query;
-      if (next == null) return '/';
-      const link = document.createElement('a');
-      link.href = next;
-      return link.host === window.location.host ? link.pathname : '/';
-    },
-    routeToNext() {
-      const query = Object.assign({}, this.$route.query);
-      delete query.next;
-      this.$router.push({ path: this.nextPath(), query });
+    navigateToNext(
+      next,
+      // Function that redirects within Frontend
+      internal,
+      // Function that redirects outside Frontend
+      external
+    ) {
+      if (typeof next !== 'string') return internal('/');
+      let url;
+      try {
+        url = new URL(next, window.location.origin);
+      } catch (e) {
+        return internal('/');
+      }
+      if (url.origin !== window.location.origin || url.pathname === '/login')
+        return internal('/');
+
+      // Enketo
+      if (url.pathname.startsWith('/_/')) return external(url.href);
+      return internal(url.pathname + url.search + url.hash);
     },
     submit() {
       this.disabled = true;
       this.request({
         method: 'POST',
         url: '/sessions',
-        data: { email: this.email, password: this.password },
-        problemToAlert: ({ code }) => (code === 401.2
-          ? 'Incorrect email address and/or password.'
-          : null)
+        data: { email: this.email, password: this.password }
       })
         .then(({ data }) => this.$store.dispatch('get', [{
           key: 'currentUser',
@@ -111,14 +103,38 @@ export default {
             this.$store.commit('setData', { key: 'session', value: data });
           }
         }]))
-        .finally(() => {
-          this.disabled = false;
-        })
         .then(() => {
-          this.routeToNext();
+          this.navigateToNext(
+            this.$route.query.next,
+            (location) => {
+              // We only set this.disabled to `false` before redirecting within
+              // Frontend. If we also set this.disabled before redirecting
+              // outside Frontend, the buttons might be re-enabled before the
+              // external page is loaded.
+              this.disabled = false;
+              this.$router.replace(location);
+            },
+            (url) => {
+              window.location.replace(url);
+            }
+          );
         })
-        .catch(noop);
+        .catch(() => {
+          this.disabled = false;
+        });
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Log in",
+    "problem": {
+      "401_2": "Incorrect email address and/or password."
+    }
+  }
+}
+</i18n>

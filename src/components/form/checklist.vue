@@ -12,86 +12,81 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="dataExists" id="form-checklist">
     <checklist-step :stage="stepStage(0)">
-      <template #title>Publish your first Draft version</template>
+      <template #title>{{ $t('steps[0].title') }}</template>
       <p>
-        <strong>Great work!</strong> You have published your Form. It is ready
-        to accept Submissions. If you want to make changes to the Form or its
-        Media Files, you can make a new Draft.
-        <doc-link to="central-forms/#updating-forms-to-a-new-version">
-          Click here to find out more.
-        </doc-link>
+        <strong>{{ $t('steps[0].body[0]') }}</strong>
+        {{ $t('steps[0].body[1]') }}
+        <doc-link to="central-forms/#updating-forms-to-a-new-version">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(1)">
-      <template #title>Download Form on survey clients and submit data</template>
+      <template #title>{{ $t('steps[1].title') }}</template>
       <p>
         <template v-if="form.submissions === 0">
-          Nobody has submitted any data to this Form yet.
-        </template>
-        <template v-else-if="form.submissions === 1">
-          A total of 1 Submission has been sent to this server.
+          {{ $t('steps[1].body[0].none') }}
         </template>
         <template v-else>
-          A total of {{ form.submissions.toLocaleString() }} Submissions have
-          been sent to this server.
+          {{ $tcn('steps[1].body[0].any', form.submissions) }}
         </template>
-        App Users will be able to see this Form on their mobile device to
-        download and fill out.
+        {{ $t('steps[1].body[1]') }}
         <template v-if="project.appUsers === 0">
-          <strong>You have not created any App Users for this Project yet, so
-          nobody will be able to use this Form.</strong> You can create them on
-          the
-          <router-link :to="projectPath('app-users')">
-            <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-            App Users tab of the Project page</router-link>.
+          <strong>{{ $t('steps[1].body[2].none[0]') }}</strong>
+          &nbsp;
+          <i18n :tag="false" path="steps[1].body[2].none[1].full">
+            <template #appUsersTab>
+              <router-link :to="projectPath('app-users')">{{ $t('steps[1].body[2].none[1].appUsersTab') }}</router-link>
+            </template>
+          </i18n>
         </template>
         <template v-else>
-          Right now,
-          <strong>
-            <router-link :to="projectPath('form-access')">
-              <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-              {{ $pluralize('App User', formActors.length, true) }}</router-link>
-          </strong>
-          in this Project {{ $pluralize('has', formActors.length) }} access to
-          this Form, but you can always
-          <router-link :to="projectPath('app-users')">add more</router-link>.
+          <i18n :tag="false"
+            :path="$tcPath('steps[1].body[2].any[0].full', formActors.length)">
+            <template #countOfAppUsers>
+              <router-link :to="projectPath('form-access')">
+                <strong>{{ $tcn('steps[1].body[2].any[0].countOfAppUsers', formActors.length) }}</strong>
+              </router-link>
+            </template>
+            <template #addMore>
+              <router-link :to="projectPath('app-users')">{{ $t('steps[1].body[2].any[0].addMore') }}</router-link>
+            </template>
+          </i18n>
         </template>
-        For more information about this,
-        <doc-link to="central-submissions/">click here</doc-link>.
+        &nbsp;
+        <i18n :tag="false" path="steps[1].body[3].full">
+          <template #clickHere>
+            <doc-link to="central-submissions/">{{ $t('steps[1].body[3].clickHere') }}</doc-link>
+          </template>
+        </i18n>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(2)">
-      <template #title>Evaluate and analyze submitted data</template>
+      <template #title>{{ $t('steps[2].title') }}</template>
       <p>
         <template v-if="form.submissions === 0">
-          Once there is data for this Form, you can export or synchronize it to
-          monitor and analyze the data for quality and results.
+          {{ $t('steps[2].body[0].none') }}
         </template>
         <template v-else>
-          You can export or synchronize the
-          {{ $pluralize('Submission', form.submissions, true) }} on this Form to
-          monitor and analyze them for quality and results.
+          {{ $tcn('steps[2].body[0].any', form.submissions) }}
         </template>
-        You can do this with the Download and Analyze buttons on the
-        <router-link :to="formPath('submissions')">Submissions tab</router-link>.
-        <doc-link to="central-submissions/">
-          Click here to find out more.
-        </doc-link>
+        <i18n :tag="false" path="steps[2].body[1].full">
+          <template #submissionsTab>
+            <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <doc-link to="central-submissions/">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(3)">
-      <template #title>Manage Form retirement</template>
+      <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        As you come to the end of your data collection, you can use the Form
-        State controls on the
-        <router-link :to="projectPath('form-access')">
-          <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
-          Form Access tab of the Project page</router-link>
-        to control whether, for example, App Users will be able to see or create
-        new Submissions to this Form.
-        <doc-link to="central-forms/#managing-form-lifecycle">
-          Click here to find out more.
-        </doc-link>
+        <i18n :tag="false" path="steps[3].body[0].full">
+          <template #formAccessTab>
+            <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <doc-link to="central-forms/#managing-form-lifecycle">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
   </div>
@@ -135,3 +130,79 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "clickForInfo": "Click here to find out more.",
+    "steps": [
+      {
+        // This is the title of a checklist item.
+        "title": "Publish your first Draft version",
+        "body": [
+          "Great work!",
+          "You have published your Form. It is ready to accept Submissions. If you want to make changes to the Form or its Media Files, you can make a new Draft."
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Download Form on survey clients and submit data",
+        "body": [
+          {
+            "none": "Nobody has submitted any data to this Form yet.",
+            "any": "A total of {count} Submission has been sent to this server. | A total of {count} Submissions have been sent to this server."
+          },
+          "App Users will be able to see this Form on their mobile device to download and fill out.",
+          {
+            "none": [
+              "You have not created any App Users for this Project yet, so nobody will be able to use this Form.",
+              {
+                "full": "You can create them on the {appUsersTab}.",
+                "appUsersTab": "App Users tab of the Project page"
+              }
+            ],
+            "any": [
+              {
+                "full": [
+                  "Right now, {countOfAppUsers} in this Project has access to this Form, but you can always {addMore}.",
+                  "Right now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}."
+                ],
+                "countOfAppUsers": "{count} App User | {count} App Users",
+                "addMore": "add more"
+              }
+            ]
+          },
+          {
+            "full": "For more information about this, {clickHere}.",
+            "clickHere": "click here"
+          }
+        ]
+      },
+      {
+        // This is the title of a checklist item.
+        "title": "Evaluate and analyze submitted data",
+        "body": [
+          {
+            "none": "Once there is data for this Form, you can export or synchronize it to monitor and analyze the data for quality and results.",
+            "any": "You can export or synchronize the {count} Submission on this Form to monitor and analyze the Submission for quality and results. | You can export or synchronize the {count} Submissions on this Form to monitor and analyze them for quality and results."
+          },
+          {
+            "full": "You can do this with the Download and Analyze buttons on the {submissionsTab}.",
+            "submissionsTab": "Submissions tab"
+          }
+        ]
+      },
+      {
+        // This is the title of a checklist item. "Retirement" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it.
+        "title": "Manage Form retirement",
+        "body": [
+          {
+            "full": "As you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form.",
+            "formAccessTab": "Form Access tab of the Project page"
+          }
+        ]
+      }
+    ]
+  }
+}
+</i18n>

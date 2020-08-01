@@ -241,7 +241,7 @@ describe('FormDraftPublish', () => {
       .afterResponse(app => {
         app.first(FormDraftPublish).should.alert(
           'danger',
-          "The version name you've specified conflicts with a past version of this Form. Please change it to something new and try again."
+          'The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again.'
         );
       });
   });

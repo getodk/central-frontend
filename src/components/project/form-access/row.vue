@@ -14,20 +14,19 @@ except according to the terms contained in the LICENSE file.
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
         <span v-if="form.publishedAt == null" class="icon-edit"
-          title="This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used."><!-- eslint-disable-line max-len -->
+          :title="$t('draftTitle')">
         </span>
-        <!-- eslint-disable-next-line max-len -->
         <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">{{ form.nameOrId() }}</router-link>
       </td>
       <td>
         <div class="form-group">
           <select class="form-control"
             :class="{ 'uncommitted-change': stateChanged }"
-            :value="changes.current.state" aria-label="State"
+            :value="changes.current.state" :aria-label="$t('field.state')"
             @change="updateState($event.target.value)">
-            <option value="open">Open</option>
-            <option value="closing">Closing</option>
-            <option value="closed">Closed</option>
+            <option value="open">{{ $t('formState.open') }}</option>
+            <option value="closing">{{ $t('formState.closing') }}</option>
+            <option value="closed">{{ $t('formState.closed') }}</option>
           </select>
         </div>
       </td>
@@ -41,7 +40,7 @@ except according to the terms contained in the LICENSE file.
             <input type="checkbox"
               :class="{ 'uncommitted-change': fieldKeyAccessChanged(fieldKey) }"
               :checked="changes.current.fieldKeyAccess[fieldKey.id]"
-              aria-label="App User Access"
+              :aria-label="$t('field.appUserAccess')"
               @change="updateFieldKeyAccess(fieldKey, $event.target.checked)">
           </label>
         </div>
@@ -134,3 +133,17 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "draftTitle": "This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used.",
+    "field": {
+      // This is the text of a form field. "State" refers to the Form State.
+      // Form States control the lifecycle state of each Form.
+      "state": "State",
+      "appUserAccess": "App User Access"
+    }
+  }
+}
+</i18n>

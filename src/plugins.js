@@ -10,8 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
+import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueI18n);

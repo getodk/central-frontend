@@ -11,7 +11,7 @@ const htmlToImg = (qrCodeHtml) => {
   return img;
 };
 
-describe('collectQr', () => {
+describe('util/collectQr', () => {
   it('encodes the settings', () => {
     const html = collectQr('/path', { errorCorrectionLevel: 'L', cellSize: 1 });
     const img = htmlToImg(html);

@@ -115,10 +115,9 @@ class Store extends Collection {
   // Updates an existing object in place, setting the properties specified by
   // `props`. If the object has an updatedAt property, it is set to the current
   // time. Returns the updated object.
-  update(objectOrIndex, props = undefined) {
-    if (typeof objectOrIndex === 'number')
-      return this.update(this.get(objectOrIndex), props);
-    if (objectOrIndex == null) throw new Error('invalid object');
+  update(index, props = undefined) {
+    const object = this.get(index);
+    if (object == null) throw new Error('invalid index');
     if (props != null) {
       if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
         // Objects are ordered in the store in order of creation. If the factory
@@ -128,13 +127,13 @@ class Store extends Collection {
         // support updating an object's createdAt property.
         throw new Error('createdAt cannot be updated');
       }
-      Object.assign(objectOrIndex, props);
+      Object.assign(object, props);
     }
-    if (Object.prototype.hasOwnProperty.call(objectOrIndex, 'updatedAt')) {
+    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
       // eslint-disable-next-line no-param-reassign
-      objectOrIndex.updatedAt = new Date().toISOString();
+      object.updatedAt = new Date().toISOString();
     }
-    return objectOrIndex;
+    return object;
   }
 }
 

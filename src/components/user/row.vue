@@ -12,17 +12,18 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="{ success: user.id === highlighted }">
     <td class="user-display-name">
-      <router-link :to="userPath(user.id)">{{ user.displayName }}</router-link>
+      <router-link :to="userPath(user.id)" :title="user.displayName">{{ user.displayName }}</router-link>
     </td>
-    <td class="user-email">{{ user.email }}</td>
+    <td class="user-row-email" :title="user.email">{{ user.email }}</td>
     <td class="user-role">
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRole"
-            :disabled="disabled" :title="selectTitle" aria-label="Sitewide Role"
+            :disabled="disabled" :title="selectTitle"
+            :aria-label="$t('field.sitewideRole')"
             @change="assignRole($event.target.value)">
-            <option value="admin">Administrator</option>
-            <option value="">None</option>
+            <option value="admin">{{ $t('role.admin') }}</option>
+            <option value="">{{ $t('role.none') }}</option>
           </select>
           <span class="spinner-container">
             <spinner :state="awaitingResponse"/>
@@ -40,18 +41,18 @@ except according to the terms contained in the LICENSE file.
         <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
           <li>
             <router-link :to="userPath(user.id)" class="edit-profile">
-              Edit profile
+              {{ $t('action.editProfile') }}
             </router-link>
           </li>
           <li>
             <a class="reset-password" href="#"
               @click.prevent="$emit('reset-password', user)">
-              Reset password&hellip;
+              {{ $t('action.resetPassword') }}&hellip;
             </a>
           </li>
           <li :class="{ disabled }" :title="retireTitle">
             <a class="retire-user" href="#" @click.prevent="retire">
-              Retire user&hellip;
+              {{ $t('action.retire') }}&hellip;
             </a>
           </li>
         </ul>
@@ -96,16 +97,16 @@ export default {
     },
     selectTitle() {
       return this.user.id === this.currentUser.id
-        ? 'You may not edit your own Sitewide Role.'
-        : '';
+        ? this.$t('cannotAssignRole')
+        : null;
     },
     actionsButtonId() {
       return `user-row-actions-button${this.user.id}`;
     },
     retireTitle() {
       return this.user.id === this.currentUser.id
-        ? 'You may not retire yourself.'
-        : '';
+        ? this.$t('cannotRetire')
+        : null;
     }
   },
   methods: {
@@ -131,7 +132,7 @@ export default {
 #user-list-table td {
   vertical-align: middle;
 
-  &.user-display-name, &.user-email {
+  &.user-display-name, &.user-row-email {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -156,3 +157,19 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "cannotAssignRole": "You may not edit your own Sitewide Role.",
+    "field": {
+      "sitewideRole": "Sitewide Role"
+    },
+    // An Administrator may retire other Web Users, but not their own account.
+    "cannotRetire": "You may not retire yourself.",
+    "action": {
+      "retire": "Retire user"
+    }
+  }
+}
+</i18n>

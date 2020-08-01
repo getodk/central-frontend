@@ -10,19 +10,35 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-list :base-url="baseUrl" :form-version="form" shows-submitter/>
+  <page-section condensed>
+    <template #heading>
+      <span>{{ $t('common.submissions') }}</span>
+      <enketo-fill v-if="dataExists && project.permits('submission.create')"
+        :form-version="form">
+        <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+      </enketo-fill>
+    </template>
+    <template #body>
+      <submission-list :base-url="baseUrl" :form-version="form"
+        shows-submitter/>
+    </template>
+  </page-section>
 </template>
 
 <script>
+import EnketoFill from '../enketo/fill.vue';
+import PageSection from '../page/section.vue';
 import SubmissionList from '../submission/list.vue';
 import reconcileData from '../../store/modules/request/reconcile';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
+const requestKeys = ['project', 'form'];
+
 export default {
   name: 'FormSubmissions',
-  components: { SubmissionList },
+  components: { EnketoFill, PageSection, SubmissionList },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -35,7 +51,12 @@ export default {
     }
   },
   computed: {
-    ...requestData(['form']),
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(requestKeys),
+    dataExists() {
+      return this.$store.getters.dataExists(requestKeys);
+    },
     baseUrl() {
       return apiPaths.form(this.projectId, this.xmlFormId);
     }

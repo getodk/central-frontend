@@ -1,7 +1,7 @@
 import UserEdit from '../../../../src/components/user/edit.vue';
 import UserEditPassword from '../../../../src/components/user/edit/password.vue';
 import testData from '../../../data';
-import { fillForm, submitForm } from '../../../util/event';
+import { fillForm, submitForm, trigger } from '../../../util/event';
 import { mockHttp, mockRoute } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 import { mountAndMark } from '../../../util/lifecycle';
@@ -102,8 +102,16 @@ describe('UserEditPassword', () => {
         .mount(UserEditPassword, {
           requestData: { user: testData.standardUsers.first() }
         })
-        .request(component => submitPasswords(component, { match: false })
-          .then(() => submitPasswords(component, { match: true })))
+        .request(async (component) => {
+          await trigger.submitForm(component, '#user-edit-password form', [
+            ['#user-edit-password-old-password', 'x'],
+            ['#user-edit-password-new-password', 'y'],
+            ['#user-edit-password-confirm', 'z']
+          ]);
+          await trigger.submitForm(component, '#user-edit-password form', [
+            ['#user-edit-password-confirm', 'y']
+          ]);
+        })
         .beforeAnyResponse(component => {
           const formGroups = component.find('.form-group');
           formGroups[1].hasClass('has-error').should.be.false();

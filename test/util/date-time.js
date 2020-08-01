@@ -12,6 +12,8 @@ const setLuxonSetting = (name, value) => {
     } else if (typeof value === 'string') {
       const millis = DateTime.fromISO(value).toMillis();
       Settings[name] = () => millis;
+    } else if (value instanceof DateTime) {
+      Settings[name] = () => value.toMillis();
     } else {
       Settings[name] = value;
     }
@@ -37,12 +39,7 @@ export const fakePastDate = (dateStrings) => {
     .filter(s => s != null)
     .map(s => DateTime.fromISO(s));
   if (dateTimes.length === 0) return faker.date.past().toISOString();
-  const maxDate = DateTime.max(...dateTimes).toJSDate();
-  const almostNow = new Date();
-  almostNow.setTime(almostNow.getTime() - 1000);
-  if (maxDate.getTime() > almostNow.getTime())
-    throw new Error('invalid dateStrings');
   return faker.date
-    .between(maxDate.toISOString(), almostNow.toISOString())
+    .between(DateTime.max(...dateTimes).toISO(), new Date().toISOString())
     .toISOString();
 };

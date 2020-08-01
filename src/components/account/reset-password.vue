@@ -14,26 +14,20 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
         <div class="panel-heading">
-          <h1 class="panel-title">
-            Reset Password
-          </h1>
+          <h1 class="panel-title">{{ $t('title') }}</h1>
         </div>
         <div class="panel-body">
           <form @submit.prevent="submit">
-            <label class="form-group">
-              <input ref="email" v-model.trim="email" type="email"
-                class="form-control" placeholder="Email address *" required
-                autocomplete="off">
-              <span class="form-label">Email address *</span>
-            </label>
+            <form-group ref="email" v-model.trim="email" type="email"
+              :placeholder="$t('field.email')" required autocomplete="off"/>
             <div class="panel-footer">
-              <button :disabled="awaitingResponse" type="submit"
-                class="btn btn-primary">
-                Reset password <spinner :state="awaitingResponse"/>
+              <button type="submit" class="btn btn-primary"
+                :disabled="awaitingResponse">
+                {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
               </button>
-              <router-link :to="loginLocation" tag="button" type="button"
+              <router-link to="/login" tag="button" type="button"
                 class="btn btn-link">
-                Cancel
+                {{ $t('action.cancel') }}
               </router-link>
             </div>
           </form>
@@ -44,27 +38,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'AccountResetPassword',
-  components: { Spinner },
+  components: { FormGroup, Spinner },
   mixins: [request()],
   data() {
     return {
       awaitingResponse: false,
       email: ''
     };
-  },
-  computed: {
-    loginLocation() {
-      return {
-        path: '/login',
-        query: Object.assign({}, this.$route.query)
-      };
-    }
   },
   mounted() {
     this.$refs.email.focus();
@@ -73,11 +60,25 @@ export default {
     submit() {
       this
         .post('/users/reset/initiate', { email: this.email })
-        .then(() => this.$router.push(this.loginLocation, () => {
-          this.$alert().success(`An email has been sent to ${this.email} with further instructions.`);
+        .then(() => this.$router.push('/login', () => {
+          this.$alert().success(this.$t('alert.success', {
+            email: this.email
+          }));
         }))
         .catch(noop);
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Reset Password",
+    "alert": {
+      "success": "An email has been sent to {email} with further instructions."
+    }
+  }
+}
+</i18n>

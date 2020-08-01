@@ -29,6 +29,10 @@ jobs:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
 
+      - run: |
+          node bin/transifex/restructure.js
+          git diff --exit-code -- transifex/strings_en.json
+
       - run: npm run lint
 
       - run: npm run test

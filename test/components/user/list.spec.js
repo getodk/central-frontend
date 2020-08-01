@@ -1,28 +1,12 @@
 import Spinner from '../../../src/components/spinner.vue';
 import UserRow from '../../../src/components/user/row.vue';
 import testData from '../../data';
-import { mockLogin, mockRouteThroughLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
+import { load, mockRoute } from '../../util/http';
+import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
 describe('UserList', () => {
   describe('routing', () => {
-    it('redirects an anonymous user to login', () =>
-      mockRoute('/users')
-        .restoreSession(false)
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/login');
-        }));
-
-    it('redirects the user back after login', () =>
-      mockRouteThroughLogin('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
-
     it('redirects a user with no sitewide role', () => {
       mockLogin({ role: 'none' });
       return mockRoute('/users')
@@ -48,19 +32,6 @@ describe('UserList', () => {
           app.find('#user-list-table thead tr').length.should.equal(1);
         }));
 
-    it('lists the users in the correct order', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers
-          .createPast(1, { email: 'b@email.com' })
-          .sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          const rows = app.find('#user-list-table tbody tr');
-          const emails = rows.map(row => row.find('td')[1].text());
-          emails.should.eql(['a@email.com', 'b@email.com']);
-        }));
-
     it('correctly renders the display name', () =>
       mockRoute('/users')
         .respondWithData(() => testData.standardUsers.sorted())
@@ -71,7 +42,15 @@ describe('UserList', () => {
           link.getAttribute('href').should.equal('#/users/1/edit');
           const user = testData.standardUsers.last();
           link.text().trim().should.equal(user.displayName);
+          link.getAttribute('title').should.equal(user.displayName);
         }));
+
+    it('shows the email', () =>
+      load('/users').then(app => {
+        const td = app.first('.user-row-email');
+        td.text().trim().should.equal('a@email.com');
+        td.getAttribute('title').should.equal('a@email.com');
+      }));
 
     it('correctly renders the edit profile action', () =>
       mockRoute('/users')
@@ -113,7 +92,7 @@ describe('UserList', () => {
               select.should.be.disabled();
             else
               select.should.not.be.disabled();
-            (select.element.title !== '').should.equal(isCurrentUser);
+            select.hasAttribute('title').should.equal(isCurrentUser);
           }
         }));
 

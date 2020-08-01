@@ -14,20 +14,23 @@ except according to the terms contained in the LICENSE file.
     <div id="form-draft-testing-info" class="row">
       <div class="col-xs-8">
         <page-section condensed>
-          <template #heading><span>Draft Testing</span></template>
+          <template #heading>
+            <span>{{ $t('title') }}</span>
+            <enketo-fill
+              v-if="dataExists && project.permits('submission.create')"
+              :form-version="formDraft">
+              <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+            </enketo-fill>
+          </template>
           <template #body>
+            <p>{{ $t('body[0]') }}</p>
             <p>
-              You can use the configuration code to the right to set up a mobile
-              device to download this Draft. If you fill a blank of the Draft
-              Form and upload it, the Submission will go only into this test
-              table below. You can preview and download the test Submissions
-              below.
-            </p>
-            <p>
-              When you publish this Draft Form, these test Submissions will be
-              permanently removed. Please see
-              <doc-link to="central-forms/#working-with-form-drafts">this article</doc-link>
-              for more information.
+              {{ $t('body[1]') }}
+              <i18n :tag="false" path="moreInfo.helpArticle.full">
+                <template #helpArticle>
+                  <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+                </template>
+              </i18n>
             </p>
           </template>
         </page-section>
@@ -45,6 +48,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import EnketoFill from '../enketo/fill.vue';
 import FloatRow from '../float-row.vue';
 import Option from '../../util/option';
 import PageSection from '../page/section.vue';
@@ -57,7 +61,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
-  components: { DocLink, FloatRow, PageSection, SubmissionList },
+  components: { DocLink, EnketoFill, FloatRow, PageSection, SubmissionList },
   mixins: [validateData()],
   props: {
     projectId: {
@@ -72,7 +76,10 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData([{ key: 'formDraft', getOption: true }]),
+    ...requestData(['project', { key: 'formDraft', getOption: true }]),
+    dataExists() {
+      return this.$store.getters.dataExists(['project', 'formDraft']);
+    },
     qrCodeHtml() {
       const url = apiPaths.serverUrlForFormDraft(
         this.formDraft.draftToken,
@@ -112,3 +119,16 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a title shown above a section of the page.
+    "title": "Draft Testing",
+    "body": [
+      "You can use the configuration code to the right to set up a mobile device to download this Draft. If you fill a blank of the Draft Form and upload it, the Submission will go only into this test table below. You can preview and download the test Submissions below.",
+      "When you publish this Draft Form, these test Submissions will be permanently removed."
+    ]
+  }
+}
+</i18n>

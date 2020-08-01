@@ -224,6 +224,9 @@ const routes = [
           }
         ]
       },
+      // Note the unlikely possibility that
+      // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
+      // will be unable to navigate to a form route.
       {
         path: 'forms/:xmlFormId',
         component: FormShow,
@@ -247,7 +250,10 @@ const routes = [
             props: true,
             meta: {
               validateData: {
-                project: (project) => project.permits('form.read'),
+                project: (project) =>
+                  // Including submission.list in order to exclude Data
+                  // Collectors.
+                  project.permits(['form.read', 'submission.list']),
                 form: (form) => form.publishedAt != null
               }
             }
@@ -397,12 +403,7 @@ const routes = [
   {
     path: '*',
     component: NotFound,
-    meta: {
-      requireLogin: false,
-      // Our testing assumes that navigating to NotFound will never send a
-      // request, even to restore the user's session.
-      restoreSession: false
-    }
+    meta: { restoreSession: false, requireLogin: false }
   }
 ];
 export default routes;

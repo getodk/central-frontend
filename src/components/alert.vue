@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <!-- When the button is clicked, we simply hide the alert, rather than using
     Bootstrap's alert plugin and calling $(...).alert('close'): the plugin would
     remove the alert from the DOM. -->
-    <button type="button" class="close" aria-label="Close" @click="hideAlert">
+    <button type="button" class="close" :aria-label="$t('action.close')"
+      @click="hideAlert">
       <span aria-hidden="true">&times;</span>
     </button>
     <span class="alert-message">{{ message }}</span>

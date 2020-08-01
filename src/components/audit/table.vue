@@ -13,11 +13,11 @@ except according to the terms contained in the LICENSE file.
   <table id="audit-table" class="table">
     <thead>
       <tr>
-        <th>Time</th>
-        <th>Type</th>
-        <th>Initiator</th>
-        <th>Target</th>
-        <th class="details">Details</th>
+        <th>{{ $t('header.time') }}</th>
+        <th>{{ $t('header.type') }}</th>
+        <th>{{ $t('header.initiator') }}</th>
+        <th>{{ $t('header.target') }}</th>
+        <th class="details">{{ $t('header.details') }}</th>
       </tr>
     </thead>
     <tbody v-if="audits != null">
@@ -47,3 +47,16 @@ export default {
   width: 33.33333333%;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      "time": "Time",
+      "initiator": "Initiator",
+      "target": "Target",
+      "details": "Details"
+    }
+  }
+}
+</i18n>

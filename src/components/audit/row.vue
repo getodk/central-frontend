@@ -11,16 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="audit-row">
-    <td>{{ loggedAt }}</td>
+    <td><date-time :iso="audit.loggedAt"/></td>
     <td>
-      <template v-if="actionInfo != null">
-        {{ actionInfo.type[0] }}
-        <template v-if="actionInfo.type.length !== 1">
-          <span class="icon-angle-right"></span> {{ actionInfo.type[1] }}
-        </template>
-      </template>
-      <template v-else>
-        {{ audit.action }}
+      {{ type[0] }}
+      <template v-if="type.length > 1">
+        <span class="icon-angle-right"></span> {{ type[1] }}
       </template>
     </td>
     <td class="initiator">
@@ -30,9 +25,9 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="targetInfo != null" :to="targetInfo.path(audit.actee)"
-        :title="targetTitle">
-        {{ targetTitle }}
+      <router-link v-if="target != null" :to="target.path"
+        :title="target.title">
+        {{ target.title }}
       </router-link>
     </td>
     <td class="details">
@@ -44,78 +39,43 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
+import i18n from '../../i18n';
 import routes from '../../mixins/routes';
-import { formatDate } from '../../util/date-time';
+import { auditActionMessage } from '../../util/i18n';
 
-const ACTIONS = {
-  'user.create': {
-    type: ['User', 'Create'],
-    target: 'user'
+const typeByCategory = {
+  user: i18n.t('common.user'),
+  assignment: i18n.t('common.user'),
+  project: i18n.t('common.project'),
+  form: i18n.t('common.form'),
+  upgrade: i18n.t('audit.category.upgrade')
+};
+
+const acteeSpeciesByCategory = {
+  user: {
+    title: ({ displayName }) => displayName,
+    path: ({ id }, vm) => vm.userPath(id)
   },
-  'user.update': {
-    type: ['User', 'Update Details'],
-    target: 'user'
+  project: {
+    title: ({ name }) => name,
+    path: ({ id }, vm) => vm.projectPath(id)
   },
-  'assignment.create': {
-    type: ['User', 'Assign Role'],
-    target: 'user'
-  },
-  'assignment.delete': {
-    type: ['User', 'Revoke Role'],
-    target: 'user'
-  },
-  'user.delete': {
-    type: ['User', 'Retire'],
-    target: 'user'
-  },
-  'project.create': {
-    type: ['Project', 'Create'],
-    target: 'project'
-  },
-  'project.update': {
-    type: ['Project', 'Update Details'],
-    target: 'project'
-  },
-  'project.delete': {
-    type: ['Project', 'Delete'],
-    target: 'project'
-  },
-  'form.create': {
-    type: ['Form', 'Create'],
-    target: 'form'
-  },
-  'form.update': {
-    type: ['Form', 'Update Details'],
-    target: 'form'
-  },
-  'form.update.draft.set': {
-    type: ['Form', 'Create or Update Draft'],
-    target: 'form'
-  },
-  'form.update.publish': {
-    type: ['Form', 'Publish Draft'],
-    target: 'form'
-  },
-  'form.update.draft.delete': {
-    type: ['Form', 'Abandon Draft'],
-    target: 'form'
-  },
-  'form.attachment.update': {
-    type: ['Form', 'Update Attachments'],
-    target: 'form'
-  },
-  'form.delete': {
-    type: ['Form', 'Delete'],
-    target: 'form'
-  },
-  backup: {
-    type: ['Backup']
+  form: {
+    title: (form) => new Form(form).nameOrId(),
+    path: (form, vm) => vm.primaryFormPath(form)
   }
 };
+acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
+// Presumably at some point, the actee of an upgrade audit might not be a form,
+// at which point we will have to update this component (perhaps we would use
+// the full action or a prefix instead of the category).
+acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
+  components: { DateTime },
   mixins: [routes()],
   props: {
     audit: {
@@ -124,35 +84,26 @@ export default {
     }
   },
   computed: {
-    loggedAt() {
-      return formatDate(this.audit.loggedAt);
+    category() {
+      const index = this.audit.action.indexOf('.');
+      return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
-    actionInfo() {
-      return ACTIONS[this.audit.action];
+    type() {
+      const actionMessage = auditActionMessage(this.audit.action);
+      if (actionMessage == null) return [this.audit.action];
+      return this.category != null
+        ? [typeByCategory[this.category], actionMessage]
+        : [actionMessage];
     },
-    targets() {
+    target() {
+      if (this.category == null) return null;
+      const species = acteeSpeciesByCategory[this.category];
+      if (species == null) return null;
+      const { actee } = this.audit;
       return {
-        user: {
-          title: ({ displayName }) => displayName,
-          path: ({ id }) => this.userPath(id)
-        },
-        project: {
-          title: ({ name }) => name,
-          path: ({ id }) => this.projectPath(id)
-        },
-        form: {
-          title: (form) => new Form(form).nameOrId(),
-          path: (form) => this.primaryFormPath(form)
-        }
+        path: species.path(actee, this),
+        title: species.title(actee)
       };
-    },
-    targetInfo() {
-      if (this.actionInfo == null) return null;
-      const { target } = this.actionInfo;
-      return target != null ? this.targets[target] : null;
-    },
-    targetTitle() {
-      return this.targetInfo.title(this.audit.actee);
     },
     details() {
       return this.audit.details != null
@@ -176,7 +127,7 @@ export default {
 @import '../../assets/scss/variables';
 
 .audit-row {
-  td {
+  .table tbody & td {
     vertical-align: middle;
   }
 

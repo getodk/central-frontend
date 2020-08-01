@@ -32,23 +32,11 @@ export default {
     this.fetchData();
   },
   methods: {
-    // Fetches or refreshes the project, keeping project.appUsers in sync with
-    // fieldKeys.length. fetchData() does not refresh or clear fieldKeys, so if
-    // fieldKeys is set, project.appUsers will not be updated even after a
-    // refresh of the project.
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'project',
         url: apiPaths.project(this.projectId),
-        extended: true,
-        success: ({ project, fieldKeys }) => {
-          if (fieldKeys == null || fieldKeys.length === project.appUsers)
-            return;
-          this.$store.commit('setData', {
-            key: 'project',
-            value: project.with({ appUsers: fieldKeys.length })
-          });
-        }
+        extended: true
       }]).catch(noop);
     }
   }

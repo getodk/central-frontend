@@ -1,4 +1,6 @@
 import ChecklistStep from '../../src/components/checklist-step.vue';
+import TestUtilP from '../util/components/p.vue';
+import TestUtilSpan from '../util/components/span.vue';
 import { mount } from '../util/lifecycle';
 
 describe('ChecklistStep', () => {
@@ -26,30 +28,24 @@ describe('ChecklistStep', () => {
   });
 
   describe('slots', () => {
-    it('uses a slot named title', () => {
+    it('uses the title slot', () => {
       const component = mount(ChecklistStep, {
         propsData: { stage: 'complete' },
-        slots: {
-          title: { render: (createElement) => createElement('span', 'Title') }
-        }
+        slots: { title: TestUtilSpan }
       });
       const spans = component.find('.checklist-step-heading span');
       spans.length.should.equal(2);
-      spans[1].text().should.equal('Title');
+      spans[1].text().should.equal('Some span text');
     });
 
-    it('uses a default slot', () => {
+    it('uses the default slot', () => {
       const component = mount(ChecklistStep, {
         propsData: { stage: 'complete' },
-        slots: {
-          default: {
-            render: (createElement) => createElement('p', 'Description')
-          }
-        }
+        slots: { default: TestUtilP }
       });
       const p = component.find('p');
       p.length.should.equal(2);
-      p[1].text().should.equal('Description');
+      p[1].text().should.equal('Some p text');
     });
   });
 });

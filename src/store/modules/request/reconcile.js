@@ -32,6 +32,7 @@ export default {
 
   reconcile(key, data, commit) {
     if (byKey[key] != null) {
+      // Iterated in insertion order
       for (const reconcile of byKey[key])
         reconcile(data, commit);
     }

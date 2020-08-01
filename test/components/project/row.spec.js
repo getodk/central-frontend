@@ -1,6 +1,6 @@
+import DateTime from '../../../src/components/date-time.vue';
 import ProjectRow from '../../../src/components/project/row.vue';
 import testData from '../../data';
-import { formatDate } from '../../../src/util/date-time';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -29,8 +29,7 @@ describe('ProjectRow', () => {
       const now = new Date().toISOString();
       testData.extendedProjects.createPast(1, { lastSubmission: now });
       return load('/').then(app => {
-        const text = app.first(ProjectRow).find('td')[2].text().trim();
-        text.should.equal(formatDate(now));
+        app.first(ProjectRow).first(DateTime).getProp('iso').should.equal(now);
       });
     });
 

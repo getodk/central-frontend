@@ -10,5 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 module.exports = {
+  chainWebpack: (config) => {
+    config.module
+      .rule('json5')
+        .test(/\/src\/locales\/en\.json$/)
+        .type('javascript/auto')
+        .use('json5')
+          .loader('json5-loader');
+
+    // We don't want to prefetch all locale files.
+    config.plugins.delete('prefetch');
+  },
   lintOnSave: false,
+  pluginOptions: {
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: true
+    }
+  }
 };

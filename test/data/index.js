@@ -11,6 +11,7 @@ import * as Roles from './roles';
 import * as Sessions from './sessions';
 import * as Submissions from './submissions';
 import * as Users from './users';
+import seed from './seed';
 import { resetDataStores } from './data-store';
 
 const testData = Object.assign(
@@ -30,6 +31,7 @@ const testData = Object.assign(
   Users
 );
 
+testData.seed = seed;
 testData.reset = resetDataStores;
 
 export default testData;

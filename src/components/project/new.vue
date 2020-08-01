@@ -11,34 +11,28 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="project-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="focusInput">
-    <template slot="title">Create Project</template>
-    <template slot="body">
+    @hide="$emit('hide')" @shown="$refs.name.focus()">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
       <div class="modal-introduction">
-        <p>
-          Projects group Forms and App Users together to make them easier to
-          organize and manage, both on this website and on your data collection
-          device.
-        </p>
-        <p>
-          For more information, please see
-          <doc-link to="central-projects/">this help article</doc-link>.
-        </p>
+        <p>{{ $t('introduction[0]') }}</p>
+        <i18n tag="p" path="moreInfo.helpArticle.full">
+          <template #helpArticle>
+            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+          </template>
+        </i18n>
       </div>
       <form @submit.prevent="submit">
-        <label class="form-group">
-          <input ref="name" v-model.trim="name" :disabled="awaitingResponse"
-            class="form-control" placeholder="My Project name *" required>
-          <span class="form-label">Name *</span>
-        </label>
+        <form-group ref="name" v-model.trim="name"
+          :placeholder="$t('field.name')" required autocomplete="off"/>
         <div class="modal-actions">
-          <button :disabled="awaitingResponse" type="submit"
-            class="btn btn-primary">
-            Create <spinner :state="awaitingResponse"/>
+          <button type="submit" class="btn btn-primary"
+            :disabled="awaitingResponse">
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
-          <button :disabled="awaitingResponse" type="button"
-            class="btn btn-link" @click="$emit('hide')">
-            Cancel
+          <button type="button" class="btn btn-link"
+            :disabled="awaitingResponse" @click="$emit('hide')">
+            {{ $t('action.cancel') }}
           </button>
         </div>
       </form>
@@ -48,6 +42,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
@@ -55,7 +50,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectNew',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -75,9 +70,6 @@ export default {
     }
   },
   methods: {
-    focusInput() {
-      this.$refs.name.focus();
-    },
     submit() {
       this.post('/projects', { name: this.name })
         .then(({ data }) => {
@@ -88,3 +80,15 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Create Project",
+    "introduction": [
+      "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device."
+    ]
+  }
+}
+</i18n>
