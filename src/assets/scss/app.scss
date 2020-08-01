@@ -262,7 +262,7 @@ a {
   width: 50%;
 }
 
-.password-strength {
+.Password__strength-meter {
   position: relative;
   height: 2px;
   background: #DDD;
@@ -270,7 +270,7 @@ a {
   margin-top: 10px;
 
 }
-.password-strength:before, .password-strength:after {
+.Password__strength-meter:before, .Password__strength-meter:after {
   content: '';
   height: inherit;
   background: transparent;
@@ -282,10 +282,10 @@ a {
   width: 20%;
   z-index: 10;
 }
-.password-strength:before {
+.Password__strength-meter:before {
   left: 20%;
 }
-.password-strength:after {
+.Password__strength-meter:after {
   right: 20%;
 }
 

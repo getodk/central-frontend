@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       @change="$emit('change', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
     <password v-model="value" v-if="strengthmeter" :strength-meter-only="true"	
-      strength-meter-class="password-strength"/>
+      strength-meter-class="Password__strength-meter password-strength"/>
     <slot name="after"></slot>
   </label>
 </template>
