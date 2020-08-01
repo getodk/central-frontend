@@ -132,8 +132,6 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
-const Password = () => import('vue-password-strength-meter');
-
 export default {
   name: 'ProjectEnableEncryption',
   components: { DocLink, FormGroup, Modal, Spinner },
