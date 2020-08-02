@@ -14,14 +14,14 @@ describe('AccountClaim', () => {
     mockRoute(LOCATION)
       .complete()
       .request(app => submitForm(app, '#account-claim form', [
-        ['input[type="password"]', 'password']
+        ['input[type="password"]', 'testPassword'] // minimum 10 character is required
       ]))
       .standardButton());
 
   it('shows a custom alert for a 401.2 problem', () =>
     mockRoute(LOCATION)
       .request(app => submitForm(app, '#account-claim form', [
-        ['input[type="password"]', 'password']
+        ['input[type="password"]', 'testPassword']
       ]))
       .respondWithProblem({ code: 401.2, message: 'AccountClaim problem.' })
       .afterResponse(app => {
@@ -35,7 +35,7 @@ describe('AccountClaim', () => {
       .request(component => {
         app = component;
         return submitForm(app, '#account-claim form', [
-          ['input[type="password"]', 'password']
+          ['input[type="password"]', 'testPassword']
         ]);
       })
       .respondWithSuccess());

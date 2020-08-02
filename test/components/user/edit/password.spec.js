@@ -8,9 +8,9 @@ import { mountAndMark } from '../../../util/lifecycle';
 
 const submitPasswords = (wrapper, { match }) =>
   submitForm(wrapper, '#user-edit-password form', [
-    ['#user-edit-password-old-password', 'x'],
-    ['#user-edit-password-new-password', 'y'],
-    ['#user-edit-password-confirm', match ? 'y' : 'z']
+    ['#user-edit-password-old-password', 'testPasswordX'],
+    ['#user-edit-password-new-password', 'testPasswordY'],
+    ['#user-edit-password-confirm', match ? 'testPasswordY' : 'testPasswordZ']
   ]);
 
 describe('UserEditPassword', () => {
@@ -104,12 +104,12 @@ describe('UserEditPassword', () => {
         })
         .request(async (component) => {
           await trigger.submitForm(component, '#user-edit-password form', [
-            ['#user-edit-password-old-password', 'x'],
-            ['#user-edit-password-new-password', 'y'],
-            ['#user-edit-password-confirm', 'z']
+            ['#user-edit-password-old-password', 'testPasswordX'],
+            ['#user-edit-password-new-password', 'testPasswordY'],
+            ['#user-edit-password-confirm', 'testPasswordZ']
           ]);
           await trigger.submitForm(component, '#user-edit-password form', [
-            ['#user-edit-password-confirm', 'y']
+            ['#user-edit-password-confirm', 'testPasswordY']
           ]);
         })
         .beforeAnyResponse(component => {
