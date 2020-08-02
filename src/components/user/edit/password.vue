@@ -73,8 +73,8 @@ export default {
   },
   methods: {
     submit() {
-      if (this.newPassword.length < 10) {
-        this.invalidPassword = true;
+      this.invalidPassword = this.newPassword.length < 10
+      if (this.invalidPassword) {
         this.$alert().danger('Please input a password at least 10 characters long.');
         return;
       }
