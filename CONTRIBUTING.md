@@ -89,7 +89,7 @@ Most components are named according to the combination of a resource and an acti
 
 ### Vue Mixins
 
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin.)
+Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
 
 ### Router
 
