@@ -15,19 +15,20 @@ describe('FormVersionRow', () => {
     it('shows the version string', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/versions').then(app => {
-        const span = app.first('.form-version-row-version span');
+        const span = app.first('.form-version-row .version span');
         span.text().trim().should.equal('v1');
         span.getAttribute('title').should.equal('v1');
       });
     });
 
-    it('shows (blank) if the version string is empty', () => {
+    it('renders correctly if the version string is empty', async () => {
       testData.extendedForms.createPast(1, { version: '' });
-      return load('/projects/1/forms/f/versions').then(app => {
-        const span = app.first('.form-version-row-version span');
-        span.text().trim().should.equal('(blank)');
-        span.getAttribute('title').should.equal('(blank)');
-      });
+      const app = await load('/projects/1/forms/f/versions');
+      const td = app.first('.form-version-row .version');
+      td.hasClass('blank-version').should.be.true();
+      const span = td.first('span');
+      span.text().trim().should.equal('(blank)');
+      span.getAttribute('title').should.equal('(blank)');
     });
   });
 

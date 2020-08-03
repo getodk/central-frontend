@@ -10,17 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table class="table">
+  <table v-if="project != null" class="table">
     <thead>
       <tr>
         <th>{{ $t('header.name') }}</th>
-        <th>{{ $t('header.createdBy') }}</th>
-        <th>{{ $t('header.publishedAt') }}</th>
-        <th>{{ $t('header.lastSubmission') }}</th>
+        <th v-if="columns.has('idAndVersion')">
+          {{ $t('header.idAndVersion') }}
+        </th>
+        <th v-if="columns.has('submissions')">
+          {{ $t('common.submissions') }}
+        </th>
+        <th v-if="columns.has('actions')">{{ $t('header.actions') }}</th>
       </tr>
     </thead>
     <tbody v-if="forms != null">
-      <form-row v-for="form of forms" :key="form.xmlFormId" :form="form"/>
+      <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
+        :columns="columns"/>
     </tbody>
   </table>
 </template>
@@ -32,9 +37,27 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormTable',
   components: { FormRow },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['forms'])
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['project', 'forms']),
+    columns() {
+      const columns = new Set(['name']);
+      // Hide columns from a project viewer.
+      if (this.project.permits('project.update') ||
+        this.project.permits('submission.create'))
+        columns.add('idAndVersion').add('actions');
+      // Hide the Submissions column from a Data Collector.
+      if (this.project.permits('submission.list')) columns.add('submissions');
+      return columns;
+    },
+    formsToShow() {
+      // Hide any form without a published version from a Data Collector.
+      return this.project.permits('submission.list')
+        ? this.forms
+        : this.forms.filter(form => form.publishedAt != null);
+    }
+  }
 };
 </script>
 
@@ -42,7 +65,9 @@ export default {
 {
   "en": {
     "header": {
-      "publishedAt": "Last Published"
+      // This is the text of a column header in a table of Forms. The column
+      // shows the ID of each Form, as well as the name of its primary version.
+      "idAndVersion": "ID and Version"
     }
   }
 }

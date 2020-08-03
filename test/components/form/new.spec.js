@@ -24,14 +24,6 @@ const upload = (app) => selectFileByInput(app.first(FormNew), xlsForm())
 
 describe('FormNew', () => {
   describe('new form modal', () => {
-    it('does not show the new form button to a project viewer', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer' });
-      return load('/projects/1').then(app => {
-        app.find('#form-list-create-button').length.should.equal(0);
-      });
-    });
-
     it('toggles the modal', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);

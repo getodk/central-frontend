@@ -14,7 +14,7 @@ import router from '../src/router';
 import store from '../src/store';
 import testData from './data';
 import { clearNavGuards, initNavGuards } from './util/router';
-import { destroyMarkedComponent } from './util/lifecycle';
+import { destroyMarkedComponents } from './util/lifecycle';
 import { noop } from '../src/util/util';
 import { setHttp } from './util/http';
 import './assertions';
@@ -45,10 +45,10 @@ Vue.prototype.$logger = { log: noop, error: noop };
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DESTROY COMPONENT
+// DESTROY COMPONENTS
 
 afterEach(() => {
-  destroyMarkedComponent();
+  destroyMarkedComponents();
 
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {

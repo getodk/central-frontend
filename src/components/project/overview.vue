@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <project-overview-right-now @scroll-to-forms="scrollToForms"/>
       </div>
     </div>
-    <form-list/>
+    <form-list :condensed="!rendersTopRow"/>
   </div>
 </template>
 
@@ -73,5 +73,7 @@ export default {
 <style lang="scss">
 #project-overview > .row {
   margin-top: 10px;
+
+  + #form-list { margin-top: 10px; }
 }
 </style>

@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="{ archived: project.archived }">
+  <tr class="project-row" :class="{ archived: project.archived }">
     <td>
-      <div class="project-row-name">
+      <div class="name">
         <router-link :to="projectPath(project.id)">
-          {{ project.nameWithArchived() }}
+          <span>{{ project.nameWithArchived() }}</span>
           <span class="icon-angle-right"></span>
         </router-link>
       </div>
@@ -59,28 +59,25 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+.project-row {
+  .table tbody & td { vertical-align: middle; }
 
-#project-list-table {
-  td {
-    vertical-align: middle;
+  &.archived { color: #999; }
 
-    .project-row-name a {
-      color: inherit;
+  .name {
+    a {
       font-size: 24px;
-      text-decoration: none;
 
-      .icon-angle-right {
-        color: $color-accent-primary;
-        font-size: 20px;
-        margin-left: 2px;
-        margin-right: 0;
+      &, &:hover, &:focus {
+        color: inherit;
+        text-decoration: none;
       }
     }
-  }
 
-  .archived {
-    color: #999;
+    .icon-angle-right {
+      font-size: 20px;
+      margin-left: 9px;
+    }
   }
 }
 </style>
