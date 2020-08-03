@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <navbar-links v-if="loggedIn"/>
         <ul class="nav navbar-nav navbar-right">
-          <navbar-locale-dropdown v-show="false"/>
+          <navbar-locale-dropdown/>
           <navbar-actions :logged-in="loggedIn"/>
         </ul>
       </div>
