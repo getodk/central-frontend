@@ -2409,7 +2409,7 @@
         }
       },
       "multipleHelp": {
-        "string": "Allow this Form to be submitted more than once from the same device."
+        "string": "Allow a user with this Link to submit more than once from the same device."
       }
     },
     "PublicLinkList": {
@@ -2427,7 +2427,7 @@
           "string": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
         "revoke": {
-          "string": "The Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
+          "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
         }
       }
     },
@@ -2459,7 +2459,7 @@
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": "Public Link is not available yet. It has not finished being processed. Please refresh later and try again."
+          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again."
         }
       }
     },

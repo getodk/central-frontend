@@ -119,7 +119,7 @@ export default {
     "emptyTable": "There are no Public Access Links for this Form.",
     "alert": {
       "create": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it.",
-      "revoke": "The Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
+      "revoke": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
     }
   }
 }

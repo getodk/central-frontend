@@ -25,7 +25,7 @@ const props = [
   // Form and form draft, not form version
   'enketoId',
   // Form only, not form draft or form version
-  'enketoSingleId',
+  'enketoOnceId',
   'state',
   'publishedAt',
   'createdAt',

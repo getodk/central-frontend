@@ -97,7 +97,7 @@ describe('FormShow', () => {
           should.not.exist(headers['X-Extended-Metadata']);
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -117,7 +117,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -158,7 +158,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -175,7 +175,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'abc');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'abc' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -260,7 +260,7 @@ describe('FormShow', () => {
           should.not.exist(headers['X-Extended-Metadata']);
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .afterResponse(app => {
@@ -270,7 +270,7 @@ describe('FormShow', () => {
         .testNoRequest(runAll);
     });
 
-    it('continues to fetch the enketoId if the form does not have one', () => {
+    it('continues to fetch enketoId if form still does not have one', () => {
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
@@ -283,7 +283,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .afterResponse(app => {
@@ -333,11 +333,11 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(0, 'xyz');
+          testData.extendedForms.update(0, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(1, 'abc');
+          testData.extendedFormDrafts.update(1, { enketoId: 'abc' });
           return testData.standardFormDrafts.last();
         })
         .afterResponses(app => {
@@ -346,6 +346,52 @@ describe('FormShow', () => {
           formDraft.get().enketoId.should.equal('abc');
         })
         .testNoRequest(runAll);
+    });
+
+    describe('enketoOnceId', () => {
+      it('fetches the enketoOnceId', () => {
+        testData.extendedForms.createPast(1, {
+          enketoId: 'xyz',
+          enketoOnceId: null,
+          publishedAt: new Date().toISOString()
+        });
+        const { runAll } = fakeSetTimeout();
+        return load('/projects/1/forms/f')
+          .complete()
+          .request(runAll)
+          .respondWithData(() => {
+            testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
+            return testData.standardForms.last();
+          })
+          .afterResponse(app => {
+            const { form } = app.vm.$store.state.request.data;
+            form.enketoOnceId.should.equal('zyx');
+          })
+          .testNoRequest(runAll);
+      });
+    });
+
+    it('continues to fetch the enketoOnceId', () => {
+      testData.extendedForms.createPast(1, {
+        enketoId: 'xyz',
+        enketoOnceId: null,
+        publishedAt: new Date().toISOString()
+      });
+      const { runAll } = fakeSetTimeout();
+      return load('/projects/1/forms/f')
+        .complete()
+        .request(runAll)
+        .respondWithData(() => testData.standardForms.last())
+        .complete()
+        .request(runAll)
+        .respondWithData(() => {
+          testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
+          return testData.standardForms.last();
+        })
+        .afterResponse(app => {
+          const { form } = app.vm.$store.state.request.data;
+          form.enketoOnceId.should.equal('zyx');
+        });
     });
   });
 });

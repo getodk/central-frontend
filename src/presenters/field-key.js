@@ -20,11 +20,9 @@ const props = [
   'token',
   'createdAt',
   'updatedAt',
-  // createdBy is a Number unless the data includes extended metadata, in which
-  // case createdBy is an Object.
-  'createdBy',
   // Extended metadata
-  'lastUsed'
+  'lastUsed',
+  'createdBy'
 ];
 
 const collectQrOptions = { errorCorrectionLevel: 'L', cellSize: 3 };

@@ -112,7 +112,6 @@ export default {
       if (tries < 70) return 15000;
       return null;
     },
-    // TODO. Add tests for enketoSingleId.
     fetchForm() {
       this.cancelCall('fetchEnketoIdsForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
@@ -121,14 +120,14 @@ export default {
         url,
         extended: true,
         success: () => {
-          if (this.form.enketoId != null && this.form.enketoSingleId != null)
+          if (this.form.enketoId != null && this.form.enketoOnceId != null)
             return;
           const { publishedAt } = this.form;
           // The enketoId of a form without a published version is the same as
           // the enketoId of the form draft. If a form without a published
           // version does not have an enketoId, we do not fetch its enketoId,
           // because we will already fetch the enketoId of the draft. A form
-          // without a published version does not have an enketoSingleId.
+          // without a published version does not have an enketoOnceId.
           if (publishedAt == null) return;
           // If Enketo hasn't finished processing the form in 15 minutes,
           // something else has probably gone wrong.
@@ -140,11 +139,11 @@ export default {
               await this.$store.dispatch('get', [{
                 key: 'form',
                 url,
-                update: ['enketoId', 'enketoSingleId'],
+                update: ['enketoId', 'enketoOnceId'],
                 alert: false
               }]);
               return this.form.enketoId != null &&
-                this.form.enketoSingleId != null;
+                this.form.enketoOnceId != null;
             },
             this.waitToRequestEnketoId
           );

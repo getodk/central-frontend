@@ -43,8 +43,7 @@ export const extendedFieldKeys = dataStore({
     isBefore(fieldKey2.createdAt, fieldKey1.createdAt))
 });
 
-export const standardFieldKeys = view(extendedFieldKeys, (extendedFieldKey) => {
-  const fieldKey = omit(['lastUsed'], extendedFieldKey);
-  fieldKey.createdBy = fieldKey.createdBy.id;
-  return fieldKey;
-});
+export const standardFieldKeys = view(
+  extendedFieldKeys,
+  omit(['lastUsed', 'createdBy'])
+);

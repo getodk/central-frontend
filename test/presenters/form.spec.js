@@ -35,7 +35,7 @@ describe('Form', () => {
     it('returns updatedAt if the form has been updated', () => {
       const form = testData.extendedForms
         .createPast(1, { state: 'open' })
-        .updateState(-1, 'closed');
+        .update(-1, { state: 'closed' });
       new Form(form).updatedOrCreatedAt().should.equal(form.updatedAt);
     });
 

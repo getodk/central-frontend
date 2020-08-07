@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="audit-row">
     <td><date-time :iso="audit.loggedAt"/></td>
-    <td>
+    <td class="type">
       {{ type[0] }}
       <template v-if="type.length > 1">
         <span class="icon-angle-right"></span> {{ type[1] }}

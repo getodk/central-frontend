@@ -188,11 +188,11 @@ const routes = [
             props: true,
             meta: {
               validateData: {
-                // We do not check whether the user can revoke the app user's
-                // access, since the actee of that assignment is the app user,
-                // not the project.
-                project: (project) =>
-                  project.permits(['field_key.list', 'field_key.create'])
+                project: (project) => project.permits([
+                  'field_key.list',
+                  'field_key.create',
+                  'session.end'
+                ])
               }
             }
           },
@@ -280,13 +280,11 @@ const routes = [
             props: true,
             meta: {
               validateData: {
-                // We do not check whether the user can revoke the public link,
-                // since the actee of that assignment is the public link, not
-                // the project.
                 project: (project) => project.permits([
                   'form.read',
                   'public_link.list',
-                  'public_link.create'
+                  'public_link.create',
+                  'session.end'
                 ]),
                 form: (form) => form.publishedAt != null
               }

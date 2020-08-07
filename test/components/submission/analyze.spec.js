@@ -92,18 +92,6 @@ describe('SubmissionAnalyze', () => {
       );
   });
 
-  it('selects the OData URL after it is clicked', async () => {
-    const modal = mount(SubmissionAnalyze, {
-      propsData: { state: true, baseUrl: '/v1/projects/1/forms/f' },
-      attachToDocument: true
-    });
-    const selectable = modal.first('.selectable');
-    await trigger.click(selectable);
-    const selection = window.getSelection();
-    selection.anchorNode.should.equal(selectable.element);
-    selection.focusNode.should.equal(selectable.element);
-  });
-
   describe('tool info', () => {
     let modal;
     beforeEach(() => {
@@ -117,7 +105,7 @@ describe('SubmissionAnalyze', () => {
       const activeTab = modal.first('.nav-tabs li.active');
       activeTab.first('a').text().trim().should.equal(tabText);
       // Test the OData URL.
-      const actualURL = modal.first('#submission-analyze-odata-url').text();
+      const actualURL = modal.first('#submission-analyze-odata-url .selectable').text();
       const baseURL = `${window.location.origin}/v1/projects/1/forms/f.svc`;
       actualURL.should.equal(`${baseURL}${urlSuffix}`);
       // Test the help text.

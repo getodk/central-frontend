@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
       <template v-else-if="form != null">
         <selectable v-if="enketoId != null">{{ url }}</selectable>
-        <span class="unavailable" :title="$t('unavailable.title')">
+        <span v-else class="unavailable" :title="$t('unavailable.title')">
           <span>{{ $t('unavailable.text') }}</span>
           <span class="icon-question-circle"></span>
         </span>
@@ -61,9 +61,7 @@ export default {
       };
     },
     enketoId() {
-      return this.publicLink.once
-        ? this.form.enketoSingleId
-        : this.form.enketoId;
+      return this.publicLink.once ? this.form.enketoOnceId : this.form.enketoId;
     },
     url() {
       return `${window.location.origin}/_/single/${this.enketoId}?st=${this.publicLink.token}`;
@@ -99,7 +97,7 @@ export default {
     "unavailable": {
       // This text is shown for a Public Access Link that is not available yet.
       "text": "Not available yet",
-      "title": "Public Link is not available yet. It has not finished being processed. Please refresh later and try again."
+      "title": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again."
     }
   }
 }

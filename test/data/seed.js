@@ -27,6 +27,7 @@ export default () => {
         'project.update',
         'public_link.create',
         'public_link.list',
+        'session.end',
         'submission.create',
         'submission.list',
         'submission.read',
@@ -63,6 +64,7 @@ export default () => {
         'project.update',
         'public_link.create',
         'public_link.list',
+        'session.end',
         'submission.create',
         'submission.list',
         'submission.read'
