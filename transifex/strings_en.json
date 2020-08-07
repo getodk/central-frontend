@@ -1276,12 +1276,12 @@
           "body": {
             "0": {
               "full": {
-                "string": "It’s a good idea to test the Form to be sure it (still) works the way you expect. Using the {testQrCode}, you can make a test Submission that won’t affect your real data.",
-                "developer_comment": "{testQrCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest QR code"
+                "string": "You can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data.",
+                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
               },
-              "testQrCode": {
-                "string": "test QR code",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {testQrCode} is in the following text:\n\nIt’s a good idea to test the Form to be sure it (still) works the way you expect. Using the {testQrCode}, you can make a test Submission that won’t affect your real data."
+              "test": {
+                "string": "test",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
               }
             }
           }
@@ -1424,10 +1424,10 @@
       },
       "body": {
         "0": {
-          "string": "You can use the configuration code to the right to set up a mobile device to download this Draft. If you fill a blank of the Draft Form and upload it, the Submission will go only into this test table below. You can preview and download the test Submissions below."
+          "string": "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser."
         },
         "1": {
-          "string": "When you publish this Draft Form, these test Submissions will be permanently removed."
+          "string": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
         }
       }
     },
@@ -1943,7 +1943,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "Here you can set Form States, which control whether Forms are available for download and open for submission. You can also separately control which App Users may see each Form at all."
+          "string": "App Users can only see and fill the Forms that they are explicity given access to in the table below. Project Managers and Data Collectors can use a web browser to fill out any Form in the Project that is in the Open state."
         }
       },
       "emptyTable": {
@@ -2041,33 +2041,12 @@
     },
     "ProjectIntroduction": {
       "title": {
-        "string": "Introducing Projects",
+        "string": "What are Projects?",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "full": {
-            "string": "ODK Central Beta v0.4 introduced {projects}.",
-            "developer_comment": "{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProjects"
-          },
-          "projects": {
-            "string": "Projects",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text:\n\nODK Central Beta v0.4 introduced {projects}."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "Projects group {forms} and {appUsers} together to make them easier to organize and manage, both on this website and on your data collection device.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {forms} has the text: Forms\n- {appUsers} has the text: App Users"
-          },
-          "forms": {
-            "string": "Forms",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text:\n\nProjects group {forms} and {appUsers} together to make them easier to organize and manage, both on this website and on your data collection device."
-          },
-          "appUsers": {
-            "string": "App Users",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nProjects group {forms} and {appUsers} together to make them easier to organize and manage, both on this website and on your data collection device."
-          }
+          "string": "Projects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within the Project, including using a web browser to fill out Forms. App Users for the Project can only see Forms in the Project which they have access to."
         }
       }
     },
@@ -2177,12 +2156,16 @@
       },
       "body": {
         "0": {
-          "string": "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project."
+          "full": {
+            "string": "Projects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}.",
+            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
+          },
+          "accessTo": {
+            "string": "access to",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
+          }
         },
         "1": {
-          "string": "Future releases of ODK Central will add more Project-centric features, including improvements to Form states and workflow, device state updates, Collect settings management, and more granular permissioning."
-        },
-        "2": {
           "full": {
             "string": "If you have any feedback, please visit {forumThread}.",
             "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
@@ -2355,13 +2338,37 @@
     "ProjectUserList": {
       "heading": {
         "0": {
+          "string": "Sitewide Administrators are automatically considered Managers of every Project. Other Users can have Roles specific to this Project:",
+          "developer_comment": "This text is shown above a list of Roles."
+        },
+        "1": {
           "full": {
-            "string": "The assigned Project Managers for this Project will be able to perform any administrative or auditing task related to this Project. Sitewide Administrators are automatically considered Managers of every Project. Project Viewers can access and download all Form data in this Project, but cannot make any changes to settings or data. To learn more about Projects, Managers and Viewers, please see {article}.",
-            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+            "string": "{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
           },
-          "article": {
-            "string": "this article",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nThe assigned Project Managers for this Project will be able to perform any administrative or auditing task related to this Project. Sitewide Administrators are automatically considered Managers of every Project. Project Viewers can access and download all Form data in this Project, but cannot make any changes to settings or data. To learn more about Projects, Managers and Viewers, please see {article}."
+          "projectManagers": {
+            "string": "Project Managers",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectManagers} is in the following text:\n\n{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
+          },
+          "projectViewers": {
+            "string": "Project Viewers",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
+          },
+          "dataCollectors": {
+            "string": "Data Collectors",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
           }
         }
       },
@@ -2423,6 +2430,11 @@
       "title": {
         "string": "Create Public Access Link",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Anyone with this Link will be able to fill out this Form in a web browser. Use the display name to remind yourself of where you posted it, who you shared it with, when it is intended to be active, and so on."
+        }
       },
       "field": {
         "multiple": {
@@ -2792,7 +2804,8 @@
       },
       "heading": {
         "0": {
-          "string": "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no role can still be made Project Managers on any Project, from that Project’s settings."
+          "string": "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no Sitewide Role can be given a Role on any Project, from that Project’s settings. Sitewide Administrators and some Project Roles can use a web browser to fill out Forms. To submit data through an application such as {collect}, create App Users for each Project.",
+          "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
         }
       },
       "header": {

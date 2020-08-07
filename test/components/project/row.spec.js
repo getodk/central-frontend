@@ -10,9 +10,25 @@ describe('ProjectRow', () => {
   it('renders the project name correctly', () => {
     testData.extendedProjects.createPast(1, { name: 'My Project' });
     return load('/').then(app => {
-      const a = app.first(ProjectRow).first('td a');
+      const a = app.first(ProjectRow).first('.name a');
       a.text().trim().should.equal('My Project');
       a.getAttribute('href').should.equal('#/projects/1');
+    });
+  });
+
+  describe('link to show projects introduction', () => {
+    it('shows the link in a fresh install', async () => {
+      testData.extendedProjects.createPast(1, { name: 'Default Project' });
+      const app = await load('/');
+      app.first('.project-row td').first('a[href="#"]').should.be.visible();
+    });
+
+    it('does not render the link if there are multiple projects', async () => {
+      testData.extendedProjects
+        .createPast(1, { name: 'Default Project' })
+        .createPast(1, { name: 'Second Project' });
+      const app = await load('/');
+      app.first('.project-row td').find('a[href="#"]').length.should.equal(0);
     });
   });
 

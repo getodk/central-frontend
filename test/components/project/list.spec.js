@@ -1,20 +1,9 @@
 import testData from '../../data';
+import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
 import { trigger } from '../../util/event';
 
 describe('ProjectList', () => {
-  describe('routing', () => {
-    it('does not redirect a user with no sitewide role', () => {
-      mockLogin({ role: 'none' });
-      return mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/');
-        });
-    });
-  });
-
   describe('Right Now', () => {
     it('shows users and projects', () => {
       mockLogin();
@@ -75,23 +64,13 @@ describe('ProjectList', () => {
     });
   });
 
-  describe('after login as an administrator', () => {
+  describe('Projects section', () => {
     beforeEach(mockLogin);
 
-    it('shows the table headers while the projects are loading', () =>
-      mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .beforeEachResponse(app => {
-          app.find('thead tr').length.should.equal(1);
-        }));
-
-    it('shows a message if there are no projects', () =>
-      mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(app => {
-          app.find('.empty-table-message').length.should.equal(1);
-        }));
+    it('shows a message if there are no projects', async () => {
+      const app = await load('/');
+      const message = app.first('#project-list-projects .empty-table-message');
+      message.should.be.visible();
+    });
   });
 });

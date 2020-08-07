@@ -31,10 +31,7 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
-p {
-  // 15-17 words per line
-  max-width: 600px;
-}
+p, p + ul { max-width: $max-width-p; }
 
 
 

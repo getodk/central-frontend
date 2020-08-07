@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     backdrop @hide="$emit('hide')" @shown="$refs.displayName.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">TODO</p>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
         <form-group ref="displayName" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
@@ -100,6 +100,9 @@ export default {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Create Public Access Link",
+    "introduction": [
+      "Anyone with this Link will be able to fill out this Form in a web browser. Use the display name to remind yourself of where you posted it, who you shared it with, when it is intended to be active, and so on."
+    ],
     "field": {
       "multiple": "Multiple responses"
     },

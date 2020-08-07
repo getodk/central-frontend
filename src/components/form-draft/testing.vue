@@ -16,9 +16,7 @@ except according to the terms contained in the LICENSE file.
         <page-section condensed>
           <template #heading>
             <span>{{ $t('title') }}</span>
-            <enketo-fill
-              v-if="dataExists && project.permits('submission.create')"
-              :form-version="formDraft">
+            <enketo-fill v-if="formDraft != null" :form-version="formDraft">
               <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
             </enketo-fill>
           </template>
@@ -76,10 +74,7 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', { key: 'formDraft', getOption: true }]),
-    dataExists() {
-      return this.$store.getters.dataExists(['project', 'formDraft']);
-    },
+    ...requestData([{ key: 'formDraft', getOption: true }]),
     qrCodeHtml() {
       const url = apiPaths.serverUrlForFormDraft(
         this.formDraft.draftToken,
@@ -126,8 +121,8 @@ export default {
     // This is a title shown above a section of the page.
     "title": "Draft Testing",
     "body": [
-      "You can use the configuration code to the right to set up a mobile device to download this Draft. If you fill a blank of the Draft Form and upload it, the Submission will go only into this test table below. You can preview and download the test Submissions below.",
-      "When you publish this Draft Form, these test Submissions will be permanently removed."
+      "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser.",
+      "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
     ]
   }
 }

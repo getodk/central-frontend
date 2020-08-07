@@ -223,6 +223,7 @@ export default {
 
   ul {
     margin-left: -5px;
+    max-width: $max-width-p;
   }
 
   :last-child {

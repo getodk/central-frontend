@@ -15,8 +15,11 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('title') }}</span>
     </template>
     <template #body>
-      <p>{{ $t('body[0]') }}</p>
-      <p>{{ $t('body[1]') }}</p>
+      <i18n tag="p" path="body[0].full">
+        <template #accessTo>
+          <router-link :to="projectPath('form-access')">{{ $t('body[0].accessTo') }}</router-link>
+        </template>
+      </i18n>
       <p>
         <i18n :tag="false" path="moreInfo.helpArticle.full">
           <template #helpArticle>
@@ -24,9 +27,9 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n>
         &nbsp;
-        <i18n :tag="false" path="body[2].full">
+        <i18n :tag="false" path="body[1].full">
           <template #forumThread>
-            <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[2].forumThread') }}</a>
+            <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[1].forumThread') }}</a>
           </template>
         </i18n>
       </p>
@@ -37,10 +40,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../../doc-link.vue';
 import PageSection from '../../page/section.vue';
+import routes from '../../../mixins/routes';
 
 export default {
   name: 'ProjectOverviewAbout',
-  components: { DocLink, PageSection }
+  components: { DocLink, PageSection },
+  mixins: [routes()]
 };
 </script>
 
@@ -50,8 +55,10 @@ export default {
     // This is a title shown above a section of the page.
     "title": "About Projects",
     "body": [
-      "Any Forms you create in this Project will only be visible on data collection devices to App Users who are a part of this Project.",
-      "Future releases of ODK Central will add more Project-centric features, including improvements to Form states and workflow, device state updates, Collect settings management, and more granular permissioning.",
+      {
+        "full": "Projects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}.",
+        "accessTo": "access to"
+      },
       {
         "full": "If you have any feedback, please visit {forumThread}.",
         "forumThread": "this forum thread"

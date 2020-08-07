@@ -300,6 +300,11 @@ describe('router', () => {
         mockLogin({ role: 'none' });
       });
 
+      it('does not redirect the user from /', async () => {
+        const app = await load('/', {}, { users: false });
+        app.vm.$route.path.should.equal('/');
+      });
+
       it('redirects the user from /system/backups', () =>
         mockRoute('/system/backups')
           .respondFor('/', { users: false })
