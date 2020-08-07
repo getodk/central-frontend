@@ -757,13 +757,25 @@
         }
       },
       "heading": {
-        "full": {
-          "string": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem.",
-          "developer_comment": "{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
+        "0": {
+          "full": {
+            "string": "App Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab.",
+            "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
+          },
+          "formAccess": {
+            "string": "Form Access",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
+          }
         },
-        "formAccess": {
-          "string": "Form Access",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem."
+        "1": {
+          "full": {
+            "string": "App Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "click here",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
+          }
         }
       },
       "header": {
@@ -1087,53 +1099,17 @@
                 "string": "Nobody has submitted any data to this Form yet."
               },
               "any": {
-                "string": "{count, plural, one {A total of {count} Submission has been sent to this server.} other {A total of {count} Submissions have been sent to this server.}}"
+                "string": "{count, plural, one {A total of {count} Submission has been made.} other {A total of {count} Submissions have been made.}}"
               }
             },
             "1": {
-              "string": "App Users will be able to see this Form on their mobile device to download and fill out."
-            },
-            "2": {
-              "none": {
-                "0": {
-                  "string": "You have not created any App Users for this Project yet, so nobody will be able to use this Form."
-                },
-                "1": {
-                  "full": {
-                    "string": "You can create them on the {appUsersTab}.",
-                    "developer_comment": "{appUsersTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users tab of the Project page"
-                  },
-                  "appUsersTab": {
-                    "string": "App Users tab of the Project page",
-                    "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsersTab} is in the following text:\n\nYou can create them on the {appUsersTab}."
-                  }
-                }
-              },
-              "any": {
-                "0": {
-                  "full": {
-                    "string": "{count, plural, one {Right now, {countOfAppUsers} in this Project has access to this Form, but you can always {addMore}.} other {Right now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}.}}",
-                    "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {countOfAppUsers} has the plural form: {count} App Users\n- {addMore} has the text: add more"
-                  },
-                  "countOfAppUsers": {
-                    "string": "{count, plural, one {{count} App User} other {{count} App Users}}",
-                    "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfAppUsers} is in the following text. (The plural form of the text is shown.)\n\nRight now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}."
-                  },
-                  "addMore": {
-                    "string": "add more",
-                    "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {addMore} is in the following text. (The plural form of the text is shown.)\n\nRight now, {countOfAppUsers} in this Project have access to this Form, but you can always {addMore}."
-                  }
-                }
-              }
-            },
-            "3": {
               "full": {
-                "string": "For more information about this, {clickHere}.",
-                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+                "string": "{clickHere} to learn about the different ways to submit data.",
+                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
               },
               "clickHere": {
-                "string": "click here",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information about this, {clickHere}."
+                "string": "Click here",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
               }
             }
           }
@@ -2330,6 +2306,52 @@
         }
       }
     },
+    "ProjectSubmissionOptions": {
+      "title": {
+        "string": "Submission Options",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "There are several options for submitting data to ODK Central:",
+          "developer_comment": "This text is shown above a list of options for submitting data."
+        },
+        "1": {
+          "full": {
+            "string": "Create {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form.",
+            "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+          },
+          "appUsers": {
+            "string": "App Users",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Create one or more {publicLinks} to share with respondents who will self-report.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
+          },
+          "publicLinks": {
+            "string": "Public Access Links",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publicLinks} is in the following text:\n\nCreate one or more {publicLinks} to share with respondents who will self-report."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "Create a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
+          },
+          "webUser": {
+            "string": "Web User",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          },
+          "dataCollector": {
+            "string": "Data Collector",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          }
+        }
+      }
+    },
     "ProjectUserList": {
       "heading": {
         "0": {
@@ -2417,6 +2439,28 @@
         "create": {
           "string": "Create Public Access Link",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Anyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}.",
+            "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
+          },
+          "state": {
+            "string": "state",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {state} is in the following text:\n\nAnyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Public Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "click here",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
+          }
         }
       },
       "emptyTable": {

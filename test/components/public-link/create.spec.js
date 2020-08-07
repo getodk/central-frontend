@@ -24,12 +24,11 @@ describe('PublicLinkCreate', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/forms/f/public-links', { component: true }, {})
-      .testModalToggles(
-        PublicLinkCreate,
-        '.heading-with-button .btn-primary',
-        '.btn-link'
-      ));
+    load('/projects/1/forms/f/public-links').testModalToggles(
+      PublicLinkCreate,
+      '.heading-with-button .btn-primary',
+      '.btn-link'
+    ));
 
   it('focuses the display name input', () => {
     const modal = mountComponent({ attachToDocument: true });
@@ -37,7 +36,7 @@ describe('PublicLinkCreate', () => {
   });
 
   it('resets the form after the modal is hidden', async () => {
-    const app = await load('/projects/1/forms/f/public-links', { component: true }, {});
+    const app = await load('/projects/1/forms/f/public-links');
     await trigger.click(app, '.heading-with-button .btn-primary');
     const modal = app.first(PublicLinkCreate);
     await trigger.fillForm(modal, [
@@ -85,7 +84,7 @@ describe('PublicLinkCreate', () => {
   describe('after a successful response', () => {
     const submit = () => {
       testData.standardPublicLinks.createPast(1);
-      return load('/projects/1/forms/f/public-links', { component: true }, {})
+      return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
           await trigger.click(app, '.heading-with-button .btn-primary');

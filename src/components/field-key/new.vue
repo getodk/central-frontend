@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
           <i18n tag="p" path="success[2].full">
             <template #formAccessSettings>
-              <a href="#" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
+              <a :href="projectPath('form-access')" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
             </template>
           </i18n>
         </div>

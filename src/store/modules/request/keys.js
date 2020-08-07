@@ -38,7 +38,6 @@ export const keys = [
   'form',
   // Fields for a single form version (the primary version or otherwise)
   'fields',
-  'formActors',
   'formVersions',
   'formDraft',
   // Form draft attachments

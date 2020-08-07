@@ -10,13 +10,31 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="public-link-list">
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('create')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <p>TODO</p>
+      <p>
+        <i18n :tag="false" path="heading[0].full">
+          <template #state>
+            <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
+          </template>
+        </i18n>
+        &nbsp;
+        <i18n :tag="false" path="moreInfo.clickHere.full">
+          <template #clickHere>
+            <!-- TODO -->
+            <doc-link>{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n>
+      </p>
+      <i18n tag="p" path="heading[1].full">
+        <template #clickHere>
+          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+        </template>
+      </i18n>
     </div>
 
     <public-link-table :highlighted="highlighted" @revoke="showRevoke"/>
@@ -28,26 +46,42 @@ except according to the terms contained in the LICENSE file.
 
     <public-link-create v-bind="create" @hide="hideModal('create')"
       @success="afterCreate"/>
+    <project-submission-options v-bind="submissionOptions"
+      @hide="hideModal('submissionOptions')"/>
     <public-link-revoke v-bind="revoke" @hide="hideRevoke"
       @success="afterRevoke"/>
   </div>
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PublicLinkCreate from './create.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import modal from '../../mixins/modal';
+import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
+import { loadAsyncComponent } from '../../util/async-components';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'PublicLinkList',
-  components: { Loading, PublicLinkCreate, PublicLinkRevoke, PublicLinkTable },
-  mixins: [modal(), validateData()],
+  components: {
+    DocLink,
+    Loading,
+    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions'),
+    PublicLinkCreate,
+    PublicLinkRevoke,
+    PublicLinkTable
+  },
+  mixins: [
+    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
+    routes(),
+    validateData()
+  ],
   props: {
     projectId: {
       type: String,
@@ -64,6 +98,9 @@ export default {
       highlighted: null,
       // Modals
       create: {
+        state: false
+      },
+      submissionOptions: {
         state: false
       },
       revoke: {
@@ -116,6 +153,16 @@ export default {
     "action": {
       "create": "Create Public Access Link",
     },
+    "heading": [
+      {
+        "full": "Anyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}.",
+        "state": "state"
+      },
+      {
+        "full": "Public Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options.",
+        "clickHere": "click here"
+      }
+    ],
     "emptyTable": "There are no Public Access Links for this Form.",
     "alert": {
       "create": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it.",

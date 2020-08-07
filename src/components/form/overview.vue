@@ -11,8 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-overview">
-    <loading :state="initiallyLoading"/>
-    <div v-show="dataExists" class="row">
+    <div class="row">
       <div class="col-xs-6">
         <form-overview-right-now v-if="form != null"/>
         <page-section condensed>
@@ -20,7 +19,8 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('checklist') }}</span>
           </template>
           <template #body>
-            <form-checklist/>
+            <form-checklist
+              @show-submission-options="showModal('submissionOptions')"/>
           </template>
         </page-section>
       </div>
@@ -52,6 +52,8 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
+    <project-submission-options v-bind="submissionOptions"
+      @hide="hideModal('submissionOptions')"/>
   </div>
 </template>
 
@@ -60,16 +62,11 @@ import FormChecklist from './checklist.vue';
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
-import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
-import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import { loadAsyncComponent } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
-
-// The component does not assume that this data will exist when the component is
-// created.
-const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments', 'formActors'];
 
 export default {
   name: 'FormOverview',
@@ -78,10 +75,13 @@ export default {
     FormDraftChecklist,
     FormOverviewRightNow,
     FormVersionSummaryItem,
-    Loading,
-    PageSection
+    PageSection,
+    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
   },
-  mixins: [validateData()],
+  mixins: [
+    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
+    validateData()
+  ],
   props: {
     projectId: {
       type: String,
@@ -92,27 +92,16 @@ export default {
       required: true
     }
   },
-  computed: {
-    ...requestData(['form', 'formDraft']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    }
+  data() {
+    return {
+      submissionOptions: {
+        state: false
+      }
+    };
   },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'formActors',
-        url: apiPaths.formActors(this.projectId, this.xmlFormId, 'app-user'),
-        resend: false
-      }]).catch(noop);
-    }
-  }
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['form', 'formDraft'])
 };
 </script>
 

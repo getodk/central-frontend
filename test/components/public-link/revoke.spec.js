@@ -19,12 +19,11 @@ describe('PublicLinkRevoke', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/forms/f/public-links', { component: true }, {})
-      .testModalToggles(
-        PublicLinkRevoke,
-        '.public-link-row .btn-danger',
-        '.btn-link'
-      ));
+    load('/projects/1/forms/f/public-links').testModalToggles(
+      PublicLinkRevoke,
+      '.public-link-row .btn-danger',
+      '.btn-link'
+    ));
 
   it('sends the correct request', () =>
     mockHttpForComponent()
@@ -56,7 +55,7 @@ describe('PublicLinkRevoke', () => {
       .respondWithData(() => testData.standardPublicLinks.sorted());
 
     it('shows a success alert', () =>
-      load('/projects/1/forms/f/public-links', { component: true }, {})
+      load('/projects/1/forms/f/public-links')
         .complete()
         .modify(revoke)
         .afterResponses(app => {
@@ -66,7 +65,7 @@ describe('PublicLinkRevoke', () => {
         }));
 
     it('indicates that the public link has been revoked', () =>
-      load('/projects/1/forms/f/public-links', { component: true }, {})
+      load('/projects/1/forms/f/public-links')
         .complete()
         .modify(revoke)
         .afterResponses(app => {
@@ -75,7 +74,7 @@ describe('PublicLinkRevoke', () => {
         }));
 
     it('no longer highlights a new public link', () =>
-      load('/projects/1/forms/f/public-links', { component: true }, {})
+      load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
           await trigger.click('.heading-with-button .btn-primary');

@@ -120,8 +120,7 @@ describe('FormDraftAbandon', () => {
         .complete()
         .request(app => trigger.click(app, '#form-draft-status-abandon-button')
           .then(trigger.click('#form-draft-abandon .btn-danger')))
-        .respondWithSuccess()
-        .respondWithData(() => []); // formActors
+        .respondWithSuccess();
     };
 
     it('shows a success alert', () =>

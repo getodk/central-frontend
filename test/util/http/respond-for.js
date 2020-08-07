@@ -16,7 +16,6 @@ const defaults = {
     testData.standardFormSummaryAssignments.sorted(),
   form: () => testData.extendedForms.last(),
   fields: () => testData.extendedForms.last()._fields,
-  formActors: () => testData.extendedFieldKeys.sorted().map(testData.toActor),
   formVersions: () => testData.extendedFormVersions.published(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.extendedFormDrafts.last()
@@ -64,7 +63,7 @@ const mapsByComponent = {
   ]),
   ProjectSettings: new Map(),
   FormShow: mapKeys(['form', 'formDraft', 'attachments']),
-  FormOverview: mapKeys(['formActors']),
+  FormOverview: new Map(),
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
   PublicLinkList: mapKeys(['publicLinks']),

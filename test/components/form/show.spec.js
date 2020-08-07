@@ -18,21 +18,16 @@ describe('FormShow', () => {
           app.find(NotFound).length.should.equal(1);
         }));
 
-    it('handles an encoded xmlFormId correctly', () =>
-      mockRoute('/projects/1/forms/i%20%C4%B1')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 1) request.url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
+    it('handles an encoded xmlFormId correctly', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'i ı' });
+      return load('/projects/1/forms/i%20%C4%B1')
+        .beforeEachResponse((_, { url }, index) => {
+          if (index === 1) url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
         })
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { forms: 1 }).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'i ı' }).last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
-        }));
+        });
+    });
   });
 
   it('re-renders the router view after a route change', () => {

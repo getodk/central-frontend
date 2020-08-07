@@ -391,7 +391,7 @@ describe('router', () => {
 
       describe('form routes', () => {
         it('redirects the user from the form overview', () =>
-          load('/projects/1/forms/f', {}, { formActors: 403.1 })
+          load('/projects/1/forms/f')
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
