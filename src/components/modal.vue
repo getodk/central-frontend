@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
 .modal-dialog {
   margin-top: 20vh;
@@ -198,9 +198,6 @@ export default {
     .modal-body {
       padding: $padding-modal-body;
 
-      .modal-introduction, .help-block { line-height: 1.2; }
-      .modal-introduction { margin-bottom: 18px; }
-
       .form-group .form-control {
         background-color: $color-panel-input-background;
       }
@@ -216,18 +213,27 @@ export default {
   }
 }
 
+.modal-warnings, .modal-introduction, .modal-body .help-block {
+  line-height: 1.2;
+}
+
+.modal-warnings, .modal-introduction {
+  ul {
+    @include text-list;
+
+    margin-left: -5px;
+  }
+}
+
 .modal-warnings {
   background-color: $color-warning;
   margin-bottom: 15px;
   padding: 15px;
 
-  ul {
-    margin-left: -5px;
-    max-width: $max-width-p;
-  }
-
   :last-child {
     margin-bottom: 0;
   }
 }
+
+.modal-introduction { margin-bottom: 18px; }
 </style>

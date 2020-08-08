@@ -2443,7 +2443,7 @@
         }
       },
       "multipleHelp": {
-        "string": "Allow a user with this Link to submit more than once from the same device."
+        "string": "Allow someone with this Link to submit more than once from the same device."
       }
     },
     "PublicLinkList": {

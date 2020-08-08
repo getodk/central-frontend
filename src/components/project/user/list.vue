@@ -15,7 +15,7 @@ component that each user is assigned at most one role and that the only roles
 are Project Manager, Project Viewer, and Data Collector. -->
 <template>
   <div id="project-user-list">
-    <div id="project-user-list-heading">
+    <div class="page-body-heading">
       <p>{{ $t('heading[0]') }}</p>
       <ul>
         <i18n tag="li" path="heading[1].full">
@@ -252,8 +252,6 @@ export default {
 
 <style lang="scss">
 @import '../../../assets/scss/variables';
-
-#project-user-list-heading { margin-bottom: 20px; }
 
 #project-user-list-search-form {
   position: relative;

@@ -1,0 +1,8 @@
+@import './variables';
+
+// A list that shows descriptive text
+@mixin text-list {
+  max-width: $max-width-p;
+
+  li { margin-bottom: 5px; }
+}

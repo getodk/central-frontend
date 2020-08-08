@@ -106,7 +106,7 @@ export default {
     "field": {
       "multiple": "Multiple responses"
     },
-    "multipleHelp": "Allow a user with this Link to submit more than once from the same device."
+    "multipleHelp": "Allow someone with this Link to submit more than once from the same device."
   }
 }
 </i18n>
