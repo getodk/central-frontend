@@ -46,11 +46,7 @@ export default {
     // component is created.
     ...requestData(['project']),
     rendersTopRow() {
-      if (this.project == null) return false;
-      // The text of ProjectOverviewAbout implies that the user can form.create.
-      if (!this.project.permits('form.create')) return false;
-      // ProjectOverviewRightNow links to .../app-users.
-      return this.canRoute(this.projectPath('app-users'));
+      return this.project != null && this.project.permits('project.update');
     }
   },
   watch: {

@@ -15,12 +15,32 @@ component that each user is assigned at most one role and that the only roles
 are Project Manager, Project Viewer, and Data Collector. -->
 <template>
   <div id="project-user-list">
-    <i18n id="project-user-list-heading" tag="p" path="heading[0].full">
-      <template #article>
-        <doc-link to="central-projects/#project-managers">{{ $t('heading[0].article') }}</doc-link>
-      </template>
-    </i18n>
-
+    <div class="page-body-heading">
+      <p>{{ $t('heading[0]') }}</p>
+      <ul>
+        <i18n tag="li" path="heading[1].full">
+          <template #projectManagers>
+            <strong>{{ $t('heading[1].projectManagers') }}</strong>
+          </template>
+        </i18n>
+        <i18n tag="li" path="heading[2].full">
+          <template #projectViewers>
+            <strong>{{ $t('heading[2].projectViewers') }}</strong>
+          </template>
+        </i18n>
+        <i18n tag="li" path="heading[3].full">
+          <template #dataCollectors>
+            <strong>{{ $t('heading[3].dataCollectors') }}</strong>
+          </template>
+        </i18n>
+      </ul>
+      <i18n tag="p" path="moreInfo.clickHere.full">
+        <template #clickHere>
+          <!-- TODO. Update the link? -->
+          <doc-link to="central-projects/#project-managers">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+        </template>
+      </i18n>
+    </div>
     <form id="project-user-list-search-form" @submit.prevent>
       <!-- When search is disabled, we hide rather than disable this button,
       because Bootstrap does not have CSS for .close[disabled]. -->
@@ -233,10 +253,6 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#project-user-list-heading {
-  margin-bottom: 20px;
-}
-
 #project-user-list-search-form {
   position: relative;
   width: 275px;
@@ -272,9 +288,22 @@ export default {
 {
   "en": {
     "heading": [
+      // This text is shown above a list of Roles.
+      "Sitewide Administrators are automatically considered Managers of every Project. Other Users can have Roles specific to this Project:",
       {
-        "full": "The assigned Project Managers for this Project will be able to perform any administrative or auditing task related to this Project. Sitewide Administrators are automatically considered Managers of every Project. Project Viewers can access and download all Form data in this Project, but cannot make any changes to settings or data. To learn more about Projects, Managers and Viewers, please see {article}.",
-        "article": "this article"
+        // This text is shown in a list of Roles.
+        "full": "{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser",
+        "projectManagers": "Project Managers"
+      },
+      {
+        // This text is shown in a list of Roles.
+        "full": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+        "projectViewers": "Project Viewers"
+      },
+      {
+        // This text is shown in a list of Roles.
+        "full": "{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings",
+        "dataCollectors": "Data Collectors"
       }
     ],
     "action": {

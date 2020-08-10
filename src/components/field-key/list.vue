@@ -16,19 +16,19 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <p>
-        <i18n :tag="false" path="heading.full">
-          <template #formAccess>
-            <router-link :to="projectPath('form-access')">{{ $t('heading.formAccess') }}</router-link>
-          </template>
-        </i18n>
-        &nbsp;
-        <i18n :tag="false" path="moreInfo.clickHere.full">
-          <template #clickHere>
-            <doc-link to="central-users/#managing-app-users">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-          </template>
-        </i18n>
-      </p>
+      <i18n tag="p" path="heading[0].full">
+        <template #collect>
+          <doc-link to="collect-intro/">ODK Collect</doc-link>
+        </template>
+        <template #formAccess>
+          <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
+        </template>
+      </i18n>
+      <i18n tag="p" path="heading[1].full">
+        <template #clickHere>
+          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+        </template>
+      </i18n>
     </div>
     <table id="field-key-list-table" class="table">
       <thead>
@@ -58,7 +58,9 @@ except according to the terms contained in the LICENSE file.
 
     <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
       @success="afterCreate"/>
-    <field-key-revoke v-bind="revoke" @hide="hideModal('revoke')"
+    <project-submission-options v-bind="submissionOptions"
+      @hide="hideModal('submissionOptions')"/>
+    <field-key-revoke v-bind="revoke" @hide="hideRevoke"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -72,6 +74,7 @@ import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
+import { loadAsyncComponent } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
 const popoverContentTemplate = `
@@ -85,8 +88,19 @@ const popoverContentTemplate = `
 
 export default {
   name: 'FieldKeyList',
-  components: { DocLink, FieldKeyRow, FieldKeyNew, FieldKeyRevoke, Loading },
-  mixins: [modal(), routes(), validateData()],
+  components: {
+    DocLink,
+    FieldKeyRow,
+    FieldKeyNew,
+    FieldKeyRevoke,
+    Loading,
+    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
+  },
+  mixins: [
+    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
+    routes(),
+    validateData()
+  ],
   props: {
     projectId: {
       type: String,
@@ -95,29 +109,27 @@ export default {
   },
   data() {
     return {
+      // The id of the highlighted app user
       highlighted: null,
       enabledPopoverLinks: new Set(),
       // The <a> element whose popover is currently shown.
       popoverLink: null,
+      // Modals
       newFieldKey: {
         state: false
       },
-      revoke: {
-        fieldKey: null,
+      submissionOptions: {
         state: false
+      },
+      revoke: {
+        state: false,
+        fieldKey: null
       }
     };
   },
   computed: requestData(['fieldKeys']),
-  watch: {
-    fieldKeys() {
-      this.enabledPopoverLinks = new Set();
-      this.revoke.fieldKey = null;
-      this.hidePopover();
-    }
-  },
   created() {
-    this.$emit('fetch-field-keys', false);
+    this.fetchData(false);
   },
   mounted() {
     $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
@@ -127,6 +139,11 @@ export default {
     $('body').off('.field-key-list');
   },
   methods: {
+    fetchData(resend) {
+      this.$emit('fetch-field-keys', resend);
+      this.highlighted = null;
+      this.enabledPopoverLinks = new Set();
+    },
     hidePopover() {
       if (this.popoverLink == null) return;
       $(this.popoverLink).popover('hide');
@@ -178,17 +195,20 @@ export default {
       this.revoke.fieldKey = fieldKey;
       this.showModal('revoke');
     },
+    hideRevoke() {
+      this.hideModal('revoke');
+      this.revoke.fieldKey = null;
+    },
     afterCreate(fieldKey) {
-      this.$emit('fetch-field-keys');
+      this.fetchData(true);
       this.hideModal('newFieldKey');
       this.$alert().success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
-      this.$emit('fetch-field-keys');
-      this.hideModal('revoke');
+      this.fetchData(true);
+      this.hideRevoke();
       this.$alert().success(this.$t('alert.revoke', fieldKey));
-      this.highlighted = null;
     }
   }
 };
@@ -203,10 +223,6 @@ export default {
   th:nth-child(5) {
     width: $padding-left-table-data + $padding-right-table-data +
       $min-width-dropdown-menu;
-  }
-
-  td {
-    vertical-align: middle;
   }
 }
 
@@ -230,10 +246,17 @@ export default {
     "action": {
       "create": "Create App User"
     },
-    "heading": {
-      "full": "App Users in this Project only will be able to download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab. Multiple devices can use the same App User profile without problem.",
-      "formAccess": "Form Access"
-    },
+    "heading": [
+      {
+        // {collect} is a link whose text is "ODK Collect".
+        "full": "App Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab.",
+        "formAccess": "Form Access"
+      },
+      {
+        "full": "App Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options.",
+        "clickHere": "click here"
+      }
+    ],
     "header": {
       "lastUsed": "Last Used",
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.

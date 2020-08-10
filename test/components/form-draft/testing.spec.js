@@ -8,23 +8,12 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('FormDraftTesting', () => {
-  describe('new submission button', () => {
-    it('shows the button to an administrator', async () => {
-      mockLogin({ role: 'admin' });
-      testData.extendedForms.createPast(1, { draft: true });
-      const path = '/projects/1/forms/f/draft/testing';
-      const component = await load(path, { component: true }, {});
-      component.first(EnketoFill).should.be.visible();
-    });
-
-    it('does not render the button for a project viewer', async () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      testData.extendedForms.createPast(1, { draft: true });
-      const path = '/projects/1/forms/f/draft/testing';
-      const component = await load(path, { component: true }, {});
-      component.find(EnketoFill).length.should.equal(0);
-    });
+  it('shows the New button', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { draft: true });
+    const path = '/projects/1/forms/f/draft/testing';
+    const component = await load(path, { component: true }, {});
+    component.first(EnketoFill).should.be.visible();
   });
 
   it('shows a QR code that encodes the correct settings', () => {

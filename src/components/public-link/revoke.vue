@@ -1,0 +1,83 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal id="public-link-revoke" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <div class="modal-introduction">
+        <p>{{ $t('introduction[0]') }}</p>
+        <p><strong>{{ $t('common.areYouSure') }}</strong></p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="revoke">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
+        </button>
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+          @click="$emit('hide')">
+          {{ $t('action.noCancel') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script>
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
+import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+
+export default {
+  name: 'PublicLinkRevoke',
+  components: { Modal, Spinner },
+  mixins: [request()],
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    },
+    publicLink: Object // eslint-disable-line vue/require-default-prop
+  },
+  data() {
+    return {
+      awaitingResponse: false
+    };
+  },
+  methods: {
+    revoke() {
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.session(this.publicLink.token)
+      })
+        .then(() => {
+          this.$emit('success', this.publicLink);
+        })
+        .catch(noop);
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Revoke Public Access Link",
+    "introduction": [
+      "You are about to revoke this Public Access Link. This means all attempts to submit data using the link will be denied, including records that have already been started."
+    ]
+  }
+}
+</i18n>

@@ -47,8 +47,8 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
         <i18n :tag="false" path="steps[3].body[0].full">
-          <template #testQrCode>
-            <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].testQrCode') }}</router-link>
+          <template #test>
+            <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].test') }}</router-link>
           </template>
         </i18n>
         &nbsp;
@@ -155,8 +155,8 @@ export default {
         "title": "Test the Form on your mobile device",
         "body": [
           {
-            "full": "It’s a good idea to test the Form to be sure it (still) works the way you expect. Using the {testQrCode}, you can make a test Submission that won’t affect your real data.",
-            "testQrCode": "test QR code"
+            "full": "You can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data.",
+            "test": "test"
           }
         ]
       },

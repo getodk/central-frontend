@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[2]') }}</p>
       </div>
       <div class="modal-actions">
-        <button :disabled="awaitingResponse" type="button"
-          class="btn btn-danger" @click="revoke">
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="revoke">
           {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
         </button>
@@ -49,11 +49,11 @@ export default {
   components: { Modal, Spinner },
   mixins: [request()],
   props: {
-    fieldKey: Object, // eslint-disable-line vue/require-default-prop
     state: {
       type: Boolean,
       default: false
-    }
+    },
+    fieldKey: Object // eslint-disable-line vue/require-default-prop
   },
   data() {
     return {
@@ -62,7 +62,10 @@ export default {
   },
   methods: {
     revoke() {
-      this.delete(apiPaths.session(this.fieldKey.token))
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.session(this.fieldKey.token)
+      })
         .then(() => {
           this.$emit('success', this.fieldKey);
         })

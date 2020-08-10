@@ -10,23 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" backdrop hideable @hide="$emit('hide')">
+  <modal :state="state" hideable backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" path="introduction[0].full">
-          <template #projects>
-            <strong>{{ $t('introduction[0].projects') }}</strong>
-          </template>
-        </i18n>
-        <i18n tag="p" path="introduction[1].full">
-          <template #forms>
-            <strong>{{ $t('introduction[1].forms') }}</strong>
-          </template>
-          <template #appUsers>
-            <strong>{{ $t('introduction[1].appUsers') }}</strong>
-          </template>
-        </i18n>
+        <p>{{ $t('introduction[0]') }}</p>
         <i18n tag="p" path="moreInfo.helpArticle.full">
           <template #helpArticle>
             <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
@@ -62,17 +50,9 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Introducing Projects",
+    "title": "What are Projects?",
     "introduction": [
-      {
-        "full": "ODK Central Beta v0.4 introduced {projects}.",
-        "projects": "Projects"
-      },
-      {
-        "full": "Projects group {forms} and {appUsers} together to make them easier to organize and manage, both on this website and on your data collection device.",
-        "forms": "Forms",
-        "appUsers": "App Users"
-      }
+      "Projects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within the Project, including using a web browser to fill out Forms. App Users for the Project can only see Forms in the Project which they have access to."
     ]
   }
 }

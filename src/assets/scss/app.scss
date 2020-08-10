@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-@import './variables';
+@import './mixins';
 
 html {
   background-color: $color-accent-secondary;
@@ -31,10 +31,7 @@ h1, .h1 {
   margin-bottom: 3px;
 }
 
-p {
-  // 15-17 words per line
-  max-width: 600px;
-}
+p { max-width: $max-width-p; }
 
 
 
@@ -49,7 +46,7 @@ p {
   vertical-align: -1px;
 
   .btn > &:first-child, a > &:first-child {
-    margin-right: 6px;
+    margin-right: $margin-right-icon;
     + .caret { margin-left: 0; }
   }
 
@@ -338,13 +335,26 @@ a {
 ////////////////////////////////////////////////////////////////////////////////
 // PAGE STRUCTURE
 
-.heading-with-button {
+/*
+Most pages render a PageHead and a PageBody. The PageBody will often contain one
+or more PageSection components. Some pages use .panel-simple, but this is an
+older pattern: try to use PageSection instead.
+
+The PageBody component may show a heading at the top. Right now we implement
+this using the page-body-heading class, but we may create a component if it
+becomes more complicated.
+*/
+
+// .heading-with-button is deprecated: use .page-body-heading instead.
+.page-body-heading, .heading-with-button {
   margin-bottom: 25px;
 
-  > button {
+  > .btn {
     float: right;
     margin-left: 20px;
   }
+
+  ul { @include text-list; }
 }
 
 

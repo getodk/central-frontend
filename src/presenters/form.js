@@ -22,7 +22,10 @@ const props = [
   'version',
   'keyId',
   'sha256',
+  // Form and form draft, not form version
   'enketoId',
+  // Form only, not form draft or form version
+  'enketoOnceId',
   'state',
   'publishedAt',
   'createdAt',

@@ -1,0 +1,118 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal :state="state" hideable backdrop @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <div class="modal-introduction">
+        <p>{{ $t('introduction[0]') }}</p>
+        <ul>
+          <i18n tag="li" path="introduction[1].full">
+            <template #appUsers>
+              <router-link v-if="$route.path !== projectPath('app-users')"
+                :to="projectPath('app-users')">
+                <strong>{{ $t('introduction[1].appUsers') }}</strong>
+              </router-link>
+              <a v-else href="#" @click.prevent="$emit('hide')">
+                <strong>{{ $t('introduction[1].appUsers') }}</strong>
+              </a>
+            </template>
+            <template #collect>
+              <doc-link to="collect-intro/">ODK Collect</doc-link>
+            </template>
+          </i18n>
+          <i18n tag="li" path="introduction[2].full">
+            <template #publicLinks>
+              <!-- Only render text, not a link, for a project route. -->
+              <template v-if="$route.params.xmlFormId == null">
+                <strong>{{ $t('introduction[2].publicLinks') }}</strong>
+              </template>
+              <router-link v-else-if="$route.path !== formPath('public-links')"
+                :to="formPath('public-links')">
+                <strong>{{ $t('introduction[2].publicLinks') }}</strong>
+              </router-link>
+              <a v-else href="#" @click.prevent="$emit('hide')">
+                <strong>{{ $t('introduction[2].publicLinks') }}</strong>
+              </a>
+            </template>
+          </i18n>
+          <i18n tag="li" path="introduction[3].full">
+            <template #webUser>
+              <link-if-can to="/users">
+                <strong>{{ $t('introduction[3].webUser') }}</strong>
+              </link-if-can>
+            </template>
+            <template #dataCollector>
+              <router-link :to="projectPath('users')">
+                <strong>{{ $t('introduction[3].dataCollector') }}</strong>
+              </router-link>
+            </template>
+          </i18n>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="$emit('hide')">
+          {{ $t('action.ok') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script>
+import DocLink from '../doc-link.vue';
+import LinkIfCan from '../link-if-can.vue';
+import Modal from '../modal.vue';
+import routes from '../../mixins/routes';
+
+export default {
+  name: 'ProjectSubmissionOptions',
+  components: { DocLink, LinkIfCan, Modal },
+  mixins: [routes()],
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Submission Options",
+    "introduction": [
+      // This text is shown above a list of options for submitting data.
+      "There are several options for submitting data to ODK Central:",
+      {
+        // This text is shown in a list of options for submitting data.
+        // {collect} is a link whose text is "ODK Collect".
+        "full": "Create {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form.",
+        "appUsers": "App Users"
+      },
+      {
+        // This text is shown in a list of options for submitting data.
+        "full": "Create one or more {publicLinks} to share with respondents who will self-report.",
+        "publicLinks": "Public Access Links"
+      },
+      {
+        // This text is shown in a list of options for submitting data.
+        "full": "Create a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser.",
+        "webUser": "Web User",
+        "dataCollector": "Data Collector"
+      }
+    ]
+  }
+}
+</i18n>

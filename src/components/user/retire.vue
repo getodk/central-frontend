@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
-        <button :disabled="awaitingResponse" type="button"
-          class="btn btn-danger" @click="retire">
+        <button type="button" class="btn btn-danger"
+          :disabled="awaitingResponse" @click="retire">
           {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
         </button>

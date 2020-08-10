@@ -54,7 +54,13 @@ const options = [
   actionOption('form.update.publish'),
   actionOption('form.update.draft.delete'),
   actionOption('form.attachment.update'),
-  actionOption('form.delete')
+  actionOption('form.delete'),
+  categoryOption('field_key'),
+  actionOption('field_key.create'),
+  categoryOption('public_link'),
+  actionOption('public_link.create'),
+  categoryOption('session'),
+  actionOption('session.end')
 ];
 
 export default {

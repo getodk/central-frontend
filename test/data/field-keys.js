@@ -1,10 +1,10 @@
 import faker from 'faker';
-import { omit } from 'ramda';
+import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
-import { fakePastDate } from '../util/date-time';
+import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 
 export const extendedFieldKeys = dataStore({
@@ -38,21 +38,12 @@ export const extendedFieldKeys = dataStore({
       updatedAt: null
     };
   },
-  sort: (fieldKey1, fieldKey2) => {
-    const accessRevoked1 = fieldKey1.token == null;
-    const accessRevoked2 = fieldKey2.token == null;
-    if (accessRevoked1 !== accessRevoked2) {
-      if (accessRevoked1) return 1;
-      if (accessRevoked2) return -1;
-    }
-    if (fieldKey1.createdAt < fieldKey2.createdAt) return 1;
-    if (fieldKey1.createdAt > fieldKey2.createdAt) return -1;
-    return 0;
-  }
+  sort: comparator((fieldKey1, fieldKey2) =>
+    (fieldKey1.token != null && fieldKey2.token == null) ||
+    isBefore(fieldKey2.createdAt, fieldKey1.createdAt))
 });
 
-export const standardFieldKeys = view(extendedFieldKeys, (extendedFieldKey) => {
-  const fieldKey = omit(['lastUsed'], extendedFieldKey);
-  fieldKey.createdBy = fieldKey.createdBy.id;
-  return fieldKey;
-});
+export const standardFieldKeys = view(
+  extendedFieldKeys,
+  omit(['lastUsed', 'createdBy'])
+);

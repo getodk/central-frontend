@@ -20,10 +20,9 @@ either is an Administrator or has no role. -->
         @click="showModal('newUser')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <p>{{ $t('heading[0]') }}</p>
-      <i18n tag="p" path="moreInfo.clickHere.full">
-        <template #clickHere>
-          <doc-link to="central-users/#managing-app-users">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+      <i18n tag="p" path="heading[0]">
+        <template #collect>
+          <doc-link to="collect-intro/">ODK Collect</doc-link>
         </template>
       </i18n>
     </div>
@@ -214,7 +213,8 @@ export default {
       "create": "Create Web User"
     },
     "heading": [
-      "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no role can still be made Project Managers on any Project, from that Project’s settings."
+      // {collect} is a link whose text is "ODK Collect".
+      "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no Sitewide Role can be given a Role on any Project, from that Project’s settings. Sitewide Administrators and some Project Roles can use a web browser to fill out Forms. To submit data through an application such as {collect}, create App Users for each Project."
     ],
     "header": {
       "sitewideRole": "Sitewide Role"

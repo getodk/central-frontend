@@ -18,21 +18,16 @@ describe('FormShow', () => {
           app.find(NotFound).length.should.equal(1);
         }));
 
-    it('handles an encoded xmlFormId correctly', () =>
-      mockRoute('/projects/1/forms/i%20%C4%B1')
-        .beforeEachResponse((app, request, index) => {
-          if (index === 1) request.url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
+    it('handles an encoded xmlFormId correctly', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'i ı' });
+      return load('/projects/1/forms/i%20%C4%B1')
+        .beforeEachResponse((_, { url }, index) => {
+          if (index === 1) url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
         })
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { forms: 1 }).last())
-        .respondWithData(() =>
-          testData.extendedForms.createPast(1, { xmlFormId: 'i ı' }).last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => []) // formActors
         .afterResponses(app => {
           app.vm.$route.params.xmlFormId.should.equal('i ı');
-        }));
+        });
+    });
   });
 
   it('re-renders the router view after a route change', () => {
@@ -97,7 +92,7 @@ describe('FormShow', () => {
           should.not.exist(headers['X-Extended-Metadata']);
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -117,7 +112,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -158,7 +153,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -175,7 +170,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'abc');
+          testData.extendedFormDrafts.update(-1, { enketoId: 'abc' });
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
@@ -260,7 +255,7 @@ describe('FormShow', () => {
           should.not.exist(headers['X-Extended-Metadata']);
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .afterResponse(app => {
@@ -270,7 +265,7 @@ describe('FormShow', () => {
         .testNoRequest(runAll);
     });
 
-    it('continues to fetch the enketoId if the form does not have one', () => {
+    it('continues to fetch enketoId if form still does not have one', () => {
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
@@ -283,7 +278,7 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(-1, 'xyz');
+          testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .afterResponse(app => {
@@ -333,11 +328,11 @@ describe('FormShow', () => {
         .complete()
         .request(runAll)
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(0, 'xyz');
+          testData.extendedForms.update(0, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
         .respondWithData(() => {
-          testData.extendedFormVersions.updateEnketoId(1, 'abc');
+          testData.extendedFormDrafts.update(1, { enketoId: 'abc' });
           return testData.standardFormDrafts.last();
         })
         .afterResponses(app => {
@@ -346,6 +341,52 @@ describe('FormShow', () => {
           formDraft.get().enketoId.should.equal('abc');
         })
         .testNoRequest(runAll);
+    });
+
+    describe('enketoOnceId', () => {
+      it('fetches the enketoOnceId', () => {
+        testData.extendedForms.createPast(1, {
+          enketoId: 'xyz',
+          enketoOnceId: null,
+          publishedAt: new Date().toISOString()
+        });
+        const { runAll } = fakeSetTimeout();
+        return load('/projects/1/forms/f')
+          .complete()
+          .request(runAll)
+          .respondWithData(() => {
+            testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
+            return testData.standardForms.last();
+          })
+          .afterResponse(app => {
+            const { form } = app.vm.$store.state.request.data;
+            form.enketoOnceId.should.equal('zyx');
+          })
+          .testNoRequest(runAll);
+      });
+    });
+
+    it('continues to fetch the enketoOnceId', () => {
+      testData.extendedForms.createPast(1, {
+        enketoId: 'xyz',
+        enketoOnceId: null,
+        publishedAt: new Date().toISOString()
+      });
+      const { runAll } = fakeSetTimeout();
+      return load('/projects/1/forms/f')
+        .complete()
+        .request(runAll)
+        .respondWithData(() => testData.standardForms.last())
+        .complete()
+        .request(runAll)
+        .respondWithData(() => {
+          testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
+          return testData.standardForms.last();
+        })
+        .afterResponse(app => {
+          const { form } = app.vm.$store.state.request.data;
+          form.enketoOnceId.should.equal('zyx');
+        });
     });
   });
 });

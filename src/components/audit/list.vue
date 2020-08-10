@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <p id="audit-list-heading">{{ $t('heading[0]') }}</p>
+    <p class="page-body-heading">{{ $t('heading[0]') }}</p>
     <audit-filters v-bind.sync="filters"/>
     <audit-table :audits="audits"/>
     <loading :state="$store.getters.initiallyLoading(['audits'])"/>
@@ -74,12 +74,6 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-#audit-list-heading {
-  margin-bottom: 20px;
-}
-</style>
 
 <i18n lang="json5">
 {

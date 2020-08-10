@@ -1,0 +1,112 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal id="public-link-create" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')" @shown="$refs.displayName.focus()">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
+      <form @submit.prevent="submit">
+        <form-group ref="displayName" v-model.trim="displayName"
+          :placeholder="$t('field.displayName')" required autocomplete="off"/>
+        <div class="checkbox">
+          <label>
+            <input v-model="multiple" type="checkbox"
+              aria-describedby="public-link-create-multiple-help">
+              {{ $t('field.multiple') }}
+          </label>
+          <p id="public-link-create-multiple-help" class="help-block">
+            {{ $t('multipleHelp') }}
+          </p>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary"
+            :disabled="awaitingResponse">
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
+          </button>
+          <button type="button" class="btn btn-link"
+            :disabled="awaitingResponse" @click="$emit('hide')">
+            {{ $t('action.cancel') }}
+          </button>
+        </div>
+      </form>
+    </template>
+  </modal>
+</template>
+
+<script>
+import FormGroup from '../form-group.vue';
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
+import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+import { requestData } from '../../store/modules/request';
+
+export default {
+  name: 'PublicLinkCreate',
+  components: { FormGroup, Modal, Spinner },
+  mixins: [request()],
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      awaitingResponse: false,
+      displayName: '',
+      multiple: false
+    };
+  },
+  // The modal assumes that this data will exist when the modal is shown.
+  computed: requestData(['form']),
+  watch: {
+    state(state) {
+      if (!state) {
+        this.displayName = '';
+        this.multiple = false;
+      }
+    }
+  },
+  methods: {
+    submit() {
+      this.request({
+        method: 'POST',
+        url: apiPaths.publicLinks(this.form.projectId, this.form.xmlFormId),
+        data: { displayName: this.displayName, once: !this.multiple }
+      })
+        .then(({ data }) => {
+          this.$emit('success', data);
+        })
+        .catch(noop);
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Create Public Access Link",
+    "introduction": [
+      "Anyone with this Link will be able to fill out this Form in a web browser. Use the display name to remind yourself of where you posted it, who you shared it with, when it is intended to be active, and so on."
+    ],
+    "field": {
+      "multiple": "Multiple responses"
+    },
+    "multipleHelp": "Allow someone with this Link to submit more than once from the same device."
+  }
+}
+</i18n>

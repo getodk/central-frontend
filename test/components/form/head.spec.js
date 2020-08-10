@@ -81,6 +81,7 @@ describe('FormHead', () => {
           'Overview',
           'Versions',
           'Submissions',
+          'Public Access',
           'Settings',
           'Status',
           'Media Files 1',
@@ -106,7 +107,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
-        tabs.length.should.equal(4);
+        tabs.length.should.equal(5);
         for (const tab of tabs) {
           tab.hasClass('disabled').should.be.true();
           tab.getAttribute('title').should.equal('These functions will become available once you publish your Draft Form');
@@ -120,7 +121,7 @@ describe('FormHead', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
-        tabs.length.should.equal(4);
+        tabs.length.should.equal(5);
         for (const tab of tabs) {
           tab.hasClass('disabled').should.be.false();
           tab.hasAttribute('title').should.be.false();

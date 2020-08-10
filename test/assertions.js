@@ -46,5 +46,5 @@ should.Assertion.add('alert', function assertAlert(type = undefined, message = u
   alert.vm.$el.style.display.should.equal('');
   if (type != null) alert.hasClass(`alert-${type}`).should.be.true();
   if (message != null)
-    alert.first('.alert-message').text().should.equal(message);
+    alert.first('.alert-message').text().should.match(message);
 });

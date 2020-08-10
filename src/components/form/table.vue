@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t('header.idAndVersion') }}
         </th>
         <th v-if="columns.has('submissions')">
-          {{ $t('common.submissions') }}
+          {{ $t('resource.submissions') }}
         </th>
         <th v-if="columns.has('actions')">{{ $t('header.actions') }}</th>
       </tr>

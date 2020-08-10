@@ -1,0 +1,67 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <table id="public-link-table" class="table">
+    <thead>
+      <tr>
+        <th class="display-name">{{ $t('header.displayName') }}</th>
+        <th>{{ $t('header.multiple') }}</th>
+        <th class="access-link">{{ $t('header.accessLink') }}</th>
+        <th class="actions">{{ $t('header.actions') }}</th>
+      </tr>
+    </thead>
+    <tbody v-if="publicLinks != null">
+      <public-link-row v-for="publicLink of publicLinks" :key="publicLink.id"
+        :public-link="publicLink" :highlighted="highlighted"
+        @revoke="$emit('revoke', $event)"/>
+    </tbody>
+  </table>
+</template>
+
+<script>
+import PublicLinkRow from './row.vue';
+import { requestData } from '../../store/modules/request';
+
+export default {
+  name: 'PublicLinkTable',
+  components: { PublicLinkRow },
+  props: {
+    highlighted: Number // eslint-disable-line vue/require-default-prop
+  },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['publicLinks'])
+};
+</script>
+
+<style lang="scss">
+#public-link-table {
+  table-layout: fixed;
+
+  th {
+    // TODO. Review this.
+    &.display-name, &.access-link { width: 33.33333333%; }
+    &.actions { width: 130px; }
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      "multiple": "Multiple Responses",
+      "accessLink": "Access Link"
+    }
+  }
+}
+</i18n>

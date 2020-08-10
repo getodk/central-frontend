@@ -255,7 +255,7 @@ export default {
 {
   "en": {
     "heading": [
-      "Here you can set Form States, which control whether Forms are available for download and open for submission. You can also separately control which App Users may see each Form at all."
+      "App Users can only see and fill the Forms that they are explicity given access to in the table below. Project Managers and Data Collectors can use a web browser to fill out any Form in the Project that is in the Open state."
     ],
     "emptyTable": "There are no Forms to show.",
     "alert": {

@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #body>
             <loading :state="loadingRightNow"/>
-            <template v-if="showsRightNow">
+            <template v-if="dataExistsForRightNow">
               <summary-item v-if="currentUser.can('user.list')"
                 route-to="/users" icon="user-circle">
                 <template #heading>
@@ -106,7 +106,7 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody v-if="projects != null">
             <project-row v-for="project of projects" :key="project.id"
-              :project-count="projects.length" :project="project"
+              :project="project" :introduction="rendersIntroduction"
               @show-introduction="showModal('introduction')"/>
           </tbody>
         </table>
@@ -120,7 +120,7 @@ except according to the terms contained in the LICENSE file.
 
     <project-new v-bind="newProject" @hide="hideModal('newProject')"
       @success="afterCreate"/>
-    <project-introduction v-bind="introduction"
+    <project-introduction v-if="rendersIntroduction" v-bind="introduction"
       @hide="hideModal('introduction')"/>
   </div>
 </template>
@@ -162,14 +162,22 @@ export default {
   },
   computed: {
     ...requestData(['currentUser', 'projects', 'users']),
-    loadingRightNow() {
+    // We should probably move the "Right Now" section into its own component.
+    rightNowKeys() {
       const keys = ['projects'];
       if (this.currentUser.can('user.list')) keys.push('users');
-      return this.$store.getters.initiallyLoading(keys);
+      return keys;
     },
-    showsRightNow() {
-      if (this.projects == null) return false;
-      return !(this.currentUser.can('user.list') && this.users == null);
+    loadingRightNow() {
+      return this.$store.getters.initiallyLoading(this.rightNowKeys);
+    },
+    dataExistsForRightNow() {
+      return this.$store.getters.dataExists(this.rightNowKeys);
+    },
+    rendersIntroduction() {
+      if (this.projects == null || this.projects.length !== 1) return false;
+      const project = this.projects[0];
+      return project.name === 'Default Project' && project.forms === 0;
     }
   },
   created() {

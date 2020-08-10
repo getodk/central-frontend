@@ -7,17 +7,6 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('ProjectOverview', () => {
-  it('does not send a new request if user navigates back to tab', () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1);
-    return load('/projects/1')
-      .complete()
-      .route('/projects/1/settings')
-      .complete()
-      .route('/projects/1')
-      .testNoRequest();
-  });
-
   describe('top row', () => {
     it('shows the row to an administrator', async () => {
       mockLogin({ role: 'admin' });

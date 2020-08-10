@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </router-link>
       </div>
-      <div v-if="showsIntroductionLink">
+      <div v-if="introduction">
         <a href="#" @click.prevent="$emit('show-introduction')">
           {{ $t('help') }}
         </a>
@@ -40,19 +40,13 @@ export default {
   components: { DateTime },
   mixins: [routes()],
   props: {
-    projectCount: {
-      type: Number,
-      required: true
-    },
     project: {
       type: Object,
       required: true
-    }
-  },
-  computed: {
-    showsIntroductionLink() {
-      return this.projectCount === 1 &&
-        this.project.name === 'Default Project' && this.project.forms === 0;
+    },
+    introduction: {
+      type: Boolean,
+      default: false
     }
   }
 };

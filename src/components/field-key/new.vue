@@ -20,12 +20,12 @@ except according to the terms contained in the LICENSE file.
           <form-group ref="displayName" v-model.trim="displayName"
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
           <div class="modal-actions">
-            <button :disabled="awaitingResponse" type="submit"
-              class="btn btn-primary">
+            <button type="submit" class="btn btn-primary"
+              :disabled="awaitingResponse">
               {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
             </button>
-            <button :disabled="awaitingResponse" type="button"
-              class="btn btn-link" @click="hideOrComplete">
+            <button type="button" class="btn btn-link"
+              :disabled="awaitingResponse" @click="hideOrComplete">
               {{ $t('action.cancel') }}
             </button>
           </div>
@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
           <i18n tag="p" path="success[2].full">
             <template #formAccessSettings>
-              <a href="#" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
+              <a :href="projectPath('form-access')" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
             </template>
           </i18n>
         </div>
@@ -97,6 +97,7 @@ export default {
       created: null
     };
   },
+  // The modal assumes that this data will exist when the modal is shown.
   computed: requestData(['project']),
   watch: {
     state(state) {
