@@ -140,55 +140,33 @@ describe('FormRow', () => {
   });
 
   describe('submissions link', () => {
-    describe('administrator', () => {
-      beforeEach(mockLogin);
+    beforeEach(mockLogin);
 
-      it('links to .../submissions for a form with a published version', async () => {
-        testData.extendedForms.createPast(1, {
-          xmlFormId: 'a b',
-          submissions: 1
-        });
-        const app = await load('/projects/1');
-        const href = app.find('.form-row .submissions a')
-          .map(a => a.getAttribute('href'));
-        href.length.should.equal(2);
-        href.should.matchEach('#/projects/1/forms/a%20b/submissions');
+    it('links to .../submissions for a form with a published version', async () => {
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'a b',
+        submissions: 1
       });
-
-      it('links to .../draft/testing for form without published version', async () => {
-        testData.extendedForms.createPast(1, {
-          xmlFormId: 'a b',
-          draft: true,
-          submissions: 1
-        });
-        const app = await load('/projects/1');
-        const a = app.find('.form-row .submissions a');
-        // Since the form does not have a published version, it does not have a
-        // lastSubmission property.
-        a.length.should.equal(1);
-        const href = a[0].getAttribute('href');
-        href.should.equal('#/projects/1/forms/a%20b/draft/testing');
-      });
+      const app = await load('/projects/1');
+      const href = app.find('.form-row .submissions a')
+        .map(a => a.getAttribute('href'));
+      href.length.should.equal(2);
+      href.should.matchEach('#/projects/1/forms/a%20b/submissions');
     });
 
-    describe('Data Collector', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        const lastSubmission = new Date().toISOString();
-        testData.extendedProjects.createPast(1, {
-          role: 'formfill',
-          forms: 1,
-          lastSubmission
-        });
-        testData.extendedForms.createPast(1, { lastSubmission });
+    it('links to .../draft/testing for a form without a published version', async () => {
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'a b',
+        draft: true,
+        submissions: 1
       });
-
-      it('does not render a link', async () => {
-        const app = await load('/projects/1');
-        const submissions = app.first('.form-row .submissions');
-        submissions.find('a').length.should.equal(0);
-        submissions.find('div').length.should.equal(2);
-      });
+      const app = await load('/projects/1');
+      const a = app.find('.form-row .submissions a');
+      // Since the form does not have a published version, it does not have a
+      // lastSubmission property.
+      a.length.should.equal(1);
+      const href = a[0].getAttribute('href');
+      href.should.equal('#/projects/1/forms/a%20b/draft/testing');
     });
   });
 

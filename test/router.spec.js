@@ -5,7 +5,7 @@ import { loadLocale } from '../src/util/i18n';
 import { mockLogin } from './util/session';
 
 describe('router', () => {
-  describe.skip('i18n', () => {
+  describe('i18n', () => {
     before(() => {
       const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
       has.should.be.false();

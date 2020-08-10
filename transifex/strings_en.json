@@ -1704,7 +1704,7 @@
     "FormTable": {
       "header": {
         "idAndVersion": {
-          "string": "ID/Version",
+          "string": "ID and Version",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
         }
       }
