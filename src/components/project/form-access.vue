@@ -156,11 +156,6 @@ export default {
     }
   },
   watch: {
-    projectId() {
-      this.fetchData(false);
-      this.changesByForm = null;
-      this.changeCount = 0;
-    },
     dataExists: {
       handler(dataExists) {
         if (dataExists) this.initChangesByForm();

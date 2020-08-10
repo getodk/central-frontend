@@ -42,10 +42,6 @@ property:
     handlers are not removed when the drop zone is disabled, but events will
     essentially be ignored. The exception is that the mixin will continue to
     update dragDepth.
-
-If the route changes, but the component is reused, the mixin assumes that the
-drop zone becomes hidden. It resets the drop zone state, including
-fileIsOverDropZone. We may revisit this as the need arises.
 */
 
 const noFiles = (event) =>
@@ -56,11 +52,6 @@ const mixin = {
   computed: {
     fileIsOverDropZone() {
       return this.dragDepth !== 0;
-    }
-  },
-  watch: {
-    $route() {
-      this.dragDepth = 0;
     }
   },
   mounted() {

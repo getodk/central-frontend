@@ -37,9 +37,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    $route: 'fetchData'
-  },
   created() {
     this.fetchData();
   },

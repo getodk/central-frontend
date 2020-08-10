@@ -15,12 +15,11 @@ except according to the terms contained in the LICENSE file.
       @create-draft="createDraft"/>
     <page-body>
       <loading :state="initiallyLoading || awaitingResponse"/>
-      <div v-show="dataExists && !awaitingResponse">
-        <!-- <router-view> is immediately created and can send its own requests
-        even before the server has responded to the requests from ProjectHome
-        and FormShow. -->
-        <router-view @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
-      </div>
+      <!-- <router-view> is immediately created and can send its own requests
+      even before the server has responded to the requests from ProjectHome and
+      FormShow. -->
+      <router-view v-show="dataExists && !awaitingResponse" :key="$route.path"
+        @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
 </template>

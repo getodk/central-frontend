@@ -1,5 +1,6 @@
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
+import ProjectOverview from '../../../src/components/project/overview.vue';
 import testData from '../../data';
 import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -10,6 +11,25 @@ describe('ProjectShow', () => {
       .then(app => {
         app.find(NotFound).length.should.equal(1);
       }));
+
+  it('re-renders the router view after a route change', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(2);
+    let vm;
+    return load('/projects/1', {}, {
+      project: () => testData.extendedProjects.first()
+    })
+      .afterResponses(app => {
+        // eslint-disable-next-line prefer-destructuring
+        vm = app.first(ProjectOverview).vm;
+      })
+      .load('/projects/2', {
+        project: () => testData.extendedProjects.last()
+      })
+      .afterResponses(app => {
+        app.first(ProjectOverview).vm.should.not.equal(vm);
+      });
+  });
 
   it("shows the project's name", () => {
     mockLogin();

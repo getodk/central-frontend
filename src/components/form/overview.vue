@@ -101,9 +101,6 @@ export default {
       return this.$store.getters.dataExists(REQUEST_KEYS);
     }
   },
-  watch: {
-    $route: 'fetchData'
-  },
   created() {
     this.fetchData();
   },

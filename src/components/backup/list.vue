@@ -57,7 +57,7 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [modal(), validateData({ update: false })],
+  mixins: [modal(), validateData()],
   data() {
     return {
       newBackup: {

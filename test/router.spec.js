@@ -1,11 +1,8 @@
-import FormAttachmentList from '../src/components/form-attachment/list.vue';
-import SubmissionList from '../src/components/submission/list.vue';
 import i18n from '../src/i18n';
 import testData from './data';
 import { load, mockRoute } from './util/http';
 import { loadLocale } from '../src/util/i18n';
 import { mockLogin } from './util/session';
-import { trigger } from './util/event';
 
 describe('router', () => {
   describe('i18n', () => {
@@ -526,90 +523,5 @@ describe('router', () => {
             app.vm.$route.path.should.equal('/');
           }));
     });
-  });
-
-  describe('after a route update', () => {
-    beforeEach(mockLogin);
-
-    it('resets and updates SubmissionList', () =>
-      mockRoute('/projects/1/forms/f1/submissions')
-        .beforeEachResponse((app, { url }, index) => {
-          if (index === 5)
-            url.should.equal('/v1/projects/1/forms/f1/fields?odata=true');
-        })
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { forms: 3, lastSubmission: new Date().toISOString() })
-          .last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f1', submissions: 1 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._fields)
-        .respondWithData(() => {
-          testData.extendedSubmissions.createPast(1);
-          return testData.submissionOData(1, 0);
-        })
-        .afterResponses(app => {
-          app.first(SubmissionList).data().submissions.length.should.equal(1);
-        })
-        .route('/projects/1/forms/f2/submissions')
-        .beforeAnyResponse(app => {
-          should.not.exist(app.first(SubmissionList).data().submissions);
-        })
-        .beforeEachResponse((app, { url }, index) => {
-          if (index === 4)
-            url.should.equal('/v1/projects/1/forms/f2/fields?odata=true');
-        })
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', submissions: 2 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._fields)
-        .respondWithData(() => {
-          const form = testData.extendedForms.last();
-          testData.extendedSubmissions.createPast(2, { form });
-          return testData.submissionOData(2, 1);
-        })
-        .afterResponses(app => {
-          app.first(SubmissionList).data().submissions.length.should.equal(2);
-        }));
-
-    it('resets FormAttachmentList', () =>
-      mockRoute('/projects/1/forms/f1/draft/attachments')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { forms: 2 }).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f1', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() =>
-          testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app =>
-          trigger.dragAndDrop(app, FormAttachmentList, [new File([''], 'a')])
-            .then(() => {
-              const { unmatchedFiles } = app.first(FormAttachmentList).data();
-              unmatchedFiles.length.should.equal(1);
-            }))
-        .route('/projects/1/forms/f2/draft/attachments')
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => [
-          testData.standardFormAttachments
-            .createPast(1, {
-              form: testData.extendedForms.last(),
-              hasUpdatedAt: false
-            })
-            .last()
-        ])
-        .afterResponses(app => {
-          const { unmatchedFiles } = app.first(FormAttachmentList).data();
-          unmatchedFiles.length.should.equal(0);
-        }));
   });
 });
