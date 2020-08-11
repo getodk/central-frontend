@@ -1,5 +1,148 @@
 {
+  "role": {
+    "none": "Ninguno",
+    "admin": "Administrador",
+    "manager": "Gerente de Proyecto",
+    "viewer": "Visor de proyecto",
+    "formfill": "Recolector de datos"
+  },
+  "formState": {
+    "open": "Abrir",
+    "closing": "Cerrando",
+    "closed": "Cerrado"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Todas las acciones)",
+      "user": "Acciones de usuarios web",
+      "project": "Acciones del proyecto",
+      "form": "Acciones del formulario",
+      "upgrade": "Actualización de servidor"
+    },
+    "action": {
+      "default": {
+        "create": "Crear",
+        "update": "Actualizar detalles",
+        "delete": "Borrar"
+      },
+      "assignment": {
+        "create": "Asignar rol",
+        "delete": "Revocar rol"
+      },
+      "backup": "Respaldo",
+      "form": {
+        "update_draft_set": "Crear o Actualizar borrador",
+        "update_publish": "Publicar borrador",
+        "update_draft_delete": "Descartar borrador",
+        "attachment_update": "Actualizar adjuntos",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Procesar formulario",
+        "process_form_draft": "Procesar formulario de borrador"
+      },
+      "user": {
+        "delete": "Retirar",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "field_key": {
+        "create": "@:audit.action.default.create"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create"
+      },
+      "session": {
+        "end": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "create": "Crear",
+    "createSubmission": "Nuevo",
+    "done": "Listo",
+    "download": "Descargar",
+    "editProfile": "Editar perfil",
+    "logIn": "Ingresar",
+    "looksGood": "Se ve bien, continuar",
+    "neverMind": "No importa, cancelar",
+    "next": "Siguiente",
+    "noCancel": "No, cancelar",
+    "ok": "De acuerdo",
+    "proceed": "Continuar",
+    "resetPassword": "Resetear contraseña",
+    "save": "Guardar",
+    "yesProceed": "Si, continuar"
+  },
   "field": {
-    "password": "Contraseña"
+    "dateRange": "Rango de fecha",
+    "displayName": "Mostrar nombre",
+    "email": "Correo electrónico",
+    "name": "Nombre",
+    "newPassword": "Contraseña nueva",
+    "oldPassword": "Contraseña antigua",
+    "password": "Contraseña",
+    "passwordConfirm": "Contraseña nueva (confirmar)",
+    "type": "Tipo"
+  },
+  "header": {
+    "actions": "Acciones",
+    "created": "Creado",
+    "createdBy": "Creado por",
+    "displayName": "Mostrar nombre",
+    "email": "Correo electrónico",
+    "lastSubmission": "Último envio",
+    "name": "Nombre",
+    "type": "Tipo"
+  },
+  "plural": {
+    "appUser": "Usuario de la aplicación | Usuarios de la aplicación",
+    "form": "Formulario | Formularios",
+    "project": "Proyecto | Proyectos",
+    "submission": "Envío | Envíos",
+    "webUser": "Usuario web | Usuarios web"
+  },
+  "count": {
+    "appUser": "{count} Usuario de la aplicación | {count} Usuarios de la aplicación",
+    "form": "{count} Formulario | {count} Formularios",
+    "submission": "{count} Envío | {count} Envíos"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Para más información, {clickHere}.",
+      "clickHere": "clic aquí"
+    },
+    "learnMore": "Conocer más."
+  },
+  "common": {
+    "areYouSure": "¿Está seguro que desea continuar?",
+    "currentDraft": "Su borrador actual",
+    "dangerZone": "Zona de Peligro",
+    "noResults": "Sin resultados",
+    "rightNow": "Ahora mismo",
+    "success": "¡Éxito!"
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(vacío)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (archivado)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "hoy",
+      "yesterday": "ayer"
+    }
   }
 }
