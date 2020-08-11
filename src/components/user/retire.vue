@@ -72,7 +72,6 @@ export default {
 };
 </script>
 
-<!-- eslint-disable vue/no-parsing-error -->
 <i18n lang="json5">
 {
   "en": {
@@ -80,7 +79,7 @@ export default {
     // pop-up to retire another Web User.
     "title": "Retiring User",
     "introduction": [
-      "You are about to retire the user account “{displayName}” <{email}>. That user will be immediately barred from performing any actions and logged out.",
+      "You are about to retire the user account “{displayName}” \u003c{email}>. That user will be immediately barred from performing any actions and logged out.",
       {
         "full": "{noUndo}, but a new account can always be created for that person with the same email address.",
         "noUndo": "This action cannot be undone"
@@ -89,4 +88,3 @@ export default {
   }
 }
 </i18n>
-<!-- eslint-enable vue/no-parsing-error -->
