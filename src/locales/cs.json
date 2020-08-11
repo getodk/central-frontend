@@ -1,0 +1,176 @@
+{
+  "role": {
+    "none": "Žádná",
+    "admin": "Administrátor",
+    "manager": "Projektový manažer",
+    "viewer": "Prohlížeč projektu",
+    "formfill": "Sběratel dat"
+  },
+  "formState": {
+    "open": "Otevřít",
+    "closing": "Dokončení",
+    "closed": "Dokončeno"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Všechny akce)",
+      "user": "Akce webového uživatele",
+      "project": "Akce projektu",
+      "form": "Akce formuláře",
+      "field_key": "Akce uživatelů aplikace",
+      "public_link": "Akce s veřejným přístupem",
+      "session": "Akce relace",
+      "upgrade": "Upgrade serveru"
+    },
+    "action": {
+      "default": {
+        "create": "Vytvořit",
+        "update": "Aktualizovat podrobnosti",
+        "delete": "Smazat"
+      },
+      "assignment": {
+        "create": "Přiřadit roli",
+        "delete": "Odebrat roli"
+      },
+      "backup": "Záloha",
+      "form": {
+        "update_draft_set": "Vytvořit nebo aktualizovat koncept",
+        "update_publish": "Zveřejnit koncept",
+        "update_draft_delete": "Opustit koncept",
+        "attachment_update": "Aktualizovat přílohy",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Zpracování formuláře",
+        "process_form_draft": "Zpracování návrhu formuláře"
+      },
+      "user": {
+        "delete": "Uspat",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "field_key": {
+        "create": "@:audit.action.default.create"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create"
+      },
+      "session": {
+        "end": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "create": "Vytvořit",
+    "createSubmission": "Nový",
+    "done": "Hotovo",
+    "download": "Stáhnout",
+    "editProfile": "Upravit profil",
+    "logIn": "Přihlásit se",
+    "looksGood": "Vypadá to dobře, pokračujte",
+    "neverMind": "Nevadí, zrušit",
+    "next": "Další",
+    "noCancel": "Ne, zrušit",
+    "ok": "OK",
+    "proceed": "Pokračovat",
+    "resetPassword": "Resetovat heslo",
+    "save": "Uložit",
+    "yesProceed": "Ano, pokračovat"
+  },
+  "field": {
+    "dateRange": "Časové období",
+    "displayName": "Zobrazit název",
+    "email": "E-mailová adresa",
+    "name": "Jméno",
+    "newPassword": "Nové heslo",
+    "oldPassword": "Staré heslo",
+    "passphrase": "Přístupová fráze",
+    "password": "Heslo",
+    "passwordConfirm": "Nové heslo (potvrzení)",
+    "type": "Typ"
+  },
+  "header": {
+    "actions": "Akce",
+    "created": "Vytvořeno",
+    "createdBy": "Vytvořeno od",
+    "displayName": "Zobrazit jméno",
+    "email": "E-mailová adresa",
+    "lastSubmission": "Poslední podání",
+    "name": "Jméno",
+    "type": "Typ"
+  },
+  "plural": {
+    "appUser": "Uživatel aplikace | Uživatelé aplikace | Uživatelů aplikace | Uživatelé aplikace",
+    "form": "Formulář | Formulářů | Formulářů | Formuláře",
+    "project": "Projekt | Projektů | Projektů | Projekty",
+    "submission": "Podaný příspěvek | Podaných příspěvků | Podaných příspěvků | Podané příspěvky",
+    "webUser": "Webový uživatel | Weboví uživatelé | Webových uživatelů | Weboví uživatelé"
+  },
+  "count": {
+    "appUser": "{count} uživatel aplikace | {count} uživatelů aplikace | {count} uživatelů aplikace | {count} uživatelů aplikace",
+    "form": "{count} formulář | {count} formulářů | {count} formulářů | {count} formulářů",
+    "submission": "{count} podaný příspěvek | {count} podaných příspěvků | {count} podaných příspěvků | {count} podaných příspěvků"
+  },
+  "resource": {
+    "appUser": "Uživatel aplikace",
+    "form": "Formulář",
+    "project": "Projekt",
+    "publicLink": "Veřejný odkaz",
+    "user": "Uživatel",
+    "webUser": "Webový uživatel",
+    "session": "Relace",
+    "submissions": "Příspěvky"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Pro více informací {clickHere}.",
+      "clickHere": "klikněte zde"
+    },
+    "helpArticle": {
+      "full": "Pro více informací viz {helpArticle}.",
+      "helpArticle": "tento článek nápovědy"
+    },
+    "learnMore": "Další informace."
+  },
+  "common": {
+    "areYouSure": "Opravdu chcete pokračovat?",
+    "currentDraft": "Váš aktuální koncept",
+    "dangerZone": "Nebezpečná zóna",
+    "no": "Ne",
+    "noResults": "Žádné výsledky",
+    "rightNow": "Právě teď",
+    "success": "Úspěch!",
+    "yes": "Ano"
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(prázdný)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (archivováno)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "dnes",
+      "yesterday": "včera"
+    },
+    "request": {
+      "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
+      "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",
+      "errorNotProblem": "Něco se pokazilo: server vrátil neplatnou chybu."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  }
+}

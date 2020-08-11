@@ -45,7 +45,38 @@ describe('util/i18n', () => {
     });
   });
 
-  describe('pluralization', () => {
+  describe('pluralization rules', () => {
+    afterEach(() => {
+      i18n.locale = 'en';
+    });
+
+    // Array of test cases by locale
+    const cases = {
+      cs: ['plural.webUser', [
+        [0, 'Webových uživatelů'],
+        [1, 'Webový uživatel'],
+        [2, 'Weboví uživatelé'],
+        [3, 'Weboví uživatelé'],
+        [4, 'Weboví uživatelé'],
+        [5, 'Webových uživatelů'],
+        [100, 'Webových uživatelů']
+      ]]
+    };
+    for (const [locale, [path, casesForLocale]] of Object.entries(cases)) {
+      describe(locale, () => {
+        before(() => loadLocale(locale));
+
+        for (const [count, form] of casesForLocale) {
+          it(`uses the correct form for ${count}`, () => {
+            i18n.locale = locale;
+            i18n.tc(path, count).should.equal(form);
+          });
+        }
+      });
+    }
+  });
+
+  describe('pluralization utilities', () => {
     beforeEach(() => {
       i18n.setLocaleMessage('la', {
         forms: '{count} Forma | {count} Formae',
