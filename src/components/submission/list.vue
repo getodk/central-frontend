@@ -364,6 +364,28 @@ export default {
       "first": "Cargando los primeros {top} de {count} Envíos..."
     },
     "emptyTable": "No hay Envíos todavía."
+  },
+  "fr": {
+    "action": {
+      "download": {
+        "withCount": "Télécharger le {count} enregistrement | Télécharger tous les {count} enregistrements",
+        "withoutCount": "Télécharger tous les enregistrements"
+      },
+      "analyze": "Analyser via OData"
+    },
+    "analyzeDisabled": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire",
+    "loading": {
+      "withoutCount": "Chargement des soumissions...",
+      "all": "Chargement de {count} soumission... | Chargement de {count}soumissions...",
+      "first": "Chargement des premières {top} sur {count} soumissions...",
+      "middle": "Chargement de {top} autres des {count} soumissions restantes...",
+      "last": {
+        "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
+        "one": "Chargement la dernière soumission..."
+      }
+    },
+    "emptyTable": "Il n'y a pas encore de soumissions.",
+    "remaining": "{count} ligne restante. | {count} lignes restantes."
   }
 }
 </i18n>

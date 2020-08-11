@@ -94,6 +94,16 @@ export default {
 {
   "es": {
     "title": "Removiendo usuario"
+  },
+  "fr": {
+    "title": "Élimination d'utilisateur",
+    "introduction": [
+      "Vous êtes sur le point de supprimer le compte \"{displayName}\" \u003c{email}>. Cet usager sera immédiatement déconnecté et empêché d'agir sur le site.",
+      {
+        "full": "{noUndo}, mais un nouveau compte peut toujours être créé pour cette personne avec la même adresse électronique.",
+        "noUndo": "Cette action ne peut être annulée"
+      }
+    ]
   }
 }
 </i18n>

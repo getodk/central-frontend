@@ -273,6 +273,15 @@ export default {
     "alert": {
       "success": "¡Sus modificaciones han sido guardadas!"
     }
+  },
+  "fr": {
+    "heading": [
+      "Les utilisateurs d'application peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
+    ],
+    "emptyTable": "Il n'y a pas de formulaire à afficher.",
+    "alert": {
+      "success": "Vos modifications ont été enregistrées."
+    }
   }
 }
 </i18n>

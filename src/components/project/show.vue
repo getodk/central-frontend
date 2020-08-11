@@ -155,6 +155,15 @@ export default {
       "formAccess": "Acceso al formulario",
       "settings": "Configuración"
     }
+  },
+  "fr": {
+    "tab": {
+      "overview": "Aperçu",
+      "users": "Rôles du projet",
+      "appUsers": "Utilisateurs d'application",
+      "formAccess": "Accès aux formulaires",
+      "settings": "Paramètres"
+    }
   }
 }
 </i18n>

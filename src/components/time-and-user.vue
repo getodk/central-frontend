@@ -69,6 +69,9 @@ export default {
 {
   "es": {
     "text": "{dateTime} por {displayName}"
+  },
+  "fr": {
+    "text": "{dateTime} par {displayName}"
   }
 }
 </i18n>

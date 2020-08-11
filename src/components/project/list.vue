@@ -327,6 +327,53 @@ export default {
     "alert": {
       "create": "Su proyecto ha sido creado exitosamente"
     }
+  },
+  "fr": {
+    "heading": [
+      "Bienvenue dans Central.",
+      "Faisons des progrès."
+    ],
+    "gettingStarted": {
+      "title": "Commencer",
+      "body": [
+        {
+          "full": "Si vous ne savez pas par où commencer, il y a un guide de démarrage et une documentation utilisateur sur le {docsWebsite}.",
+          "docsWebsite": "Site web de la documentaion d'ODK"
+        },
+        {
+          "full": "De plus, vous pouvez toujours bénéficier de l'aide des autres utilisateurs sur le forum {forum}, en cherchant parmi les anciens sujets ou en en ouvrant un nouveau.",
+          "forum": "Forum de la communauté ODK"
+        }
+      ]
+    },
+    "news": "Nouvelles",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} pouvant administrer les projets à travers ce site.",
+          "{webUsers} pouvant administrer les projets à travers ce site."
+        ],
+        "webUsers": "Utilisateur Web | Utilisateurs Web"
+      },
+      "projects": {
+        "full": [
+          "{projects} qui peut organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs.",
+          "{projects} qui peuvent organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs."
+        ],
+        "projects": "Projet | Projets"
+      }
+    },
+    "projectsTitle": "Projets",
+    "action": {
+      "create": "Nouveau"
+    },
+    "header": {
+      "forms": "Formulaires"
+    },
+    "emptyTable": "Il n'y a pas de projets à voir.",
+    "alert": {
+      "create": "Votre nouveau projet a été créé avec succès."
+    }
   }
 }
 </i18n>

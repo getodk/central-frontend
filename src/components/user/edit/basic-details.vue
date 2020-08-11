@@ -102,6 +102,15 @@ export default {
     "alert": {
       "success": "Información de usuario guardada!"
     }
+  },
+  "fr": {
+    "title": "Détails de base",
+    "action": {
+      "update": "Mettre à jour les détails"
+    },
+    "alert": {
+      "success": "Détails de l'utilisateur sauvegardées !"
+    }
   }
 }
 </i18n>

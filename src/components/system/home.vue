@@ -71,6 +71,13 @@ export default {
       "backups": "Copias de seguridad",
       "audits": "Registro de auditoría"
     }
+  },
+  "fr": {
+    "title": "Gestion du système",
+    "tab": {
+      "backups": "Sauvegardes",
+      "audits": "Journal d'audit"
+    }
   }
 }
 </i18n>

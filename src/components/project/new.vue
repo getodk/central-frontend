@@ -98,6 +98,12 @@ export default {
 {
   "es": {
     "title": "Crear proyecto"
+  },
+  "fr": {
+    "title": "Créer un projet",
+    "introduction": [
+      "Les projets regroupent les formulaires et les utilisateurs d'applications afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre dispositif de collecte de données."
+    ]
   }
 }
 </i18n>

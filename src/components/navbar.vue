@@ -205,6 +205,11 @@ $shadow-color: #dedede;
     "action": {
       "toggle": "Alternar la navegación"
     }
+  },
+  "fr": {
+    "action": {
+      "toggle": "Basculer la navigation"
+    }
   }
 }
 </i18n>

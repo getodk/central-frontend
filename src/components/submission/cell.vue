@@ -213,6 +213,9 @@ export default {
 {
   "es": {
     "binaryLinkTitle": "El archivo fue enviado. Haga clic para descargar."
+  },
+  "fr": {
+    "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger."
   }
 }
 </i18n>

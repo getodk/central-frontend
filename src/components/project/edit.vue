@@ -100,6 +100,18 @@ export default {
     "alert": {
       "success": "¡Configuración del proyecto guardada!"
     }
+  },
+  "fr": {
+    "title": "Détails basiques",
+    "field": {
+      "name": "Nom du projet"
+    },
+    "action": {
+      "update": "Enregistrer les paramètres"
+    },
+    "alert": {
+      "success": "Paramètres du projet enregistrés !"
+    }
   }
 }
 </i18n>

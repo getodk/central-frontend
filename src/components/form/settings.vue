@@ -126,6 +126,21 @@ export default {
     "alert": {
       "delete": "{name} El formulario fue borrado."
     }
+  },
+  "fr": {
+    "state": {
+      "title": "État du formulaire",
+      "body": {
+        "full": "Pour définir l'état de ce formulaire, veuillez consulter le {formAccessSettings} du projet.",
+        "formAccessSettings": "Paramètres d'accès aux formualires"
+      }
+    },
+    "action": {
+      "delete": "Supprimer ce formulaire"
+    },
+    "alert": {
+      "delete": "Le formulaire {name} a été supprimé."
+    }
   }
 }
 </i18n>

@@ -83,6 +83,14 @@ export default {
       "roles": "Administración de Roles"
     },
     "comingSoon": "(próximamente)"
+  },
+  "fr": {
+    "title": "Paramètres d'utilisateur",
+    "tab": {
+      "users": "Utilisateur web",
+      "roles": "Paramètres de rôle"
+    },
+    "comingSoon": "(bientôt disponible)"
   }
 }
 </i18n>

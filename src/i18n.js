@@ -17,7 +17,9 @@ import fallbackMessages from './locales/en.json';
 
 export const locales = new Map()
   .set('en', 'English')
-  .set('es', 'Español');
+  .set('de', 'Deutsch')
+  .set('es', 'Español')
+  .set('fr', 'Français');
 
 const fallbackLocale = 'en';
 

@@ -238,6 +238,13 @@ export default {
       "submissionDate": "Enviado el",
       "instanceId": "ID de la Instancia"
     }
+  },
+  "fr": {
+    "header": {
+      "submitterName": "Soumis par",
+      "submissionDate": "Soumis à",
+      "instanceId": "ID de l'instance"
+    }
   }
 }
 </i18n>

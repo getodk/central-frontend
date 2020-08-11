@@ -255,6 +255,39 @@ export default {
         "article": "este artículo"
       }
     }
+  },
+  "fr": {
+    "title": "Utilisation d'OData",
+    "introduction": [
+      "OData est une nouvelle norme pour le transfert de données entre outils et services. Des outils d'analyse gratuits et puissants comme Excel, {powerBi} et {r} peuvent récupérer des données par le biais d'OData pour les analyser.",
+      "OData présente de nombreux avantages, mais surtout il permet le transfert en toute fidélité de types complexes comme les nombres et les données géographiques, et il permet à la dernière version de vos données de se synchroniser facilement avec tous les outils qui l'utilisent.",
+      "Pour commencer à utiliser OData, sélectionnez votre outil et y copiez le lien."
+    ],
+    "tab": {
+      "microsoft": "Excel/Power BI",
+      "other": "Autre"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Pour obtenir de l'aide sur l'utilisation d'OData avec Excel, voir {pageForExcel}. Pour obtenir de l'aide sur Power BI, voir {pageForPowerBi}.",
+        "pageForExcel": "cette page",
+        "pageForPowerBi": "cette page"
+      },
+      "r": [
+        {
+          "full": "Pour accéder aux données de Central depuis {r}, nous vous recommandons d'utiliser {ruODK}. Voir les vignettes de ruODK pour des exemples d'utilisation des API {oData} et {restful}.",
+          "restful": "RESTful"
+        },
+        {
+          "full": "Tout comme ODK, ruODK est développé et soutenu par les membres de la communauté. Si vous souhaitez contribuer à son amélioration, vous pouvez trouver des informations {here}.",
+          "here": "ici"
+        }
+      ],
+      "other": {
+        "full": "Pour une description complète de notre intégration OData, veuillez consulter {article}",
+        "article": "cet article"
+      }
+    }
   }
 }
 </i18n>

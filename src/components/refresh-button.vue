@@ -73,6 +73,11 @@ export default {
     "action": {
       "refresh": "Refresque la lista"
     }
+  },
+  "fr": {
+    "action": {
+      "refresh": "Rafraîchir la liste"
+    }
   }
 }
 </i18n>

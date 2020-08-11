@@ -73,6 +73,19 @@ export default {
 {
   "es": {
     "title": "Acerca del proyecto"
+  },
+  "fr": {
+    "title": "A propos des projets",
+    "body": [
+      {
+        "full": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs d'application pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
+        "accessTo": "accès"
+      },
+      {
+        "full": "Si vous avez des commentaires, veuillez participer à {forumThread}.",
+        "forumThread": "ce fil de discussion du forum"
+      }
+    ]
   }
 }
 </i18n>

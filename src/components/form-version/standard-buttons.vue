@@ -114,6 +114,15 @@ export default {
       "xForm": "Como XForm",
       "xlsForm": "Como XLSForm"
     }
+  },
+  "fr": {
+    "action": {
+      "downloadXForm": "Télécharger le XML"
+    },
+    "format": {
+      "xForm": "Comme XForm",
+      "xlsForm": "Comme XLSForm"
+    }
   }
 }
 </i18n>

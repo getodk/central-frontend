@@ -194,6 +194,38 @@ export default {
     "alert": {
       "archive": "El proyecto {name}fue archivado."
     }
+  },
+  "fr": {
+    "encryption": {
+      "title": "Chiffrement",
+      "body": {
+        "unencrypted": [
+          "Le chiffrement des données envoyées n'est pas activé pour ce projet."
+        ],
+        "encrypted": [
+          {
+            "full": "Le chiffrement des données de soumission est {enabled} pour ce projet.",
+            "enabled": "Activé"
+          },
+          "Dans cette version d'ODK Central, vous ne pouvez pas désactiver le chiffrement une fois qu'il est activé."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Activer le chiffrement"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Archiver ce projet"
+      },
+      "archived": [
+        "Le projet a été archivé.",
+        "Dans cette version d'ODK Central, vous ne pouvez pas désarchiver un projet. Cependant, la possibilité de désarchiver un projet est prévue pour une prochaine version."
+      ]
+    },
+    "alert": {
+      "archive": "Le projet \"{name}\" a été archivé."
+    }
   }
 }
 </i18n>

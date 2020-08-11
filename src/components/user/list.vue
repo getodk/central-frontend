@@ -242,6 +242,23 @@ export default {
     "alert": {
       "retire": "El usuario \"{displayName}\" ha sido retirado"
     }
+  },
+  "fr": {
+    "action": {
+      "create": "Créer un utilisateur web"
+    },
+    "heading": [
+      "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs d'application pour chaque projet."
+    ],
+    "header": {
+      "sitewideRole": "Rôle sur l'ensemble du site"
+    },
+    "alert": {
+      "create": "Un utilisateur a été créé avec succès pour \"{displayName}\".",
+      "assignRole": "Succès ! \"{displayName}\" a reçu le rôle de \"{roleName}\" pour l'ensemble du site.",
+      "resetPassword": "Le mot de passe pour \"{displayName}\" a été invalidé. Un courrier électronique a été envoyé à {email} avec des instructions sur la manière de procéder.",
+      "retire": "L'utilisateur {displayName}a été supprimé."
+    }
   }
 }
 </i18n>

@@ -80,6 +80,11 @@ export default {
     "header": {
       "idAndVersion": "ID y Versión"
     }
+  },
+  "fr": {
+    "header": {
+      "idAndVersion": "Identifiant et version"
+    }
   }
 }
 </i18n>

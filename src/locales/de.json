@@ -1,0 +1,176 @@
+{
+  "role": {
+    "none": "Keine",
+    "admin": "Administrator",
+    "manager": "Projektmanager",
+    "viewer": "Projekt-Teilnehmer",
+    "formfill": "Datensammler"
+  },
+  "formState": {
+    "open": "Offen",
+    "closing": "Wird geschlossen",
+    "closed": "Geschlossen"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Alle Aktionen)",
+      "user": "Webnutzer-Aktionen",
+      "project": "Projekt-Aktionen",
+      "form": "Formular-Aktionen",
+      "field_key": "App-Benutzer-Aktionen",
+      "public_link": "Öffentlicher Zugangslink-Aktionen",
+      "session": "Sitzungsaktionen",
+      "upgrade": "Server-Aktualisierung"
+    },
+    "action": {
+      "default": {
+        "create": "Erstellen",
+        "update": "Details aktualisieren",
+        "delete": "Löschen"
+      },
+      "assignment": {
+        "create": "Rolle zuweisen",
+        "delete": "Rolle entziehen"
+      },
+      "backup": "Sicherheitskopie",
+      "form": {
+        "update_draft_set": "Entwurf verfassen oder aktualisieren",
+        "update_publish": "Entwurf veröffentlichen",
+        "update_draft_delete": "Entwurf löschen",
+        "attachment_update": "Anhänge aktualisieren",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Formular verarbeiten",
+        "process_form_draft": "Formularentwurf verarbeiten"
+      },
+      "user": {
+        "delete": "Abschalten",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "field_key": {
+        "create": "@:audit.action.default.create"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create"
+      },
+      "session": {
+        "end": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "create": "Anlegen",
+    "createSubmission": "Neu",
+    "done": "Fertig",
+    "download": "Herunterladen",
+    "editProfile": "Profil bearbeiten",
+    "logIn": "Einloggen",
+    "looksGood": "Sieht gut aus, weiter",
+    "neverMind": "Nein danke, abbrechen",
+    "next": "Weiter",
+    "noCancel": "Nein, abbrechen",
+    "ok": "Okay",
+    "proceed": "Fortfahren",
+    "resetPassword": "Passwort zurücksetzen",
+    "save": "Speichern",
+    "yesProceed": "Ja, fortfahren"
+  },
+  "field": {
+    "dateRange": "Zeitraum",
+    "displayName": "Anzeigename",
+    "email": "Emailadresse",
+    "name": "Name",
+    "newPassword": "Neues Passwort",
+    "oldPassword": "Altes Passwort",
+    "passphrase": "Passphrase",
+    "password": "Passwort",
+    "passwordConfirm": "Neues Passwort (bestätigen)",
+    "type": "Typ"
+  },
+  "header": {
+    "actions": "Aktionen",
+    "created": "Erstellt",
+    "createdBy": "Erstellt von",
+    "displayName": "Anzeigename",
+    "email": "Emailadresse",
+    "lastSubmission": "Letzte Übermittlung",
+    "name": "Name",
+    "type": "Typ"
+  },
+  "plural": {
+    "appUser": "App-Benutzer | App-Benutzer",
+    "form": "Formular | Formulare",
+    "project": "Projekt | Projekte",
+    "submission": "Einsendung | Übermittlungen",
+    "webUser": "Web-Benutzer | Web-Benutzer"
+  },
+  "count": {
+    "appUser": "{count} App-Benutzer | {count} App-Benutzer",
+    "form": "{count} Formular | {count} Formulare",
+    "submission": "{count} Einsendung | {count} Übermittlungen"
+  },
+  "resource": {
+    "appUser": "App-Benutzer",
+    "form": "Formular",
+    "project": "Projekt",
+    "publicLink": "Öffentlicher Zugangslink",
+    "user": "Benutzer",
+    "webUser": "Web-Benutzer",
+    "session": "Sitzung",
+    "submissions": "Übermittlungen"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Für weitere Information {clickHere}",
+      "clickHere": "klicken Sie hier"
+    },
+    "helpArticle": {
+      "full": "Weitere Information: {helpArticle}",
+      "helpArticle": "dieser Hilfe-Artikel"
+    },
+    "learnMore": "Erfahren Sie mehr."
+  },
+  "common": {
+    "areYouSure": "Wollen Sie wirklich fortfahren?",
+    "currentDraft": "Ihr aktueller Entwurf",
+    "dangerZone": "Gefahrenbereich",
+    "no": "Nein",
+    "noResults": "Keine Ergebnisse",
+    "rightNow": "Genau jetzt",
+    "success": "Das hat geklappt!",
+    "yes": "Ja"
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(leer)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (archiviert)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "heute",
+      "yesterday": "gestern"
+    },
+    "request": {
+      "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
+      "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
+      "errorNotProblem": "Etwas ging schief: Der Fehler meldete einen ungültige Anfrage."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  }
+}

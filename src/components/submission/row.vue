@@ -144,6 +144,9 @@ $icon-lock-margin-right: 12px;
 {
   "es": {
     "encryptionMessage": "La vista previa de los datos no está disponible debido a la encriptación."
+  },
+  "fr": {
+    "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
   }
 }
 </i18n>

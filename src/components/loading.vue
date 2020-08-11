@@ -46,6 +46,9 @@ export default {
 {
   "es": {
     "text": "Cargando"
+  },
+  "fr": {
+    "text": "Chargement..."
   }
 }
 </i18n>

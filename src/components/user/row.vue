@@ -185,6 +185,16 @@ export default {
     "action": {
       "retire": "Retirar usuario"
     }
+  },
+  "fr": {
+    "cannotAssignRole": "Vous ne pouvez pas modifier votre propre rôle sur le site.",
+    "field": {
+      "sitewideRole": "Rôle sur l'ensemble du site"
+    },
+    "cannotRetire": "Vous ne pouvez pas supprimer votre propre compte.",
+    "action": {
+      "retire": "Supprimer utilisateur"
+    }
   }
 }
 </i18n>

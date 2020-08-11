@@ -110,6 +110,16 @@ export default {
         "noUndo": "Esta acción no se puede deshacer."
       }
     ]
+  },
+  "fr": {
+    "title": "Archivage du projet",
+    "introduction": [
+      "Vous êtes sur le point d'archiver le projet “{name}”. Il fonctionnera toujours comme maintenant, mais il sera classé en bas de la liste des projets de la page d'accueil de Central.",
+      {
+        "full": "{noUndo}, mais la possibilité de \"dés-archiver\" un projet est prévu pour une version future.",
+        "noUndo": "Cette action ne peut être annulée"
+      }
+    ]
   }
 }
 </i18n>

@@ -46,6 +46,10 @@ export default {
   "es": {
     "title": "Página no encontrada",
     "body": "La página que está solicitando no pudo ser encontrada."
+  },
+  "fr": {
+    "title": "Page non trouvée",
+    "body": "La page demandée ne peut être trouvée."
   }
 }
 </i18n>

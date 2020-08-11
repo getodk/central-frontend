@@ -93,6 +93,10 @@ export default {
   "es": {
     "help": "¿Qué son los Proyectos?",
     "noSubmission": "(ninguno)"
+  },
+  "fr": {
+    "help": "Que sont les \"Projets\" ?",
+    "noSubmission": "(aucun)"
   }
 }
 </i18n>

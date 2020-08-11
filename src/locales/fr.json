@@ -1,0 +1,176 @@
+{
+  "role": {
+    "none": "Aucun",
+    "admin": "Administrateur",
+    "manager": "Gestionnaire de projet",
+    "viewer": "Lecteur de projet",
+    "formfill": "Collecteur de données"
+  },
+  "formState": {
+    "open": "Ouvert",
+    "closing": "Fermeture",
+    "closed": "Fermé"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Toutes actions)",
+      "user": "Actions d'utilisateur web",
+      "project": "Actions de projet",
+      "form": "Actions de formulaire",
+      "field_key": "Actions d'utilisateurs d'application",
+      "public_link": "Actions de liens d'accès public",
+      "session": "Actions de sessions",
+      "upgrade": "Mise à jour du serveur"
+    },
+    "action": {
+      "default": {
+        "create": "Créer",
+        "update": "Mettre à jour les détails",
+        "delete": "Supprimer"
+      },
+      "assignment": {
+        "create": "Attribuer un rôle",
+        "delete": "Révoquer un rôle"
+      },
+      "backup": "Sauvegarder",
+      "form": {
+        "update_draft_set": "Créer ou mettre à jour l'ébauche",
+        "update_publish": "Publier l'ébauche",
+        "update_draft_delete": "Abandonner l'ébauche",
+        "attachment_update": "Mettre à jour les fichiers joints",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Traiter le formulaire",
+        "process_form_draft": "Traiter l'ébauche du formulaire"
+      },
+      "user": {
+        "delete": "Supprimer",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "field_key": {
+        "create": "@:audit.action.default.create"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create"
+      },
+      "session": {
+        "end": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "create": "Créer",
+    "createSubmission": "Nouveau",
+    "done": "Fait",
+    "download": "Télécharger",
+    "editProfile": "Éditer le profil",
+    "logIn": "Se connecter",
+    "looksGood": "Ça a l'air bon, continuez",
+    "neverMind": "Peu importe, annuler",
+    "next": "Suivant",
+    "noCancel": "Non, abandonner",
+    "ok": "OK",
+    "proceed": "Continuer",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "save": "Enregistrer",
+    "yesProceed": "Oui, procéder"
+  },
+  "field": {
+    "dateRange": "Intervalle de date",
+    "displayName": "Nom affiché",
+    "email": "Adresse de courriel",
+    "name": "Nom",
+    "newPassword": "Nouveau mot de passe",
+    "oldPassword": "Ancien mot de passe",
+    "passphrase": "Phrase de passe",
+    "password": "Mot de passe",
+    "passwordConfirm": "Nouveau mot de passe (confirmez)",
+    "type": "Type"
+  },
+  "header": {
+    "actions": "Actions",
+    "created": "Créé",
+    "createdBy": "Créé par",
+    "displayName": "Nom affiché",
+    "email": "Adresse de courriel",
+    "lastSubmission": "Dernière soumission",
+    "name": "Nom",
+    "type": "Type"
+  },
+  "plural": {
+    "appUser": "Utilisateur d'application | Utilisateurs d'application",
+    "form": "Formulaires | Formulaires",
+    "project": "Projet | Projets",
+    "submission": "Soumission | Soumissions",
+    "webUser": "Utilisateur Web | Utilisateurs Web"
+  },
+  "count": {
+    "appUser": "{count} Utilisateur d'application | {count} Utilisateurs d'application",
+    "form": "{count} Formulaire | {count} Formulaires",
+    "submission": "{count} Soumission | {count} Soumissions"
+  },
+  "resource": {
+    "appUser": "Utilisateur d'application",
+    "form": "Formulaire",
+    "project": "Projet",
+    "publicLink": "Lien d'accès public",
+    "user": "Utilisateur",
+    "webUser": "Utilisateur web",
+    "session": "Session",
+    "submissions": "Soumissions"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Pour plus d'informations, {clickHere}.",
+      "clickHere": "Cliquez ici"
+    },
+    "helpArticle": {
+      "full": "Pour plus d'information, veuillez consulter ceci {helpArticle}.",
+      "helpArticle": "cet article d'aide"
+    },
+    "learnMore": "En savoir plus."
+  },
+  "common": {
+    "areYouSure": "Êtes vous sûr de vouloir procéder ?",
+    "currentDraft": "Votre ébauche actuelle",
+    "dangerZone": "Zone Dangereuse",
+    "no": "Non",
+    "noResults": "Aucun résultat",
+    "rightNow": "Tout de suite",
+    "success": "Succès !",
+    "yes": "Oui"
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(vierge)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (archivé)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "aujourd'hui",
+      "yesterday": "hier"
+    },
+    "request": {
+      "noRequest": "Quelque-chose s'est mal passé : il n'y avait pas de requête.",
+      "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
+      "errorNotProblem": "Quelque-chose s'est mal passé : le serveur a retourné une erreur invalide."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
+  }
+}

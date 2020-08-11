@@ -169,6 +169,12 @@ export default {
     "field": {
       "projectRole": "Rol en el proyecto"
     }
+  },
+  "fr": {
+    "cannotAssignRole": "Vous ne pouvez pas modifier votre propre rôle dans le projet.",
+    "field": {
+      "projectRole": "Rôle dans le projet"
+    }
   }
 }
 </i18n>

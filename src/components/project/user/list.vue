@@ -352,6 +352,42 @@ export default {
       "assignRole": "A {displayName} se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
       "unassignRole": "{displayName}ha sido removido exitosamente de este proyecto."
     }
+  },
+  "fr": {
+    "heading": [
+      "Les administrateurs sur l'ensemble du site sont automatiquement considérés comme gestionnaires de chaque projet. Les autres utilisateurs peuvent avoir des rôles spécifiques à ce projet:",
+      {
+        "full": "Les {projectManagers}peuvent exécuter toutes les tâches administratives liées à ce projet et peuvent remplir des formulaires depuis leurs navigateurs.",
+        "projectManagers": "gestionnaires de projet"
+      },
+      {
+        "full": "Les {projectViewers}ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
+        "projectViewers": "lecteurs de projet"
+      },
+      {
+        "full": "Les {dataCollectors}peuvent remplir des formulaires depuis leur navigateur mais n'ont aucun accès aux données ou paramètres du projet.",
+        "dataCollectors": "collecteurs de données"
+      }
+    ],
+    "action": {
+      "clearSearch": "Effacer la recherche"
+    },
+    "field": {
+      "q": {
+        "canList": "Rechercher un utilisateur...",
+        "cannotList": "Entrez l'adresse e-mail exacte de l'utilisateur..."
+      }
+    },
+    "header": {
+      "user": "Utilisateur",
+      "projectRole": "Rôle dans le projet"
+    },
+    "emptyTable": "Il n'y a pas encore d'utilisateurs affectés à ce projet. Pour en ajouter un, recherchez un utilisateur ci-dessus.",
+    "alert": {
+      "unassignWithoutReassign": "Quelque chose a mal tourné. \"{displayName}\" a été retiré du projet.",
+      "assignRole": "Succès ! \"{displayName}\" a reçu un rôle de \"{roleName}\" dans ce projet.",
+      "unassignRole": "Succès ! “{displayName}” a été retiré de ce projet."
+    }
   }
 }
 </i18n>

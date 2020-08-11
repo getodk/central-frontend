@@ -71,6 +71,12 @@ export default {
       "published": "Publicado",
       "definition": "Definición"
     }
+  },
+  "fr": {
+    "header": {
+      "published": "Publié",
+      "definition": "Définition"
+    }
   }
 }
 </i18n>

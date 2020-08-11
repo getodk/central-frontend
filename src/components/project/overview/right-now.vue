@@ -103,6 +103,22 @@ export default {
       ],
       "forms": "Formulario | Formularios"
     }
+  },
+  "fr": {
+    "appUsers": {
+      "full": [
+        "{appUsers}qui peut utiliser un client de collecte de données pour télécharger et soumettre les données du formulaire à ce projet.",
+        "{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger et soumettre les données du formulaire à ce projet."
+      ],
+      "appUsers": "Utilisateur d'application | Utilisateurs d'application"
+    },
+    "forms": {
+      "full": [
+        "{forms} qui peut être téléchargé et donné sous forme d'une enquête sur les clients mobiles.",
+        "{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes sur les clients mobiles."
+      ],
+      "forms": "Formulaire | Formulaires"
+    }
   }
 }
 </i18n>
