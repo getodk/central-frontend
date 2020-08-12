@@ -93,7 +93,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is the text for an action, for example, the text of a button.
+    // Clicking on this text displays an App User QR code for configuring ODK Collect.
     "seeCode": "See code",
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",

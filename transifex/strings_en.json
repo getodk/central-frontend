@@ -394,7 +394,7 @@
     },
     "rightNow": {
       "string": "Right Now",
-      "developer_comment": "This is a title shown above a section of the page."
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
     "success": {
       "string": "Success!"
@@ -691,7 +691,8 @@
       },
       "success": {
         "0": {
-          "string": "Backup is working."
+          "string": "Backup is working.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
         },
         "1": {
           "string": "The last backup completed successfully {dateTime}.",
@@ -867,7 +868,7 @@
     "FieldKeyRow": {
       "seeCode": {
         "string": "See code",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
       },
       "accessRevoked": {
         "string": "Access revoked",
@@ -2056,7 +2057,8 @@
           "string": "Welcome to Central."
         },
         "1": {
-          "string": "Let’s get some things done."
+          "string": "Let’s get some things done.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
         }
       },
       "gettingStarted": {
