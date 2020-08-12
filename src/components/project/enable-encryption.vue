@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
           </div>
           <i18n tag="p" path="steps[0].introduction[2].full">
             <template #here>
-              <doc-link to="central-encryption/">here</doc-link>
+              <doc-link to="central-encryption/">{{ $t('steps[0].introduction[2].here') }}</doc-link>
             </template>
           </i18n>
         </div>

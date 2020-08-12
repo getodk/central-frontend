@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           <th>{{ $t('header.created') }}</th>
           <th>{{ $t('header.lastUsed') }}</th>
           <th>{{ $t('header.configureClient') }}</th>
-          <th>{{ $t('header.actions') }} </th>
+          <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
       <tbody v-if="fieldKeys != null">
@@ -220,10 +220,7 @@ export default {
 #field-key-list-table {
   table-layout: fixed;
 
-  th:nth-child(5) {
-    width: $padding-left-table-data + $padding-right-table-data +
-      $min-width-dropdown-menu;
-  }
+  th.actions { width: 125px; }
 }
 
 #field-key-list-popover-content {

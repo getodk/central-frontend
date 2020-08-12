@@ -35,7 +35,8 @@ except according to the terms contained in the LICENSE file.
           aria-haspopup="true" aria-expanded="false">
           <span class="icon-cog"></span><span class="caret"></span>
         </button>
-        <ul :aria-labelledby="actionsId" class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-right"
+          :aria-labelledby="actionsId">
           <li :class="{ disabled: fieldKey.token == null }">
             <a href="#" @click.prevent="revoke">{{ $t('action.revokeAccess') }}&hellip;</a>
           </li>

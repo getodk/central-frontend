@@ -116,21 +116,3 @@ export function $tcPath(path, choice) {
   const fallbackIndex = choice === 1 ? 0 : 1;
   return `${path}[${fallbackIndex}]`;
 }
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// AUDITS
-
-const auditActionPath = (action) => {
-  const index = action.indexOf('.');
-  if (index === -1) return `audit.action.${action}`;
-  const category = action.slice(0, index);
-  const subaction = action.slice(index + 1);
-  const subactionKey = subaction.replace(/\./g, '_');
-  return `audit.action.${category}.${subactionKey}`;
-};
-export const auditActionMessage = (action) => {
-  const path = auditActionPath(action);
-  return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
-};

@@ -22,49 +22,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import i18n from '../../../i18n';
-import { auditActionMessage } from '../../../util/i18n';
-
-const categoryOption = (category) => ({
-  text: i18n.t(`audit.category.${category}`),
-  value: category,
-  htmlClass: 'audit-filters-action-category'
-});
-const actionOption = (action) => ({
-  // Adding non-breaking spaces: see #323 on GitHub.
-  text: `\u00a0\u00a0\u00a0${auditActionMessage(action)}`,
-  value: action
-});
-const options = [
-  categoryOption('nonverbose'),
-  categoryOption('user'),
-  actionOption('user.create'),
-  actionOption('user.update'),
-  actionOption('assignment.create'),
-  actionOption('assignment.delete'),
-  actionOption('user.delete'),
-  categoryOption('project'),
-  actionOption('project.create'),
-  actionOption('project.update'),
-  actionOption('project.delete'),
-  categoryOption('form'),
-  actionOption('form.create'),
-  actionOption('form.update'),
-  actionOption('form.update.draft.set'),
-  actionOption('form.update.publish'),
-  actionOption('form.update.draft.delete'),
-  actionOption('form.attachment.update'),
-  actionOption('form.delete'),
-  categoryOption('field_key'),
-  actionOption('field_key.create'),
-  categoryOption('public_link'),
-  actionOption('public_link.create'),
-  categoryOption('session'),
-  actionOption('session.end')
-];
+import audit from '../../../mixins/audit';
 
 export default {
   name: 'AuditFiltersAction',
+  mixins: [audit()],
   props: {
     value: {
       type: String,
@@ -73,7 +35,49 @@ export default {
   },
   computed: {
     options() {
-      return options;
+      return [
+        this.categoryOption('nonverbose'),
+        this.categoryOption('user'),
+        this.actionOption('user.create'),
+        this.actionOption('user.update'),
+        this.actionOption('assignment.create'),
+        this.actionOption('assignment.delete'),
+        this.actionOption('user.delete'),
+        this.categoryOption('project'),
+        this.actionOption('project.create'),
+        this.actionOption('project.update'),
+        this.actionOption('project.delete'),
+        this.categoryOption('form'),
+        this.actionOption('form.create'),
+        this.actionOption('form.update'),
+        this.actionOption('form.update.draft.set'),
+        this.actionOption('form.update.publish'),
+        this.actionOption('form.update.draft.delete'),
+        this.actionOption('form.attachment.update'),
+        this.actionOption('form.delete'),
+        this.categoryOption('field_key'),
+        this.actionOption('field_key.create'),
+        this.categoryOption('public_link'),
+        this.actionOption('public_link.create'),
+        this.categoryOption('session'),
+        this.actionOption('session.end')
+      ];
+    }
+  },
+  methods: {
+    categoryOption(category) {
+      return {
+        text: this.$t(`audit.category.${category}`),
+        value: category,
+        htmlClass: 'audit-filters-action-category'
+      };
+    },
+    actionOption(action) {
+      return {
+        // Adding non-breaking spaces: see #323 on GitHub.
+        text: `\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
+        value: action
+      };
     }
   }
 };

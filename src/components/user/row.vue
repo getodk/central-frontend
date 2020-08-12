@@ -38,7 +38,8 @@ except according to the terms contained in the LICENSE file.
           aria-haspopup="true" aria-expanded="false">
           <span class="icon-cog"></span><span class="caret"></span>
         </button>
-        <ul :aria-labelledby="actionsButtonId" class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-right"
+          :aria-labelledby="actionsButtonId">
           <li>
             <router-link :to="userPath(user.id)" class="edit-profile">
               {{ $t('action.editProfile') }}

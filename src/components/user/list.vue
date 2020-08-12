@@ -35,7 +35,7 @@ either is an Administrator or has no role. -->
           <th>{{ $t('header.displayName') }}</th>
           <th>{{ $t('header.email') }}</th>
           <th>{{ $t('header.sitewideRole') }}</th>
-          <th>{{ $t('header.actions') }}</th>
+          <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
       <tbody v-if="users != null && adminIds != null">
@@ -194,15 +194,10 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 #user-list-table {
   table-layout: fixed;
 
-  th:nth-child(4) {
-    width: $padding-left-table-data + $padding-right-table-data +
-      $min-width-dropdown-menu;
-  }
+  th.actions { width: 125px; }
 }
 </style>
 

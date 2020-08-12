@@ -41,19 +41,18 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import Selectable from '../selectable.vue';
-import i18n from '../../i18n';
+import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
-import { auditActionMessage } from '../../util/i18n';
 
 const typeByCategory = {
-  session: i18n.t('resource.session'),
-  user: i18n.t('resource.user'),
-  assignment: i18n.t('resource.user'),
-  project: i18n.t('resource.project'),
-  form: i18n.t('resource.form'),
-  public_link: i18n.t('resource.publicLink'),
-  field_key: i18n.t('resource.appUser'),
-  upgrade: i18n.t('audit.category.upgrade')
+  session: 'resource.session',
+  user: 'resource.user',
+  assignment: 'resource.user',
+  project: 'resource.project',
+  form: 'resource.form',
+  public_link: 'resource.publicLink',
+  field_key: 'resource.appUser',
+  upgrade: 'audit.category.upgrade'
 };
 
 const getDisplayName = ({ displayName }) => displayName;
@@ -89,7 +88,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 export default {
   name: 'AuditRow',
   components: { DateTime, Selectable },
-  mixins: [routes()],
+  mixins: [audit(), routes()],
   props: {
     audit: {
       type: Object,
@@ -102,10 +101,10 @@ export default {
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
     type() {
-      const actionMessage = auditActionMessage(this.audit.action);
+      const actionMessage = this.actionMessage(this.audit.action);
       if (actionMessage == null) return [this.audit.action];
       return this.category != null
-        ? [typeByCategory[this.category], actionMessage]
+        ? [this.$t(typeByCategory[this.category]), actionMessage]
         : [actionMessage];
     },
     target() {
