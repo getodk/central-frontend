@@ -277,7 +277,19 @@ export default {
       "success": "Vaše změny byly uloženy!"
     }
   },
+  "de": {
+    "heading": [
+      "Benutzer der App können nur diejenigen Formulare ansehen oder ausfüllen, für die sie expliziten Zugriff haben. Projekt-Manager und Datensammler können einen Browser benutzen, um beliebige Formulare im Projekt, die sich noch im offenen Zustand befinden, auszufüllen."
+    ],
+    "emptyTable": "Es gibt keine Formulare zum Anzeigen.",
+    "alert": {
+      "success": "Ihre Änderungen wurden gespeichert."
+    }
+  },
   "es": {
+    "heading": [
+      "Los usuarios móviles solo pueden ver y llenar los formularios a los que explícitamente se les ha dado acceso en la tabla siguiente. Los administradores de proyecto y recolectores de datos puede utilizar un navegador web para llenar cualquier formulario del proyecto que está en estado abierto."
+    ],
     "emptyTable": "No existen formularios para mostrar.",
     "alert": {
       "success": "¡Sus modificaciones han sido guardadas!"
@@ -285,7 +297,7 @@ export default {
   },
   "fr": {
     "heading": [
-      "Les utilisateurs d'application peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
+      "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
     ],
     "emptyTable": "Il n'y a pas de formulaire à afficher.",
     "alert": {

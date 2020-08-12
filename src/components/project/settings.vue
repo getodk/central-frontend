@@ -195,23 +195,55 @@ export default {
       "archive": "Projekt „{name}“ byl archivován."
     }
   },
-  "es": {
+  "de": {
     "encryption": {
-      "title": "Encriptación",
+      "title": "Verschlüsselung",
       "body": {
         "unencrypted": [
-          "El envío de datos encriptados, no está habilitado para este proyecto."
+          "Übermittlungsdatenverschlüsselung ist für dieses Projekt nicht aktiviert."
         ],
         "encrypted": [
           {
-            "full": "La encriptación de datos de los envíos está {enabled}para este Proyecto.",
-            "enabled": "habilitado"
+            "full": "Übermittlungsdatenverschlüsselung ist für dieses Projekt {enabled}.",
+            "enabled": "aktiviert"
           },
-          "En esta versión de ODK Central, no podrá desactivar la encriptación una vez haya sido activada."
+          "In dieser Version von ODK Central dürfen Sie die Verschlüsselung nicht mehr deaktivieren nachdem sie aktiviert wurde."
         ]
       },
       "action": {
-        "enableEncryption": "Encriptación activada"
+        "enableEncryption": "Verschlüsselung aktivieren"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Dieses Projekt archivieren"
+      },
+      "archived": [
+        "Dieses Projekt wurde archiviert.",
+        "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
+      ]
+    },
+    "alert": {
+      "archive": "Das Projekt \"{name}\" wurde archiviert."
+    }
+  },
+  "es": {
+    "encryption": {
+      "title": "Cifrado",
+      "body": {
+        "unencrypted": [
+          "El envío de datos cifrados no está activado para este proyecto."
+        ],
+        "encrypted": [
+          {
+            "full": "El cifrado de datos de los envíos está {enabled} para este proyecto.",
+            "enabled": "activado"
+          },
+          "En esta versión de ODK Central, no podrá desactivar el cifrado una vez haya sido activada."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Activar cifrado"
       }
     },
     "dangerZone": {
@@ -224,7 +256,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "El proyecto {name}fue archivado."
+      "archive": "El proyecto \"{name}\" fue archivado."
     }
   },
   "fr": {

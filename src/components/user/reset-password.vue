@@ -95,13 +95,17 @@ export default {
     }
   },
   "de": {
-    "title": "Passwort zurücksetzen"
+    "title": "Passwort zurücksetzen",
+    "introduction": {
+      "full": "Sobald Sie unten {resetPassword} klicken, wird das Passwort des Benutzers \"{displayName}\" \u003c{email}> unmittelbar ungültig. Eine E-Mail wird an {email} gesendet mit Anweisungen wie weiter vorgegangen wird.",
+      "resetPassword": "Passwort zurücksetzen"
+    }
   },
   "es": {
     "title": "Restablecer contraseña",
     "introduction": {
-      "full": "Una vez que presiones{resetPassword}a continuación, la contraseña del usuario “{displayName}” \u003c{email}> será invalidada inmediatamente. Se enviará un correo electrónico a {email} con instrucciones de cómo proceder.",
-      "resetPassword": "Formatear constraseña"
+      "full": "Una vez que presione {resetPassword} a continuación, la contraseña del usuario “{displayName}” \u003c{email}> será invalidada inmediatamente. Se enviará un correo electrónico a {email} con instrucciones de cómo proceder.",
+      "resetPassword": "restablecer constraseña"
     }
   },
   "fr": {

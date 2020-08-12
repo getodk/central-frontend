@@ -23,7 +23,7 @@
   },
   "formState": {
     "open": {
-      "string": "Abrir",
+      "string": "Abierto",
       "developer_comment": "Form States control the lifecycle state of each Form. \"Open\" is one Form State."
     },
     "closing": {
@@ -46,23 +46,23 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "project": {
-        "string": "Acciones del proyecto",
+        "string": "Acciones de proyectos",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "form": {
-        "string": "Acciones del formulario",
+        "string": "Acciones de Formulario",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
-        "string": "",
+        "string": "Acciones de usuarios móviles",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "public_link": {
-        "string": "",
+        "string": "Acciones de enlaces de acceso público",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "session": {
-        "string": "",
+        "string": "Acciones de sesión",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
@@ -96,12 +96,12 @@
         }
       },
       "backup": {
-        "string": "Respaldo",
+        "string": "Copia de seguridad",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "form": {
         "update_draft_set": {
-          "string": "Crear o Actualizar borrador",
+          "string": "Crear o actualizar borrador",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -123,7 +123,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "process_form_draft": {
-          "string": "Procesar formulario de borrador",
+          "string": "Procesar borrador de formulario",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -193,7 +193,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "resetPassword": {
-      "string": "Resetear contraseña",
+      "string": "Restablecer contraseña",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -211,7 +211,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "displayName": {
-      "string": "Mostrar nombre",
+      "string": "Nombre para mostrar",
       "developer_comment": "This is the text of a form field."
     },
     "email": {
@@ -231,7 +231,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "",
+      "string": "Frase de contraseña",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -261,7 +261,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "displayName": {
-      "string": "Mostrar nombre",
+      "string": "Nombre para mostrar",
       "developer_comment": "This is the text of a table column header."
     },
     "email": {
@@ -269,7 +269,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "lastSubmission": {
-      "string": "Último envio",
+      "string": "Último envío",
       "developer_comment": "This is the text of a table column header."
     },
     "name": {
@@ -283,7 +283,7 @@
   },
   "plural": {
     "appUser": {
-      "string": "{count, plural, one {Usuario de la aplicación} other {Usuarios de la aplicación}}"
+      "string": "{count, plural, one {Usuario móvil} other {Usuarios móviles}}"
     },
     "form": {
       "string": "{count, plural, one {Formulario} other {Formularios}}"
@@ -300,49 +300,49 @@
   },
   "count": {
     "appUser": {
-      "string": "{count, plural, one {{count} Usuario de la aplicación} other {{count} Usuarios de la aplicación}}",
+      "string": "{count, plural, one {{count} usuario móvil} other {{count} usuarios móviles}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
-      "string": "{count, plural, one {{count} Formulario} other {{count} Formularios}}",
+      "string": "{count, plural, one {{count} formulario} other {{count} formularios}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "submission": {
-      "string": "{count, plural, one {{count} Envío} other {{count} Envíos}}",
+      "string": "{count, plural, one {{count} Envío} other {{count} envíos}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
   "resource": {
     "appUser": {
-      "string": "",
+      "string": "Usuario móvil",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
-      "string": "",
+      "string": "Formulario",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
-      "string": "",
+      "string": "Proyecto",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "publicLink": {
-      "string": "",
+      "string": "Enlace de acceso público",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "user": {
-      "string": "",
+      "string": "Usuario",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
-      "string": "",
+      "string": "Usuario web",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "session": {
-      "string": "",
+      "string": "Sesión",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
-      "string": "",
+      "string": "Envíos",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -353,7 +353,7 @@
         "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
       },
       "clickHere": {
-        "string": "clic aquí",
+        "string": "haga clic aquí",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
       }
     },
@@ -363,7 +363,7 @@
         "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
       },
       "helpArticle": {
-        "string": "",
+        "string": "este artículo de ayuda",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
       }
     },
@@ -382,11 +382,11 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "dangerZone": {
-      "string": "Zona de Peligro",
+      "string": "Zona de peligro",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "no": {
-      "string": ""
+      "string": "No"
     },
     "noResults": {
       "string": "Sin resultados",
@@ -394,13 +394,13 @@
     },
     "rightNow": {
       "string": "Ahora mismo",
-      "developer_comment": "This is a title shown above a section of the page."
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
     "success": {
       "string": "¡Éxito!"
     },
     "yes": {
-      "string": ""
+      "string": "Sí"
     }
   },
   "presenter": {
@@ -430,19 +430,19 @@
     },
     "request": {
       "noRequest": {
-        "string": ""
+        "string": "Algo salió mal: no hubo solicitud."
       },
       "noResponse": {
-        "string": ""
+        "string": "Algo salió mal: no hubo respuesta a su solicitud."
       },
       "errorNotProblem": {
-        "string": ""
+        "string": "Algo salió mal: el servidor devolvió un error no válido."
       }
     }
   },
   "router": {
     "unsavedChanges": {
-      "string": ""
+      "string": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
     }
   },
   "component": {
@@ -459,7 +459,7 @@
       },
       "problem": {
         "401_2": {
-          "string": "",
+          "string": "{message} Es posible que el enlace de su correo electrónico haya expirado y tenga que enviarse un nuevo correo electrónico.",
           "developer_comment": "{message} is an error message from the server."
         }
       },
@@ -482,7 +482,7 @@
     },
     "AccountResetPassword": {
       "title": {
-        "string": "Resetear contraseña",
+        "string": "Restablecer contraseña",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
@@ -500,7 +500,7 @@
     "AuditList": {
       "heading": {
         "0": {
-          "string": "Aquí encontrará un registro de acciones significativas realizadas en este servidor. Los cambios realizados en la configuración de usuario, Proyecto o Formulario se pueden encontrar aquí."
+          "string": "Aquí encontrará un registro de acciones significativas realizadas en este servidor. Los cambios realizados en la configuración de usuario, proyecto o formulario se pueden encontrar aquí."
         }
       },
       "emptyTable": {
@@ -534,7 +534,7 @@
       },
       "alert": {
         "create": {
-          "string": "Exitoso! Las copias de seguridad automáticas están ahora configuradas."
+          "string": "¡Exitoso! Las copias de seguridad automáticas están ahora configuradas."
         },
         "terminate": {
           "string": "Sus copias de seguridad automáticas terminaron. Se recomienda que configure uno nuevo tan pronto como sea posible."
@@ -617,11 +617,11 @@
     "BackupStatus": {
       "getHelp": {
         "full": {
-          "string": "Si tiene problemas, pruebe el foro {forum}.",
+          "string": "Si tiene problemas, pruebe el {forum}.",
           "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
         },
         "forum": {
-          "string": "Foro de la comunidad",
+          "string": "foro de la comunidad",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
         }
       },
@@ -634,11 +634,11 @@
         },
         "2": {
           "full": {
-            "string": "A menos que haya configurado algún otro Formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
+            "string": "A menos que haya configurado algún otro formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
             "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
           },
           "recommended": {
-            "string": "Muy recomendado",
+            "string": "muy recomendado",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
           }
         },
@@ -659,7 +659,7 @@
             "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
           },
           "terminate": {
-            "string": "Terminar",
+            "string": "terminar",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
           }
         }
@@ -674,7 +674,7 @@
             "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
           },
           "moreThanThreeDaysAgo": {
-            "string": "Hace más de tres días",
+            "string": "hace más de tres días",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
           }
         },
@@ -684,14 +684,15 @@
             "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
           },
           "terminate": {
-            "string": "Terminar",
+            "string": "terminar",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
           }
         }
       },
       "success": {
         "0": {
-          "string": "La copia de seguridad está funcionando"
+          "string": "La copia de seguridad está funcionando",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
         },
         "1": {
           "string": "Última copia de seguridad completada con éxito {dateTime}",
@@ -726,10 +727,10 @@
     "EnketoFill": {
       "disabled": {
         "processing": {
-          "string": "El Formulario web aún no está disponible. No ha terminado de ser procesado. Por favor actualice más tarde e intente nuevamente."
+          "string": "El formulario web aún no está disponible. No ha terminado de ser procesado. Por favor actualice más tarde e intente nuevamente."
         },
         "notOpen": {
-          "string": "Este Formulario no acepta nuevos envíos en este momento."
+          "string": "Este formulario no acepta nuevos envíos en este momento."
         }
       }
     },
@@ -742,7 +743,7 @@
       },
       "disabled": {
         "processing": {
-          "string": "La vista previa no ha finalizado el procesamiento de este Formulario. Por favor actualice más tarde e intente nuevamente."
+          "string": "La vista previa no ha finalizado el procesamiento de este formulario. Por favor actualice más tarde e intente nuevamente."
         },
         "notOpen": {
           "string": "En esta versión de ODK Central, la vista previa solo está disponible para formularios en estado abierto."
@@ -752,18 +753,18 @@
     "FieldKeyList": {
       "action": {
         "create": {
-          "string": "Crear usuario de la aplicación",
+          "string": "Crear usuario móvil",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "heading": {
         "0": {
           "full": {
-            "string": "",
+            "string": "Los usuarios móviles se utilizan para recolectar datos desde una aplicación tal como {collect}. Típicamente representan un rol compartido como “Vacunador” pero también pueden representar a individuos. Los usuarios móviles en este proyecto solo pueden descargar y usar formularios en este proyecto. Cuando usted crea un nuevo usuario móvil, al principio este no tendrá acceso a ningún formulario. Para definir los formularios a los que cada usuario móvil puede acceder, utilice la pestaña {formAccess}.",
             "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
           },
           "formAccess": {
-            "string": "",
+            "string": "Acceso a formularios",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
           }
         },
@@ -773,7 +774,7 @@
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
-            "string": "",
+            "string": "haga clic aquí",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
           }
         }
@@ -793,34 +794,34 @@
         "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
       },
       "emptyTable": {
-        "string": "Todavía no hay usuarios de la aplicación. Deberá crear algunos para descargar Formularios y enviar datos desde su dispositivo."
+        "string": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo."
       },
       "alert": {
         "create": {
-          "string": "El usuario de la aplicación \"{displayName}\" se creó correctamente."
+          "string": "El usuario móvil \"{displayName}\" se creó correctamente."
         },
         "revoke": {
-          "string": "Se revocó el acceso para el usuario de la aplicación \"{displayName}\"."
+          "string": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
         }
       }
     },
     "FieldKeyNew": {
       "title": {
-        "string": "Crear usuario de la aplicación",
+        "string": "Crear usuario móvil",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Este usuario no tendrá acceso a ningún formulario al principio. Podrá asignar Formularios después de crear el usuario."
+          "string": "Este usuario no tendrá acceso a ningún formulario al principio. Podrá asignar formularios después de crear el usuario."
         }
       },
       "success": {
         "0": {
-          "string": "Se ha creado el usuario de la aplicación {displayName}"
+          "string": "Se ha creado el usuario móvil {displayName}"
         },
         "1": {
           "full": {
-            "string": "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo{scanningCode} en su aplicación. O puede hacerlo más tarde desde la tabla Usuarios de la aplicación haciendo clic en \"Ver código\".",
+            "string": "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo {scanningCode} en su aplicación. O puede hacerlo más tarde desde la tabla de usuarios móviles haciendo clic en \"Ver código\".",
             "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
           },
           "scanningCode": {
@@ -830,11 +831,11 @@
         },
         "2": {
           "full": {
-            "string": "Es posible que desee visitar este proyecto {formAccessSettings} para dar acceso a este usuario a los formularios.",
+            "string": "Es posible que desee visitar la {formAccessSettings} de este proyecto para dar acceso a este usuario a los formularios.",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
-            "string": "Configuración de acceso al Formulario",
+            "string": "configuración de acceso a formularios",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
           }
         }
@@ -853,7 +854,7 @@
       },
       "introduction": {
         "0": {
-          "string": "¿Está seguro de que desea revocar el acceso del usuario de la aplicación {displayName}?",
+          "string": "¿Está seguro de que desea revocar el acceso del usuario móvil {displayName}?",
           "developer_comment": "{displayName} is formatted in bold."
         },
         "1": {
@@ -867,7 +868,7 @@
     "FieldKeyRow": {
       "seeCode": {
         "string": "Ver código",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
       },
       "accessRevoked": {
         "string": "Acceso revocado",
@@ -907,7 +908,7 @@
           "developer_comment": "{message} is an error message from the server."
         },
         "someUploaded": {
-          "string": "{count, plural, one {{message}Solo {uploaded}{total} los archivos se cargaron correctamente.} other {{message}Solo {uploaded} de {total} archivos se cargaron correctamente.}}",
+          "string": "{count, plural, one {{message} Solo {uploaded} de {total} archivos se cargó correctamente.} other {{message} Solo {uploaded} de {total} archivos se cargaron correctamente.}}",
           "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
         }
       },
@@ -916,7 +917,7 @@
           "string": "Algo salió mal mientras leía {filename}"
         },
         "success": {
-          "string": "{count, plural, one {{count}Los archivos se han cargado correctamente.} other {{count} Los archivos se han cargado correctamente.}}"
+          "string": "{count, plural, one {{count} archivo se ha cargado correctamente.} other {{count} archivos se han cargado correctamente.}}"
         }
       }
     },
@@ -933,7 +934,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Está seguro que quiere subir {filename}como {attachmentName}?",
+          "string": "Está seguro que quiere subir {filename} como {attachmentName}?",
           "developer_comment": "{filename} and {attachmentName} are formatted in bold."
         },
         "1": {
@@ -956,11 +957,11 @@
         },
         "dropToPrepare": {
           "full": {
-            "string": "Suelte ahora para preparar {countOfFiles} para subir a este Formulario.",
+            "string": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count}archivo} other {{count} archivos}}",
+            "string": "{count, plural, one {{count} archivo} other {{count} archivos}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
           }
         }
@@ -968,7 +969,7 @@
       "afterSelection": {
         "matched": {
           "full": {
-            "string": "{count, plural, one {{countOfFiles}listo para subir.} other {{countOfFiles} listo para subir.}}",
+            "string": "{count, plural, one {{countOfFiles} listo para subir.} other {{countOfFiles} listos para subir.}}",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
@@ -992,7 +993,7 @@
       },
       "duringUpload": {
         "total": {
-          "string": "{count, plural, one {Por favor espere, cargando sus {count}archivos:} other {Por favor espere, cargando sus {count} archivos:}}"
+          "string": "{count, plural, one {Por favor espere, cargando su {count} archivo:} other {Por favor espere, cargando sus {count} archivos:}}"
         },
         "current": {
           "string": "Enviando {filename}",
@@ -1049,11 +1050,11 @@
       "introduction": {
         "0": {
           "full": {
-            "string": "Para cargar archivos, puede arrastrar y soltar {dragAndDrop}uno o más archivos en la tabla de esta página.",
+            "string": "Para cargar archivos, puede {dragAndDrop} uno o más archivos en la tabla de esta página.",
             "developer_comment": "{dragAndDrop} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndrag and drop"
           },
           "dragAndDrop": {
-            "string": "Arrastrar y soltar",
+            "string": "arrastrar y soltar",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dragAndDrop} is in the following text:\n\nTo upload files, you can {dragAndDrop} one or more files onto the table on this page."
           }
         },
@@ -1063,7 +1064,7 @@
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
           },
           "clickHere": {
-            "string": "Haga clic aquí para elegir",
+            "string": "haga clic aquí para elegir",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
         }
@@ -1081,34 +1082,34 @@
           },
           "body": {
             "0": {
-              "string": "Buen trabajo!"
+              "string": "¡Buen trabajo!"
             },
             "1": {
-              "string": "Ha publicado su formulario. Está listo para aceptar envíos. Si desea realizar cambios en el formulario o sus archivos multimedia, puede hacer un nuevo borrador."
+              "string": "Ha publicado su formulario. Está listo para aceptar envíos. Si desea realizar cambios en el formulario o sus archivos multimedia, puede crear un nuevo borrador."
             }
           }
         },
         "1": {
           "title": {
-            "string": "Descargar el Formulario en encuestas de clientes y envíe datos.",
+            "string": "Descargar el formulario en la aplicación móvil y envíe datos.",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "none": {
-                "string": "Nadie ha enviado datos a este Formulario todavía."
+                "string": "Nadie ha enviado datos a este formulario todavía."
               },
               "any": {
-                "string": "{count, plural, one {} other {}}"
+                "string": "{count, plural, one {Se ha enviado un total de {count} envío a este servidor.} other {Se han enviado un total de {count} envíos a este servidor.}}"
               }
             },
             "1": {
               "full": {
-                "string": "",
+                "string": "{clickHere} para aprender sobre las diferentes maneras de enviar datos.",
                 "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
               },
               "clickHere": {
-                "string": "",
+                "string": "Haga clic aquí",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
               }
             }
@@ -1122,19 +1123,19 @@
           "body": {
             "0": {
               "none": {
-                "string": "Una vez que haya datos para este Formulario, puede exportarlo o sincronizarlo para monitorear y analizar los datos en cuanto a calidad y resultados."
+                "string": "Una vez que haya datos para este formulario, puede exportarlo o sincronizarlo para monitorear y analizar los datos en cuanto a calidad y resultados."
               },
               "any": {
-                "string": "{count, plural, one {Puede exportar o sincronizar los {count} Envíos en este Formulario para monitorearlos y analizarlos en cuanto a calidad y resultados.} other {Puede exportar o sincronizar los{count} Envíos en este Formulario para monitorearlos y analizarlos en cuanto a calidad y resultados.}}"
+                "string": "{count, plural, one {Puede exportar o sincronizar el {count} envío en este formulario para monitorearlo y analizarlo en cuanto a calidad y resultados.} other {Puede exportar o sincronizar los {count} envíos en este formulario para monitorearlos y analizarlos en cuanto a calidad y resultados.}}"
               }
             },
             "1": {
               "full": {
-                "string": "Puede hacerlo con los botones Descargar y Analizar en la {submissionsTab}",
+                "string": "Puede hacerlo con los botones descargar y analizar en la {submissionsTab}",
                 "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
               },
               "submissionsTab": {
-                "string": "Pestaña Envíos",
+                "string": "pestaña envíos",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
               }
             }
@@ -1142,17 +1143,17 @@
         },
         "3": {
           "title": {
-            "string": "Gestionar retiro de Formulario",
+            "string": "Gestionar retiro de formularios",
             "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
           },
           "body": {
             "0": {
               "full": {
-                "string": "Cuando llegue al final de su recopilación de datos, puede usar los controles de Estado del Formulario en el {formAccessTab} para controlar si, por ejemplo, los Usuarios de la aplicación podrán ver o crear nuevos Envíos a este Formulario.",
+                "string": "Cuando llegue al final de su recopilación de datos, puede usar los controles de estado del formulario en la {formAccessTab} para controlar si, por ejemplo, los usuarios móviles podrán ver o crear nuevos envíos a este formulario.",
                 "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
               },
               "formAccessTab": {
-                "string": "Pestaña Acceso al Formulario de la página Proyecto",
+                "string": "pestaña acceso a formularios de la página del proyecto",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
               }
             }
@@ -1162,12 +1163,12 @@
     },
     "FormDelete": {
       "title": {
-        "string": "Borrar Formulario.",
+        "string": "Borrar formulario",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Está seguro que desea Borrar el Formulario {name} y todos sus envíos?"
+          "string": "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?"
         },
         "1": {
           "string": "Esta acción no se puede deshacer."
@@ -1177,26 +1178,26 @@
     "FormDraftAbandon": {
       "title": {
         "abandon": {
-          "string": "Abandonar borrador.",
+          "string": "Abandonar borrador",
           "developer_comment": "This is the title at the top of a pop-up."
         },
         "deleteForm": {
-          "string": "Abandonar borrador y Borrar Formulario",
+          "string": "Abandonar borrador y borrar formulario",
           "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
         "abandon": {
           "0": {
-            "string": "Está a punto de Borrar permanentemente la versión borrador de este Formulario. Esto significa que se borrará el borrador de la definición del Formulario, cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba."
+            "string": "Está a punto de borrar permanentemente la versión borrador de este formulario. Esto significa que se borrará el borrador de la definición del formulario, cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba."
           },
           "1": {
-            "string": "Su definición de Formulario publicada, sus archivos multimedia y envíos no se verán afectados."
+            "string": "Su definición de formulario publicada, sus archivos multimedia y envíos no se verán afectados."
           }
         },
         "deleteForm": {
           "0": {
-            "string": "Está a punto de Borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este Formulario se eliminará por completo."
+            "string": "Está a punto de borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará por completo."
           }
         }
       },
@@ -1214,7 +1215,7 @@
       "steps": {
         "0": {
           "title": {
-            "string": "Subir definición de Formulario inicial",
+            "string": "Subir definición de formulario inicial",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1222,28 +1223,28 @@
               "string": "Buen trabajo."
             },
             "1": {
-              "string": "Su diseño de Formulario se ha cargado correctamente."
+              "string": "Su diseño de formulario se ha cargado correctamente."
             }
           }
         },
         "1": {
           "title": {
-            "string": "Subir definición de Formulario revisada (opcional)",
+            "string": "Subir definición de formulario revisada (opcional)",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "status": {
-                "string": "Si ha realizado cambios en el Formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de cargar el nuevo XML o XLSForm utilizando el botón a la derecha.",
+                "string": "Si ha realizado cambios en el formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de cargar el nuevo XML o XLSForm utilizando el botón a la derecha.",
                 "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
               },
               "link": {
                 "full": {
-                  "string": "Si ha realizado cambios en el Formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de {upload} el nuevo XML o XLSForm.",
+                  "string": "Si ha realizado cambios en el formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de {upload} el nuevo XML o XLSForm.",
                   "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
-                  "string": "Subir",
+                  "string": "subir",
                   "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
                 }
               }
@@ -1252,7 +1253,7 @@
         },
         "2": {
           "title": {
-            "string": "Subir archivos multimedia de Formulario",
+            "string": "Subir archivos multimedia de formulario",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1262,7 +1263,7 @@
                 "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
               },
               "mediaFiles": {
-                "string": "Archivos multimedia",
+                "string": "archivos multimedia",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
               }
             }
@@ -1270,17 +1271,17 @@
         },
         "3": {
           "title": {
-            "string": "Pruebe el Formulario en su dispositivo móvil",
+            "string": "Pruebe el formulario en su dispositivo móvil",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "full": {
-                "string": "",
+                "string": "Puede {test} un formulario para asegurarse de que funciona como usted espera. Los envíos de prueba no son incluidos en sus datos finales.",
                 "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
               },
               "test": {
-                "string": "",
+                "string": "probar",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
               }
             }
@@ -1288,7 +1289,7 @@
         },
         "4": {
           "title": {
-            "string": "Publicar el Borrador",
+            "string": "Publicar el borrador",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1298,11 +1299,11 @@
               },
               "link": {
                 "full": {
-                  "string": "Cuando esté seguro de que su Borrador está listo y desea extenderlo a sus dispositivos en el campo, puede hacerlo {publish}.",
+                  "string": "Cuando esté seguro de que su borrador está listo y desea extenderlo a sus dispositivos en el campo, puede {publish}.",
                   "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
                 },
                 "publish": {
-                  "string": "Publicar",
+                  "string": "publicarlo",
                   "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
                 }
               }
@@ -1313,40 +1314,40 @@
     },
     "FormDraftPublish": {
       "title": {
-        "string": "Publicar Borrador",
+        "string": "Publicar borrador",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "warnings": {
         "attachments": {
           "full": {
-            "string": "No ha proporcionado todo lo{mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de Borrador para cargar esos archivos más tarde.",
+            "string": "No ha proporcionado todos los {mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
             "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
           },
           "mediaFiles": {
-            "string": "Archivos multimedia",
+            "string": "archivos multimedia",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
           }
         },
         "testing": {
           "full": {
-            "string": "Aún no ha conectado {tested} un dispositivo móvil y ha subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
+            "string": "Aún no ha {tested} con un dispositivo móvil y subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
-            "string": "Probó este Formulario",
+            "string": "probado este formulario",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
       },
       "introduction": {
         "0": {
-          "string": "Está a punto de hacer de este Borrador la versión publicada de su Formulario. Esto finalizará cualquier cambio que haya realizado en la definición del Formulario y sus archivos multimedia adjuntos"
+          "string": "Está a punto de hacer de este borrador la versión publicada de su formulario. Esto finalizará cualquier cambio que haya realizado en la definición del formulario y sus archivos multimedia adjuntos."
         },
         "1": {
-          "string": "Los envíos de Formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador."
+          "string": "Los envíos de formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador."
         },
         "2": {
-          "string": "Cada versión de un Formulario requiere un nombre de versión único. En este momento, su borrador de Formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de Formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted."
+          "string": "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted."
         }
       },
       "field": {
@@ -1357,21 +1358,21 @@
       },
       "problem": {
         "409_6": {
-          "string": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este Formulario. Cambie a algo nuevo e intente nuevamente."
+          "string": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este formulario. Cambie a algo nuevo e intente nuevamente."
         }
       }
     },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
-          "string": "Lista de verificación de Borrador",
+          "string": "Lista de verificación de borrador",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
       "currentDraft": {
         "versionCaption": {
           "full": {
-            "string": "{draftVersion}de este Formulario.",
+            "string": "{draftVersion} de este formulario.",
             "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
           },
           "draftVersion": {
@@ -1393,38 +1394,38 @@
         },
         "action": {
           "publish": {
-            "string": "Publicar Borrador",
+            "string": "Publicar borrador",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "abandon": {
-            "string": "Abandonar borrador.",
+            "string": "Abandonar borrador",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "upload": {
-          "string": "¡Éxito! La nueva definición del Formulario se ha guardado como su borrador"
+          "string": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador"
         },
         "publish": {
-          "string": "Su borrador ya está publicado. Cualquier dispositivo que recupere formularios para este proyecto ahora recibirá la nueva definición de Formulario y archivos multimedia"
+          "string": "Su borrador ya está publicado. Cualquier dispositivo que recupere formularios para este proyecto ahora recibirá la nueva definición de formulario y archivos multimedia."
         },
         "abandon": {
-          "string": "La versión Borrador de este Formulario ha sido eliminado con éxito."
+          "string": "La versión borrador de este formulario ha sido eliminado con éxito."
         },
         "delete": {
-          "string": "El Formulario {name}fue eliminado."
+          "string": "El formulario {name} fue eliminado."
         }
       }
     },
     "FormDraftTesting": {
       "title": {
-        "string": "Borrador de prueba",
+        "string": "Prueba de borrador",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
         "0": {
-          "string": ""
+          "string": "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web."
         },
         "1": {
           "string": ""
@@ -1443,7 +1444,7 @@
       "formNav": {
         "tab": {
           "overview": {
-            "string": "Descripción general.",
+            "string": "Descripción general",
             "developer_comment": "This is the text of a navigation tab."
           },
           "versions": {
@@ -1451,7 +1452,7 @@
             "developer_comment": "This is the text of a navigation tab."
           },
           "publicLinks": {
-            "string": "",
+            "string": "Acceso público",
             "developer_comment": "This is the text of a navigation tab."
           },
           "settings": {
@@ -1460,7 +1461,7 @@
           }
         },
         "tabTitle": {
-          "string": "Estas funciones estarán disponibles una vez que publique su borrador de Formulario.",
+          "string": "Estas funciones estarán disponibles una vez que publique su borrador de formulario.",
           "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
         }
       },
@@ -1471,7 +1472,7 @@
         },
         "action": {
           "create": {
-            "string": "Crear un nuevo borrador.",
+            "string": "Crear un nuevo borrador",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         },
@@ -1481,7 +1482,7 @@
             "developer_comment": "This is the text of a navigation tab."
           },
           "attachments": {
-            "string": "Archivos multimedia.",
+            "string": "Archivos multimedia",
             "developer_comment": "This is the text of a navigation tab."
           },
           "testing": {
@@ -1503,29 +1504,29 @@
         }
       },
       "emptyTable": {
-        "string": "No hay Formularios para mostrar."
+        "string": "No hay formularios para mostrar."
       },
       "alert": {
         "create": {
-          "string": "Su nuevo Formulario \"{name}\" se ha creado como un borrador. Eche un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el Formulario para su uso."
+          "string": "Su nuevo formulario \"{name}\" se ha creado como un borrador. De un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el formulario para su uso."
         }
       }
     },
     "FormNew": {
       "title": {
         "create": {
-          "string": "Crear formulario.",
+          "string": "Crear formulario",
           "developer_comment": "This is the title at the top of a pop-up."
         },
         "update": {
-          "string": "Cargar nueva definición de Formulario.",
+          "string": "Cargar nueva definición de formulario",
           "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
         "0": {
           "create": {
-            "string": "Para crear un Formulario, cargue un archivo XML de XForms o un archivo XLSForm de Excel"
+            "string": "Para crear un formulario, cargue un archivo XML de XForms o un archivo XLSForm de Excel"
           },
           "update": {
             "string": "Para actualizar el borrador, cargue un archivo XML de XForms o un archivo XLSForm de Excel."
@@ -1533,11 +1534,11 @@
         },
         "1": {
           "full": {
-            "string": "Si aún no tiene uno, hay {tools}para ayudarlo a diseñar su Formulario.",
+            "string": "Si aún no tiene uno, hay {tools} para ayudarlo a diseñar su formulario.",
             "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
           },
           "tools": {
-            "string": "Herramientas disponibles",
+            "string": "herramientas disponibles",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
           }
         },
@@ -1551,7 +1552,7 @@
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
-          "string": "Elegir uno",
+          "string": "elige uno",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
         }
       },
@@ -1567,40 +1568,40 @@
       },
       "alert": {
         "fileRequired": {
-          "string": "Por favor, elija un archivo"
+          "string": "Por favor, elija un archivo."
         }
       },
       "problem": {
         "400_8": {
-          "string": "La definición del formulario que ha subido no parece ser para este ­­formulario. Tiene el FormId equivocado (esperado \" 1{expected}\", got \"2{actual}\")."
+          "string": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\")."
         },
         "400_15": {
           "string": "El XLSForm no se pudo convertir: {error}"
         },
         "409_3": {
-          "string": "Un formulario ya existe en este Proyecto con el ID formulario de {xmlFormId}"
+          "string": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
         }
       },
       "warningsText": {
         "0": {
-          "string": "Este archivo en formato XLS puede ser usado, pero tiene algunos posibles inconvenientes ( advertencias de conversión ):"
+          "string": "Este archivo en formato XLS puede ser usado, pero tiene algunos problemas posibles ( advertencias de conversión ):"
         },
         "1": {
-          "string": "Por favor, corrija  los problemas e intente nuevamente"
+          "string": "Por favor, corrija los problemas e intente nuevamente."
         },
         "2": {
           "create": {
-            "string": "Si esta seguro que estos errores pueden ser ignorados, de clic en el botón para crear el formulario de todos modos:\n "
+            "string": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:"
           },
           "update": {
-            "string": "Si esta seguro que estos errores pueden ser ignorados, de click en el botón para actualizar el borrador de todos modos: "
+            "string": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos: "
           }
         }
       }
     },
     "FormOverview": {
       "checklist": {
-        "string": "Lista de chequeo",
+        "string": "Lista de verificación",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "draft": {
@@ -1610,7 +1611,7 @@
             "developer_comment": "This is a title shown above a section of the page."
           },
           "body": {
-            "string": "Actualmente no existe una versión preliminar de este formulario. Si desea hacer cambios en el formulario o en sus Archivos Multimedia, empiece por crear un borrador por medio del botón que se encuentra arriba."
+            "string": "Actualmente no existe una versión borrador de este formulario. Si desea hacer cambios en el formulario o en sus archivos multimedia, empiece por crear un borrador por medio del botón que se encuentra arriba."
           }
         },
         "any": {
@@ -1651,11 +1652,11 @@
       },
       "submissions": {
         "full": {
-          "string": "{count, plural, one {1 {submissions} han sido guardado para este formulario} other {{submissions} Han sido guardadas para este formulario.<br><br>}}",
+          "string": "{count, plural, one {{submissions} ha sido guardada para este formulario} other {{submissions} han sido guardadas para este formulario.}}",
           "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
         },
         "submissions": {
-          "string": "{count, plural, one {Presentaciones} other {Presentaciones}}",
+          "string": "{count, plural, one {Envío} other {Envíos}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
       }
@@ -1667,7 +1668,7 @@
       },
       "action": {
         "fill": {
-          "string": "Llenar Formulario",
+          "string": "Llenar formulario",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -1680,11 +1681,11 @@
         },
         "body": {
           "full": {
-            "string": "Para establecer el estado de este formulario, por favor visite el proyecto {formAccessSettings}.",
+            "string": "Para establecer el estado de este formulario, por favor visite la {formAccessSettings} de este proyecto.",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
-            "string": "Configuración de acceso al formulario",
+            "string": "configuración de acceso a formulario",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nTo set this Form’s state, please visit the Project {formAccessSettings}."
           }
         }
@@ -1697,14 +1698,14 @@
       },
       "alert": {
         "delete": {
-          "string": "{name} El formulario fue borrado."
+          "string": "El formulario \"{name}\" fue borrado."
         }
       }
     },
     "FormTable": {
       "header": {
         "idAndVersion": {
-          "string": "ID y Versión",
+          "string": "ID y versión",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
         }
       }
@@ -1741,7 +1742,7 @@
     },
     "Loading": {
       "text": {
-        "string": "Cargando"
+        "string": "Cargando..."
       }
     },
     "Navbar": {
@@ -1754,12 +1755,12 @@
     },
     "NavbarActions": {
       "notLoggedIn": {
-        "string": "No ha iniciado sesión.",
+        "string": "No ha iniciado sesión",
         "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
       },
       "action": {
         "logOut": {
-          "string": "Cerrar sesión.",
+          "string": "Cerrar sesión",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -1771,7 +1772,7 @@
     },
     "NavbarLinks": {
       "projects": {
-        "string": "Proyecto",
+        "string": "Proyectos",
         "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
       },
       "users": {
@@ -1783,7 +1784,7 @@
         "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
       },
       "current": {
-        "string": "Actual",
+        "string": "actual",
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
@@ -1798,16 +1799,16 @@
     },
     "ProjectArchive": {
       "title": {
-        "string": "Proyecto archivado.",
+        "string": "Archivando proyecto",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Está a punto de archivar el proyecto. {name}Seguirá funcionando como lo hace ahora, pero se ordenará al final de la lista de proyectos de la página de inicio Central."
+          "string": "Está a punto de archivar el proyecto \"{name}\". Seguirá funcionando como lo hace ahora, pero se ordenará al final de la lista de proyectos de la página de inicio Central."
         },
         "1": {
           "full": {
-            "string": "{noUndo}pero la posibilidad de no archivar un proyecto está prevista para una futura publicación.",
+            "string": "{noUndo} pero la posibilidad de desarchivar un proyecto está prevista para una futura versión.",
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
@@ -1819,18 +1820,18 @@
     },
     "ProjectEdit": {
       "title": {
-        "string": "Detalles básicos.",
+        "string": "Detalles básicos",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "field": {
         "name": {
-          "string": "Nombre del proyecto.",
+          "string": "Nombre del proyecto",
           "developer_comment": "This is the text of a form field."
         }
       },
       "action": {
         "update": {
-          "string": "Guardar la configuración.",
+          "string": "Guardar la configuración",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -1842,7 +1843,7 @@
     },
     "ProjectEnableEncryption": {
       "title": {
-        "string": "Habilitar el cifrado.",
+        "string": "Habilitar el cifrado",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "steps": {
@@ -1856,15 +1857,15 @@
                 "string": "Los datos de la presentación final serán cifrados en los dispositivos móviles."
               },
               "2": {
-                "string": "Los datos de la presentación que se encuentran en reposo serán cifrados en el servidor central."
+                "string": "Los datos de la presentación que se encuentran en reposo serán cifrados en el servidor Central."
               },
               "3": {
                 "0": {
-                  "string": "{submission} Los formularios configurados con claves manuales  continuarán utilizando esas claves y deben ser descifrados manualmente.",
+                  "string": "Los formularios configurados con claves {submission} manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
                   "developer_comment": "{submission} will have the text \"<submission>\", which is XML and will not be translated."
                 },
                 "1": {
-                  "string": "Para utilizar el proceso automático de encriptación central en estos formularios, remueva la {base64RsaPublicKey}configuración",
+                  "string": "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}.",
                   "developer_comment": "{base64RsaPublicKey} will have the text \"base64RsaPublicKey\", which is code and will not be translated."
                 }
               },
@@ -1881,7 +1882,7 @@
               },
               "1": {
                 "0": {
-                  "string": "Las presentaciones existentes permanecerán sin cifrar."
+                  "string": "Los envíos existentes permanecerán sin cifrar."
                 },
                 "1": {
                   "string": "En una futura versión, tendrá la opción de cifrar los datos existentes."
@@ -1898,11 +1899,11 @@
             },
             "2": {
               "full": {
-                "string": "Puede obtener más información sobre cifrado {here}.Si esto suena como algo que desea hacer, presione siguiente para continuar.",
+                "string": "Puede obtener más información sobre el cifrado {here}. Si esto suena como algo que desea hacer, presione siguiente para continuar.",
                 "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
               },
               "here": {
-                "string": "Aquí",
+                "string": "aquí",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nYou can learn more about encryption {here}. If this sounds like something you want, press Next to proceed."
               }
             }
@@ -1911,11 +1912,11 @@
         "1": {
           "introduction": {
             "0": {
-              "string": "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus presentaciones. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos."
+              "string": "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus envíos. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos."
             },
             "1": {
               "full": {
-                "string": "No hay restricciones de longitud o de contenido para la frase de contraseña, pero si usted la pierde, {no}habrá forma de recuperarla ni a sus datos!",
+                "string": "No hay restricciones de longitud o de contenido para la frase de contraseña, pero si usted la pierde, {no} habrá forma de recuperarla ni a sus datos!",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -1943,7 +1944,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": ""
+          "string": "Los usuarios móviles solo pueden ver y llenar los formularios a los que explícitamente se les ha dado acceso en la tabla siguiente. Los administradores de proyecto y recolectores de datos puede utilizar un navegador web para llenar cualquier formulario del proyecto que está en estado abierto."
         }
       },
       "emptyTable": {
@@ -1965,7 +1966,7 @@
           "developer_comment": "This is the text of a form field. \"State\" refers to the Form State. Form States control the lifecycle state of each Form."
         },
         "appUserAccess": {
-          "string": "Acceso del usuario a la aplicación",
+          "string": "Acceso de los usuarios móviles",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -1977,25 +1978,25 @@
       },
       "introduction": {
         "0": {
-          "string": "El estado del formulario controla el ciclo de vida de cada formulario,\nPor lo general, pero en algunas ocasiones no será de este modo,\nel formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario."
+          "string": "El estado del formulario controla el ciclo de vida de cada formulario. Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario."
         },
         "1": {
           "full": {
-            "string": "{open}Los formularios están disponibles para descarga en dispositivos móviles y aceptarán nuevas presentaciones.",
+            "string": "Los formularios {open} están disponibles para descarga en dispositivos móviles y aceptán nuevos envíos.",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
-            "string": "Abrir",
+            "string": "abiertos",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
           }
         },
         "2": {
           "full": {
-            "string": "{closing}Los formularios aceptarán nuevas presentaciones y entregas, pero {not} estarán disponibles para descarga en dispositivos móviles.",
+            "string": "Los formularios {closing} aceptán nuevos envíos pero {not} están disponibles para descarga en dispositivos móviles.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
-            "string": "Cerrando",
+            "string": "cerrando",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
           },
           "not": {
@@ -2005,11 +2006,11 @@
         },
         "3": {
           "full": {
-            "string": "{closed}Formulario está {not1}disponible para descarga en dispositivos móviles, y {not2}aceptará nuevas presentaciones.\n",
+            "string": "Los formularios {closed} {not1} están disponibles para descarga en dispositivos móviles, y {not2} aceptán nuevos envíos.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
-            "string": "Cerrado",
+            "string": "cerrados",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
           },
           "not1": {
@@ -2034,14 +2035,14 @@
           "developer_comment": "This is the text of a table column header."
         },
         "appUserAccess": {
-          "string": "Acceso del usuario a la aplicación",
+          "string": "Acceso de usuarios móviles",
           "developer_comment": "This is the text of a table column header."
         }
       }
     },
     "ProjectIntroduction": {
       "title": {
-        "string": "",
+        "string": "¿Qué son los proyectos?",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -2056,7 +2057,8 @@
           "string": "Bienvenido a Central."
         },
         "1": {
-          "string": "Hagamos algunas cosas."
+          "string": "Hagamos algunas cosas.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
         }
       },
       "gettingStarted": {
@@ -2067,21 +2069,21 @@
         "body": {
           "0": {
             "full": {
-              "string": "Si no está seguro de dónde empezar,  consulte la guía de inicio y documentación del usuario dispuesta en {docsWebsite}",
+              "string": "Si no está seguro de dónde empezar, consulte la guía de inicio y documentación del usuario dispuesta en {docsWebsite}.",
               "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
             },
             "docsWebsite": {
-              "string": "Sitio web ODK Docs",
+              "string": "el sitio de documentación de ODK",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
             }
           },
           "1": {
             "full": {
-              "string": "",
+              "string": "Adicionalmente, siempre puede obtener ayuda de otros en el {forum}, donde puede buscar por preguntas previas o hacer una por su cuenta.",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
             },
             "forum": {
-              "string": "Foro de comunidad ODK",
+              "string": "foro de comunidad ODK",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
             }
           }
@@ -2094,7 +2096,7 @@
       "rightNow": {
         "users": {
           "full": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {{webUsers} que puede administrar proyectos a través de este sitio web.} other {{webUsers} que pueden administrar proyectos a través de este sitios web.}}",
             "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
           },
           "webUsers": {
@@ -2104,7 +2106,7 @@
         },
         "projects": {
           "full": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.} other {{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.}}",
             "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
           },
           "projects": {
@@ -2119,7 +2121,7 @@
       },
       "action": {
         "create": {
-          "string": "Novedades",
+          "string": "Nuevo",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -2130,7 +2132,7 @@
         }
       },
       "emptyTable": {
-        "string": "No hay proyectos para su revisión"
+        "string": "No existen proyectos para mostrar."
       },
       "alert": {
         "create": {
@@ -2145,13 +2147,13 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Los proyectos agrupan formularios y Usuarios de aplicativos móviles juntos para facilitar su organización y manejo, tanto en este sitio web como en su dispositivo de recolección de datos."
         }
       }
     },
     "ProjectOverviewAbout": {
       "title": {
-        "string": "Acerca del proyecto",
+        "string": "Conocer proyectos",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
@@ -2161,17 +2163,17 @@
             "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
           },
           "accessTo": {
-            "string": "",
+            "string": "acceso",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
           }
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "Si tiene algún comentario, por favor visite {forumThread}.",
             "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
           },
           "forumThread": {
-            "string": "",
+            "string": "este hilo del foro",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
           }
         }
@@ -2180,11 +2182,11 @@
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
-          "string": "{count, plural, one {} other {}}",
+          "string": "{count, plural, one {{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto.} other {{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto.}}",
           "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
         },
         "appUsers": {
-          "string": "{count, plural, one {Usuario de la aplicación} other {Usuarios de la aplicación}}",
+          "string": "{count, plural, one {Usuario móvil} other {Usuarios móviles}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
         }
       },
@@ -2211,34 +2213,34 @@
     "ProjectSettings": {
       "encryption": {
         "title": {
-          "string": "Encriptación",
+          "string": "Cifrado",
           "developer_comment": "This is a title shown above a section of the page."
         },
         "body": {
           "unencrypted": {
             "0": {
-              "string": "El envío de datos encriptados, no está habilitado para este proyecto."
+              "string": "El envío de datos cifrados no está activado para este proyecto."
             }
           },
           "encrypted": {
             "0": {
               "full": {
-                "string": "La encriptación de datos de los envíos está {enabled}para este Proyecto.",
+                "string": "El cifrado de datos de los envíos está {enabled} para este proyecto.",
                 "developer_comment": "{enabled} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nenabled"
               },
               "enabled": {
-                "string": "habilitado",
+                "string": "activado",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {enabled} is in the following text:\n\nSubmission data encryption is {enabled} for this Project."
               }
             },
             "1": {
-              "string": "En esta versión de ODK Central, no podrá desactivar la encriptación una vez haya sido activada."
+              "string": "En esta versión de ODK Central, no podrá desactivar el cifrado una vez haya sido activada."
             }
           }
         },
         "action": {
           "enableEncryption": {
-            "string": "Encriptación activada",
+            "string": "Activar cifrado",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -2261,14 +2263,14 @@
       },
       "alert": {
         "archive": {
-          "string": "El proyecto {name}fue archivado."
+          "string": "El proyecto \"{name}\" fue archivado."
         }
       }
     },
     "ProjectShow": {
       "tab": {
         "overview": {
-          "string": "Resumen",
+          "string": "Descripción general",
           "developer_comment": "This is the text of a navigation tab."
         },
         "users": {
@@ -2276,11 +2278,11 @@
           "developer_comment": "This is the text of a navigation tab."
         },
         "appUsers": {
-          "string": "Usuarios de la aplicación",
+          "string": "Usuarios móviles",
           "developer_comment": "This is the text of a navigation tab."
         },
         "formAccess": {
-          "string": "Acceso al formulario",
+          "string": "Acceso a formularios",
           "developer_comment": "This is the text of a navigation tab."
         },
         "settings": {
@@ -2291,45 +2293,45 @@
     },
     "ProjectSubmissionOptions": {
       "title": {
-        "string": "",
+        "string": "Opciones de envío",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "Hay varias opciones para enviar datos a ODK Central:",
           "developer_comment": "This text is shown above a list of options for submitting data."
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "Crea {appUsers} y usa la {collect} aplicación de Android. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un Formulario complejo.",
             "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
           },
           "appUsers": {
-            "string": "",
+            "string": "Usuarios móviles",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
           }
         },
         "2": {
           "full": {
-            "string": "",
+            "string": "Cree uno o más {publicLinks} para compartir con los encuestados que se auto informarán.",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
           },
           "publicLinks": {
-            "string": "",
+            "string": "Enlaces de acceso público",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publicLinks} is in the following text:\n\nCreate one or more {publicLinks} to share with respondents who will self-report."
           }
         },
         "3": {
           "full": {
-            "string": "",
+            "string": "Cree un {webUser} con el rol de {dataCollector} para cada individuo que recopilará datos. Estos usuarios iniciarán sesión en Central para completar este Formulario en un navegador web. Los administradores de proyectos también pueden crear envíos desde un navegador web.",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
           },
           "webUser": {
-            "string": "",
+            "string": "Usuario web",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
           },
           "dataCollector": {
-            "string": "",
+            "string": "Recolector de datos",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
           }
         }
@@ -2338,36 +2340,36 @@
     "ProjectUserList": {
       "heading": {
         "0": {
-          "string": "",
+          "string": "Los administradores de todo el sitio se consideran automáticamente administradores de cada proyecto. Otros usuarios pueden tener roles específicos para este proyecto:",
           "developer_comment": "This text is shown above a list of Roles."
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "{projectManagers} pueden realizar cualquier tarea administrativa relacionada con este proyecto y puede llenar formularios desde un navegador web",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
           },
           "projectManagers": {
-            "string": "",
+            "string": "Administradores de proyecto",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectManagers} is in the following text:\n\n{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser"
           }
         },
         "2": {
           "full": {
-            "string": "",
+            "string": "{projectViewers} puede acceder y descargar todos los datos del Formulario en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
-            "string": "",
+            "string": "Visores de proyecto",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
           "full": {
-            "string": "",
+            "string": "{dataCollectors} pueden llenar formularios desde un navegador web, pero no pueden ver o cambiar datos o configuraciones",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
-            "string": "",
+            "string": "Recolectores de datos",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
           }
         }
@@ -2405,13 +2407,13 @@
       },
       "alert": {
         "unassignWithoutReassign": {
-          "string": "Algo salió mal. {displayName}ha sido removido del proyecto"
+          "string": "Algo salió mal. \"{displayName}\" ha sido removido del proyecto"
         },
         "assignRole": {
-          "string": "A {displayName} se le ha asignado exitosamente el rol de       \"{roleName}\" en este proyecto. "
+          "string": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto."
         },
         "unassignRole": {
-          "string": "{displayName}ha sido removido exitosamente de este proyecto."
+          "string": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
         }
       }
     },
@@ -2428,17 +2430,17 @@
     },
     "PublicLinkCreate": {
       "title": {
-        "string": "",
+        "string": "Crear enlace de acceso público",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Cualquier persona con este enlace será capaz de llenar este formulario desde un navegador web. Utilice nombre para mostrar para recordar dónde lo ha publicado, con quién lo ha compartido, hasta cuando pretende que esté activo, entre otras cosas."
         }
       },
       "field": {
         "multiple": {
-          "string": "",
+          "string": "Respuestas múltiples ",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -2449,7 +2451,7 @@
     "PublicLinkList": {
       "action": {
         "create": {
-          "string": "",
+          "string": "Crear enlace de acceso público",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2460,7 +2462,7 @@
             "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
           },
           "state": {
-            "string": "",
+            "string": "estado",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {state} is in the following text:\n\nAnyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}."
           }
         },
@@ -2470,13 +2472,13 @@
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
-            "string": "",
+            "string": "haga clic aquí",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
           }
         }
       },
       "emptyTable": {
-        "string": ""
+        "string": "No hay enlaces de acceso público para este formulario."
       },
       "alert": {
         "create": {
@@ -2489,7 +2491,7 @@
     },
     "PublicLinkRevoke": {
       "title": {
-        "string": "",
+        "string": "Revocar enlace de acceso público",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -2501,32 +2503,32 @@
     "PublicLinkRow": {
       "action": {
         "revoke": {
-          "string": "",
+          "string": "Revocar",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "revoked": {
-        "string": "",
+        "string": "Revocar",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
       },
       "unavailable": {
         "text": {
-          "string": "",
+          "string": "Todavía no disponible",
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": ""
+          "string": "El enlace de acceso público aún no está disponible. No se ha terminado de procesar. Por favor actualice más tarde y vuelva a intentarlo."
         }
       }
     },
     "PublicLinkTable": {
       "header": {
         "multiple": {
-          "string": "",
+          "string": "Respuestas múltiples",
           "developer_comment": "This is the text of a table column header."
         },
         "accessLink": {
-          "string": "",
+          "string": "Enlace de acceso",
           "developer_comment": "This is the text of a table column header."
         }
       }
@@ -2546,7 +2548,7 @@
       },
       "introduction": {
         "0": {
-          "string": "El protocolo de datos abiertos \"OData\" es un nuevo  protocolo que permite realizar transferencia de datos entre aplicaciones y servidores. Herramientas gratuitas y potentes como Excel, {powerBi}, y {r} pueden obtener y analizar datos a través de OData.",
+          "string": "El protocolo de datos abiertos \"OData\" es un nuevo protocolo que permite realizar transferencia de datos entre aplicaciones y servidores. Herramientas gratuitas y potentes como Excel, {powerBi}, y {r} pueden obtener y analizar datos a través de OData.",
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
         },
         "1": {
@@ -2584,7 +2586,7 @@
         "r": {
           "0": {
             "full": {
-              "string": "Para acceder a los datos de Central desde {r}, recomendamos usar {ruODK}. Vea las viñetas de ruODK para leer ejemplos de uso de {oData}y {restful}API.",
+              "string": "Para acceder a los datos de Central desde {r}, recomendamos usar {ruODK}. Vea las viñetas de ruODK para leer ejemplos de uso de {oData} y {restful} API.",
               "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
             },
             "restful": {
@@ -2605,7 +2607,7 @@
         },
         "other": {
           "full": {
-            "string": "Para una descripción detallada del soporte realizado para OData, léa el siguiente {article}.",
+            "string": "Para una descripción detallada del soporte realizado para OData, léa {article}.",
             "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
           },
           "article": {
@@ -2622,12 +2624,12 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Desencriptar y descargar",
+        "string": "Descifrar y descargar",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
         }
       },
       "hint": {
@@ -2644,7 +2646,7 @@
       "action": {
         "download": {
           "withCount": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {Descargar {count} registro} other {Descargar todos los {count} registros}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withoutCount": {
@@ -2658,7 +2660,7 @@
         }
       },
       "analyzeDisabled": {
-        "string": ""
+        "string": "El acceso a OData no está disponible debido al cifrado del formulario"
       },
       "loading": {
         "withoutCount": {
@@ -2666,35 +2668,35 @@
           "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
-          "string": "{count, plural, one {Cargando {count} Envío...} other {Cargando {count} Envíos...}}"
+          "string": "{count, plural, one {Cargando {count} envío...} other {Cargando {count} envíos...}}"
         },
         "first": {
-          "string": "Cargando los primeros {top} de {count} Envíos...",
+          "string": "Cargando los primeros {top} de {count} envíos...",
           "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "middle": {
-          "string": "",
+          "string": "Cargando {top} más de {count} envíos restantes...",
           "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "last": {
           "multiple": {
-            "string": "{count, plural, one {} other {}}"
+            "string": "{count, plural, one {Cargando el último {count} envío...} other {Cargando los últimos {count} envíos...}}"
           },
           "one": {
-            "string": ""
+            "string": "Cargando el último envío..."
           }
         }
       },
       "emptyTable": {
-        "string": "No hay Envíos todavía."
+        "string": "No hay envíos todavía."
       },
       "remaining": {
-        "string": "{count, plural, one {} other {}}"
+        "string": "{count, plural, one {{count} archivo permanece.} other {{count} archivos permanecen.}}"
       }
     },
     "SubmissionRow": {
       "encryptionMessage": {
-        "string": "La vista previa de los datos no está disponible debido a la encriptación."
+        "string": "La vista previa de los datos no está disponible debido al cifrado del formulario."
       }
     },
     "SubmissionTable": {
@@ -2715,7 +2717,7 @@
     },
     "SystemHome": {
       "title": {
-        "string": "Administración del Sistema",
+        "string": "Administración del sistema",
         "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
       },
       "tab": {
@@ -2768,7 +2770,7 @@
       },
       "alert": {
         "mismatch": {
-          "string": "Verifique que sus nuevas credenciales coincidan"
+          "string": "Verifique que sus nuevas credenciales coincidan."
         },
         "success": {
           "string": "¡Éxito! Su contraseña ha sido actualizada."
@@ -2804,7 +2806,7 @@
       },
       "heading": {
         "0": {
-          "string": "",
+          "string": "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los Administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un rol, se le puede asignar uno en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tipo {collect}, cree usuarios de aplicación en cada proyecto.",
           "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
         }
       },
@@ -2816,13 +2818,13 @@
       },
       "alert": {
         "create": {
-          "string": ""
+          "string": "Se creó un usuario satisfactoriamente para “{displayName}”."
         },
         "assignRole": {
-          "string": ""
+          "string": "Realizado.  Al usuario \"{displayName}\" se le ha asignado el rol \" {roleName}\"  en este proyecto."
         },
         "resetPassword": {
-          "string": ""
+          "string": "La contraseña asociada al usuario {displayName} es incorrecta. Se ha enviado un correo electrónico a {email} con las instrucciones para continuar. "
         },
         "retire": {
           "string": "El usuario \"{displayName}\" ha sido retirado"
@@ -2847,27 +2849,27 @@
       },
       "introduction": {
         "full": {
-          "string": "Una vez que presiones{resetPassword}a continuación, la contraseña del usuario “{displayName}” <{email}> será invalidada inmediatamente. Se enviará un correo electrónico a {email} con instrucciones de cómo proceder.",
+          "string": "Una vez que presione {resetPassword} a continuación, la contraseña del usuario “{displayName}” <{email}> será invalidada inmediatamente. Se enviará un correo electrónico a {email} con instrucciones de cómo proceder.",
           "developer_comment": "{resetPassword} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReset password"
         },
         "resetPassword": {
-          "string": "Formatear constraseña",
+          "string": "restablecer constraseña",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {resetPassword} is in the following text:\n\nOnce you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed."
         }
       }
     },
     "UserRetire": {
       "title": {
-        "string": "Removiendo usuario",
+        "string": "Retirando usuario",
         "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Esta a punto de retirar el usuario \"{displayName}\"<{email}> . El usuario será removido inmediatamente y se restringirá cualquier tipo de actividad en el proyecto."
         },
         "1": {
           "full": {
-            "string": "{noUndo}, sin embargo, siempre puedes crear una nueva cuenta para esa persona con el mismo correo electrónico.",
+            "string": "{noUndo}, sin embargo, siempre puede crear una nueva cuenta para esa persona con el mismo correo electrónico.",
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
@@ -2879,7 +2881,7 @@
     },
     "UserRow": {
       "cannotAssignRole": {
-        "string": ""
+        "string": "No puede editar su propio rol en el proyecto"
       },
       "field": {
         "sitewideRole": {

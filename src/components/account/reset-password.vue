@@ -95,11 +95,11 @@ export default {
   "de": {
     "title": "Passwort zurücksetzen",
     "alert": {
-      "success": "Eine Email mit weiteren Anleitungen wurde an {email} gesendet."
+      "success": "Eine E-Mail mit weiteren Anweisungen wurde an {email} gesendet."
     }
   },
   "es": {
-    "title": "Resetear contraseña",
+    "title": "Restablecer contraseña",
     "alert": {
       "success": "Se ha enviado un correo electrónico {email} con más instrucciones"
     }

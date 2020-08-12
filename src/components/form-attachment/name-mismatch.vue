@@ -117,7 +117,7 @@ export default {
       "replace": "Datei ersetzen"
     },
     "introduction": [
-      "Sind Sie sicher, dass Sie {filename}als {attachmentName}hochladen wollen?",
+      "Sind Sie sicher, dass Sie {filename} als {attachmentName} hochladen wollen?",
       "Wir fragen zurück, weil die Dateinamen nicht übereinstimmen."
     ]
   },
@@ -127,7 +127,7 @@ export default {
       "replace": "Reemplazar el archivo"
     },
     "introduction": [
-      "Está seguro que quiere subir {filename}como {attachmentName}?",
+      "Está seguro que quiere subir {filename} como {attachmentName}?",
       "Estamos verificando dos veces porque los nombres de los archivos no coinciden."
     ]
   },

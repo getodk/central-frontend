@@ -124,6 +124,25 @@ export default {
     },
     "multipleHelp": "Povolit někomu s tímto odkazem odesílat více než jednou ze stejného zařízení."
   },
+  "de": {
+    "title": "Öffentlichen Zugangslink erstellen",
+    "introduction": [
+      "Jeder mit diesem Link kann das Formular mit einem Webbrowser ausfüllen. Verwenden Sie den Anzeigenamen, um sich zu erinnern, wo Sie ihn veröffentlicht haben, mit wem Sie ihn geteilt haben, wann er aktiv sein soll und so weiter."
+    ],
+    "field": {
+      "multiple": "Mehrfachantworten"
+    },
+    "multipleHelp": "Jemandem mit diesem Link erlauben mehr als einmal Daten vom selben Gerät zu übermitteln."
+  },
+  "es": {
+    "title": "Crear enlace de acceso público",
+    "introduction": [
+      "Cualquier persona con este enlace será capaz de llenar este formulario desde un navegador web. Utilice nombre para mostrar para recordar dónde lo ha publicado, con quién lo ha compartido, hasta cuando pretende que esté activo, entre otras cosas."
+    ],
+    "field": {
+      "multiple": "Respuestas múltiples"
+    }
+  },
   "fr": {
     "title": "Créer lien d'accès public",
     "introduction": [

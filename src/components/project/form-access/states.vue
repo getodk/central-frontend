@@ -125,24 +125,42 @@ export default {
     ]
   },
   "de": {
-    "title": "Formular-Status"
+    "title": "Formular-Status",
+    "introduction": [
+      "Formular-Status steuern den Lebenszyklusstatus eines jeden Formulars. Normalerweise, aber nicht immer, beginnt ein Formular im Status Offen und geht weiter über Schließen nach Geschlossen, wenn es nicht mehr benötigt wird.",
+      {
+        "full": "{open} Formulare können auf mobile Geräte heruntergeladen werden und akzeptieren neue Übermittlungen.",
+        "open": "Offen"
+      },
+      {
+        "full": "{closing} Formulare akzeptieren neue Übermittlungen, aber können {not} auf mobile Geräte heruntergeladen werden.",
+        "closing": "Wird geschlossen",
+        "not": "nicht"
+      },
+      {
+        "full": "{closed} Formulare können {not1} auf mobile Geräte heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
+        "closed": "Geschlossene",
+        "not1": "nicht",
+        "not2": "nicht"
+      }
+    ]
   },
   "es": {
     "title": "Estado del formulario",
     "introduction": [
-      "El estado del formulario controla el ciclo de vida de cada formulario, Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario.",
+      "El estado del formulario controla el ciclo de vida de cada formulario. Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario.",
       {
-        "full": "{open}Los formularios están disponibles para descarga en dispositivos móviles y aceptarán nuevas presentaciones.",
-        "open": "Abrir"
+        "full": "Los formularios {open} están disponibles para descarga en dispositivos móviles y aceptán nuevos envíos.",
+        "open": "abiertos"
       },
       {
-        "full": "{closing}Los formularios aceptarán nuevas presentaciones y entregas, pero {not} estarán disponibles para descarga en dispositivos móviles.",
-        "closing": "Cerrando",
+        "full": "Los formularios {closing} aceptán nuevos envíos pero {not} están disponibles para descarga en dispositivos móviles.",
+        "closing": "cerrando",
         "not": "no"
       },
       {
-        "full": "{closed}Formulario está {not1}disponible para descarga en dispositivos móviles, y {not2}aceptará nuevas presentaciones.",
-        "closed": "Cerrado",
+        "full": "Los formularios {closed} {not1} están disponibles para descarga en dispositivos móviles, y {not2} aceptán nuevos envíos.",
+        "closed": "cerrados",
         "not1": "no",
         "not2": "no"
       }
@@ -153,7 +171,7 @@ export default {
     "introduction": [
       "Les États de formulaire contrôlent le cycle de vie de chaque formulaire. Généralement, mais pas toujours, un formulaire démarrera \"Ouvert\", sera utilisé jusqu'à sa \"Fermeture\", et sera \"Fermé\" quand il ne sera plus utile.",
       {
-        "full": "Les formulaires{open} sont téléchargeables sur les appareils mobiles, et peuvent accepter des soumissions.",
+        "full": "Les formulaires {open} sont téléchargeables sur les appareils mobiles, et peuvent accepter des soumissions.",
         "open": "Ouvert"
       },
       {

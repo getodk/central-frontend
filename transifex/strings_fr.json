@@ -54,7 +54,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
-        "string": "Actions d'utilisateurs d'application",
+        "string": "Actions d'utilisateurs mobiles",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "public_link": {
@@ -283,10 +283,10 @@
   },
   "plural": {
     "appUser": {
-      "string": "{count, plural, one {Utilisateur d'application} other {Utilisateurs d'application}}"
+      "string": "{count, plural, one {Utilisateur mobile} other {Utilisateurs mobiles}}"
     },
     "form": {
-      "string": "{count, plural, one {Formulaires} other {Formulaires}}"
+      "string": "{count, plural, one {Formulaire} other {Formulaires}}"
     },
     "project": {
       "string": "{count, plural, one {Projet} other {Projets}}"
@@ -295,12 +295,12 @@
       "string": "{count, plural, one {Soumission} other {Soumissions}}"
     },
     "webUser": {
-      "string": "{count, plural, one {Utilisateur Web} other {Utilisateurs Web}}"
+      "string": "{count, plural, one {Utilisateur Web} other {Utilisateurs web}}"
     }
   },
   "count": {
     "appUser": {
-      "string": "{count, plural, one {{count} Utilisateur d'application} other {{count} Utilisateurs d'application}}",
+      "string": "{count, plural, one {{count} utilisateur mobile} other {{count} utilisateurs mobiles}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
@@ -314,7 +314,7 @@
   },
   "resource": {
     "appUser": {
-      "string": "Utilisateur d'application",
+      "string": "Utilisateur mobile",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -353,13 +353,13 @@
         "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
       },
       "clickHere": {
-        "string": "Cliquez ici",
+        "string": "cliquez ici",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
       }
     },
     "helpArticle": {
       "full": {
-        "string": "Pour plus d'information, veuillez consulter ceci {helpArticle}.",
+        "string": "Pour plus d'information, veuillez consulter {helpArticle}.",
         "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
       },
       "helpArticle": {
@@ -393,8 +393,8 @@
       "developer_comment": "This is shown if a search returned no results."
     },
     "rightNow": {
-      "string": "Tout de suite",
-      "developer_comment": "This is a title shown above a section of the page."
+      "string": "Présentement",
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
     "success": {
       "string": "Succès !"
@@ -593,7 +593,7 @@
               }
             },
             "1": {
-              "string": "SInon, coller ci-bas et c'est fini"
+              "string": "Sinon, collez ci-bas et c'est fini !"
             }
           }
         }
@@ -617,7 +617,7 @@
     "BackupStatus": {
       "getHelp": {
         "full": {
-          "string": "Si vous rencontrez des difficultés, merci de consulter {forum}.",
+          "string": "Si vous rencontrez des difficultés, merci de consulter le {forum}.",
           "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
         },
         "forum": {
@@ -630,7 +630,7 @@
           "string": "Sauvegarde non configuré"
         },
         "1": {
-          "string": "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données quelque part."
+          "string": "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données."
         },
         "2": {
           "full": {
@@ -691,7 +691,8 @@
       },
       "success": {
         "0": {
-          "string": "La sauvegarde fonctionne."
+          "string": "La sauvegarde fonctionne.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
         },
         "1": {
           "string": "La dernière sauvegarde correctement exécutée {dateTime}.",
@@ -752,24 +753,24 @@
     "FieldKeyList": {
       "action": {
         "create": {
-          "string": "Créer une utilisateur d'application",
+          "string": "Créer un utilisateur mobile",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "heading": {
         "0": {
           "full": {
-            "string": "Les utilisateurs d'application sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle partagé tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs d'application dans ce projet peuvent seulement télécharger et utiliser les formulaires de ce projet. Quand vous créez un nouvel utilisateur d'application, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur d'application peut accéder, utilisez l'onglet {formAccess}.",
+            "string": "Les utilisateurs mobiles sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle partagé tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs mobiles dans ce projet peuvent seulement télécharger et utiliser les formulaires de ce projet. Quand vous créez un nouvel utilisateur mobile, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur mobile peut accéder, utilisez l'onglet {formAccess}.",
             "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
           },
           "formAccess": {
-            "string": "Accès aux formulaires",
+            "string": "\"accès aux formulaires\"",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
           }
         },
         "1": {
           "full": {
-            "string": "Les utilisateurs de projet conviennent particulièrement bien quand les collecteurs de données doivent accéder à plusieurs formulaires, sont hors-ligne, ou ont des formulaires complexes. Si vous voulez que des répondants remplissent directement votre formulaire ou vos collecteurs de données auront toujours accès à l'Internet, {clickHere} pour d'autres méthodes d'envoi de données.",
+            "string": "Les utilisateurs mobiles conviennent particulièrement bien quand les collecteurs de données doivent accéder à plusieurs formulaires, sont hors-ligne, ou ont des formulaires complexes. Si vous voulez que des répondants remplissent directement votre formulaire ou vos collecteurs de données auront toujours accès à l'Internet, {clickHere} pour d'autres méthodes d'envoi de données.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
@@ -793,20 +794,20 @@
         "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
       },
       "emptyTable": {
-        "string": "Il n'y a pas encore d’utilisateur d'application. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil."
+        "string": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil."
       },
       "alert": {
         "create": {
-          "string": "L'utilisateur d'application “{displayName}” a été correctement créé."
+          "string": "L'utilisateur mobile “{displayName}” a été correctement créé."
         },
         "revoke": {
-          "string": "L'accès a été retiré à l'utilisateur d'application “{displayName}”."
+          "string": "L'accès de l'utilisateur mobile “{displayName}” a été retiré ."
         }
       }
     },
     "FieldKeyNew": {
       "title": {
-        "string": "Créer une utilisateur d'application",
+        "string": "Créer un utilisateur mobile",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -816,11 +817,11 @@
       },
       "success": {
         "0": {
-          "string": "L'utilisateur d'applicatin “{displayName}” a été créé."
+          "string": "L'utilisateur mobile “{displayName}” a été créé."
         },
         "1": {
           "full": {
-            "string": "Vous pouvez configurer un appareil mobile pour “{displayName}” dés maintenant en {scanningCode} dans leur application. Ou vous pouvez le faire plus tard depuis le tableau des utilisateurs d'application en cliquant su \"Voir Code.\"",
+            "string": "Vous pouvez configurer un appareil mobile pour “{displayName}” dès maintenant en {scanningCode} dans leur application. Ou vous pouvez le faire plus tard depuis le tableau des utilisateurs mobiles en cliquant sur \"Voir le code.\"",
             "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
           },
           "scanningCode": {
@@ -834,7 +835,7 @@
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
-            "string": "Paramètres d'accès aux formualires",
+            "string": "Paramètres d'accès aux formulaires",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
           }
         }
@@ -853,7 +854,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur d'application {displayName}?",
+          "string": "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur mobile {displayName}?",
           "developer_comment": "{displayName} is formatted in bold."
         },
         "1": {
@@ -867,7 +868,7 @@
     "FieldKeyRow": {
       "seeCode": {
         "string": "Voir le code",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
       },
       "accessRevoked": {
         "string": "Accès retiré",
@@ -982,7 +983,7 @@
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count} fichier} other {{count} fchiers}}",
+            "string": "{count, plural, one {{count} fichier} other {{count} fichiers}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
           }
         },
@@ -995,7 +996,7 @@
           "string": "{count, plural, one {Merci de patienter, téléversement de votre {count} fichier en cours :} other {Merci de patienter, téléversement de vos {count} fichiers en cours :}}"
         },
         "current": {
-          "string": "Envoi en cours de{filename}",
+          "string": "Envoi en cours de {filename}",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -1099,12 +1100,12 @@
                 "string": "Personne n'a encore soumis de données pour ce formulaire."
               },
               "any": {
-                "string": "{count, plural, one {Un total de {count}soumission a été faite.} other {Un total de {count}soumissions ont été faites.}}"
+                "string": "{count, plural, one {Un total de {count} soumission a été faite.} other {Un total de {count} soumissions ont été faites.}}"
               }
             },
             "1": {
               "full": {
-                "string": "{clickHere}pour vous renseigner sur les diverses méthodes d'envoi de données.",
+                "string": "{clickHere} pour vous renseigner sur les diverses méthodes d'envoi de données.",
                 "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
               },
               "clickHere": {
@@ -1134,7 +1135,7 @@
                 "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
               },
               "submissionsTab": {
-                "string": "Onglet \"Soumissions\"",
+                "string": "onglet \"soumissions\"",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
               }
             }
@@ -1148,11 +1149,11 @@
           "body": {
             "0": {
               "full": {
-                "string": "Lorsque vous arrivez à la fin de votre collecte de données, vous pouvez utiliser les contrôles de l'État du formulaire sur {formAccessTab} pour contrôler si, par exemple, les utilisateurs de l'application seront en mesure de voir ou de créer de nouvelles soumissions à ce formulaire.",
+                "string": "Lorsque vous arrivez à la fin de votre collecte de données, vous pouvez utiliser les contrôles de l'État du formulaire sur {formAccessTab} pour contrôler si, par exemple, les utilisateurs mobiles seront en mesure de voir ou de créer de nouvelles soumissions à ce formulaire.",
                 "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
               },
               "formAccessTab": {
-                "string": "Onglet accès au formulaire de la page Projet",
+                "string": "onglet \"accès aux formulaires\" de la page du projet",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
               }
             }
@@ -1276,7 +1277,7 @@
           "body": {
             "0": {
               "full": {
-                "string": "Vous pouvez {test}un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
+                "string": "Vous pouvez {test} un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
                 "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
               },
               "test": {
@@ -1333,7 +1334,7 @@
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
-            "string": "a testé ce formulaire",
+            "string": "testé ce formulaire",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
@@ -1343,10 +1344,10 @@
           "string": "Vous êtes sur le point de rendre cette ébauche la version publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers médias qui y sont liés."
         },
         "1": {
-          "string": "Les soumissions existantes ne seront pas affectées, mais toutes les soumissions de test de l'ébauche seront supprimées."
+          "string": "Les vraies soumissions existantes ne seront pas affectées, mais toutes les soumissions de test de cette ébauche seront supprimées."
         },
         "2": {
-          "string": "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en entrer un nouveau ci-dessous et le serveur le changera pour vous."
+          "string": "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous."
         }
       },
       "field": {
@@ -1533,7 +1534,7 @@
         },
         "1": {
           "full": {
-            "string": "Si vous n'en avez as déjà un, il existe {tools}pour vous aider à concevoir votre formulaire. ",
+            "string": "Si vous n'en avez as déjà un, il y a des {tools} pour vous aider à concevoir votre formulaire. ",
             "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
           },
           "tools": {
@@ -1662,7 +1663,7 @@
     },
     "FormRow": {
       "lastSubmission": {
-        "string": "(dernier {dateTime})",
+        "string": "(dernière {dateTime})",
         "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       },
       "action": {
@@ -1898,7 +1899,7 @@
             },
             "2": {
               "full": {
-                "string": "Vous pouvez en apprendre plus sur le chiffrement en cliquant ici {here}. Si semble vous être utile, cliquez sur Suivant pour procéder.",
+                "string": "Vous pouvez en apprendre plus sur le chiffrement en cliquant {here}. Si il vous semble être utile, cliquez sur Suivant pour procéder.",
                 "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
               },
               "here": {
@@ -1943,7 +1944,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "Les utilisateurs d'application peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
+          "string": "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
         }
       },
       "emptyTable": {
@@ -1965,7 +1966,7 @@
           "developer_comment": "This is the text of a form field. \"State\" refers to the Form State. Form States control the lifecycle state of each Form."
         },
         "appUserAccess": {
-          "string": "Accès d'utilisateurs d'application",
+          "string": "Accès d'utilisateurs mobiles",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -1981,7 +1982,7 @@
         },
         "1": {
           "full": {
-            "string": "Les formulaires{open} sont téléchargeables sur les appareils mobiles, et peuvent accepter des soumissions.",
+            "string": "Les formulaires {open} sont téléchargeables sur les appareils mobiles, et peuvent accepter des soumissions.",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
@@ -2034,7 +2035,7 @@
           "developer_comment": "This is the text of a table column header."
         },
         "appUserAccess": {
-          "string": "Accès d'utilisateurs d'application",
+          "string": "Accès d'utilisateurs mobiles",
           "developer_comment": "This is the text of a table column header."
         }
       }
@@ -2046,7 +2047,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs d'application pour ce projet ne peuvent que voir les formulaires auxquels ils ont accès."
+          "string": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs mobiles pour ce projet ne peuvent que voir les formulaires auxquels ils ont accès."
         }
       }
     },
@@ -2056,7 +2057,8 @@
           "string": "Bienvenue dans Central."
         },
         "1": {
-          "string": "Faisons des progrès."
+          "string": "Faisons des progrès.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
         }
       },
       "gettingStarted": {
@@ -2071,7 +2073,7 @@
               "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
             },
             "docsWebsite": {
-              "string": "Site web de la documentaion d'ODK",
+              "string": "site web de la documentaion d'ODK",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
             }
           },
@@ -2081,7 +2083,7 @@
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
             },
             "forum": {
-              "string": "Forum de la communauté ODK",
+              "string": "forum de la communauté ODK",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
             }
           }
@@ -2098,13 +2100,13 @@
             "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
           },
           "webUsers": {
-            "string": "{count, plural, one {Utilisateur Web} other {Utilisateurs Web}}",
+            "string": "{count, plural, one {Utilisateur Web} other {Utilisateurs web}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
           }
         },
         "projects": {
           "full": {
-            "string": "{count, plural, one {{projects} qui peut organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs.} other {{projects} qui peuvent organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs.}}",
+            "string": "{count, plural, one {{projects} qui regroupe des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.} other {{projects} qui regroupent des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.}}",
             "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
           },
           "projects": {
@@ -2145,7 +2147,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Les projets regroupent les formulaires et les utilisateurs d'applications afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre dispositif de collecte de données."
+          "string": "Les projets regroupent les formulaires et les utilisateurs mobiles afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre appareil de collecte de données."
         }
       }
     },
@@ -2157,7 +2159,7 @@
       "body": {
         "0": {
           "full": {
-            "string": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs d'application pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
+            "string": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs mobiles pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
             "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
           },
           "accessTo": {
@@ -2180,11 +2182,11 @@
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
-          "string": "{count, plural, one {{appUsers}qui peut utiliser un client de collecte de données pour télécharger et soumettre les données du formulaire à ce projet.} other {{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger et soumettre les données du formulaire à ce projet.}}",
+          "string": "{count, plural, one {{appUsers} qui peut utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.} other {{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.}}",
           "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
         },
         "appUsers": {
-          "string": "{count, plural, one {Utilisateur d'application} other {Utilisateurs d'application}}",
+          "string": "{count, plural, one {Utilisateur mobile} other {Utilisateurs mobiles}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
         }
       },
@@ -2204,7 +2206,7 @@
         "string": "Que sont les \"Projets\" ?"
       },
       "noSubmission": {
-        "string": "(aucun)",
+        "string": "(aucune)",
         "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
       }
     },
@@ -2276,7 +2278,7 @@
           "developer_comment": "This is the text of a navigation tab."
         },
         "appUsers": {
-          "string": "Utilisateurs d'application",
+          "string": "Utilisateurs mobiles",
           "developer_comment": "This is the text of a navigation tab."
         },
         "formAccess": {
@@ -2305,13 +2307,13 @@
             "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
           },
           "appUsers": {
-            "string": "Utilisateurs d'application",
+            "string": "Utilisateurs mobiles",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
           }
         },
         "2": {
           "full": {
-            "string": "Créez un ou plusieurs {publicLinks}à partager avec des répondants.",
+            "string": "Créez un ou plusieurs {publicLinks} à partager avec des répondants.",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
           },
           "publicLinks": {
@@ -2321,7 +2323,7 @@
         },
         "3": {
           "full": {
-            "string": "Créez un {webUser} avec le rôle de {dataCollector}pour chaque individu qui participera à la collecte de données. Ces utilisateurs accéderont à leurs comptes Central pour remplir ce formulaire depuis leurs navigateurs. Les gestionnaires de projet peuvent également créer des soumissions depuis leurs navigateurs.",
+            "string": "Créez un {webUser} avec le rôle de {dataCollector} pour chaque individu qui participera à la collecte de données. Ces utilisateurs accéderont à leurs comptes Central pour remplir ce formulaire depuis leurs navigateurs. Les gestionnaires de projet peuvent également créer des soumissions depuis leurs navigateurs.",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
           },
           "webUser": {
@@ -2343,7 +2345,7 @@
         },
         "1": {
           "full": {
-            "string": "Les {projectManagers}peuvent exécuter toutes les tâches administratives liées à ce projet et peuvent remplir des formulaires depuis leurs navigateurs.",
+            "string": "Les {projectManagers} peuvent exécuter toutes les tâches administratives liées à ce projet et peuvent remplir des formulaires depuis leurs navigateurs.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
           },
           "projectManagers": {
@@ -2353,7 +2355,7 @@
         },
         "2": {
           "full": {
-            "string": "Les {projectViewers}ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
+            "string": "Les {projectViewers} ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -2363,7 +2365,7 @@
         },
         "3": {
           "full": {
-            "string": "Les {dataCollectors}peuvent remplir des formulaires depuis leur navigateur mais n'ont aucun accès aux données ou paramètres du projet.",
+            "string": "Les {dataCollectors} peuvent remplir des formulaires depuis leur navigateur mais n'ont aucun accès aux données ou paramètres du projet.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
@@ -2385,7 +2387,7 @@
             "developer_comment": "This is the text of a form field."
           },
           "cannotList": {
-            "string": "Entrez l'adresse e-mail exacte de l'utilisateur...",
+            "string": "Entrez l'adresse de courriel exacte de l'utilisateur...",
             "developer_comment": "This is the text of a form field."
           }
         }
@@ -2466,7 +2468,7 @@
         },
         "1": {
           "full": {
-            "string": "Les liens d'accès public sont conçus pour l'auto-évaluation. Si vous travaillez avec des collecteurs de données qui doivent soumettre le même formulaire plusieurs fois, {clickHere}pour d'autres méthodes d'envoi de données.",
+            "string": "Les liens d'accès public sont conçus pour l'auto-évaluation. Si vous travaillez avec des collecteurs de données qui doivent soumettre le même formulaire plusieurs fois, {clickHere} pour d'autres méthodes d'envoi de données.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
@@ -2605,7 +2607,7 @@
         },
         "other": {
           "full": {
-            "string": "Pour une description complète de notre intégration OData, veuillez consulter {article}",
+            "string": "Pour une description complète de notre intégration OData, veuillez consulter {article}.",
             "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
           },
           "article": {
@@ -2666,7 +2668,7 @@
           "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
-          "string": "{count, plural, one {Chargement de {count} soumission...} other {Chargement de {count}soumissions...}}"
+          "string": "{count, plural, one {Chargement de {count} soumission...} other {Chargement de {count} soumissions...}}"
         },
         "first": {
           "string": "Chargement des premières {top} sur {count} soumissions...",
@@ -2804,7 +2806,7 @@
       },
       "heading": {
         "0": {
-          "string": "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs d'application pour chaque projet.",
+          "string": "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs mobiles pour chaque projet.",
           "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
         }
       },
@@ -2825,7 +2827,7 @@
           "string": "Le mot de passe pour \"{displayName}\" a été invalidé. Un courrier électronique a été envoyé à {email} avec des instructions sur la manière de procéder."
         },
         "retire": {
-          "string": "L'utilisateur {displayName}a été supprimé."
+          "string": "L'utilisateur {displayName} a été supprimé."
         }
       }
     },
@@ -2836,7 +2838,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Une fois que vous aurez créé ce compte, l'adresse électronique que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
+          "string": "Une fois que vous aurez créé ce compte, l'adresse de courriel que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
         }
       }
     },
@@ -2858,7 +2860,7 @@
     },
     "UserRetire": {
       "title": {
-        "string": "Élimination d'utilisateur",
+        "string": "Supprimer utilisateur",
         "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
       },
       "introduction": {
@@ -2867,7 +2869,7 @@
         },
         "1": {
           "full": {
-            "string": "{noUndo}, mais un nouveau compte peut toujours être créé pour cette personne avec la même adresse électronique.",
+            "string": "{noUndo}, mais un nouveau compte peut toujours être créé pour cette personne avec la même adresse de courriel.",
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
@@ -2893,7 +2895,7 @@
       },
       "action": {
         "retire": {
-          "string": "Supprimer utilisateur",
+          "string": "Supprimer l'utilisateur",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }

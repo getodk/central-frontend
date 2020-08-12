@@ -115,10 +115,10 @@ export default {
   "de": {
     "title": "Passwort festlegen",
     "action": {
-      "set": "Passwort"
+      "set": "Passwort festlegen"
     },
     "problem": {
-      "401_2": "{message} Der Hyperlink in Ihrer Email könnte abgelaufen sein; eine neue Email sollte gesendet werden."
+      "401_2": "{message} Der Hyperlink in Ihrer E-Mail könnte abgelaufen sein und vielleicht sollte eine neue E-Mail gesendet werden."
     },
     "alert": {
       "success": "Das Passwort wurde erfolgreich zurückgesetzt."
@@ -128,6 +128,9 @@ export default {
     "title": "Establecer contraseña",
     "action": {
       "set": "Establecer contraseña"
+    },
+    "problem": {
+      "401_2": "{message} Es posible que el enlace de su correo electrónico haya expirado y tenga que enviarse un nuevo correo electrónico."
     },
     "alert": {
       "success": "La contraseña fue restablecida exitosamente."

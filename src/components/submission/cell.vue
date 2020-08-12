@@ -214,6 +214,9 @@ export default {
   "cs": {
     "binaryLinkTitle": "Soubor byl odeslán. Klikněte pro stažení."
   },
+  "de": {
+    "binaryLinkTitle": "Datei wurde übermittelt. Klicken Sie, um sie herunterzuladen."
+  },
   "es": {
     "binaryLinkTitle": "El archivo fue enviado. Haga clic para descargar."
   },

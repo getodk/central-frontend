@@ -139,16 +139,16 @@ export default {
     }
   },
   "de": {
-    "auditsTitle": "Letzte Backups",
+    "auditsTitle": "Letzte Sicherheitskopien",
     "alert": {
-      "create": "Automatische Backups sind jetzt eingerichtet.",
+      "create": "Automatische Sicherungskopien sind jetzt eingerichtet.",
       "terminate": "Ihre automatischen Backups wurden abgestellt. Wir empfehlen diese schnellstmöglich wieder zu konfigurieren."
     }
   },
   "es": {
     "auditsTitle": "Últimas copias de seguridad",
     "alert": {
-      "create": "Exitoso! Las copias de seguridad automáticas están ahora configuradas.",
+      "create": "¡Exitoso! Las copias de seguridad automáticas están ahora configuradas.",
       "terminate": "Sus copias de seguridad automáticas terminaron. Se recomienda que configure uno nuevo tan pronto como sea posible."
     }
   },

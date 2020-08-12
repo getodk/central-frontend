@@ -116,6 +116,26 @@ export default {
       "title": "Veřejně přístupný odkaz už není k dispozici. Zpracování se nedokončilo. Aktualizujte prosím později a zkuste to znovu."
     }
   },
+  "de": {
+    "action": {
+      "revoke": "Widerrufen"
+    },
+    "revoked": "Widerrufen",
+    "unavailable": {
+      "text": "Noch nicht verfügbar",
+      "title": "Öffentlicher Zugangslink noch nicht verfügbar. Er wurde noch nicht vollständig verarbeitet. Bitte aktualisieren Sie später und versuchen Sie es erneut."
+    }
+  },
+  "es": {
+    "action": {
+      "revoke": "Revocar"
+    },
+    "revoked": "Revocar",
+    "unavailable": {
+      "text": "Todavía no disponible",
+      "title": "El enlace de acceso público aún no está disponible. No se ha terminado de procesar. Por favor actualice más tarde y vuelva a intentarlo."
+    }
+  },
   "fr": {
     "action": {
       "revoke": "Révoquer"

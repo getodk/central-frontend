@@ -234,7 +234,7 @@ export default {
         "scanningCode": "den obigen Code einscannen"
       },
       {
-        "full": "Sie können dem Benutzer jetzt auf der Seite {formAccessSettings}Zugriff zu den Formularen geben.",
+        "full": "Sie können dem Benutzer jetzt auf der Seite {formAccessSettings} Zugriff zu den Formularen geben.",
         "formAccessSettings": "Einstellungen Formular-Zugriff"
       }
     ],
@@ -243,19 +243,19 @@ export default {
     }
   },
   "es": {
-    "title": "Crear usuario de la aplicación",
+    "title": "Crear usuario móvil",
     "introduction": [
-      "Este usuario no tendrá acceso a ningún formulario al principio. Podrá asignar Formularios después de crear el usuario."
+      "Este usuario no tendrá acceso a ningún formulario al principio. Podrá asignar formularios después de crear el usuario."
     ],
     "success": [
-      "Se ha creado el usuario de la aplicación {displayName}",
+      "Se ha creado el usuario móvil {displayName}",
       {
-        "full": "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo{scanningCode} en su aplicación. O puede hacerlo más tarde desde la tabla Usuarios de la aplicación haciendo clic en \"Ver código\".",
+        "full": "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo {scanningCode} en su aplicación. O puede hacerlo más tarde desde la tabla de usuarios móviles haciendo clic en \"Ver código\".",
         "scanningCode": "Escaneando el código de arriba"
       },
       {
-        "full": "Es posible que desee visitar este proyecto {formAccessSettings} para dar acceso a este usuario a los formularios.",
-        "formAccessSettings": "Configuración de acceso al Formulario"
+        "full": "Es posible que desee visitar la {formAccessSettings} de este proyecto para dar acceso a este usuario a los formularios.",
+        "formAccessSettings": "configuración de acceso a formularios"
       }
     ],
     "action": {
@@ -263,19 +263,19 @@ export default {
     }
   },
   "fr": {
-    "title": "Créer une utilisateur d'application",
+    "title": "Créer un utilisateur mobile",
     "introduction": [
       "Cet utilisateur n'aura accès à aucun formulaire dans un premier temps. Vous pourrez lui en assigner quand il aura été créé."
     ],
     "success": [
-      "L'utilisateur d'applicatin “{displayName}” a été créé.",
+      "L'utilisateur mobile “{displayName}” a été créé.",
       {
-        "full": "Vous pouvez configurer un appareil mobile pour “{displayName}” dés maintenant en {scanningCode} dans leur application. Ou vous pouvez le faire plus tard depuis le tableau des utilisateurs d'application en cliquant su \"Voir Code.\"",
+        "full": "Vous pouvez configurer un appareil mobile pour “{displayName}” dès maintenant en {scanningCode} dans leur application. Ou vous pouvez le faire plus tard depuis le tableau des utilisateurs mobiles en cliquant sur \"Voir le code.\"",
         "scanningCode": "scannant le code ci-dessous"
       },
       {
         "full": "Vous pourriez vouloir visiter les {formAccessSettings} de ce projet pour donner accès aux formulaires à cet utilisateur.",
-        "formAccessSettings": "Paramètres d'accès aux formualires"
+        "formAccessSettings": "Paramètres d'accès aux formulaires"
       }
     ],
     "action": {

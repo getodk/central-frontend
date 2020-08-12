@@ -2,13 +2,13 @@
   "role": {
     "none": "Keine",
     "admin": "Administrator",
-    "manager": "Projektmanager",
-    "viewer": "Projekt-Teilnehmer",
+    "manager": "Projekt-Manager",
+    "viewer": "Projekt-Viewer",
     "formfill": "Datensammler"
   },
   "formState": {
     "open": "Offen",
-    "closing": "Wird geschlossen",
+    "closing": "Schließen",
     "closed": "Geschlossen"
   },
   "audit": {
@@ -89,7 +89,7 @@
   "field": {
     "dateRange": "Zeitraum",
     "displayName": "Anzeigename",
-    "email": "Emailadresse",
+    "email": "E-Mail-Adresse",
     "name": "Name",
     "newPassword": "Neues Passwort",
     "oldPassword": "Altes Passwort",
@@ -103,7 +103,7 @@
     "created": "Erstellt",
     "createdBy": "Erstellt von",
     "displayName": "Anzeigename",
-    "email": "Emailadresse",
+    "email": "E-Mail-Adresse",
     "lastSubmission": "Letzte Übermittlung",
     "name": "Name",
     "type": "Typ"
@@ -112,13 +112,13 @@
     "appUser": "App-Benutzer | App-Benutzer",
     "form": "Formular | Formulare",
     "project": "Projekt | Projekte",
-    "submission": "Einsendung | Übermittlungen",
+    "submission": "Übermittlung | Übermittlungen",
     "webUser": "Web-Benutzer | Web-Benutzer"
   },
   "count": {
     "appUser": "{count} App-Benutzer | {count} App-Benutzer",
     "form": "{count} Formular | {count} Formulare",
-    "submission": "{count} Einsendung | {count} Übermittlungen"
+    "submission": "{count} Übermittlung | {count} Übermittlungen"
   },
   "resource": {
     "appUser": "App-Benutzer",
@@ -132,12 +132,12 @@
   },
   "moreInfo": {
     "clickHere": {
-      "full": "Für weitere Information {clickHere}",
+      "full": "Weitere Informationen: {clickHere}.",
       "clickHere": "klicken Sie hier"
     },
     "helpArticle": {
-      "full": "Weitere Information: {helpArticle}",
-      "helpArticle": "dieser Hilfe-Artikel"
+      "full": "Weitere Informationen: {helpArticle}",
+      "helpArticle": "diesen Hilfe-Artikel"
     },
     "learnMore": "Erfahren Sie mehr."
   },
@@ -147,7 +147,7 @@
     "dangerZone": "Gefahrenbereich",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
-    "rightNow": "Genau jetzt",
+    "rightNow": "Aktuell",
     "success": "Das hat geklappt!",
     "yes": "Ja"
   },

@@ -210,16 +210,16 @@ export default {
     "title": "Entwurf veröffentlichen",
     "warnings": {
       "attachments": {
-        "full": "Sie haben die {mediaFiles}für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
+        "full": "Sie haben die {mediaFiles} für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
         "mediaFiles": "Mediendateien"
       },
       "testing": {
-        "full": "Sie haben {tested}noch nicht auf einem Mobilgerät getestet und eine Datenübermittlung bereitgestellt. Sie müssen diese nicht tun, aber es wird dringend empfohlen.",
+        "full": "Sie haben {tested} noch nicht auf einem Mobilgerät getestet und eine Datenübermittlung bereitgestellt. Sie müssen diese nicht tun, aber es wird dringend empfohlen.",
         "tested": "dieses Formular"
       }
     },
     "introduction": [
-      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazu gehörenden Mediendatein finalisiert.",
+      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazu gehörenden Mediendatein abgeschlossen.",
       "Bestehende Übermittlungen sind nicht betroffen, aber alle Übermittlungen für den Testentwurf werden entfernt.",
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen."
     ],
@@ -231,27 +231,27 @@ export default {
     }
   },
   "es": {
-    "title": "Publicar Borrador",
+    "title": "Publicar borrador",
     "warnings": {
       "attachments": {
-        "full": "No ha proporcionado todo lo{mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de Borrador para cargar esos archivos más tarde.",
-        "mediaFiles": "Archivos multimedia"
+        "full": "No ha proporcionado todos los {mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
+        "mediaFiles": "archivos multimedia"
       },
       "testing": {
-        "full": "Aún no ha conectado {tested} un dispositivo móvil y ha subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
-        "tested": "Probó este Formulario"
+        "full": "Aún no ha {tested} con un dispositivo móvil y subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
+        "tested": "probado este formulario"
       }
     },
     "introduction": [
-      "Está a punto de hacer de este Borrador la versión publicada de su Formulario. Esto finalizará cualquier cambio que haya realizado en la definición del Formulario y sus archivos multimedia adjuntos",
-      "Los envíos de Formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador.",
-      "Cada versión de un Formulario requiere un nombre de versión único. En este momento, su borrador de Formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de Formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted."
+      "Está a punto de hacer de este borrador la versión publicada de su formulario. Esto finalizará cualquier cambio que haya realizado en la definición del formulario y sus archivos multimedia adjuntos.",
+      "Los envíos de formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador.",
+      "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted."
     ],
     "field": {
       "version": "Versión"
     },
     "problem": {
-      "409_6": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este Formulario. Cambie a algo nuevo e intente nuevamente."
+      "409_6": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este formulario. Cambie a algo nuevo e intente nuevamente."
     }
   },
   "fr": {
@@ -263,13 +263,13 @@ export default {
       },
       "testing": {
         "full": "Vous n'avez pas encore {tested} sur un appareil mobile et téléchargé une soumission de test. Vous n'êtes pas obligé de le faire, mais c'est fortement recommandé.",
-        "tested": "a testé ce formulaire"
+        "tested": "testé ce formulaire"
       }
     },
     "introduction": [
       "Vous êtes sur le point de rendre cette ébauche la version publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers médias qui y sont liés.",
-      "Les soumissions existantes ne seront pas affectées, mais toutes les soumissions de test de l'ébauche seront supprimées.",
-      "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en entrer un nouveau ci-dessous et le serveur le changera pour vous."
+      "Les vraies soumissions existantes ne seront pas affectées, mais toutes les soumissions de test de cette ébauche seront supprimées.",
+      "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous."
     ],
     "field": {
       "version": "Version"

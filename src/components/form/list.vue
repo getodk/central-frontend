@@ -110,6 +110,10 @@ export default {
     "title": "Formulare",
     "action": {
       "create": "Neu"
+    },
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
+    "alert": {
+      "create": "Ihr neues Formular \"{name}\" wurde als Entwurf erstellt. Überprüfen Sie die Checklisten unten: wenn Sie finden, das sie abgearbeitet ist, können sie das Formular veröffentlichen."
     }
   },
   "es": {
@@ -117,9 +121,9 @@ export default {
     "action": {
       "create": "Nuevo"
     },
-    "emptyTable": "No hay Formularios para mostrar.",
+    "emptyTable": "No hay formularios para mostrar.",
     "alert": {
-      "create": "Su nuevo Formulario \"{name}\" se ha creado como un borrador. Eche un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el Formulario para su uso."
+      "create": "Su nuevo formulario \"{name}\" se ha creado como un borrador. De un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el formulario para su uso."
     }
   },
   "fr": {

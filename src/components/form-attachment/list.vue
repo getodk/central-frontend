@@ -438,7 +438,7 @@ export default {
     },
     "problem": {
       "noneUploaded": "{message} Nebyly nahrány žádné soubory.",
-      "someUploaded": "{message}Úspěšně byl nahrán pouze{uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z{total}."
+      "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
     },
     "alert": {
       "readError": "Při čtení “{filename}” došlo k chybě.",
@@ -457,12 +457,12 @@ export default {
       "uploaded": "Hochgeladen"
     },
     "problem": {
-      "noneUploaded": "{message}Es wurden keine Dateien erfolgreich hochgeladen.",
-      "someUploaded": "{message}Nur {uploaded}von {total}Dateien wurde erfolgreich hochgeladen. | {message}Nur {uploaded}von {total} Dateien wurden erfolgreich hochgeladen."
+      "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
+      "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
       "readError": "Etwa hat beim Lesen der Datei \"{filename}\" nicht geklappt.",
-      "success": "{count}Datei wurde erfolgreich hochgeladen. | {count}Dateien wurden erfolgreich hochgeladen."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
     }
   },
   "es": {
@@ -478,11 +478,11 @@ export default {
     },
     "problem": {
       "noneUploaded": "{message} No se cargaron archivos correctamente",
-      "someUploaded": "{message}Solo {uploaded}{total} los archivos se cargaron correctamente. | {message}Solo {uploaded} de {total} archivos se cargaron correctamente."
+      "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
     },
     "alert": {
       "readError": "Algo salió mal mientras leía {filename}",
-      "success": "{count}Los archivos se han cargado correctamente. | {count} Los archivos se han cargado correctamente."
+      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente."
     }
   },
   "fr": {

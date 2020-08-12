@@ -156,12 +156,21 @@ export default {
       "settings": "Nastavení"
     }
   },
+  "de": {
+    "tab": {
+      "overview": "Übersicht",
+      "users": "Projektrollen",
+      "appUsers": "App-Benutzer",
+      "formAccess": "Formular-Zugriff",
+      "settings": "Einstellungen"
+    }
+  },
   "es": {
     "tab": {
-      "overview": "Resumen",
+      "overview": "Descripción general",
       "users": "Roles del proyecto",
-      "appUsers": "Usuarios de la aplicación",
-      "formAccess": "Acceso al formulario",
+      "appUsers": "Usuarios móviles",
+      "formAccess": "Acceso a formularios",
       "settings": "Configuración"
     }
   },
@@ -169,7 +178,7 @@ export default {
     "tab": {
       "overview": "Aperçu",
       "users": "Rôles du projet",
-      "appUsers": "Utilisateurs d'application",
+      "appUsers": "Utilisateurs mobiles",
       "formAccess": "Accès aux formulaires",
       "settings": "Paramètres"
     }

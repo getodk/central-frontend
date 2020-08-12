@@ -235,7 +235,7 @@ export default {
       "Weboví uživatelé mají na této webové stránce účty pro přehled a správu projektů na tomto serveru. Správci mohou na webu spravovat cokoli. Uživatelé bez role úplného přístupu mohou mít roli v jakémkoli projektu, z jeho Projektového nastavení. Administrátoři webu a některé role projektu mohou k vyplnění formulářů použít webový prohlížeč. Chcete-li odeslat data prostřednictvím aplikace, jako {collect} vytvořte uživatele aplikace pro každý projekt."
     ],
     "header": {
-      "sitewideRole": "Role pro celý web"
+      "sitewideRole": "Role úplného přístupu"
     },
     "alert": {
       "create": "Uživatel byl úspěšně vytvořen pro „{displayName}“.",
@@ -244,14 +244,37 @@ export default {
       "retire": "Uživatel „{displayName}“ byl uspán."
     }
   },
+  "de": {
+    "action": {
+      "create": "Web-Benutzer anlegen"
+    },
+    "heading": [
+      "Web-Benutzer haben Konten auf dieser Webseite, um Projekte auf diesem Server zu überwachen und zu administrieren. Administratoren können alles auf dieser Seite verwalten. Benutzer ohne seitenweite Rolle können in jedem Projekt in den Projekteinstellungen eine Rolle zugewiesen bekommen. Seitenweite Administratoren und einige Projektrollen können einen Webbrowser zum Ausfüllen von Formularen benutzen. Um Daten über eine App wie {collect} zu übermitteln, erstellen Sie App-Benutzer für jedes Projekt."
+    ],
+    "header": {
+      "sitewideRole": "Seitenweite Rolle"
+    },
+    "alert": {
+      "create": "Ein Benutzer für \"{displayName}\" wurde erfolgreich erstellt.",
+      "assignRole": "\"{displayName}\" wurde erfolgreich eine seitenweite Rolle als \"{roleName}\" zugewiesen.",
+      "resetPassword": "Das Passwort für \"{displayName}\" wurde als ungültig gekennzeichnet. Eine E-Mail wurde an {email} gesendet mit Anweisungen wie weiter vorgegangen wird.",
+      "retire": "Der App-Benutzer \"{displayName}\" wurde deaktiviert."
+    }
+  },
   "es": {
     "action": {
       "create": "Crear usuario web"
     },
+    "heading": [
+      "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los Administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un rol, se le puede asignar uno en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tipo {collect}, cree usuarios de aplicación en cada proyecto."
+    ],
     "header": {
       "sitewideRole": "Rol de sitio"
     },
     "alert": {
+      "create": "Se creó un usuario satisfactoriamente para “{displayName}”.",
+      "assignRole": "Realizado. Al usuario \"{displayName}\" se le ha asignado el rol \" {roleName}\" en este proyecto.",
+      "resetPassword": "La contraseña asociada al usuario {displayName} es incorrecta. Se ha enviado un correo electrónico a {email} con las instrucciones para continuar.",
       "retire": "El usuario \"{displayName}\" ha sido retirado"
     }
   },
@@ -260,7 +283,7 @@ export default {
       "create": "Créer un utilisateur web"
     },
     "heading": [
-      "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs d'application pour chaque projet."
+      "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs mobiles pour chaque projet."
     ],
     "header": {
       "sitewideRole": "Rôle sur l'ensemble du site"
@@ -269,7 +292,7 @@ export default {
       "create": "Un utilisateur a été créé avec succès pour \"{displayName}\".",
       "assignRole": "Succès ! \"{displayName}\" a reçu le rôle de \"{roleName}\" pour l'ensemble du site.",
       "resetPassword": "Le mot de passe pour \"{displayName}\" a été invalidé. Un courrier électronique a été envoyé à {email} avec des instructions sur la manière de procéder.",
-      "retire": "L'utilisateur {displayName}a été supprimé."
+      "retire": "L'utilisateur {displayName} a été supprimé."
     }
   }
 }

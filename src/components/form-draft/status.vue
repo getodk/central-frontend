@@ -268,19 +268,26 @@ export default {
       }
     },
     "actions": {
+      "title": "Aktionen",
       "action": {
         "publish": "Entwurf veröffentlichen",
         "abandon": "Entwurf verwerfen"
       }
+    },
+    "alert": {
+      "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
+      "publish": "Ihr Entwurf ist jetzt veröffentlicht. Alle Geräte, die Formulare für dieses Projekt beziehen, erhalten ab jetzt die neuen Formularedefinitionen und Mediendateien.",
+      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
+      "delete": "Das Formular \"{name}\" wurde gelöscht."
     }
   },
   "es": {
     "draftChecklist": {
-      "title": "Lista de verificación de Borrador"
+      "title": "Lista de verificación de borrador"
     },
     "currentDraft": {
       "versionCaption": {
-        "full": "{draftVersion}de este Formulario.",
+        "full": "{draftVersion} de este formulario.",
         "draftVersion": "Versión preliminar"
       },
       "action": {
@@ -290,15 +297,15 @@ export default {
     "actions": {
       "title": "Acciones",
       "action": {
-        "publish": "Publicar Borrador",
-        "abandon": "Abandonar borrador."
+        "publish": "Publicar borrador",
+        "abandon": "Abandonar borrador"
       }
     },
     "alert": {
-      "upload": "¡Éxito! La nueva definición del Formulario se ha guardado como su borrador",
-      "publish": "Su borrador ya está publicado. Cualquier dispositivo que recupere formularios para este proyecto ahora recibirá la nueva definición de Formulario y archivos multimedia",
-      "abandon": "La versión Borrador de este Formulario ha sido eliminado con éxito.",
-      "delete": "El Formulario {name}fue eliminado."
+      "upload": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador",
+      "publish": "Su borrador ya está publicado. Cualquier dispositivo que recupere formularios para este proyecto ahora recibirá la nueva definición de formulario y archivos multimedia.",
+      "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
+      "delete": "El formulario {name} fue eliminado."
     }
   },
   "fr": {

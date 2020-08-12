@@ -239,6 +239,13 @@ export default {
       "instanceId": "Instance ID"
     }
   },
+  "de": {
+    "header": {
+      "submitterName": "Übermittelt von",
+      "submissionDate": "Übermittelt um",
+      "instanceId": "Instanz-ID"
+    }
+  },
   "es": {
     "header": {
       "submitterName": "Enviado por",

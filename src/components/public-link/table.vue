@@ -75,6 +75,18 @@ export default {
       "accessLink": "Odkaz"
     }
   },
+  "de": {
+    "header": {
+      "multiple": "Mehrfachantworten",
+      "accessLink": "Zugangslink"
+    }
+  },
+  "es": {
+    "header": {
+      "multiple": "Respuestas múltiples",
+      "accessLink": "Enlace de acceso"
+    }
+  },
   "fr": {
     "header": {
       "multiple": "Réponses multiples",

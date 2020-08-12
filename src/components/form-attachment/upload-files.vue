@@ -110,7 +110,7 @@ export default {
     "title": "Dateien hochladen",
     "introduction": [
       {
-        "full": "Um Dateien hochzuladen, können Sie eine oder mehrere Dateien mit {dragAndDrop}in die Tabelle auf dieser Seite ziehen.",
+        "full": "Um Dateien hochzuladen, können Sie eine oder mehrere Dateien mit {dragAndDrop} in die Tabelle auf dieser Seite ziehen.",
         "dragAndDrop": "Drag-and-Drop"
       },
       {
@@ -123,12 +123,12 @@ export default {
     "title": "Subir archivos",
     "introduction": [
       {
-        "full": "Para cargar archivos, puede arrastrar y soltar {dragAndDrop}uno o más archivos en la tabla de esta página.",
-        "dragAndDrop": "Arrastrar y soltar"
+        "full": "Para cargar archivos, puede {dragAndDrop} uno o más archivos en la tabla de esta página.",
+        "dragAndDrop": "arrastrar y soltar"
       },
       {
         "full": "Si prefiere seleccionar archivos de una solicitud, asegúrese de que sus nombres coincidan con los de la tabla y luego {clickHere}.",
-        "clickHere": "Haga clic aquí para elegir"
+        "clickHere": "haga clic aquí para elegir"
       }
     ]
   },

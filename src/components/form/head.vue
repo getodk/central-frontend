@@ -337,11 +337,29 @@ body {
     }
   },
   "de": {
+    "projectNav": {
+      "action": {
+        "back": "Zurück zur Projektübersicht"
+      }
+    },
+    "formNav": {
+      "tab": {
+        "overview": "Übersicht",
+        "versions": "Versionen",
+        "publicLinks": "Öffentlicher Zugriff",
+        "settings": "Einstellungen"
+      },
+      "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
+    },
     "draftNav": {
       "title": "Entwurf",
+      "action": {
+        "create": "Neuen Entwurf erstellen"
+      },
       "tab": {
         "status": "Status",
-        "attachments": "Mediendateien"
+        "attachments": "Mediendateien",
+        "testing": "Testen"
       }
     }
   },
@@ -353,20 +371,21 @@ body {
     },
     "formNav": {
       "tab": {
-        "overview": "Descripción general.",
+        "overview": "Descripción general",
         "versions": "Versiones",
+        "publicLinks": "Acceso público",
         "settings": "Ajustes"
       },
-      "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de Formulario."
+      "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
     },
     "draftNav": {
       "title": "Borrador",
       "action": {
-        "create": "Crear un nuevo borrador."
+        "create": "Crear un nuevo borrador"
       },
       "tab": {
         "status": "Estado",
-        "attachments": "Archivos multimedia.",
+        "attachments": "Archivos multimedia",
         "testing": "Pruebas"
       }
     }

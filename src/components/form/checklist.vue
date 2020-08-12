@@ -183,7 +183,8 @@ export default {
         "title": "Stáhněte si formulář o klientech průzkumu a odešlete data",
         "body": [
           {
-            "none": "Do tohoto formuláře zatím nikdo nezadal žádné údaje."
+            "none": "Do tohoto formuláře zatím nikdo nezadal žádné údaje.",
+            "any": "Celkem byl odeslán {count} příspěvek. | Celkem byly odeslány {count} příspěvky | Celkem bylo odesláno {count} příspěvků. | Celkem bylo odesláno {count} příspěvků."
           },
           {
             "full": "{clickHere} abyste se dozvěděli o různých způsobech zadávání údajů.",
@@ -195,7 +196,8 @@ export default {
         "title": "Vyhodnotit a analyzovat odeslaná data",
         "body": [
           {
-            "none": "Jakmile budou pro tento formulář k dispozici data, můžete je exportovat nebo synchronizovat a sledovat a analyzovat data z hlediska kvality a výsledků."
+            "none": "Jakmile budou pro tento formulář k dispozici data, můžete je exportovat nebo synchronizovat a sledovat a analyzovat data z hlediska kvality a výsledků.",
+            "any": "Můžete exportovat nebo synchronizovat {count} příspěvek v tomto formuláři a sledovat a analyzovat příspěvek z hlediska kvality a výsledků. | Můžete exportovat nebo synchronizovat {count} příspěvky v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků. | Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků. | Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků."
           },
           {
             "full": "Můžete to udělat pomocí tlačítek Stáhnout a Analyzovat na {submissionsTab}.",
@@ -215,7 +217,7 @@ export default {
     ]
   },
   "de": {
-    "clickForInfo": "Klicken Sie hier um mehr zu erfahren.",
+    "clickForInfo": "Klicken Sie hier, um mehr zu erfahren.",
     "steps": [
       {
         "title": "Veröffentlichen Sie Ihre ersten Entwurf",
@@ -229,10 +231,10 @@ export default {
         "body": [
           {
             "none": "Bisher hat noch niemand Daten für diese Formular hochgeladen.",
-            "any": "Es wurde {count} Übermittlung durchgeführt. | Es wurden {count}Übermittlungen durchgeführt."
+            "any": "Es wurde {count} Übermittlung durchgeführt. | Es wurden {count} Übermittlungen durchgeführt."
           },
           {
-            "full": "{clickHere} um über die unterschiedlichen Möglichkeiten der Datenübermittlung zu erfahren.",
+            "full": "{clickHere}, um mehr über die unterschiedlichen Möglichkeiten der Datenübermittlung zu erfahren.",
             "clickHere": "Klicken Sie hier"
           }
         ]
@@ -242,10 +244,10 @@ export default {
         "body": [
           {
             "none": "Wenn es Daten für dieses Formular gibt, können Sie diese zur Überwachung und Analyse exportieren oder synchronisieren.",
-            "any": "Sie können die {count}Übermittlung für dieses Formular zur Qualitiätsüberwachung exportieren oder synchronisieren. | Sie können die {count}Übermittlungen für dieses Formular zur Qualitiätsüberwachung exportieren oder synchronisieren."
+            "any": "Sie können die {count} Übermittlung für dieses Formular zur Qualitiätsüberwachung exportieren oder synchronisieren. | Sie können die {count} Übermittlungen für dieses Formular zur Qualitiätsüberwachung exportieren oder synchronisieren."
           },
           {
-            "full": "Sie können dies über die Buttons Herunterladen und Analysieren auf dem {submissionsTab}durchführen.",
+            "full": "Sie können dies über die Buttons Herunterladen und Analysieren auf dem {submissionsTab} durchführen.",
             "submissionsTab": "Reiter Übermittlungen"
           }
         ]
@@ -254,8 +256,8 @@ export default {
         "title": "Formular-Deaktivierung verwalten",
         "body": [
           {
-            "full": "Wenn Sie sich dem Ende der Datenaufnahme nähern, können Sie die Schaltflächen für den Formularstatus auf dem {formAccessTab}benutzen, um Benutzern zu erlauben, dass sie Übermittlungen anschauen oder neu erstellen können.",
-            "formAccessTab": "Zugrif auf Formulare der Projekt-Seite"
+            "full": "Wenn Sie sich dem Ende der Datenaufnahme nähern, können Sie die Schaltflächen für den Formularstatus auf dem {formAccessTab} benutzen, um Benutzern zu erlauben, dass sie Übermittlungen anschauen oder neu erstellen können.",
+            "formAccessTab": "Formular-Zugriff-Tab der Projekt-Seite"
           }
         ]
       }
@@ -267,38 +269,42 @@ export default {
       {
         "title": "Publique su primera versión borrador",
         "body": [
-          "Buen trabajo!",
-          "Ha publicado su formulario. Está listo para aceptar envíos. Si desea realizar cambios en el formulario o sus archivos multimedia, puede hacer un nuevo borrador."
+          "¡Buen trabajo!",
+          "Ha publicado su formulario. Está listo para aceptar envíos. Si desea realizar cambios en el formulario o sus archivos multimedia, puede crear un nuevo borrador."
         ]
       },
       {
-        "title": "Descargar el Formulario en encuestas de clientes y envíe datos.",
+        "title": "Descargar el formulario en la aplicación móvil y envíe datos.",
         "body": [
           {
-            "none": "Nadie ha enviado datos a este Formulario todavía."
+            "none": "Nadie ha enviado datos a este formulario todavía.",
+            "any": "Se ha enviado un total de {count} envío a este servidor. | Se han enviado un total de {count} envíos a este servidor."
           },
-          {}
+          {
+            "full": "{clickHere} para aprender sobre las diferentes maneras de enviar datos.",
+            "clickHere": "Haga clic aquí"
+          }
         ]
       },
       {
         "title": "Evaluar y analizar los datos enviados.",
         "body": [
           {
-            "none": "Una vez que haya datos para este Formulario, puede exportarlo o sincronizarlo para monitorear y analizar los datos en cuanto a calidad y resultados.",
-            "any": "Puede exportar o sincronizar los {count} Envíos en este Formulario para monitorearlos y analizarlos en cuanto a calidad y resultados. | Puede exportar o sincronizar los{count} Envíos en este Formulario para monitorearlos y analizarlos en cuanto a calidad y resultados."
+            "none": "Una vez que haya datos para este formulario, puede exportarlo o sincronizarlo para monitorear y analizar los datos en cuanto a calidad y resultados.",
+            "any": "Puede exportar o sincronizar el {count} envío en este formulario para monitorearlo y analizarlo en cuanto a calidad y resultados. | Puede exportar o sincronizar los {count} envíos en este formulario para monitorearlos y analizarlos en cuanto a calidad y resultados."
           },
           {
-            "full": "Puede hacerlo con los botones Descargar y Analizar en la {submissionsTab}",
-            "submissionsTab": "Pestaña Envíos"
+            "full": "Puede hacerlo con los botones descargar y analizar en la {submissionsTab}",
+            "submissionsTab": "pestaña envíos"
           }
         ]
       },
       {
-        "title": "Gestionar retiro de Formulario",
+        "title": "Gestionar retiro de formularios",
         "body": [
           {
-            "full": "Cuando llegue al final de su recopilación de datos, puede usar los controles de Estado del Formulario en el {formAccessTab} para controlar si, por ejemplo, los Usuarios de la aplicación podrán ver o crear nuevos Envíos a este Formulario.",
-            "formAccessTab": "Pestaña Acceso al Formulario de la página Proyecto"
+            "full": "Cuando llegue al final de su recopilación de datos, puede usar los controles de estado del formulario en la {formAccessTab} para controlar si, por ejemplo, los usuarios móviles podrán ver o crear nuevos envíos a este formulario.",
+            "formAccessTab": "pestaña acceso a formularios de la página del proyecto"
           }
         ]
       }
@@ -319,10 +325,10 @@ export default {
         "body": [
           {
             "none": "Personne n'a encore soumis de données pour ce formulaire.",
-            "any": "Un total de {count}soumission a été faite. | Un total de {count}soumissions ont été faites."
+            "any": "Un total de {count} soumission a été faite. | Un total de {count} soumissions ont été faites."
           },
           {
-            "full": "{clickHere}pour vous renseigner sur les diverses méthodes d'envoi de données.",
+            "full": "{clickHere} pour vous renseigner sur les diverses méthodes d'envoi de données.",
             "clickHere": "Cliquez ici"
           }
         ]
@@ -336,7 +342,7 @@ export default {
           },
           {
             "full": "Vous pouvez faire cela en utilisant les boutons \"Télécharger\" et \"Analyser\" de l'{submissionsTab}.",
-            "submissionsTab": "Onglet \"Soumissions\""
+            "submissionsTab": "onglet \"soumissions\""
           }
         ]
       },
@@ -344,8 +350,8 @@ export default {
         "title": "Gérer les limitations d'accès au formulaire",
         "body": [
           {
-            "full": "Lorsque vous arrivez à la fin de votre collecte de données, vous pouvez utiliser les contrôles de l'État du formulaire sur {formAccessTab} pour contrôler si, par exemple, les utilisateurs de l'application seront en mesure de voir ou de créer de nouvelles soumissions à ce formulaire.",
-            "formAccessTab": "Onglet accès au formulaire de la page Projet"
+            "full": "Lorsque vous arrivez à la fin de votre collecte de données, vous pouvez utiliser les contrôles de l'État du formulaire sur {formAccessTab} pour contrôler si, par exemple, les utilisateurs mobiles seront en mesure de voir ou de créer de nouvelles soumissions à ce formulaire.",
+            "formAccessTab": "onglet \"accès aux formulaires\" de la page du projet"
           }
         ]
       }

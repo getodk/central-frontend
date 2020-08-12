@@ -47,8 +47,11 @@ export default {
   "cs": {
     "text": "Načítání ..."
   },
+  "de": {
+    "text": "Wird geladen..."
+  },
   "es": {
-    "text": "Cargando"
+    "text": "Cargando..."
   },
   "fr": {
     "text": "Chargement..."

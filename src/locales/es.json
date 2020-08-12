@@ -7,7 +7,7 @@
     "formfill": "Recolector de datos"
   },
   "formState": {
-    "open": "Abrir",
+    "open": "Abierto",
     "closing": "Cerrando",
     "closed": "Cerrado"
   },
@@ -15,8 +15,11 @@
     "category": {
       "nonverbose": "(Todas las acciones)",
       "user": "Acciones de usuarios web",
-      "project": "Acciones del proyecto",
-      "form": "Acciones del formulario",
+      "project": "Acciones de proyectos",
+      "form": "Acciones de Formulario",
+      "field_key": "Acciones de usuarios móviles",
+      "public_link": "Acciones de enlaces de acceso público",
+      "session": "Acciones de sesión",
       "upgrade": "Actualización de servidor"
     },
     "action": {
@@ -29,9 +32,9 @@
         "create": "Asignar rol",
         "delete": "Revocar rol"
       },
-      "backup": "Respaldo",
+      "backup": "Copia de seguridad",
       "form": {
-        "update_draft_set": "Crear o Actualizar borrador",
+        "update_draft_set": "Crear o actualizar borrador",
         "update_publish": "Publicar borrador",
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
@@ -41,7 +44,7 @@
       },
       "upgrade": {
         "process_form": "Procesar formulario",
-        "process_form_draft": "Procesar formulario de borrador"
+        "process_form_draft": "Procesar borrador de formulario"
       },
       "user": {
         "delete": "Retirar",
@@ -79,17 +82,18 @@
     "noCancel": "No, cancelar",
     "ok": "De acuerdo",
     "proceed": "Continuar",
-    "resetPassword": "Resetear contraseña",
+    "resetPassword": "Restablecer contraseña",
     "save": "Guardar",
     "yesProceed": "Si, continuar"
   },
   "field": {
     "dateRange": "Rango de fecha",
-    "displayName": "Mostrar nombre",
+    "displayName": "Nombre para mostrar",
     "email": "Correo electrónico",
     "name": "Nombre",
     "newPassword": "Contraseña nueva",
     "oldPassword": "Contraseña antigua",
+    "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
     "type": "Tipo"
@@ -98,38 +102,54 @@
     "actions": "Acciones",
     "created": "Creado",
     "createdBy": "Creado por",
-    "displayName": "Mostrar nombre",
+    "displayName": "Nombre para mostrar",
     "email": "Correo electrónico",
-    "lastSubmission": "Último envio",
+    "lastSubmission": "Último envío",
     "name": "Nombre",
     "type": "Tipo"
   },
   "plural": {
-    "appUser": "Usuario de la aplicación | Usuarios de la aplicación",
+    "appUser": "Usuario móvil | Usuarios móviles",
     "form": "Formulario | Formularios",
     "project": "Proyecto | Proyectos",
     "submission": "Envío | Envíos",
     "webUser": "Usuario web | Usuarios web"
   },
   "count": {
-    "appUser": "{count} Usuario de la aplicación | {count} Usuarios de la aplicación",
-    "form": "{count} Formulario | {count} Formularios",
-    "submission": "{count} Envío | {count} Envíos"
+    "appUser": "{count} usuario móvil | {count} usuarios móviles",
+    "form": "{count} formulario | {count} formularios",
+    "submission": "{count} Envío | {count} envíos"
+  },
+  "resource": {
+    "appUser": "Usuario móvil",
+    "form": "Formulario",
+    "project": "Proyecto",
+    "publicLink": "Enlace de acceso público",
+    "user": "Usuario",
+    "webUser": "Usuario web",
+    "session": "Sesión",
+    "submissions": "Envíos"
   },
   "moreInfo": {
     "clickHere": {
       "full": "Para más información, {clickHere}.",
-      "clickHere": "clic aquí"
+      "clickHere": "haga clic aquí"
+    },
+    "helpArticle": {
+      "full": "Para más información, por favor véase {helpArticle}.",
+      "helpArticle": "este artículo de ayuda"
     },
     "learnMore": "Conocer más."
   },
   "common": {
     "areYouSure": "¿Está seguro que desea continuar?",
     "currentDraft": "Su borrador actual",
-    "dangerZone": "Zona de Peligro",
+    "dangerZone": "Zona de peligro",
+    "no": "No",
     "noResults": "Sin resultados",
     "rightNow": "Ahora mismo",
-    "success": "¡Éxito!"
+    "success": "¡Éxito!",
+    "yes": "Sí"
   },
   "presenter": {
     "Form": {
@@ -143,6 +163,14 @@
     "dateTime": {
       "today": "hoy",
       "yesterday": "ayer"
+    },
+    "request": {
+      "noRequest": "Algo salió mal: no hubo solicitud.",
+      "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
+      "errorNotProblem": "Algo salió mal: el servidor devolvió un error no válido."
     }
+  },
+  "router": {
+    "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
   }
 }

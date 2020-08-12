@@ -97,13 +97,13 @@ export default {
   },
   "de": {
     "heading": [
-      "Hier befindet sich Log-Einträge signifikanter Aktionen auf diesem Server, wie Änderungen von Benutzer-, Projekt-, oder Formulareinstellungen."
+      "Hier befinden sich Log-Einträge signifikanter Aktionen auf diesem Server, wie Änderungen von Benutzer-, Projekt-, oder Formulareinstellungen."
     ],
     "emptyTable": "Keine zutreffenden Audit Logeinträge"
   },
   "es": {
     "heading": [
-      "Aquí encontrará un registro de acciones significativas realizadas en este servidor. Los cambios realizados en la configuración de usuario, Proyecto o Formulario se pueden encontrar aquí."
+      "Aquí encontrará un registro de acciones significativas realizadas en este servidor. Los cambios realizados en la configuración de usuario, proyecto o formulario se pueden encontrar aquí."
     ],
     "emptyTable": "No hay entradas de registro de auditoría coincidentes."
   },

@@ -151,7 +151,7 @@ export default {
   "de": {
     "title": "Einloggen",
     "problem": {
-      "401_2": "Falsche Emailadresse oder Passwort"
+      "401_2": "Falsche E-Mail-Adresse und/oder Passwort."
     }
   },
   "es": {

@@ -74,6 +74,11 @@ export default {
       "refresh": "Obnovit seznam"
     }
   },
+  "de": {
+    "action": {
+      "refresh": "Liste aktualisieren"
+    }
+  },
   "es": {
     "action": {
       "refresh": "Refresque la lista"

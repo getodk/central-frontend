@@ -75,8 +75,8 @@ export default {
   },
   "es": {
     "disabled": {
-      "processing": "El Formulario web aún no está disponible. No ha terminado de ser procesado. Por favor actualice más tarde e intente nuevamente.",
-      "notOpen": "Este Formulario no acepta nuevos envíos en este momento."
+      "processing": "El formulario web aún no está disponible. No ha terminado de ser procesado. Por favor actualice más tarde e intente nuevamente.",
+      "notOpen": "Este formulario no acepta nuevos envíos en este momento."
     }
   },
   "fr": {

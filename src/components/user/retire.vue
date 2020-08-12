@@ -102,15 +102,32 @@ export default {
       }
     ]
   },
+  "de": {
+    "title": "User deaktivieren",
+    "introduction": [
+      "Sie sind dabei das Benutzerkonto \"{displayName}\" \u003c{email}> zu deaktivieren. Dieser Benutzer wird sofort am Ausführen von Aktionen gehindert und ausgeloggt.",
+      {
+        "full": "{noUndo}, aber es kann immer ein neues Konto mit derselben E-Mail-Adresse für diese Person angelegt werden.",
+        "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden."
+      }
+    ]
+  },
   "es": {
-    "title": "Removiendo usuario"
+    "title": "Retirando usuario",
+    "introduction": [
+      "Esta a punto de retirar el usuario \"{displayName}\"\u003c{email}> . El usuario será removido inmediatamente y se restringirá cualquier tipo de actividad en el proyecto.",
+      {
+        "full": "{noUndo}, sin embargo, siempre puede crear una nueva cuenta para esa persona con el mismo correo electrónico.",
+        "noUndo": "Esta acción no puede ser realizada"
+      }
+    ]
   },
   "fr": {
-    "title": "Élimination d'utilisateur",
+    "title": "Supprimer utilisateur",
     "introduction": [
       "Vous êtes sur le point de supprimer le compte \"{displayName}\" \u003c{email}>. Cet usager sera immédiatement déconnecté et empêché d'agir sur le site.",
       {
-        "full": "{noUndo}, mais un nouveau compte peut toujours être créé pour cette personne avec la même adresse électronique.",
+        "full": "{noUndo}, mais un nouveau compte peut toujours être créé pour cette personne avec la même adresse de courriel.",
         "noUndo": "Cette action ne peut être annulée"
       }
     ]

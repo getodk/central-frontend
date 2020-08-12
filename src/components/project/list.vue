@@ -314,11 +314,31 @@ export default {
         },
         {
           "full": "Kromě toho můžete vždy získat pomoc od ostatních na {forum}, kde můžete prohledávat předchozí otázky, nebo položit vlastní.",
-          "forum": "ODK komunitní fórum"
+          "forum": "ODK komunitním fóru"
         }
       ]
     },
     "news": "Novinky",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} který může spravovat projekty prostřednictvím tohoto webu.",
+          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
+          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
+          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu."
+        ],
+        "webUsers": "Webový uživatel | Weboví uživatelé | Weboví uživatelé | Weboví uživatelé"
+      },
+      "projects": {
+        "full": [
+          "{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
+          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
+          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
+          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení."
+        ],
+        "projects": "Projekt | Projekty | Projektů | Projektů"
+      }
+    },
     "projectsTitle": "Projekty",
     "action": {
       "create": "Nový"
@@ -331,6 +351,53 @@ export default {
       "create": "Váš nový projekt byl úspěšně vytvořen."
     }
   },
+  "de": {
+    "heading": [
+      "Willkommen bei Central",
+      "Lasst uns einige Dinge erledigen."
+    ],
+    "gettingStarted": {
+      "title": "Erste Schritte",
+      "body": [
+        {
+          "full": "Wenn Sie unsicher sind, wo sie anfangen sollen: Es gibt ein Erste-Schritte-Tutorial und die Benutzerdokumentation auf der {docsWebsite}.",
+          "docsWebsite": "ODK Dokumentationswebseite"
+        },
+        {
+          "full": "Außerdem können Sie im {forum} immer Hilfe von anderen erhalten. Dort können Sie auch nach Antworten auf ähnliche Fragen suchen und eigenen Fragen stellen.",
+          "forum": "ODK-Community-Forum"
+        }
+      ]
+    },
+    "news": "Neuigkeiten",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} der Projekte auf dieser Webseite verwalten kann.",
+          "{webUsers} die Projekte auf dieser Webseite verwalten können."
+        ],
+        "webUsers": "Web-Benutzer | Web-Benutzer"
+      },
+      "projects": {
+        "full": [
+          "{projects}, das Formulare und App-Benutzer von Mobilgeräten verwaltet.",
+          "{projects}, die Formulare und App-Benutzer von Mobilgeräten verwalten."
+        ],
+        "projects": "Projekt | Projekte"
+      }
+    },
+    "projectsTitle": "Projekte",
+    "action": {
+      "create": "Neu"
+    },
+    "header": {
+      "forms": "Formulare"
+    },
+    "emptyTable": "Es gibt für Sie keine Formulare zum Anzeigen.",
+    "alert": {
+      "create": "Ihr neues Projekt wurde erfolgreich erstellt."
+    }
+  },
   "es": {
     "heading": [
       "Bienvenido a Central.",
@@ -340,21 +407,40 @@ export default {
       "title": "Introducción",
       "body": [
         {
-          "full": "Si no está seguro de dónde empezar, consulte la guía de inicio y documentación del usuario dispuesta en {docsWebsite}",
-          "docsWebsite": "Sitio web ODK Docs"
+          "full": "Si no está seguro de dónde empezar, consulte la guía de inicio y documentación del usuario dispuesta en {docsWebsite}.",
+          "docsWebsite": "el sitio de documentación de ODK"
         },
-        {}
+        {
+          "full": "Adicionalmente, siempre puede obtener ayuda de otros en el {forum}, donde puede buscar por preguntas previas o hacer una por su cuenta.",
+          "forum": "foro de comunidad ODK"
+        }
       ]
     },
     "news": "Novedades",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} que puede administrar proyectos a través de este sitio web.",
+          "{webUsers} que pueden administrar proyectos a través de este sitios web."
+        ],
+        "webUsers": "Usuario web | Usuarios web"
+      },
+      "projects": {
+        "full": [
+          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.",
+          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos."
+        ],
+        "projects": "Proyecto | Proyectos"
+      }
+    },
     "projectsTitle": "Proyectos",
     "action": {
-      "create": "Novedades"
+      "create": "Nuevo"
     },
     "header": {
       "forms": "Formularios"
     },
-    "emptyTable": "No hay proyectos para su revisión",
+    "emptyTable": "No existen proyectos para mostrar.",
     "alert": {
       "create": "Su proyecto ha sido creado exitosamente"
     }
@@ -369,11 +455,11 @@ export default {
       "body": [
         {
           "full": "Si vous ne savez pas par où commencer, il y a un guide de démarrage et une documentation utilisateur sur le {docsWebsite}.",
-          "docsWebsite": "Site web de la documentaion d'ODK"
+          "docsWebsite": "site web de la documentaion d'ODK"
         },
         {
           "full": "De plus, vous pouvez toujours bénéficier de l'aide des autres utilisateurs sur le forum {forum}, en cherchant parmi les anciens sujets ou en en ouvrant un nouveau.",
-          "forum": "Forum de la communauté ODK"
+          "forum": "forum de la communauté ODK"
         }
       ]
     },
@@ -384,12 +470,12 @@ export default {
           "{webUsers} pouvant administrer les projets à travers ce site.",
           "{webUsers} pouvant administrer les projets à travers ce site."
         ],
-        "webUsers": "Utilisateur Web | Utilisateurs Web"
+        "webUsers": "Utilisateur Web | Utilisateurs web"
       },
       "projects": {
         "full": [
-          "{projects} qui peut organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs.",
-          "{projects} qui peuvent organiser les formulaires et les utilisateurs d'applications pour le déploiement de dispositifs."
+          "{projects} qui regroupe des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.",
+          "{projects} qui regroupent des formulaires et des utilisateurs mobiles pour le déploiement d'appareils."
         ],
         "projects": "Projet | Projets"
       }

@@ -99,6 +99,7 @@ export default {
     }
   },
   "de": {
+    "notLoggedIn": "Nicht angemeldet",
     "action": {
       "logOut": "Ausloggen"
     },
@@ -107,9 +108,9 @@ export default {
     }
   },
   "es": {
-    "notLoggedIn": "No ha iniciado sesión.",
+    "notLoggedIn": "No ha iniciado sesión",
     "action": {
-      "logOut": "Cerrar sesión."
+      "logOut": "Cerrar sesión"
     },
     "alert": {
       "logOut": "Ha cerrado la sesión correctamente."

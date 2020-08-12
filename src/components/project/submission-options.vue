@@ -135,7 +135,45 @@ export default {
       {
         "full": "Vytvořte {webUser} s rolí {dataCollector} pro každého jednotlivce, který bude shromažďovat data. Tito uživatelé se přihlásí do Central a vyplní tento formulář ve webovém prohlížeči. Projektoví manažeři mohou také vytvářet příspěvky z webového prohlížeče.",
         "webUser": "Webového uživatele",
-        "dataCollector": "Sběratel dat"
+        "dataCollector": "Sběrač dat"
+      }
+    ]
+  },
+  "de": {
+    "title": "Übermittlungsoptionen",
+    "introduction": [
+      "Es gibt mehrere Optionen, um Daten an ODK Central zu übermitteln:",
+      {
+        "full": "{appUsers} erstellen und die {collect} Android-App benutzen. Dies passt am besten, wenn die Datensammler Zugriff auf mehrere Formulare benötigen, offline sind oder wenn Sie ein komplexes Formular haben.",
+        "appUsers": "App-Benutzer"
+      },
+      {
+        "full": "Einen oder mehrere {publicLinks} erstellen, um sie mit Befragten zu teilen, die selbst ausfüllen.",
+        "publicLinks": "Öffentlicher Zugangslinks"
+      },
+      {
+        "full": "Erstellen Sie einen {webUser} mit der Rolle eines {dataCollector} für jeden Einzelnen, der Daten sammeln wird. Diese Benutzer werden sich in Central einloggen, um dieses Formular in einem Webbrowser auszufüllen. Projekt-Manager können auch Übermittlungen in einem Webbrowser erstellen.",
+        "webUser": "Web-Benutzer",
+        "dataCollector": "Datensammler"
+      }
+    ]
+  },
+  "es": {
+    "title": "Opciones de envío",
+    "introduction": [
+      "Hay varias opciones para enviar datos a ODK Central:",
+      {
+        "full": "Crea {appUsers} y usa la {collect} aplicación de Android. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un Formulario complejo.",
+        "appUsers": "Usuarios móviles"
+      },
+      {
+        "full": "Cree uno o más {publicLinks} para compartir con los encuestados que se auto informarán.",
+        "publicLinks": "Enlaces de acceso público"
+      },
+      {
+        "full": "Cree un {webUser} con el rol de {dataCollector} para cada individuo que recopilará datos. Estos usuarios iniciarán sesión en Central para completar este Formulario en un navegador web. Los administradores de proyectos también pueden crear envíos desde un navegador web.",
+        "webUser": "Usuario web",
+        "dataCollector": "Recolector de datos"
       }
     ]
   },
@@ -145,14 +183,14 @@ export default {
       "Il y a plusieurs méthodes pour envoyer des données à ODK Central:",
       {
         "full": "Créez des {appUsers} et utilisez l'application Android {collect}. Cela convient particulièrement bien quand les collecteurs de données doivent accéder à plusieurs formulaires, sont hors-ligne, ou ont des formulaires complexes.",
-        "appUsers": "Utilisateurs d'application"
+        "appUsers": "Utilisateurs mobiles"
       },
       {
-        "full": "Créez un ou plusieurs {publicLinks}à partager avec des répondants.",
+        "full": "Créez un ou plusieurs {publicLinks} à partager avec des répondants.",
         "publicLinks": "liens d'accès public"
       },
       {
-        "full": "Créez un {webUser} avec le rôle de {dataCollector}pour chaque individu qui participera à la collecte de données. Ces utilisateurs accéderont à leurs comptes Central pour remplir ce formulaire depuis leurs navigateurs. Les gestionnaires de projet peuvent également créer des soumissions depuis leurs navigateurs.",
+        "full": "Créez un {webUser} avec le rôle de {dataCollector} pour chaque individu qui participera à la collecte de données. Ces utilisateurs accéderont à leurs comptes Central pour remplir ce formulaire depuis leurs navigateurs. Les gestionnaires de projet peuvent également créer des soumissions depuis leurs navigateurs.",
         "webUser": "utilisateur web",
         "dataCollector": "collecteur de données"
       }

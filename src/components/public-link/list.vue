@@ -191,8 +191,35 @@ export default {
     ],
     "emptyTable": "Pro tento formulář neexistují žádné veřejně přístupné odkazy.",
     "alert": {
-      "create": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho."
+      "create": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho.",
+      "revoke": "Veřejně přístupný odkaz „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
     }
+  },
+  "de": {
+    "action": {
+      "create": "Öffentlichen Zugangslink erstellen"
+    },
+    "heading": [
+      {
+        "full": "Jeder mit einem öffentlichen Zugangslink kann dieses Formular in einem Webbrowser ausfüllen. Sie können mehrere Links erstellen, um z.B. unterschiedliche Verteilungen des Formulars nachzuverfolgen oder zu begrenzen wie lange eine spezifische Gruppe von Menschen Zugriff auf das Formular hat. Diese Links funktionieren nur, wenn das Formular den {state} Offen hat.",
+        "state": "Status"
+      },
+      {
+        "full": "Öffentliche Links sind für das Selbstbeantworten gedacht. Wenn Sie mit Datensammlern arbeiten, die dasselbe Formular mehrfach übermitteln müssen, {clickHere} für andere Optionen.",
+        "clickHere": "klicken Sie hier"
+      }
+    ],
+    "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
+    "alert": {
+      "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
+      "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
+    }
+  },
+  "es": {
+    "action": {
+      "create": "Crear enlace de acceso público"
+    },
+    "emptyTable": "No hay enlaces de acceso público para este formulario."
   },
   "fr": {
     "action": {
@@ -204,7 +231,7 @@ export default {
         "state": "l'état"
       },
       {
-        "full": "Les liens d'accès public sont conçus pour l'auto-évaluation. Si vous travaillez avec des collecteurs de données qui doivent soumettre le même formulaire plusieurs fois, {clickHere}pour d'autres méthodes d'envoi de données.",
+        "full": "Les liens d'accès public sont conçus pour l'auto-évaluation. Si vous travaillez avec des collecteurs de données qui doivent soumettre le même formulaire plusieurs fois, {clickHere} pour d'autres méthodes d'envoi de données.",
         "clickHere": "cliquez ici"
       }
     ],

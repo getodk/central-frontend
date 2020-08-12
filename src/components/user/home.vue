@@ -84,6 +84,14 @@ export default {
     },
     "comingSoon": "(již brzy)"
   },
+  "de": {
+    "title": "Benutzer-Einstellungen",
+    "tab": {
+      "users": "Web-Benutzer",
+      "roles": "Rollen-Einstellungen"
+    },
+    "comingSoon": "(bald verfügbar)"
+  },
   "es": {
     "title": "Configuraciones del usuario",
     "tab": {

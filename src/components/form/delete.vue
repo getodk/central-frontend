@@ -94,21 +94,21 @@ export default {
   "cs": {
     "title": "Odstranit formulář",
     "introduction": [
-      "Opravdu chcete odstranit formulář {name}a všechny jeho odeslání?",
+      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
       "Tuto akci nelze vrátit zpět."
     ]
   },
   "de": {
     "title": "Formulare löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie das Formulare {name} und alle dazugehörigen Übermittlungen löschen wollen?",
+      "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
       "Diese Aktion kann nicht rückgängig gemacht werden."
     ]
   },
   "es": {
-    "title": "Borrar Formulario.",
+    "title": "Borrar formulario",
     "introduction": [
-      "Está seguro que desea Borrar el Formulario {name} y todos sus envíos?",
+      "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?",
       "Esta acción no se puede deshacer."
     ]
   },

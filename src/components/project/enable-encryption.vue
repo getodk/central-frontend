@@ -339,7 +339,7 @@ export default {
         "introduction": [
           "Nejprve si musíte zvolit přístupové heslo. Toto heslo bude vyžadováno k dešifrování vašich příspěvků. Server si toto heslo nebude pamatovat z důvodu vašeho soukromí: pouze lidé s přístupovým slovem budou moci dešifrovat a přečíst vaše údaje o odeslání.",
           {
-            "full": "Na přístupové fráze neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
+            "full": "Na přístupová hesla neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
             "no": "žádný"
           }
         ]
@@ -355,32 +355,69 @@ export default {
     }
   },
   "de": {
+    "title": "Verschlüsselung aktivieren",
     "steps": [
-      {},
       {
         "introduction": [
-          "Zuerst müssen Sie eine Passphrase auswählen. Diese wird dann benötigt, um Ihre Einsendungen zu entschlüsseln. Zum Schutz Ihrer Daten wird diese Passphrase nicht gespeichert. Nur Benutzer, die diese Passphrase wissen, können Ihre Einsendungen entschlüsseln.",
-          {}
+          [
+            "Wenn Sie die Verschlüsselung aktivieren, wird folgendes geschehen:",
+            "Daten von abgeschlossenen Übermittlungen werden auf den Mobilgeräten verschlüsselt.",
+            "Übermittlungen auf dem Central Server werden verschlüsselt.",
+            [
+              "Formulare, die mit manuellen {submission} Schlüsseln konfiguriert wurden, werden diese Schlüssel weiterhin verwenden und müssen manuell entschlüsselt werden.",
+              "Um den automatischen Central-Verschlüsselungsprozess für diese Formulare zu nutzen, entfernen Sie die {base64RsaPublicKey} Konfiguration."
+            ],
+            "Sie werden zukünftig Übermittlungsdaten nicht mehr online als Vorschau sehen können.",
+            "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können."
+          ],
+          [
+            "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
+            [
+              "Existierende Übermittlungen bleiben unverschlüsselt.",
+              "In einer zukünftigen Version werden Sie die Option haben existierende Daten zu verschlüsseln."
+            ],
+            [
+              "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde.",
+              "In einer zukünftigen Version werden Sie Verschlüsselung deaktivieren können, was ihre Daten entschlüsseln wird. Dies trifft auch zu, wenn Sie Verschlüsselung jetzt aktivieren."
+            ]
+          ],
+          {
+            "full": "Sie können {here} mehr über Verschlüsselung erfahren. Wenn sich das wollen, klicken Sie auf Weiter, um fortzufahren.",
+            "here": "hier"
+          }
         ]
       },
-      {}
+      {
+        "introduction": [
+          "Zuerst müssen Sie eine Passphrase auswählen. Diese wird dann benötigt, um Ihre Übermittlungen zu entschlüsseln. Zum Schutz Ihrer Daten wird diese Passphrase nicht gespeichert. Nur Benutzer, die diese Passphrase wissen, können Ihre Übermittlungen entschlüsseln.",
+          {
+            "full": "Passphrasen haben keine Längen- oder Inhaltsbeschränkungen. Es gibt {no} Möglichkeit eine verlorene Passphrase wiederherzustellen!",
+            "no": "keine"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
+        ]
+      }
     ],
     "field": {
       "hint": "Optionale Merkhilfe für die Passphrase"
     }
   },
   "es": {
-    "title": "Habilitar el cifrado.",
+    "title": "Habilitar el cifrado",
     "steps": [
       {
         "introduction": [
           [
             "Si usted habilita el cifrado, ocurrirán las siguientes cosas:",
             "Los datos de la presentación final serán cifrados en los dispositivos móviles.",
-            "Los datos de la presentación que se encuentran en reposo serán cifrados en el servidor central.",
+            "Los datos de la presentación que se encuentran en reposo serán cifrados en el servidor Central.",
             [
-              "{submission} Los formularios configurados con claves manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
-              "Para utilizar el proceso automático de encriptación central en estos formularios, remueva la {base64RsaPublicKey}configuración"
+              "Los formularios configurados con claves {submission} manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
+              "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}."
             ],
             "Ya no podrá obtener una vista previa de los datos de la presentación en línea",
             "Ya no podrá conectarse a los datos a través de Odata."
@@ -388,7 +425,7 @@ export default {
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
             [
-              "Las presentaciones existentes permanecerán sin cifrar.",
+              "Los envíos existentes permanecerán sin cifrar.",
               "En una futura versión, tendrá la opción de cifrar los datos existentes."
             ],
             [
@@ -397,16 +434,16 @@ export default {
             ]
           ],
           {
-            "full": "Puede obtener más información sobre cifrado {here}.Si esto suena como algo que desea hacer, presione siguiente para continuar.",
-            "here": "Aquí"
+            "full": "Puede obtener más información sobre el cifrado {here}. Si esto suena como algo que desea hacer, presione siguiente para continuar.",
+            "here": "aquí"
           }
         ]
       },
       {
         "introduction": [
-          "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus presentaciones. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos.",
+          "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus envíos. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos.",
           {
-            "full": "No hay restricciones de longitud o de contenido para la frase de contraseña, pero si usted la pierde, {no}habrá forma de recuperarla ni a sus datos!",
+            "full": "No hay restricciones de longitud o de contenido para la frase de contraseña, pero si usted la pierde, {no} habrá forma de recuperarla ni a sus datos!",
             "no": "no"
           }
         ]
@@ -449,7 +486,7 @@ export default {
             ]
           ],
           {
-            "full": "Vous pouvez en apprendre plus sur le chiffrement en cliquant ici {here}. Si semble vous être utile, cliquez sur Suivant pour procéder.",
+            "full": "Vous pouvez en apprendre plus sur le chiffrement en cliquant {here}. Si il vous semble être utile, cliquez sur Suivant pour procéder.",
             "here": "ici"
           }
         ]

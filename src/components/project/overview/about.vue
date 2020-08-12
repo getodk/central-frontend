@@ -72,7 +72,7 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "O projektech",
+    "title": "O Projektech",
     "body": [
       {
         "full": "Projekty umožňují seskupovat související formuláře a uživatele. Webovým uživatelům mohou být přiděleny role, které jim umožní provádět určité akce v rámci tohoto projektu, včetně použití webového prohlížeče k vyplnění formulářů. Uživatelé aplikace pro tento projekt mohou vidět pouze formuláře v tomto projektu, ke kterému mají {accessTo}.",
@@ -84,14 +84,34 @@ export default {
       }
     ]
   },
+  "de": {
+    "title": "Über Projekte",
+    "body": [
+      {
+        "full": "Projekte lassen Sie zusammengehörige Formulare und Benutzer gruppieren. Web-Benutzer können Rollen erhalten, die es ihnen ermöglicht, bestimmte Aktionen innerhalb des Projekts auszuführen, einschließlich der Verwendung eines Webbrowsers zum Ausfüllen von Formularen. App-Benutzer des Projekts können Formulare nur in dem Projekt sehen, zu dem Sie {accessTo} haben.",
+        "accessTo": "Zugriff auf"
+      },
+      {
+        "full": "Wenn Sie Feedback haben, besuchen Sie bitte {forumThread}.",
+        "forumThread": "diesen Forumsthread"
+      }
+    ]
+  },
   "es": {
-    "title": "Acerca del proyecto"
+    "title": "Conocer proyectos",
+    "body": [
+      {},
+      {
+        "full": "Si tiene algún comentario, por favor visite {forumThread}.",
+        "forumThread": "este hilo del foro"
+      }
+    ]
   },
   "fr": {
     "title": "A propos des projets",
     "body": [
       {
-        "full": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs d'application pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
+        "full": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs mobiles pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
         "accessTo": "accès"
       },
       {

@@ -304,11 +304,11 @@ export default {
     },
     "heading": [
       {
-        "full": "App-Benutzer werden benutzt um Daten von einer App wie {collect} zu sammeln. Sie repräsentieren typischerweise eine geteilte Rolle wie \"Impfarzt\" aber können auch einzelne Idividuen repräsentieren. App-Benutzer in diesem Projekt können nur Formulare aus diesem Projekt herunterladen und benutzen. Wenn Sie einen neuen App-Benutzer erstellen, wird er oder sie zunächst keinen Zugriff auf Formulare haben. Um Formulare für einen Benutzer zugänglich zu machen, verwenden Sie den Reiter {formAccess}.",
+        "full": "App-Benutzer werden benutzt, um Daten von einer App wie {collect} zu sammeln. Sie repräsentieren typischerweise eine geteilte Rolle wie \"Impfarzt\" aber können auch einzelne Idividuen repräsentieren. App-Benutzer in diesem Projekt können nur Formulare aus diesem Projekt herunterladen und benutzen. Wenn Sie einen neuen App-Benutzer erstellen, wird er oder sie zunächst keinen Zugriff auf Formulare haben. Um Formulare für einen Benutzer zugänglich zu machen, verwenden Sie den Reiter {formAccess}.",
         "formAccess": "Formular-Zugriff"
       },
       {
-        "full": "App-Benutzer sind am passendsten, wenn Datensammler Zugriff auf mehrere Formulare benötigen, offline sind oder wenn Sie ein komplexes Formular haben. Wenn Antwortende eine Selbsteinschätzung durchführen müssen oder Sie ein reines Online-Formular haben, {clickHere}für andere Optionen.",
+        "full": "App-Benutzer sind am passendsten, wenn Datensammler Zugriff auf mehrere Formulare benötigen, offline sind oder wenn Sie ein komplexes Formular haben. Wenn Antwortende eine Selbsteinschätzung durchführen müssen oder Sie ein reines Online-Formular haben, {clickHere} für andere Optionen.",
         "clickHere": "klicken Sie hier"
       }
     ],
@@ -317,7 +317,7 @@ export default {
       "configureClient": "Client konfigurieren"
     },
     "qrCodeHelp": "Was ist das",
-    "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
+    "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
       "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
       "revoke": "Die Zugriffsberechtigng für App-Benuzter \"{displayName}\" wurde entzogen."
@@ -325,30 +325,37 @@ export default {
   },
   "es": {
     "action": {
-      "create": "Crear usuario de la aplicación"
+      "create": "Crear usuario móvil"
     },
+    "heading": [
+      {
+        "full": "Los usuarios móviles se utilizan para recolectar datos desde una aplicación tal como {collect}. Típicamente representan un rol compartido como “Vacunador” pero también pueden representar a individuos. Los usuarios móviles en este proyecto solo pueden descargar y usar formularios en este proyecto. Cuando usted crea un nuevo usuario móvil, al principio este no tendrá acceso a ningún formulario. Para definir los formularios a los que cada usuario móvil puede acceder, utilice la pestaña {formAccess}.",
+        "formAccess": "Acceso a formularios"
+      },
+      {}
+    ],
     "header": {
       "lastUsed": "Última utilizada",
       "configureClient": "Configurar cliente"
     },
     "qrCodeHelp": "¿Qué es esto?",
-    "emptyTable": "Todavía no hay usuarios de la aplicación. Deberá crear algunos para descargar Formularios y enviar datos desde su dispositivo.",
+    "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
-      "create": "El usuario de la aplicación \"{displayName}\" se creó correctamente.",
-      "revoke": "Se revocó el acceso para el usuario de la aplicación \"{displayName}\"."
+      "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
+      "revoke": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
     }
   },
   "fr": {
     "action": {
-      "create": "Créer une utilisateur d'application"
+      "create": "Créer un utilisateur mobile"
     },
     "heading": [
       {
-        "full": "Les utilisateurs d'application sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle partagé tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs d'application dans ce projet peuvent seulement télécharger et utiliser les formulaires de ce projet. Quand vous créez un nouvel utilisateur d'application, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur d'application peut accéder, utilisez l'onglet {formAccess}.",
-        "formAccess": "Accès aux formulaires"
+        "full": "Les utilisateurs mobiles sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle partagé tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs mobiles dans ce projet peuvent seulement télécharger et utiliser les formulaires de ce projet. Quand vous créez un nouvel utilisateur mobile, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur mobile peut accéder, utilisez l'onglet {formAccess}.",
+        "formAccess": "\"accès aux formulaires\""
       },
       {
-        "full": "Les utilisateurs de projet conviennent particulièrement bien quand les collecteurs de données doivent accéder à plusieurs formulaires, sont hors-ligne, ou ont des formulaires complexes. Si vous voulez que des répondants remplissent directement votre formulaire ou vos collecteurs de données auront toujours accès à l'Internet, {clickHere} pour d'autres méthodes d'envoi de données.",
+        "full": "Les utilisateurs mobiles conviennent particulièrement bien quand les collecteurs de données doivent accéder à plusieurs formulaires, sont hors-ligne, ou ont des formulaires complexes. Si vous voulez que des répondants remplissent directement votre formulaire ou vos collecteurs de données auront toujours accès à l'Internet, {clickHere} pour d'autres méthodes d'envoi de données.",
         "clickHere": "cliquez ici"
       }
     ],
@@ -357,10 +364,10 @@ export default {
       "configureClient": "Configurer le client"
     },
     "qrCodeHelp": "Qu'est-ce que c'est ?",
-    "emptyTable": "Il n'y a pas encore d’utilisateur d'application. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
+    "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
     "alert": {
-      "create": "L'utilisateur d'application “{displayName}” a été correctement créé.",
-      "revoke": "L'accès a été retiré à l'utilisateur d'application “{displayName}”."
+      "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
+      "revoke": "L'accès de l'utilisateur mobile “{displayName}” a été retiré ."
     }
   }
 }

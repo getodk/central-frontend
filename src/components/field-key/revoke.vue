@@ -104,15 +104,15 @@ export default {
   "de": {
     "title": "Zugriffsberechtigung entziehen",
     "introduction": [
-      "Wollen Sie dem Benutzer {displayName}wirklich die Zugriffsberechtigung entziehen?",
-      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden um Formulare herunterzuladen oder Übermittlungen einzureichen.",
+      "Wollen Sie dem Benutzer {displayName} wirklich die Zugriffsberechtigung entziehen?",
+      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden, um Formulare herunterzuladen oder Übermittlungen einzureichen.",
       "Diese Aktion kann nicht rückgängig gemacht werden."
     ]
   },
   "es": {
     "title": "Revocar acceso de usuario",
     "introduction": [
-      "¿Está seguro de que desea revocar el acceso del usuario de la aplicación {displayName}?",
+      "¿Está seguro de que desea revocar el acceso del usuario móvil {displayName}?",
       "Los envíos existentes de este usuario permanecerán, pero cualquiera que confíe en este usuario tendrá que crear uno nuevo para continuar descargando formularios o cargando envíos.",
       "Esta acción no se puede deshacer."
     ]
@@ -120,7 +120,7 @@ export default {
   "fr": {
     "title": "Révoquer l'accès des utilisateurs",
     "introduction": [
-      "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur d'application {displayName}?",
+      "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur mobile {displayName}?",
       "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions.",
       "Cette action ne peut être annulée."
     ]

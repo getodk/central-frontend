@@ -163,7 +163,8 @@ export default {
     "checklist": "Checkliste",
     "draft": {
       "none": {
-        "title": "Kein aktueller Entwurf"
+        "title": "Kein aktueller Entwurf",
+        "body": "Es gibt aktuell keine Entwurfsversion dieses Formulars. Wenn Sie Änderungen am Formular oder den dazugehörigen Mediendateien machen wollen, legen Sie mit der Schaltfläche oben erst einen Entwurf an."
       },
       "any": {
         "versionCaption": {
@@ -174,11 +175,11 @@ export default {
     }
   },
   "es": {
-    "checklist": "Lista de chequeo",
+    "checklist": "Lista de verificación",
     "draft": {
       "none": {
         "title": "Sin borrador actual",
-        "body": "Actualmente no existe una versión preliminar de este formulario. Si desea hacer cambios en el formulario o en sus Archivos Multimedia, empiece por crear un borrador por medio del botón que se encuentra arriba."
+        "body": "Actualmente no existe una versión borrador de este formulario. Si desea hacer cambios en el formulario o en sus archivos multimedia, empiece por crear un borrador por medio del botón que se encuentra arriba."
       },
       "any": {
         "versionCaption": {

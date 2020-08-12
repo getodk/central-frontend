@@ -127,19 +127,34 @@ export default {
       "delete": "Formulář „{name}“ byl odstraněn."
     }
   },
+  "de": {
+    "state": {
+      "title": "Formular-Status",
+      "body": {
+        "full": "Die Zugriffsberechtigungen für diese Formular finden Sie in {formAccessSettings}.",
+        "formAccessSettings": "Zugriffsberechtigungen"
+      }
+    },
+    "action": {
+      "delete": "Dieses Formular löschen"
+    },
+    "alert": {
+      "delete": "Das Formular \"{name}\" wurde gelöscht."
+    }
+  },
   "es": {
     "state": {
       "title": "Estado del formulario",
       "body": {
-        "full": "Para establecer el estado de este formulario, por favor visite el proyecto {formAccessSettings}.",
-        "formAccessSettings": "Configuración de acceso al formulario"
+        "full": "Para establecer el estado de este formulario, por favor visite la {formAccessSettings} de este proyecto.",
+        "formAccessSettings": "configuración de acceso a formulario"
       }
     },
     "action": {
       "delete": "Borrar este formulario"
     },
     "alert": {
-      "delete": "{name} El formulario fue borrado."
+      "delete": "El formulario \"{name}\" fue borrado."
     }
   },
   "fr": {

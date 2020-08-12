@@ -89,7 +89,7 @@ export default {
       "preview": "Vista previa"
     },
     "disabled": {
-      "processing": "La vista previa no ha finalizado el procesamiento de este Formulario. Por favor actualice más tarde e intente nuevamente.",
+      "processing": "La vista previa no ha finalizado el procesamiento de este formulario. Por favor actualice más tarde e intente nuevamente.",
       "notOpen": "En esta versión de ODK Central, la vista previa solo está disponible para formularios en estado abierto."
     }
   },

@@ -70,6 +70,9 @@ export default {
   "cs": {
     "text": "{dateTime} od {displayName}"
   },
+  "de": {
+    "text": "{dateTime} von {displayName}"
+  },
   "es": {
     "text": "{dateTime} por {displayName}"
   },

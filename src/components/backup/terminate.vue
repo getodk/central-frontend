@@ -94,7 +94,7 @@ export default {
   "de": {
     "title": "Automatische Sicherungskopien beenden",
     "introduction": [
-      "Sind Sie sicher, dass Sie die automatischen Sicherungskopieren beenden möchten?",
+      "Sind Sie sicher, dass Sie die automatischen Sicherungskopien beenden möchten?",
       "Sie müssen Sie danach wieder neue konfigurieren, um sie wieder zu starten. Diese Aktion kann nicht rückgängig gemacht werden."
     ]
   },

@@ -159,16 +159,19 @@ export default {
     }
   },
   "de": {
-    "lastSubmission": "(zuletzt {dateTime})"
+    "lastSubmission": "(zuletzt {dateTime})",
+    "action": {
+      "fill": "Formular ausfüllen"
+    }
   },
   "es": {
     "lastSubmission": "(último {dateTime})",
     "action": {
-      "fill": "Llenar Formulario"
+      "fill": "Llenar formulario"
     }
   },
   "fr": {
-    "lastSubmission": "(dernier {dateTime})",
+    "lastSubmission": "(dernière {dateTime})",
     "action": {
       "fill": "Remplir le formulaire"
     }

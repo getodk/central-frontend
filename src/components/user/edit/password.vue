@@ -131,6 +131,11 @@ export default {
     "title": "Passwort ändern",
     "action": {
       "change": "Passwort ändern"
+    },
+    "cannotChange": "Nur der Besitzer des Kontos kann sein eigenes Passwort direkt setzen.",
+    "alert": {
+      "mismatch": "Bitte prüfen Sie, dass ihre neuen Passwörter übereinstimmen.",
+      "success": "Ihr Passwort wurde erfolgreich aktualisiert."
     }
   },
   "es": {
@@ -140,7 +145,7 @@ export default {
     },
     "cannotChange": "Solo el propietario de la cuenta puede establecer directamente su contraseña.",
     "alert": {
-      "mismatch": "Verifique que sus nuevas credenciales coincidan",
+      "mismatch": "Verifique que sus nuevas credenciales coincidan.",
       "success": "¡Éxito! Su contraseña ha sido actualizada."
     }
   },

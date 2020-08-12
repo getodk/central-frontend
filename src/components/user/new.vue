@@ -107,7 +107,7 @@ export default {
   "de": {
     "title": "Web-Benutzer anlegen",
     "introduction": [
-      "Sobald Sie dieses Benutzerkonto angelegt haben, senden wir eine Email mit weiteren Schritten zur Passworterstellung an die angegebene Emailadresse."
+      "Sobald Sie dieses Benutzerkonto angelegt haben, senden wir eine Email mit weiteren Schritten zur Passworterstellung an die angegebene E-Mail-Adresse."
     ]
   },
   "es": {
@@ -119,7 +119,7 @@ export default {
   "fr": {
     "title": "Créer un utilisateur web",
     "introduction": [
-      "Une fois que vous aurez créé ce compte, l'adresse électronique que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
+      "Une fois que vous aurez créé ce compte, l'adresse de courriel que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
     ]
   }
 }

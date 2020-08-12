@@ -103,6 +103,15 @@ export default {
       "success": "Detaily uživatele uloženy!"
     }
   },
+  "de": {
+    "title": "Basisinformationen",
+    "action": {
+      "update": "Details aktualisieren"
+    },
+    "alert": {
+      "success": "Benutzerinformationen gespeichert!"
+    }
+  },
   "es": {
     "title": "Información básica",
     "action": {

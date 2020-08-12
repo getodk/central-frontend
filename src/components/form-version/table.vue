@@ -72,6 +72,12 @@ export default {
       "definition": "Definice"
     }
   },
+  "de": {
+    "header": {
+      "published": "Veröffentlicht",
+      "definition": "Definition"
+    }
+  },
   "es": {
     "header": {
       "published": "Publicado",

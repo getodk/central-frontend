@@ -91,8 +91,12 @@ export default {
 <i18n>
 {
   "cs": {
-    "help": "Co jsou to projekty?",
+    "help": "Co jsou Projekty?",
     "noSubmission": "(žádné)"
+  },
+  "de": {
+    "help": "Was sind Projekte",
+    "noSubmission": "(keine)"
   },
   "es": {
     "help": "¿Qué son los Proyectos?",
@@ -100,7 +104,7 @@ export default {
   },
   "fr": {
     "help": "Que sont les \"Projets\" ?",
-    "noSubmission": "(aucun)"
+    "noSubmission": "(aucune)"
   }
 }
 </i18n>

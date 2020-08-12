@@ -340,10 +340,13 @@ export default {
         "projectManagers": "Projektoví manažeři"
       },
       {
-        "full": "{projectViewers}mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+        "full": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
         "projectViewers": "Prohlížeči Projektu"
       },
-      {}
+      {
+        "full": "{dataCollectors} mohou vyplnit formuláře ve webovém prohlížeči, ale nemohou zobrazit ani změnit data nebo nastavení",
+        "dataCollectors": "Sběrači dat"
+      }
     ],
     "action": {
       "clearSearch": "Vymazat vyhledávání"
@@ -365,7 +368,58 @@ export default {
       "unassignRole": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
     }
   },
+  "de": {
+    "heading": [
+      "Seitenweite Administratoren sind automatisch Manager in jedem Projekt. Andere Benutzer können Rollen spezifisch für dieses Projekt haben:",
+      {
+        "full": "{projectManagers} können jede administrative Aufgabe im Zusammenhang mit diesem Projekt ausführen und können Formulare in einem Webbrowser ausfüllen.",
+        "projectManagers": "Projekt-Manager"
+      },
+      {
+        "full": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
+        "projectViewers": "Projekt-Teilnehmer"
+      },
+      {
+        "full": "{dataCollectors} können Formulare in einem Webbrowser ausfüllen, aber können keine Daten oder Einstellungen anzeigen oder ändern.",
+        "dataCollectors": "Datensammler"
+      }
+    ],
+    "action": {
+      "clearSearch": "Suche löschen"
+    },
+    "field": {
+      "q": {
+        "canList": "Suche nach einem Benutzer...",
+        "cannotList": "Genaue Benutzer-E-Mail-Adresse eingeben..."
+      }
+    },
+    "header": {
+      "user": "Benutzer",
+      "projectRole": "Projektrolle"
+    },
+    "emptyTable": "Es wurden noch keine Benutzer diesem Projekt zugewiesen. Um einen hinzuzufügen, suchen Sie oben nach einem Benutzer.",
+    "alert": {
+      "unassignWithoutReassign": "Irgendetwas hat nicht funktioniert. \"{displayName}\" wurde aus diesem Projekt entfernt.",
+      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen.",
+      "unassignRole": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
+    }
+  },
   "es": {
+    "heading": [
+      "Los administradores de todo el sitio se consideran automáticamente administradores de cada proyecto. Otros usuarios pueden tener roles específicos para este proyecto:",
+      {
+        "full": "{projectManagers} pueden realizar cualquier tarea administrativa relacionada con este proyecto y puede llenar formularios desde un navegador web",
+        "projectManagers": "Administradores de proyecto"
+      },
+      {
+        "full": "{projectViewers} puede acceder y descargar todos los datos del Formulario en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
+        "projectViewers": "Visores de proyecto"
+      },
+      {
+        "full": "{dataCollectors} pueden llenar formularios desde un navegador web, pero no pueden ver o cambiar datos o configuraciones",
+        "dataCollectors": "Recolectores de datos"
+      }
+    ],
     "action": {
       "clearSearch": "Limpiar la búsqueda"
     },
@@ -381,24 +435,24 @@ export default {
     },
     "emptyTable": "No se han asignado usuarios a este proyecto. Para agregar uno, busque un usuario en la parte superior.",
     "alert": {
-      "unassignWithoutReassign": "Algo salió mal. {displayName}ha sido removido del proyecto",
-      "assignRole": "A {displayName} se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
-      "unassignRole": "{displayName}ha sido removido exitosamente de este proyecto."
+      "unassignWithoutReassign": "Algo salió mal. \"{displayName}\" ha sido removido del proyecto",
+      "assignRole": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
+      "unassignRole": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
     }
   },
   "fr": {
     "heading": [
       "Les administrateurs sur l'ensemble du site sont automatiquement considérés comme gestionnaires de chaque projet. Les autres utilisateurs peuvent avoir des rôles spécifiques à ce projet:",
       {
-        "full": "Les {projectManagers}peuvent exécuter toutes les tâches administratives liées à ce projet et peuvent remplir des formulaires depuis leurs navigateurs.",
+        "full": "Les {projectManagers} peuvent exécuter toutes les tâches administratives liées à ce projet et peuvent remplir des formulaires depuis leurs navigateurs.",
         "projectManagers": "gestionnaires de projet"
       },
       {
-        "full": "Les {projectViewers}ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
+        "full": "Les {projectViewers} ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
         "projectViewers": "lecteurs de projet"
       },
       {
-        "full": "Les {dataCollectors}peuvent remplir des formulaires depuis leur navigateur mais n'ont aucun accès aux données ou paramètres du projet.",
+        "full": "Les {dataCollectors} peuvent remplir des formulaires depuis leur navigateur mais n'ont aucun accès aux données ou paramètres du projet.",
         "dataCollectors": "collecteurs de données"
       }
     ],
@@ -408,7 +462,7 @@ export default {
     "field": {
       "q": {
         "canList": "Rechercher un utilisateur...",
-        "cannotList": "Entrez l'adresse e-mail exacte de l'utilisateur..."
+        "cannotList": "Entrez l'adresse de courriel exacte de l'utilisateur..."
       }
     },
     "header": {

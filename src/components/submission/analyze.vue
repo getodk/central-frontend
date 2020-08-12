@@ -237,19 +237,55 @@ export default {
     "help": {
       "microsoft": {
         "full": "Nápovědu k používání OData s Excelem najdete na {pageForExcel}. Nápověda k Power BI je na {pageForPowerBi}.",
-        "pageForExcel": "tuto stranu",
-        "pageForPowerBi": "tuto stranu"
+        "pageForExcel": "této straně",
+        "pageForPowerBi": "této straně"
       },
       "r": [
-        {},
+        {
+          "full": "Pro přístup k Centrálním datům z {r} , doporučujeme použít {ruODK}. Příklady použití rozhraní {oData} API i {restful} API naleznete u viněty ruODK.",
+          "restful": "RESTful"
+        },
         {
           "full": "Stejně jako ODK samotný je i ruODK vyvíjen a podporován členy komunity. Chcete-li ji vylepšit, můžete najít informace {here}.",
           "here": "zde"
         }
       ],
       "other": {
-        "full": "Úplný popis podpory OData naleznete na {article}.",
-        "article": "tento článek"
+        "full": "Úplný popis podpory OData naleznete v {article}.",
+        "article": "tomto článku"
+      }
+    }
+  },
+  "de": {
+    "title": "OData verwenden",
+    "introduction": [
+      "OData ist ein neuer Standard, um Daten zwischen Tools und Diensten zu übertragen. Kostenlose und mächtige Tools wie Excel, {powerBi} und {r} können Daten für Analysen über OData holen.",
+      "OData hat viele Vorteile, aber am wichtigsten ist, dass es den wiedergabetreuen Transfer von komplizierten Typen wie Nummern und geografischen Daten unterstützt und es ermöglicht die einfache Synchronisation der aktuellste Version Ihrer Daten mit allen Tools, die OData verwenden.",
+      "Um OData zu verwenden, wählen Sie Ihr Tool und kopieren Sie den Link."
+    ],
+    "tab": {
+      "microsoft": "Excel/Power BI",
+      "other": "Anderes"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Für Hilfe zur Verwendung von OData mit Excel, lesen Sie {pageForExcel}. Für Hilfe zu Power BI, lesen Sie {pageForPowerBi}.",
+        "pageForExcel": "diese Seite",
+        "pageForPowerBi": "diese Seite"
+      },
+      "r": [
+        {
+          "full": "Um auf Central Daten von {r} aus zuzugreifen, empfehlen wir {ruODK} zu benutzen. Schauen Sie ruODKs Vignettes an für Beispiele zur Verwendung der {oData} und der {restful} API.",
+          "restful": "RESTful"
+        },
+        {
+          "full": "Wie ODK selbst, wird ruODK von Community-Mitgliedern entwickelt und supported. Wenn Sie helfen wollen es zu verbessern, finden Sie Informationen {here}.",
+          "here": "hier"
+        }
+      ],
+      "other": {
+        "full": "Für eine ausführliche Beschreibung unserer OData-Unterstützung, bitte lesen Sie {article}.",
+        "article": "diesen Artikel"
       }
     }
   },
@@ -272,7 +308,7 @@ export default {
       },
       "r": [
         {
-          "full": "Para acceder a los datos de Central desde {r}, recomendamos usar {ruODK}. Vea las viñetas de ruODK para leer ejemplos de uso de {oData}y {restful}API.",
+          "full": "Para acceder a los datos de Central desde {r}, recomendamos usar {ruODK}. Vea las viñetas de ruODK para leer ejemplos de uso de {oData} y {restful} API.",
           "restful": "RESTful"
         },
         {
@@ -281,7 +317,7 @@ export default {
         }
       ],
       "other": {
-        "full": "Para una descripción detallada del soporte realizado para OData, léa el siguiente {article}.",
+        "full": "Para una descripción detallada del soporte realizado para OData, léa {article}.",
         "article": "este artículo"
       }
     }
@@ -314,7 +350,7 @@ export default {
         }
       ],
       "other": {
-        "full": "Pour une description complète de notre intégration OData, veuillez consulter {article}",
+        "full": "Pour une description complète de notre intégration OData, veuillez consulter {article}.",
         "article": "cet article"
       }
     }

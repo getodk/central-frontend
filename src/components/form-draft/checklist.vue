@@ -197,7 +197,7 @@ export default {
           {
             "status": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas nahrát nový XML nebo XLSForm pomocí tlačítka napravo.",
             "link": {
-              "full": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload}nového XML nebo XLSForm.",
+              "full": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload} nového XML nebo XLSForm.",
               "upload": "nahrát"
             }
           }
@@ -236,7 +236,7 @@ export default {
     ]
   },
   "de": {
-    "clickForInfo": "Klicken Sie hier, um mehr zu erfahren",
+    "clickForInfo": "Klicken Sie hier, um mehr zu erfahren.",
     "steps": [
       {
         "title": "Formulardefinition hochladen",
@@ -261,7 +261,7 @@ export default {
         "title": "Mediendateien hochladen",
         "body": [
           {
-            "full": "Ihre Referenzdateien für den Formularentwurf werden für die Darstellung des Formulars benötigt. Sie können neue oder geänderte Formulare über den Reiter {mediaFiles}hochladen.",
+            "full": "Ihre Referenzdateien für den Formularentwurf werden für die Darstellung des Formulars benötigt. Sie können neue oder geänderte Formulare über den Reiter {mediaFiles} hochladen.",
             "mediaFiles": "Mediendateien"
           }
         ]
@@ -281,7 +281,7 @@ export default {
           {
             "status": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und sie ihn für den Feldeinsatz bereitstellen wollen, können Sie ihn mit der Schaltfläche rechts veröffentlichen.",
             "link": {
-              "full": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und sie ihn für den Feldeinsatz bereitstellen wollen, könnnen sie ihn {publish}-",
+              "full": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und sie ihn für den Feldeinsatz bereitstellen wollen, könnnen sie ihn {publish}.",
               "publish": "veröffentlichen"
             }
           }
@@ -293,44 +293,50 @@ export default {
     "clickForInfo": "Haga clic aquí para descubrir más.",
     "steps": [
       {
-        "title": "Subir definición de Formulario inicial",
+        "title": "Subir definición de formulario inicial",
         "body": [
           "Buen trabajo.",
-          "Su diseño de Formulario se ha cargado correctamente."
+          "Su diseño de formulario se ha cargado correctamente."
         ]
       },
       {
-        "title": "Subir definición de Formulario revisada (opcional)",
+        "title": "Subir definición de formulario revisada (opcional)",
         "body": [
           {
-            "status": "Si ha realizado cambios en el Formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de cargar el nuevo XML o XLSForm utilizando el botón a la derecha.",
+            "status": "Si ha realizado cambios en el formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de cargar el nuevo XML o XLSForm utilizando el botón a la derecha.",
             "link": {
-              "full": "Si ha realizado cambios en el Formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de {upload} el nuevo XML o XLSForm.",
-              "upload": "Subir"
+              "full": "Si ha realizado cambios en el formulario en sí, incluido el texto de la pregunta o las reglas lógicas, ahora es el momento de {upload} el nuevo XML o XLSForm.",
+              "upload": "subir"
             }
           }
         ]
       },
       {
-        "title": "Subir archivos multimedia de Formulario",
+        "title": "Subir archivos multimedia de formulario",
         "body": [
           {
             "full": "El diseño de su formulario hace referencia a los archivos necesarios para presentar su formulario. Puede cargar copias nuevas o actualizadas para su distribución en la pestaña {mediaFiles}.",
-            "mediaFiles": "Archivos multimedia"
+            "mediaFiles": "archivos multimedia"
           }
         ]
       },
       {
-        "title": "Pruebe el Formulario en su dispositivo móvil"
+        "title": "Pruebe el formulario en su dispositivo móvil",
+        "body": [
+          {
+            "full": "Puede {test} un formulario para asegurarse de que funciona como usted espera. Los envíos de prueba no son incluidos en sus datos finales.",
+            "test": "probar"
+          }
+        ]
       },
       {
-        "title": "Publicar el Borrador",
+        "title": "Publicar el borrador",
         "body": [
           {
             "status": "Cuando esté seguro de que su borrador está listo y desea extenderlo a sus dispositivos en el campo, puede publicarlo usando el botón a la derecha.",
             "link": {
-              "full": "Cuando esté seguro de que su Borrador está listo y desea extenderlo a sus dispositivos en el campo, puede hacerlo {publish}.",
-              "publish": "Publicar"
+              "full": "Cuando esté seguro de que su borrador está listo y desea extenderlo a sus dispositivos en el campo, puede {publish}.",
+              "publish": "publicarlo"
             }
           }
         ]
@@ -372,7 +378,7 @@ export default {
         "title": "Testez le formulaire sur votre appareil mobile",
         "body": [
           {
-            "full": "Vous pouvez {test}un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
+            "full": "Vous pouvez {test} un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
             "test": "tester"
           }
         ]

@@ -138,8 +138,15 @@ export default {
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ]
   },
+  "de": {
+    "title": "Entwurfs-Test",
+    "body": [
+      "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
+      "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
+    ]
+  },
   "es": {
-    "title": "Borrador de prueba"
+    "title": "Prueba de borrador"
   },
   "fr": {
     "title": "Test de l'ébauche",

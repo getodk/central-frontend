@@ -156,16 +156,16 @@ export default {
   },
   "es": {
     "title": {
-      "abandon": "Abandonar borrador.",
-      "deleteForm": "Abandonar borrador y Borrar Formulario"
+      "abandon": "Abandonar borrador",
+      "deleteForm": "Abandonar borrador y borrar formulario"
     },
     "introduction": {
       "abandon": [
-        "Está a punto de Borrar permanentemente la versión borrador de este Formulario. Esto significa que se borrará el borrador de la definición del Formulario, cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba.",
-        "Su definición de Formulario publicada, sus archivos multimedia y envíos no se verán afectados."
+        "Está a punto de borrar permanentemente la versión borrador de este formulario. Esto significa que se borrará el borrador de la definición del formulario, cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba.",
+        "Su definición de formulario publicada, sus archivos multimedia y envíos no se verán afectados."
       ],
       "deleteForm": [
-        "Está a punto de Borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este Formulario se eliminará por completo."
+        "Está a punto de borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará por completo."
       ]
     },
     "action": {

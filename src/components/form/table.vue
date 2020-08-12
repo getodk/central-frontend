@@ -81,9 +81,14 @@ export default {
       "idAndVersion": "ID a Verze"
     }
   },
+  "de": {
+    "header": {
+      "idAndVersion": "ID und Version"
+    }
+  },
   "es": {
     "header": {
-      "idAndVersion": "ID y Versión"
+      "idAndVersion": "ID y versión"
     }
   },
   "fr": {

@@ -17,7 +17,7 @@
       "user": "Actions d'utilisateur web",
       "project": "Actions de projet",
       "form": "Actions de formulaire",
-      "field_key": "Actions d'utilisateurs d'application",
+      "field_key": "Actions d'utilisateurs mobiles",
       "public_link": "Actions de liens d'accès public",
       "session": "Actions de sessions",
       "upgrade": "Mise à jour du serveur"
@@ -109,19 +109,19 @@
     "type": "Type"
   },
   "plural": {
-    "appUser": "Utilisateur d'application | Utilisateurs d'application",
-    "form": "Formulaires | Formulaires",
+    "appUser": "Utilisateur mobile | Utilisateurs mobiles",
+    "form": "Formulaire | Formulaires",
     "project": "Projet | Projets",
     "submission": "Soumission | Soumissions",
-    "webUser": "Utilisateur Web | Utilisateurs Web"
+    "webUser": "Utilisateur Web | Utilisateurs web"
   },
   "count": {
-    "appUser": "{count} Utilisateur d'application | {count} Utilisateurs d'application",
+    "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles",
     "form": "{count} Formulaire | {count} Formulaires",
     "submission": "{count} Soumission | {count} Soumissions"
   },
   "resource": {
-    "appUser": "Utilisateur d'application",
+    "appUser": "Utilisateur mobile",
     "form": "Formulaire",
     "project": "Projet",
     "publicLink": "Lien d'accès public",
@@ -133,10 +133,10 @@
   "moreInfo": {
     "clickHere": {
       "full": "Pour plus d'informations, {clickHere}.",
-      "clickHere": "Cliquez ici"
+      "clickHere": "cliquez ici"
     },
     "helpArticle": {
-      "full": "Pour plus d'information, veuillez consulter ceci {helpArticle}.",
+      "full": "Pour plus d'information, veuillez consulter {helpArticle}.",
       "helpArticle": "cet article d'aide"
     },
     "learnMore": "En savoir plus."
@@ -147,7 +147,7 @@
     "dangerZone": "Zone Dangereuse",
     "no": "Non",
     "noResults": "Aucun résultat",
-    "rightNow": "Tout de suite",
+    "rightNow": "Présentement",
     "success": "Succès !",
     "yes": "Oui"
   },

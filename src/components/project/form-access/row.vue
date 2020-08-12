@@ -159,22 +159,24 @@ export default {
     }
   },
   "de": {
+    "draftTitle": "Für dieses Formular gibt es noch keine veröffentlichte Version. Auf den Endgeräten wird es erst dann erscheinen, wenn der Entwurf publiziert ist. Sobald Sie das Formular publizieren, werden die hier gezeigten Einstellungen verwendet.",
     "field": {
-      "state": "Status"
+      "state": "Status",
+      "appUserAccess": "Benutzerzugriff"
     }
   },
   "es": {
     "draftTitle": "Este formulario aún no posee una versión publicada. No aparecerá en los dispositivos hasta que un borrador sea publicado. Una vez sea publicado el formulario, los ajustes mostrados aquí serán utilizados.",
     "field": {
       "state": "Estado",
-      "appUserAccess": "Acceso del usuario a la aplicación"
+      "appUserAccess": "Acceso de los usuarios móviles"
     }
   },
   "fr": {
     "draftTitle": "Ce formulaire n'a pas encore de version publiée. Il n’apparaîtra pas sur les appareils tant qu'une ébauche ne sera pas publié. Une fois que vous aurez publié le formulaire, les paramètres ci-dessous seront utilisés.",
     "field": {
       "state": "État",
-      "appUserAccess": "Accès d'utilisateurs d'application"
+      "appUserAccess": "Accès d'utilisateurs mobiles"
     }
   }
 }

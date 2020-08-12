@@ -101,13 +101,25 @@ export default {
       "success": "Nastavení projektu uloženo."
     }
   },
-  "es": {
-    "title": "Detalles básicos.",
+  "de": {
+    "title": "Basisinformationen",
     "field": {
-      "name": "Nombre del proyecto."
+      "name": "Projektname"
     },
     "action": {
-      "update": "Guardar la configuración."
+      "update": "Einstellungen speichern"
+    },
+    "alert": {
+      "success": "Projekteinstellungen wurden gespeichert"
+    }
+  },
+  "es": {
+    "title": "Detalles básicos",
+    "field": {
+      "name": "Nombre del proyecto"
+    },
+    "action": {
+      "update": "Guardar la configuración"
     },
     "alert": {
       "success": "¡Configuración del proyecto guardada!"

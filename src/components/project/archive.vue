@@ -111,12 +111,22 @@ export default {
       }
     ]
   },
-  "es": {
-    "title": "Proyecto archivado.",
+  "de": {
+    "title": "Projekt wird archiviert",
     "introduction": [
-      "Está a punto de archivar el proyecto. {name}Seguirá funcionando como lo hace ahora, pero se ordenará al final de la lista de proyectos de la página de inicio Central.",
+      "Sie sind dabei das Projekt \"{name}\" zu archivieren. Es wird weiterhin wie bisher funktioniern, aber es wird ans Ende der Projektliste auf der Homepage von Central verschoben.",
       {
-        "full": "{noUndo}pero la posibilidad de no archivar un proyecto está prevista para una futura publicación.",
+        "full": "{noUndo}, aber die Möglichkeit ein Projekt zu dearchivieren ist für eine zukünftige Version geplant.",
+        "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden"
+      }
+    ]
+  },
+  "es": {
+    "title": "Archivando proyecto",
+    "introduction": [
+      "Está a punto de archivar el proyecto \"{name}\". Seguirá funcionando como lo hace ahora, pero se ordenará al final de la lista de proyectos de la página de inicio Central.",
+      {
+        "full": "{noUndo} pero la posibilidad de desarchivar un proyecto está prevista para una futura versión.",
         "noUndo": "Esta acción no se puede deshacer."
       }
     ]

@@ -47,6 +47,10 @@ export default {
     "title": "Strana nenalezena",
     "body": "Požadovanou stránku nelze najít."
   },
+  "de": {
+    "title": "Seite nicht gefunden",
+    "body": "Die von Ihnen gewünschte Seite wurde nicht gefunden."
+  },
   "es": {
     "title": "Página no encontrada",
     "body": "La página que está solicitando no pudo ser encontrada."

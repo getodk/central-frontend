@@ -91,6 +91,15 @@ export default {
       "Chystáte se odebrat tento veřejně přístupný odkaz. To znamená, že všechny pokusy o odeslání dat pomocí odkazu budou zamítnuty, včetně záznamů, které již byly spuštěny."
     ]
   },
+  "de": {
+    "title": "Öffentlichen Zugangslink widerrufen",
+    "introduction": [
+      "Sie sind dabei diesen öffentlichen Zugriffslink zu widerrufen. Das bedeutet, alle Versuche Daten über diesen Link zu übermitteln, werden abgewiesen, einschließlich Aufzeichnungen, die bereits begonnen wurden."
+    ]
+  },
+  "es": {
+    "title": "Revocar enlace de acceso público"
+  },
   "fr": {
     "title": "Révoquer lien d'accès public",
     "introduction": [

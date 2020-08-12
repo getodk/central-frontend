@@ -96,13 +96,16 @@ export default {
     "current": "stávající"
   },
   "de": {
-    "projects": "Projekte"
+    "projects": "Projekte",
+    "users": "Benutzer",
+    "system": "System",
+    "current": "aktuell"
   },
   "es": {
-    "projects": "Proyecto",
+    "projects": "Proyectos",
     "users": "Usuarios",
     "system": "Sistema",
-    "current": "Actual"
+    "current": "actual"
   },
   "fr": {
     "projects": "Projets",

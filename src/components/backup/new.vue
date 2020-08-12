@@ -257,12 +257,12 @@ export default {
     }
   },
   "de": {
-    "title": "Backups configurieren",
+    "title": "Sicherheitskopien einrichten",
     "steps": [
       {
         "introduction": [
           "Sie können das Backup optional mit einer Passphrase sichern. Das Backup kann dann nur mit dieser Passphrase entschlüsselt werden.",
-          "Verlorene Passphrasen können nicht wiederhergestellt werden!",
+          "Eine verlorene Passphrase kann nicht wiederhergestellt werden!",
           "Wählen Sie etwas gut Merkbares, oder bewahren Sie es an einem sicheren Ort schriftlich auf."
         ]
       },
@@ -272,17 +272,17 @@ export default {
             "full": "Wir sichern Ihre Daten in Google Drive. Sie können {here} ein kostenloses Benutzerkonto erstellen.",
             "here": "hier"
           },
-          "Wenn Sie \"weiter\" wählen, wird Google sich bestätigen lassen, dass der Server auf ihr System zugreifen darf. Der Server darf ausschließlich auf die erzeugten Backups zurückgreifen.",
+          "Wenn Sie \"weiter\" wählen, wird Google sich bestätigen lassen, dass der Server auf ihr System zugreifen darf. Der Server darf ausschließlich auf die erzeugten Backup-Dateien zugreifen.",
           "Wenn Sie diese bestätigen, werden Sie gebeten, etwas Text mit Copy-and-Paste hier einzufügen."
         ]
       },
       {
         "introduction": [
           {
-            "full": "Herzlich willkommen! Wollen Sie Text einfügen? Wenn nicht, klicken Sie bitte {here}.",
+            "full": "Willkommen zurück! Haben Sie einen Text zum Einfügen bekommen? Wenn nicht, klicken Sie bitte {here}.",
             "here": "hier"
           },
-          "Oder fügen Sie es einfach unten ein."
+          "Oder einfach unten einfügen und fertig."
         ]
       }
     ],
@@ -358,7 +358,7 @@ export default {
             "full": "Bienvenue à nouveau ! Vous avez reçu du texte à copier-coller ? Si ce n'est pas le cas, cliquez {here} pour réessayer.",
             "here": "ici"
           },
-          "SInon, coller ci-bas et c'est fini"
+          "Sinon, collez ci-bas et c'est fini !"
         ]
       }
     ],

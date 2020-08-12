@@ -320,8 +320,8 @@ $popup-width: 300px;
       "dropToUpload": "Přetažením nyní nahrajte tento soubor jako {attachmentName}.",
       "dragover": "Označte soubor, který chcete nahrát a přetažením ho nahrajte.",
       "dropToPrepare": {
-        "full": "Přetáhněte nyní {countOfFiles}a připravte se na upload do tohoto formuláře.",
-        "countOfFiles": "{count} soubor | {count}souborů | {count} souborů | {count} souborů"
+        "full": "Přetáhněte nyní {countOfFiles} a připravte se na upload do tohoto formuláře.",
+        "countOfFiles": "{count} soubor | {count} souborů | {count} souborů | {count} souborů"
       }
     },
     "afterSelection": {
@@ -332,7 +332,7 @@ $popup-width: 300px;
           "{countOfFiles} připraveno k nahrání",
           "{countOfFiles} připraveno k nahrání"
         ],
-        "countOfFiles": "{count}soubor | {count}soubory | {count}souborů | {count} souborů"
+        "countOfFiles": "{count} soubor | {count} soubory | {count} souborů | {count} souborů"
       },
       "someUnmatched": {
         "full": [
@@ -346,7 +346,7 @@ $popup-width: 300px;
       "noneMatched": "Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme žádný ze souborů, které se pokoušíte nahrát. Přejmenujte je podle výše uvedených názvů nebo je přetáhněte jednotlivě na jejich cíle."
     },
     "duringUpload": {
-      "total": "Čekejte prosím, nahráváme {count} soubor: | Čekejte prosím, nahráváme {count} soubory: | Čekejte prosím, nahráváme {count}souborů: | Čekejte prosím, nahráváme {count} souborů:",
+      "total": "Čekejte prosím, nahráváme {count} soubor: | Čekejte prosím, nahráváme {count} soubory: | Čekejte prosím, nahráváme {count} souborů: | Čekejte prosím, nahráváme {count} souborů:",
       "current": "Odesílání {filename}",
       "remaining": {
         "beforeLast": "{count} soubor zbývá. | {count} soubory zbývají. | {count} souborů zbývá. | {count} souborů zbývá.",
@@ -357,35 +357,35 @@ $popup-width: 300px;
   "de": {
     "title": "Dateien hochladen",
     "duringDragover": {
-      "dropToUpload": "Jetzt fallen lassen um die Datei als {attachmentName}hochzuladen",
+      "dropToUpload": "Jetzt loslassen, um die Datei als {attachmentName} hochzuladen.",
       "dragover": "Verwenden Sie Drag-and-Drop, um die Datei hochzuladen und die existierende Datei zu ersetzen.",
       "dropToPrepare": {
         "full": "Lassen Sie die {countOfFiles} hier fallen, um sie hochzuladen.",
-        "countOfFiles": "{count}Datei | {count}Dateien"
+        "countOfFiles": "{count} Datei | {count} Dateien"
       }
     },
     "afterSelection": {
       "matched": {
         "full": [
           "{countOfFiles} bereit zum Hochladen",
-          "{countOfFiles}bereit zum Hochladen"
+          "{countOfFiles} bereit zum Hochladen"
         ],
-        "countOfFiles": "{count}Datei | {count}Dateien"
+        "countOfFiles": "{count} Datei | {count} Dateien"
       },
       "someUnmatched": {
         "full": [
-          "{countOfFiles}Datei hat eine Namen, den wir nicht erkennen, diese wird deshalb nicht bearbeitet. Um sie hochzuladen, nennen Sie sie bitte um ziehen sie auf das Ziel.",
-          "{countOfFiles}Dateien haben Namen, die wir nicht erkennen, diese werden deshalb nicht bearbeitet. Um sie hochzuladen, nennen Sie sie bitte um ziehen sie auf das Ziel."
+          "{countOfFiles} Datei hat einen Namen, den wir nicht erkennen, sie wird ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen.",
+          "{countOfFiles} Dateien haben Namen, die wir nicht erkennen, diese werden ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen."
         ],
-        "countOfFiles": "{count}Datei | {count}Dateien"
+        "countOfFiles": "{count} Datei | {count} Dateien"
       },
       "noneMatched": "Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele. | Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele."
     },
     "duringUpload": {
-      "total": "Bitte warten Sie, {count}Datei wird hochgeladen. | Bitte warten Sie, {count}Dateien werden hochgeladen.",
-      "current": "Datei {filename}wird gesendet.",
+      "total": "Bitte warten Sie, {count} Datei wird hochgeladen. | Bitte warten Sie, {count} Dateien werden hochgeladen.",
+      "current": "Datei {filename} wird gesendet.",
       "remaining": {
-        "beforeLast": "Noch {count} Datei | Noch {count}Dateien",
+        "beforeLast": "Noch {count} Datei | Noch {count} Dateien",
         "last": "Dies ist die letzte Datei"
       }
     }
@@ -396,15 +396,15 @@ $popup-width: 300px;
       "dropToUpload": "Suelta ahora para cargar este archivo como {attachmentName}",
       "dragover": "Arrastre sobre la entrada del archivo que desea reemplazar con el archivo y suéltela para cargar.",
       "dropToPrepare": {
-        "full": "Suelte ahora para preparar {countOfFiles} para subir a este Formulario.",
-        "countOfFiles": "{count}archivo | {count} archivos"
+        "full": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
+        "countOfFiles": "{count} archivo | {count} archivos"
       }
     },
     "afterSelection": {
       "matched": {
         "full": [
-          "{countOfFiles}listo para subir.",
-          "{countOfFiles} listo para subir."
+          "{countOfFiles} listo para subir.",
+          "{countOfFiles} listos para subir."
         ],
         "countOfFiles": "{count} | {count} archivos"
       },
@@ -418,7 +418,7 @@ $popup-width: 300px;
       "noneMatched": "No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos."
     },
     "duringUpload": {
-      "total": "Por favor espere, cargando sus {count}archivos: | Por favor espere, cargando sus {count} archivos:",
+      "total": "Por favor espere, cargando su {count} archivo: | Por favor espere, cargando sus {count} archivos:",
       "current": "Enviando {filename}",
       "remaining": {
         "beforeLast": "{count} archivo permanece. | {count} archivos permanecen.",
@@ -449,13 +449,13 @@ $popup-width: 300px;
           "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible.",
           "{countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles."
         ],
-        "countOfFiles": "{count} fichier | {count} fchiers"
+        "countOfFiles": "{count} fichier | {count} fichiers"
       },
       "noneMatched": "Nous ne reconnaissons pas le fichier que vous tentez de téléverser. Renommez le pour qu'il corresponde aux noms listez ci-dessous, ou déposez le individuellement sur sa cible. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles."
     },
     "duringUpload": {
       "total": "Merci de patienter, téléversement de votre {count} fichier en cours : | Merci de patienter, téléversement de vos {count} fichiers en cours :",
-      "current": "Envoi en cours de{filename}",
+      "current": "Envoi en cours de {filename}",
       "remaining": {
         "beforeLast": "{count} fichier restant. | {count} fichiers restants.",
         "last": "Ceci est le dernier fichier."

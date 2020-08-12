@@ -97,18 +97,27 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Vytvořit projekt",
+    "title": "Vytvořit Projekt",
     "introduction": [
       "Skupiny projektů Formulářů a Uživatelů aplikací společně usnadňují jejich organizaci a správu, a to jak na tomto webu, tak v zařízení pro sběr dat."
     ]
   },
+  "de": {
+    "title": "Projekt erstellen",
+    "introduction": [
+      "Projekte gruppieren Formulare und App-Benutzer, um es zu vereinfachen, sie zu organisieren und zu verwalten, sowohl auf dieser Webseite als auch auf Ihrem Datenerfassungsgerät."
+    ]
+  },
   "es": {
-    "title": "Crear proyecto"
+    "title": "Crear proyecto",
+    "introduction": [
+      "Los proyectos agrupan formularios y Usuarios de aplicativos móviles juntos para facilitar su organización y manejo, tanto en este sitio web como en su dispositivo de recolección de datos."
+    ]
   },
   "fr": {
     "title": "Créer un projet",
     "introduction": [
-      "Les projets regroupent les formulaires et les utilisateurs d'applications afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre dispositif de collecte de données."
+      "Les projets regroupent les formulaires et les utilisateurs mobiles afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre appareil de collecte de données."
     ]
   }
 }

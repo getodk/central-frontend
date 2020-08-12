@@ -115,6 +115,15 @@ export default {
       "xlsForm": "Jako XLSForm"
     }
   },
+  "de": {
+    "action": {
+      "downloadXForm": "XML herunterladen"
+    },
+    "format": {
+      "xForm": "Als XForm",
+      "xlsForm": "Als XLSForm"
+    }
+  },
   "es": {
     "action": {
       "downloadXForm": "Descargar XML"

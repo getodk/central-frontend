@@ -189,7 +189,7 @@ export default {
     "replace": "Ersetzen",
     "notUploaded": {
       "text": "Noch nicht hochgeladen",
-      "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite."
+      "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     }
   },
   "es": {

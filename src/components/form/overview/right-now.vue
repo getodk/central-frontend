@@ -133,6 +133,15 @@ export default {
       "open": "Tento formulář je ke stažení a přijímá příspěvky.",
       "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
       "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
+    },
+    "submissions": {
+      "full": [
+        "{submissions} byl pro tento formulář uložen.",
+        "{submissions} byly pro tento formulář uloženy.",
+        "{submissions} bylo pro tento formulář uloženo.",
+        "{submissions} bylo pro tento formulář uloženo."
+      ],
+      "submissions": "Příspěvek | Příspěvky | Příspěvků | Příspěvků"
     }
   },
   "de": {
@@ -148,7 +157,7 @@ export default {
     "submissions": {
       "full": [
         "{submissions} wurde für dieses Formular gespeichert.",
-        "{submissions}wurden für dieses Formular gespeichert."
+        "{submissions} wurden für dieses Formular gespeichert."
       ],
       "submissions": "Übermittlung | Übermittlungen"
     }
@@ -165,10 +174,10 @@ export default {
     },
     "submissions": {
       "full": [
-        "1 {submissions} han sido guardado para este formulario",
-        "{submissions} Han sido guardadas para este formulario.\u003cbr>\u003cbr>"
+        "{submissions} ha sido guardada para este formulario",
+        "{submissions} han sido guardadas para este formulario."
       ],
-      "submissions": "Presentaciones | Presentaciones"
+      "submissions": "Envío | Envíos"
     }
   },
   "fr": {

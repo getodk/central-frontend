@@ -183,12 +183,23 @@ export default {
     "field": {
       "sitewideRole": "Role úplného přístupu"
     },
-    "cannotRetire": "Nemůžete sám sebe nastavit jako uspaný.",
+    "cannotRetire": "Nemůžete sám sebe uspat",
     "action": {
       "retire": "Uspat uživatele"
     }
   },
+  "de": {
+    "cannotAssignRole": "Sie dürfen Ihre seitenweite Rolle nicht bearbeiten.",
+    "field": {
+      "sitewideRole": "Seitenweite Rolle"
+    },
+    "cannotRetire": "Sie dürfen sich nicht selbst deaktivieren.",
+    "action": {
+      "retire": "User deaktivieren"
+    }
+  },
   "es": {
+    "cannotAssignRole": "No puede editar su propio rol en el proyecto",
     "field": {
       "sitewideRole": "Rol de sitio"
     },
@@ -204,7 +215,7 @@ export default {
     },
     "cannotRetire": "Vous ne pouvez pas supprimer votre propre compte.",
     "action": {
-      "retire": "Supprimer utilisateur"
+      "retire": "Supprimer l'utilisateur"
     }
   }
 }

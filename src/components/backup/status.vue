@@ -261,7 +261,7 @@ export default {
   },
   "de": {
     "getHelp": {
-      "full": "Wenn es nicht funktioniert, fragen Sie im {forum}nach.",
+      "full": "Wenn es nicht funktioniert, fragen Sie im {forum} nach.",
       "forum": "Community-Forum"
     },
     "notConfigured": [
@@ -275,7 +275,7 @@ export default {
     ],
     "neverRun": [
       "Die konfigurierte Sicherung ist wurde noch nicht ausgeführt.",
-      "Wenn Sie die Sicherungen in den letzten Tagen konfiguriert haben, ist dies nicht unerwartet. Sonst ist irgendetwas schief gegangen.",
+      "Wenn Sie die Sicherungen in den letzten Tagen konfiguriert haben, ist dies normal. Wenn nicht, ist irgendetwas schief gegangen.",
       {
         "full": "In diesem Falle ist es am besten, wenn Sie die Verbindung {terminate} und danach neu starten. Alternativ können Sie den Dienst neu starten.",
         "terminate": "beenden"
@@ -284,11 +284,11 @@ export default {
     "somethingWentWrong": [
       "Irgendetwas hat da nicht geklappt.",
       {
-        "full": "Die letzte vollständige Sicherung wurde{moreThanThreeDaysAgo} ausgeführt.",
+        "full": "Die letzte vollständige Sicherung wurde {moreThanThreeDaysAgo} ausgeführt.",
         "moreThanThreeDaysAgo": "vor mehr als drei Tagen."
       },
       {
-        "full": "Am besten {terminate}Sie die Verbindung und starten sie neu; alternativ können Sie auch den Dienst neu starten.",
+        "full": "Am besten {terminate} Sie die Verbindung und starten sie neu; alternativ können Sie auch den Dienst neu starten.",
         "terminate": "beenden"
       }
     ],
@@ -303,15 +303,15 @@ export default {
   },
   "es": {
     "getHelp": {
-      "full": "Si tiene problemas, pruebe el foro {forum}.",
-      "forum": "Foro de la comunidad"
+      "full": "Si tiene problemas, pruebe el {forum}.",
+      "forum": "foro de la comunidad"
     },
     "notConfigured": [
       "Las copias de seguridad no están configuradas.",
       "El servidor de datos no se ha configurado para hacer una copia de seguridad automática de sus datos en ninguna parte.",
       {
-        "full": "A menos que haya configurado algún otro Formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
-        "recommended": "Muy recomendado"
+        "full": "A menos que haya configurado algún otro formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
+        "recommended": "muy recomendado"
       },
       "Las copias de seguridad automáticas de datos se realizan a través de este sistema una vez al día. Todos sus datos están encriptados con una contraseña que proporcione para que solo usted pueda desbloquearla."
     ],
@@ -320,18 +320,18 @@ export default {
       "Si ha configurado copias de seguridad en los últimos días, esto es normal. De lo contrario, algo ha salido mal.",
       {
         "full": "En ese caso, las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-        "terminate": "Terminar"
+        "terminate": "terminar"
       }
     ],
     "somethingWentWrong": [
       "¡Algo está mal!",
       {
         "full": "La última copia de seguridad que se completó correctamente fue {moreThanThreeDaysAgo}.",
-        "moreThanThreeDaysAgo": "Hace más de tres días"
+        "moreThanThreeDaysAgo": "hace más de tres días"
       },
       {
         "full": "Las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-        "terminate": "Terminar"
+        "terminate": "terminar"
       }
     ],
     "success": [
@@ -345,12 +345,12 @@ export default {
   },
   "fr": {
     "getHelp": {
-      "full": "Si vous rencontrez des difficultés, merci de consulter {forum}.",
+      "full": "Si vous rencontrez des difficultés, merci de consulter le {forum}.",
       "forum": "forum de la communauté"
     },
     "notConfigured": [
       "Sauvegarde non configuré",
-      "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données quelque part.",
+      "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données.",
       {
         "full": "À moins que vous n'ayez mis en place une autre forme de sauvegarde des données dont le serveur n'a pas connaissance, il est {recommended} de le faire maintenant. Si vous n'êtes pas sûr, il est préférable de le faire juste pour être sûr.",
         "recommended": "fortement recommandé"

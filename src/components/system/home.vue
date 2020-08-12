@@ -72,8 +72,15 @@ export default {
       "audits": "Protokoly auditu serveru"
     }
   },
+  "de": {
+    "title": "System-Management",
+    "tab": {
+      "backups": "Sicherheitskopien",
+      "audits": "Server Audit Logs"
+    }
+  },
   "es": {
-    "title": "Administración del Sistema",
+    "title": "Administración del sistema",
     "tab": {
       "backups": "Copias de seguridad",
       "audits": "Registro de auditoría"

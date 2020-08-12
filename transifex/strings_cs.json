@@ -394,7 +394,7 @@
     },
     "rightNow": {
       "string": "Právě teď",
-      "developer_comment": "This is a title shown above a section of the page."
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
     "success": {
       "string": "Úspěch!"
@@ -691,7 +691,8 @@
       },
       "success": {
         "0": {
-          "string": "Zálohování funguje."
+          "string": "Zálohování funguje.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
         },
         "1": {
           "string": "Poslední záloha byla úspěšně dokončena {dateTime}.",
@@ -867,7 +868,7 @@
     "FieldKeyRow": {
       "seeCode": {
         "string": "Viz kód",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
       },
       "accessRevoked": {
         "string": "Přístup byl zrušen",
@@ -907,7 +908,7 @@
           "developer_comment": "{message} is an error message from the server."
         },
         "someUploaded": {
-          "string": "{count, plural, one {{message}Úspěšně byl nahrán pouze{uploaded} soubor ze {total}.} few {{message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}.} many {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}.} other {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z{total}.}}",
+          "string": "{count, plural, one {{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}.} few {{message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}.} many {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}.} other {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}.}}",
           "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
         }
       },
@@ -956,11 +957,11 @@
         },
         "dropToPrepare": {
           "full": {
-            "string": "Přetáhněte nyní {countOfFiles}a připravte se na upload do tohoto formuláře.",
+            "string": "Přetáhněte nyní {countOfFiles} a připravte se na upload do tohoto formuláře.",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count} soubor} few {{count}souborů} many {{count} souborů} other {{count} souborů}}",
+            "string": "{count, plural, one {{count} soubor} few {{count} souborů} many {{count} souborů} other {{count} souborů}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
           }
         }
@@ -972,7 +973,7 @@
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count}soubor} few {{count}soubory} many {{count}souborů} other {{count} souborů}}",
+            "string": "{count, plural, one {{count} soubor} few {{count} soubory} many {{count} souborů} other {{count} souborů}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
           }
         },
@@ -992,7 +993,7 @@
       },
       "duringUpload": {
         "total": {
-          "string": "{count, plural, one {Čekejte prosím, nahráváme {count} soubor:} few {Čekejte prosím, nahráváme {count} soubory:} many {Čekejte prosím, nahráváme {count}souborů:} other {Čekejte prosím, nahráváme {count} souborů:}}"
+          "string": "{count, plural, one {Čekejte prosím, nahráváme {count} soubor:} few {Čekejte prosím, nahráváme {count} soubory:} many {Čekejte prosím, nahráváme {count} souborů:} other {Čekejte prosím, nahráváme {count} souborů:}}"
         },
         "current": {
           "string": "Odesílání {filename}",
@@ -1099,7 +1100,7 @@
                 "string": "Do tohoto formuláře zatím nikdo nezadal žádné údaje."
               },
               "any": {
-                "string": "{count, plural, one {} few {} many {} other {}}"
+                "string": "{count, plural, one {Celkem byl odeslán {count} příspěvek.} few {Celkem byly odeslány {count} příspěvky} many {Celkem bylo odesláno {count} příspěvků.} other {Celkem bylo odesláno {count} příspěvků.}}"
               }
             },
             "1": {
@@ -1125,7 +1126,7 @@
                 "string": "Jakmile budou pro tento formulář k dispozici data, můžete je exportovat nebo synchronizovat a sledovat a analyzovat data z hlediska kvality a výsledků."
               },
               "any": {
-                "string": "{count, plural, one {} few {} many {} other {}}"
+                "string": "{count, plural, one {Můžete exportovat nebo synchronizovat {count} příspěvek v tomto formuláři a sledovat a analyzovat příspěvek z hlediska kvality a výsledků.} few {Můžete exportovat nebo synchronizovat {count} příspěvky v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} many {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} other {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.}}"
               }
             },
             "1": {
@@ -1167,7 +1168,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Opravdu chcete odstranit formulář {name}a všechny jeho odeslání?"
+          "string": "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
         },
         "1": {
           "string": "Tuto akci nelze vrátit zpět."
@@ -1239,7 +1240,7 @@
               },
               "link": {
                 "full": {
-                  "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload}nového XML nebo XLSForm.",
+                  "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload} nového XML nebo XLSForm.",
                   "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
@@ -1651,7 +1652,7 @@
       },
       "submissions": {
         "full": {
-          "string": "{count, plural, one {} few {} many {} other {}}",
+          "string": "{count, plural, one {{submissions} byl pro tento formulář uložen.} few {{submissions} byly pro tento formulář uloženy.} many {{submissions} bylo pro tento formulář uloženo.} other {{submissions} bylo pro tento formulář uloženo.}}",
           "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
         },
         "submissions": {
@@ -1915,7 +1916,7 @@
             },
             "1": {
               "full": {
-                "string": "Na přístupové fráze neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
+                "string": "Na přístupová hesla neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -2056,7 +2057,8 @@
           "string": "Vítejte v Centralu."
         },
         "1": {
-          "string": "Pojďme udělat pár věcí."
+          "string": "Pojďme udělat pár věcí.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
         }
       },
       "gettingStarted": {
@@ -2081,7 +2083,7 @@
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
             },
             "forum": {
-              "string": "ODK komunitní fórum",
+              "string": "ODK komunitním fóru",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
             }
           }
@@ -2094,17 +2096,17 @@
       "rightNow": {
         "users": {
           "full": {
-            "string": "{count, plural, one {} few {} many {} other {}}",
+            "string": "{count, plural, one {{webUsers} který může spravovat projekty prostřednictvím tohoto webu.} few {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} many {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} other {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.}}",
             "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
           },
           "webUsers": {
-            "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {weboví uživatelé} other {weboví uživatelé}}",
+            "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {Weboví uživatelé} other {Weboví uživatelé}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
           }
         },
         "projects": {
           "full": {
-            "string": "{count, plural, one {} few {} many {} other {}}",
+            "string": "{count, plural, one {{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.} few {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} many {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} other {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.}}",
             "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
           },
           "projects": {
@@ -2140,7 +2142,7 @@
     },
     "ProjectNew": {
       "title": {
-        "string": "Vytvořit projekt",
+        "string": "Vytvořit Projekt",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -2151,7 +2153,7 @@
     },
     "ProjectOverviewAbout": {
       "title": {
-        "string": "O projektech",
+        "string": "O Projektech",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
@@ -2180,7 +2182,7 @@
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
-          "string": "{count, plural, one {} few {} many {} other {}}",
+          "string": "{count, plural, one {{appUsers} který může pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} few {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} many {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} other {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.}}",
           "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
         },
         "appUsers": {
@@ -2190,7 +2192,7 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {} few {} many {} other {}}",
+          "string": "{count, plural, one {{forms} který lze stáhnout a zadat jako průzkumy mobilních klientů.} few {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} many {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} other {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
@@ -2201,7 +2203,7 @@
     },
     "ProjectRow": {
       "help": {
-        "string": "Co jsou to projekty?"
+        "string": "Co jsou Projekty?"
       },
       "noSubmission": {
         "string": "(žádné)",
@@ -2329,7 +2331,7 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
           },
           "dataCollector": {
-            "string": "Sběratel dat",
+            "string": "Sběrač dat",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
           }
         }
@@ -2353,7 +2355,7 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers}mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+            "string": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -2363,11 +2365,11 @@
         },
         "3": {
           "full": {
-            "string": "",
+            "string": "{dataCollectors} mohou vyplnit formuláře ve webovém prohlížeči, ale nemohou zobrazit ani změnit data nebo nastavení",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
-            "string": "",
+            "string": "Sběrači dat",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
           }
         }
@@ -2483,7 +2485,7 @@
           "string": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho."
         },
         "revoke": {
-          "string": ""
+          "string": "Veřejně přístupný odkaz  „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
         }
       }
     },
@@ -2573,18 +2575,18 @@
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
-            "string": "tuto stranu",
+            "string": "této straně",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
           },
           "pageForPowerBi": {
-            "string": "tuto stranu",
+            "string": "této straně",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
           }
         },
         "r": {
           "0": {
             "full": {
-              "string": "",
+              "string": "Pro přístup k Centrálním datům z {r} , doporučujeme použít {ruODK}. Příklady použití rozhraní {oData} API i {restful} API naleznete u viněty ruODK.",
               "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
             },
             "restful": {
@@ -2605,11 +2607,11 @@
         },
         "other": {
           "full": {
-            "string": "Úplný popis podpory OData naleznete na {article}.",
+            "string": "Úplný popis podpory OData naleznete v {article}.",
             "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
           },
           "article": {
-            "string": "tento článek",
+            "string": "tomto článku",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
           }
         }
@@ -2644,7 +2646,7 @@
       "action": {
         "download": {
           "withCount": {
-            "string": "{count, plural, one {} few {} many {} other {}}",
+            "string": "{count, plural, one {Stáhnout {count} záznam} few {Stáhnout tyto {count} záznamy } many {Stáhnout všech {count} záznamů} other {Stáhnout všech {count} záznamů}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withoutCount": {
@@ -2666,19 +2668,19 @@
           "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
-          "string": "{count, plural, one {} few {} many {} other {}}"
+          "string": "{count, plural, one {Načítání {count} příspěvku ...} few {Načítání {count} příspěvků ...} many {Načítání {count} příspěvků ...} other {Načítání {count} příspěvků ...}}"
         },
         "first": {
           "string": "Načítání prvních {top} ze {count} příspěvků…",
           "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "middle": {
-          "string": "Načítání {top}dalších ze {count} zbývajících příspěvků…",
+          "string": "Načítání {top} dalších ze {count} zbývajících příspěvků…",
           "developer_comment": "{top} and {count} are both numbers that are at least 250."
         },
         "last": {
           "multiple": {
-            "string": "{count, plural, one {} few {} many {} other {}}"
+            "string": "{count, plural, one {Načítání posledního {count} příspěvku…} few {Načítání posledních {count} příspěvků…} many {Načítání posledních {count} příspěvků…} other {Načítání posledních {count} příspěvků…}}"
           },
           "one": {
             "string": "Načítání posledního příspěvku…"
@@ -2689,7 +2691,7 @@
         "string": "Zatím neexistují žádné příspěvky."
       },
       "remaining": {
-        "string": "{count, plural, one {{count} řádka zbývá} few {{count}řádky zbývají.} many {{count}řádek zbývá.} other {{count}řádek zbývá.}}"
+        "string": "{count, plural, one {{count} řádka zbývá} few {{count} řádky zbývají.} many {{count} řádek zbývá.} other {{count} řádek zbývá.}}"
       }
     },
     "SubmissionRow": {
@@ -2810,7 +2812,7 @@
       },
       "header": {
         "sitewideRole": {
-          "string": "Role pro celý web",
+          "string": "Role úplného přístupu",
           "developer_comment": "This is the text of a table column header."
         }
       },
@@ -2888,7 +2890,7 @@
         }
       },
       "cannotRetire": {
-        "string": "Nemůžete sám sebe nastavit jako uspaný.",
+        "string": "Nemůžete sám sebe uspat",
         "developer_comment": "An Administrator may retire other Web Users, but not their own account."
       },
       "action": {

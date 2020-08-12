@@ -344,7 +344,23 @@ $drop-zone-vpadding: 15px;
   },
   "de": {
     "title": {
-      "create": "Formular erstellen"
+      "create": "Formular erstellen",
+      "update": "Neue Formulardefinition hochladen"
+    },
+    "introduction": [
+      {
+        "create": "Um ein Formular zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch.",
+        "update": "Um einen Entwurf zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch."
+      },
+      {
+        "full": "Wenn Sie noch kein Formular haben, gibt es {tools} mit denen Sie Ihr Formular entwickeln können.",
+        "tools": "Werkzeuge"
+      },
+      "Wenn Sie Mediendateien haben, können Sie diese auf der folgenden Seite hochladen, nachdem das Formular erstellt wurde."
+    ],
+    "dropZone": {
+      "full": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
+      "chooseOne": "eine auswählen"
     },
     "action": {
       "upload": "Hochladen",
@@ -362,49 +378,49 @@ $drop-zone-vpadding: 15px;
       "Die XLSForm-Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme (Warnungen bei der Umwandlung):",
       "Bitte beheben Sie die Probleme und versuchen es erneut.",
       {
-        "create": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button um das Formular trotzdem zu erzeugen:",
-        "update": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button um den Entwurf trotzdem zu aktualisieren:"
+        "create": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um das Formular trotzdem zu erzeugen:",
+        "update": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um den Entwurf trotzdem zu aktualisieren:"
       }
     ]
   },
   "es": {
     "title": {
-      "create": "Crear formulario.",
-      "update": "Cargar nueva definición de Formulario."
+      "create": "Crear formulario",
+      "update": "Cargar nueva definición de formulario"
     },
     "introduction": [
       {
-        "create": "Para crear un Formulario, cargue un archivo XML de XForms o un archivo XLSForm de Excel",
+        "create": "Para crear un formulario, cargue un archivo XML de XForms o un archivo XLSForm de Excel",
         "update": "Para actualizar el borrador, cargue un archivo XML de XForms o un archivo XLSForm de Excel."
       },
       {
-        "full": "Si aún no tiene uno, hay {tools}para ayudarlo a diseñar su Formulario.",
-        "tools": "Herramientas disponibles"
+        "full": "Si aún no tiene uno, hay {tools} para ayudarlo a diseñar su formulario.",
+        "tools": "herramientas disponibles"
       },
       "Si tiene medios, podrá cargarlos en la página siguiente, después de que se haya creado el formulario."
     ],
     "dropZone": {
       "full": "Drop a file here, or {chooseOne} to upload.",
-      "chooseOne": "Elegir uno"
+      "chooseOne": "elige uno"
     },
     "action": {
       "upload": "Subir",
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
-      "fileRequired": "Por favor, elija un archivo"
+      "fileRequired": "Por favor, elija un archivo."
     },
     "problem": {
-      "400_8": "La definición del formulario que ha subido no parece ser para este ­­formulario. Tiene el FormId equivocado (esperado \" 1{expected}\", got \"2{actual}\").",
+      "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
       "400_15": "El XLSForm no se pudo convertir: {error}",
-      "409_3": "Un formulario ya existe en este Proyecto con el ID formulario de {xmlFormId}"
+      "409_3": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
     },
     "warningsText": [
-      "Este archivo en formato XLS puede ser usado, pero tiene algunos posibles inconvenientes ( advertencias de conversión ):",
-      "Por favor, corrija los problemas e intente nuevamente",
+      "Este archivo en formato XLS puede ser usado, pero tiene algunos problemas posibles ( advertencias de conversión ):",
+      "Por favor, corrija los problemas e intente nuevamente.",
       {
-        "create": "Si esta seguro que estos errores pueden ser ignorados, de clic en el botón para crear el formulario de todos modos:",
-        "update": "Si esta seguro que estos errores pueden ser ignorados, de click en el botón para actualizar el borrador de todos modos:"
+        "create": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:",
+        "update": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos:"
       }
     ]
   },
@@ -419,7 +435,7 @@ $drop-zone-vpadding: 15px;
         "update": "Pour modifier l'ébauche, téléversez un fichier XML XForms ou un fichier Excel XLSForm"
       },
       {
-        "full": "Si vous n'en avez as déjà un, il existe {tools}pour vous aider à concevoir votre formulaire.",
+        "full": "Si vous n'en avez as déjà un, il y a des {tools} pour vous aider à concevoir votre formulaire.",
         "tools": "outils disponibles"
       },
       "Si vous avez des médias, vous pourrez les envoyer à la page suivante, après que le formulaire aura été créé."

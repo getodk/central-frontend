@@ -216,11 +216,18 @@ export default {
   "de": {
     "title": "Entschlüsseln und Herunterladen",
     "introduction": [
-      "Um die Daten herunterzuladen wird Ihre Passphrase benötigt. Diese wird nur zur Entschlüsselung der Daten für den Download benutzt und nicht gespeichert."
-    ]
+      "Um die Daten herunterzuladen wird Ihre Passphrase benötigt. Diese wird nur zum Entschlüsseln der Daten für den Download benutzt und nicht gespeichert."
+    ],
+    "hint": "Hinweis: {hint}",
+    "alert": {
+      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
+    }
   },
   "es": {
-    "title": "Desencriptar y descargar",
+    "title": "Descifrar y descargar",
+    "introduction": [
+      "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
+    ],
     "hint": "Pista: {hint}",
     "alert": {
       "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente."

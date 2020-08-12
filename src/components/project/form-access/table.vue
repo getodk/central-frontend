@@ -230,21 +230,22 @@ export default {
   "de": {
     "header": {
       "form": "Formular",
-      "state": "Status"
+      "state": "Status",
+      "appUserAccess": "Benutzerzugriffs"
     }
   },
   "es": {
     "header": {
       "form": "Formulario",
       "state": "Estado",
-      "appUserAccess": "Acceso del usuario a la aplicación"
+      "appUserAccess": "Acceso de usuarios móviles"
     }
   },
   "fr": {
     "header": {
       "form": "Formulaire",
       "state": "État",
-      "appUserAccess": "Accès d'utilisateurs d'application"
+      "appUserAccess": "Accès d'utilisateurs mobiles"
     }
   }
 }

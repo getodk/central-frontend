@@ -145,8 +145,11 @@ $icon-lock-margin-right: 12px;
   "cs": {
     "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování."
   },
+  "de": {
+    "encryptionMessage": "Datenvorschau ist wegen der Verschlüsselung nicht verfügbar."
+  },
   "es": {
-    "encryptionMessage": "La vista previa de los datos no está disponible debido a la encriptación."
+    "encryptionMessage": "La vista previa de los datos no está disponible debido al cifrado del formulario."
   },
   "fr": {
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."

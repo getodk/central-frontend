@@ -170,6 +170,12 @@ export default {
       "projectRole": "Role projektu"
     }
   },
+  "de": {
+    "cannotAssignRole": "Sie dürfen Ihre eigene Projektrolle nicht bearbeiten.",
+    "field": {
+      "projectRole": "Projektrolle"
+    }
+  },
   "es": {
     "cannotAssignRole": "No puede editar su propio rol en el proyecto",
     "field": {

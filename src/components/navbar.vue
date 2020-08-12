@@ -206,6 +206,11 @@ $shadow-color: #dedede;
       "toggle": "Přepnout navigaci"
     }
   },
+  "de": {
+    "action": {
+      "toggle": "Navigation umschalten"
+    }
+  },
   "es": {
     "action": {
       "toggle": "Alternar la navegación"
