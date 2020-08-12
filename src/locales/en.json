@@ -189,7 +189,7 @@
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
-    // This is a title shown above a section of the page.
+    // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     "success": "Success!",
     "yes": "Yes"

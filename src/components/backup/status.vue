@@ -199,6 +199,7 @@ export default {
       }
     ],
     "success": [
+      // This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working.
       "Backup is working.",
       // {dateTime} shows the date and time at which the last backup completed,
       // for example: "2020/01/01 01:23". It may show a formatted date like

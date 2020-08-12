@@ -244,6 +244,7 @@ export default {
   "en": {
     "heading": [
       "Welcome to Central.",
+      // This is a tagline displayed next to "Welcome to Central". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun.
       "Let’s get some things done."
     ],
     "gettingStarted": {
