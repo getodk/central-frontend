@@ -20,7 +20,7 @@ describe('EnketoPreview', () => {
       propsData: { formVersion: form }
     });
     button.vm.$el.tagName.should.equal('A');
-    button.getAttribute('href').should.equal('/_/preview/xyz');
+    button.getAttribute('href').should.equal('/-/preview/xyz');
   });
 
   it('renders correctly for a form without an enketoId', () => {

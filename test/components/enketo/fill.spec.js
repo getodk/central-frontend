@@ -22,7 +22,7 @@ describe('EnketoFill', () => {
       slots: { default: TestUtilSpan }
     });
     button.vm.$el.tagName.should.equal('A');
-    button.getAttribute('href').should.equal('/_/xyz');
+    button.getAttribute('href').should.equal('/-/xyz');
     button.first('span').text().should.equal('Some span text');
   });
 

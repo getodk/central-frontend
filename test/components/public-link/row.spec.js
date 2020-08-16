@@ -45,7 +45,7 @@ describe('PublicLinkRow', () => {
           token: 'abc'
         });
         const url = mountComponent().first('.access-link .selectable').text();
-        url.should.equal('http://localhost:9876/_/single/xyz?st=abc');
+        url.should.equal('http://localhost:9876/-/single/xyz?st=abc');
       });
 
       it('indicates if the form does not have an enketoId', () => {
@@ -74,7 +74,7 @@ describe('PublicLinkRow', () => {
           token: 'abc'
         });
         const url = mountComponent().first('.access-link .selectable').text();
-        url.should.equal('http://localhost:9876/_/single/zyx?st=abc');
+        url.should.equal('http://localhost:9876/-/single/zyx?st=abc');
       });
 
       it('indicates if the form does not have an enketoOnceId', () => {
