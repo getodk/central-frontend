@@ -187,5 +187,13 @@ describe('FormRow', () => {
       app.first(EnketoFill).should.be.visible();
       app.find(EnketoPreview).length.should.equal(0);
     });
+
+    it('does not render preview button for form without published version', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+      const app = await load('/projects/1');
+      app.find(EnketoPreview).length.should.equal(0);
+      app.find(EnketoFill).length.should.equal(0);
+    });
   });
 });

@@ -146,40 +146,6 @@ describe('FormShow', () => {
         .respondWithProblem(() => testData.standardFormAttachments.sorted());
     });
 
-    it('updates the enketoId of a form without a published version', () => {
-      testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
-      return load('/projects/1/forms/f/draft')
-        .complete()
-        .request(runAll)
-        .respondWithData(() => {
-          testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
-          return testData.standardFormDrafts.last();
-        })
-        .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
-        });
-    });
-
-    it('does not update enketoId of form with a published version', () => {
-      testData.extendedForms.createPast(1, { enketoId: 'xyz' });
-      testData.extendedFormVersions.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
-      return load('/projects/1/forms/f/draft')
-        .complete()
-        .request(runAll)
-        .respondWithData(() => {
-          testData.extendedFormDrafts.update(-1, { enketoId: 'abc' });
-          return testData.standardFormDrafts.last();
-        })
-        .afterResponse(app => {
-          const { form, formDraft } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
-          formDraft.get().enketoId.should.equal('abc');
-        });
-    });
-
     describe('route change', () => {
       it('continues to fetch enketoId as user navigates within form', () => {
         testData.extendedForms.createPast(1, { draft: true, enketoId: null });

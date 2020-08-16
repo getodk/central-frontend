@@ -42,11 +42,13 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td v-if="columns.has('actions')" class="actions">
-      <enketo-preview v-if="project.permits('project.update')"
-        :form-version="form"/>
-      <enketo-fill v-else :form-version="form">
-        <span class="icon-edit"></span>{{ $t('action.fill') }}
-      </enketo-fill>
+      <template v-if="form.publishedAt != null">
+        <enketo-preview v-if="project.permits('project.update')"
+          :form-version="form"/>
+        <enketo-fill v-else :form-version="form">
+          <span class="icon-edit"></span>{{ $t('action.fill') }}
+        </enketo-fill>
+      </template>
     </td>
   </tr>
 </template>

@@ -67,7 +67,8 @@ const forms = dataStore({
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
     enketoId = 'xyz',
-    enketoOnceId = 'zyx',
+    draft = !inPast,
+    enketoOnceId = !draft ? 'zyx' : null,
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
@@ -78,7 +79,6 @@ const forms = dataStore({
     hasInstanceId = faker.random.boolean(),
     fields = defaultFields(hasInstanceId),
 
-    draft = !inPast,
     ...rest
   }) => {
     const form = {
@@ -199,29 +199,27 @@ formVersions = dataStore({
 ////////////////////////////////////////////////////////////////////////////////
 // VIEWS
 
-const findVersion = (published) => (form) => {
+const findPrimaryVersion = (form) => {
   for (let i = formVersions.size - 1; i >= 0; i -= 1) {
     const version = formVersions.get(i);
-    if (version.form === form && (version.publishedAt != null) === published)
-      return version;
+    if (version.form === form && version.publishedAt != null) return version;
   }
   return null;
 };
-const findPrimaryVersion = findVersion(true);
-const findDraft = findVersion(false);
 
 const transformForm = (formProps, versionProps) => (form) => {
   const data = pick(formProps, form);
+  data.enketoId = form.enketoId;
+
   const primary = findPrimaryVersion(form);
   if (primary != null) {
     // We should probably sum `submissions` for all published versions, rather
     // than simply copying it from the primary version.
     Object.assign(data, pick(versionProps, primary));
-    data.enketoId = form.enketoId;
-  } else {
-    data.enketoId = findDraft(form).enketoId;
-    if (versionProps.includes('submissions')) data.submissions = 0;
+  } else if (versionProps.includes('submissions')) {
+    data.submissions = 0;
   }
+
   return data;
 };
 const transformVersion = (formProps, versionProps) => (version) =>
