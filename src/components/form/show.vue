@@ -40,23 +40,6 @@ import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 reconcileData.add(
-  'form', 'formDraft',
-  (form, formDraft, commit) => {
-    // Note the unlikely possibility that
-    // form.publishedAt == null && formDraft.isEmpty(). In that case,
-    // the user will be redirected to /.
-    if (form.publishedAt == null && formDraft.isDefined()) {
-      const { enketoId } = formDraft.get();
-      if (form.enketoId !== enketoId) {
-        commit('setData', {
-          key: 'form',
-          value: form.with({ enketoId })
-        });
-      }
-    }
-  }
-);
-reconcileData.add(
   'formDraft', 'attachments',
   (formDraft, attachments, commit) => {
     if (formDraft.isDefined() && attachments.isEmpty())
@@ -122,16 +105,11 @@ export default {
         success: () => {
           if (this.form.enketoId != null && this.form.enketoOnceId != null)
             return;
-          const { publishedAt } = this.form;
-          // The enketoId of a form without a published version is the same as
-          // the enketoId of the form draft. If a form without a published
-          // version does not have an enketoId, we do not fetch its enketoId,
-          // because we will already fetch the enketoId of the draft. A form
-          // without a published version does not have an enketoOnceId.
-          if (publishedAt == null) return;
+          if (this.form.publishedAt == null) return;
           // If Enketo hasn't finished processing the form in 15 minutes,
           // something else has probably gone wrong.
-          if (Date.now() - DateTime.fromISO(publishedAt).toMillis() > 900000)
+          if (Date.now() -
+            DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
             return;
           this.callWait(
             'fetchEnketoIdsForForm',
@@ -161,8 +139,7 @@ export default {
           fulfillProblem: ({ code }) => code === 404.1,
           success: () => {
             if (this.formDraft.isEmpty()) return;
-            const { enketoId } = this.formDraft.get();
-            if (enketoId != null) return;
+            if (this.formDraft.get().enketoId != null) return;
             this.callWait(
               'fetchEnketoIdForDraft',
               async () => {
