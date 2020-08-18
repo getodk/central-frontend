@@ -22,6 +22,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Form from '../../presenters/form';
+import { enketoBasePath } from '../../util/util';
 
 export default {
   name: 'EnketoFill',
@@ -41,7 +42,8 @@ export default {
       return null;
     },
     href() {
-      return `/_/${encodeURIComponent(this.formVersion.enketoId)}`;
+      const encodedId = encodeURIComponent(this.formVersion.enketoId);
+      return `${enketoBasePath}/${encodedId}`;
     }
   }
 };

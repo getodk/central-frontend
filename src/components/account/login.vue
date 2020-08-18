@@ -44,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
+import { enketoBasePath } from '../../util/util';
 
 export default {
   name: 'AccountLogin',
@@ -83,8 +84,8 @@ export default {
       if (url.origin !== window.location.origin || url.pathname === '/login')
         return internal('/');
 
-      // Enketo
-      if (url.pathname.startsWith('/_/')) return external(url.href);
+      if (url.pathname.startsWith(`${enketoBasePath}/`))
+        return external(url.href);
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {

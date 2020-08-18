@@ -38,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Selectable from '../selectable.vue';
+import { enketoBasePath } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -64,7 +65,8 @@ export default {
       return this.publicLink.once ? this.form.enketoOnceId : this.form.enketoId;
     },
     url() {
-      return `${window.location.origin}/_/single/${this.enketoId}?st=${this.publicLink.token}`;
+      const encodedId = encodeURIComponent(this.enketoId);
+      return `${window.location.origin}${enketoBasePath}/single/${encodedId}?st=${this.publicLink.token}`;
     }
   }
 };
