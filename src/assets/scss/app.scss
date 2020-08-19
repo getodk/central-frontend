@@ -228,6 +228,11 @@ a {
   cursor: default;
 }
 
+.checkbox label + .help-block {
+  margin-left: 20px;
+  margin-top: 0;
+}
+
 .has-error {
   .radio, .checkbox, &.radio label, &.checkbox label { color: $color-danger; }
 

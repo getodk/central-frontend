@@ -56,7 +56,7 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: true });
+          data.should.eql({ displayName: 'My Public Link', once: false });
         })
         .respondWithProblem());
 
@@ -67,7 +67,7 @@ describe('PublicLinkCreate', () => {
           ['input[type="checkbox"]', true]
         ]))
         .beforeEachResponse((_, { data }) => {
-          data.once.should.be.false();
+          data.once.should.be.true();
         })
         .respondWithProblem());
   });
