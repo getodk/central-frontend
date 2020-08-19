@@ -21,15 +21,15 @@ describe('PublicLinkRow', () => {
     span.getAttribute('title').should.equal('My Public Link');
   });
 
-  describe('"Multiple responses" column', () => {
-    it('shows "Yes" if the once property is false', () => {
-      testData.standardPublicLinks.createPast(1, { once: false });
-      mountComponent().first('.multiple').text().trim().should.equal('Yes');
+  describe('"Single Submission" column', () => {
+    it('shows "Yes" if the once property is true', () => {
+      testData.standardPublicLinks.createPast(1, { once: true });
+      mountComponent().first('.once').text().trim().should.equal('Yes');
     });
 
-    it('shows "No" if the once property is true', () => {
-      testData.standardPublicLinks.createPast(1, { once: true });
-      mountComponent().first('.multiple').text().trim().should.equal('No');
+    it('shows "No" if the once property is false', () => {
+      testData.standardPublicLinks.createPast(1, { once: false });
+      mountComponent().first('.once').text().trim().should.equal('No');
     });
   });
 

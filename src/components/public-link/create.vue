@@ -20,12 +20,14 @@ except according to the terms contained in the LICENSE file.
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
         <div class="checkbox">
           <label>
-            <input v-model="multiple" type="checkbox"
-              aria-describedby="public-link-create-multiple-help">
-              {{ $t('field.multiple') }}
+            <input v-model="once" type="checkbox"
+              aria-describedby="public-link-create-once-help">
+              {{ $t('field.once') }}
           </label>
-          <p id="public-link-create-multiple-help" class="help-block">
-            {{ $t('multipleHelp') }}
+          <p id="public-link-create-once-help" class="help-block">
+            {{ $t('onceHelp') }}
+            <!-- TODO -->
+            <doc-link>{{ $t('moreInfo.learnMore') }}</doc-link>
           </p>
         </div>
         <div class="modal-actions">
@@ -44,6 +46,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -54,7 +57,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'PublicLinkCreate',
-  components: { FormGroup, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -66,7 +69,7 @@ export default {
     return {
       awaitingResponse: false,
       displayName: '',
-      multiple: false
+      once: false
     };
   },
   // The modal assumes that this data will exist when the modal is shown.
@@ -75,7 +78,7 @@ export default {
     state(state) {
       if (!state) {
         this.displayName = '';
-        this.multiple = false;
+        this.once = false;
       }
     }
   },
@@ -84,7 +87,7 @@ export default {
       this.request({
         method: 'POST',
         url: apiPaths.publicLinks(this.form.projectId, this.form.xmlFormId),
-        data: { displayName: this.displayName, once: !this.multiple }
+        data: { displayName: this.displayName, once: this.once }
       })
         .then(({ data }) => {
           this.$emit('success', data);
@@ -104,9 +107,10 @@ export default {
       "Anyone with this Link will be able to fill out this Form in a web browser. Use the display name to remind yourself of where you posted it, who you shared it with, when it is intended to be active, and so on."
     ],
     "field": {
-      "multiple": "Multiple responses"
+      "once": "Single Submission"
     },
-    "multipleHelp": "Allow someone with this Link to submit more than once from the same device."
+    // This is help text for the "Single Submission" checkbox.
+    "onceHelp": "Allow only one Submission from each browser."
   }
 }
 </i18n>

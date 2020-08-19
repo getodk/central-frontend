@@ -2439,13 +2439,14 @@
         }
       },
       "field": {
-        "multiple": {
-          "string": "Multiple responses",
+        "once": {
+          "string": "Single Submission",
           "developer_comment": "This is the text of a form field."
         }
       },
-      "multipleHelp": {
-        "string": "Allow someone with this Link to submit more than once from the same device."
+      "onceHelp": {
+        "string": "Allow only one Submission from each browser.",
+        "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
     "PublicLinkList": {
@@ -2523,8 +2524,8 @@
     },
     "PublicLinkTable": {
       "header": {
-        "multiple": {
-          "string": "Multiple Responses",
+        "once": {
+          "string": "Single Submission",
           "developer_comment": "This is the text of a table column header."
         },
         "accessLink": {

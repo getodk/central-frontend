@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <thead>
       <tr>
         <th class="display-name">{{ $t('header.displayName') }}</th>
-        <th>{{ $t('header.multiple') }}</th>
+        <th>{{ $t('header.once') }}</th>
         <th class="access-link">{{ $t('header.accessLink') }}</th>
         <th class="actions">{{ $t('header.actions') }}</th>
       </tr>
@@ -59,7 +59,7 @@ export default {
 {
   "en": {
     "header": {
-      "multiple": "Multiple Responses",
+      "once": "Single Submission",
       "accessLink": "Access Link"
     }
   }

@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <td class="display-name">
       <span :title="publicLink.displayName">{{ publicLink.displayName }}</span>
     </td>
-    <td class="multiple">
-      {{ publicLink.once ? $t('common.no') : $t('common.yes') }}
+    <td class="once">
+      {{ publicLink.once ? $t('common.yes') : $t('common.no') }}
     </td>
     <td class="access-link">
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>

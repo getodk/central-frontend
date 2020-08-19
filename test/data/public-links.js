@@ -17,7 +17,7 @@ export const standardPublicLinks = dataStore({
       ? extendedForms.first()
       : extendedForms.createPast(1).last(),
     displayName = faker.name.findName(),
-    once = true,
+    once = false,
     token = faker.random.alphaNumeric(64)
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
