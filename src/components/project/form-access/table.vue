@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
       <table class="table">
         <thead>
           <tr>
-            <th><div>{{ $t('header.appUserAccess') }}</div></th>
+            <th><div>{{ $t('resource.appUsers') }}</div></th>
             <th v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
               :title="fieldKey.displayName">
               <div>{{ fieldKey.displayName }}</div>
@@ -151,7 +151,7 @@ export default {
         position: absolute;
         transform: rotate(-45deg);
         transform-origin: center left;
-        width: 110px;
+        width: 120px;
 
         overflow: hidden;
         text-overflow: ellipsis;
@@ -210,8 +210,7 @@ export default {
   "en": {
     "header": {
       "form": "Form",
-      "state": "State",
-      "appUserAccess": "App User Access"
+      "state": "State"
     }
   }
 }

@@ -62,9 +62,10 @@ export default {
 
 <style lang="scss">
 @media (min-width: 768px) {
-  #navbar-links-projects, #navbar-links-users {
-    margin-left: 30px;
-  }
+  // It would probably be better to add the margin to the <li> element rather
+  // than the <a> element.
+  #navbar-links > li > a { margin-right: 10px; }
+  #navbar-links-projects, #navbar-links-users { margin-left: 30px; }
 }
 </style>
 

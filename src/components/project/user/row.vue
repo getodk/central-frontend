@@ -139,7 +139,7 @@ export default {
 
   .form-control {
     display: inline-block;
-    width: 175px;
+    width: 200px;
   }
 
   .spinner-container {

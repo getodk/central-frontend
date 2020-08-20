@@ -62,7 +62,7 @@ describe('ProjectFormAccess', () => {
         th.map(wrapper => wrapper.text().trim().iTrim()).should.eql([
           'Form',
           'State',
-          'App User Access',
+          'App Users',
           'App User 2',
           'App User 1',
           ''

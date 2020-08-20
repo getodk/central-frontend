@@ -317,6 +317,10 @@
       "string": "App User",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "appUsers": {
+      "string": "App Users",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "form": {
       "string": "Form",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -2032,10 +2036,6 @@
         "state": {
           "string": "State",
           "developer_comment": "This is the text of a table column header."
-        },
-        "appUserAccess": {
-          "string": "App User Access",
-          "developer_comment": "This is the text of a table column header."
         }
       }
     },
@@ -2273,10 +2273,6 @@
         },
         "users": {
           "string": "Project Roles",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "appUsers": {
-          "string": "App Users",
           "developer_comment": "This is the text of a navigation tab."
         },
         "formAccess": {
