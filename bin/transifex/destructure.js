@@ -1,3 +1,6 @@
+// For a description of our Transifex workflow and how this script fits into it,
+// see CONTRIBUTING.md.
+
 const fs = require('fs');
 
 const { destructure, readSourceMessages, writeTranslations } = require('../util/transifex');
@@ -16,7 +19,7 @@ for (const basename of fs.readdirSync('transifex')) {
   writeTranslations(
     locale,
     sourceMessages,
-    destructure(fs.readFileSync(`transifex/${basename}`).toString()),
+    destructure(fs.readFileSync(`transifex/${basename}`).toString(), locale),
     'src/locales',
     filenamesByComponent
   );

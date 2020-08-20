@@ -1,3 +1,6 @@
+// For a description of our Transifex workflow and how this script fits into it,
+// see CONTRIBUTING.md.
+
 const fs = require('fs');
 
 const { readSourceMessages, restructure, sourceLocale } = require('../util/transifex');

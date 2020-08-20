@@ -31,6 +31,9 @@ const parseVars = (pluralForm) => {
 ////////////////////////////////////////////////////////////////////////////////
 // PLURALS
 
+const pluralFormCounts = new Map()
+  .set('cs', 4);
+
 // PluralForms is an array-like object with an element for each plural form of a
 // message. It provides methods to convert to or from an Vue I18n message or a
 // Transifex string. If a message is not pluralized, PluralForms will contain a
@@ -53,7 +56,7 @@ class PluralForms {
   }
 
   // Transifex uses ICU plurals.
-  static fromTransifex(string) {
+  static fromTransifex(string, locale) {
     const icuMatch = string.match(/^({count, plural,).+}$/);
     const forms = [];
     if (icuMatch == null) {
@@ -75,6 +78,12 @@ class PluralForms {
         forms.push(string.slice(begin + formMatch[0].length, end - 1));
         begin = end;
       }
+
+      const expectedCount = pluralFormCounts.has(locale)
+        ? pluralFormCounts.get(locale)
+        : 2;
+      if (forms.length !== expectedCount)
+        logThenThrow(string, `Expected ${expectedCount} plural forms, but found ${forms.length}. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
@@ -88,25 +97,25 @@ class PluralForms {
     this[0] = forms[0]; // eslint-disable-line prefer-destructuring
     const vars = parseVars(forms[0]);
     for (let i = 1; i < forms.length; i += 1) {
+      // Transifex should prevent this.
+      if ((forms[i] === '') !== (forms[0] === ''))
+        logThenThrow(forms, 'unexpected empty plural form');
+      // Our Transifex translation checks should prevent this.
       if (!equals(parseVars(forms[i]), vars))
         logThenThrow(forms, 'plural forms must use the same variables in each form');
+
       this[i] = forms[i];
     }
     this.length = forms.length;
   }
 
-  isEmpty() {
-    for (let i = 0; i < this.length; i += 1) {
-      if (this[i] !== '') return false;
-    }
-    return true;
-  }
+  isEmpty() { return this[0] === ''; }
 
   toVueI18n() {
-    for (let i = 0; i < this.length; i += 1) {
-      if (this[i].includes('|')) logThenThrow(this, 'unexpected |');
-    }
-    return Array.from(this).join(' | ');
+    const forms = Array.from(this);
+    if (forms.some(form => form.includes('|')))
+      logThenThrow(this, 'unexpected |');
+    return forms.join(' | ');
   }
 
   toTransifex() {
@@ -131,10 +140,33 @@ class PluralForms {
 ////////////////////////////////////////////////////////////////////////////////
 // LINKED LOCALE MESSAGES
 
+/*
+We will use a linked locale message when two messages are exactly the same.
+However, we don't use a linked locale message to insert one message into
+another, larger message: grammatical features like noun case and construct state
+mean that that usually won't work across languages. Given that, we only use the
+@:path syntax, not @:(path). We also do not use linked locale message modifiers.
+
+Related to this, note that while a linked locale message can link to a
+pluralized message if they are exactly the same, a pluralized message should not
+contain a linked locale message: that would mean that it is using a linked
+locale message within a longer message. See also these related issues:
+
+https://github.com/kazupon/vue-i18n/issues/521
+https://github.com/kazupon/vue-i18n/issues/195
+*/
 const pathOfLinkedMessage = (pluralForms) => {
-  if (pluralForms.length !== 1) return null;
-  const match = pluralForms[0].match(/^@:([\w.]+)$/);
-  return match != null ? match[1].split('.') : null;
+  if (pluralForms.length === 1) {
+    const match = pluralForms[0].match(/^@:([\w.]+)$/);
+    if (match != null) return match[1].split('.');
+  }
+
+  for (let i = 0; i < pluralForms.length; i += 1) {
+    if (pluralForms[i].includes('@:'))
+      logThenThrow(pluralForms, 'unexpected linked locale message');
+  }
+
+  return null;
 };
 
 
@@ -179,13 +211,14 @@ const generateCommentForFull = (obj, key) => {
   return `The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n${joined}`;
 };
 
-// Converts Vue I18n JSON to structured JSON, returning an object.
+// Converts Vue I18n JSON to Structured JSON, returning an object.
 const _restructure = (
   value,
-  commentsByKey,
+  root,
   commentForPath,
   commentForKey,
-  commentForFull
+  commentForFull,
+  commentsByKey
 ) => {
   if (value == null) throw new Error('invalid value');
 
@@ -209,24 +242,55 @@ const _restructure = (
 
   if (typeof value !== 'object') throw new Error('invalid value');
 
-  // `structured` will be a non-array object, even if `value` is an array: it
-  // seems that structured JSON does not support arrays.
+  // `structured` will be a non-array object, even if `value` is an array:
+  // Structured JSON does not seem to support arrays.
   const structured = {};
   const entries = Object.entries(value);
   for (const [k, v] of entries) {
-    // Skip linked locale messages.
-    if (v instanceof PluralForms && pathOfLinkedMessage(v) != null)
-      continue; // eslint-disable-line no-continue
+    // If `v` is a linked locale message, validate it, then skip it so that it
+    // does not appear in the Structured JSON.
+    if (v instanceof PluralForms) {
+      const path = pathOfLinkedMessage(v);
+      if (path != null) {
+        const messageLinkedTo = path.reduce(
+          (node, key) => {
+            if (node[key] == null) {
+              // We do not currently support a linked locale message in an i18n
+              // custom block that links to another message in the block, but we
+              // may very well at some point.
+              logThenThrow(value, 'link to message that either does not exist or is in i18n custom block');
+            }
+            return node[key];
+          },
+          root
+        );
+        if (pathOfLinkedMessage(messageLinkedTo) != null) {
+          // Supporting this case would add complexity to
+          // copyLinkedLocaleMessage().
+          logThenThrow(value, 'cannot link to a linked locale message');
+        }
+        if (value.full != null || Array.isArray(value)) {
+          // Supporting this case would add complexity to
+          // deletePartialTranslation(), because then linking to an untranslated
+          // message could result in a partial translation, which would then be
+          // removed.
+          logThenThrow(value, 'linked locale message not allowed in component interpolation or array element');
+        }
+
+        continue; // eslint-disable-line no-continue
+      }
+    }
 
     const comments = value[Symbol.for(`before:${k}`)];
     structured[k] = _restructure(
       v,
-      commentsByKey,
+      root,
       comments != null
         ? comments.map(comment => comment.value.trim()).join(' ')
         : commentForPath,
       commentsByKey[k] != null ? commentsByKey[k] : commentForKey,
-      generateCommentForFull(value, k)
+      generateCommentForFull(value, k),
+      commentsByKey
     );
 
     // Remove an object that only contains linked locale messages.
@@ -243,17 +307,17 @@ const restructure = (messages) => {
     if (match != null) commentsByKey[match[1]] = match[2];
   }
 
-  return _restructure(messages, commentsByKey, null, null, null);
+  return _restructure(messages, messages, null, null, null, commentsByKey);
 };
 
-// Converts structured JSON to Vue I18n JSON, returning an object where each
+// Converts Structured JSON to Vue I18n JSON, returning an object where each
 // message is a PluralForms object.
-const destructure = (json) => JSON.parse(
+const destructure = (json, locale) => JSON.parse(
   json,
   (_, value) => {
     if (value != null && typeof value === 'object' &&
       typeof value.string === 'string')
-      return PluralForms.fromTransifex(value.string);
+      return PluralForms.fromTransifex(value.string, locale);
     return value;
   }
 );
@@ -266,7 +330,6 @@ const destructure = (json) => JSON.parse(
 // Returns the Vue I18n messages for the source locale after converting them to
 // PluralForms objects.
 const readSourceMessages = (localesDir, filenamesByComponent) => {
-  // Read the root messages.
   const reviver = (key, value) => {
     if (typeof value === 'string') return PluralForms.fromVueI18n(value);
     if (key === 'full') {
@@ -280,6 +343,8 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
     }
     return value;
   };
+
+  // Read the root messages.
   const messages = parse(
     fs.readFileSync(`${localesDir}/${sourceLocale}.json`).toString(),
     reviver
@@ -318,30 +383,43 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
 class Translation {
   constructor(parent, key) {
     this.parent = parent;
-    this._key = key;
+    this.key = key;
     this.source = parent._source[key];
   }
 
   get root() { return this.parent.root; }
+  get path() { return [...this.parent.path, this.key]; }
 
-  // The translation is "live": if it changes in the parent, it will change here
-  // as well.
-  get translated() { return this.parent._translated[this._key]; }
+  // `translated` returns either a PluralForms object or `null`. The result is
+  // an empty PluralForms object for an untranslated message and `null` for a
+  // message that does not exist in Transifex at all (because it is a linked
+  // locale message). `translated` is "live": if the translation changes in the
+  // parent, it will change here as well.
+  get translated() { return this.parent._translated[this.key]; }
 
   toJSON(key) {
     if (this.translated.isEmpty()) return undefined;
     return key === 'full' && this.translated.length !== 1
-      ? Array.from(this.translated)
+      ? Array.from(this.translated) // Needed for $tcPath().
       : this.translated.toVueI18n();
   }
 }
 
-// `Translations` stores an object of source messages with the corresponding
-// translations. It provides methods to modify the translations.
+/*
+A `Translations` object is a tree whose structure mirrors the source Vue I18n
+JSON. It stores source messages along with the corresponding translations.
+`Translations` is used to:
+
+  - walk the source messages and translations in parallel
+  - modify the translations
+  - output the Vue I18n JSON for the translations
+*/
 class Translations {
+  // `source` is either a non-array object or an array. `translated` is always
+  // a non-array object: Structured JSON does not seem to support arrays.
   constructor(parent, key, source, translated) {
     this.parent = parent;
-    this._key = key;
+    this.key = key;
     if (source == null || typeof source !== 'object')
       logThenThrow(source, 'invalid source');
     this._source = source;
@@ -353,14 +431,27 @@ class Translations {
 
   get root() { return this.parent == null ? this : this.parent.root; }
 
-  // Returns a translation or another set of translations. In either case, the
-  // result is "live": a change to this node will be reflected in its children.
+  get path() {
+    return this.parent == null ? [] : [...this.parent.path, this.key];
+  }
+
+  isArray() { return Array.isArray(this._source); }
+
+  // Returns either a single translation or another `Translations` object. In
+  // either case, the result is "live": a change to this node will be reflected
+  // in its children.
   get(key) {
     const sourceValue = this._source[key];
     if (sourceValue == null) return undefined;
-    if (sourceValue instanceof PluralForms) return new Translation(this, key);
+    if (sourceValue instanceof PluralForms)
+      return new Translation(this, key.toString());
     if (this._translated[key] == null) this._translated[key] = {};
-    return new Translations(this, key, sourceValue, this._translated[key]);
+    return new Translations(
+      this,
+      key.toString(),
+      sourceValue,
+      this._translated[key]
+    );
   }
 
   has(key) { return this._source[key] != null; }
@@ -375,7 +466,7 @@ class Translations {
     return this;
   }
 
-  // Removes a translation or set of translations.
+  // Removes one or more translations.
   delete(key) {
     const value = this._translated[key];
     if (value == null) return;
@@ -401,7 +492,7 @@ class Translations {
       const value = this.get(key);
       if (value instanceof Translation) {
         for (const callback of callbacks)
-          callback(key, value);
+          callback(value);
       } else {
         value.walk(callbacks);
       }
@@ -409,17 +500,12 @@ class Translations {
   }
 
   toJSON(key) {
-    const keyIsIndex = /^\d+$/.test(key);
-
-    if (this.has('0')) {
+    if (this.isArray()) {
       const result = [];
       let emptyPluralForms = 0;
       let emptyObjects = 0;
       for (let i = 0; i < this.size; i += 1) {
-        const k = i.toString();
-        if (!this.has(k))
-          logThenThrow(this, 'error converting object to array');
-        const value = this.get(k).toJSON(k);
+        const value = this.get(i).toJSON(i.toString());
         result.push(value);
         if (value === undefined)
           emptyPluralForms += 1;
@@ -431,7 +517,7 @@ class Translations {
         // `undefined` so that there is not an empty array in the JSON. However,
         // we do not return `undefined` if doing so would result in a sparse
         // array: JSON does not support sparse arrays.
-        return keyIsIndex ? [] : undefined;
+        return /^\d+$/.test(key) ? [] : undefined;
       }
       if (emptyPluralForms !== 0) logThenThrow(this, 'sparse array');
       return result;
@@ -442,44 +528,103 @@ class Translations {
       const value = this.get(k).toJSON(k);
       if (value != null) result[k] = value;
     }
-    return Object.keys(result).length !== 0 || keyIsIndex ? result : undefined;
+    return Object.keys(result).length !== 0 || /^\d+$/.test(key)
+      ? result
+      : undefined;
   }
 }
 
-// This will not work for a linked locale message in an i18n custom block, but
-// we do not use those yet.
-const copyLinkedLocaleMessage = (key, { source, parent }) => {
+// If a linked locale message links to a message that does not exist in the
+// user's locale, then in some cases, Vue I18n does not fall back to the message
+// in the fallback locale. Because of that, we copy a linked locale message only
+// if the message it links to is translated.
+const copyLinkedLocaleMessage = ({ source, root, parent, key }) => {
   const path = pathOfLinkedMessage(source);
   if (path == null) return;
-  let linked = parent.root;
-  for (let i = 0; linked != null && i < path.length; i += 1)
-    linked = linked.get(path[i]);
-  if (linked != null && linked.translated != null) parent.set(key, source);
+  const translationLinkedTo = path.reduce((node, k) => node.get(k), root);
+  if (!translationLinkedTo.translated.isEmpty()) parent.set(key, source);
 };
 
-const verifyDestructure = (_, { source, translated }) => {
+const verifyDestructure = ({ source, translated }) => {
   if (translated == null || !equals(Array.from(source), Array.from(translated)))
     logThenThrow({ source, translated }, 'mismatch for source locale');
 };
 
-// If a component interpolation is only partially translated, we remove the
-// partial translation so that the resulting text is not a mix of locales. We
-// also remove an array that is missing a translation, because JSON does not
-// support sparse arrays.
-const deletePartialTranslation = (key, { source, translated, parent }) => {
-  if (parent.has('full') || parent.has('0')) {
-    // Linked locale message
-    if (translated == null) logThenThrow(source, 'not supported');
-    if (translated.isEmpty()) parent.clear();
+/*
+If a component interpolation is only partially translated, we remove the partial
+translation so that the resulting text is not a mix of locales. For example:
+
+{
+  "en": {
+    "introduction": [
+      {
+        "full": "Click {here}.",
+        "here": "here"
+      }
+    ]
+  },
+  "es": {
+    "introduction": [
+      {
+        // Since this message is untranslated, the entire component
+        // interpolation will be removed.
+        "full": "",
+        "here": "aquí"
+      }
+    ]
   }
+}
+
+We also remove an array if one of its elements is an untranslated message,
+because JSON does not support sparse arrays. For example:
+
+{
+  "en": {
+    "introduction": [
+      "one",
+      "two",
+      "three"
+    ]
+  },
+  "es": {
+    "introduction": [
+      // Since this message is untranslated, the entire array will be removed.
+      "",
+      "dos",
+      "tres"
+    ]
+  }
+}
+
+If https://github.com/kazupon/vue-i18n/issues/563 is implemented, we might not
+need to discard the array.
+*/
+const deletePartialTranslation = ({ translated, parent }) => {
+  if ((parent.has('full') || parent.isArray()) && translated.isEmpty())
+    parent.clear();
 };
 
-const validateTranslation = (_, { source, translated }) => {
-  if ((source.length !== 1) !== (translated.length !== 1))
+const validateTranslation = (locale) => ({ source, translated, path }) => {
+  // Our Transifex translation checks should prevent these possibilities.
+  if (pluralFormCounts.get(locale) !== 1 &&
+    (source.length !== 1) !== (translated.length !== 1))
     logThenThrow({ source, translated }, 'pluralization mismatch');
   if (!translated.isEmpty() &&
     !equals(parseVars(source[0]), parseVars(translated[0])))
     logThenThrow({ source, translated }, 'translation must use the same variables as the source message');
+
+  for (let i = 0; i < translated.length; i += 1) {
+    // Check for a linked locale message. (I don't see an easy way to set up a
+    // Transifex translation check for this.)
+    if (translated[i].includes('@:') && translated[i] !== source[i])
+      logThenThrow({ source, translated }, 'unexpected linked locale message');
+
+    const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
+    if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
+      // eslint-disable-next-line no-console
+      console.warn(`warning: ${path.join('.')}: variable without separator.`);
+    }
+  }
 };
 
 // Writes the translations for the specified locale.
@@ -492,6 +637,10 @@ const writeTranslations = (
 ) => {
   const translations = new Translations(null, null, source, translated);
 
+  // Instead of overwriting the source messages, here we check that
+  // destructuring the restructured source messages results in the original
+  // source messages again. If this fails, then there may be an issue with
+  // restructure.js or destructure.js.
   if (locale === sourceLocale) {
     translations.walk([copyLinkedLocaleMessage, verifyDestructure]);
     return;
@@ -500,14 +649,15 @@ const writeTranslations = (
   translations.walk(deletePartialTranslation);
   // Walking twice so that we copy a linked locale message only if
   // deletePartialTranslation won't delete it.
-  translations.walk([copyLinkedLocaleMessage, validateTranslation]);
+  translations.walk([copyLinkedLocaleMessage, validateTranslation(locale)]);
 
   const translationsByComponent = translations.get('component');
   const autogenerated = {
     open: '<!-- Autogenerated by destructure.js -->\n<i18n>\n',
     close: '\n</i18n>\n'
   };
-  // Needed to prevent an ESLint vue/no-parsing-error.
+  // We escape '<' in an i18n custom block in order to avoid an ESLint
+  // vue/no-parsing-error: see https://github.com/kazupon/vue-i18n/issues/977
   const escapeJSON = (json) => json.replace(/</g, '\\u003c');
   for (const [componentName, filename] of filenamesByComponent) {
     const translationsForComponent = translationsByComponent.get(componentName);
