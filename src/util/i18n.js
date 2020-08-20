@@ -63,7 +63,7 @@ const loadMessages = (locale) => {
     `../locales/${locale}.json`
   )
     .then(messages => {
-      i18n.setLocaleMessage(locale, messages);
+      i18n.setLocaleMessage(locale, messages.default);
     });
 };
 

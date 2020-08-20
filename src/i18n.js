@@ -89,6 +89,9 @@ export default new VueI18n({
   messages: { [fallbackLocale]: fallbackMessages },
   pluralizationRules,
   numberFormats: numberFormatsByLocale,
+  // No message in the fallback locale should use HTML, because we use component
+  // interpolation instead. We also use a Transifex translation check to check
+  // that no translation contains HTML.
   warnHtmlInMessage: 'error',
   silentFallbackWarn: true,
   // Silence the following warning:
