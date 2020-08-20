@@ -25,8 +25,7 @@ except according to the terms contained in the LICENSE file.
         &nbsp;
         <i18n :tag="false" path="moreInfo.clickHere.full">
           <template #clickHere>
-            <!-- TODO -->
-            <doc-link>{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
         </i18n>
       </p>
