@@ -36,8 +36,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
       </ul>
       <i18n tag="p" path="moreInfo.clickHere.full">
         <template #clickHere>
-          <!-- TODO. Update the link? -->
-          <doc-link to="central-projects/#project-managers">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          <doc-link to="central-projects/#managing-project-roles">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
         </template>
       </i18n>
     </div>
