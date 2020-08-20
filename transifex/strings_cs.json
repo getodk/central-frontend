@@ -1,0 +1,2904 @@
+{
+  "role": {
+    "none": {
+      "string": "Žádná",
+      "developer_comment": "This is shown when a user does not have a Role."
+    },
+    "admin": {
+      "string": "Administrátor",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "manager": {
+      "string": "Projektový manažer",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "viewer": {
+      "string": "Prohlížeč projektu",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "formfill": {
+      "string": "Sběratel dat",
+      "developer_comment": "This is the name of a user Role."
+    }
+  },
+  "formState": {
+    "open": {
+      "string": "Otevřít",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Open\" is one Form State."
+    },
+    "closing": {
+      "string": "Dokončení",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closing\" is one Form State."
+    },
+    "closed": {
+      "string": "Dokončeno",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    }
+  },
+  "audit": {
+    "category": {
+      "nonverbose": {
+        "string": "(Všechny akce)",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "user": {
+        "string": "Akce webového uživatele",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "project": {
+        "string": "Akce projektu",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "form": {
+        "string": "Akce formuláře",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "field_key": {
+        "string": "Akce uživatelů aplikace",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "public_link": {
+        "string": "Akce s veřejným přístupem",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "session": {
+        "string": "Akce relace",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "upgrade": {
+        "string": "Upgrade serveru",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      }
+    },
+    "action": {
+      "default": {
+        "create": {
+          "string": "Vytvořit",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "update": {
+          "string": "Aktualizovat podrobnosti",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "delete": {
+          "string": "Smazat",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        }
+      },
+      "assignment": {
+        "create": {
+          "string": "Přiřadit roli",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        },
+        "delete": {
+          "string": "Odebrat roli",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        }
+      },
+      "backup": {
+        "string": "Záloha",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "form": {
+        "update_draft_set": {
+          "string": "Vytvořit nebo aktualizovat koncept",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_publish": {
+          "string": "Zveřejnit koncept",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_delete": {
+          "string": "Opustit koncept",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "attachment_update": {
+          "string": "Aktualizovat přílohy",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        }
+      },
+      "upgrade": {
+        "process_form": {
+          "string": "Zpracování formuláře",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_draft": {
+          "string": "Zpracování návrhu formuláře",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        }
+      },
+      "user": {
+        "delete": {
+          "string": "Uspat",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        }
+      }
+    }
+  },
+  "action": {
+    "cancel": {
+      "string": "Zrušit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "close": {
+      "string": "Zavřít",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "create": {
+      "string": "Vytvořit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "createSubmission": {
+      "string": "Nový",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+    },
+    "done": {
+      "string": "Hotovo",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "download": {
+      "string": "Stáhnout",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "editProfile": {
+      "string": "Upravit profil",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "logIn": {
+      "string": "Přihlásit se",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "looksGood": {
+      "string": "Vypadá to dobře, pokračujte",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "neverMind": {
+      "string": "Nevadí, zrušit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "next": {
+      "string": "Další",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "noCancel": {
+      "string": "Ne, zrušit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "ok": {
+      "string": "OK",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "proceed": {
+      "string": "Pokračovat",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "resetPassword": {
+      "string": "Resetovat heslo",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "save": {
+      "string": "Uložit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "yesProceed": {
+      "string": "Ano, pokračovat",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    }
+  },
+  "field": {
+    "dateRange": {
+      "string": "Časové období",
+      "developer_comment": "This is the text of a form field."
+    },
+    "displayName": {
+      "string": "Zobrazit název",
+      "developer_comment": "This is the text of a form field."
+    },
+    "email": {
+      "string": "E-mailová adresa",
+      "developer_comment": "This is the text of a form field."
+    },
+    "name": {
+      "string": "Jméno",
+      "developer_comment": "This is the text of a form field."
+    },
+    "newPassword": {
+      "string": "Nové heslo",
+      "developer_comment": "This is the text of a form field."
+    },
+    "oldPassword": {
+      "string": "Staré heslo",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passphrase": {
+      "string": "Přístupová fráze",
+      "developer_comment": "This is the text of a form field."
+    },
+    "password": {
+      "string": "Heslo",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passwordConfirm": {
+      "string": "Nové heslo (potvrzení)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "type": {
+      "string": "Typ",
+      "developer_comment": "This is the text of a form field."
+    }
+  },
+  "header": {
+    "actions": {
+      "string": "Akce",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "created": {
+      "string": "Vytvořeno",
+      "developer_comment": "This is the text of a table column header. The column shows who created the resource and possibly also when they did so."
+    },
+    "createdBy": {
+      "string": "Vytvořeno od",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "displayName": {
+      "string": "Zobrazit jméno",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "email": {
+      "string": "E-mailová adresa",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "lastSubmission": {
+      "string": "Poslední podání",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "name": {
+      "string": "Jméno",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "type": {
+      "string": "Typ",
+      "developer_comment": "This is the text of a table column header."
+    }
+  },
+  "plural": {
+    "appUser": {
+      "string": "{count, plural, one {Uživatel aplikace} few {Uživatelé aplikace} many {Uživatelů aplikace} other {Uživatelé aplikace}}"
+    },
+    "form": {
+      "string": "{count, plural, one {Formulář} few {Formulářů} many {Formulářů} other {Formuláře}}"
+    },
+    "project": {
+      "string": "{count, plural, one {Projekt} few {Projektů} many {Projektů} other {Projekty}}"
+    },
+    "submission": {
+      "string": "{count, plural, one {Podaný příspěvek} few {Podaných příspěvků} many {Podaných příspěvků} other {Podané příspěvky}}"
+    },
+    "webUser": {
+      "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {Webových uživatelů} other {Weboví uživatelé}}"
+    }
+  },
+  "count": {
+    "appUser": {
+      "string": "{count, plural, one {{count} uživatel aplikace} few {{count} uživatelů aplikace} many {{count} uživatelů aplikace} other {{count} uživatelů aplikace}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "form": {
+      "string": "{count, plural, one {{count} formulář} few {{count} formulářů} many {{count} formulářů} other {{count} formulářů}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "submission": {
+      "string": "{count, plural, one {{count} podaný příspěvek} few {{count} podaných příspěvků} many {{count} podaných příspěvků} other {{count} podaných příspěvků}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    }
+  },
+  "resource": {
+    "appUser": {
+      "string": "Uživatel aplikace",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "form": {
+      "string": "Formulář",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "project": {
+      "string": "Projekt",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLink": {
+      "string": "Veřejný odkaz",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "user": {
+      "string": "Uživatel",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUser": {
+      "string": "Webový uživatel",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "session": {
+      "string": "Relace",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submissions": {
+      "string": "Příspěvky",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": {
+        "string": "Pro více informací {clickHere}.",
+        "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+      },
+      "clickHere": {
+        "string": "klikněte zde",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
+      }
+    },
+    "helpArticle": {
+      "full": {
+        "string": "Pro více informací viz {helpArticle}.",
+        "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
+      },
+      "helpArticle": {
+        "string": "tento článek nápovědy",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
+      }
+    },
+    "learnMore": {
+      "string": "Další informace.",
+      "developer_comment": "This is a link to more information."
+    }
+  },
+  "common": {
+    "areYouSure": {
+      "string": "Opravdu chcete pokračovat?",
+      "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
+    },
+    "currentDraft": {
+      "string": "Váš aktuální koncept",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "dangerZone": {
+      "string": "Nebezpečná zóna",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "no": {
+      "string": "Ne"
+    },
+    "noResults": {
+      "string": "Žádné výsledky",
+      "developer_comment": "This is shown if a search returned no results."
+    },
+    "rightNow": {
+      "string": "Právě teď",
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    },
+    "success": {
+      "string": "Úspěch!"
+    },
+    "yes": {
+      "string": "Ano"
+    }
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": {
+        "string": "(prázdný)",
+        "developer_comment": "This is shown for a Form with a blank version name."
+      }
+    },
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archivováno)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
+      }
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": {
+        "string": "dnes",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
+      },
+      "yesterday": {
+        "string": "včera",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
+      }
+    },
+    "request": {
+      "noRequest": {
+        "string": "Něco se pokazilo: nebyl žádný požadavek."
+      },
+      "noResponse": {
+        "string": "Něco se pokazilo: nebyla žádná odezva na váš požadavek."
+      },
+      "errorNotProblem": {
+        "string": "Něco se pokazilo: server vrátil neplatnou chybu."
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": {
+      "string": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+    }
+  },
+  "component": {
+    "AccountClaim": {
+      "title": {
+        "string": "Nastavit heslo",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "set": {
+          "string": "Nastavit heslo",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "401_2": {
+          "string": "{message} Platnost odkazu ve vašem e-mailu pravděpodobně skončila a možná bude nutné zaslat nový e-mail.",
+          "developer_comment": "{message} is an error message from the server."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Heslo bylo úspěšně resetováno."
+        }
+      }
+    },
+    "AccountLogin": {
+      "title": {
+        "string": "Přihlásit se",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "problem": {
+        "401_2": {
+          "string": "Nesprávná e-mailová adresa nebo heslo."
+        }
+      }
+    },
+    "AccountResetPassword": {
+      "title": {
+        "string": "Obnovit heslo",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "success": {
+          "string": "Byl odeslán e-mail na {email} s dalšími pokyny."
+        }
+      }
+    },
+    "AuditFilters": {
+      "filter": {
+        "string": "Filtrovat podle",
+        "developer_comment": "This text is shown next to options for filtering a table."
+      }
+    },
+    "AuditList": {
+      "heading": {
+        "0": {
+          "string": "Zde najdete protokol významných akcí provedených na tomto serveru. Změny provedené v nastavení uživatele, projektu nebo formuláře najdete zde."
+        }
+      },
+      "emptyTable": {
+        "string": "Neexistují žádné odpovídající položky protokolu auditu."
+      }
+    },
+    "AuditTable": {
+      "header": {
+        "time": {
+          "string": "Čas",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "initiator": {
+          "string": "Iniciátor",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "target": {
+          "string": "Cíl",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "details": {
+          "string": "Detaily",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "BackupList": {
+      "auditsTitle": {
+        "string": "Nejnovější zálohy",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "create": {
+          "string": "Skvěle! Nyní jsou nakonfigurovány automatické zálohy."
+        },
+        "terminate": {
+          "string": "Vaše automatické zálohování bylo ukončeno. Doporučujeme, abyste si nové zálohování nastavili co nejdříve."
+        }
+      }
+    },
+    "BackupNew": {
+      "title": {
+        "string": "Nastavení záloh",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "string": "Pokud chcete, můžete nastavit šifrovací přístupové heslo, které musí být použito k odemknutí zálohy."
+            },
+            "1": {
+              "string": "Pokud heslo ztratíte, není možné jej obnovit."
+            },
+            "2": {
+              "string": "Nezapomeňte si vybrat něco, na co si vzpomenete, nebo si je zapište na bezpečné místo."
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Pro účely úschovy server odešle vaše data na Google Drive. Můžete si zaregistrovat bezplatný účet {here}.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "zde",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
+              }
+            },
+            "1": {
+              "string": "Po dalším stisknutí Google potvrdí, že chcete serveru povolit přístup k vašemu účtu. Jediné, čeho se bude server moci dotknout, jsou záložní soubory, které vytvoří."
+            },
+            "2": {
+              "string": "Jakmile to potvrdíte, budete požádáni o zkopírování a vložení textu sem."
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Vítej zpět! Dostali jste nějaký text ke kopírování a vložení? Pokud ne, zkuste to znovu kliknutím  {here}.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "zde",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
+              }
+            },
+            "1": {
+              "string": "Jinak jej vložte níže a máte hotovo!"
+            }
+          }
+        }
+      },
+      "field": {
+        "passphrase": {
+          "string": "Heslo (volitelné)",
+          "developer_comment": "This is the text of a form field."
+        },
+        "confirmationText": {
+          "string": "Potvrzovací text",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "problem": {
+        "verify": {
+          "string": "Zkuste to prosím znovu a přejděte na komunitní fórum, pokud problém přetrvává."
+        }
+      }
+    },
+    "BackupStatus": {
+      "getHelp": {
+        "full": {
+          "string": "Pokud máte potíže, zkuste prosím {forum}.",
+          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
+        },
+        "forum": {
+          "string": "komunitní fórum",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
+        }
+      },
+      "notConfigured": {
+        "0": {
+          "string": "Zálohy nejsou nakonfigurovány."
+        },
+        "1": {
+          "string": "Datový server nebyl nastaven tak, aby automaticky zálohoval jeho data kdekoli."
+        },
+        "2": {
+          "full": {
+            "string": "Pokud jste nenastavili nějakou jinou formu zálohování dat, o které server neví, je {recommended}, že to uděláte nyní. Pokud si nejste jisti, je nejlepší to udělat jen proto, abyste byli v bezpečí.",
+            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
+          },
+          "recommended": {
+            "string": "silně doporučeno",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
+          }
+        },
+        "3": {
+          "string": "Automatické zálohování dat probíhá prostřednictvím tohoto systému jednou denně. Všechna vaše data jsou zašifrována pomocí hesla, které zadáte, abyste je mohli odemknout pouze vy."
+        }
+      },
+      "neverRun": {
+        "0": {
+          "string": "Nakonfigurované zálohování dosud nebylo spuštěno."
+        },
+        "1": {
+          "string": "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo."
+        },
+        "2": {
+          "full": {
+            "string": "V takovém případě je nejpravděpodobnější opravou {terminate} připojení a opětovné nastavení nebo restartování služby.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "ukončení",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "somethingWentWrong": {
+        "0": {
+          "string": "Něco je špatně!"
+        },
+        "1": {
+          "full": {
+            "string": "Poslední úspěšná záloha byla {moreThanThreeDaysAgo}.",
+            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
+          },
+          "moreThanThreeDaysAgo": {
+            "string": "před více než třemi dny",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Nejpravděpodobnější opravou je {terminate} připojení a znovu nastavení, nebo restartování služby.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "ukončit",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Zálohování funguje.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
+        },
+        "1": {
+          "string": "Poslední záloha byla úspěšně dokončena {dateTime}.",
+          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
+        }
+      },
+      "action": {
+        "setUp": {
+          "string": "Nastavit nyní",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "terminate": {
+          "string": "Ukončit",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "BackupTerminate": {
+      "title": {
+        "string": "Ukončit automatické zálohování",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Opravdu chcete ukončit automatické zálohování?"
+        },
+        "1": {
+          "string": "Budete je muset znovu nakonfigurovat od nuly, abyste je mohli znovu spustit, a tuto akci nelze vrátit zpět."
+        }
+      }
+    },
+    "EnketoFill": {
+      "disabled": {
+        "processing": {
+          "string": "Webový formulář zatím není k dispozici. Zpracování se nedokončilo. Aktualizujte prosím později a zkuste to znovu."
+        },
+        "notOpen": {
+          "string": "Tento formulář nyní nepřijímá nové podané příspěvky."
+        }
+      }
+    },
+    "EnketoPreview": {
+      "action": {
+        "preview": {
+          "string": "Náhled",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "disabled": {
+        "processing": {
+          "string": "Náhled nedokončil zpracování tohoto formuláře. Aktualizujte prosím později a zkuste to znovu."
+        },
+        "notOpen": {
+          "string": "V této verzi ODK Central je náhled k dispozici pouze pro formuláře v otevřeném stavu."
+        }
+      }
+    },
+    "FieldKeyList": {
+      "action": {
+        "create": {
+          "string": "Vytvořit uživatele aplikace",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Uživatelé aplikace se používají ke sběru dat z aplikace, jako např. {collect}. Obvykle představují společnou roli, jako je „Vakcinátor“, ale mohou představovat i jednotlivce. Uživatelé aplikace v tomto projektu mohou stahovat a používat pouze formuláře v rámci tohoto projektu. Když vytvoříte nového uživatele aplikace, nebude mít nejprve přístup k žádným formulářům. Chcete-li nastavit formuláře, ke kterým má každý uživatel aplikace přístup, použijte kartu {formAccess}.",
+            "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
+          },
+          "formAccess": {
+            "string": "Přístup k formuláři",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Uživatelé aplikace jsou nejvhodnější, když sběratelé dat potřebují přístup k více formulářům, jsou offline nebo máte složitý formulář. Pokud potřebujete respondenty k vlastnímu hlášení nebo máte pouze formulář online, {clickHere} pro další možnosti.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "klikněte zde",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
+          }
+        }
+      },
+      "header": {
+        "lastUsed": {
+          "string": "Naposledy použitý",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "configureClient": {
+          "string": "Konfigurovat klienta",
+          "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
+        }
+      },
+      "qrCodeHelp": {
+        "string": "Co je to?",
+        "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
+      },
+      "emptyTable": {
+        "string": "Zatím nejsou žádní uživatelé aplikace. Pro stažení formulářů a odeslání dat z vašeho zařízení budete muset vytvořit nějaké."
+      },
+      "alert": {
+        "create": {
+          "string": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
+        },
+        "revoke": {
+          "string": "Přístup k aplikaci byl  zrušen uživateli  „{displayName}“."
+        }
+      }
+    },
+    "FieldKeyNew": {
+      "title": {
+        "string": "Vytvořit uživatele aplikace",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Tento uživatel nebude mít nejprve přístup k žádným formulářům. Po vytvoření uživatele budete moci přiřadit formuláře."
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Uživatel aplikace “{displayName}” byl vytvořen."
+        },
+        "1": {
+          "full": {
+            "string": "Nyní můžete pro „{displayName}“ nakonfigurovat mobilní zařízení do aplikace pomocí {scanningCode}. Nebo to můžete udělat později z tabulky Uživatelé aplikací kliknutím na „Zobrazit kód“.",
+            "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
+          },
+          "scanningCode": {
+            "string": "skenování výše uvedeného kódu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {scanningCode} is in the following text:\n\nYou can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Možná budete chtít navštívit toto  {formAccessSettings} projektu a dát tomuto uživateli přístup k formulářům.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "Nastavení přístupu k formuláři",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
+          }
+        }
+      },
+      "action": {
+        "createAnother": {
+          "string": "Vytvořit jiného",
+          "developer_comment": "This is the text of a button that is used to create another App User."
+        }
+      }
+    },
+    "FieldKeyRevoke": {
+      "title": {
+        "string": "Odebrat  přístup uživatele",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Opravdu chcete odebrat přístup uživateli aplikace {displayName}?",
+          "developer_comment": "{displayName} is formatted in bold."
+        },
+        "1": {
+          "string": "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků."
+        },
+        "2": {
+          "string": "Tuto akci nelze vrátit zpět."
+        }
+      }
+    },
+    "FieldKeyRow": {
+      "seeCode": {
+        "string": "Viz kód",
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
+      },
+      "accessRevoked": {
+        "string": "Přístup byl zrušen",
+        "developer_comment": "This text is shown for an App User whose access has been revoked."
+      },
+      "action": {
+        "revokeAccess": {
+          "string": "Odebrat přístup",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormAttachmentList": {
+      "action": {
+        "upload": {
+          "string": "Nahrát soubory",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Na základě nahraného formuláře se očekávají následující soubory. Můžete vidět, které z nich byly nahrány nebo stále chybí."
+        },
+        "1": {
+          "string": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na stránku."
+        }
+      },
+      "header": {
+        "uploaded": {
+          "string": "Nahráno",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        }
+      },
+      "problem": {
+        "noneUploaded": {
+          "string": "{message} Nebyly nahrány žádné soubory.",
+          "developer_comment": "{message} is an error message from the server."
+        },
+        "someUploaded": {
+          "string": "{count, plural, one {{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}.} few {{message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}.} many {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}.} other {{message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}.}}",
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
+        }
+      },
+      "alert": {
+        "readError": {
+          "string": "Při čtení “{filename}” došlo k chybě."
+        },
+        "success": {
+          "string": "{count, plural, one {{count} soubor byl úspěšně nahrán.} few {{count} soubory byly úspěšně nahrány.} many {{count} souborů bylo úspěšně nahráno.} other {{count} souborů bylo úspěšně nahráno.}}"
+        }
+      }
+    },
+    "FormAttachmentNameMismatch": {
+      "title": {
+        "upload": {
+          "string": "Nahrát soubor",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "replace": {
+          "string": "Nahradit soubor",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Opravdu chcete nahrát {filename} jako {attachmentName}?",
+          "developer_comment": "{filename} and {attachmentName} are formatted in bold."
+        },
+        "1": {
+          "string": "Dvakrát to kontrolujeme, protože názvy souborů se neshodují."
+        }
+      }
+    },
+    "FormAttachmentPopups": {
+      "title": {
+        "string": "Nahrát soubory",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "duringDragover": {
+        "dropToUpload": {
+          "string": "Přetažením nyní nahrajte tento soubor jako {attachmentName}.",
+          "developer_comment": "{attachmentName} is formatted in bold."
+        },
+        "dragover": {
+          "string": "Označte soubor, který chcete nahrát a přetažením ho nahrajte."
+        },
+        "dropToPrepare": {
+          "full": {
+            "string": "Přetáhněte nyní {countOfFiles} a připravte se na upload do tohoto formuláře.",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {{count} soubor} few {{count} souborů} many {{count} souborů} other {{count} souborů}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
+          }
+        }
+      },
+      "afterSelection": {
+        "matched": {
+          "full": {
+            "string": "{count, plural, one {{countOfFiles} připraven k nahrání} few {{countOfFiles} připraveny k nahrání} many {{countOfFiles} připraveno k nahrání} other {{countOfFiles} připraveno k nahrání}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {{count} soubor} few {{count} soubory} many {{count} souborů} other {{count} souborů}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
+          }
+        },
+        "someUnmatched": {
+          "full": {
+            "string": "{count, plural, one {{countOfFiles} má název, který neznáme a bude ignorováno. Chcete-li jej nahrát, přejmenujte jej, nebo přetáhněte na svůj cíl.} few {{countOfFiles}  mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.} many {{countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.} other {{countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {{count} soubor} few {{count} soubory} many {{count} soubory} other {{count} souborů}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
+          }
+        },
+        "noneMatched": {
+          "string": "{count, plural, one {Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl.} few {Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl.} many {Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl.} other {Nerozpoznáváme žádný ze souborů, které se pokoušíte nahrát. Přejmenujte je podle výše uvedených názvů nebo je přetáhněte jednotlivě na jejich cíle.}}"
+        }
+      },
+      "duringUpload": {
+        "total": {
+          "string": "{count, plural, one {Čekejte prosím, nahráváme {count} soubor:} few {Čekejte prosím, nahráváme {count} soubory:} many {Čekejte prosím, nahráváme {count} souborů:} other {Čekejte prosím, nahráváme {count} souborů:}}"
+        },
+        "current": {
+          "string": "Odesílání {filename}",
+          "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
+        },
+        "remaining": {
+          "beforeLast": {
+            "string": "{count, plural, one {{count} soubor zbývá.} few {{count} soubory zbývají.} many {{count}  souborů zbývá.} other {{count}  souborů zbývá.}}"
+          },
+          "last": {
+            "string": "Toto je poslední soubor."
+          }
+        }
+      }
+    },
+    "FormAttachmentRow": {
+      "type": {
+        "image": {
+          "string": "Obrázek",
+          "developer_comment": "This is a type of Media File."
+        },
+        "audio": {
+          "string": "Zvuk",
+          "developer_comment": "This is a type of Media File."
+        },
+        "video": {
+          "string": "Video",
+          "developer_comment": "This is a type of Media File."
+        },
+        "file": {
+          "string": "Datový soubor",
+          "developer_comment": "This is a type of Media File."
+        }
+      },
+      "replace": {
+        "string": "Nahradit",
+        "developer_comment": "This is a label that is shown next to a Media File that would be replaced if the selected files were uploaded."
+      },
+      "notUploaded": {
+        "text": {
+          "string": "Nebyl nahrán",
+          "developer_comment": "This is shown for a Media File that has not been uploaded."
+        },
+        "title": {
+          "string": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
+        }
+      }
+    },
+    "FormAttachmentUploadFiles": {
+      "title": {
+        "string": "Nahrát soubory",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "Chcete-li nahrát soubory, můžete {dragAndDrop} do tabulky na této stránce  jeden nebo více souborů.",
+            "developer_comment": "{dragAndDrop} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndrag and drop"
+          },
+          "dragAndDrop": {
+            "string": "přetáhněte soubory sem",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dragAndDrop} is in the following text:\n\nTo upload files, you can {dragAndDrop} one or more files onto the table on this page."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Pokud byste raději vybrali soubory z příkazového řádku, zajistěte, aby se jejich názvy shodovaly se jmény v tabulce a poté {clickHere}.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
+          },
+          "clickHere": {
+            "string": "kliknutím vyberte",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
+          }
+        }
+      }
+    },
+    "FormChecklist": {
+      "clickForInfo": {
+        "string": "klikněte sem a dozvíte se více"
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Zveřejněte svou první verzi konceptu",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Skvělá práce!"
+            },
+            "1": {
+              "string": "Publikovali jste svůj formulář. Je připraven přijímat příspěvky. Pokud chcete provést změny ve formuláři nebo jeho mediálních souborech, můžete vytvořit nový koncept."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Stáhněte si formulář o klientech průzkumu a odešlete data",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Do tohoto formuláře zatím nikdo nezadal žádné údaje."
+              },
+              "any": {
+                "string": "{count, plural, one {Celkem byl odeslán {count} příspěvek.} few {Celkem byly odeslány {count} příspěvky} many {Celkem bylo odesláno {count} příspěvků.} other {Celkem bylo odesláno {count} příspěvků.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "{clickHere} abyste se dozvěděli o různých způsobech zadávání údajů.",
+                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
+              },
+              "clickHere": {
+                "string": "Klikněte zde",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Vyhodnotit a analyzovat odeslaná data",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Jakmile budou pro tento formulář k dispozici data, můžete je exportovat nebo synchronizovat a sledovat a analyzovat data z hlediska kvality a výsledků."
+              },
+              "any": {
+                "string": "{count, plural, one {Můžete exportovat nebo synchronizovat {count} příspěvek v tomto formuláři a sledovat a analyzovat příspěvek z hlediska kvality a výsledků.} few {Můžete exportovat nebo synchronizovat {count} příspěvky v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} many {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} other {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "Můžete to udělat pomocí tlačítek Stáhnout a Analyzovat na {submissionsTab}.",
+                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
+              },
+              "submissionsTab": {
+                "string": "Karta příspěvků",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Spravovat časové uspání formulářů",
+            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Až budete na konci svého sběru dat, můžete pomocí ovládacích prvků Stav formuláře na {formAccessTab} ovládat, zda například Uživatelé aplikace budou moci vidět nebo vytvářet nová odeslání do tohoto formuláře.",
+                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
+              },
+              "formAccessTab": {
+                "string": "Karta Přístup k formuláři na stránce Projektu",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDelete": {
+      "title": {
+        "string": "Odstranit formulář",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
+        },
+        "1": {
+          "string": "Tuto akci nelze vrátit zpět."
+        }
+      }
+    },
+    "FormDraftAbandon": {
+      "title": {
+        "abandon": {
+          "string": "Opustit koncept",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "deleteForm": {
+          "string": "Opustit koncept a smazat formulář",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "abandon": {
+          "0": {
+            "string": "Chystáte se trvale smazat pracovní verzi tohoto formuláře. To znamená, že definice konceptu formuláře, všechny koncepty mediálních souborů, které jste nahráli, a všechna testovací odeslání budou odstraněna."
+          },
+          "1": {
+            "string": "Vaše publikovaná definice formuláře, její mediální soubory a odeslání  nebudou ovlivněny."
+          }
+        },
+        "deleteForm": {
+          "0": {
+            "string": "Chystáte se trvale smazat tuto definici konceptu formuláře, spolu se všemi koncepty mediálních souborů, které jste nahráli, a všechny testovací příspěvky. Protože jste jej ještě nezveřejnili, bude tento formulář zcela smazán."
+          }
+        }
+      },
+      "action": {
+        "abandon": {
+          "string": "Opustit",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormDraftChecklist": {
+      "clickForInfo": {
+        "string": "Klikněte sem a dozvíte se více"
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Nahrajte počáteční definici formuláře",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Skvělá práce!"
+            },
+            "1": {
+              "string": "Návrh formuláře byl úspěšně načten."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Nahrát revidovanou definici formuláře (volitelné)",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas nahrát nový XML nebo XLSForm pomocí tlačítka napravo.",
+                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
+              },
+              "link": {
+                "full": {
+                  "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload} nového XML nebo XLSForm.",
+                  "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                },
+                "upload": {
+                  "string": "nahrát",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Nahrát mediální soubory formuláře",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Návrh formuláře odkazuje na soubory, které jsou potřebné k prezentaci formuláře. Na kartě {mediaFiles} můžete nahrát nové, nebo aktualizované kopie těchto souborů určených k distribuci.",
+                "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+              },
+              "mediaFiles": {
+                "string": "Mediální soubory",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Vyzkoušejte formulář na svém mobilním zařízení",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Můžete {test} formulář abyste se ujistili, že funguje tak, jak očekáváte. Testovací odeslání nejsou součástí vašich konečných údajů.",
+                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
+              },
+              "test": {
+                "string": "otestovat",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
+              }
+            }
+          }
+        },
+        "4": {
+          "title": {
+            "string": "Publikovat koncept",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Pokud jste si jisti, že je koncept připraven a chcete jej uvést do provozu v terénu, můžete jej publikovat pomocí tlačítka napravo."
+              },
+              "link": {
+                "full": {
+                  "string": "Pokud jste si jisti, že je koncept připraven a chcete jej uvést do provozu v terénu, můžete ho {publish}.",
+                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
+                },
+                "publish": {
+                  "string": "publikovat",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDraftPublish": {
+      "title": {
+        "string": "Publikovat koncept",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "warnings": {
+        "attachments": {
+          "full": {
+            "string": "Nedodali  jste všechny {mediaFiles}, které váš formulář vyžaduje. Můžete to ignorovat, pokud si budete přát, ale budete muset vytvořit novou verzi konceptu, abyste tyto soubory mohli později nahrát.",
+            "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+          },
+          "mediaFiles": {
+            "string": "Mediální soubory",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
+          }
+        },
+        "testing": {
+          "full": {
+            "string": "Ještě nemáte {tested} na mobilním zařízení a nahráli jste zkušební příspěvek. Nemusíte to dělat, ale je to velmi  doporučeno.",
+            "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
+          },
+          "tested": {
+            "string": "otestovaný tento formulář",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+          }
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Chystáte se  tento Koncept vašeho formuláře publikovat. Tím budou dokončeny všechny změny, které jste provedli v definici formuláře a připojených mediálních souborech."
+        },
+        "1": {
+          "string": "Dosavadní odeslání formulářů nebude ovlivněno, ale všechna rozpracovaná vyplnění formulářů budou odstraněna."
+        },
+        "2": {
+          "string": "Každá verze formuláře vyžaduje jedinečný název verze. Váš pracovní formulář má nyní stejný název verze jako dříve publikovaná verze. Nový můžete nastavit tak, že nahrajete definici formuláře s požadovaným jménem, nebo můžete napsat nový a server jej za vás změní."
+        }
+      },
+      "field": {
+        "version": {
+          "string": "Verze",
+          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
+        }
+      },
+      "problem": {
+        "409_6": {
+          "string": "Název verze, který jste zadali, je v konfliktu s předchozí verzí tohoto formuláře. Změňte prosím na něco nového a zkuste to znovu."
+        }
+      }
+    },
+    "FormDraftStatus": {
+      "draftChecklist": {
+        "title": {
+          "string": "Návrh odškrtávacího seznamu",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "currentDraft": {
+        "versionCaption": {
+          "full": {
+            "string": "{draftVersion} tohoto formuláře.",
+            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+          },
+          "draftVersion": {
+            "string": "Verze konceptu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+          }
+        },
+        "action": {
+          "upload": {
+            "string": "Nahrát novou definici",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "actions": {
+        "title": {
+          "string": "Akce",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "action": {
+          "publish": {
+            "string": "Publikovat koncept",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "abandon": {
+            "string": "Opustit koncept",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "upload": {
+          "string": "Bezva! Nová definice formuláře byla uložena jako koncept."
+        },
+        "publish": {
+          "string": "Váš koncept je nyní publikován. Všechna zařízení získávající formuláře pro tento projekt nyní obdrží novou definici formuláře a mediální soubory."
+        },
+        "abandon": {
+          "string": "Koncept verze tohoto formuláře byl úspěšně odstraněn."
+        },
+        "delete": {
+          "string": "Formulář „{name}“ byl odstraněn."
+        }
+      }
+    },
+    "FormDraftTesting": {
+      "title": {
+        "string": "Testování konceptu",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "string": "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče."
+        },
+        "1": {
+          "string": "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
+        }
+      }
+    },
+    "FormHead": {
+      "projectNav": {
+        "action": {
+          "back": {
+            "string": "Zpět na přehled projektu",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "formNav": {
+        "tab": {
+          "overview": {
+            "string": "Přehled",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "versions": {
+            "string": "Verze",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "publicLinks": {
+            "string": "Veřejný přístup",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "settings": {
+            "string": "Nastavení",
+            "developer_comment": "This is the text of a navigation tab."
+          }
+        },
+        "tabTitle": {
+          "string": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+        }
+      },
+      "draftNav": {
+        "title": {
+          "string": "Koncept",
+          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
+        },
+        "action": {
+          "create": {
+            "string": "Vytvořit nový koncept",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "tab": {
+          "status": {
+            "string": "Stav",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "attachments": {
+            "string": "Mediální soubory",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "testing": {
+            "string": "Testování",
+            "developer_comment": "This is the text of a navigation tab."
+          }
+        }
+      }
+    },
+    "FormList": {
+      "title": {
+        "string": "Formuláře",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Nový",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
+        }
+      },
+      "emptyTable": {
+        "string": "Nejsou k dispozici žádné formuláře."
+      },
+      "alert": {
+        "create": {
+          "string": "Váš nový formulář „{name}“ byl vytvořen jako koncept. Podívejte se na odškrtávací seznam níže a až budete mít pocit, že je připraven, můžete formulář publikovat k použití."
+        }
+      }
+    },
+    "FormNew": {
+      "title": {
+        "create": {
+          "string": "Vytvořit formulář",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "update": {
+          "string": "Nahrát novou definici formuláře",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "create": {
+            "string": "Chcete-li vytvořit formulář, nahrajte soubor XForms XML nebo XLSForm Excel."
+          },
+          "update": {
+            "string": "Chcete-li aktualizovat pracovní verzi, nahrajte soubor XForms XML nebo XLSForm Excel."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Pokud ještě žádný nemáte, je tu {tools} který vám pomůže navrhnout formulář.",
+            "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
+          },
+          "tools": {
+            "string": "dostupný nástroj",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
+          }
+        },
+        "2": {
+          "string": "Pokud máte médium, budete jej moci po vytvoření formuláře nahrát na další stránku."
+        }
+      },
+      "dropZone": {
+        "full": {
+          "string": "Sem přetáhněte soubor nebo {chooseOne} a nahrajte.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "vyberte jeden",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
+        }
+      },
+      "action": {
+        "upload": {
+          "string": "Nahrát",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "uploadAnyway": {
+          "string": "Přesto nahrát",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "fileRequired": {
+          "string": "Vyberte soubor."
+        }
+      },
+      "problem": {
+        "400_8": {
+          "string": "Zdá se, že definice formuláře, kterou jste nahráli, není pro tento formulář. Má nesprávnou formu (očekává se „{expected}“, a máte  „{actual}“)."
+        },
+        "400_15": {
+          "string": "XLSForm nelze převést: {error}"
+        },
+        "409_3": {
+          "string": "Formulář již v tomto projektu existuje s ID formuláře „{xmlFormId}“."
+        }
+      },
+      "warningsText": {
+        "0": {
+          "string": "Tento soubor XLSForm lze použít, ale má následující možné problémy (upozornění při převodu):"
+        },
+        "1": {
+          "string": "Opravte problémy a zkuste to znovu."
+        },
+        "2": {
+          "create": {
+            "string": "Pokud jste si jisti, že tyto problémy lze ignorovat, formulář přesto vytvořte kliknutím na tlačítko:"
+          },
+          "update": {
+            "string": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko a  Koncept aktualizujte:"
+          }
+        }
+      }
+    },
+    "FormOverview": {
+      "checklist": {
+        "string": "Odškrtávací seznam",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "draft": {
+        "none": {
+          "title": {
+            "string": "Žádný aktuální koncept",
+            "developer_comment": "This is a title shown above a section of the page."
+          },
+          "body": {
+            "string": "Aktuálně neexistuje pracovní verze tohoto formuláře. Pokud chcete provést změny ve formuláři nebo jeho mediálních souborech, začněte vytvořením konceptu pomocí tlačítka výše."
+          }
+        },
+        "any": {
+          "versionCaption": {
+            "full": {
+              "string": "{draftVersion} tohoto formuláře.",
+              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+            },
+            "draftVersion": {
+              "string": "Verze konceptu",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+            }
+          }
+        }
+      }
+    },
+    "FormOverviewRightNow": {
+      "version": {
+        "full": {
+          "string": "{publishedVersion} tohoto formuláře.",
+          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
+        },
+        "publishedVersion": {
+          "string": "Publikovaná verze",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
+        }
+      },
+      "stateCaption": {
+        "open": {
+          "string": "Tento formulář je ke stažení a přijímá příspěvky."
+        },
+        "closing": {
+          "string": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky."
+        },
+        "closed": {
+          "string": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
+        }
+      },
+      "submissions": {
+        "full": {
+          "string": "{count, plural, one {{submissions} byl pro tento formulář uložen.} few {{submissions} byly pro tento formulář uloženy.} many {{submissions} bylo pro tento formulář uloženo.} other {{submissions} bylo pro tento formulář uloženo.}}",
+          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
+        },
+        "submissions": {
+          "string": "{count, plural, one {Příspěvek} few {Příspěvky} many {Příspěvků} other {Příspěvků}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
+        }
+      }
+    },
+    "FormRow": {
+      "lastSubmission": {
+        "string": "(poslední {dateTime})",
+        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "action": {
+        "fill": {
+          "string": "Vyplnit formulář",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormSettings": {
+      "state": {
+        "title": {
+          "string": "Stav formuláře",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "full": {
+            "string": "Chcete-li nastavit stav tohoto formuláře, navštivte {formAccessSettings} Projektu.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "Nastavení přístupu k formuláři",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nTo set this Form’s state, please visit the Project {formAccessSettings}."
+          }
+        }
+      },
+      "action": {
+        "delete": {
+          "string": "Odstranit tento formulář",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "Formulář „{name}“ byl odstraněn."
+        }
+      }
+    },
+    "FormTable": {
+      "header": {
+        "idAndVersion": {
+          "string": "ID a Verze",
+          "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
+        }
+      }
+    },
+    "FormVersionStandardButtons": {
+      "action": {
+        "downloadXForm": {
+          "string": "Stáhnout XML",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "format": {
+        "xForm": {
+          "string": "Jako XForm",
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        },
+        "xlsForm": {
+          "string": "Jako  XLSForm",
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        }
+      }
+    },
+    "FormVersionTable": {
+      "header": {
+        "published": {
+          "string": "Publikováno",
+          "developer_comment": "This is the text of a table column header. The column shows who published the version of the Form, as well as when they did so."
+        },
+        "definition": {
+          "string": "Definice",
+          "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
+        }
+      }
+    },
+    "Loading": {
+      "text": {
+        "string": "Načítání ..."
+      }
+    },
+    "Navbar": {
+      "action": {
+        "toggle": {
+          "string": "Přepnout navigaci",
+          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
+        }
+      }
+    },
+    "NavbarActions": {
+      "notLoggedIn": {
+        "string": "Nepřihlášen",
+        "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
+      },
+      "action": {
+        "logOut": {
+          "string": "Odhlásit se",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "logOut": {
+          "string": "Úspěšně jste se odhlásili."
+        }
+      }
+    },
+    "NavbarLinks": {
+      "projects": {
+        "string": "Projekty",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "users": {
+        "string": "Uživatelé",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "system": {
+        "string": "Systém",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "current": {
+        "string": "stávající",
+        "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
+      }
+    },
+    "NotFound": {
+      "title": {
+        "string": "Strana nenalezena",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "string": "Požadovanou stránku nelze najít."
+      }
+    },
+    "ProjectArchive": {
+      "title": {
+        "string": "Archivování projektu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Chystáte se archivovat projekt „{name}“. Bude stále fungovat jako nyní, ale bude se řadit na konec seznamu projektů na hlavní domovské stránce."
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, ale schopnost vyjmout projekt z archivu je plánována do budoucího vydání.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Tuto akci nelze vrátit zpět",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
+          }
+        }
+      }
+    },
+    "ProjectEdit": {
+      "title": {
+        "string": "Základní detaily",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "field": {
+        "name": {
+          "string": "Název projektu",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "update": {
+          "string": "Uložit nastavení",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Nastavení projektu uloženo."
+        }
+      }
+    },
+    "ProjectEnableEncryption": {
+      "title": {
+        "string": "Povolit šifrování",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "0": {
+                "string": "Pokud povolíte šifrování, stanou se následující věci:"
+              },
+              "1": {
+                "string": "Dokončená data k odesílání budou šifrována na mobilních zařízeních."
+              },
+              "2": {
+                "string": "Data k odesílání budou nakonec šifrována na centrálním serveru."
+              },
+              "3": {
+                "0": {
+                  "string": "Formuláře nakonfigurované pomocí ručně {submission} klíčů budou tyto klíče nadále používat a musí být ručně dešifrovány.",
+                  "developer_comment": "{submission} will have the text \"<submission>\", which is XML and will not be translated."
+                },
+                "1": {
+                  "string": "Chcete-li použít automatický proces centrálního šifrování na těchto formulářích, odeberte konfiguraci {base64RsaPublicKey}.",
+                  "developer_comment": "{base64RsaPublicKey} will have the text \"base64RsaPublicKey\", which is code and will not be translated."
+                }
+              },
+              "4": {
+                "string": "Již nebudete mít možnost zobrazit online náhled odeslaných údajů."
+              },
+              "5": {
+                "string": "Již se nebudete moci připojit k datům přes OData."
+              }
+            },
+            "1": {
+              "0": {
+                "string": "Kromě toho platí pro tuto verzi ODK Central následující:"
+              },
+              "1": {
+                "0": {
+                  "string": "Stávající příspěvky zůstanou nezašifrované."
+                },
+                "1": {
+                  "string": "V budoucí verzi budete mít možnost šifrovat stávající data."
+                }
+              },
+              "2": {
+                "0": {
+                  "string": "Po aktivaci nelze šifrování vypnout."
+                },
+                "1": {
+                  "string": "V budoucí verzi budete moci zakázat šifrování, které dešifruje vaše data. To bude platit, i když nyní povolíte šifrování."
+                }
+              }
+            },
+            "2": {
+              "full": {
+                "string": "{here} se dozvíte více o šifrování. Pokud to zní jako něco, co chcete, pokračujte stisknutím tlačítka Další.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "zde ",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nYou can learn more about encryption {here}. If this sounds like something you want, press Next to proceed."
+              }
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "string": "Nejprve si musíte zvolit přístupové heslo. Toto heslo bude vyžadováno k dešifrování vašich příspěvků. Server si toto heslo nebude pamatovat z důvodu vašeho soukromí: pouze lidé s přístupovým slovem budou moci dešifrovat a přečíst vaše údaje o odeslání."
+            },
+            "1": {
+              "full": {
+                "string": "Na přístupová hesla neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
+                "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
+              },
+              "no": {
+                "string": "žádný",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nThere are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!"
+              }
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "string": "Pro tento projekt bylo nakonfigurováno šifrování. K provedení šifrování bude muset mobilní zařízení načíst, nebo znovu načíst nejnovější formuláře."
+            }
+          }
+        }
+      },
+      "field": {
+        "hint": {
+          "string": "Přístupová fráze (volitelné)",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "ProjectFormAccess": {
+      "heading": {
+        "0": {
+          "string": "Uživatelé aplikace mohou vidět a vyplnit pouze formuláře, k nimž mají výslovný přístup v níže uvedené tabulce. Projektoví manažeři a sběratelé dat mohou pomocí webového prohlížeče vyplnit jakýkoli formulář v projektu, který je ve stavu Otevřený."
+        }
+      },
+      "emptyTable": {
+        "string": "Nejsou k dispozici žádné formuláře."
+      },
+      "alert": {
+        "success": {
+          "string": "Vaše změny byly uloženy!"
+        }
+      }
+    },
+    "ProjectFormAccessRow": {
+      "draftTitle": {
+        "string": "Tento formulář zatím nemá publikovanou verzi. Dokud nebude publikován koncept, na zařízeních se nezobrazí. Jakmile formulář publikujete, použijí se zde uvedená nastavení."
+      },
+      "field": {
+        "state": {
+          "string": "Stav",
+          "developer_comment": "This is the text of a form field. \"State\" refers to the Form State. Form States control the lifecycle state of each Form."
+        },
+        "appUserAccess": {
+          "string": "Přístup uživatelů aplikace",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "ProjectFormAccessStates": {
+      "title": {
+        "string": "Stavy formuláře",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Stavy formuláře kontrolují stav životního cyklu každého formuláře. Obvykle, ale ne vždy, bude formulář otevřen a bude pokračovat přes Uzavření až do Uzavřeno, pokud již nebude potřeba."
+        },
+        "1": {
+          "full": {
+            "string": "{open} formuláře jsou k dispozici ke stažení na mobilních zařízeních a budou přijímat nové příspěvky.",
+            "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
+          },
+          "open": {
+            "string": "Otevřené",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{closing} formuláře přijímají nové příspěvky, ale {not} k dispozici ke stažení na mobilních zařízeních.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
+          },
+          "closing": {
+            "string": "Uzavřené",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+          },
+          "not": {
+            "string": "nejsou",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{closed} formuláře {not1}jsou k dispozici ke stažení na mobilních zařízeních a {not2}přijímají nová podání.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
+          },
+          "closed": {
+            "string": "Uzavřené",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          },
+          "not1": {
+            "string": "ne",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          },
+          "not2": {
+            "string": "ne",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          }
+        }
+      }
+    },
+    "ProjectFormAccessTable": {
+      "header": {
+        "form": {
+          "string": "Formulář",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "state": {
+          "string": "Stav",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "appUserAccess": {
+          "string": "Přístup uživatelů aplikace",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "ProjectIntroduction": {
+      "title": {
+        "string": "Co jsou Projekty?",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Projekty umožňují seskupovat související formuláře a uživatele. Webovým uživatelům mohou být přiděleny role, které jim umožní provádět určité akce v rámci projektu, včetně použití webového prohlížeče k vyplnění formulářů. Uživatelé aplikace pro projekt mohou vidět pouze formuláře v projektu, ke kterým mají přístup."
+        }
+      }
+    },
+    "ProjectList": {
+      "heading": {
+        "0": {
+          "string": "Vítejte v Centralu."
+        },
+        "1": {
+          "string": "Pojďme udělat pár věcí.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
+        }
+      },
+      "gettingStarted": {
+        "title": {
+          "string": "Začínáme",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "0": {
+            "full": {
+              "string": "Pokud si nejste jisti, kde začít, je k dispozici příručka pro začínající a uživatelská dokumentace na {docsWebsite}.",
+              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
+            },
+            "docsWebsite": {
+              "string": "Webové stránky ODK Docs",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Kromě toho můžete vždy získat pomoc od ostatních na {forum}, kde můžete prohledávat předchozí otázky, nebo položit vlastní.",
+              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
+            },
+            "forum": {
+              "string": "ODK komunitním fóru",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
+            }
+          }
+        }
+      },
+      "news": {
+        "string": "Novinky",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "rightNow": {
+        "users": {
+          "full": {
+            "string": "{count, plural, one {{webUsers} který může spravovat projekty prostřednictvím tohoto webu.} few {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} many {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} other {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.}}",
+            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
+          },
+          "webUsers": {
+            "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {Weboví uživatelé} other {Weboví uživatelé}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
+          }
+        },
+        "projects": {
+          "full": {
+            "string": "{count, plural, one {{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.} few {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} many {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} other {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.}}",
+            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
+          },
+          "projects": {
+            "string": "{count, plural, one {Projekt} few {Projekty} many {Projektů} other {Projektů}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
+          }
+        }
+      },
+      "projectsTitle": {
+        "string": "Projekty",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Nový",
+          "developer_comment": "This is the text of a button that is used to create a new Project."
+        }
+      },
+      "header": {
+        "forms": {
+          "string": "Formuláře",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "Nejsou žádné projekty, které byste mohli vidět."
+      },
+      "alert": {
+        "create": {
+          "string": "Váš nový projekt byl úspěšně vytvořen."
+        }
+      }
+    },
+    "ProjectNew": {
+      "title": {
+        "string": "Vytvořit Projekt",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Skupiny projektů Formulářů a Uživatelů aplikací společně usnadňují jejich organizaci a správu, a to jak na tomto webu, tak v zařízení pro sběr dat."
+        }
+      }
+    },
+    "ProjectOverviewAbout": {
+      "title": {
+        "string": "O Projektech",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "full": {
+            "string": "Projekty umožňují seskupovat související formuláře a uživatele. Webovým uživatelům mohou být přiděleny role, které jim umožní provádět určité akce v rámci tohoto projektu, včetně použití webového prohlížeče k vyplnění formulářů. Uživatelé aplikace pro tento projekt mohou vidět pouze formuláře v tomto projektu, ke kterému mají {accessTo}.",
+            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
+          },
+          "accessTo": {
+            "string": "přístup",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Pokud chcete poskytnout zpětnou vazbu, navštivte prosím {forumThread}.",
+            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
+          },
+          "forumThread": {
+            "string": "toto diskusní fórum",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
+          }
+        }
+      }
+    },
+    "ProjectOverviewRightNow": {
+      "appUsers": {
+        "full": {
+          "string": "{count, plural, one {{appUsers} který může pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} few {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} many {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} other {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.}}",
+          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "{count, plural, one {Uživatel aplikace} few {Uživatelů aplikace} many {Uživatelů aplikace} other {Uživatelé aplikace}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
+        }
+      },
+      "forms": {
+        "full": {
+          "string": "{count, plural, one {{forms} který lze stáhnout a zadat jako průzkumy mobilních klientů.} few {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} many {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} other {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.}}",
+          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
+        },
+        "forms": {
+          "string": "{count, plural, one {Formulář} few {Formulářů} many {Formulářů} other {Formuláře}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+        }
+      }
+    },
+    "ProjectRow": {
+      "help": {
+        "string": "Co jsou Projekty?"
+      },
+      "noSubmission": {
+        "string": "(žádné)",
+        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
+      }
+    },
+    "ProjectSettings": {
+      "encryption": {
+        "title": {
+          "string": "Šifrování",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "unencrypted": {
+            "0": {
+              "string": "Šifrování při odesílání dat není pro tento projekt povoleno."
+            }
+          },
+          "encrypted": {
+            "0": {
+              "full": {
+                "string": "Šifrování dat příspěvků je {enabled} pro tento projekt.",
+                "developer_comment": "{enabled} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nenabled"
+              },
+              "enabled": {
+                "string": "povoleno",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {enabled} is in the following text:\n\nSubmission data encryption is {enabled} for this Project."
+              }
+            },
+            "1": {
+              "string": "V této verzi ODK Central není možné šifrování zakázat, jakmile je zapnuto."
+            }
+          }
+        },
+        "action": {
+          "enableEncryption": {
+            "string": "Povolit šifrování",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "dangerZone": {
+        "action": {
+          "archive": {
+            "string": "Archivovat tento projekt",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "archived": {
+          "0": {
+            "string": "Tento projekt byl archivován."
+          },
+          "1": {
+            "string": "V této verzi ODK Central nelze archivovat Projekt. Schopnost vyjmout projekt z archivu je však naplánována na budoucí vydání."
+          }
+        }
+      },
+      "alert": {
+        "archive": {
+          "string": "Projekt „{name}“ byl archivován."
+        }
+      }
+    },
+    "ProjectShow": {
+      "tab": {
+        "overview": {
+          "string": "Přehled",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "users": {
+          "string": "Role projektu",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "appUsers": {
+          "string": "Uživatelé aplikace",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "formAccess": {
+          "string": "Přístup k formuláři",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "settings": {
+          "string": "Nastavení",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      }
+    },
+    "ProjectSubmissionOptions": {
+      "title": {
+        "string": "Možnosti Příspěvků",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Existuje několik možností pro odesílání dat do ODK Central:",
+          "developer_comment": "This text is shown above a list of options for submitting data."
+        },
+        "1": {
+          "full": {
+            "string": "Vytvořte {appUsers} a použijte {collect} aplikaci pro Android. To je nejvhodnější, pokud sběratelé dat potřebují přístup k více formulářům, jsou offline, nebo máte složitý formulář.",
+            "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+          },
+          "appUsers": {
+            "string": "Uživatele aplikace",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Vytvořte jeden  nebo více {publicLinks} a sdílejte je s respondenty, kteří se budou sami reportovat.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
+          },
+          "publicLinks": {
+            "string": "Veřejně přístupných odkazů",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publicLinks} is in the following text:\n\nCreate one or more {publicLinks} to share with respondents who will self-report."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "Vytvořte {webUser} s rolí {dataCollector} pro každého jednotlivce, který bude shromažďovat data. Tito uživatelé se přihlásí do Central a vyplní tento formulář ve webovém prohlížeči. Projektoví manažeři mohou také vytvářet příspěvky z webového prohlížeče.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
+          },
+          "webUser": {
+            "string": "Webového uživatele",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          },
+          "dataCollector": {
+            "string": "Sběrač dat",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          }
+        }
+      }
+    },
+    "ProjectUserList": {
+      "heading": {
+        "0": {
+          "string": "Administrátoři celého webu jsou automaticky považováni za manažery každého projektu. Ostatní uživatelé mohou mít role specifické pro tento projekt:",
+          "developer_comment": "This text is shown above a list of Roles."
+        },
+        "1": {
+          "full": {
+            "string": "{projectManagers} mohou provádět jakékoli administrativní úkoly související s tímto projektem a mohou vyplnit formuláře ve webovém prohlížeči",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
+          },
+          "projectManagers": {
+            "string": "Projektoví manažeři",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectManagers} is in the following text:\n\n{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
+          },
+          "projectViewers": {
+            "string": "Prohlížeči Projektu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{dataCollectors} mohou vyplnit formuláře ve webovém prohlížeči, ale nemohou zobrazit ani změnit data nebo nastavení",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
+          },
+          "dataCollectors": {
+            "string": "Sběrači dat",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
+          }
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Vymazat vyhledávání",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "field": {
+        "q": {
+          "canList": {
+            "string": "Vyhledat uživatele…",
+            "developer_comment": "This is the text of a form field."
+          },
+          "cannotList": {
+            "string": "Zadejte přesnou e-mailovou adresu uživatele ...",
+            "developer_comment": "This is the text of a form field."
+          }
+        }
+      },
+      "header": {
+        "user": {
+          "string": "Uživatel",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "projectRole": {
+          "string": "Role Projektu",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "K tomuto projektu zatím nejsou přiřazeni žádní uživatelé. Chcete-li přidat jednoho, vyhledejte uživatele výše."
+      },
+      "alert": {
+        "unassignWithoutReassign": {
+          "string": "Něco se pokazilo. „{displayName}“ Byl z projektu odstraněn."
+        },
+        "assignRole": {
+          "string": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
+        },
+        "unassignRole": {
+          "string": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+        }
+      }
+    },
+    "ProjectUserRow": {
+      "cannotAssignRole": {
+        "string": "Nemůžete upravovat svou vlastní roli projektu."
+      },
+      "field": {
+        "projectRole": {
+          "string": "Role projektu",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "PublicLinkCreate": {
+      "title": {
+        "string": "Vytvořit veřejně přístupný odkaz",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Kdokoli s tímto odkazem bude moci vyplnit tento formulář ve webovém prohlížeči. Zobrazovaný název používejte, abyste si připomněli, kde jste ho zveřejnili, s kým jste jej sdíleli, kdy má být aktivní atd."
+        }
+      },
+      "field": {
+        "multiple": {
+          "string": "Více odpovědí",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "multipleHelp": {
+        "string": "Povolit někomu s tímto odkazem odesílat více než jednou ze stejného zařízení."
+      }
+    },
+    "PublicLinkList": {
+      "action": {
+        "create": {
+          "string": "Vytvořit veřejně přístupný odkaz",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Kdokoli s odkazem na veřejný přístup může vyplnit tento formulář ve webovém prohlížeči. Můžete vytvořit více odkazů pro sledování různých distribucí formuláře, abyste omezili, jak dlouho má určitá skupina lidí přístup k formuláři a další. Tyto odkazy budou fungovat, pouze pokud je formulář ve {state} Open.",
+            "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
+          },
+          "state": {
+            "string": "stavu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {state} is in the following text:\n\nAnyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Veřejné odkazy jsou určeny pro vlastní reportování. Pokud pracujete se sběrači dat, kteří potřebují zaslat stejný formulář vícekrát, {clickHere} pro jiné možnosti.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "klikněte zde",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Pro tento formulář neexistují žádné veřejně přístupné odkazy."
+      },
+      "alert": {
+        "create": {
+          "string": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho."
+        },
+        "revoke": {
+          "string": "Veřejně přístupný odkaz  „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
+        }
+      }
+    },
+    "PublicLinkRevoke": {
+      "title": {
+        "string": "Odebrat veřejně přístupný odkaz",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Chystáte se odebrat tento veřejně přístupný odkaz. To znamená, že všechny pokusy o odeslání dat pomocí odkazu budou zamítnuty, včetně záznamů, které již byly spuštěny."
+        }
+      }
+    },
+    "PublicLinkRow": {
+      "action": {
+        "revoke": {
+          "string": "Odebrat",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "revoked": {
+        "string": "Odebrán",
+        "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
+      },
+      "unavailable": {
+        "text": {
+          "string": "Už není dostupný",
+          "developer_comment": "This text is shown for a Public Access Link that is not available yet."
+        },
+        "title": {
+          "string": "Veřejně přístupný odkaz už není k dispozici. Zpracování se nedokončilo. Aktualizujte prosím později a zkuste to znovu."
+        }
+      }
+    },
+    "PublicLinkTable": {
+      "header": {
+        "multiple": {
+          "string": "Více odpovědí",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "accessLink": {
+          "string": "Odkaz",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "RefreshButton": {
+      "action": {
+        "refresh": {
+          "string": "Obnovit seznam",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "SubmissionAnalyze": {
+      "title": {
+        "string": "Pomocí OData",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "OData je nový standard pro přenos dat mezi nástroji a službami. Bezplatné a výkonné analytické nástroje, jako je Excel, {powerBi} a  {r} mohou načíst data přes OData k  analýze.",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+        },
+        "1": {
+          "string": "Existuje mnoho výhod pro OData, ale důležité je, že podporuje plně věrný přenos komplikovaných typů, jako jsou čísla a geografická data, a umožňuje nejnovější verzi vašich dat snadno synchronizovat s jakýmikoli nástroji, které ji používají."
+        },
+        "2": {
+          "string": "Chcete-li začít používat OData, vyberte svůj nástroj a zkopírujte do něj odkaz."
+        }
+      },
+      "tab": {
+        "microsoft": {
+          "string": "Excel/Power BI",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "other": {
+          "string": "Jiné",
+          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
+        }
+      },
+      "help": {
+        "microsoft": {
+          "full": {
+            "string": "Nápovědu k používání OData s Excelem najdete na {pageForExcel}. Nápověda k Power BI je na {pageForPowerBi}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
+          },
+          "pageForExcel": {
+            "string": "této straně",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          },
+          "pageForPowerBi": {
+            "string": "této straně",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          }
+        },
+        "r": {
+          "0": {
+            "full": {
+              "string": "Pro přístup k Centrálním datům z {r} , doporučujeme použít {ruODK}. Příklady použití rozhraní {oData} API i {restful} API naleznete u viněty ruODK.",
+              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
+            },
+            "restful": {
+              "string": "RESTful",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Stejně jako ODK samotný je i ruODK vyvíjen a podporován členy komunity. Chcete-li ji vylepšit, můžete najít informace {here}.",
+              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+            },
+            "here": {
+              "string": "zde",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
+            }
+          }
+        },
+        "other": {
+          "full": {
+            "string": "Úplný popis podpory OData naleznete v {article}.",
+            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+          },
+          "article": {
+            "string": "tomto článku",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
+          }
+        }
+      }
+    },
+    "SubmissionCell": {
+      "binaryLinkTitle": {
+        "string": "Soubor byl odeslán. Klikněte pro stažení."
+      }
+    },
+    "SubmissionDecrypt": {
+      "title": {
+        "string": "Dešifrovat a stáhnout",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Abyste mohli tato data stáhnout, budete muset zadat vaše přístupové heslo. Vaše přístupové heslo bude použito pouze k dešifrování vašich dat ke stažení, a poté ho server znovu zapomene."
+        }
+      },
+      "hint": {
+        "string": "Nápověda: {hint}",
+        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+      },
+      "alert": {
+        "submit": {
+          "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+        }
+      }
+    },
+    "SubmissionList": {
+      "action": {
+        "download": {
+          "withCount": {
+            "string": "{count, plural, one {Stáhnout {count} záznam} few {Stáhnout tyto {count} záznamy } many {Stáhnout všech {count} záznamů} other {Stáhnout všech {count} záznamů}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withoutCount": {
+            "string": "Stáhnout všechny záznamy",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "analyze": {
+          "string": "Analyzovat přes OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": "Přístup k datům OData není k dispozici kvůli šifrování formulářů"
+      },
+      "loading": {
+        "withoutCount": {
+          "string": "Načítání příspěvků…",
+          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {Načítání {count} příspěvku ...} few {Načítání {count} příspěvků ...} many {Načítání {count} příspěvků ...} other {Načítání {count} příspěvků ...}}"
+        },
+        "first": {
+          "string": "Načítání prvních {top} ze {count} příspěvků…",
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+        },
+        "middle": {
+          "string": "Načítání {top} dalších ze {count} zbývajících příspěvků…",
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {Načítání posledního {count} příspěvku…} few {Načítání posledních {count} příspěvků…} many {Načítání posledních {count} příspěvků…} other {Načítání posledních {count} příspěvků…}}"
+          },
+          "one": {
+            "string": "Načítání posledního příspěvku…"
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Zatím neexistují žádné příspěvky."
+      },
+      "remaining": {
+        "string": "{count, plural, one {{count} řádka zbývá} few {{count} řádky zbývají.} many {{count} řádek zbývá.} other {{count} řádek zbývá.}}"
+      }
+    },
+    "SubmissionRow": {
+      "encryptionMessage": {
+        "string": "Náhled dat není k dispozici kvůli šifrování."
+      }
+    },
+    "SubmissionTable": {
+      "header": {
+        "submitterName": {
+          "string": "Odesláno od",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "submissionDate": {
+          "string": "Odesláno na",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "instanceId": {
+          "string": "Instance ID",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "SystemHome": {
+      "title": {
+        "string": "Řízení systému",
+        "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      },
+      "tab": {
+        "backups": {
+          "string": "Zálohy",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "audits": {
+          "string": "Protokoly auditu serveru",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      }
+    },
+    "TimeAndUser": {
+      "text": {
+        "string": "{dateTime} od {displayName}",
+        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      }
+    },
+    "UserEditBasicDetails": {
+      "title": {
+        "string": "Základní podrobnosti",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "update": {
+          "string": "Aktualizovat podrobnosti",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Detaily uživatele uloženy!"
+        }
+      }
+    },
+    "UserEditPassword": {
+      "title": {
+        "string": "Změnit heslo",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "change": {
+          "string": "Změnit heslo",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "cannotChange": {
+        "string": "Pouze majitel účtu si může přímo nastavit vlastní heslo."
+      },
+      "alert": {
+        "mismatch": {
+          "string": "Zkontrolujte, zda se vaše nová hesla shodují."
+        },
+        "success": {
+          "string": "Úspěch! Vaše heslo bylo aktualizováno."
+        }
+      }
+    },
+    "UserHome": {
+      "title": {
+        "string": "Uživatelské nastavení",
+        "developer_comment": "This is shown as the title at the top of the page."
+      },
+      "tab": {
+        "users": {
+          "string": "Uživatelé webu",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "roles": {
+          "string": "Nastavení role",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      },
+      "comingSoon": {
+        "string": "(již brzy)",
+        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
+      }
+    },
+    "UserList": {
+      "action": {
+        "create": {
+          "string": "Vytvořit webového uživatele",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Weboví uživatelé mají na této webové stránce účty pro přehled a správu projektů na tomto serveru. Správci mohou na webu spravovat cokoli. Uživatelé bez role úplného přístupu mohou mít roli v jakémkoli projektu, z jeho Projektového nastavení. Administrátoři webu a některé role projektu mohou k vyplnění formulářů použít webový prohlížeč. Chcete-li odeslat data prostřednictvím aplikace, jako {collect} vytvořte uživatele aplikace pro každý projekt.",
+          "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
+        }
+      },
+      "header": {
+        "sitewideRole": {
+          "string": "Role úplného přístupu",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "alert": {
+        "create": {
+          "string": "Uživatel byl úspěšně vytvořen pro „{displayName}“."
+        },
+        "assignRole": {
+          "string": "Úspěch! „{displayName}“ získal roli úplného přístupu „{roleName}“."
+        },
+        "resetPassword": {
+          "string": "Heslo pro „{displayName}“ bylo zneplatněno. Byl odeslán e-mail na {email} s pokyny, jak postupovat."
+        },
+        "retire": {
+          "string": "Uživatel „{displayName}“ byl uspán."
+        }
+      }
+    },
+    "UserNew": {
+      "title": {
+        "string": "Vytvořit webového uživatele",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Po vytvoření tohoto účtu vám bude zaslána e-mailová adresa, kterou zadáte,  s pokyny, jak nastavit heslo a jak pokračovat."
+        }
+      }
+    },
+    "UserResetPassword": {
+      "title": {
+        "string": "Obnovit heslo",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "full": {
+          "string": "Po kliknutí na {resetPassword} bude heslo uživatele „{displayName}“ <{email}> okamžitě neplatné. Bude vám zaslán e-mail na {email} s pokyny, jak postupovat.",
+          "developer_comment": "{resetPassword} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReset password"
+        },
+        "resetPassword": {
+          "string": "Obnovit heslo",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {resetPassword} is in the following text:\n\nOnce you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed."
+        }
+      }
+    },
+    "UserRetire": {
+      "title": {
+        "string": "Uspaný uživatel",
+        "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
+      },
+      "introduction": {
+        "0": {
+          "string": "Chystáte se uspat uživatelský účet „{displayName}“ <{email}>. Tomuto uživateli bude okamžitě zakázáno provádět jakékoli akce a bude odhlášen."
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, ale pro tuto osobu lze vždy vytvořit nový účet se stejnou e-mailovou adresou.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Tuto akci nelze vrátit zpět",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but a new account can always be created for that person with the same email address."
+          }
+        }
+      }
+    },
+    "UserRow": {
+      "cannotAssignRole": {
+        "string": "Nemůžete změnit svou vlastní roli úplného přístupu."
+      },
+      "field": {
+        "sitewideRole": {
+          "string": "Role úplného přístupu",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "cannotRetire": {
+        "string": "Nemůžete sám sebe uspat",
+        "developer_comment": "An Administrator may retire other Web Users, but not their own account."
+      },
+      "action": {
+        "retire": {
+          "string": "Uspat uživatele",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    }
+  }
+}

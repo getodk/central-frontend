@@ -11,9 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div :class="htmlClass">
-    <p class="checklist-step-heading">
-      <span class="icon-check-circle"></span><slot name="title"></slot>
-    </p>
+    <span class="icon-check-circle"></span>
+    <p class="heading"><slot name="title"></slot></p>
     <slot></slot>
   </div>
 </template>
@@ -48,37 +47,33 @@ export default {
 
 .checklist-step {
   margin-bottom: 20px;
+  position: relative;
+
+  .icon-check-circle {
+    position: absolute;
+    font-size: 17px;
+  }
 
   p {
     margin-left: 21px;
     line-height: 17px;
   }
 
-  .checklist-step-heading {
+  .heading {
     font-weight: bold;
-    margin-left: 0;
     margin-bottom: 5px;
-
-    .icon-check-circle {
-      display: inline-block;
-      font-size: 17px;
-      vertical-align: -2px;
-      width: 21px;
-    }
   }
 }
 
-.checklist-step-later .checklist-step-heading {
-  color: #999;
+.checklist-step-later {
+  .icon-check-circle, .heading { color: #ccc; }
 }
 
-.checklist-step-current .checklist-step-heading {
-  .icon-check-circle {
-    color: #999;
-  }
+.checklist-step-current {
+  .icon-check-circle { color: #ccc; }
 }
 
-.checklist-step-complete .checklist-step-heading {
-  color: $color-success;
+.checklist-step-complete {
+  .icon-check-circle, .heading { color: $color-success; }
 }
 </style>

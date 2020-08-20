@@ -158,6 +158,7 @@
   // be shown as a title, for example, at the top of the page.
   "resource": {
     "appUser": "App User",
+    "appUsers": "App Users",
     "form": "Form",
     "project": "Project",
     "publicLink": "Public Access Link",

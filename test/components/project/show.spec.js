@@ -3,6 +3,7 @@ import NotFound from '../../../src/components/not-found.vue';
 import ProjectOverview from '../../../src/components/project/overview.vue';
 import testData from '../../data';
 import { load, mockRoute } from '../../util/http';
+import { loadLocale } from '../../../src/util/i18n';
 import { mockLogin } from '../../util/session';
 
 describe('ProjectShow', () => {
@@ -53,6 +54,25 @@ describe('ProjectShow', () => {
         const title = app.first('#page-head-title').text().trim();
         title.should.equal('My Project (archived)');
       });
+  });
+
+  it('updates (archived) after a locale change', async () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1, {
+      name: 'My Project',
+      archived: true
+    });
+    const app = await load('/projects/1');
+    const title = app.first('#page-head-title');
+    title.text().trim().should.equal('My Project (archived)');
+    app.vm.$root.$i18n.locale = 'es';
+    await loadLocale('es');
+    await app.vm.$nextTick();
+    try {
+      title.text().trim().should.equal('My Project (archivado)');
+    } finally {
+      app.vm.$root.$i18n.locale = 'en';
+    }
   });
 
   it('shows a loading message until all responses are received', () => {
