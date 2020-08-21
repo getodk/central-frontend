@@ -146,7 +146,11 @@ export default {
     ]
   },
   "es": {
-    "title": "Prueba de borrador"
+    "title": "Prueba de borrador",
+    "body": [
+      "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
+      "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
+    ]
   },
   "fr": {
     "title": "Test de l'ébauche",

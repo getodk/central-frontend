@@ -71,25 +71,24 @@ export default {
 {
   "cs": {
     "header": {
-      "multiple": "Více odpovědí",
       "accessLink": "Odkaz"
     }
   },
   "de": {
     "header": {
-      "multiple": "Mehrfachantworten",
+      "once": "Einzelübermittlung",
       "accessLink": "Zugangslink"
     }
   },
   "es": {
     "header": {
-      "multiple": "Respuestas múltiples",
+      "once": "Envío único",
       "accessLink": "Enlace de acceso"
     }
   },
   "fr": {
     "header": {
-      "multiple": "Réponses multiples",
+      "once": "Soumission unique",
       "accessLink": "Lien d'accès"
     }
   }

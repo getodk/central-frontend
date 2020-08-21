@@ -332,7 +332,10 @@ export default {
         "full": "Los usuarios móviles se utilizan para recolectar datos desde una aplicación tal como {collect}. Típicamente representan un rol compartido como “Vacunador” pero también pueden representar a individuos. Los usuarios móviles en este proyecto solo pueden descargar y usar formularios en este proyecto. Cuando usted crea un nuevo usuario móvil, al principio este no tendrá acceso a ningún formulario. Para definir los formularios a los que cada usuario móvil puede acceder, utilice la pestaña {formAccess}.",
         "formAccess": "Acceso a formularios"
       },
-      {}
+      {
+        "full": "Los usuarios móviles son más apropiados cuando los recopiladores de datos necesitan acceso a varios formularios, están fuera de línea o tiene un Formulario complejo. Si necesita que los encuestados se autoinforme o tengan un formulario solo en línea, {clickHere} busque otras opciones.",
+        "clickHere": "haga clic aquí"
+      }
     ],
     "header": {
       "lastUsed": "Última utilizada",

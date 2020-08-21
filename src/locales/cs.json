@@ -122,6 +122,7 @@
   },
   "resource": {
     "appUser": "Uživatel aplikace",
+    "appUsers": "Uživatelé aplikace",
     "form": "Formulář",
     "project": "Projekt",
     "publicLink": "Veřejný odkaz",

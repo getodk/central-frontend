@@ -122,6 +122,7 @@
   },
   "resource": {
     "appUser": "App-Benutzer",
+    "appUsers": "App-Benutzer",
     "form": "Formular",
     "project": "Projekt",
     "publicLink": "Öffentlicher Zugangslink",
@@ -167,7 +168,7 @@
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
-      "errorNotProblem": "Etwas ging schief: Der Fehler meldete einen ungültige Anfrage."
+      "errorNotProblem": "Etwas ging schief: Der Server meldete eine ungültige Anfrage."
     }
   },
   "router": {

@@ -163,7 +163,7 @@ export default {
     "introduction": [
       "Hay varias opciones para enviar datos a ODK Central:",
       {
-        "full": "Crea {appUsers} y usa la {collect} aplicación de Android. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un Formulario complejo.",
+        "full": "Crea {appUsers} y usa la aplicación Android {collect}. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un formulario complejo.",
         "appUsers": "Usuarios móviles"
       },
       {

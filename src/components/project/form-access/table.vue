@@ -222,29 +222,25 @@ export default {
   "cs": {
     "header": {
       "form": "Formulář",
-      "state": "Stav",
-      "appUserAccess": "Přístup uživatelů aplikace"
+      "state": "Stav"
     }
   },
   "de": {
     "header": {
       "form": "Formular",
-      "state": "Status",
-      "appUserAccess": "Benutzerzugriffs"
+      "state": "Status"
     }
   },
   "es": {
     "header": {
       "form": "Formulario",
-      "state": "Estado",
-      "appUserAccess": "Acceso de usuarios móviles"
+      "state": "Estado"
     }
   },
   "fr": {
     "header": {
       "form": "Formulaire",
-      "state": "État",
-      "appUserAccess": "Accès d'utilisateurs mobiles"
+      "state": "État"
     }
   }
 }

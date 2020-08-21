@@ -98,7 +98,10 @@ export default {
     ]
   },
   "es": {
-    "title": "Revocar enlace de acceso público"
+    "title": "Revocar enlace de acceso público",
+    "introduction": [
+      "Está a punto de revocar este enlace de acceso público. Esto significa que cualquier intento de enviar datos utilizando el enlace será denegado, incluyendo los registros que ya han sido iniciados."
+    ]
   },
   "fr": {
     "title": "Révoquer lien d'accès public",

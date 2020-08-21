@@ -230,7 +230,7 @@ export default {
         "title": "Das Formular der Befragungsteilnehmer herunterladen und Daten einreichen",
         "body": [
           {
-            "none": "Bisher hat noch niemand Daten für diese Formular hochgeladen.",
+            "none": "Bisher hat noch niemand Daten für dieses Formular hochgeladen.",
             "any": "Es wurde {count} Übermittlung durchgeführt. | Es wurden {count} Übermittlungen durchgeführt."
           },
           {

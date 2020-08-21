@@ -100,7 +100,10 @@ export default {
   "es": {
     "title": "Conocer proyectos",
     "body": [
-      {},
+      {
+        "full": "Los proyectos permiten agrupar los formularios y usuarios relacionados. A los usuarios web se les puede asignar roles que les permitan realizar ciertas acciones dentro de este proyecto, incluyendo el uso de un navegador web para llenar formularios. Los usuarios móviles de este proyecto sólo podrán ver los formularios del proyecto al que tienen {accessTo}.",
+        "accessTo": "acceso"
+      },
       {
         "full": "Si tiene algún comentario, por favor visite {forumThread}.",
         "forumThread": "este hilo del foro"

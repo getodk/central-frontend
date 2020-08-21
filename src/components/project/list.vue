@@ -374,8 +374,8 @@ export default {
     "rightNow": {
       "users": {
         "full": [
-          "{webUsers} der Projekte auf dieser Webseite verwalten kann.",
-          "{webUsers} die Projekte auf dieser Webseite verwalten können."
+          "{webUsers}, der Projekte auf dieser Webseite verwalten kann.",
+          "{webUsers}, die Projekte auf dieser Webseite verwalten können."
         ],
         "webUsers": "Web-Benutzer | Web-Benutzer"
       },

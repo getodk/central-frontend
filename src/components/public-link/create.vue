@@ -121,11 +121,7 @@ export default {
     "title": "Vytvořit veřejně přístupný odkaz",
     "introduction": [
       "Kdokoli s tímto odkazem bude moci vyplnit tento formulář ve webovém prohlížeči. Zobrazovaný název používejte, abyste si připomněli, kde jste ho zveřejnili, s kým jste jej sdíleli, kdy má být aktivní atd."
-    ],
-    "field": {
-      "multiple": "Více odpovědí"
-    },
-    "multipleHelp": "Povolit někomu s tímto odkazem odesílat více než jednou ze stejného zařízení."
+    ]
   },
   "de": {
     "title": "Öffentlichen Zugangslink erstellen",
@@ -133,9 +129,9 @@ export default {
       "Jeder mit diesem Link kann das Formular mit einem Webbrowser ausfüllen. Verwenden Sie den Anzeigenamen, um sich zu erinnern, wo Sie ihn veröffentlicht haben, mit wem Sie ihn geteilt haben, wann er aktiv sein soll und so weiter."
     ],
     "field": {
-      "multiple": "Mehrfachantworten"
+      "once": "Einzelübermittlung"
     },
-    "multipleHelp": "Jemandem mit diesem Link erlauben mehr als einmal Daten vom selben Gerät zu übermitteln."
+    "onceHelp": "Erlaubt nur eine Übermittlung von jedem Browser."
   },
   "es": {
     "title": "Crear enlace de acceso público",
@@ -143,8 +139,9 @@ export default {
       "Cualquier persona con este enlace será capaz de llenar este formulario desde un navegador web. Utilice nombre para mostrar para recordar dónde lo ha publicado, con quién lo ha compartido, hasta cuando pretende que esté activo, entre otras cosas."
     ],
     "field": {
-      "multiple": "Respuestas múltiples"
-    }
+      "once": "Envío único"
+    },
+    "onceHelp": "Permitir solo un envío por cada navegador."
   },
   "fr": {
     "title": "Créer lien d'accès public",
@@ -152,9 +149,9 @@ export default {
       "N'importe qui avec ce lien pourra remplir ce formulaire depuis leur navigateur. Utilisez le nom affiché pour vous souvenir d'où vous l'avez publié, avec qui vous l'avez partagé, quand il est destiné à être actif et ainsi de suite."
     ],
     "field": {
-      "multiple": "Réponses multiples"
+      "once": "Soumission unique"
     },
-    "multipleHelp": "Permettre à quelqu'un avec ce lien de soumettre plus qu'une fois du même appareil."
+    "onceHelp": "N'accepter qu'une soumission par répondant."
   }
 }
 </i18n>

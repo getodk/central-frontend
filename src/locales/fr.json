@@ -122,6 +122,7 @@
   },
   "resource": {
     "appUser": "Utilisateur mobile",
+    "appUsers": "Utilisateurs mobiles",
     "form": "Formulaire",
     "project": "Projet",
     "publicLink": "Lien d'accès public",

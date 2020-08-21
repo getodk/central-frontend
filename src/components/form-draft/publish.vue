@@ -214,12 +214,12 @@ export default {
         "mediaFiles": "Mediendateien"
       },
       "testing": {
-        "full": "Sie haben {tested} noch nicht auf einem Mobilgerät getestet und eine Datenübermittlung bereitgestellt. Sie müssen diese nicht tun, aber es wird dringend empfohlen.",
+        "full": "Sie haben {tested} noch nicht auf einem Mobilgerät getestet und eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
         "tested": "dieses Formular"
       }
     },
     "introduction": [
-      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazu gehörenden Mediendatein abgeschlossen.",
+      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazugehörenden Mediendateien abgeschlossen.",
       "Bestehende Übermittlungen sind nicht betroffen, aber alle Übermittlungen für den Testentwurf werden entfernt.",
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen."
     ],

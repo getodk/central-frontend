@@ -2,7 +2,7 @@
   "role": {
     "none": "Ninguno",
     "admin": "Administrador",
-    "manager": "Gerente de Proyecto",
+    "manager": "Gerente de proyecto",
     "viewer": "Visor de proyecto",
     "formfill": "Recolector de datos"
   },
@@ -16,7 +16,7 @@
       "nonverbose": "(Todas las acciones)",
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
-      "form": "Acciones de Formulario",
+      "form": "Acciones de formulario",
       "field_key": "Acciones de usuarios móviles",
       "public_link": "Acciones de enlaces de acceso público",
       "session": "Acciones de sesión",
@@ -122,6 +122,7 @@
   },
   "resource": {
     "appUser": "Usuario móvil",
+    "appUsers": "Usuarios móviles",
     "form": "Formulario",
     "project": "Proyecto",
     "publicLink": "Enlace de acceso público",
