@@ -376,7 +376,7 @@ export default {
       },
       {
         "full": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
-        "projectViewers": "Projekt-Teilnehmer"
+        "projectViewers": "Projekt-Viewer"
       },
       {
         "full": "{dataCollectors} können Formulare in einem Webbrowser ausfüllen, aber können keine Daten oder Einstellungen anzeigen oder ändern.",

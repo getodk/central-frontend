@@ -279,9 +279,9 @@ export default {
         "title": "Den Entwurf veröffentlichen",
         "body": [
           {
-            "status": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und sie ihn für den Feldeinsatz bereitstellen wollen, können Sie ihn mit der Schaltfläche rechts veröffentlichen.",
+            "status": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und Sie ihn für den Feldeinsatz bereitstellen wollen, können Sie ihn mit der Schaltfläche rechts veröffentlichen.",
             "link": {
-              "full": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und sie ihn für den Feldeinsatz bereitstellen wollen, könnnen sie ihn {publish}.",
+              "full": "Wenn Sie sicher sind, dass Ihr Entwurf fertig ist und Sie ihn für den Feldeinsatz bereitstellen wollen, können sie ihn {publish}.",
               "publish": "veröffentlichen"
             }
           }

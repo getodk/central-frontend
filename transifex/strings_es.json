@@ -9,7 +9,7 @@
       "developer_comment": "This is the name of a user Role."
     },
     "manager": {
-      "string": "Gerente de Proyecto",
+      "string": "Gerente de proyecto",
       "developer_comment": "This is the name of a user Role."
     },
     "viewer": {
@@ -50,7 +50,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "form": {
-        "string": "Acciones de Formulario",
+        "string": "Acciones de formulario",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -315,6 +315,10 @@
   "resource": {
     "appUser": {
       "string": "Usuario móvil",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "appUsers": {
+      "string": "Usuarios móviles",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -770,7 +774,7 @@
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "Los usuarios móviles son más apropiados cuando los recopiladores de datos necesitan acceso a varios formularios, están fuera de línea o tiene un Formulario complejo. Si necesita que los encuestados se autoinforme o tengan un formulario solo en línea, {clickHere} busque otras opciones.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
@@ -1428,7 +1432,7 @@
           "string": "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web."
         },
         "1": {
-          "string": ""
+          "string": "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
         }
       }
     },
@@ -1548,7 +1552,7 @@
       },
       "dropZone": {
         "full": {
-          "string": "Drop a file here, or {chooseOne} to upload.",
+          "string": "Suelta un archivo aquí o {chooseOne} para subir.",
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
@@ -2033,10 +2037,6 @@
         "state": {
           "string": "Estado",
           "developer_comment": "This is the text of a table column header."
-        },
-        "appUserAccess": {
-          "string": "Acceso de usuarios móviles",
-          "developer_comment": "This is the text of a table column header."
         }
       }
     },
@@ -2047,7 +2047,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Los proyectos permiten agrupar los formularios y usuarios relacionados. A los usuarios web se les puede asignar roles que les permitan realizar ciertas acciones dentro de este proyecto, incluyendo el uso de un navegador web para llenar formularios.  Los usuarios móviles de este proyecto sólo podrán ver los formularios a los cuales se les otorgó el acceso."
         }
       }
     },
@@ -2159,7 +2159,7 @@
       "body": {
         "0": {
           "full": {
-            "string": "",
+            "string": "Los proyectos permiten agrupar los formularios y usuarios relacionados. A los usuarios web se les puede asignar roles que les permitan realizar ciertas acciones dentro de este proyecto, incluyendo el uso de un navegador web para llenar formularios. Los usuarios móviles de este proyecto sólo podrán ver los formularios del proyecto al que tienen {accessTo}.",
             "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
           },
           "accessTo": {
@@ -2277,10 +2277,6 @@
           "string": "Roles del proyecto",
           "developer_comment": "This is the text of a navigation tab."
         },
-        "appUsers": {
-          "string": "Usuarios móviles",
-          "developer_comment": "This is the text of a navigation tab."
-        },
         "formAccess": {
           "string": "Acceso a formularios",
           "developer_comment": "This is the text of a navigation tab."
@@ -2303,7 +2299,7 @@
         },
         "1": {
           "full": {
-            "string": "Crea {appUsers} y usa la {collect} aplicación de Android. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un Formulario complejo.",
+            "string": "Crea {appUsers} y usa la aplicación Android {collect}. Esto es más apropiado cuando los recolectores de datos necesitan acceso a múltiples formularios, están fuera de línea o tiene un formulario complejo.",
             "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
           },
           "appUsers": {
@@ -2439,13 +2435,14 @@
         }
       },
       "field": {
-        "multiple": {
-          "string": "Respuestas múltiples ",
+        "once": {
+          "string": "Envío único",
           "developer_comment": "This is the text of a form field."
         }
       },
-      "multipleHelp": {
-        "string": ""
+      "onceHelp": {
+        "string": "Permitir solo un envío por cada navegador.",
+        "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
     "PublicLinkList": {
@@ -2458,7 +2455,7 @@
       "heading": {
         "0": {
           "full": {
-            "string": "",
+            "string": "Cualquier persona con un enlace de acceso público puede rellenar este formulario en un navegador web. Puede crear múltiples enlaces para rastrear diferentes distribuciones del formulario, para limitar el tiempo que un grupo específico de personas tiene acceso al Formulario, y más. Estos enlaces sólo funcionarán si el formulario está en el {state} abierto.",
             "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
           },
           "state": {
@@ -2468,7 +2465,7 @@
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "Los enlaces públicos están pensados para autoinformarse. Si usted se encuentra trabajando con recolectores de datos que necesitan enviar el mismo formulario varias veces, {clickHere} para otras opciones.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
@@ -2482,10 +2479,10 @@
       },
       "alert": {
         "create": {
-          "string": ""
+          "string": "¡Operación exitosa! Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo."
         },
         "revoke": {
-          "string": ""
+          "string": "El enlace de acceso público \"{displayName}\" fue revocado con éxito. No se aceptarán más envíos a través de este enlace."
         }
       }
     },
@@ -2496,7 +2493,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Está a punto de revocar este enlace de acceso público. Esto significa que cualquier intento de enviar datos utilizando el enlace será denegado, incluyendo los registros que ya han sido iniciados."
         }
       }
     },
@@ -2523,8 +2520,8 @@
     },
     "PublicLinkTable": {
       "header": {
-        "multiple": {
-          "string": "Respuestas múltiples",
+        "once": {
+          "string": "Envío único",
           "developer_comment": "This is the text of a table column header."
         },
         "accessLink": {
@@ -2806,7 +2803,7 @@
       },
       "heading": {
         "0": {
-          "string": "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los Administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un rol, se le puede asignar uno en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tipo {collect}, cree usuarios de aplicación en cada proyecto.",
+          "string": "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un rol, se le puede asignar uno en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tal como {collect}, cree usuarios móviles en cada proyecto.",
           "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
         }
       },

@@ -95,7 +95,7 @@ export default {
     "noSubmission": "(žádné)"
   },
   "de": {
-    "help": "Was sind Projekte",
+    "help": "Was sind Projekte?",
     "noSubmission": "(keine)"
   },
   "es": {

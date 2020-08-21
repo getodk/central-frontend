@@ -273,7 +273,7 @@ export default {
             "here": "hier"
           },
           "Wenn Sie \"weiter\" wählen, wird Google sich bestätigen lassen, dass der Server auf ihr System zugreifen darf. Der Server darf ausschließlich auf die erzeugten Backup-Dateien zugreifen.",
-          "Wenn Sie diese bestätigen, werden Sie gebeten, etwas Text mit Copy-and-Paste hier einzufügen."
+          "Wenn Sie das bestätigen, werden Sie gebeten, etwas Text mit Copy-and-Paste hier einzufügen."
         ]
       },
       {

@@ -68,13 +68,16 @@ export default {
     ]
   },
   "de": {
-    "title": "Was sind Projekte",
+    "title": "Was sind Projekte?",
     "introduction": [
       "Projekte lassen Sie zusammengehörige Formulare und Benutzer gruppieren. Web-Benutzer können Rollen erhalten, die es ihnen ermöglicht, bestimmte Aktionen innerhalb des Projekts auszuführen, einschließlich der Verwendung eines Webbrowsers zum Ausfüllen von Formularen. App-Benutzer des Projekts können Formulare nur in dem Projekt sehen, zu dem Sie Zugriff haben."
     ]
   },
   "es": {
-    "title": "¿Qué son los proyectos?"
+    "title": "¿Qué son los proyectos?",
+    "introduction": [
+      "Los proyectos permiten agrupar los formularios y usuarios relacionados. A los usuarios web se les puede asignar roles que les permitan realizar ciertas acciones dentro de este proyecto, incluyendo el uso de un navegador web para llenar formularios. Los usuarios móviles de este proyecto sólo podrán ver los formularios a los cuales se les otorgó el acceso."
+    ]
   },
   "fr": {
     "title": "Qu'est ce qu'un projet?",

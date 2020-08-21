@@ -113,7 +113,7 @@ export default {
     },
     "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
     "alert": {
-      "create": "Ihr neues Formular \"{name}\" wurde als Entwurf erstellt. Überprüfen Sie die Checklisten unten: wenn Sie finden, das sie abgearbeitet ist, können sie das Formular veröffentlichen."
+      "create": "Ihr neues Formular \"{name}\" wurde als Entwurf erstellt. Überprüfen Sie die Checkliste unten: Wenn Sie finden, das sie abgearbeitet ist, können sie das Formular veröffentlichen."
     }
   },
   "es": {

@@ -218,7 +218,21 @@ export default {
     "action": {
       "create": "Crear enlace de acceso público"
     },
-    "emptyTable": "No hay enlaces de acceso público para este formulario."
+    "heading": [
+      {
+        "full": "Cualquier persona con un enlace de acceso público puede rellenar este formulario en un navegador web. Puede crear múltiples enlaces para rastrear diferentes distribuciones del formulario, para limitar el tiempo que un grupo específico de personas tiene acceso al Formulario, y más. Estos enlaces sólo funcionarán si el formulario está en el {state} abierto.",
+        "state": "estado"
+      },
+      {
+        "full": "Los enlaces públicos están pensados para autoinformarse. Si usted se encuentra trabajando con recolectores de datos que necesitan enviar el mismo formulario varias veces, {clickHere} para otras opciones.",
+        "clickHere": "haga clic aquí"
+      }
+    ],
+    "emptyTable": "No hay enlaces de acceso público para este formulario.",
+    "alert": {
+      "create": "¡Operación exitosa! Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo.",
+      "revoke": "El enlace de acceso público \"{displayName}\" fue revocado con éxito. No se aceptarán más envíos a través de este enlace."
+    }
   },
   "fr": {
     "action": {

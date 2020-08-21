@@ -150,7 +150,6 @@ export default {
     "tab": {
       "overview": "Přehled",
       "users": "Role projektu",
-      "appUsers": "Uživatelé aplikace",
       "formAccess": "Přístup k formuláři",
       "settings": "Nastavení"
     }
@@ -159,7 +158,6 @@ export default {
     "tab": {
       "overview": "Übersicht",
       "users": "Projektrollen",
-      "appUsers": "App-Benutzer",
       "formAccess": "Formular-Zugriff",
       "settings": "Einstellungen"
     }
@@ -168,7 +166,6 @@ export default {
     "tab": {
       "overview": "Descripción general",
       "users": "Roles del proyecto",
-      "appUsers": "Usuarios móviles",
       "formAccess": "Acceso a formularios",
       "settings": "Configuración"
     }
@@ -177,7 +174,6 @@ export default {
     "tab": {
       "overview": "Aperçu",
       "users": "Rôles du projet",
-      "appUsers": "Utilisateurs mobiles",
       "formAccess": "Accès aux formulaires",
       "settings": "Paramètres"
     }

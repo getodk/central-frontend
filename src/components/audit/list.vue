@@ -99,7 +99,7 @@ export default {
     "heading": [
       "Hier befinden sich Log-Einträge signifikanter Aktionen auf diesem Server, wie Änderungen von Benutzer-, Projekt-, oder Formulareinstellungen."
     ],
-    "emptyTable": "Keine zutreffenden Audit Logeinträge"
+    "emptyTable": "Keine zutreffenden Audit-Logeinträge."
   },
   "es": {
     "heading": [

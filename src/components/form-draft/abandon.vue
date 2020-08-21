@@ -147,7 +147,7 @@ export default {
         "Ihre veröffentlichten Forumulardefinitionen, ihre Mediendateien und Übermittlungen werden nicht angetastet."
       ],
       "deleteForm": [
-        "Sie sind dabei, diese Formulardefinition, die dazu gehörenden hochgeladenen Mediendaten und alle Testübermittlungen zu löschen. Weil Sie das Formular noch nicht veröffentlicht haben, wird es vollständig gelöscht."
+        "Sie sind dabei, diese Formulardefinition, die dazugehörenden hochgeladenen Mediendaten und alle Testübermittlungen zu löschen. Weil Sie das Formular noch nicht veröffentlicht haben, wird es vollständig gelöscht."
       ]
     },
     "action": {

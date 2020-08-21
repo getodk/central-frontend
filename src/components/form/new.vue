@@ -400,7 +400,7 @@ $drop-zone-vpadding: 15px;
       "Si tiene medios, podrá cargarlos en la página siguiente, después de que se haya creado el formulario."
     ],
     "dropZone": {
-      "full": "Drop a file here, or {chooseOne} to upload.",
+      "full": "Suelta un archivo aquí o {chooseOne} para subir.",
       "chooseOne": "elige uno"
     },
     "action": {
