@@ -1,5 +1,6 @@
 import { mockRoute } from '../../util/http';
 import { fillForm, submitForm } from '../../util/event';
+
 const LOCATION = { path: '/account/claim', query: { token: 'a'.repeat(64) } };
 
 describe('AccountClaim', () => {
@@ -26,7 +27,7 @@ describe('AccountClaim', () => {
       .afterResponse(app => {
         app.should.alert('danger', 'AccountClaim problem. The link in your email may have expired, and a new email may have to be sent.');
       }));
-  
+
   it('shows a alert for short password length error', () =>
     mockRoute(LOCATION)
       .request(app => submitForm(app, '#account-claim form', [

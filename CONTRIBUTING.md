@@ -83,13 +83,13 @@ Most components are named according to the combination of a resource and an acti
 * `Row`. A row of a `*Table` component.
 * `Show`. A component that shows a single resource of a particular type.
 * `Home`. A parent component of related components, for example, `SystemHome`.
-* `New`. A modal used to create a new resource of a particular type.
+* `Create` (or `New`). A modal used to create a new resource of a particular type.
 * `Edit`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 
 ### Vue Mixins
 
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin.)
+Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
 
 ### Router
 
@@ -141,7 +141,9 @@ Also note about comments:
 - `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
 - Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
 
-Before each release, we pull all translations from Transifex and save them in [`/transifex/`](/transifex/). We convert the structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json`.
+Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, use the Transifex client, specifying `translator` as the mode.
+
+Once they are downloaded, we convert the Transifex structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json`.
 
 To summarize the workflow:
 
@@ -149,7 +151,7 @@ To summarize the workflow:
 - Add any developer comments to the Vue I18n JSON.
 - Run `restructure.js` to generate `strings_en.json`.
 - `strings_en.json` is automatically pulled into Transifex.
-- Before a release, pull all translations from Transifex.
+- Before a release, download all translations from Transifex.
 - Convert those translations to Vue I18n JSON by running `destructure.js`.
 
 Finally, also note:

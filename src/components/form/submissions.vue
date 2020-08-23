@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section condensed>
     <template #heading>
-      <span>{{ $t('common.submissions') }}</span>
+      <span>{{ $t('resource.submissions') }}</span>
       <enketo-fill v-if="dataExists && project.permits('submission.create')"
         :form-version="form">
         <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}

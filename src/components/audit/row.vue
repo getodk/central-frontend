@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="audit-row">
     <td><date-time :iso="audit.loggedAt"/></td>
-    <td>
+    <td class="type">
       {{ type[0] }}
       <template v-if="type.length > 1">
         <span class="icon-angle-right"></span> {{ type[1] }}
@@ -25,37 +25,43 @@ except according to the terms contained in the LICENSE file.
       </router-link>
     </td>
     <td class="target">
-      <router-link v-if="target != null" :to="target.path"
-        :title="target.title">
-        {{ target.title }}
-      </router-link>
+      <template v-if="target != null">
+        <router-link v-if="target.path != null" :to="target.path"
+          :title="target.title">
+          {{ target.title }}
+        </router-link>
+        <span v-else :title="target.title">{{ target.title }}</span>
+      </template>
     </td>
-    <td class="details">
-      <!-- Adding a <div> to work around a Firefox bug: see
-      https://bugzilla.mozilla.org/show_bug.cgi?id=386970. -->
-      <div ref="details" @click="selectDetails">{{ details }}</div>
-    </td>
+    <td><selectable>{{ details }}</selectable></td>
   </tr>
 </template>
 
 <script>
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
-import i18n from '../../i18n';
+import Selectable from '../selectable.vue';
+import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
-import { auditActionMessage } from '../../util/i18n';
 
 const typeByCategory = {
-  user: i18n.t('common.user'),
-  assignment: i18n.t('common.user'),
-  project: i18n.t('common.project'),
-  form: i18n.t('common.form'),
-  upgrade: i18n.t('audit.category.upgrade')
+  session: 'resource.session',
+  user: 'resource.user',
+  assignment: 'resource.user',
+  project: 'resource.project',
+  form: 'resource.form',
+  public_link: 'resource.publicLink',
+  field_key: 'resource.appUser',
+  upgrade: 'audit.category.upgrade'
 };
 
+const getDisplayName = ({ displayName }) => displayName;
 const acteeSpeciesByCategory = {
+  session: {
+    title: getDisplayName
+  },
   user: {
-    title: ({ displayName }) => displayName,
+    title: getDisplayName,
     path: ({ id }, vm) => vm.userPath(id)
   },
   project: {
@@ -65,6 +71,12 @@ const acteeSpeciesByCategory = {
   form: {
     title: (form) => new Form(form).nameOrId(),
     path: (form, vm) => vm.primaryFormPath(form)
+  },
+  public_link: {
+    title: getDisplayName
+  },
+  field_key: {
+    title: getDisplayName
   }
 };
 acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
@@ -75,8 +87,8 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { DateTime },
-  mixins: [routes()],
+  components: { DateTime, Selectable },
+  mixins: [audit(), routes()],
   props: {
     audit: {
       type: Object,
@@ -89,10 +101,10 @@ export default {
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
     type() {
-      const actionMessage = auditActionMessage(this.audit.action);
+      const actionMessage = this.actionMessage(this.audit.action);
       if (actionMessage == null) return [this.audit.action];
       return this.category != null
-        ? [typeByCategory[this.category], actionMessage]
+        ? [this.$t(typeByCategory[this.category]), actionMessage]
         : [actionMessage];
     },
     target() {
@@ -100,32 +112,20 @@ export default {
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
       const { actee } = this.audit;
-      return {
-        path: species.path(actee, this),
-        title: species.title(actee)
-      };
+      const result = { title: species.title(actee) };
+      if (species.path != null) result.path = species.path(actee, this);
+      return result;
     },
     details() {
       return this.audit.details != null
         ? JSON.stringify(this.audit.details)
         : '';
     }
-  },
-  methods: {
-    selectDetails() {
-      if (this.audit.details == null) return;
-      const selection = window.getSelection();
-      // Select the entire JSON unless the user has selected specific text.
-      if (selection.isCollapsed)
-        selection.selectAllChildren(this.$refs.details);
-    }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 .audit-row {
   .table tbody & td {
     vertical-align: middle;
@@ -139,12 +139,6 @@ export default {
   .initiator, .target {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .details div {
-    font-family: $font-family-monospace;
-    overflow-x: auto;
     white-space: nowrap;
   }
 }

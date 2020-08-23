@@ -15,12 +15,11 @@ except according to the terms contained in the LICENSE file.
       @create-draft="createDraft"/>
     <page-body>
       <loading :state="initiallyLoading || awaitingResponse"/>
-      <div v-show="dataExists && !awaitingResponse">
-        <!-- <router-view> is immediately created and can send its own requests
-        even before the server has responded to the requests from ProjectHome
-        and FormShow. -->
-        <router-view @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
-      </div>
+      <!-- <router-view> is immediately created and can send its own requests
+      even before the server has responded to the requests from ProjectHome and
+      FormShow. -->
+      <router-view v-show="dataExists && !awaitingResponse" :key="$route.path"
+        @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
 </template>
@@ -38,24 +37,8 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { requestData } from '../../store/modules/request';
 
-reconcileData.add(
-  'form', 'formDraft',
-  (form, formDraft, commit) => {
-    // Note the unlikely possibility that
-    // form.publishedAt == null && formDraft.isEmpty(). In that case,
-    // the user will be redirected to /.
-    if (form.publishedAt == null && formDraft.isDefined()) {
-      const { enketoId } = formDraft.get();
-      if (form.enketoId !== enketoId) {
-        commit('setData', {
-          key: 'form',
-          value: form.with({ enketoId })
-        });
-      }
-    }
-  }
-);
 reconcileData.add(
   'formDraft', 'attachments',
   (formDraft, attachments, commit) => {
@@ -66,7 +49,7 @@ reconcileData.add(
   }
 );
 
-const REQUEST_KEYS = ['project', 'form', 'formDraft', 'attachments'];
+const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 
 export default {
   name: 'FormShow',
@@ -89,11 +72,12 @@ export default {
     };
   },
   computed: {
+    ...requestData(requestKeys),
     initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
+      return this.$store.getters.initiallyLoading(requestKeys);
     },
     dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
+      return this.$store.getters.dataExists(requestKeys);
     }
   },
   watch: {
@@ -104,49 +88,43 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchEnketoId(callName, requestKey, url) {
-      this.callWait(
-        callName,
-        () => new Promise((resolve, reject) => {
-          this.$store.dispatch('get', [{
-            key: requestKey,
-            url,
-            update: ['enketoId'],
-            success: (data) => {
-              resolve(Option.of(data[requestKey]).get().enketoId != null);
-            },
-            alert: false
-          }]).catch(reject);
-        }),
-        // Wait for up to a total of 10 minutes, not including request time.
-        (tries) => {
-          if (tries < 20) return 3000;
-          if (tries < 50) return 8000;
-          if (tries < 70) return 15000;
-          return null;
-        }
-      );
+    // Wait for up to a total of 10 minutes, not including request time.
+    waitToRequestEnketoId(tries) {
+      if (tries < 20) return 3000;
+      if (tries < 50) return 8000;
+      if (tries < 70) return 15000;
+      return null;
     },
     fetchForm() {
-      this.cancelCall('fetchEnketoIdForForm');
+      this.cancelCall('fetchEnketoIdsForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.$store.dispatch('get', [{
         key: 'form',
         url,
         extended: true,
-        success: ({ form }) => {
-          if (form.enketoId != null) return;
-          const { publishedAt } = form;
-          // The enketoId of a form without a published version is the same as
-          // the enketoId of the form draft. If a form without a published
-          // version does not have an enketoId, we do not fetch its enketoId,
-          // because we will already fetch the enketoId of the draft.
-          if (publishedAt == null) return;
+        success: () => {
+          if (this.form.enketoId != null && this.form.enketoOnceId != null)
+            return;
+          if (this.form.publishedAt == null) return;
           // If Enketo hasn't finished processing the form in 15 minutes,
           // something else has probably gone wrong.
-          if (Date.now() - DateTime.fromISO(publishedAt).toMillis() > 900000)
+          if (Date.now() -
+            DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
             return;
-          this.fetchEnketoId('fetchEnketoIdForForm', 'form', url);
+          this.callWait(
+            'fetchEnketoIdsForForm',
+            async () => {
+              await this.$store.dispatch('get', [{
+                key: 'form',
+                url,
+                update: ['enketoId', 'enketoOnceId'],
+                alert: false
+              }]);
+              return this.form.enketoId != null &&
+                this.form.enketoOnceId != null;
+            },
+            this.waitToRequestEnketoId
+          );
         }
       }]).catch(noop);
     },
@@ -159,14 +137,24 @@ export default {
           url: draftUrl,
           extended: true,
           fulfillProblem: ({ code }) => code === 404.1,
-          success: ({ formDraft }) => {
-            formDraft.ifDefined(({ enketoId }) => {
-              if (enketoId == null) {
+          success: () => {
+            if (this.formDraft.isEmpty()) return;
+            if (this.formDraft.get().enketoId != null) return;
+            this.callWait(
+              'fetchEnketoIdForDraft',
+              async () => {
+                await this.$store.dispatch('get', [{
+                  key: 'formDraft',
+                  url: draftUrl,
+                  update: ['enketoId'],
+                  alert: false
+                }]);
                 // We do not check that the form draft has not changed, for
                 // example, by another user concurrently modifying the draft.
-                this.fetchEnketoId('fetchEnketoIdForDraft', 'formDraft', draftUrl);
-              }
-            });
+                return this.formDraft.get().enketoId != null;
+              },
+              this.waitToRequestEnketoId
+            );
           }
         },
         {

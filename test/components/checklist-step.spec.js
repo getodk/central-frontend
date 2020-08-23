@@ -33,9 +33,7 @@ describe('ChecklistStep', () => {
         propsData: { stage: 'complete' },
         slots: { title: TestUtilSpan }
       });
-      const spans = component.find('.checklist-step-heading span');
-      spans.length.should.equal(2);
-      spans[1].text().should.equal('Some span text');
+      component.first('.heading span').text().should.equal('Some span text');
     });
 
     it('uses the default slot', () => {

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="form-version-row">
-    <td class="form-version-row-version">
+    <td class="version" :class="{ 'blank-version': version.version === '' }">
       <span :title="version.versionOrBlank()">
         {{ version.versionOrBlank() }}
       </span>
@@ -43,13 +43,20 @@ export default {
 </script>
 
 <style lang="scss">
-.table tbody .form-version-row td {
-  vertical-align: middle;
-}
+@import '../../assets/scss/variables';
 
-.form-version-row-version {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.form-version-row {
+  .table tbody & td { vertical-align: middle; }
+
+  .version {
+    font-family: $font-family-monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .blank-version {
+    font-family: inherit;
+  }
 }
 </style>

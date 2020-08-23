@@ -62,7 +62,7 @@ describe('ProjectFormAccess', () => {
         th.map(wrapper => wrapper.text().trim().iTrim()).should.eql([
           'Form',
           'State',
-          'App User Access',
+          'App Users',
           'App User 2',
           'App User 1',
           ''
@@ -255,7 +255,7 @@ describe('ProjectFormAccess', () => {
       const saveWithSuccess = () => save()
         .respondWithData(() => testData.standardProjects.last())
         .respondWithData(() => {
-          testData.extendedForms.updateState(-1, 'open');
+          testData.extendedForms.update(-1, { state: 'open' });
           return testData.extendedForms.sorted();
         })
         .respondWithData(() => testData.extendedFieldKeys.sorted())

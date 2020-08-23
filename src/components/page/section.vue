@@ -51,7 +51,7 @@ export default {
     color: $color-accent-primary;
     font-weight: bold;
 
-    + button {
+    + .btn {
       margin-left: 6px;
     }
   }

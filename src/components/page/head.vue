@@ -39,16 +39,18 @@ export default {
   color: #555;
   font-size: 15px;
   letter-spacing: -0.01em;
+  // If #page-head-body is empty, this margin will collapse with the bottom
+  // margin of #page-head-title. As a result, there will always be exactly 15px
+  // between #page-head-tabs and the previous visible element.
+  margin-bottom: 15px;
   max-width: 650px;
 }
 
 #page-head-tabs {
-  &:empty {
-    margin-top: 15px;
-  }
-
   > li {
-    margin-top: 5px;
+    &:only-child {
+      display: none;
+    }
 
     &.active > a {
       &, &:hover, &:focus {

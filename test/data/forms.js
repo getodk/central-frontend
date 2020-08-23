@@ -57,11 +57,18 @@ const forms = dataStore({
     id,
     lastCreatedAt,
 
+    submissions = undefined,
+    lastSubmission = submissions != null && submissions !== 0
+      ? new Date().toISOString()
+      : undefined,
     project = extendedProjects.size !== 0
       ? extendedProjects.first()
-      : extendedProjects.createPast(1, { forms: 1 }).last(),
+      : extendedProjects.createPast(1, { forms: 1, lastSubmission }).last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
+    enketoId = 'xyz',
+    draft = !inPast,
+    enketoOnceId = !draft ? 'zyx' : null,
     state = !inPast
       ? 'open'
       : faker.random.arrayElement(['open', 'closing', 'closed']),
@@ -72,7 +79,6 @@ const forms = dataStore({
     hasInstanceId = faker.random.boolean(),
     fields = defaultFields(hasInstanceId),
 
-    draft = !inPast,
     ...rest
   }) => {
     const form = {
@@ -80,6 +86,8 @@ const forms = dataStore({
       projectId: project.id,
       xmlFormId,
       name,
+      enketoId: !draft ? enketoId : null,
+      enketoOnceId,
       state,
       createdAt: inPast
         ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
@@ -91,7 +99,14 @@ const forms = dataStore({
       // of access during testing.
       _fields: fields
     };
-    const versionOptions = { ...rest, form, draft };
+    const versionOptions = {
+      ...rest,
+      form,
+      draft,
+      enketoId: draft ? enketoId : null,
+      submissions,
+      lastSubmission
+    };
     if (inPast)
       formVersions.createPast(1, versionOptions);
     else
@@ -123,11 +138,11 @@ formVersions = dataStore({
     version = 'v1',
     key = null,
     sha256 = 'a'.repeat(64),
-    enketoId = 'xyz',
+    enketoId,
     draft = false,
     publishedAt = undefined,
     excelContentType = null,
-    submissions = 0,
+    submissions = undefined,
     lastSubmission = undefined,
     publishedBy = undefined,
     draftToken = draft ? faker.random.alphaNumeric(64) : null
@@ -141,9 +156,6 @@ formVersions = dataStore({
       enketoId,
       // Extended form, extended form version, and extended form draft
       excelContentType,
-      // Extended form and extended form draft
-      // This property does not necessarily match testData.extendedSubmissions.
-      submissions,
       // Extended form version
       publishedBy: publishedBy != null
         ? toActor(publishedBy)
@@ -162,11 +174,20 @@ formVersions = dataStore({
       if (!draft) result.publishedAt = result.createdAt;
     }
 
-    // This property does not necessarily match testData.extendedProjects or
-    // testData.extendedSubmissions.
-    result.lastSubmission = lastSubmission != null
-      ? lastSubmission
-      : (submissions !== 0 ? fakePastDate([result.createdAt]) : null);
+    if (submissions != null) {
+      // This property does not necessarily match testData.extendedSubmissions.
+      result.submissions = submissions;
+      // This property does not necessarily match testData.extendedProjects or
+      // testData.extendedSubmissions.
+      result.lastSubmission = lastSubmission != null
+        ? lastSubmission
+        : (submissions !== 0 ? new Date().toISOString() : null);
+    } else if (lastSubmission != null) {
+      result.submissions = 1;
+      result.lastSubmission = lastSubmission;
+    } else {
+      result.submissions = 0;
+    }
 
     return result;
   },
@@ -178,28 +199,27 @@ formVersions = dataStore({
 ////////////////////////////////////////////////////////////////////////////////
 // VIEWS
 
-const findVersion = (published) => (form) => {
+const findPrimaryVersion = (form) => {
   for (let i = formVersions.size - 1; i >= 0; i -= 1) {
     const version = formVersions.get(i);
-    if (version.form === form && (version.publishedAt != null) === published)
-      return version;
+    if (version.form === form && version.publishedAt != null) return version;
   }
   return null;
 };
-const findPrimaryVersion = findVersion(true);
-const findDraft = findVersion(false);
 
 const transformForm = (formProps, versionProps) => (form) => {
   const data = pick(formProps, form);
+  data.enketoId = form.enketoId;
+
   const primary = findPrimaryVersion(form);
   if (primary != null) {
     // We should probably sum `submissions` for all published versions, rather
     // than simply copying it from the primary version.
     Object.assign(data, pick(versionProps, primary));
-  } else {
-    data.enketoId = findDraft(form).enketoId;
-    if (versionProps.includes('submissions')) data.submissions = 0;
+  } else if (versionProps.includes('submissions')) {
+    data.submissions = 0;
   }
+
   return data;
 };
 const transformVersion = (formProps, versionProps) => (version) =>
@@ -209,22 +229,21 @@ const formProps = [
   'projectId',
   'xmlFormId',
   'name',
+  'enketoOnceId',
   'state',
   'createdAt',
   'updatedAt',
   '_fields'
 ];
 const extendedFormProps = ['createdBy'];
-// The enketoId of the form is actually different from the enketoId of the
-// primary version, but that shouldn't matter for testing Frontend.
-const versionProps = ['version', 'keyId', 'enketoId', 'publishedAt'];
+const versionProps = ['version', 'keyId', 'publishedAt'];
 const versionPropsForExtendedForm = [
   'excelContentType',
   'submissions',
   'lastSubmission'
 ];
 const extendedVersionProps = ['excelContentType', 'publishedBy'];
-const draftProps = ['draftToken'];
+const draftProps = ['enketoId', 'draftToken'];
 
 export const standardForms = view(
   forms,
@@ -238,8 +257,11 @@ export const extendedForms = view(
     [...versionProps, ...versionPropsForExtendedForm]
   )
 );
-extendedForms.updateState = function updateState(index, state) {
-  forms.update(index, { state });
+extendedForms.update = function update(index, props = undefined) {
+  forms.update(
+    index,
+    props != null ? pick(['enketoId', 'enketoOnceId', 'state'], props) : props
+  );
   return this.get(index);
 };
 
@@ -256,10 +278,6 @@ extendedFormVersions.published = () => {
   }
   return published.sort(sortByPublishedAt);
 };
-extendedFormVersions.updateEnketoId = function updateEnketoId(index, enketoId) {
-  formVersions.update(index, { enketoId });
-  return this.get(index);
-};
 
 export const standardFormDrafts = view(
   formVersions,
@@ -273,9 +291,14 @@ export const extendedFormDrafts = view(
     [...versionProps, ...versionPropsForExtendedForm, ...draftProps]
   )
 );
+extendedFormDrafts.update = function update(index, props = undefined) {
+  formVersions.update(index, props != null ? pick(['enketoId'], props) : props);
+  return this.get(index);
+};
 extendedFormDrafts.publish = (index) => {
   if (extendedUsers.size === 0) throw new Error('user not found');
   formVersions.update(index, {
+    enketoId: null,
     publishedAt: new Date().toISOString(),
     submissions: 0,
     lastSubmission: null,

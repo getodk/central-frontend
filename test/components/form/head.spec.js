@@ -81,6 +81,7 @@ describe('FormHead', () => {
           'Overview',
           'Versions',
           'Submissions',
+          'Public Access',
           'Settings',
           'Status',
           'Media Files 1',
@@ -106,7 +107,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
-        tabs.length.should.equal(4);
+        tabs.length.should.equal(5);
         for (const tab of tabs) {
           tab.hasClass('disabled').should.be.true();
           tab.getAttribute('title').should.equal('These functions will become available once you publish your Draft Form');
@@ -120,7 +121,7 @@ describe('FormHead', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.find('#form-head-form-tabs li');
-        tabs.length.should.equal(4);
+        tabs.length.should.equal(5);
         for (const tab of tabs) {
           tab.hasClass('disabled').should.be.false();
           tab.hasAttribute('title').should.be.false();
@@ -248,11 +249,11 @@ describe('FormHead', () => {
       it('shows a loading message during the request', () =>
         load('/projects/1/forms/f')
           .complete()
-          .request(app => trigger.click(app, '#form-head-create-draft-button'))
+          .request(trigger.click('#form-head-create-draft-button'))
           .beforeAnyResponse(app => {
             app.first(Loading).should.be.visible();
             app.first(FormHead).should.be.hidden();
-            app.first(FormOverview).vm.$el.parentNode.should.be.hidden();
+            app.first(FormOverview).should.be.hidden();
           })
           .respondWithSuccess()
           .respondFor('/projects/1/forms/f/draft', {

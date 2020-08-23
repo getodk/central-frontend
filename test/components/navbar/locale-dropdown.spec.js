@@ -19,7 +19,9 @@ describe('NavbarLocaleDropdown', () => {
       .afterResponses(app => {
         const text = app.find('#navbar-locale-dropdown .dropdown-menu a')
           .map(a => a.text().trim());
-        text.should.eql(['English', 'Español']);
+        text[0].should.eql('English');
+        text[1].should.eql('Čeština');
+        text[2].should.eql('Deutsch');
       }));
 
   describe('after a locale selection', () => {

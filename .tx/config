@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[central.strings]
+file_filter = transifex/strings_<lang>.json
+minimum_perc = 0
+source_file = transifex/strings_en.json
+source_lang = en
+type = STRUCTURED_JSON

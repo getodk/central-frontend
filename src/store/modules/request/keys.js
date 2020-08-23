@@ -38,13 +38,13 @@ export const keys = [
   'form',
   // Fields for a single form version (the primary version or otherwise)
   'fields',
-  'formActors',
   'formVersions',
   'formDraft',
   // Form draft attachments
   'attachments',
   // A single chunk of submissions OData for a single form version
   'submissionsChunk',
+  'publicLinks',
   // Encryption keys for a single form version
   'keys',
   'fieldKeys',

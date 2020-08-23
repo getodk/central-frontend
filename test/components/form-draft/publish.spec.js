@@ -251,12 +251,11 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return showModal()
         .request(trigger.click('#form-draft-publish .btn-primary'))
-        .respondWithSuccess()
         .respondWithData(() => {
           testData.extendedFormDrafts.publish(-1);
-          return testData.extendedForms.last();
+          return { success: true };
         })
-        .respondWithData(() => []); // formActors
+        .respondWithData(() => testData.extendedForms.last());
     };
 
     it('shows a success alert', () =>
@@ -287,12 +286,11 @@ describe('FormDraftPublish', () => {
         .route('/projects/1/forms/f/draft')
         .request(app => trigger.click(app, '#form-draft-status-publish-button')
           .then(trigger.click('#form-draft-publish .btn-primary')))
-        .respondWithSuccess()
         .respondWithData(() => {
           testData.extendedFormDrafts.publish(-1);
-          return testData.extendedForms.last();
+          return { success: true };
         })
-        .respondWithData(() => []) // formActors
+        .respondWithData(() => testData.extendedForms.last())
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())

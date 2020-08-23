@@ -1,34 +1,41 @@
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import Selectable from '../../../src/components/selectable.vue';
 import testData from '../../data';
 import { ago } from '../../../src/util/date-time';
 import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
-const testTypeAndTarget = (type, target) => (app) => {
-  const td = app.find('.audit-row td');
+const testType = (app, type) => {
+  const td = app.first('.audit-row .type');
+  td.text().trim().iTrim().should.equal(type.join(' '));
 
-  td[1].text().trim().iTrim().should.equal(type.join(' '));
-
-  const icons = td[1].find('.icon-angle-right');
+  const icons = td.find('.icon-angle-right');
   if (type.length === 1)
     icons.length.should.equal(0);
   else if (type.length === 2)
     icons.length.should.equal(1);
   else
-    throw new Error();
-
-  td[3].hasClass('target').should.be.true();
-  if (target != null) {
-    const a = td[3].first('a');
-    a.text().trim().should.equal(target.text);
-    a.getAttribute('title').should.equal(target.text);
-    a.getAttribute('href').should.equal(`#${target.href}`);
+    throw new Error('invalid type');
+};
+const testTarget = (app, text, href) => {
+  const td = app.first('.audit-row .target');
+  if (text === '') {
+    td.text().should.equal('');
+  } else if (href == null) {
+    const span = td.first('span');
+    span.text().trim().should.equal(text);
+    span.getAttribute('title').should.equal(text);
   } else {
-    td[3].text().trim().should.equal('');
-    td[3].find('a').length.should.equal(0);
+    const a = td.first('a');
+    a.text().trim().should.equal(text);
+    a.getAttribute('title').should.equal(text);
+    a.getAttribute('href').should.equal(`#${href}`);
   }
+};
+const testTypeAndTarget = (type, target) => (app) => {
+  testType(app, type);
+  if (target != null) testTarget(app, target.text, target.href);
 };
 
 describe('AuditTable', () => {
@@ -172,6 +179,45 @@ describe('AuditTable', () => {
     });
   });
 
+  it('renders a public_link.create audit correctly', async () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'public_link.create',
+      actee: testData.toActor(testData.standardPublicLinks
+        .createPast(1, { displayName: 'My Public Link' })
+        .last())
+    });
+    const app = await load('/system/audits');
+    testType(app, ['Public Access Link', 'Create']);
+    testTarget(app, 'My Public Link', null);
+  });
+
+  it('renders a field_key.create audit correctly', async () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'field_key.create',
+      actee: testData.toActor(testData.extendedFieldKeys
+        .createPast(1, { displayName: 'My App User' })
+        .last())
+    });
+    const app = await load('/system/audits');
+    testType(app, ['App User', 'Create']);
+    testTarget(app, 'My App User', null);
+  });
+
+  it('renders a session.end audit correctly', async () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'session.end',
+      actee: testData.toActor(testData.extendedFieldKeys
+        .createPast(1, { displayName: 'My App User' })
+        .last())
+    });
+    const app = await load('/system/audits');
+    testType(app, ['Session', 'Delete']);
+    testTarget(app, 'My App User', null);
+  });
+
   it('renders a backup audit correctly', () =>
     mockRoute('/system/backups')
       .respondWithData(() => testData.standardBackupsConfigs
@@ -258,35 +304,15 @@ describe('AuditTable', () => {
     });
   });
 
-  it('renders details correctly', () =>
-    mockRoute('/system/audits')
-      .respondWithData(() => testData.extendedAudits
-        .createPast(1, {
-          actor: testData.extendedUsers.first(),
-          action: 'user.update',
-          actee: testData.toActor(testData.extendedUsers.first()),
-          details: { some: 'json' }
-        })
-        .sorted())
-      .afterResponse(app => {
-        app.first('.audit-row .details').text().should.equal('{"some":"json"}');
-      }));
-
-  it('selects details after they are clicked', () =>
-    mockRoute('/system/audits', { attachToDocument: true })
-      .respondWithData(() => testData.extendedAudits
-        .createPast(1, {
-          actor: testData.extendedUsers.first(),
-          action: 'user.update',
-          actee: testData.toActor(testData.extendedUsers.first()),
-          details: { some: 'json' }
-        })
-        .sorted())
-      .afterResponse(app => trigger.click(app, '.audit-row .details div'))
-      .then(() => {
-        const selection = window.getSelection();
-        const details = document.querySelector('.audit-row .details div');
-        selection.anchorNode.should.equal(details);
-        selection.focusNode.should.equal(details);
-      }));
+  it('renders the details correctly', async () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'user.update',
+      actee: testData.toActor(testData.extendedUsers.first()),
+      details: { some: 'json' }
+    });
+    const app = await load('/system/audits');
+    const selectable = app.first(AuditRow).first(Selectable);
+    selectable.text().should.equal('{"some":"json"}');
+  });
 });

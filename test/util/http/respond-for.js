@@ -16,7 +16,6 @@ const defaults = {
     testData.standardFormSummaryAssignments.sorted(),
   form: () => testData.extendedForms.last(),
   fields: () => testData.extendedForms.last()._fields,
-  formActors: () => testData.extendedFieldKeys.sorted().map(testData.toActor),
   formVersions: () => testData.extendedFormVersions.published(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.extendedFormDrafts.last()
@@ -26,6 +25,7 @@ const defaults = {
     : { problem: 404.1 }),
   submissionsChunk: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
+  publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
   backupsConfig: () => (testData.standardBackupsConfigs.size !== 0
@@ -63,9 +63,10 @@ const mapsByComponent = {
   ]),
   ProjectSettings: new Map(),
   FormShow: mapKeys(['form', 'formDraft', 'attachments']),
-  FormOverview: mapKeys(['formActors']),
+  FormOverview: new Map(),
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  PublicLinkList: mapKeys(['publicLinks']),
   FormSettings: new Map(),
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),

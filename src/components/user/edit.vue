@@ -61,7 +61,7 @@ export default {
     UserEditBasicDetails,
     UserEditPassword
   },
-  mixins: [validateData()],
+  mixins: [validateData({ update: true })],
   props: {
     id: {
       type: String,

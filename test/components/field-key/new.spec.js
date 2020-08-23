@@ -164,7 +164,7 @@ describe('FieldKeyNew', () => {
     it('fetches app users after link to Form Access tab is clicked', () =>
       submit()
         .complete()
-        .request(app => trigger.click(app, '#field-key-new a[href="#"]'))
+        .request(trigger.click('#field-key-new a[href="/projects/1/form-access"]'))
         .beforeEachResponse((app, config, index) => {
           if (index === 1) config.url.should.equal('/v1/projects/1/app-users');
         })

@@ -10,8 +10,8 @@ const submitPasswords = (wrapper, { match, validSizePass = true }) =>
   submitForm(wrapper, '#user-edit-password form', [
     ['#user-edit-password-old-password', 'testPasswordX'],
     ['#user-edit-password-new-password', validSizePass ? 'testPasswordY' : 'y'],
-    ['#user-edit-password-confirm', match ? validSizePass ? 'testPasswordY' : 'y':
-      validSizePass ? 'testPasswordZ' : 'z']
+    ['#user-edit-password-confirm', match ? validSizePass ? 'testPasswordY' : 'y'
+      : validSizePass ? 'testPasswordZ' : 'z']
   ]);
 
 describe('UserEditPassword', () => {
@@ -104,12 +104,12 @@ describe('UserEditPassword', () => {
           requestData: { user: testData.standardUsers.first() }
         })
         .request(async (component) => {
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-old-password', 'testPasswordX'],
             ['#user-edit-password-new-password', 'testPasswordY'],
             ['#user-edit-password-confirm', 'testPasswordZ']
           ]);
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-confirm', 'testPasswordY']
           ]);
         })
@@ -140,13 +140,12 @@ describe('UserEditPassword', () => {
           requestData: { user: testData.standardUsers.first() }
         })
         .request(async (component) => {
-          console.log("STARTING");
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-old-password', 'testPasswordX'],
             ['#user-edit-password-new-password', 'y'],
             ['#user-edit-password-confirm', 'testPasswordY']
           ]);
-          await trigger.submitForm(component, '#user-edit-password form', [
+          await trigger.submit(component, '#user-edit-password form', [
             ['#user-edit-password-new-password', 'testPasswordY']
           ]);
         })

@@ -14,12 +14,18 @@ except according to the terms contained in the LICENSE file.
 A component that contains one or more modals may use this mixin, which includes
 methods for toggling a modal.
 
-The mixin factory does not take any options.
-
 The component using this mixin must define a data property for each modal that
-it contains. Each modal's corresponding property must be an object. The object
-must have a `state` property that indicates whether the modal should be shown.
+it contains. The property should be an object that has a property named `state`
+that indicates whether the modal should be shown.
+
+If a component loads a modal component asynchronously, then when the component
+uses the mixin, it should specify the name of the modal component along with the
+name of the associated property. For example:
+
+  modal({ submissionOptions: 'ProjectSubmissionOptions' })
 */
+
+import { loadedAsyncComponent } from '../util/async-components';
 
 // @vue/component
 const mixin = {
@@ -33,4 +39,17 @@ const mixin = {
   }
 };
 
-export default () => mixin;
+// @vue/component
+const mixinForAsyncModals = (asyncModals) => ({
+  methods: {
+    showModal(name) {
+      const componentName = asyncModals[name];
+      if (componentName == null || loadedAsyncComponent(componentName))
+        this[name].state = true;
+    },
+    hideModal: mixin.methods.hideModal
+  }
+});
+
+export default (asyncModals = undefined) =>
+  (asyncModals == null ? mixin : mixinForAsyncModals(asyncModals));

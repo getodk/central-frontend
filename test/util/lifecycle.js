@@ -2,6 +2,7 @@ import { mount as avoriazMount } from 'avoriaz';
 
 import Root from './lifecycle/root.vue';
 import i18n from '../../src/i18n';
+import router from '../../src/router';
 import store from '../../src/store';
 import { transforms } from '../../src/store/modules/request/keys';
 
@@ -10,21 +11,16 @@ import { transforms } from '../../src/store/modules/request/keys';
 ////////////////////////////////////////////////////////////////////////////////
 // DESTROY
 
-let componentToDestroy = null;
+const componentsToDestroy = [];
 
-const markComponentToDestroy = (component) => {
-  if (componentToDestroy != null)
-    throw new Error('a component has already been marked');
-  componentToDestroy = component;
-};
-
-export const destroyMarkedComponent = () => {
-  if (componentToDestroy == null) return;
-  const { vm } = componentToDestroy;
-  vm.$destroy();
-  const { $el } = vm;
-  if ($el.parentNode != null) $el.parentNode.removeChild($el);
-  componentToDestroy = null;
+export const destroyMarkedComponents = () => {
+  for (const component of componentsToDestroy) {
+    const { vm } = component;
+    vm.$destroy();
+    const { $el } = vm;
+    if ($el.parentNode != null) $el.parentNode.removeChild($el);
+  }
+  componentsToDestroy.splice(0);
 };
 
 
@@ -84,12 +80,24 @@ export const mount = (component, options = {}) => {
     return root.first(component);
   }
 
+  if (options.attachToDocument === true) {
+    for (const componentToDestroy of componentsToDestroy) {
+      if (componentToDestroy.vm.$el.parentNode != null)
+        throw new Error('only one component can be attached to the document');
+    }
+  }
+
   const { requestData, ...mountOptions } = options;
-  if (requestData != null) setRequestData(requestData);
+
+  // Normalize the options.
+  if (mountOptions.router === true) mountOptions.router = router;
   mountOptions.store = store;
   mountOptions.i18n = i18n;
+
+  if (requestData != null) setRequestData(requestData);
+
   const wrapper = avoriazMount(component, mountOptions);
-  markComponentToDestroy(wrapper);
+  componentsToDestroy.push(wrapper);
   return wrapper;
 };
 

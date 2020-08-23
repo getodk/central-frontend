@@ -24,14 +24,6 @@ const upload = (app) => selectFileByInput(app.first(FormNew), xlsForm())
 
 describe('FormNew', () => {
   describe('new form modal', () => {
-    it('does not show the new form button to a project viewer', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer' });
-      return load('/projects/1').then(app => {
-        app.find('#form-list-create-button').length.should.equal(0);
-      });
-    });
-
     it('toggles the modal', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
@@ -426,29 +418,6 @@ describe('FormNew', () => {
           const steps = app.find(ChecklistStep);
           steps.length.should.equal(4);
           steps[2].getProp('stage').should.equal('current');
-        });
-    });
-
-    it('updates the form enketoId', () => {
-      testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      return load('/projects/1/forms/f/draft')
-        .complete()
-        .request(async (app) => {
-          await trigger.click(app, '#form-draft-status-upload-button');
-          await upload(app);
-        })
-        .respondWithData(() => {
-          testData.extendedFormVersions.createPast(1, {
-            draft: true,
-            enketoId: 'xyz'
-          });
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          const { form } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
         });
     });
   });

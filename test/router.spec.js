@@ -1,14 +1,11 @@
-import FormAttachmentList from '../src/components/form-attachment/list.vue';
-import SubmissionList from '../src/components/submission/list.vue';
 import i18n from '../src/i18n';
 import testData from './data';
 import { load, mockRoute } from './util/http';
 import { loadLocale } from '../src/util/i18n';
 import { mockLogin } from './util/session';
-import { trigger } from './util/event';
 
 describe('router', () => {
-  describe.skip('i18n', () => {
+  describe('i18n', () => {
     before(() => {
       const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
       has.should.be.false();
@@ -86,6 +83,7 @@ describe('router', () => {
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
       '/projects/1/forms/f/submissions',
+      '/projects/1/forms/f/public-links',
       '/projects/1/forms/f/settings',
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
@@ -133,17 +131,166 @@ describe('router', () => {
   });
 
   describe('preserveData', () => {
-    describe('project routes', () => {
-      it('preserves data if the user changes tabs', () => {
-        mockLogin();
+    beforeEach(mockLogin);
+
+    const dataExists = (keys) => (app) => {
+      for (const key of keys)
+        should.exist(app.vm.$store.state.request.data[key]);
+    };
+
+    describe('navigating between project routes', () => {
+      beforeEach(() => {
         testData.extendedProjects.createPast(1, { appUsers: 0 });
-        return load('/projects/1/app-users')
+      });
+
+      it('preserves data while navigating to/from the project overview', () =>
+        // Load .../form-access, which requests all the data that the project
+        // overview uses.
+        load('/projects/1/form-access')
+          .complete()
+          .route('/projects/1')
+          .complete()
+          .route('/projects/1/form-access')
+          .then(dataExists(['project', 'forms'])));
+
+      describe('navigating to/from .../users', () => {
+        it('preserves project', () =>
+          load('/projects/1/settings')
+            .complete()
+            .load('/projects/1/users', { project: false })
+            .complete()
+            .route('/projects/1/settings')
+            .then(dataExists(['project'])));
+
+        it('preserves roles', () =>
+          load('/projects/1/form-access')
+            .complete()
+            .load('/projects/1/users', { project: false, roles: false })
+            .complete()
+            .route('/projects/1/form-access')
+            .then(dataExists(['roles'])));
+
+        // Only .../users uses projectAssignments, but we test that the data is
+        // preserved if the user navigates away, then back.
+        it('preserves projectAssignments', () =>
+          load('/projects/1/users')
+            .complete()
+            .route('/projects/1/settings')
+            .complete()
+            .route('/projects/1/users')
+            .then(dataExists(['projectAssignments'])));
+      });
+
+      it('preserves data while navigating to/from .../app-users', () =>
+        load('/projects/1/form-access')
+          .complete()
+          .route('/projects/1/app-users')
+          .complete()
+          .route('/projects/1/form-access')
+          .then(dataExists(['project', 'fieldKeys'])));
+
+      describe('navigating to/from .../form-access', () => {
+        it('preserves project', () =>
+          load('/projects/1/settings')
+            .complete()
+            .load('/projects/1/form-access', { project: false })
+            .complete()
+            .route('/projects/1/settings')
+            .then(dataExists(['project'])));
+
+        it('preserves roles', () =>
+          load('/projects/1/users')
+            .complete()
+            .load('/projects/1/form-access', { project: false, roles: false })
+            .complete()
+            .route('/projects/1/users')
+            .then(dataExists(['roles'])));
+
+        it('preserves forms', () =>
+          load('/projects/1')
+            .complete()
+            .load('/projects/1/form-access', { project: false, forms: false })
+            .complete()
+            .route('/projects/1')
+            .then(dataExists(['forms'])));
+
+        it('preserves fieldKeys', () =>
+          load('/projects/1/app-users')
+            .complete()
+            .load('/projects/1/form-access', { project: false, fieldKeys: false })
+            .complete()
+            .route('/projects/1/app-users')
+            .then(dataExists(['fieldKeys'])));
+
+        it('preserves formSummaryAssignments', () =>
+          load('/projects/1/form-access')
+            .complete()
+            .route('/projects/1/settings')
+            .complete()
+            .route('/projects/1/form-access')
+            .then(dataExists(['formSummaryAssignments'])));
+      });
+
+      it('preserves data while navigating to/from .../settings', () =>
+        load('/projects/1')
           .complete()
           .route('/projects/1/settings')
           .complete()
-          .route('/projects/1/app-users')
-          .testNoRequest();
+          .route('/projects/1')
+          .then(dataExists(['project'])));
+    });
+
+    describe('navigating between form routes', () => {
+      beforeEach(() => {
+        testData.extendedForms.createPast(1);
+        testData.extendedFormVersions.createPast(1, { draft: true });
+        testData.standardFormAttachments.createPast(1);
       });
+
+      describe('navigating to/from .../public-links', () => {
+        it('preserves data that FormShow uses', () =>
+          load('/projects/1/forms/f/settings')
+            .complete()
+            .load('/projects/1/forms/f/public-links', {
+              project: false,
+              form: false,
+              formDraft: false,
+              attachments: false
+            })
+            .complete()
+            .route('/projects/1/forms/f/settings')
+            .then(dataExists(['project', 'form', 'formDraft', 'attachments'])));
+
+        it('preserves publicLinks', () =>
+          load('/projects/1/forms/f/public-links')
+            .complete()
+            .route('/projects/1/forms/f/settings')
+            .complete()
+            .route('/projects/1/forms/f/public-links')
+            .then(dataExists(['publicLinks'])));
+      });
+    });
+
+    describe('navigating between project and form routes', () => {
+      beforeEach(() => {
+        testData.extendedForms.createPast(1);
+      });
+
+      it('preserves project while navigating to/from a form route', () =>
+        load('/projects/1/settings')
+          .complete()
+          .load('/projects/1/forms/f/settings', { project: false })
+          .complete()
+          .route('/projects/1/settings')
+          .then(dataExists(['project'])));
+
+      it('preserves project while navigating to/from a project route', () =>
+        load('/projects/1/forms/f/settings')
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .load('/projects/1/forms/f/settings', { project: false })
+          .then(dataExists(['project'])));
     });
   });
 
@@ -151,6 +298,11 @@ describe('router', () => {
     describe('user without a sitewide role', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
+      });
+
+      it('does not redirect the user from /', async () => {
+        const app = await load('/', {}, { users: false });
+        app.vm.$route.path.should.equal('/');
       });
 
       it('redirects the user from /system/backups', () =>
@@ -244,7 +396,7 @@ describe('router', () => {
 
       describe('form routes', () => {
         it('redirects the user from the form overview', () =>
-          load('/projects/1/forms/f', {}, { formActors: 403.1 })
+          load('/projects/1/forms/f')
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
@@ -259,6 +411,13 @@ describe('router', () => {
           const app = await load('/projects/1/forms/f/submissions');
           app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
         });
+
+        it('redirects the user from .../public-links', () =>
+          load('/projects/1/forms/f/public-links')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
 
         it('redirects the user from .../settings', () =>
           load('/projects/1/forms/f/settings')
@@ -325,6 +484,7 @@ describe('router', () => {
           '/projects/1/forms/f',
           '/projects/1/forms/f/versions',
           '/projects/1/forms/f/submissions',
+          '/projects/1/forms/f/public-links',
           '/projects/1/forms/f/settings',
           '/projects/1/forms/f/draft',
           '/projects/1/forms/f/draft/attachments',
@@ -391,6 +551,13 @@ describe('router', () => {
 
       it('redirects the user from .../submissions', () =>
         load('/projects/1/forms/f/submissions')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects the user from .../public-links', () =>
+        load('/projects/1/forms/f/public-links')
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -526,90 +693,5 @@ describe('router', () => {
             app.vm.$route.path.should.equal('/');
           }));
     });
-  });
-
-  describe('after a route update', () => {
-    beforeEach(mockLogin);
-
-    it('resets and updates SubmissionList', () =>
-      mockRoute('/projects/1/forms/f1/submissions')
-        .beforeEachResponse((app, { url }, index) => {
-          if (index === 5)
-            url.should.equal('/v1/projects/1/forms/f1/fields?odata=true');
-        })
-        .respondWithData(() => testData.extendedProjects
-          .createPast(1, { forms: 3, lastSubmission: new Date().toISOString() })
-          .last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f1', submissions: 1 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._fields)
-        .respondWithData(() => {
-          testData.extendedSubmissions.createPast(1);
-          return testData.submissionOData(1, 0);
-        })
-        .afterResponses(app => {
-          app.first(SubmissionList).data().submissions.length.should.equal(1);
-        })
-        .route('/projects/1/forms/f2/submissions')
-        .beforeAnyResponse(app => {
-          should.not.exist(app.first(SubmissionList).data().submissions);
-        })
-        .beforeEachResponse((app, { url }, index) => {
-          if (index === 4)
-            url.should.equal('/v1/projects/1/forms/f2/fields?odata=true');
-        })
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', submissions: 2 })
-          .last())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .respondWithData(() => testData.standardKeys.sorted())
-        .respondWithData(() => testData.extendedForms.last()._fields)
-        .respondWithData(() => {
-          const form = testData.extendedForms.last();
-          testData.extendedSubmissions.createPast(2, { form });
-          return testData.submissionOData(2, 1);
-        })
-        .afterResponses(app => {
-          app.first(SubmissionList).data().submissions.length.should.equal(2);
-        }));
-
-    it('resets FormAttachmentList', () =>
-      mockRoute('/projects/1/forms/f1/draft/attachments')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { forms: 2 }).last())
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f1', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() =>
-          testData.standardFormAttachments.createPast(1).sorted())
-        .afterResponses(app =>
-          trigger.dragAndDrop(app, FormAttachmentList, [new File([''], 'a')])
-            .then(() => {
-              const { unmatchedFiles } = app.first(FormAttachmentList).data();
-              unmatchedFiles.length.should.equal(1);
-            }))
-        .route('/projects/1/forms/f2/draft/attachments')
-        .respondWithData(() => testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', draft: true })
-          .last())
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => [
-          testData.standardFormAttachments
-            .createPast(1, {
-              form: testData.extendedForms.last(),
-              hasUpdatedAt: false
-            })
-            .last()
-        ])
-        .afterResponses(app => {
-          const { unmatchedFiles } = app.first(FormAttachmentList).data();
-          unmatchedFiles.length.should.equal(0);
-        }));
   });
 });
