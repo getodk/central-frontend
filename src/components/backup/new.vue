@@ -22,7 +22,8 @@ except according to the terms contained in the LICENSE file.
         </p>
         <form @submit.prevent="initiate">
           <form-group ref="passphrase" v-model="passphrase"
-            :placeholder="$t('field.passphrase')" autocomplete="off"/>
+            :placeholder="$t('field.passphrase')" autocomplete="off"
+            strengthmeter/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-primary"
               :disabled="awaitingResponse">

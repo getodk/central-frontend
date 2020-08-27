@@ -258,7 +258,40 @@ a {
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+// PASSWORD FIELD
 
+.Password {
+  float: right;
+  width: 50%;
+}
+
+.Password__strength-meter {
+  position: relative;
+  height: 2px;
+  background: #DDD;
+  border-radius: 3px;
+  margin-top: 10px;
+
+}
+.Password__strength-meter:before, .Password__strength-meter:after {
+  content: '';
+  height: inherit;
+  background: transparent;
+  display: block;
+  border-color: #FFF;
+  border-style: solid;
+  border-width: 0 5px 0 5px;
+  position: absolute;
+  width: 20%;
+  z-index: 10;
+}
+.Password__strength-meter:before {
+  left: 20%;
+}
+.Password__strength-meter:after {
+  right: 20%;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // TABLES

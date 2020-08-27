@@ -6,11 +6,12 @@ import { mockHttp, mockRoute } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 import { mountAndMark } from '../../../util/lifecycle';
 
-const submitPasswords = (wrapper, { match }) =>
+const submitPasswords = (wrapper, { match, validSizePass = true }) =>
   submitForm(wrapper, '#user-edit-password form', [
-    ['#user-edit-password-old-password', 'x'],
-    ['#user-edit-password-new-password', 'y'],
-    ['#user-edit-password-confirm', match ? 'y' : 'z']
+    ['#user-edit-password-old-password', 'testPasswordX'],
+    ['#user-edit-password-new-password', validSizePass ? 'testPasswordY' : 'y'],
+    ['#user-edit-password-confirm', match ? validSizePass ? 'testPasswordY' : 'y'
+      : validSizePass ? 'testPasswordZ' : 'z']
   ]);
 
 describe('UserEditPassword', () => {
@@ -104,16 +105,53 @@ describe('UserEditPassword', () => {
         })
         .request(async (component) => {
           await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-old-password', 'x'],
-            ['#user-edit-password-new-password', 'y'],
-            ['#user-edit-password-confirm', 'z']
+            ['#user-edit-password-old-password', 'testPasswordX'],
+            ['#user-edit-password-new-password', 'testPasswordY'],
+            ['#user-edit-password-confirm', 'testPasswordZ']
           ]);
           await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-confirm', 'y']
+            ['#user-edit-password-confirm', 'testPasswordY']
           ]);
         })
         .beforeAnyResponse(component => {
           const formGroups = component.find('.form-group');
+          formGroups[1].hasClass('has-error').should.be.false();
+          formGroups[2].hasClass('has-error').should.be.false();
+        })
+        .respondWithSuccess());
+  });
+
+  describe('password length does not meet the criteria', () => {
+    it('adds .has-error to the fields when password length < 10', () => {
+      const component = mountAndMark(UserEditPassword, {
+        requestData: { user: testData.standardUsers.first() }
+      });
+      return submitPasswords(component, { match: false, validSizePass: false }).then(() => {
+        const formGroups = component.find('.form-group');
+        formGroups.length.should.equal(3);
+        formGroups[1].hasClass('has-error').should.be.true();
+        formGroups[2].hasClass('has-error').should.be.true();
+      });
+    });
+
+    it('removes .has-error once the passwords length > 10', () =>
+      mockHttp()
+        .mount(UserEditPassword, {
+          requestData: { user: testData.standardUsers.first() }
+        })
+        .request(async (component) => {
+          await trigger.submit(component, '#user-edit-password form', [
+            ['#user-edit-password-old-password', 'testPasswordX'],
+            ['#user-edit-password-new-password', 'y'],
+            ['#user-edit-password-confirm', 'testPasswordY']
+          ]);
+          await trigger.submit(component, '#user-edit-password form', [
+            ['#user-edit-password-new-password', 'testPasswordY']
+          ]);
+        })
+        .beforeAnyResponse(component => {
+          const formGroups = component.find('.form-group');
+          formGroups.length.should.equal(3);
           formGroups[1].hasClass('has-error').should.be.false();
           formGroups[2].hasClass('has-error').should.be.false();
         })

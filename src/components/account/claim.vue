@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             not know the user's email address on this page. -->
             <form-group ref="password" v-model="password" type="password"
               :placeholder="$t('field.newPassword')" required
-              autocomplete="new-password"/>
+              autocomplete="new-password" strengthmeter/>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
                 :disabled="awaitingResponse">
@@ -58,6 +58,10 @@ export default {
   },
   methods: {
     submit() {
+      if (this.password.length < 10) {
+        this.$alert().danger('Please input a password at least 10 characters long.');
+        return;
+      }
       const headers = {};
       const { token } = this.$route.query;
       if (typeof token === 'string') headers.Authorization = `Bearer ${token}`;

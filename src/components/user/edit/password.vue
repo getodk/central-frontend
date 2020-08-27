@@ -23,10 +23,10 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="mismatch" autocomplete="new-password"/>
+          :has-error="mismatch || invalidPassword" autocomplete="new-password" strengthmeter/>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
-          :has-error="mismatch" autocomplete="new-password"/>
+          :has-error="mismatch || invalidPassword" autocomplete="new-password"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
@@ -57,7 +57,8 @@ export default {
       oldPassword: '',
       newPassword: '',
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      invalidPassword: false
     };
   },
   computed: requestData(['currentUser', 'user']),
@@ -67,10 +68,16 @@ export default {
       this.newPassword = '';
       this.confirm = '';
       this.mismatch = false;
+      this.invalidPassword = false;
     }
   },
   methods: {
     submit() {
+      this.invalidPassword = this.newPassword.length < 10;
+      if (this.invalidPassword) {
+        this.$alert().danger('Please input a password at least 10 characters long.');
+        return;
+      }
       this.mismatch = this.newPassword !== this.confirm;
       if (this.mismatch) {
         this.$alert().danger(this.$t('alert.mismatch'));

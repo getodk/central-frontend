@@ -87,7 +87,8 @@ except according to the terms contained in the LICENSE file.
         </div>
         <form @submit.prevent="submit">
           <form-group ref="passphrase" v-model="passphrase"
-            :placeholder="$t('field.passphrase')" required autocomplete="off"/>
+            :placeholder="$t('field.passphrase')" required autocomplete="off"
+            strengthmeter/>
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">

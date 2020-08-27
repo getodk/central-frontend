@@ -20,6 +20,8 @@ except according to the terms contained in the LICENSE file.
       :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
       @change="$emit('change', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <password v-if="strengthmeter" v-model="value" :strength-meter-only="true"
+      strength-meter-class="Password__strength-meter password-strength"/>
     <slot name="after"></slot>
   </label>
 </template>
@@ -27,6 +29,9 @@ except according to the terms contained in the LICENSE file.
 <script>
 export default {
   name: 'FormGroup',
+  components: {
+    Password: () => import('vue-password-strength-meter')
+  },
   inheritAttrs: false,
   props: {
     value: {
@@ -48,6 +53,10 @@ export default {
     autocomplete: {
       type: String,
       required: true
+    },
+    strengthmeter: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
