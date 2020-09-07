@@ -39,7 +39,7 @@
     "@vue/eslint-config-airbnb": "~4.0",
     "avoriaz": "~6.3",
     "babel-eslint": "~10.0",
-    "comment-json": "~3.0",
+    "comment-json": "~4.0",
     "eslint": "~5.16",
     "eslint-plugin-import": "~2.20",
     "eslint-plugin-vue": "~5.2",
