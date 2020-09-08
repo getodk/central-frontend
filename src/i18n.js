@@ -13,7 +13,7 @@ import VueI18n from 'vue-i18n';
 
 // Bundle en messages, since en is the fallback locale. Other locales are loaded
 // asynchronously.
-import fallbackMessages from './locales/en.json';
+import fallbackMessages from './locales/en.json5';
 
 export const locales = new Map()
   .set('en', 'English')

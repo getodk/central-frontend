@@ -13,7 +13,7 @@ module.exports = {
   chainWebpack: (config) => {
     config.module
       .rule('json5')
-        .test(/\/src\/locales\/en\.json$/)
+        .test(/\/src\/locales\/en\.json5$/)
         .type('javascript/auto')
         .use('json5')
           .loader('json5-loader');

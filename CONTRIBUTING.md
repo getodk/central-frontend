@@ -101,7 +101,7 @@ We also store router state in the Vuex store (see [`/src/store/modules/router.js
 
 We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
 
-ODK Central Frontend uses the translations stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a BCP 47 language tag, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and `en.json` is bundled with Frontend; other files are loaded asynchronously as needed. We also make ample use of single file component `i18n` custom blocks.
+ODK Central Frontend uses the translations stored in [`/src/locales/`](/src/locales/): there is a JSON file for each locale. The base name of each file must be a BCP 47 language tag, because we use the name to set the `lang` attribute of the `<html>` element. `en` is the fallback locale, and [`en.json5`](/src/locales/en.json5) is bundled with Frontend; other files are loaded asynchronously as needed. We also make ample use of single file component `i18n` custom blocks.
 
 We also define internationalization-related utilities in [`/src/util/i18n.js`](/src/util/i18n.js).
 
@@ -113,9 +113,9 @@ Note that while Vue I18n supports date/time localization, we use Luxon to manage
 
 We use Transifex to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
 
-`strings_en.json` is formatted as Transifex [structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of structured JSON is that it supports developer comments. However, structured JSON is a different format from the JSON that Vue I18n expects.
+`strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
-We use a script to convert Vue I18n JSON to structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json` and in single file component `i18n` custom blocks, then converts that JSON to a single structured JSON file, `strings_en.json`. Run `restructure.js` from the root directory of the repository.
+We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. Run `restructure.js` from the root directory of the repository.
 
 `restructure.js` adds developer comments to `strings_en.json` by reading JSON5 comments. To use JSON5 comments in a single file component, specify `lang="json5"` for the `i18n` custom block. For example:
 
@@ -136,18 +136,18 @@ We use a script to convert Vue I18n JSON to structured JSON: [`/bin/transifex/re
 
 Also note about comments:
 
-- You can use comments in `/src/locales/en.json`, which is parsed as JSON5.
-- If you add a comment about a specific key to the top of `/src/locales/en.json`, that comment will be added for the key whether it appears in `en.json` or a single file component `i18n` custom block.
+- You can use comments in `/src/locales/en.json5`, which is parsed as JSON5.
+- If you add a comment about a specific key to the top of `/src/locales/en.json5`, that comment will be added for the key whether it appears in `en.json5` or a single file component `i18n` custom block.
 - `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
 - Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
 
 Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, use the Transifex client, specifying `translator` as the mode.
 
-Once they are downloaded, we convert the Transifex structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json`.
+Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json5`.
 
 To summarize the workflow:
 
-- Use Vue I18n as you normally would, adding messages to `/src/locales/en.json` and to single file component `i18n` custom blocks.
+- Use Vue I18n as you normally would, adding messages to `/src/locales/en.json5` and to single file component `i18n` custom blocks.
 - Add any developer comments to the Vue I18n JSON.
 - Run `restructure.js` to generate `strings_en.json`.
 - `strings_en.json` is automatically pulled into Transifex.
