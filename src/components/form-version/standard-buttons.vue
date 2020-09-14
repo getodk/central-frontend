@@ -94,9 +94,12 @@ export default {
     "action": {
       "downloadXForm": "Download XML"
     },
-    // Here, the user selects the format that a Form should be downloaded as.
     "format": {
+      // Here, the user selects the format that a Form should be downloaded as.
+      // The word "XForm" should not be translated.
       "xForm": "As XForm",
+      // Here, the user selects the format that a Form should be downloaded as.
+      // The word "XLSForm" should not be translated.
       "xlsForm": "As XLSForm"
     }
   }

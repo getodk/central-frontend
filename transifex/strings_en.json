@@ -1240,12 +1240,12 @@
             "0": {
               "status": {
                 "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
-                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
+                "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
               },
               "link": {
                 "full": {
                   "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
-                  "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                  "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
                   "string": "upload",
@@ -1530,10 +1530,12 @@
       "introduction": {
         "0": {
           "create": {
-            "string": "To create a Form, upload an XForms XML file or an XLSForm Excel file."
+            "string": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           },
           "update": {
-            "string": "To update the Draft, upload an XForms XML file or an XLSForm Excel file."
+            "string": "To update the Draft, upload an XForms XML file or an XLSForm Excel file.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           }
         },
         "1": {
@@ -1580,7 +1582,8 @@
           "string": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”)."
         },
         "400_15": {
-          "string": "The XLSForm could not be converted: {error}"
+          "string": "The XLSForm could not be converted: {error}",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "409_3": {
           "string": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
@@ -1588,7 +1591,8 @@
       },
       "warningsText": {
         "0": {
-          "string": "This XLSForm file can be used, but it has the following possible problems (conversion warnings):"
+          "string": "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "1": {
           "string": "Please correct the problems and try again."
@@ -1724,11 +1728,11 @@
       "format": {
         "xForm": {
           "string": "As XForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as. The word \"XForm\" should not be translated."
         },
         "xlsForm": {
           "string": "As XLSForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as. The word \"XLSForm\" should not be translated."
         }
       }
     },

@@ -260,6 +260,7 @@ $drop-zone-vpadding: 15px;
       "update": "Upload New Form Definition"
     },
     "introduction": [
+      // The words "XForms" and "XLSForm" should not be translated.
       {
         "create": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
         "update": "To update the Draft, upload an XForms XML file or an XLSForm Excel file."
@@ -283,10 +284,12 @@ $drop-zone-vpadding: 15px;
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
+      // The word "XLSForm" should not be translated.
       "400_15": "The XLSForm could not be converted: {error}",
       "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
     },
     "warningsText": [
+      // The word "XLSForm" should not be translated.
       "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
       "Please correct the problems and try again.",
       {
