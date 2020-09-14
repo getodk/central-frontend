@@ -461,6 +461,36 @@ $popup-width: 300px;
         "last": "Ceci est le dernier fichier."
       }
     }
+  },
+  "id": {
+    "title": "Unggah Berkas",
+    "duringDragover": {
+      "dropToUpload": "Lepas sekarang untuk mengunggah dokumen ini dengan nama {attachmentName}.",
+      "dragover": "Seret dan lepas untuk mengunggah entri dokumen yang ingin Anda ubah.",
+      "dropToPrepare": {
+        "full": "Lepas untuk mempersiapkan unggahan {countOfFiles} ke formulir ini.",
+        "countOfFiles": "{count} berkas"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles} siap untuk diunggah.",
+        "countOfFiles": "{count} berkas"
+      },
+      "someUnmatched": {
+        "full": "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing.",
+        "countOfFiles": "{count} berkas"
+      },
+      "noneMatched": "Kami tidak mengenali dokumen yang ingin Anda unggah. Mohon ubah nama dokumen sesuai dengan nama-nama yang terdaftar di atas, atau seret dokumen satu per satu ke targetnya masing-masing."
+    },
+    "duringUpload": {
+      "total": "Mohon tungguh, menunggah {count} dokumen:",
+      "current": "Mengirim {filename}",
+      "remaining": {
+        "beforeLast": "Tersisa {count} dokumen.",
+        "last": "Ini adalah dokumen terakhir."
+      }
+    }
   }
 }
 </i18n>

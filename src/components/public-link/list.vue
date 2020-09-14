@@ -253,6 +253,26 @@ export default {
       "create": "Succès! Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
       "revoke": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."
     }
+  },
+  "id": {
+    "action": {
+      "create": "Buat Tautan Akses Publik"
+    },
+    "heading": [
+      {
+        "full": "Siapapun dengan Tautan Akses Publik dapat mengisi formulir lewat web browser. Anda dapat membuat beberapa tautan untuk melacak pembagian formulir, membatasi seberapa lama kelompok tertentu memiliki akses formulir, dan banyak lagi. Tautan-tautan ini hanya akan berfungsi jika form berada dalam {state} Terbuka.",
+        "state": "status"
+      },
+      {
+        "full": "Tautan Publik dimaksudkan untuk laporan pribadi. Apabila Anda bekerja dengan pengumpul data yang butuh mengirimkan beberapa data dalam satu formulir yang sama, {clickHere} untuk pilihan lain.",
+        "clickHere": "klik di sini"
+      }
+    ],
+    "emptyTable": "Tidak ada Tautan Akses Publik untuk formulir ini.",
+    "alert": {
+      "create": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar.",
+      "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
+    }
   }
 }
 </i18n>

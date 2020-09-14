@@ -135,6 +135,16 @@ export default {
     "alert": {
       "create": "Votre nouveau formulaire \"{name}\" a été créé en tant qu'ébauche. Jetez un œil à la liste de contrôle ci-dessous, et quand vous pensez que c'est prêt, vous pouvez publier le formulaire pour utilisation."
     }
+  },
+  "id": {
+    "title": "Formulir",
+    "action": {
+      "create": "Formulir Baru"
+    },
+    "emptyTable": "Tidak ada formulir untuk ditampilkan.",
+    "alert": {
+      "create": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
+    }
   }
 }
 </i18n>

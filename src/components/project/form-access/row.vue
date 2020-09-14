@@ -176,6 +176,13 @@ export default {
       "state": "État",
       "appUserAccess": "Accès d'utilisateurs mobiles"
     }
+  },
+  "id": {
+    "draftTitle": "Formulir ini belum memiliki versi terbit. Formulir tidak akan muncul pada perangkat sampai draf diterbitkan. Setelah Anda menerbitkan formulir, Anda dapat menggunakan pengaturan yang ada di sini.",
+    "field": {
+      "state": "Status",
+      "appUserAccess": "Akses Pengguna Aplikasi"
+    }
   }
 }
 </i18n>

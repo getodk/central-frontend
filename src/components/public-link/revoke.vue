@@ -108,6 +108,12 @@ export default {
     "introduction": [
       "Vous êtes sur le point de révoquer ce lien d'accès public. Toute tentative de soumission de données utilisant le lien sera refusée, y compris les formulaires qui ont déjà été commencés."
     ]
+  },
+  "id": {
+    "title": "Cabut Tautan Akses Publik",
+    "introduction": [
+      "Anda hendak mencabut Tautan Akses Publik. Ini berarti semua usaha untuk mengirim data melalui tautan ini akan ditolak, termasuk catatan yang sudah dimulai."
+    ]
   }
 }
 </i18n>

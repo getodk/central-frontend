@@ -277,6 +277,30 @@ export default {
     "problem": {
       "409_6": "Le nom de version spécifié est en conflit avec une ancienne version du formulaire. Merci d'en essayer un nouveau et d'essayer à nouveau."
     }
+  },
+  "id": {
+    "title": "Terbitkan Draf",
+    "warnings": {
+      "attachments": {
+        "full": "Anda belum melengkapi {mediaFiles} yang dibutuhkan formulir Anda. Anda dapat mengabaikan ini sekarang, tetapi Anda harus membuat Draf versi baru untuk mengunggah file-file tersebut nanti.",
+        "mediaFiles": "File Media"
+      },
+      "testing": {
+        "full": "Anda belum {tested} dan mengunggah tes kiriman data pada perangkat seluler. Hal ini tidak harus, tetapi sangat direkomendasikan.",
+        "tested": "mengetes formulir ini"
+      }
+    },
+    "introduction": [
+      "Anda hendak menjadikan Draf ini sebagai versi Formulir yang diterbitkan. Ini akan memfinalisasi semua perubahan definisi formulir dan file media yang Anda buat.",
+      "Kiriman data formulir yang sudah ada tidak akan terpengaruh, tetapi semua Draf kiriman data akan dihapus.",
+      "Setiap versi dari sebuah formulir memerlukan nama yang unik. Saat ini, Draf Formulir Anda memiliki nama yang sama dengan versi yang sudah dipublikasikan sebelumnya. Anda bisa mengatur yang baru dengan mengunggah definisi formulir dengan nama yang Anda kehendaki, atau mengetik nama yang baru di bawah ini dan server akan menggantinya untuk Anda."
+    ],
+    "field": {
+      "version": "Versi"
+    },
+    "problem": {
+      "409_6": "Nama yang Anda pilih sama dengan nama dari versi lama formulir ini. Mohon ubah nama dan coba lagi."
+    }
   }
 }
 </i18n>

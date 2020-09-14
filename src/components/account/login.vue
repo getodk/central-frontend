@@ -166,6 +166,12 @@ export default {
     "problem": {
       "401_2": "Adresse de courriel et/ou mot de passe invalides."
     }
+  },
+  "id": {
+    "title": "Masuk",
+    "problem": {
+      "401_2": "Alamat email dan/atau kata sandi salah."
+    }
   }
 }
 </i18n>

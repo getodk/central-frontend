@@ -158,6 +158,13 @@ export default {
       "create": "Succès ! Les sauvegardes automatiques sont maintenant configurées",
       "terminate": "Vos sauvegardes automatiques ont été interrompus. Il est recommandé d'en mettre une nouvelle en place dès que possible."
     }
+  },
+  "id": {
+    "auditsTitle": "Data Cadangan Terakhir",
+    "alert": {
+      "create": "Berhasil! Data cadangan otomatis telah dikonfigurasi.",
+      "terminate": "Data cadangan otomatis Anda telah berakhir. Anda direkomendasikan untuk menyetel cadangan otomatis baru secepatnya."
+    }
   }
 }
 </i18n>

@@ -119,6 +119,12 @@ export default {
     "introduction": [
       "Les projets regroupent les formulaires et les utilisateurs mobiles afin de les rendre plus faciles à organiser et à gérer, tant sur ce site web que sur votre appareil de collecte de données."
     ]
+  },
+  "id": {
+    "title": "Buat Proyek",
+    "introduction": [
+      "Proyek mengelompokkan Formulir dan Pengguna Aplikasi untuk mempermudah pengorganisiran dan pengaturan, baik melalui website ini maupun perangkat koleksi data Anda."
+    ]
   }
 }
 </i18n>

@@ -369,6 +369,44 @@ export default {
     "problem": {
       "verify": "Merci d'essayer à nouveau, et de consulter le forum de la communauté si le problème persiste."
     }
+  },
+  "id": {
+    "title": "Mengatur Data Cadangan",
+    "steps": [
+      {
+        "introduction": [
+          "Bila ingin, Anda dapat mengatur enkripsi frasa sandi yang harus digunakan untuk membuka data cadangan.",
+          "Frasa sandi yang hilang/lupa tidak dapat dikembalikan/diatur ulang!",
+          "Pastikan Anda memilih sesuatu yang mudah Anda ingat, atau catat frasa sandi Anda di tempat aman."
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Demi keamanan, server mengirimkan data Anda ke Google Drive. Anda dapat membuat akun gratis {here}.",
+            "here": "di sini"
+          },
+          "Ketika mekenan tombol lanjut, Google akan mengonfirmasi bahwa Anda mengizinkan server mengakses akun Anda. Server hanya akan memiliki akses terhadap data cadangan yang dibuat.",
+          "Setelah mengonfirmasi, Anda akan diminta untuk menyalin dan menempel teks di sini."
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Selamat datang kembali! Apakah Anda sudah menerima teks untuk disalin dan ditempel? Jika belum, klik {here} untuk mencoba lagi.",
+            "here": "di sini"
+          },
+          "Cara lainnya, tempel teks di bawah ini dan Anda telah selesai!"
+        ]
+      }
+    ],
+    "field": {
+      "passphrase": "Frasa sandi (opsional)",
+      "confirmationText": "Teks konfirmasi"
+    },
+    "problem": {
+      "verify": "Mohon coba lagi, dan kunjungi forum komunitas jika terjadi masalah berkelanjutan."
+    }
   }
 }
 </i18n>

@@ -129,6 +129,15 @@ export default {
     "alert": {
       "success": "Détails de l'utilisateur sauvegardées !"
     }
+  },
+  "id": {
+    "title": "Rincian Dasar",
+    "action": {
+      "update": "Rincian Pembaruan"
+    },
+    "alert": {
+      "success": "Rincian pengguna tersimpan!"
+    }
   }
 }
 </i18n>

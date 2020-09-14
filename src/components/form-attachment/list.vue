@@ -504,6 +504,26 @@ export default {
       "readError": "Quelque-chose s'est mal passé pendant la lecture de “{filename}”.",
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés."
     }
+  },
+  "id": {
+    "action": {
+      "upload": "Unggah dokumen"
+    },
+    "heading": [
+      "Berdasarkan formulir yang Anda unggah, beberapa dokumen berikut adalah wajib. Anda dapat melihat mana yang sudah dan belum diunggah.",
+      "Untuk mengunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman."
+    ],
+    "header": {
+      "uploaded": "Diunggah"
+    },
+    "problem": {
+      "noneUploaded": "{message} Pengunggahan gagal.",
+      "someUploaded": "{message} Hanya {uploaded} dari {total} dokumen berhasil diunggah."
+    },
+    "alert": {
+      "readError": "Terjadi kesalahan saat membaca \"{filename}\".",
+      "success": "{count} dokumen berhasil diunggah."
+    }
   }
 }
 </i18n>

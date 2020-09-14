@@ -84,6 +84,12 @@ export default {
     "introduction": [
       "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs mobiles pour ce projet ne peuvent que voir les formulaires auxquels ils ont accès."
     ]
+  },
+  "id": {
+    "title": "Apa itu Proyek?",
+    "introduction": [
+      "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek yang aksesnya sudah diberikan kepada mereka."
+    ]
   }
 }
 </i18n>

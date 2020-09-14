@@ -152,6 +152,16 @@ export default {
       "once": "Soumission unique"
     },
     "onceHelp": "N'accepter qu'une soumission par répondant."
+  },
+  "id": {
+    "title": "Buat Tautan Akses Publik",
+    "introduction": [
+      "Siapapun yang memiliki tautan ini akan bisa mengisi formulir ini lewat web browser. Gunakan Nama Tampilan sebagai pengingat di mana Anda mempublikasikannya, dengan siapa Anda membagikannya, kapan akan aktif, dan sebagainya."
+    ],
+    "field": {
+      "once": "Kiriman data tunggal"
+    },
+    "onceHelp": "Izinkan hanya satu kiriman data dari setiap browser."
   }
 }
 </i18n>

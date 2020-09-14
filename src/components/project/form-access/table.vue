@@ -242,6 +242,12 @@ export default {
       "form": "Formulaire",
       "state": "État"
     }
+  },
+  "id": {
+    "header": {
+      "form": "Formulir",
+      "state": "Status"
+    }
   }
 }
 </i18n>

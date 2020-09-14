@@ -92,6 +92,13 @@ export default {
       "backups": "Sauvegardes",
       "audits": "Journal d'audit"
     }
+  },
+  "id": {
+    "title": "Manajemen Sistem",
+    "tab": {
+      "backups": "Data Cadangan",
+      "audits": "Catatan Server Audit"
+    }
   }
 }
 </i18n>

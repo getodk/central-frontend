@@ -1,0 +1,2901 @@
+{
+  "role": {
+    "none": {
+      "string": "Tidak Ada",
+      "developer_comment": "This is shown when a user does not have a Role."
+    },
+    "admin": {
+      "string": "Administrator",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "manager": {
+      "string": "Manajer Proyek",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "viewer": {
+      "string": "Pemerhati Proyek",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "formfill": {
+      "string": "Pengumpul Data",
+      "developer_comment": "This is the name of a user Role."
+    }
+  },
+  "formState": {
+    "open": {
+      "string": "Buka",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Open\" is one Form State."
+    },
+    "closing": {
+      "string": "Menutup",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closing\" is one Form State."
+    },
+    "closed": {
+      "string": "Tutup",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    }
+  },
+  "audit": {
+    "category": {
+      "nonverbose": {
+        "string": "(Semua Tindakan)",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "user": {
+        "string": "Tindakan Pengguna Web",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "project": {
+        "string": "Tindakan Proyek",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "form": {
+        "string": "Tindakan Formulir",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "field_key": {
+        "string": "Tindakan Pengguna Aplikasi",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "public_link": {
+        "string": "Tindakan Tautan Akses Publik",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "session": {
+        "string": "Tindakan Sesi",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "upgrade": {
+        "string": "Peningkatan Server",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      }
+    },
+    "action": {
+      "default": {
+        "create": {
+          "string": "Buat",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "update": {
+          "string": "Pembaruan Rincian",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "delete": {
+          "string": "Hapus",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        }
+      },
+      "assignment": {
+        "create": {
+          "string": "Tetapkan Peran",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        },
+        "delete": {
+          "string": "Cabut Peran",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        }
+      },
+      "backup": {
+        "string": "Pembuatan data cadangan",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "form": {
+        "update_draft_set": {
+          "string": "Buat atau Perbarui Draf",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_publish": {
+          "string": "Terbitkan Draf",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_delete": {
+          "string": "Buang Draf",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "attachment_update": {
+          "string": "Perbarui Lampiran",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        }
+      },
+      "upgrade": {
+        "process_form": {
+          "string": "Memproses Formulir",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_draft": {
+          "string": "Draf Formulir Proses",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        }
+      },
+      "user": {
+        "delete": {
+          "string": "Mengundurkan Diri",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        }
+      }
+    }
+  },
+  "action": {
+    "cancel": {
+      "string": "Batal",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "close": {
+      "string": "Tutup",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "create": {
+      "string": "Buat",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "createSubmission": {
+      "string": "Baru",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+    },
+    "done": {
+      "string": "Selesai",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "download": {
+      "string": "Unduh",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "editProfile": {
+      "string": "Sunting Profil",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "logIn": {
+      "string": "Masuk",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "looksGood": {
+      "string": "Terlihat bagus, lanjutkan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "neverMind": {
+      "string": "Tidak jadi, batalkan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "next": {
+      "string": "Lanjut",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "noCancel": {
+      "string": "Tidak, batalkan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "ok": {
+      "string": "OK",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "proceed": {
+      "string": "Lanjutkan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "resetPassword": {
+      "string": "Atur Ulang Kata Sandi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "save": {
+      "string": "Simpan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "yesProceed": {
+      "string": "Ya, lanjutkan",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    }
+  },
+  "field": {
+    "dateRange": {
+      "string": "Rentang Tanggal",
+      "developer_comment": "This is the text of a form field."
+    },
+    "displayName": {
+      "string": "Nama tampilan",
+      "developer_comment": "This is the text of a form field."
+    },
+    "email": {
+      "string": "Alamat email",
+      "developer_comment": "This is the text of a form field."
+    },
+    "name": {
+      "string": "Nama",
+      "developer_comment": "This is the text of a form field."
+    },
+    "newPassword": {
+      "string": "Kata sandi baru",
+      "developer_comment": "This is the text of a form field."
+    },
+    "oldPassword": {
+      "string": "Kata sandi lama",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passphrase": {
+      "string": "Frasa sandi",
+      "developer_comment": "This is the text of a form field."
+    },
+    "password": {
+      "string": "Kata sandi",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passwordConfirm": {
+      "string": "Kata sandi baru (konfirmasi)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "type": {
+      "string": "Tipe",
+      "developer_comment": "This is the text of a form field."
+    }
+  },
+  "header": {
+    "actions": {
+      "string": "Tindakan",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "created": {
+      "string": "Dibuat",
+      "developer_comment": "This is the text of a table column header. The column shows who created the resource and possibly also when they did so."
+    },
+    "createdBy": {
+      "string": "Dibuat oleh",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "displayName": {
+      "string": "Nama tampilan",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "email": {
+      "string": "Alamat Email",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "lastSubmission": {
+      "string": "Kiriman Terakhir",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "name": {
+      "string": "Nama",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "type": {
+      "string": "Tipe",
+      "developer_comment": "This is the text of a table column header."
+    }
+  },
+  "plural": {
+    "appUser": {
+      "string": "{count, plural, other {Pengguna Aplikasi}}"
+    },
+    "form": {
+      "string": "{count, plural, other {Formulir}}"
+    },
+    "project": {
+      "string": "{count, plural, other {Proyek}}"
+    },
+    "submission": {
+      "string": "{count, plural, other {Kiriman}}"
+    },
+    "webUser": {
+      "string": "{count, plural, other {Pengguna Web}}"
+    }
+  },
+  "count": {
+    "appUser": {
+      "string": "{count, plural, other {{count} Pengguna Aplikasi}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "form": {
+      "string": "{count, plural, other {{count} Formulir}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "submission": {
+      "string": "{count, plural, other {{count} Kiriman}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    }
+  },
+  "resource": {
+    "appUser": {
+      "string": "Pengguna Aplikasi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "appUsers": {
+      "string": "Pengguna Aplikasi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "form": {
+      "string": "Formulir",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "project": {
+      "string": "Proyek",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLink": {
+      "string": "Tautan Akses Publik",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "user": {
+      "string": "Pengguna",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUser": {
+      "string": "Pengguna Web",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "session": {
+      "string": "Sesi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submissions": {
+      "string": "Kiriman",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": {
+        "string": "Untuk informasi lebih lanjut, {clickHere}.",
+        "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+      },
+      "clickHere": {
+        "string": "klik disini",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
+      }
+    },
+    "helpArticle": {
+      "full": {
+        "string": "Untuk informasi lebih lanjut, silakan lihat {helpArticle}.",
+        "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
+      },
+      "helpArticle": {
+        "string": "artikel bantuan ini",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
+      }
+    },
+    "learnMore": {
+      "string": "Pelajari lebih lanjut.",
+      "developer_comment": "This is a link to more information."
+    }
+  },
+  "common": {
+    "areYouSure": {
+      "string": "Apakah Anda yakin ingin melanjutkan?",
+      "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
+    },
+    "currentDraft": {
+      "string": "Draf Anda Saat Ini",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "dangerZone": {
+      "string": "Zona Bahaya",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "no": {
+      "string": "Tidak"
+    },
+    "noResults": {
+      "string": "Tidak ada hasil",
+      "developer_comment": "This is shown if a search returned no results."
+    },
+    "rightNow": {
+      "string": "Sekarang Juga",
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    },
+    "success": {
+      "string": "Sukses!"
+    },
+    "yes": {
+      "string": "Iya"
+    }
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": {
+        "string": "(kosong)",
+        "developer_comment": "This is shown for a Form with a blank version name."
+      }
+    },
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (diarsipkan)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
+      }
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": {
+        "string": "hari ini",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
+      },
+      "yesterday": {
+        "string": "semalam",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
+      }
+    },
+    "request": {
+      "noRequest": {
+        "string": "Terjadi kesalahan: tidak ada permintaan."
+      },
+      "noResponse": {
+        "string": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"
+      },
+      "errorNotProblem": {
+        "string": "Terjadi kesalahan: server mengembalikan eror yang tidak valid."
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": {
+      "string": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+    }
+  },
+  "component": {
+    "AccountClaim": {
+      "title": {
+        "string": "Atur Kata Sandi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "set": {
+          "string": "Atur kata sandi",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "401_2": {
+          "string": "{message} Tautan menuju email Anda sudah kedaluwarsa, Anda harus mengirimkan email baru.",
+          "developer_comment": "{message} is an error message from the server."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Kata sandi berhasil diatur ulang."
+        }
+      }
+    },
+    "AccountLogin": {
+      "title": {
+        "string": "Masuk",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "problem": {
+        "401_2": {
+          "string": "Alamat email dan/atau kata sandi salah."
+        }
+      }
+    },
+    "AccountResetPassword": {
+      "title": {
+        "string": "Atur Ulang Kata Sandi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "success": {
+          "string": "Email sudah dikirimkan ke {email} dengan instruksi lebih lanjut."
+        }
+      }
+    },
+    "AuditFilters": {
+      "filter": {
+        "string": "Saring berdasarkan",
+        "developer_comment": "This text is shown next to options for filtering a table."
+      }
+    },
+    "AuditList": {
+      "heading": {
+        "0": {
+          "string": "Di sini Anda bisa menemukan catatan tindakan-tindakan yang dilakukan di server ini. Perubahan terhadap pengguna, proyek, atau pengaturan formulir dapat ditemukan di sini."
+        }
+      },
+      "emptyTable": {
+        "string": "Tidak ada catatan audit yang cocok."
+      }
+    },
+    "AuditTable": {
+      "header": {
+        "time": {
+          "string": "Waktu",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "initiator": {
+          "string": "Pemrakarsa",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "target": {
+          "string": "Target",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "details": {
+          "string": "Rincian",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "BackupList": {
+      "auditsTitle": {
+        "string": "Data Cadangan Terakhir",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "create": {
+          "string": "Berhasil! Data cadangan otomatis telah dikonfigurasi."
+        },
+        "terminate": {
+          "string": "Data cadangan otomatis Anda telah berakhir. Anda direkomendasikan untuk menyetel cadangan otomatis baru secepatnya."
+        }
+      }
+    },
+    "BackupNew": {
+      "title": {
+        "string": "Mengatur Data Cadangan",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "string": "Bila ingin, Anda dapat mengatur enkripsi frasa sandi yang harus digunakan untuk membuka data cadangan."
+            },
+            "1": {
+              "string": "Frasa sandi yang hilang/lupa tidak dapat dikembalikan/diatur ulang!"
+            },
+            "2": {
+              "string": "Pastikan Anda memilih sesuatu yang mudah Anda ingat, atau catat frasa sandi Anda di tempat aman."
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Demi keamanan, server mengirimkan data Anda ke Google Drive. Anda dapat membuat akun gratis {here}.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "di sini",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
+              }
+            },
+            "1": {
+              "string": "Ketika mekenan tombol lanjut, Google akan mengonfirmasi bahwa Anda mengizinkan server mengakses akun Anda. Server hanya akan memiliki akses terhadap data cadangan yang dibuat."
+            },
+            "2": {
+              "string": "Setelah mengonfirmasi, Anda akan diminta untuk menyalin dan menempel teks di sini."
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Selamat datang kembali! Apakah Anda sudah menerima teks untuk disalin dan ditempel? Jika belum, klik {here} untuk mencoba lagi.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "di sini",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
+              }
+            },
+            "1": {
+              "string": "Cara lainnya, tempel teks di bawah ini dan Anda telah selesai!"
+            }
+          }
+        }
+      },
+      "field": {
+        "passphrase": {
+          "string": "Frasa sandi (opsional)",
+          "developer_comment": "This is the text of a form field."
+        },
+        "confirmationText": {
+          "string": "Teks konfirmasi",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "problem": {
+        "verify": {
+          "string": "Mohon coba lagi, dan kunjungi forum komunitas jika terjadi masalah berkelanjutan."
+        }
+      }
+    },
+    "BackupStatus": {
+      "getHelp": {
+        "full": {
+          "string": "Apabila Anda memiliki kesulitan, silakan kunjungi {forum}.",
+          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
+        },
+        "forum": {
+          "string": "Forum komunitas",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
+        }
+      },
+      "notConfigured": {
+        "0": {
+          "string": "Data cadangan tidak terkonfigurasi."
+        },
+        "1": {
+          "string": "Server belum diatur untuk melakukan data cadangan otomatis dimanapun."
+        },
+        "2": {
+          "full": {
+            "string": "Apabila Anda belum memiliki pengaturan data cadangan sama sekali, {recommended} Anda mengatur cadangan sekarang demi keamanan data Anda.",
+            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
+          },
+          "recommended": {
+            "string": "sangat direkomendasikan",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
+          }
+        },
+        "3": {
+          "string": "Data cadangan otomatis diproses sistem ini satu kali sehari. Semua data Anda dienkripsi dengan kata sandi yang telah Anda tentukan sehingga hanya Anda yang dapat membukanya."
+        }
+      },
+      "neverRun": {
+        "0": {
+          "string": "Data candangan yang dikonfigurasi belum berjalan."
+        },
+        "1": {
+          "string": "Hal ini adalah normal ppabila Anda memiliki data cadangan yang telah dikonfigurasi dalam beberapa hari terakhir. Jika tidak, terjadi sebuah kesalahan."
+        },
+        "2": {
+          "full": {
+            "string": "Dalam hal ini, saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau dengan mengatur ulang servis.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "memutus",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "somethingWentWrong": {
+        "0": {
+          "string": "Terjadi kesalahan!"
+        },
+        "1": {
+          "full": {
+            "string": "Data cadangan terakhir yang sukses dibuat adalah {moreThanThreeDaysAgo}.",
+            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
+          },
+          "moreThanThreeDaysAgo": {
+            "string": "lebih dari tiga hari yang lalu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau mengatur ulang servis.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "memutus",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Data cadangan telah berfungsi.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
+        },
+        "1": {
+          "string": "Data cadangan terakhir telah sukses dibuat {dateTime}.",
+          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
+        }
+      },
+      "action": {
+        "setUp": {
+          "string": "Atur sekarang",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "terminate": {
+          "string": "Putuskan",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "BackupTerminate": {
+      "title": {
+        "string": "Putuskan Data Cadangan Otomatis",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Apakah Anda yakin ingin memutus data cadangan otomatis?"
+        },
+        "1": {
+          "string": "Anda harus mengonfigurasi ulang dari awal untuk mengaktifkannya kembali, dan tindakan ini tidak bisa dibatalkan/dikembalikan."
+        }
+      }
+    },
+    "EnketoFill": {
+      "disabled": {
+        "processing": {
+          "string": "Formulir Web belum tersedia. Silakan muat ulang dan coba lagi nanti."
+        },
+        "notOpen": {
+          "string": "Formulir ini sedang tidak menerima kiriman data baru sekarang."
+        }
+      }
+    },
+    "EnketoPreview": {
+      "action": {
+        "preview": {
+          "string": "Pratinjau",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "disabled": {
+        "processing": {
+          "string": "Pratinjau untuk formulir ini masih dalam proses pengerjaan. Silakan muat ulang dan coba lagi nanti."
+        },
+        "notOpen": {
+          "string": "Pada versi ODK Central ini, pratinjau hanya tersedia untuk formulir dalam kondisi terbuka."
+        }
+      }
+    },
+    "FieldKeyList": {
+      "action": {
+        "create": {
+          "string": "Buat Pengguna Aplikasi",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Pengguna Aplikasi bertugas untuk mengumpulkan data dari aplikasi seperti {collect}. Mereka biasanya merepresentasikan peran bersama, seperti \"Vaksinator\", atau bisa juga merepresentasikan secara individu. Pengguna Aplikasi di proyek ini hanya dapat mengunduh dan menggunakan formulir yang tergabung dalam proyek ini. Ketika Anda membuat Pengguna Aplikasi baru, Anda tidak akan mendapatkan akses ke formulir apapun pada tahap awal. Untuk mengatur formulir yang dapat diakses oleh setiap Pengguna Aplikasi, gunakan tab {formAccess}.",
+            "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
+          },
+          "formAccess": {
+            "string": "Akses Formulir",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Pengguna Aplikasi sangat membantu ketika pengumpul data membutuhkan akses ke berbagai formulir, sedang offline, atau ketika Anda memiliki formulir yang kompleks. Apabila Anda membutuhkan responden untuk laporan pribadi atau formulir yang hanya dapat diakses secara online, {clickHere} untuk pilihan lain.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "klik di sini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
+          }
+        }
+      },
+      "header": {
+        "lastUsed": {
+          "string": "Terakhir Digunakan",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "configureClient": {
+          "string": "Klien Konfigurasi",
+          "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
+        }
+      },
+      "qrCodeHelp": {
+        "string": "Apakah ini?",
+        "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
+      },
+      "emptyTable": {
+        "string": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda."
+      },
+      "alert": {
+        "create": {
+          "string": "Pengguna Aplikasi \"{displayName}\" sukses dibuat."
+        },
+        "revoke": {
+          "string": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
+        }
+      }
+    },
+    "FieldKeyNew": {
+      "title": {
+        "string": "Buat Pengguna Aplikasi",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Pengguna ini belum bisa mengakses formulir apapun. Anda bisa membagikan formulir setelah akun Pengguna dibuat."
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Pengguna Aplikasi \"{displayName}\" telah dibuat."
+        },
+        "1": {
+          "full": {
+            "string": "Anda bisa mengonfigurasi perangkat seluler nutuk \"{displayName}\" sekarang dengan cara {scanningCode} di aplikasi. Atau Anda bisa melakukannya nanti lewat tabel Pengguna Aplikasi dengan mengklik \"Lihat kode\".",
+            "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
+          },
+          "scanningCode": {
+            "string": "memindai kode di atas",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {scanningCode} is in the following text:\n\nYou can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Anda mungkin ingin mengunjungi {formAccessSettings} proyek ini untuk memberikan Pengguna ini akses formulir.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "pengaturan Akses Formulir",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
+          }
+        }
+      },
+      "action": {
+        "createAnother": {
+          "string": "Buat baru",
+          "developer_comment": "This is the text of a button that is used to create another App User."
+        }
+      }
+    },
+    "FieldKeyRevoke": {
+      "title": {
+        "string": "Cabut Akses Pengguna",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Apakah Anda yakin ingin mencabut akses dari Pengguna Aplikasi {displayName}?",
+          "developer_comment": "{displayName} is formatted in bold."
+        },
+        "1": {
+          "string": "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data. "
+        },
+        "2": {
+          "string": "Tindakan ini tidak bisa dibatalkan/dikembalikan."
+        }
+      }
+    },
+    "FieldKeyRow": {
+      "seeCode": {
+        "string": "Lihat kode",
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
+      },
+      "accessRevoked": {
+        "string": "Akses dicabut",
+        "developer_comment": "This text is shown for an App User whose access has been revoked."
+      },
+      "action": {
+        "revokeAccess": {
+          "string": "Cabut akses",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormAttachmentList": {
+      "action": {
+        "upload": {
+          "string": "Unggah dokumen",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Berdasarkan formulir yang Anda unggah, beberapa dokumen berikut adalah wajib. Anda dapat melihat mana yang sudah dan belum diunggah."
+        },
+        "1": {
+          "string": "Untuk mengunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman. "
+        }
+      },
+      "header": {
+        "uploaded": {
+          "string": "Diunggah",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        }
+      },
+      "problem": {
+        "noneUploaded": {
+          "string": "{message} Pengunggahan gagal.",
+          "developer_comment": "{message} is an error message from the server."
+        },
+        "someUploaded": {
+          "string": "{count, plural, other {{message} Hanya {uploaded} dari {total} dokumen berhasil diunggah.}}",
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
+        }
+      },
+      "alert": {
+        "readError": {
+          "string": "Terjadi kesalahan saat membaca \"{filename}\"."
+        },
+        "success": {
+          "string": "{count, plural, other {{count} dokumen berhasil diunggah.}}"
+        }
+      }
+    },
+    "FormAttachmentNameMismatch": {
+      "title": {
+        "upload": {
+          "string": "Unggah Berkas",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "replace": {
+          "string": "Ganti dokumen",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Apakah Anda yakin ingin mengunggah {filename} dengan nama {attachmentName}?",
+          "developer_comment": "{filename} and {attachmentName} are formatted in bold."
+        },
+        "1": {
+          "string": "Kami sedang mengecek ulang karena nama dokumen tidak cocok."
+        }
+      }
+    },
+    "FormAttachmentPopups": {
+      "title": {
+        "string": "Unggah Berkas",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "duringDragover": {
+        "dropToUpload": {
+          "string": "Lepas sekarang untuk mengunggah dokumen ini dengan nama {attachmentName}.",
+          "developer_comment": "{attachmentName} is formatted in bold."
+        },
+        "dragover": {
+          "string": "Seret dan lepas untuk mengunggah entri dokumen yang ingin Anda ubah."
+        },
+        "dropToPrepare": {
+          "full": {
+            "string": "Lepas untuk mempersiapkan unggahan {countOfFiles} ke formulir ini.",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, other {{count} berkas}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
+          }
+        }
+      },
+      "afterSelection": {
+        "matched": {
+          "full": {
+            "string": "{count, plural, other {{countOfFiles} siap untuk diunggah.}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, other {{count} berkas}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
+          }
+        },
+        "someUnmatched": {
+          "full": {
+            "string": "{count, plural, other {Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing.}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, other {{count} berkas}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
+          }
+        },
+        "noneMatched": {
+          "string": "{count, plural, other {Kami tidak mengenali dokumen yang ingin Anda unggah. Mohon ubah nama dokumen sesuai dengan nama-nama yang terdaftar di atas, atau seret dokumen satu per satu ke targetnya masing-masing.}}"
+        }
+      },
+      "duringUpload": {
+        "total": {
+          "string": "{count, plural, other {Mohon tungguh, menunggah {count} dokumen:}}"
+        },
+        "current": {
+          "string": "Mengirim {filename}",
+          "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
+        },
+        "remaining": {
+          "beforeLast": {
+            "string": "{count, plural, other {Tersisa {count} dokumen.}}"
+          },
+          "last": {
+            "string": "Ini adalah dokumen terakhir."
+          }
+        }
+      }
+    },
+    "FormAttachmentRow": {
+      "type": {
+        "image": {
+          "string": "Gambar",
+          "developer_comment": "This is a type of Media File."
+        },
+        "audio": {
+          "string": "Audio",
+          "developer_comment": "This is a type of Media File."
+        },
+        "video": {
+          "string": "Video",
+          "developer_comment": "This is a type of Media File."
+        },
+        "file": {
+          "string": "File Data",
+          "developer_comment": "This is a type of Media File."
+        }
+      },
+      "replace": {
+        "string": "Ganti",
+        "developer_comment": "This is a label that is shown next to a Media File that would be replaced if the selected files were uploaded."
+      },
+      "notUploaded": {
+        "text": {
+          "string": "Belum terunggah",
+          "developer_comment": "This is shown for a Media File that has not been uploaded."
+        },
+        "title": {
+          "string": "Untuk menunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman ini"
+        }
+      }
+    },
+    "FormAttachmentUploadFiles": {
+      "title": {
+        "string": "Unggah dokumen",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "Untuk menunggah dokumen, {dragAndDrop} satu atau lebih dokumen ke tabel pada laman ini",
+            "developer_comment": "{dragAndDrop} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndrag and drop"
+          },
+          "dragAndDrop": {
+            "string": "seret dan lepas",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dragAndDrop} is in the following text:\n\nTo upload files, you can {dragAndDrop} one or more files onto the table on this page."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel , lalu {clickHere}.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
+          },
+          "clickHere": {
+            "string": "Klik di sini untuk memilih",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
+          }
+        }
+      }
+    },
+    "FormChecklist": {
+      "clickForInfo": {
+        "string": "Klik di sini untuk mencari lebih banyak."
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Terbitkan versi pertama draf Anda",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Kerja bagus!"
+            },
+            "1": {
+              "string": "Formulir Anda telah diterbitkan dan siap menerima kiriman data. Apabila Anda ingin membuat perubahan terhadap formulir atau file media, Anda dapat membuat draf baru."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Unduh formulir survei klien dan ajukan data",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Belum ada pengajuan data di formulir ini."
+              },
+              "any": {
+                "string": "{count, plural, other {Total {count} kiriman data sudah dibuat.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "{clickHere} untuk mempelajari cara-cara mengajukan data.",
+                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
+              },
+              "clickHere": {
+                "string": "Klik di sini",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Evaluasi dan analisis data yang telah masuk",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Setelah ada data untuk formulir ini, Anda bisa mengeskpor atau mensinkronisasi data tersebut ke monitor dan menganalisisnya untuk kualitas dan hasil."
+              },
+              "any": {
+                "string": "{count, plural, other {Anda bisa mengekspor atau mensinkronisasi {count} data yang sudah masuk di formulir ini ke monitor dan menganalisisnya untuk kualitas dan hasil.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "Anda bisa melakukannya dengan menekan tombol Unduh dan Analisis pada {submissionsTab}.",
+                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
+              },
+              "submissionsTab": {
+                "string": "Tab kiriman data",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Atur formulir yang sudah tidak aktif",
+            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Setelah Anda selesai mengumpulkan data, Anda bisa menggunakan pengaturan Status Formulir pada {formAccessTab} untuk mengatur, misalnya, apakah Pengguna Aplikasi masih bisa melihat atau membuat kiriman data baru untuk formulir ini.",
+                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
+              },
+              "formAccessTab": {
+                "string": "Tab Akses Formulir pada laman Proyek",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDelete": {
+      "title": {
+        "string": "Hapus Formulir",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?"
+        },
+        "1": {
+          "string": "Tindakan ini tidak dapat dibatalkan/dikembalikan."
+        }
+      }
+    },
+    "FormDraftAbandon": {
+      "title": {
+        "abandon": {
+          "string": "Buang Draf",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "deleteForm": {
+          "string": "Buang Draf dan Hapus Formulir",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "abandon": {
+          "0": {
+            "string": "Anda hendak menghapus permanen versi draf dari formulir ini. Draf definisi formulir, draf file media yang telah diunggah, dan semua tes kiriman data dalam formulir akan dihapus."
+          },
+          "1": {
+            "string": "Definisi formulir, file media, dan kiriman data yang sudah diterbitkan tidak akan terpengaruh."
+          }
+        },
+        "deleteForm": {
+          "0": {
+            "string": "Anda hendak menghapus permanen draf definisi formulir ini beserta draf file media yang telah diunggah, dan semua kiriman data yang masuk. Sebab Anda belum menerbitkannya, maka keseluruhan formulir ini akan dihapus."
+          }
+        }
+      },
+      "action": {
+        "abandon": {
+          "string": "Buang",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormDraftChecklist": {
+      "clickForInfo": {
+        "string": "Klik di sini untuk mencari tahu lebih."
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Unggah definisi formulir awal",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Kerja bagus!"
+            },
+            "1": {
+              "string": "Desain formulir Anda telah berhasil dimuat."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Unggah definisi formulir yang sudah direvisi (opsional)",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya mengunggah XML baru atau XLSForm menggunakan tombol yang ada di sebelah kanan.",
+                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
+              },
+              "link": {
+                "full": {
+                  "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya {upload} XML baru atau XLSForm.",
+                  "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                },
+                "upload": {
+                  "string": "Unggah",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Unggah Formulir File Media",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Dokumen referensi desain formulir Anda yang dibutuhkan untuk menampilkan formulir Anda. Anda dapat mengunggah distribusi baru atau yang sudah diperbarui di tab {mediaFiles}.",
+                "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+              },
+              "mediaFiles": {
+                "string": "File Media",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Tes formulir pada perangkat seluler Anda",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Anda bisa {test}  formulir untuk memastikan kesesuaiannya dengan yang Anda ekspektasikan. Kiriman data dari hasil tes tidak akan dimasukkan ke dalam data akhir Anda.",
+                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
+              },
+              "test": {
+                "string": "mengetes",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
+              }
+            }
+          }
+        },
+        "4": {
+          "title": {
+            "string": "Terbitkan Draf",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Ketika Anda yakin Draf sudah siap, Anda bisa menerbitkannya menggunakan tombol yang ada di sebelah kanan."
+              },
+              "link": {
+                "full": {
+                  "string": "Ketika Anda yakin Draf sudah siap, Anda bisa {publish} menggunakan tombol yang ada di sebelah kanan.",
+                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
+                },
+                "publish": {
+                  "string": "menerbitkannya",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDraftPublish": {
+      "title": {
+        "string": "Terbitkan Draf",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "warnings": {
+        "attachments": {
+          "full": {
+            "string": "Anda belum melengkapi {mediaFiles} yang dibutuhkan formulir Anda. Anda dapat mengabaikan ini sekarang, tetapi Anda harus membuat Draf versi baru untuk mengunggah file-file tersebut nanti.",
+            "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+          },
+          "mediaFiles": {
+            "string": "File Media",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
+          }
+        },
+        "testing": {
+          "full": {
+            "string": "Anda belum {tested} dan mengunggah tes kiriman data pada perangkat seluler. Hal ini tidak harus, tetapi sangat direkomendasikan.",
+            "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
+          },
+          "tested": {
+            "string": "mengetes formulir ini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+          }
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Anda hendak menjadikan Draf ini sebagai versi Formulir yang diterbitkan. Ini akan memfinalisasi semua perubahan definisi formulir dan file media yang Anda buat."
+        },
+        "1": {
+          "string": "Kiriman data formulir yang sudah ada tidak akan terpengaruh, tetapi semua Draf kiriman data akan dihapus."
+        },
+        "2": {
+          "string": "Setiap versi dari sebuah formulir memerlukan nama yang unik. Saat ini, Draf Formulir Anda memiliki nama yang sama dengan versi yang sudah dipublikasikan sebelumnya. Anda bisa mengatur yang baru dengan mengunggah definisi formulir dengan nama yang Anda kehendaki, atau mengetik nama yang baru di bawah ini dan server akan menggantinya untuk Anda."
+        }
+      },
+      "field": {
+        "version": {
+          "string": "Versi",
+          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
+        }
+      },
+      "problem": {
+        "409_6": {
+          "string": "Nama yang Anda pilih sama dengan nama dari versi lama formulir ini. Mohon ubah nama dan coba lagi."
+        }
+      }
+    },
+    "FormDraftStatus": {
+      "draftChecklist": {
+        "title": {
+          "string": "Daftar Periksa Draf",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "currentDraft": {
+        "versionCaption": {
+          "full": {
+            "string": "{draftVersion} Formulir ini.",
+            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+          },
+          "draftVersion": {
+            "string": "Versi draf",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+          }
+        },
+        "action": {
+          "upload": {
+            "string": "Unggah definisi baru",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "actions": {
+        "title": {
+          "string": "Tindakan",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "action": {
+          "publish": {
+            "string": "Terbitkan Draf",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "abandon": {
+            "string": "Buang Draf",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "upload": {
+          "string": "Sukses! Definisi formulir baru telah disimpan di Draf."
+        },
+        "publish": {
+          "string": "Draf Anda telah diterbitkan. Setiap perangkat yang mengambil Formulir dari Proyek ini akan menerima definisi formulir dan file media yang baru."
+        },
+        "abandon": {
+          "string": "Versi draf dari formulir ini telah sukses dihapus."
+        },
+        "delete": {
+          "string": "Formulir {name} sudah dihapus."
+        }
+      }
+    },
+    "FormDraftTesting": {
+      "title": {
+        "string": "Pengujian Draf",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "string": "Anda bisa menggunakan kode konfigurasi di sebelah kanan untuk mengatur perangkat seluler untuk mengunduh draf ini. Anda juga bisa mengklik tombol \"Baru\" untuk membuat kiriman data baru lewat web browser Anda."
+        },
+        "1": {
+          "string": "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
+        }
+      }
+    },
+    "FormHead": {
+      "projectNav": {
+        "action": {
+          "back": {
+            "string": "Kembali ke Gambaran Proyek",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "formNav": {
+        "tab": {
+          "overview": {
+            "string": "Gambaran",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "versions": {
+            "string": "Versi",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "publicLinks": {
+            "string": "Akses Publik",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "settings": {
+            "string": "Pengaturan",
+            "developer_comment": "This is the text of a navigation tab."
+          }
+        },
+        "tabTitle": {
+          "string": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+        }
+      },
+      "draftNav": {
+        "title": {
+          "string": "Draf",
+          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
+        },
+        "action": {
+          "create": {
+            "string": "Buat draf baru",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "tab": {
+          "status": {
+            "string": "Status",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "attachments": {
+            "string": "File Media",
+            "developer_comment": "This is the text of a navigation tab."
+          },
+          "testing": {
+            "string": "Uji Coba",
+            "developer_comment": "This is the text of a navigation tab."
+          }
+        }
+      }
+    },
+    "FormList": {
+      "title": {
+        "string": "Formulir",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Formulir Baru",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
+        }
+      },
+      "emptyTable": {
+        "string": "Tidak ada formulir untuk ditampilkan."
+      },
+      "alert": {
+        "create": {
+          "string": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
+        }
+      }
+    },
+    "FormNew": {
+      "title": {
+        "create": {
+          "string": "Buat Formulir",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "update": {
+          "string": "Unggah Definisi Formulir Baru",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "create": {
+            "string": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel."
+          },
+          "update": {
+            "string": "Untuk memperbarui draf, unggan dokumen XForms XML atau dokumen XLSForm Excel."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Apabila Anda belum memilikinya, {tools} akan membantu Anda mendesain formulir Anda.",
+            "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
+          },
+          "tools": {
+            "string": "Perangkat yang tersedia",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
+          }
+        },
+        "2": {
+          "string": "Apabila Anda memiliki media, Anda dapat mengunggahnya pada laman berikutnya setelah formulir berhasil dibuat."
+        }
+      },
+      "dropZone": {
+        "full": {
+          "string": "Lepas dokumen di sini, atau {chooseOne} untuk mengunggah.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "pilih satu",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
+        }
+      },
+      "action": {
+        "upload": {
+          "string": "Unggah",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "uploadAnyway": {
+          "string": "Lanjutkan unggah",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "fileRequired": {
+          "string": "Silakan pilih dokumen."
+        }
+      },
+      "problem": {
+        "400_8": {
+          "string": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\")."
+        },
+        "400_15": {
+          "string": "XLSForm tidak bisa diubah: {error}"
+        },
+        "409_3": {
+          "string": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
+        }
+      },
+      "warningsText": {
+        "0": {
+          "string": "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):"
+        },
+        "1": {
+          "string": "Mohon perbaiki dan coba lagi."
+        },
+        "2": {
+          "create": {
+            "string": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan buat formulir:"
+          },
+          "update": {
+            "string": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
+          }
+        }
+      }
+    },
+    "FormOverview": {
+      "checklist": {
+        "string": "Daftar periksa",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "draft": {
+        "none": {
+          "title": {
+            "string": "Belum ada draf",
+            "developer_comment": "This is a title shown above a section of the page."
+          },
+          "body": {
+            "string": "Belum ada versi draf untuk formulir ini. Apabila Anda ingin membuat perubahan terhadap formulir atau file media di dalamnya, mulailah dengan membuat sebuah draf menggunakan tombol di atas."
+          }
+        },
+        "any": {
+          "versionCaption": {
+            "full": {
+              "string": "{draftVersion} dari formulir ini.",
+              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+            },
+            "draftVersion": {
+              "string": "Versi draf",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+            }
+          }
+        }
+      }
+    },
+    "FormOverviewRightNow": {
+      "version": {
+        "full": {
+          "string": "{publishedVersion} dari formulir ini.",
+          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
+        },
+        "publishedVersion": {
+          "string": "Versi terbit",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
+        }
+      },
+      "stateCaption": {
+        "open": {
+          "string": "Formulir ini bisa diunduh dan sedang menerima kiriman data."
+        },
+        "closing": {
+          "string": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data."
+        },
+        "closed": {
+          "string": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
+        }
+      },
+      "submissions": {
+        "full": {
+          "string": "{count, plural, other {{submissions} untuk formulir ini sudah disimpan.}}",
+          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
+        },
+        "submissions": {
+          "string": "{count, plural, other {Kiriman data}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
+        }
+      }
+    },
+    "FormRow": {
+      "lastSubmission": {
+        "string": "(terakhir {dateTime})",
+        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "action": {
+        "fill": {
+          "string": "Isi Formulir",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormSettings": {
+      "state": {
+        "title": {
+          "string": "Status Formulir",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "full": {
+            "string": "Untuk mengatur status formulir, silakan kunjungi {formAccessSettings} Proyek.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "Pengaturan Akses Formulir",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nTo set this Form’s state, please visit the Project {formAccessSettings}."
+          }
+        }
+      },
+      "action": {
+        "delete": {
+          "string": "Hapus formulir ini",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "Formulir {name} telah dihapus."
+        }
+      }
+    },
+    "FormTable": {
+      "header": {
+        "idAndVersion": {
+          "string": "ID dan Versi",
+          "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
+        }
+      }
+    },
+    "FormVersionStandardButtons": {
+      "action": {
+        "downloadXForm": {
+          "string": "Unduh XML",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "format": {
+        "xForm": {
+          "string": "Sebagai XForm",
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        },
+        "xlsForm": {
+          "string": "Sebagai XLSForm",
+          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        }
+      }
+    },
+    "FormVersionTable": {
+      "header": {
+        "published": {
+          "string": "Diterbitkan",
+          "developer_comment": "This is the text of a table column header. The column shows who published the version of the Form, as well as when they did so."
+        },
+        "definition": {
+          "string": "Definisi",
+          "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
+        }
+      }
+    },
+    "Loading": {
+      "text": {
+        "string": "Memuat..."
+      }
+    },
+    "Navbar": {
+      "action": {
+        "toggle": {
+          "string": "Navigasi Toggle",
+          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
+        }
+      }
+    },
+    "NavbarActions": {
+      "notLoggedIn": {
+        "string": "Belum masuk",
+        "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
+      },
+      "action": {
+        "logOut": {
+          "string": "Keluar",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "logOut": {
+          "string": "Anda sudah berhasil keluar."
+        }
+      }
+    },
+    "NavbarLinks": {
+      "projects": {
+        "string": "Proyek",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "users": {
+        "string": "Pengguna",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "system": {
+        "string": "Sistem",
+        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
+      },
+      "current": {
+        "string": "Sekarang ini",
+        "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
+      }
+    },
+    "NotFound": {
+      "title": {
+        "string": "Laman tidak ditemui",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "string": "Laman yang Anda minta tidak ditemui."
+      }
+    },
+    "ProjectArchive": {
+      "title": {
+        "string": "Mengarsip Proyek",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Anda hendak mengarsip Proyek \"{name}\". Proyek akan tetap berjalan seperti sekarang, tetapi peletakannya akan berada di bawah Daftar Proyek pada laman utama Central. "
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, tetapi fungsi untuk membatalkan pengarsipan Proyek akan dirancang untuk pembaruan yang akan datang.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Tindakan ini tidak bisa dibatalkan/dikembalikan",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
+          }
+        }
+      }
+    },
+    "ProjectEdit": {
+      "title": {
+        "string": "Rincian Dasar",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "field": {
+        "name": {
+          "string": "Nama Proyek",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "update": {
+          "string": "Simpan pengaturan",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Pengaturan proyek tersimpan!"
+        }
+      }
+    },
+    "ProjectEnableEncryption": {
+      "title": {
+        "string": "Izinkan Enkripsi",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "0": {
+                "string": "Apabila Anda mengizinkan enkripsi, hal-hal berikut akan terjadi:"
+              },
+              "1": {
+                "string": "Kiriman data yang sudah difinalisasi akan dienkripsi di perangkat seluler. "
+              },
+              "2": {
+                "string": "Kiriman data lain akan dienkripsi di server Central."
+              },
+              "3": {
+                "0": {
+                  "string": "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
+                  "developer_comment": "{submission} will have the text \"<submission>\", which is XML and will not be translated."
+                },
+                "1": {
+                  "string": "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}.",
+                  "developer_comment": "{base64RsaPublicKey} will have the text \"base64RsaPublicKey\", which is code and will not be translated."
+                }
+              },
+              "4": {
+                "string": "Anda tidak akan bisa melihat pratinjau kiriman data secara online."
+              },
+              "5": {
+                "string": "Anda tidak akan bisa menghubungkan data lewat OData."
+              }
+            },
+            "1": {
+              "0": {
+                "string": "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:"
+              },
+              "1": {
+                "0": {
+                  "string": "Kiriman data yang sudah ada akan tetap tidak terenkripsi."
+                },
+                "1": {
+                  "string": "Pada versi yang akan datang, Anda akan memiliki pilihan untuk mengenkripsi data yang sudah ada."
+                }
+              },
+              "2": {
+                "0": {
+                  "string": "Enkripsi tidak dapat dimatikan setelah diizinkan."
+                },
+                "1": {
+                  "string": "Pada versi yang akan datang, Anda akan bisa menonaktifkan enkripsi, yang mana akan mendekripsi data Anda. Ini akan terjadi bahkan apabila Anda mengizinkan enkripsi sekarang."
+                }
+              }
+            },
+            "2": {
+              "full": {
+                "string": "Anda dapat mempelajari lebih banyak tentang enkripsi {here}. Apabila ini terdengar seperti sesuatu yang Anda inginkan, tekan \"Berikutnya\" untuk melanjutkan.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "di sini",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nYou can learn more about encryption {here}. If this sounds like something you want, press Next to proceed."
+              }
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "string": "Pertama-tama, Anda harus memilih sebuah frasa sandi. Frasa sandi ini akan dibutuhkan untuk mendekripsi kiriman data Anda. Demi pribasi Anda, server tidak akan bisa mengingat frasa sandi ini: hanya orang yang mengetahui frasa sandi yang dapat mendekripsi dan membaca kiriman data Anda."
+            },
+            "1": {
+              "full": {
+                "string": "Tidak ada batas panjang atau larangan konten pada frasa sandi, namun apabila Anda kehilangan/lupa, {no} cara untuk mengembalikan frasa sandi maupun data Anda!",
+                "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
+              },
+              "no": {
+                "string": "tidak ada",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nThere are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!"
+              }
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "string": "Enkripsi telah dikonfigurasi untuk Proyek ini. Setiap perangkat seluler harus mengambil ulang formulir terbaru untuk mengaktifkan enkripsi. "
+            }
+          }
+        }
+      },
+      "field": {
+        "hint": {
+          "string": "Petunjuk frasa sandi (opsional)",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "ProjectFormAccess": {
+      "heading": {
+        "0": {
+          "string": "Pengguna Aplikasi hanya bisa melihat dan mengisi formulir yang aksesnya telah diberikan kepada mereka pada tabel di bawah ini. Manajer Proyek dan pengumpul data dapat menggunakan web browser untuk mengisi formulir apapun dalam Proyek yang statusnya adalah Terbuka."
+        }
+      },
+      "emptyTable": {
+        "string": "Tidak ada formulir untuk ditampilkan."
+      },
+      "alert": {
+        "success": {
+          "string": "Perubahan telah disimpan!"
+        }
+      }
+    },
+    "ProjectFormAccessRow": {
+      "draftTitle": {
+        "string": "Formulir ini belum memiliki versi terbit. Formulir tidak akan muncul pada perangkat sampai draf diterbitkan. Setelah Anda menerbitkan formulir, Anda dapat menggunakan pengaturan yang ada di sini."
+      },
+      "field": {
+        "state": {
+          "string": "Status",
+          "developer_comment": "This is the text of a form field. \"State\" refers to the Form State. Form States control the lifecycle state of each Form."
+        },
+        "appUserAccess": {
+          "string": "Akses Pengguna Aplikasi",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "ProjectFormAccessStates": {
+      "title": {
+        "string": "Status Formulir",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Status Formulir mengontrol keadaan lingkar keaktifan setiap formulir. Biasanya, tidak selalu, sebuah formulir akan dimulai dengan status Terbuka, kemudian Penutupan, hingga Ditutup, ketika sudah tidak diperlukan lagi."
+        },
+        "1": {
+          "full": {
+            "string": "Formulir {open} tersedia untuk diunduh lewat perangkat seluler dan akan menerima kiriman data baru.",
+            "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
+          },
+          "open": {
+            "string": "Terbuka",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{closing} Formulir  akan menerima kiriman data baru, tetapi {not} tersedia untuk diunduh di perangkat seluler.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
+          },
+          "closing": {
+            "string": "Penutupan",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+          },
+          "not": {
+            "string": "tidak",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "Formulir {closed} {not1} tersedia untuk diunduh di perangkat seluler dan {not2} menerima kiriman data baru.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
+          },
+          "closed": {
+            "string": "Ditutup",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          },
+          "not1": {
+            "string": "tidak",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          },
+          "not2": {
+            "string": "tidak",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+          }
+        }
+      }
+    },
+    "ProjectFormAccessTable": {
+      "header": {
+        "form": {
+          "string": "Formulir",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "state": {
+          "string": "Status",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "ProjectIntroduction": {
+      "title": {
+        "string": "Apa itu Proyek?",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek yang aksesnya sudah diberikan kepada mereka."
+        }
+      }
+    },
+    "ProjectList": {
+      "heading": {
+        "0": {
+          "string": "Selamat datang di Central."
+        },
+        "1": {
+          "string": "Ayo selesaikan beberapa hal.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
+        }
+      },
+      "gettingStarted": {
+        "title": {
+          "string": "Mulai",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "0": {
+            "full": {
+              "string": "Apabila Anda tidak yakin harus memulai dari mana, {docsWebsite} menyediakan Panduan Awal dan Dokumentasi Pengguna yang dapat membantu Anda.",
+              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
+            },
+            "docsWebsite": {
+              "string": "Website ODK Docs",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Selain itu, Anda selalu bisa mendapatkan pertolongan dari orang lain lewat {forum}, di mana Anda bisa mencari pertanyaan-pertanyaan yang sudah ditanyakan atau menanyakan pertanyaan Anda sendiri.",
+              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
+            },
+            "forum": {
+              "string": "Forum komunitas ODK",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
+            }
+          }
+        }
+      },
+      "news": {
+        "string": "Berita",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "rightNow": {
+        "users": {
+          "full": {
+            "string": "{count, plural, other {{webUsers} dapat mengelola Proyek lewat website ini.}}",
+            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
+          },
+          "webUsers": {
+            "string": "{count, plural, other {Pengguna Web}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
+          }
+        },
+        "projects": {
+          "full": {
+            "string": "{count, plural, other {{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat.}}",
+            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
+          },
+          "projects": {
+            "string": "{count, plural, other {Proyek}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
+          }
+        }
+      },
+      "projectsTitle": {
+        "string": "Proyek",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Baru",
+          "developer_comment": "This is the text of a button that is used to create a new Project."
+        }
+      },
+      "header": {
+        "forms": {
+          "string": "Formulir",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "Tidak ada Proyek untuk dilihat."
+      },
+      "alert": {
+        "create": {
+          "string": "Proyek baru Anda telah sukses dibuat."
+        }
+      }
+    },
+    "ProjectNew": {
+      "title": {
+        "string": "Buat Proyek",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Proyek mengelompokkan Formulir dan Pengguna Aplikasi untuk mempermudah pengorganisiran dan pengaturan, baik melalui website ini maupun perangkat koleksi data Anda."
+        }
+      }
+    },
+    "ProjectOverviewAbout": {
+      "title": {
+        "string": "Tentang Proyek",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "full": {
+            "string": "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek {accessTo}.",
+            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
+          },
+          "accessTo": {
+            "string": "yang aksesnya sudah diberikan kepada mereka",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Apabila Anda memiliki masukan, silakan kunjungi {forumThread}.",
+            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
+          },
+          "forumThread": {
+            "string": "utas forum ini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
+          }
+        }
+      }
+    },
+    "ProjectOverviewRightNow": {
+      "appUsers": {
+        "full": {
+          "string": "{count, plural, other {{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini.}}",
+          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "{count, plural, other {Pengguna Aplikasi}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
+        }
+      },
+      "forms": {
+        "full": {
+          "string": "{count, plural, other {{forms} yang dapat diunduh dan diberikan sebagai survei di klien seluler.}}",
+          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
+        },
+        "forms": {
+          "string": "{count, plural, other {Formulir}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+        }
+      }
+    },
+    "ProjectRow": {
+      "help": {
+        "string": "Apa itu Proyek?"
+      },
+      "noSubmission": {
+        "string": "(tidak ada)",
+        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
+      }
+    },
+    "ProjectSettings": {
+      "encryption": {
+        "title": {
+          "string": "Enkripsi",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "unencrypted": {
+            "0": {
+              "string": "Enkripsi untuk kiriman data tidak diaktifkan di Proyek ini."
+            }
+          },
+          "encrypted": {
+            "0": {
+              "full": {
+                "string": "Enkripsi kiriman data {enabled} di Proyek ini.",
+                "developer_comment": "{enabled} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nenabled"
+              },
+              "enabled": {
+                "string": "diaktifkan",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {enabled} is in the following text:\n\nSubmission data encryption is {enabled} for this Project."
+              }
+            },
+            "1": {
+              "string": "Pada versi ODK Central sekarang, Anda tidak dapat menonaktifkan enkripsi setelah enkripsi diaktifkan."
+            }
+          }
+        },
+        "action": {
+          "enableEncryption": {
+            "string": "Aktifkan enkripsi",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "dangerZone": {
+        "action": {
+          "archive": {
+            "string": "Arsipkan Proyek ini",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "archived": {
+          "0": {
+            "string": "Proyek ini telah diarsipkan."
+          },
+          "1": {
+            "string": "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
+          }
+        }
+      },
+      "alert": {
+        "archive": {
+          "string": "Proyek \"{name}\" telah diarsipkan."
+        }
+      }
+    },
+    "ProjectShow": {
+      "tab": {
+        "overview": {
+          "string": "Gambaran",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "users": {
+          "string": "Peran Proyek",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "formAccess": {
+          "string": "Akses Formulir",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "settings": {
+          "string": "Pengaturan",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      }
+    },
+    "ProjectSubmissionOptions": {
+      "title": {
+        "string": "Pengaturan Kiriman Data",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Ada beberapa pengaturan untuk mengirim data ke ODK Central:",
+          "developer_comment": "This text is shown above a list of options for submitting data."
+        },
+        "1": {
+          "full": {
+            "string": "Buat {appUsers} dan gunakan aplikasi Android {collect}. Ini akan membantu dan memudahkan pengumpul data membutuhkan akses ke berbagai formulir, sedang offline, atau ketika Anda memiliki formulir yang kompleks.",
+            "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+          },
+          "appUsers": {
+            "string": "Pengguna Aplikasi",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Buat satu atau lebih {publicLinks} untuk dibagikan dengan responden yang akan melakukan laporan pribadi.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
+          },
+          "publicLinks": {
+            "string": "Tautan Akses Publik",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publicLinks} is in the following text:\n\nCreate one or more {publicLinks} to share with respondents who will self-report."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "Buat sebuah {webUser} dengan Peran sebagai {dataCollector} untuk setiap invididu yang akan mengumpulkan data. Pengguna ini akan masuk ke Central untuk mengisi formulir lewat web browser. Manajer Proyek juga bisa membuat kiriman data lewat web browser.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
+          },
+          "webUser": {
+            "string": "Pengguna Web",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          },
+          "dataCollector": {
+            "string": "Pengumpul Data",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          }
+        }
+      }
+    },
+    "ProjectUserList": {
+      "heading": {
+        "0": {
+          "string": "Administrator seluruh situs akan secara otomatis dikenali sebagai Manajer dari setiap Proyek. Pengguna lainnya bisa memiliki Peran spesifik dalam Proyek ini:",
+          "developer_comment": "This text is shown above a list of Roles."
+        },
+        "1": {
+          "full": {
+            "string": "{projectManagers} bisa melakukan pekerjaan administratif apapun sehubungan dengan Proyek ini dan bisa mengisi formulir lewat web browser.",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
+          },
+          "projectManagers": {
+            "string": "Manajer Proyek",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectManagers} is in the following text:\n\n{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{projectViewers} dapat mengakses dan mengunduh semua data formulir di Proyek ini, tetapi tidak bisa membuat perubahan terhadap pengaturan maupun data",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
+          },
+          "projectViewers": {
+            "string": "Pemerhati Proyek",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{dataCollectors} dapat mengisi formulir di web browser, tetapi tidak bisa melihat atau mengubah data atau pengaturan.",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
+          },
+          "dataCollectors": {
+            "string": "Pengumpul Data",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
+          }
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Hapus pencarian",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "field": {
+        "q": {
+          "canList": {
+            "string": "Cari pengguna...",
+            "developer_comment": "This is the text of a form field."
+          },
+          "cannotList": {
+            "string": "Masukkan email pengguna...",
+            "developer_comment": "This is the text of a form field."
+          }
+        }
+      },
+      "header": {
+        "user": {
+          "string": "Pengguna",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "projectRole": {
+          "string": "Peran Proyek",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "Belum ada Pengguna yang ditugaskan dalam Proyek ini. Untuk menambah Pengguna, cari nama Pengguna di atas."
+      },
+      "alert": {
+        "unassignWithoutReassign": {
+          "string": "Terjadi kesalahan. \"{displayName}\" sudah dihapus dari Proyek."
+        },
+        "assignRole": {
+          "string": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini."
+        },
+        "unassignRole": {
+          "string": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
+        }
+      }
+    },
+    "ProjectUserRow": {
+      "cannotAssignRole": {
+        "string": "Anda tidak dapat menyunting Peran Proyek Anda sendiri."
+      },
+      "field": {
+        "projectRole": {
+          "string": "Peran Proyek",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "PublicLinkCreate": {
+      "title": {
+        "string": "Buat Tautan Akses Publik",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Siapapun yang memiliki tautan ini akan bisa mengisi formulir ini lewat web browser. Gunakan Nama Tampilan sebagai pengingat di mana Anda mempublikasikannya, dengan siapa Anda membagikannya, kapan akan aktif, dan sebagainya."
+        }
+      },
+      "field": {
+        "once": {
+          "string": "Kiriman data tunggal",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "onceHelp": {
+        "string": "Izinkan hanya satu kiriman data dari setiap browser.",
+        "developer_comment": "This is help text for the \"Single Submission\" checkbox."
+      }
+    },
+    "PublicLinkList": {
+      "action": {
+        "create": {
+          "string": "Buat Tautan Akses Publik",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Siapapun dengan Tautan Akses Publik dapat mengisi formulir lewat web browser. Anda dapat membuat beberapa tautan untuk melacak pembagian formulir, membatasi seberapa lama kelompok tertentu memiliki akses formulir, dan banyak lagi. Tautan-tautan ini hanya akan berfungsi jika form berada dalam {state} Terbuka.",
+            "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
+          },
+          "state": {
+            "string": "status",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {state} is in the following text:\n\nAnyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Tautan Publik dimaksudkan untuk laporan pribadi. Apabila Anda bekerja dengan pengumpul data yang butuh mengirimkan beberapa data dalam satu formulir yang sama, {clickHere} untuk pilihan lain.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "klik di sini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Tidak ada Tautan Akses Publik untuk formulir ini."
+      },
+      "alert": {
+        "create": {
+          "string": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar. "
+        },
+        "revoke": {
+          "string": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini. "
+        }
+      }
+    },
+    "PublicLinkRevoke": {
+      "title": {
+        "string": "Cabut Tautan Akses Publik",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Anda hendak mencabut Tautan Akses Publik. Ini berarti semua usaha untuk mengirim data melalui tautan ini akan ditolak, termasuk catatan yang sudah dimulai."
+        }
+      }
+    },
+    "PublicLinkRow": {
+      "action": {
+        "revoke": {
+          "string": "Cabut",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "revoked": {
+        "string": "Dicabut",
+        "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
+      },
+      "unavailable": {
+        "text": {
+          "string": "Belum tersedia",
+          "developer_comment": "This text is shown for a Public Access Link that is not available yet."
+        },
+        "title": {
+          "string": "Tautan Akses Publik belum tersedia. Tautan belum selesai diproses. Silakan muat ulang dan coba lagi nanti."
+        }
+      }
+    },
+    "PublicLinkTable": {
+      "header": {
+        "once": {
+          "string": "Kiriman Data Tunggal",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "accessLink": {
+          "string": "Tautan Akses",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "RefreshButton": {
+      "action": {
+        "refresh": {
+          "string": "Daftar Muat Ulang",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "SubmissionAnalyze": {
+      "title": {
+        "string": "Menggunakan OData",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "OData adalah standar baru untuk mentransfer data antara perangkat dan servis. Perangkat analisis gratis dan unggul seperti Excel, {powerBi}, dan {r} dapat mengambil data lewat OData untuk analisis.",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+        },
+        "1": {
+          "string": "Ada banyak keuntungan menggunakan OData. Yang paling penting adalah OData mendukung ketepatan sempurna pemindahan data kompleks seperti angka dan data geografis, dan memudahkan sinkronisasi data terakhir Anda dengan perangkat yang menggunakannya."
+        },
+        "2": {
+          "string": "Untuk memulai menggunakan OData, pilih perangkat Anda dan salin tautannya ke sana."
+        }
+      },
+      "tab": {
+        "microsoft": {
+          "string": "Excel/Power BI",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "other": {
+          "string": "Lainnya",
+          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
+        }
+      },
+      "help": {
+        "microsoft": {
+          "full": {
+            "string": "Untuk bantuan penggunaan OData dengan Excel, lihat {pageForExcel}. Untuk bantuan penggunaan Power BI, lihat {pageForPowerBi}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
+          },
+          "pageForExcel": {
+            "string": "laman ini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          },
+          "pageForPowerBi": {
+            "string": "laman ini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          }
+        },
+        "r": {
+          "0": {
+            "full": {
+              "string": "Untuk mengakses data Central dari {r}, kami merekomendasikan Anda untuk menggunakan {ruODK}. Lihat skema ruODK untuk contoh penggunaan {oData} dan {restful} API.",
+              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
+            },
+            "restful": {
+              "string": "RESTful",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Sama seperti ODK, ruODK dikembangkan dan didukung oleh anggota komunitas. Apabila Anda ingin membantu perkembangannya, Anda dapat menemukan informasi lebih lanjut {here}.",
+              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+            },
+            "here": {
+              "string": "di sini",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
+            }
+          }
+        },
+        "other": {
+          "full": {
+            "string": "Untuk deskripsi lengkap tentang dukungan OData kami, silakan lihat {article}.",
+            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+          },
+          "article": {
+            "string": "artikel ini",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
+          }
+        }
+      }
+    },
+    "SubmissionCell": {
+      "binaryLinkTitle": {
+        "string": "Dokumen telah dikirim. Klik untuk mengunduh."
+      }
+    },
+    "SubmissionDecrypt": {
+      "title": {
+        "string": "Dekripsi dan Unduh",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
+        }
+      },
+      "hint": {
+        "string": "Petunjuk: {hint}",
+        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+      },
+      "alert": {
+        "submit": {
+          "string": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
+        }
+      }
+    },
+    "SubmissionList": {
+      "action": {
+        "download": {
+          "withCount": {
+            "string": "{count, plural, other {Unduh semua {count} catatan.}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withoutCount": {
+            "string": "Unduh semua catatan",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "analyze": {
+          "string": "Analisis lewat OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": "Akses OData tidak tersedia karena enkripsi formulir"
+      },
+      "loading": {
+        "withoutCount": {
+          "string": "Memuat kiriman data...",
+          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, other {Memuat {count} kiriman data...}}"
+        },
+        "first": {
+          "string": "Memuat {top} pertama dari {count} kiriman data...",
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+        },
+        "middle": {
+          "string": "Memuat {top} lebih dari {count} sisa kiriman data...",
+          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, other {Memuat {count} kiriman data terakhir...}}"
+          },
+          "one": {
+            "string": "Memuat kiriman data terakhir..."
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Belum ada kiriman data."
+      },
+      "remaining": {
+        "string": "{count, plural, other {{count} baris tersisa.}}"
+      }
+    },
+    "SubmissionRow": {
+      "encryptionMessage": {
+        "string": "Pratinjau data tidak tersedia karena enkripsi."
+      }
+    },
+    "SubmissionTable": {
+      "header": {
+        "submitterName": {
+          "string": "Dikirim oleh",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "submissionDate": {
+          "string": "Dikirim pada",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "instanceId": {
+          "string": "ID Instansi",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "SystemHome": {
+      "title": {
+        "string": "Manajemen Sistem",
+        "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      },
+      "tab": {
+        "backups": {
+          "string": "Data Cadangan",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "audits": {
+          "string": "Catatan Server Audit",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      }
+    },
+    "TimeAndUser": {
+      "text": {
+        "string": "{dateTime} oleh {displayName}",
+        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      }
+    },
+    "UserEditBasicDetails": {
+      "title": {
+        "string": "Rincian Dasar",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "update": {
+          "string": "Rincian Pembaruan",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Rincian pengguna tersimpan!"
+        }
+      }
+    },
+    "UserEditPassword": {
+      "title": {
+        "string": "Ubah Kata Sandi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "change": {
+          "string": "Ubah Kata Sandi",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "cannotChange": {
+        "string": "Hanya pemilik akun yang bisa mengatur kata sandi."
+      },
+      "alert": {
+        "mismatch": {
+          "string": "Harap periksa kesamaan kata sandi baru Anda."
+        },
+        "success": {
+          "string": "Berhasil! Kata sandi telah diperbarui."
+        }
+      }
+    },
+    "UserHome": {
+      "title": {
+        "string": "Pengaturan Pengguna",
+        "developer_comment": "This is shown as the title at the top of the page."
+      },
+      "tab": {
+        "users": {
+          "string": "Pengguna Web",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "roles": {
+          "string": "Pengaturan Peran",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      },
+      "comingSoon": {
+        "string": "(akan datang)",
+        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
+      }
+    },
+    "UserList": {
+      "action": {
+        "create": {
+          "string": "Buat Pengguna Web",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Pengguna Web memiliki akun di website ini untuk mengawasi dan mengelola Proyek pada server ini. Administrator dapat mengelola apapun di situs. Pengguna yang tidak memiliki Peran Seluruh Situs bisa diberikan Peran dalam Proyek apapun, melalui pengaturan Proyek tersebut. Administrator Seluruh Sirus dan beberapa Perak Proyek dapat menggunakan web browser untuk mengisi Formulir. Untuk mengirim data lewat aplikasi seperti {collect}, buat Pengguna Aplikasi untuk masing-masing Proyek.",
+          "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
+        }
+      },
+      "header": {
+        "sitewideRole": {
+          "string": "Peran Seluruh Situs",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "alert": {
+        "create": {
+          "string": "Pengguna telah sukses dibuat untuk \"{displayName}\"."
+        },
+        "assignRole": {
+          "string": "Berhasil! \"{displayName}\" telah diberikan Peran Seluruh Situs oleh \"{roleName}\"."
+        },
+        "resetPassword": {
+          "string": "Kata sandi untuk \"{displayName}\" sudah tidak berlaku. Sebuah email tetang instruksi selanjutnya telah dikirimkan ke {email}. "
+        },
+        "retire": {
+          "string": "Pengguna {displayName} telah berhenti."
+        }
+      }
+    },
+    "UserNew": {
+      "title": {
+        "string": "Buat Pengguna Web",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Setelah Anda membuat akun, instruksi untuk mengatur kata sandi dan tahap selanjutnya akan dikirimkan ke alamat email yang Anda sediakan."
+        }
+      }
+    },
+    "UserResetPassword": {
+      "title": {
+        "string": "Atur Ulang Kata Sandi",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "full": {
+          "string": "Setelah Anda mengklik {resetPassword} di bawah, kata sandi untuk Pengguna \"{displayName}\" <{email}> tidak akan berlaku lagi. Sebuah email tentang instruksi selanjutnya akan dikirim ke {email}.",
+          "developer_comment": "{resetPassword} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReset password"
+        },
+        "resetPassword": {
+          "string": "Atur Ulang Kata Sandi",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {resetPassword} is in the following text:\n\nOnce you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed."
+        }
+      }
+    },
+    "UserRetire": {
+      "title": {
+        "string": "Pengguna yang sudah Berhenti",
+        "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
+      },
+      "introduction": {
+        "0": {
+          "string": "Anda hendak memberhentikan akun pengguna \"{displayName}\" <{email}>. Pengguna tersebut tidak akan bisa melakukan tindakan apapun dan keluar."
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, tetapi sebuah akun baru akan selalu dapat dibuat untuk pengguna tersebut dengan alamat email yang sama.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Tindakan ini tidak bisa dibatalkan/dikembalikan",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but a new account can always be created for that person with the same email address."
+          }
+        }
+      }
+    },
+    "UserRow": {
+      "cannotAssignRole": {
+        "string": "Anda tidak dapat menyunting Peran Seluruh Situs Anda sendiri."
+      },
+      "field": {
+        "sitewideRole": {
+          "string": "Peran Seluruh Situs",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "cannotRetire": {
+        "string": "Anda tidak dapat memberhentikan diri sendiri.",
+        "developer_comment": "An Administrator may retire other Web Users, but not their own account."
+      },
+      "action": {
+        "retire": {
+          "string": "Pengguna Berhenti",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    }
+  }
+}

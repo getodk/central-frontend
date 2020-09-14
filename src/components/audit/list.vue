@@ -112,6 +112,12 @@ export default {
       "Vous trouverez ici un log des actions importantes effectuées sur le serveur. Les modifications apportées aux utilisateurs, projets ou formulaires se trouvent ici."
     ],
     "emptyTable": "Il n'y a pas d'entrée correspondante dans le journal d'audit."
+  },
+  "id": {
+    "heading": [
+      "Di sini Anda bisa menemukan catatan tindakan-tindakan yang dilakukan di server ini. Perubahan terhadap pengguna, proyek, atau pengaturan formulir dapat ditemukan di sini."
+    ],
+    "emptyTable": "Tidak ada catatan audit yang cocok."
   }
 }
 </i18n>

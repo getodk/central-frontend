@@ -121,6 +121,12 @@ export default {
     "introduction": [
       "Une fois que vous aurez créé ce compte, l'adresse de courriel que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
     ]
+  },
+  "id": {
+    "title": "Buat Pengguna Web",
+    "introduction": [
+      "Setelah Anda membuat akun, instruksi untuk mengatur kata sandi dan tahap selanjutnya akan dikirimkan ke alamat email yang Anda sediakan."
+    ]
   }
 }
 </i18n>

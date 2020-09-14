@@ -153,6 +153,9 @@ $icon-lock-margin-right: 12px;
   },
   "fr": {
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
+  },
+  "id": {
+    "encryptionMessage": "Pratinjau data tidak tersedia karena enkripsi."
   }
 }
 </i18n>

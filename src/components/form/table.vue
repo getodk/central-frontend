@@ -95,6 +95,11 @@ export default {
     "header": {
       "idAndVersion": "Identifiant et version"
     }
+  },
+  "id": {
+    "header": {
+      "idAndVersion": "ID dan Versi"
+    }
   }
 }
 </i18n>

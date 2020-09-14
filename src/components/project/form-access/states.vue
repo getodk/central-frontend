@@ -186,6 +186,27 @@ export default {
         "not2": "pas"
       }
     ]
+  },
+  "id": {
+    "title": "Status Formulir",
+    "introduction": [
+      "Status Formulir mengontrol keadaan lingkar keaktifan setiap formulir. Biasanya, tidak selalu, sebuah formulir akan dimulai dengan status Terbuka, kemudian Penutupan, hingga Ditutup, ketika sudah tidak diperlukan lagi.",
+      {
+        "full": "Formulir {open} tersedia untuk diunduh lewat perangkat seluler dan akan menerima kiriman data baru.",
+        "open": "Terbuka"
+      },
+      {
+        "full": "{closing} Formulir akan menerima kiriman data baru, tetapi {not} tersedia untuk diunduh di perangkat seluler.",
+        "closing": "Penutupan",
+        "not": "tidak"
+      },
+      {
+        "full": "Formulir {closed} {not1} tersedia untuk diunduh di perangkat seluler dan {not2} menerima kiriman data baru.",
+        "closed": "Ditutup",
+        "not1": "tidak",
+        "not2": "tidak"
+      }
+    ]
   }
 }
 </i18n>

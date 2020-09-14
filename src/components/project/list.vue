@@ -492,6 +492,47 @@ export default {
     "alert": {
       "create": "Votre nouveau projet a été créé avec succès."
     }
+  },
+  "id": {
+    "heading": [
+      "Selamat datang di Central.",
+      "Ayo selesaikan beberapa hal."
+    ],
+    "gettingStarted": {
+      "title": "Mulai",
+      "body": [
+        {
+          "full": "Apabila Anda tidak yakin harus memulai dari mana, {docsWebsite} menyediakan Panduan Awal dan Dokumentasi Pengguna yang dapat membantu Anda.",
+          "docsWebsite": "Website ODK Docs"
+        },
+        {
+          "full": "Selain itu, Anda selalu bisa mendapatkan pertolongan dari orang lain lewat {forum}, di mana Anda bisa mencari pertanyaan-pertanyaan yang sudah ditanyakan atau menanyakan pertanyaan Anda sendiri.",
+          "forum": "Forum komunitas ODK"
+        }
+      ]
+    },
+    "news": "Berita",
+    "rightNow": {
+      "users": {
+        "full": "{webUsers} dapat mengelola Proyek lewat website ini.",
+        "webUsers": "Pengguna Web"
+      },
+      "projects": {
+        "full": "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat.",
+        "projects": "Proyek"
+      }
+    },
+    "projectsTitle": "Proyek",
+    "action": {
+      "create": "Baru"
+    },
+    "header": {
+      "forms": "Formulir"
+    },
+    "emptyTable": "Tidak ada Proyek untuk dilihat.",
+    "alert": {
+      "create": "Proyek baru Anda telah sukses dibuat."
+    }
   }
 }
 </i18n>

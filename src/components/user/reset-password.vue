@@ -114,6 +114,13 @@ export default {
       "full": "Une fois que vous avez cliqué sur {resetPassword} ci-dessous, le mot de passe de l'utilisateur \"{displayName}\" est \u003c{email}> sera immédiatement invalidé. Un courrier électronique sera envoyé à {email} avec des instructions sur la manière de procéder.",
       "resetPassword": "Réinitialiser le mot de passe"
     }
+  },
+  "id": {
+    "title": "Atur Ulang Kata Sandi",
+    "introduction": {
+      "full": "Setelah Anda mengklik {resetPassword} di bawah, kata sandi untuk Pengguna \"{displayName}\" \u003c{email}> tidak akan berlaku lagi. Sebuah email tentang instruksi selanjutnya akan dikirim ke {email}.",
+      "resetPassword": "Atur Ulang Kata Sandi"
+    }
   }
 }
 </i18n>

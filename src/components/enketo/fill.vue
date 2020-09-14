@@ -86,6 +86,12 @@ export default {
       "processing": "Le Formulaire Web n'est pas encore disponible. Il n'a pas encore été traité. Veuillez rafraîchir plus tard et réessayer.",
       "notOpen": "Ce Formulaire n'accepte pas de nouvelles soumissions pour le moment."
     }
+  },
+  "id": {
+    "disabled": {
+      "processing": "Formulir Web belum tersedia. Silakan muat ulang dan coba lagi nanti.",
+      "notOpen": "Formulir ini sedang tidak menerima kiriman data baru sekarang."
+    }
   }
 }
 </i18n>

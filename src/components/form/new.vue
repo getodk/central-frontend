@@ -464,6 +464,47 @@ $drop-zone-vpadding: 15px;
         "update": "Si vous êtes sûr que ce problème peut-être ignoré, cliquez sur le bouton pour mettre à jour l'ébauche :"
       }
     ]
+  },
+  "id": {
+    "title": {
+      "create": "Buat Formulir",
+      "update": "Unggah Definisi Formulir Baru"
+    },
+    "introduction": [
+      {
+        "create": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel.",
+        "update": "Untuk memperbarui draf, unggan dokumen XForms XML atau dokumen XLSForm Excel."
+      },
+      {
+        "full": "Apabila Anda belum memilikinya, {tools} akan membantu Anda mendesain formulir Anda.",
+        "tools": "Perangkat yang tersedia"
+      },
+      "Apabila Anda memiliki media, Anda dapat mengunggahnya pada laman berikutnya setelah formulir berhasil dibuat."
+    ],
+    "dropZone": {
+      "full": "Lepas dokumen di sini, atau {chooseOne} untuk mengunggah.",
+      "chooseOne": "pilih satu"
+    },
+    "action": {
+      "upload": "Unggah",
+      "uploadAnyway": "Lanjutkan unggah"
+    },
+    "alert": {
+      "fileRequired": "Silakan pilih dokumen."
+    },
+    "problem": {
+      "400_8": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\").",
+      "400_15": "XLSForm tidak bisa diubah: {error}",
+      "409_3": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
+    },
+    "warningsText": [
+      "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):",
+      "Mohon perbaiki dan coba lagi.",
+      {
+        "create": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan buat formulir:",
+        "update": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
+      }
+    ]
   }
 }
 </i18n>

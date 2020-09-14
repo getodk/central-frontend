@@ -136,6 +136,18 @@ export default {
     "alert": {
       "success": "Paramètres du projet enregistrés !"
     }
+  },
+  "id": {
+    "title": "Rincian Dasar",
+    "field": {
+      "name": "Nama Proyek"
+    },
+    "action": {
+      "update": "Simpan pengaturan"
+    },
+    "alert": {
+      "success": "Pengaturan proyek tersimpan!"
+    }
   }
 }
 </i18n>

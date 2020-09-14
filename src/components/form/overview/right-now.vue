@@ -197,6 +197,21 @@ export default {
       ],
       "submissions": "Soumission | Soumissions"
     }
+  },
+  "id": {
+    "version": {
+      "full": "{publishedVersion} dari formulir ini.",
+      "publishedVersion": "Versi terbit"
+    },
+    "stateCaption": {
+      "open": "Formulir ini bisa diunduh dan sedang menerima kiriman data.",
+      "closing": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data.",
+      "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
+    },
+    "submissions": {
+      "full": "{submissions} untuk formulir ini sudah disimpan.",
+      "submissions": "Kiriman data"
+    }
   }
 }
 </i18n>

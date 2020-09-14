@@ -113,6 +113,12 @@ export default {
     "users": "Utilisateurs",
     "system": "Système",
     "current": "actuel"
+  },
+  "id": {
+    "projects": "Proyek",
+    "users": "Pengguna",
+    "system": "Sistem",
+    "current": "Sekarang ini"
   }
 }
 </i18n>

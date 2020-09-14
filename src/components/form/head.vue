@@ -416,6 +416,33 @@ body {
         "testing": "Test"
       }
     }
+  },
+  "id": {
+    "projectNav": {
+      "action": {
+        "back": "Kembali ke Gambaran Proyek"
+      }
+    },
+    "formNav": {
+      "tab": {
+        "overview": "Gambaran",
+        "versions": "Versi",
+        "publicLinks": "Akses Publik",
+        "settings": "Pengaturan"
+      },
+      "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
+    },
+    "draftNav": {
+      "title": "Draf",
+      "action": {
+        "create": "Buat draf baru"
+      },
+      "tab": {
+        "status": "Status",
+        "attachments": "File Media",
+        "testing": "Uji Coba"
+      }
+    }
   }
 }
 </i18n>

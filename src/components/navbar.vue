@@ -227,6 +227,11 @@ $shadow-color: #dedede;
     "action": {
       "toggle": "Basculer la navigation"
     }
+  },
+  "id": {
+    "action": {
+      "toggle": "Navigasi Toggle"
+    }
   }
 }
 </i18n>

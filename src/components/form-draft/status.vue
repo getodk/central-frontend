@@ -334,6 +334,33 @@ export default {
       "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
       "delete": "Le formulaire {name} a été supprimé."
     }
+  },
+  "id": {
+    "draftChecklist": {
+      "title": "Daftar Periksa Draf"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion} Formulir ini.",
+        "draftVersion": "Versi draf"
+      },
+      "action": {
+        "upload": "Unggah definisi baru"
+      }
+    },
+    "actions": {
+      "title": "Tindakan",
+      "action": {
+        "publish": "Terbitkan Draf",
+        "abandon": "Buang Draf"
+      }
+    },
+    "alert": {
+      "upload": "Sukses! Definisi formulir baru telah disimpan di Draf.",
+      "publish": "Draf Anda telah diterbitkan. Setiap perangkat yang mengambil Formulir dari Proyek ini akan menerima definisi formulir dan file media yang baru.",
+      "abandon": "Versi draf dari formulir ini telah sukses dihapus.",
+      "delete": "Formulir {name} sudah dihapus."
+    }
   }
 }
 </i18n>

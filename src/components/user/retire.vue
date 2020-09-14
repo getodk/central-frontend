@@ -131,6 +131,16 @@ export default {
         "noUndo": "Cette action ne peut être annulée"
       }
     ]
+  },
+  "id": {
+    "title": "Pengguna yang sudah Berhenti",
+    "introduction": [
+      "Anda hendak memberhentikan akun pengguna \"{displayName}\" \u003c{email}>. Pengguna tersebut tidak akan bisa melakukan tindakan apapun dan keluar.",
+      {
+        "full": "{noUndo}, tetapi sebuah akun baru akan selalu dapat dibuat untuk pengguna tersebut dengan alamat email yang sama.",
+        "noUndo": "Tindakan ini tidak bisa dibatalkan/dikembalikan"
+      }
+    ]
   }
 }
 </i18n>

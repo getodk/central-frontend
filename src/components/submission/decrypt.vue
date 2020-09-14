@@ -242,6 +242,16 @@ export default {
     "alert": {
       "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer."
     }
+  },
+  "id": {
+    "title": "Dekripsi dan Unduh",
+    "introduction": [
+      "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
+    ],
+    "hint": "Petunjuk: {hint}",
+    "alert": {
+      "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
+    }
   }
 }
 </i18n>

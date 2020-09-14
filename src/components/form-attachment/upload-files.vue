@@ -144,6 +144,19 @@ export default {
         "clickHere": "Cliquez ici pour choisir"
       }
     ]
+  },
+  "id": {
+    "title": "Unggah dokumen",
+    "introduction": [
+      {
+        "full": "Untuk menunggah dokumen, {dragAndDrop} satu atau lebih dokumen ke tabel pada laman ini",
+        "dragAndDrop": "seret dan lepas"
+      },
+      {
+        "full": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel , lalu {clickHere}.",
+        "clickHere": "Klik di sini untuk memilih"
+      }
+    ]
   }
 }
 </i18n>

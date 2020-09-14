@@ -89,6 +89,12 @@ export default {
       "published": "Publié",
       "definition": "Définition"
     }
+  },
+  "id": {
+    "header": {
+      "published": "Diterbitkan",
+      "definition": "Definisi"
+    }
   }
 }
 </i18n>

@@ -91,6 +91,12 @@ export default {
       "once": "Soumission unique",
       "accessLink": "Lien d'accès"
     }
+  },
+  "id": {
+    "header": {
+      "once": "Kiriman Data Tunggal",
+      "accessLink": "Tautan Akses"
+    }
   }
 }
 </i18n>

@@ -396,6 +396,60 @@ export default {
         ]
       }
     ]
+  },
+  "id": {
+    "clickForInfo": "Klik di sini untuk mencari tahu lebih.",
+    "steps": [
+      {
+        "title": "Unggah definisi formulir awal",
+        "body": [
+          "Kerja bagus!",
+          "Desain formulir Anda telah berhasil dimuat."
+        ]
+      },
+      {
+        "title": "Unggah definisi formulir yang sudah direvisi (opsional)",
+        "body": [
+          {
+            "status": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya mengunggah XML baru atau XLSForm menggunakan tombol yang ada di sebelah kanan.",
+            "link": {
+              "full": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya {upload} XML baru atau XLSForm.",
+              "upload": "Unggah"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Unggah Formulir File Media",
+        "body": [
+          {
+            "full": "Dokumen referensi desain formulir Anda yang dibutuhkan untuk menampilkan formulir Anda. Anda dapat mengunggah distribusi baru atau yang sudah diperbarui di tab {mediaFiles}.",
+            "mediaFiles": "File Media"
+          }
+        ]
+      },
+      {
+        "title": "Tes formulir pada perangkat seluler Anda",
+        "body": [
+          {
+            "full": "Anda bisa {test} formulir untuk memastikan kesesuaiannya dengan yang Anda ekspektasikan. Kiriman data dari hasil tes tidak akan dimasukkan ke dalam data akhir Anda.",
+            "test": "mengetes"
+          }
+        ]
+      },
+      {
+        "title": "Terbitkan Draf",
+        "body": [
+          {
+            "status": "Ketika Anda yakin Draf sudah siap, Anda bisa menerbitkannya menggunakan tombol yang ada di sebelah kanan.",
+            "link": {
+              "full": "Ketika Anda yakin Draf sudah siap, Anda bisa {publish} menggunakan tombol yang ada di sebelah kanan.",
+              "publish": "menerbitkannya"
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 </i18n>

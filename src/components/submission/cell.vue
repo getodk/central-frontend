@@ -222,6 +222,9 @@ export default {
   },
   "fr": {
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger."
+  },
+  "id": {
+    "binaryLinkTitle": "Dokumen telah dikirim. Klik untuk mengunduh."
   }
 }
 </i18n>
