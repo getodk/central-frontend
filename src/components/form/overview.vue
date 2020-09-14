@@ -203,6 +203,21 @@ export default {
         }
       }
     }
+  },
+  "id": {
+    "checklist": "Daftar periksa",
+    "draft": {
+      "none": {
+        "title": "Belum ada draf",
+        "body": "Belum ada versi draf untuk formulir ini. Apabila Anda ingin membuat perubahan terhadap formulir atau file media di dalamnya, mulailah dengan membuat sebuah draf menggunakan tombol di atas."
+      },
+      "any": {
+        "versionCaption": {
+          "full": "{draftVersion} dari formulir ini.",
+          "draftVersion": "Versi draf"
+        }
+      }
+    }
   }
 }
 </i18n>

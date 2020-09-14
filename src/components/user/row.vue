@@ -217,6 +217,16 @@ export default {
     "action": {
       "retire": "Supprimer l'utilisateur"
     }
+  },
+  "id": {
+    "cannotAssignRole": "Anda tidak dapat menyunting Peran Seluruh Situs Anda sendiri.",
+    "field": {
+      "sitewideRole": "Peran Seluruh Situs"
+    },
+    "cannotRetire": "Anda tidak dapat memberhentikan diri sendiri.",
+    "action": {
+      "retire": "Pengguna Berhenti"
+    }
   }
 }
 </i18n>

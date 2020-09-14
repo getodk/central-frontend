@@ -217,6 +217,19 @@ export default {
       "text": "Non encore téléversé",
       "title": "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur le tableau de cette page."
     }
+  },
+  "id": {
+    "type": {
+      "image": "Gambar",
+      "audio": "Audio",
+      "video": "Video",
+      "file": "File Data"
+    },
+    "replace": "Ganti",
+    "notUploaded": {
+      "text": "Belum terunggah",
+      "title": "Untuk menunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman ini"
+    }
   }
 }
 </i18n>

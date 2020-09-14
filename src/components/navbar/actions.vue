@@ -124,6 +124,15 @@ export default {
     "alert": {
       "logOut": "Vous avez été déconnecté avec succès."
     }
+  },
+  "id": {
+    "notLoggedIn": "Belum masuk",
+    "action": {
+      "logOut": "Keluar"
+    },
+    "alert": {
+      "logOut": "Anda sudah berhasil keluar."
+    }
   }
 }
 </i18n>

@@ -135,6 +135,13 @@ export default {
     "action": {
       "revokeAccess": "Retirer l'accès"
     }
+  },
+  "id": {
+    "seeCode": "Lihat kode",
+    "accessRevoked": "Akses dicabut",
+    "action": {
+      "revokeAccess": "Cabut akses"
+    }
   }
 }
 </i18n>

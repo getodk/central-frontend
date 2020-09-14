@@ -290,6 +290,38 @@ export default {
     "alert": {
       "archive": "Le projet \"{name}\" a été archivé."
     }
+  },
+  "id": {
+    "encryption": {
+      "title": "Enkripsi",
+      "body": {
+        "unencrypted": [
+          "Enkripsi untuk kiriman data tidak diaktifkan di Proyek ini."
+        ],
+        "encrypted": [
+          {
+            "full": "Enkripsi kiriman data {enabled} di Proyek ini.",
+            "enabled": "diaktifkan"
+          },
+          "Pada versi ODK Central sekarang, Anda tidak dapat menonaktifkan enkripsi setelah enkripsi diaktifkan."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Aktifkan enkripsi"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Arsipkan Proyek ini"
+      },
+      "archived": [
+        "Proyek ini telah diarsipkan.",
+        "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
+      ]
+    },
+    "alert": {
+      "archive": "Proyek \"{name}\" telah diarsipkan."
+    }
   }
 }
 </i18n>

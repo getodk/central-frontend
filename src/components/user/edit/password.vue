@@ -166,6 +166,17 @@ export default {
       "mismatch": "Veuillez vérifier que vos nouveaux mots de passe correspondent.",
       "success": "Succès ! Votre mot de passe a été mis à jour."
     }
+  },
+  "id": {
+    "title": "Ubah Kata Sandi",
+    "action": {
+      "change": "Ubah Kata Sandi"
+    },
+    "cannotChange": "Hanya pemilik akun yang bisa mengatur kata sandi.",
+    "alert": {
+      "mismatch": "Harap periksa kesamaan kata sandi baru Anda.",
+      "success": "Berhasil! Kata sandi telah diperbarui."
+    }
   }
 }
 </i18n>

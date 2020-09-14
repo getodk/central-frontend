@@ -83,6 +83,9 @@ export default {
   },
   "fr": {
     "filter": "Filtrer par"
+  },
+  "id": {
+    "filter": "Saring berdasarkan"
   }
 }
 </i18n>

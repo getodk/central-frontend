@@ -177,6 +177,12 @@ export default {
     "action": {
       "fill": "Remplir le formulaire"
     }
+  },
+  "id": {
+    "lastSubmission": "(terakhir {dateTime})",
+    "action": {
+      "fill": "Isi Formulir"
+    }
   }
 }
 </i18n>

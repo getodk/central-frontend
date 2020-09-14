@@ -88,6 +88,11 @@ export default {
     "action": {
       "refresh": "Rafraîchir la liste"
     }
+  },
+  "id": {
+    "action": {
+      "refresh": "Daftar Muat Ulang"
+    }
   }
 }
 </i18n>

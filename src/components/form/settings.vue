@@ -171,6 +171,21 @@ export default {
     "alert": {
       "delete": "Le formulaire {name} a été supprimé."
     }
+  },
+  "id": {
+    "state": {
+      "title": "Status Formulir",
+      "body": {
+        "full": "Untuk mengatur status formulir, silakan kunjungi {formAccessSettings} Proyek.",
+        "formAccessSettings": "Pengaturan Akses Formulir"
+      }
+    },
+    "action": {
+      "delete": "Hapus formulir ini"
+    },
+    "alert": {
+      "delete": "Formulir {name} telah dihapus."
+    }
   }
 }
 </i18n>

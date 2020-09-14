@@ -122,6 +122,19 @@ export default {
         "forumThread": "ce fil de discussion du forum"
       }
     ]
+  },
+  "id": {
+    "title": "Tentang Proyek",
+    "body": [
+      {
+        "full": "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek {accessTo}.",
+        "accessTo": "yang aksesnya sudah diberikan kepada mereka"
+      },
+      {
+        "full": "Apabila Anda memiliki masukan, silakan kunjungi {forumThread}.",
+        "forumThread": "utas forum ini"
+      }
+    ]
   }
 }
 </i18n>

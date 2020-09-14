@@ -109,6 +109,12 @@ export default {
     "alert": {
       "success": "Un courriel a été envoyé à {email} avec de plus amples instructions"
     }
+  },
+  "id": {
+    "title": "Atur Ulang Kata Sandi",
+    "alert": {
+      "success": "Email sudah dikirimkan ke {email} dengan instruksi lebih lanjut."
+    }
   }
 }
 </i18n>

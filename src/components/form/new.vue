@@ -260,6 +260,7 @@ $drop-zone-vpadding: 15px;
       "update": "Upload New Form Definition"
     },
     "introduction": [
+      // The words "XForms" and "XLSForm" should not be translated.
       {
         "create": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
         "update": "To update the Draft, upload an XForms XML file or an XLSForm Excel file."
@@ -283,10 +284,12 @@ $drop-zone-vpadding: 15px;
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
+      // The word "XLSForm" should not be translated.
       "400_15": "The XLSForm could not be converted: {error}",
       "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
     },
     "warningsText": [
+      // The word "XLSForm" should not be translated.
       "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
       "Please correct the problems and try again.",
       {
@@ -462,6 +465,47 @@ $drop-zone-vpadding: 15px;
       {
         "create": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez sur le bouton pour créer quand même le formulaire :",
         "update": "Si vous êtes sûr que ce problème peut-être ignoré, cliquez sur le bouton pour mettre à jour l'ébauche :"
+      }
+    ]
+  },
+  "id": {
+    "title": {
+      "create": "Buat Formulir",
+      "update": "Unggah Definisi Formulir Baru"
+    },
+    "introduction": [
+      {
+        "create": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel.",
+        "update": "Untuk memperbarui draf, unggan dokumen XForms XML atau dokumen XLSForm Excel."
+      },
+      {
+        "full": "Apabila Anda belum memilikinya, {tools} akan membantu Anda mendesain formulir Anda.",
+        "tools": "Perangkat yang tersedia"
+      },
+      "Apabila Anda memiliki media, Anda dapat mengunggahnya pada laman berikutnya setelah formulir berhasil dibuat."
+    ],
+    "dropZone": {
+      "full": "Lepas dokumen di sini, atau {chooseOne} untuk mengunggah.",
+      "chooseOne": "pilih satu"
+    },
+    "action": {
+      "upload": "Unggah",
+      "uploadAnyway": "Lanjutkan unggah"
+    },
+    "alert": {
+      "fileRequired": "Silakan pilih dokumen."
+    },
+    "problem": {
+      "400_8": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\").",
+      "400_15": "XLSForm tidak bisa diubah: {error}",
+      "409_3": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
+    },
+    "warningsText": [
+      "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):",
+      "Mohon perbaiki dan coba lagi.",
+      {
+        "create": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan buat formulir:",
+        "update": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
       }
     ]
   }

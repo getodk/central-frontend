@@ -259,6 +259,13 @@ export default {
       "submissionDate": "Soumis à",
       "instanceId": "ID de l'instance"
     }
+  },
+  "id": {
+    "header": {
+      "submitterName": "Dikirim oleh",
+      "submissionDate": "Dikirim pada",
+      "instanceId": "ID Instansi"
+    }
   }
 }
 </i18n>

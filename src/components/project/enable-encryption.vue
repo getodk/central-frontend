@@ -510,6 +510,58 @@ export default {
     "field": {
       "hint": "Indice de phrase de passe (optionnel)"
     }
+  },
+  "id": {
+    "title": "Izinkan Enkripsi",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "Apabila Anda mengizinkan enkripsi, hal-hal berikut akan terjadi:",
+            "Kiriman data yang sudah difinalisasi akan dienkripsi di perangkat seluler.",
+            "Kiriman data lain akan dienkripsi di server Central.",
+            [
+              "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
+              "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}."
+            ],
+            "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
+            "Anda tidak akan bisa menghubungkan data lewat OData."
+          ],
+          [
+            "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
+            [
+              "Kiriman data yang sudah ada akan tetap tidak terenkripsi.",
+              "Pada versi yang akan datang, Anda akan memiliki pilihan untuk mengenkripsi data yang sudah ada."
+            ],
+            [
+              "Enkripsi tidak dapat dimatikan setelah diizinkan.",
+              "Pada versi yang akan datang, Anda akan bisa menonaktifkan enkripsi, yang mana akan mendekripsi data Anda. Ini akan terjadi bahkan apabila Anda mengizinkan enkripsi sekarang."
+            ]
+          ],
+          {
+            "full": "Anda dapat mempelajari lebih banyak tentang enkripsi {here}. Apabila ini terdengar seperti sesuatu yang Anda inginkan, tekan \"Berikutnya\" untuk melanjutkan.",
+            "here": "di sini"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Pertama-tama, Anda harus memilih sebuah frasa sandi. Frasa sandi ini akan dibutuhkan untuk mendekripsi kiriman data Anda. Demi pribasi Anda, server tidak akan bisa mengingat frasa sandi ini: hanya orang yang mengetahui frasa sandi yang dapat mendekripsi dan membaca kiriman data Anda.",
+          {
+            "full": "Tidak ada batas panjang atau larangan konten pada frasa sandi, namun apabila Anda kehilangan/lupa, {no} cara untuk mengembalikan frasa sandi maupun data Anda!",
+            "no": "tidak ada"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Enkripsi telah dikonfigurasi untuk Proyek ini. Setiap perangkat seluler harus mengambil ulang formulir terbaru untuk mengaktifkan enkripsi."
+        ]
+      }
+    ],
+    "field": {
+      "hint": "Petunjuk frasa sandi (opsional)"
+    }
   }
 }
 </i18n>

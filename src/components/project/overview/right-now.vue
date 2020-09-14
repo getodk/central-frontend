@@ -162,6 +162,16 @@ export default {
       ],
       "forms": "Formulaire | Formulaires"
     }
+  },
+  "id": {
+    "appUsers": {
+      "full": "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini.",
+      "appUsers": "Pengguna Aplikasi"
+    },
+    "forms": {
+      "full": "{forms} yang dapat diunduh dan diberikan sebagai survei di klien seluler.",
+      "forms": "Formulir"
+    }
   }
 }
 </i18n>

@@ -187,6 +187,12 @@ export default {
     "field": {
       "projectRole": "Rôle dans le projet"
     }
+  },
+  "id": {
+    "cannotAssignRole": "Anda tidak dapat menyunting Peran Proyek Anda sendiri.",
+    "field": {
+      "projectRole": "Peran Proyek"
+    }
   }
 }
 </i18n>

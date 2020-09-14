@@ -147,6 +147,16 @@ export default {
       "text": "Pas encore disponible",
       "title": "Le lien d'accès public n'est pas encore disponible. Il n'a pas encore été traité. Veuillez rafraîchir plus tard et réessayer."
     }
+  },
+  "id": {
+    "action": {
+      "revoke": "Cabut"
+    },
+    "revoked": "Dicabut",
+    "unavailable": {
+      "text": "Belum tersedia",
+      "title": "Tautan Akses Publik belum tersedia. Tautan belum selesai diproses. Silakan muat ulang dan coba lagi nanti."
+    }
   }
 }
 </i18n>

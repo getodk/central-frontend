@@ -58,6 +58,10 @@ export default {
   "fr": {
     "title": "Page non trouvée",
     "body": "La page demandée ne peut être trouvée."
+  },
+  "id": {
+    "title": "Laman tidak ditemui",
+    "body": "Laman yang Anda minta tidak ditemui."
   }
 }
 </i18n>

@@ -372,6 +372,31 @@ export default {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
       "revoke": "L'accès de l'utilisateur mobile “{displayName}” a été retiré ."
     }
+  },
+  "id": {
+    "action": {
+      "create": "Buat Pengguna Aplikasi"
+    },
+    "heading": [
+      {
+        "full": "Pengguna Aplikasi bertugas untuk mengumpulkan data dari aplikasi seperti {collect}. Mereka biasanya merepresentasikan peran bersama, seperti \"Vaksinator\", atau bisa juga merepresentasikan secara individu. Pengguna Aplikasi di proyek ini hanya dapat mengunduh dan menggunakan formulir yang tergabung dalam proyek ini. Ketika Anda membuat Pengguna Aplikasi baru, Anda tidak akan mendapatkan akses ke formulir apapun pada tahap awal. Untuk mengatur formulir yang dapat diakses oleh setiap Pengguna Aplikasi, gunakan tab {formAccess}.",
+        "formAccess": "Akses Formulir"
+      },
+      {
+        "full": "Pengguna Aplikasi sangat membantu ketika pengumpul data membutuhkan akses ke berbagai formulir, sedang offline, atau ketika Anda memiliki formulir yang kompleks. Apabila Anda membutuhkan responden untuk laporan pribadi atau formulir yang hanya dapat diakses secara online, {clickHere} untuk pilihan lain.",
+        "clickHere": "klik di sini"
+      }
+    ],
+    "header": {
+      "lastUsed": "Terakhir Digunakan",
+      "configureClient": "Klien Konfigurasi"
+    },
+    "qrCodeHelp": "Apakah ini?",
+    "emptyTable": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda.",
+    "alert": {
+      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat.",
+      "revoke": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
+    }
   }
 }
 </i18n>

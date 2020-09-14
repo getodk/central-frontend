@@ -140,6 +140,16 @@ export default {
       "Êtes-vous sûr de vouloir téléverser {filename} en tant que {attachmentName} ?",
       "Nous faisons une double vérification car les noms de fichiers ne correspondent pas."
     ]
+  },
+  "id": {
+    "title": {
+      "upload": "Unggah Berkas",
+      "replace": "Ganti dokumen"
+    },
+    "introduction": [
+      "Apakah Anda yakin ingin mengunggah {filename} dengan nama {attachmentName}?",
+      "Kami sedang mengecek ulang karena nama dokumen tidak cocok."
+    ]
   }
 }
 </i18n>

@@ -474,6 +474,42 @@ export default {
       "assignRole": "Succès ! \"{displayName}\" a reçu un rôle de \"{roleName}\" dans ce projet.",
       "unassignRole": "Succès ! “{displayName}” a été retiré de ce projet."
     }
+  },
+  "id": {
+    "heading": [
+      "Administrator seluruh situs akan secara otomatis dikenali sebagai Manajer dari setiap Proyek. Pengguna lainnya bisa memiliki Peran spesifik dalam Proyek ini:",
+      {
+        "full": "{projectManagers} bisa melakukan pekerjaan administratif apapun sehubungan dengan Proyek ini dan bisa mengisi formulir lewat web browser.",
+        "projectManagers": "Manajer Proyek"
+      },
+      {
+        "full": "{projectViewers} dapat mengakses dan mengunduh semua data formulir di Proyek ini, tetapi tidak bisa membuat perubahan terhadap pengaturan maupun data",
+        "projectViewers": "Pemerhati Proyek"
+      },
+      {
+        "full": "{dataCollectors} dapat mengisi formulir di web browser, tetapi tidak bisa melihat atau mengubah data atau pengaturan.",
+        "dataCollectors": "Pengumpul Data"
+      }
+    ],
+    "action": {
+      "clearSearch": "Hapus pencarian"
+    },
+    "field": {
+      "q": {
+        "canList": "Cari pengguna...",
+        "cannotList": "Masukkan email pengguna..."
+      }
+    },
+    "header": {
+      "user": "Pengguna",
+      "projectRole": "Peran Proyek"
+    },
+    "emptyTable": "Belum ada Pengguna yang ditugaskan dalam Proyek ini. Untuk menambah Pengguna, cari nama Pengguna di atas.",
+    "alert": {
+      "unassignWithoutReassign": "Terjadi kesalahan. \"{displayName}\" sudah dihapus dari Proyek.",
+      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini.",
+      "unassignRole": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
+    }
   }
 }
 </i18n>

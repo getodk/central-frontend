@@ -177,6 +177,14 @@ export default {
       "formAccess": "Accès aux formulaires",
       "settings": "Paramètres"
     }
+  },
+  "id": {
+    "tab": {
+      "overview": "Gambaran",
+      "users": "Peran Proyek",
+      "formAccess": "Akses Formulir",
+      "settings": "Pengaturan"
+    }
   }
 }
 </i18n>

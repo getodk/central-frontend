@@ -356,6 +356,53 @@ export default {
         ]
       }
     ]
+  },
+  "id": {
+    "clickForInfo": "Klik di sini untuk mencari lebih banyak.",
+    "steps": [
+      {
+        "title": "Terbitkan versi pertama draf Anda",
+        "body": [
+          "Kerja bagus!",
+          "Formulir Anda telah diterbitkan dan siap menerima kiriman data. Apabila Anda ingin membuat perubahan terhadap formulir atau file media, Anda dapat membuat draf baru."
+        ]
+      },
+      {
+        "title": "Unduh formulir survei klien dan ajukan data",
+        "body": [
+          {
+            "none": "Belum ada pengajuan data di formulir ini.",
+            "any": "Total {count} kiriman data sudah dibuat."
+          },
+          {
+            "full": "{clickHere} untuk mempelajari cara-cara mengajukan data.",
+            "clickHere": "Klik di sini"
+          }
+        ]
+      },
+      {
+        "title": "Evaluasi dan analisis data yang telah masuk",
+        "body": [
+          {
+            "none": "Setelah ada data untuk formulir ini, Anda bisa mengeskpor atau mensinkronisasi data tersebut ke monitor dan menganalisisnya untuk kualitas dan hasil.",
+            "any": "Anda bisa mengekspor atau mensinkronisasi {count} data yang sudah masuk di formulir ini ke monitor dan menganalisisnya untuk kualitas dan hasil."
+          },
+          {
+            "full": "Anda bisa melakukannya dengan menekan tombol Unduh dan Analisis pada {submissionsTab}.",
+            "submissionsTab": "Tab kiriman data"
+          }
+        ]
+      },
+      {
+        "title": "Atur formulir yang sudah tidak aktif",
+        "body": [
+          {
+            "full": "Setelah Anda selesai mengumpulkan data, Anda bisa menggunakan pengaturan Status Formulir pada {formAccessTab} untuk mengatur, misalnya, apakah Pengguna Aplikasi masih bisa melihat atau membuat kiriman data baru untuk formulir ini.",
+            "formAccessTab": "Tab Akses Formulir pada laman Proyek"
+          }
+        ]
+      }
+    ]
   }
 }
 </i18n>

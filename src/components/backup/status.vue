@@ -385,6 +385,48 @@ export default {
       "setUp": "Paramétrer maintenant",
       "terminate": "Terminer"
     }
+  },
+  "id": {
+    "getHelp": {
+      "full": "Apabila Anda memiliki kesulitan, silakan kunjungi {forum}.",
+      "forum": "Forum komunitas"
+    },
+    "notConfigured": [
+      "Data cadangan tidak terkonfigurasi.",
+      "Server belum diatur untuk melakukan data cadangan otomatis dimanapun.",
+      {
+        "full": "Apabila Anda belum memiliki pengaturan data cadangan sama sekali, {recommended} Anda mengatur cadangan sekarang demi keamanan data Anda.",
+        "recommended": "sangat direkomendasikan"
+      },
+      "Data cadangan otomatis diproses sistem ini satu kali sehari. Semua data Anda dienkripsi dengan kata sandi yang telah Anda tentukan sehingga hanya Anda yang dapat membukanya."
+    ],
+    "neverRun": [
+      "Data candangan yang dikonfigurasi belum berjalan.",
+      "Hal ini adalah normal ppabila Anda memiliki data cadangan yang telah dikonfigurasi dalam beberapa hari terakhir. Jika tidak, terjadi sebuah kesalahan.",
+      {
+        "full": "Dalam hal ini, saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau dengan mengatur ulang servis.",
+        "terminate": "memutus"
+      }
+    ],
+    "somethingWentWrong": [
+      "Terjadi kesalahan!",
+      {
+        "full": "Data cadangan terakhir yang sukses dibuat adalah {moreThanThreeDaysAgo}.",
+        "moreThanThreeDaysAgo": "lebih dari tiga hari yang lalu"
+      },
+      {
+        "full": "Saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau mengatur ulang servis.",
+        "terminate": "memutus"
+      }
+    ],
+    "success": [
+      "Data cadangan telah berfungsi.",
+      "Data cadangan terakhir telah sukses dibuat {dateTime}."
+    ],
+    "action": {
+      "setUp": "Atur sekarang",
+      "terminate": "Putuskan"
+    }
   }
 }
 </i18n>

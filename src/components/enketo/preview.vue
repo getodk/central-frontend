@@ -103,6 +103,15 @@ export default {
       "processing": "L'aperçu n'a pas fini d'être exécuté pour ce formulaire. Veuillez rafraîchir plus tard et réessayer.",
       "notOpen": "Dans cette version d'ODK Central, l'aperçu n'est disponible que pour les formulaires dont l'état est ouvert."
     }
+  },
+  "id": {
+    "action": {
+      "preview": "Pratinjau"
+    },
+    "disabled": {
+      "processing": "Pratinjau untuk formulir ini masih dalam proses pengerjaan. Silakan muat ulang dan coba lagi nanti.",
+      "notOpen": "Pada versi ODK Central ini, pratinjau hanya tersedia untuk formulir dalam kondisi terbuka."
+    }
   }
 }
 </i18n>

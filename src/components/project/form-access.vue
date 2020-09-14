@@ -303,6 +303,15 @@ export default {
     "alert": {
       "success": "Vos modifications ont été enregistrées."
     }
+  },
+  "id": {
+    "heading": [
+      "Pengguna Aplikasi hanya bisa melihat dan mengisi formulir yang aksesnya telah diberikan kepada mereka pada tabel di bawah ini. Manajer Proyek dan pengumpul data dapat menggunakan web browser untuk mengisi formulir apapun dalam Proyek yang statusnya adalah Terbuka."
+    ],
+    "emptyTable": "Tidak ada formulir untuk ditampilkan.",
+    "alert": {
+      "success": "Perubahan telah disimpan!"
+    }
   }
 }
 </i18n>

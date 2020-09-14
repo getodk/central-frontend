@@ -20,7 +20,8 @@ export const locales = new Map()
   .set('cs', 'Čeština')
   .set('de', 'Deutsch')
   .set('es', 'Español')
-  .set('fr', 'Français');
+  .set('fr', 'Français')
+  .set('id', 'Bahasa Indonesia');
 
 const fallbackLocale = 'en';
 
@@ -47,7 +48,8 @@ const pluralizationRules = {
     https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals
     */
     return 2;
-  }
+  },
+  id: () => 0
 };
 
 

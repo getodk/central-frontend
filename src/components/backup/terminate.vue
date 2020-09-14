@@ -111,6 +111,13 @@ export default {
       "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?",
       "Vous devrez les reconfigurer à partir de zéro pour les faire redémarrer, et cette action ne peut être annulée."
     ]
+  },
+  "id": {
+    "title": "Putuskan Data Cadangan Otomatis",
+    "introduction": [
+      "Apakah Anda yakin ingin memutus data cadangan otomatis?",
+      "Anda harus mengonfigurasi ulang dari awal untuk mengaktifkannya kembali, dan tindakan ini tidak bisa dibatalkan/dikembalikan."
+    ]
   }
 }
 </i18n>

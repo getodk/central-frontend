@@ -55,6 +55,9 @@ export default {
   },
   "fr": {
     "text": "Chargement..."
+  },
+  "id": {
+    "text": "Memuat..."
   }
 }
 </i18n>

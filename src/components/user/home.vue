@@ -107,6 +107,14 @@ export default {
       "roles": "Paramètres de rôle"
     },
     "comingSoon": "(bientôt disponible)"
+  },
+  "id": {
+    "title": "Pengaturan Pengguna",
+    "tab": {
+      "users": "Pengguna Web",
+      "roles": "Pengaturan Peran"
+    },
+    "comingSoon": "(akan datang)"
   }
 }
 </i18n>

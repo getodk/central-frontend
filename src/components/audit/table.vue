@@ -91,6 +91,14 @@ export default {
       "target": "Cible",
       "details": "Détails"
     }
+  },
+  "id": {
+    "header": {
+      "time": "Waktu",
+      "initiator": "Pemrakarsa",
+      "target": "Target",
+      "details": "Rincian"
+    }
   }
 }
 </i18n>

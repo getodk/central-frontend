@@ -124,6 +124,14 @@ export default {
       "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions.",
       "Cette action ne peut être annulée."
     ]
+  },
+  "id": {
+    "title": "Cabut Akses Pengguna",
+    "introduction": [
+      "Apakah Anda yakin ingin mencabut akses dari Pengguna Aplikasi {displayName}?",
+      "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data.",
+      "Tindakan ini tidak bisa dibatalkan/dikembalikan."
+    ]
   }
 }
 </i18n>

@@ -78,6 +78,9 @@ export default {
   },
   "fr": {
     "text": "{dateTime} par {displayName}"
+  },
+  "id": {
+    "text": "{dateTime} oleh {displayName}"
   }
 }
 </i18n>

@@ -140,6 +140,16 @@ export default {
         "noUndo": "Cette action ne peut être annulée"
       }
     ]
+  },
+  "id": {
+    "title": "Mengarsip Proyek",
+    "introduction": [
+      "Anda hendak mengarsip Proyek \"{name}\". Proyek akan tetap berjalan seperti sekarang, tetapi peletakannya akan berada di bawah Daftar Proyek pada laman utama Central.",
+      {
+        "full": "{noUndo}, tetapi fungsi untuk membatalkan pengarsipan Proyek akan dirancang untuk pembaruan yang akan datang.",
+        "noUndo": "Tindakan ini tidak bisa dibatalkan/dikembalikan"
+      }
+    ]
   }
 }
 </i18n>

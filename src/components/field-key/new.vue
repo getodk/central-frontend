@@ -281,6 +281,26 @@ export default {
     "action": {
       "createAnother": "En créer un autre"
     }
+  },
+  "id": {
+    "title": "Buat Pengguna Aplikasi",
+    "introduction": [
+      "Pengguna ini belum bisa mengakses formulir apapun. Anda bisa membagikan formulir setelah akun Pengguna dibuat."
+    ],
+    "success": [
+      "Pengguna Aplikasi \"{displayName}\" telah dibuat.",
+      {
+        "full": "Anda bisa mengonfigurasi perangkat seluler nutuk \"{displayName}\" sekarang dengan cara {scanningCode} di aplikasi. Atau Anda bisa melakukannya nanti lewat tabel Pengguna Aplikasi dengan mengklik \"Lihat kode\".",
+        "scanningCode": "memindai kode di atas"
+      },
+      {
+        "full": "Anda mungkin ingin mengunjungi {formAccessSettings} proyek ini untuk memberikan Pengguna ini akses formulir.",
+        "formAccessSettings": "pengaturan Akses Formulir"
+      }
+    ],
+    "action": {
+      "createAnother": "Buat baru"
+    }
   }
 }
 </i18n>

@@ -130,10 +130,14 @@ export default {
         "title": "Upload revised Form definition (optional)",
         "body": [
           {
-            // This refers to changes to the form definition as opposed to just the media associated with the Form.
+            // This refers to changes to the Form definition as opposed to just
+            // the media associated with the Form. The word "XLSForm" should not
+            // be translated.
             "status": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
             "link": {
-              // This refers to changes to the form definition as opposed to just the media associated with the Form.
+              // This refers to changes to the Form definition as opposed to
+              // just the media associated with the Form. The word "XLSForm"
+              // should not be translated.
               "full": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
               "upload": "upload"
             }
@@ -391,6 +395,60 @@ export default {
             "link": {
               "full": "Quand vous êtes sûr que votre ébauche est prête et que vous souhaitez la déployer sur vos appareils sur le terrain, vous pouvez la {publish}.",
               "publish": "publier"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "id": {
+    "clickForInfo": "Klik di sini untuk mencari tahu lebih.",
+    "steps": [
+      {
+        "title": "Unggah definisi formulir awal",
+        "body": [
+          "Kerja bagus!",
+          "Desain formulir Anda telah berhasil dimuat."
+        ]
+      },
+      {
+        "title": "Unggah definisi formulir yang sudah direvisi (opsional)",
+        "body": [
+          {
+            "status": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya mengunggah XML baru atau XLSForm menggunakan tombol yang ada di sebelah kanan.",
+            "link": {
+              "full": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya {upload} XML baru atau XLSForm.",
+              "upload": "Unggah"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Unggah Formulir File Media",
+        "body": [
+          {
+            "full": "Dokumen referensi desain formulir Anda yang dibutuhkan untuk menampilkan formulir Anda. Anda dapat mengunggah distribusi baru atau yang sudah diperbarui di tab {mediaFiles}.",
+            "mediaFiles": "File Media"
+          }
+        ]
+      },
+      {
+        "title": "Tes formulir pada perangkat seluler Anda",
+        "body": [
+          {
+            "full": "Anda bisa {test} formulir untuk memastikan kesesuaiannya dengan yang Anda ekspektasikan. Kiriman data dari hasil tes tidak akan dimasukkan ke dalam data akhir Anda.",
+            "test": "mengetes"
+          }
+        ]
+      },
+      {
+        "title": "Terbitkan Draf",
+        "body": [
+          {
+            "status": "Ketika Anda yakin Draf sudah siap, Anda bisa menerbitkannya menggunakan tombol yang ada di sebelah kanan.",
+            "link": {
+              "full": "Ketika Anda yakin Draf sudah siap, Anda bisa {publish} menggunakan tombol yang ada di sebelah kanan.",
+              "publish": "menerbitkannya"
             }
           }
         ]

@@ -294,6 +294,23 @@ export default {
       "resetPassword": "Le mot de passe pour \"{displayName}\" a été invalidé. Un courrier électronique a été envoyé à {email} avec des instructions sur la manière de procéder.",
       "retire": "L'utilisateur {displayName} a été supprimé."
     }
+  },
+  "id": {
+    "action": {
+      "create": "Buat Pengguna Web"
+    },
+    "heading": [
+      "Pengguna Web memiliki akun di website ini untuk mengawasi dan mengelola Proyek pada server ini. Administrator dapat mengelola apapun di situs. Pengguna yang tidak memiliki Peran Seluruh Situs bisa diberikan Peran dalam Proyek apapun, melalui pengaturan Proyek tersebut. Administrator Seluruh Sirus dan beberapa Perak Proyek dapat menggunakan web browser untuk mengisi Formulir. Untuk mengirim data lewat aplikasi seperti {collect}, buat Pengguna Aplikasi untuk masing-masing Proyek."
+    ],
+    "header": {
+      "sitewideRole": "Peran Seluruh Situs"
+    },
+    "alert": {
+      "create": "Pengguna telah sukses dibuat untuk \"{displayName}\".",
+      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran Seluruh Situs oleh \"{roleName}\".",
+      "resetPassword": "Kata sandi untuk \"{displayName}\" sudah tidak berlaku. Sebuah email tetang instruksi selanjutnya telah dikirimkan ke {email}.",
+      "retire": "Pengguna {displayName} telah berhenti."
+    }
   }
 }
 </i18n>

@@ -438,6 +438,28 @@ export default {
     },
     "emptyTable": "Il n'y a pas encore de soumissions.",
     "remaining": "{count} ligne restante. | {count} lignes restantes."
+  },
+  "id": {
+    "action": {
+      "download": {
+        "withCount": "Unduh semua {count} catatan.",
+        "withoutCount": "Unduh semua catatan"
+      },
+      "analyze": "Analisis lewat OData"
+    },
+    "analyzeDisabled": "Akses OData tidak tersedia karena enkripsi formulir",
+    "loading": {
+      "withoutCount": "Memuat kiriman data...",
+      "all": "Memuat {count} kiriman data...",
+      "first": "Memuat {top} pertama dari {count} kiriman data...",
+      "middle": "Memuat {top} lebih dari {count} sisa kiriman data...",
+      "last": {
+        "multiple": "Memuat {count} kiriman data terakhir...",
+        "one": "Memuat kiriman data terakhir..."
+      }
+    },
+    "emptyTable": "Belum ada kiriman data.",
+    "remaining": "{count} baris tersisa."
   }
 }
 </i18n>

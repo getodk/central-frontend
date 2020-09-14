@@ -118,6 +118,13 @@ export default {
       "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
       "Cette action ne peut être annulée."
     ]
+  },
+  "id": {
+    "title": "Hapus Formulir",
+    "introduction": [
+      "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?",
+      "Tindakan ini tidak dapat dibatalkan/dikembalikan."
+    ]
   }
 }
 </i18n>

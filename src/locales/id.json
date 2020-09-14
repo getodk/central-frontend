@@ -1,0 +1,177 @@
+{
+  "role": {
+    "none": "Tidak Ada",
+    "admin": "Administrator",
+    "manager": "Manajer Proyek",
+    "viewer": "Pemerhati Proyek",
+    "formfill": "Pengumpul Data"
+  },
+  "formState": {
+    "open": "Buka",
+    "closing": "Menutup",
+    "closed": "Tutup"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Semua Tindakan)",
+      "user": "Tindakan Pengguna Web",
+      "project": "Tindakan Proyek",
+      "form": "Tindakan Formulir",
+      "field_key": "Tindakan Pengguna Aplikasi",
+      "public_link": "Tindakan Tautan Akses Publik",
+      "session": "Tindakan Sesi",
+      "upgrade": "Peningkatan Server"
+    },
+    "action": {
+      "default": {
+        "create": "Buat",
+        "update": "Pembaruan Rincian",
+        "delete": "Hapus"
+      },
+      "assignment": {
+        "create": "Tetapkan Peran",
+        "delete": "Cabut Peran"
+      },
+      "backup": "Pembuatan data cadangan",
+      "form": {
+        "update_draft_set": "Buat atau Perbarui Draf",
+        "update_publish": "Terbitkan Draf",
+        "update_draft_delete": "Buang Draf",
+        "attachment_update": "Perbarui Lampiran",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Memproses Formulir",
+        "process_form_draft": "Draf Formulir Proses"
+      },
+      "user": {
+        "delete": "Mengundurkan Diri",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "field_key": {
+        "create": "@:audit.action.default.create"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create"
+      },
+      "session": {
+        "end": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Batal",
+    "close": "Tutup",
+    "create": "Buat",
+    "createSubmission": "Baru",
+    "done": "Selesai",
+    "download": "Unduh",
+    "editProfile": "Sunting Profil",
+    "logIn": "Masuk",
+    "looksGood": "Terlihat bagus, lanjutkan",
+    "neverMind": "Tidak jadi, batalkan",
+    "next": "Lanjut",
+    "noCancel": "Tidak, batalkan",
+    "ok": "OK",
+    "proceed": "Lanjutkan",
+    "resetPassword": "Atur Ulang Kata Sandi",
+    "save": "Simpan",
+    "yesProceed": "Ya, lanjutkan"
+  },
+  "field": {
+    "dateRange": "Rentang Tanggal",
+    "displayName": "Nama tampilan",
+    "email": "Alamat email",
+    "name": "Nama",
+    "newPassword": "Kata sandi baru",
+    "oldPassword": "Kata sandi lama",
+    "passphrase": "Frasa sandi",
+    "password": "Kata sandi",
+    "passwordConfirm": "Kata sandi baru (konfirmasi)",
+    "type": "Tipe"
+  },
+  "header": {
+    "actions": "Tindakan",
+    "created": "Dibuat",
+    "createdBy": "Dibuat oleh",
+    "displayName": "Nama tampilan",
+    "email": "Alamat Email",
+    "lastSubmission": "Kiriman Terakhir",
+    "name": "Nama",
+    "type": "Tipe"
+  },
+  "plural": {
+    "appUser": "Pengguna Aplikasi",
+    "form": "Formulir",
+    "project": "Proyek",
+    "submission": "Kiriman",
+    "webUser": "Pengguna Web"
+  },
+  "count": {
+    "appUser": "{count} Pengguna Aplikasi",
+    "form": "{count} Formulir",
+    "submission": "{count} Kiriman"
+  },
+  "resource": {
+    "appUser": "Pengguna Aplikasi",
+    "appUsers": "Pengguna Aplikasi",
+    "form": "Formulir",
+    "project": "Proyek",
+    "publicLink": "Tautan Akses Publik",
+    "user": "Pengguna",
+    "webUser": "Pengguna Web",
+    "session": "Sesi",
+    "submissions": "Kiriman"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Untuk informasi lebih lanjut, {clickHere}.",
+      "clickHere": "klik disini"
+    },
+    "helpArticle": {
+      "full": "Untuk informasi lebih lanjut, silakan lihat {helpArticle}.",
+      "helpArticle": "artikel bantuan ini"
+    },
+    "learnMore": "Pelajari lebih lanjut."
+  },
+  "common": {
+    "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
+    "currentDraft": "Draf Anda Saat Ini",
+    "dangerZone": "Zona Bahaya",
+    "no": "Tidak",
+    "noResults": "Tidak ada hasil",
+    "rightNow": "Sekarang Juga",
+    "success": "Sukses!",
+    "yes": "Iya"
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(kosong)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (diarsipkan)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "hari ini",
+      "yesterday": "semalam"
+    },
+    "request": {
+      "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
+      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
+      "errorNotProblem": "Terjadi kesalahan: server mengembalikan eror yang tidak valid."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  }
+}

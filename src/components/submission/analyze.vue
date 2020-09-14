@@ -354,6 +354,39 @@ export default {
         "article": "cet article"
       }
     }
+  },
+  "id": {
+    "title": "Menggunakan OData",
+    "introduction": [
+      "OData adalah standar baru untuk mentransfer data antara perangkat dan servis. Perangkat analisis gratis dan unggul seperti Excel, {powerBi}, dan {r} dapat mengambil data lewat OData untuk analisis.",
+      "Ada banyak keuntungan menggunakan OData. Yang paling penting adalah OData mendukung ketepatan sempurna pemindahan data kompleks seperti angka dan data geografis, dan memudahkan sinkronisasi data terakhir Anda dengan perangkat yang menggunakannya.",
+      "Untuk memulai menggunakan OData, pilih perangkat Anda dan salin tautannya ke sana."
+    ],
+    "tab": {
+      "microsoft": "Excel/Power BI",
+      "other": "Lainnya"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Untuk bantuan penggunaan OData dengan Excel, lihat {pageForExcel}. Untuk bantuan penggunaan Power BI, lihat {pageForPowerBi}.",
+        "pageForExcel": "laman ini",
+        "pageForPowerBi": "laman ini"
+      },
+      "r": [
+        {
+          "full": "Untuk mengakses data Central dari {r}, kami merekomendasikan Anda untuk menggunakan {ruODK}. Lihat skema ruODK untuk contoh penggunaan {oData} dan {restful} API.",
+          "restful": "RESTful"
+        },
+        {
+          "full": "Sama seperti ODK, ruODK dikembangkan dan didukung oleh anggota komunitas. Apabila Anda ingin membantu perkembangannya, Anda dapat menemukan informasi lebih lanjut {here}.",
+          "here": "di sini"
+        }
+      ],
+      "other": {
+        "full": "Untuk deskripsi lengkap tentang dukungan OData kami, silakan lihat {article}.",
+        "article": "artikel ini"
+      }
+    }
   }
 }
 </i18n>

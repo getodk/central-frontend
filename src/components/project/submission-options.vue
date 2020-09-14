@@ -195,6 +195,25 @@ export default {
         "dataCollector": "collecteur de données"
       }
     ]
+  },
+  "id": {
+    "title": "Pengaturan Kiriman Data",
+    "introduction": [
+      "Ada beberapa pengaturan untuk mengirim data ke ODK Central:",
+      {
+        "full": "Buat {appUsers} dan gunakan aplikasi Android {collect}. Ini akan membantu dan memudahkan pengumpul data membutuhkan akses ke berbagai formulir, sedang offline, atau ketika Anda memiliki formulir yang kompleks.",
+        "appUsers": "Pengguna Aplikasi"
+      },
+      {
+        "full": "Buat satu atau lebih {publicLinks} untuk dibagikan dengan responden yang akan melakukan laporan pribadi.",
+        "publicLinks": "Tautan Akses Publik"
+      },
+      {
+        "full": "Buat sebuah {webUser} dengan Peran sebagai {dataCollector} untuk setiap invididu yang akan mengumpulkan data. Pengguna ini akan masuk ke Central untuk mengisi formulir lewat web browser. Manajer Proyek juga bisa membuat kiriman data lewat web browser.",
+        "webUser": "Pengguna Web",
+        "dataCollector": "Pengumpul Data"
+      }
+    ]
   }
 }
 </i18n>

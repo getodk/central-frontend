@@ -151,6 +151,18 @@ export default {
     "alert": {
       "success": "Le mot de passe a été réinitialisé."
     }
+  },
+  "id": {
+    "title": "Atur Kata Sandi",
+    "action": {
+      "set": "Atur kata sandi"
+    },
+    "problem": {
+      "401_2": "{message} Tautan menuju email Anda sudah kedaluwarsa, Anda harus mengirimkan email baru."
+    },
+    "alert": {
+      "success": "Kata sandi berhasil diatur ulang."
+    }
   }
 }
 </i18n>

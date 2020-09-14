@@ -189,6 +189,24 @@ export default {
     "action": {
       "abandon": "Abandonner"
     }
+  },
+  "id": {
+    "title": {
+      "abandon": "Buang Draf",
+      "deleteForm": "Buang Draf dan Hapus Formulir"
+    },
+    "introduction": {
+      "abandon": [
+        "Anda hendak menghapus permanen versi draf dari formulir ini. Draf definisi formulir, draf file media yang telah diunggah, dan semua tes kiriman data dalam formulir akan dihapus.",
+        "Definisi formulir, file media, dan kiriman data yang sudah diterbitkan tidak akan terpengaruh."
+      ],
+      "deleteForm": [
+        "Anda hendak menghapus permanen draf definisi formulir ini beserta draf file media yang telah diunggah, dan semua kiriman data yang masuk. Sebab Anda belum menerbitkannya, maka keseluruhan formulir ini akan dihapus."
+      ]
+    },
+    "action": {
+      "abandon": "Buang"
+    }
   }
 }
 </i18n>

@@ -105,6 +105,10 @@ export default {
   "fr": {
     "help": "Que sont les \"Projets\" ?",
     "noSubmission": "(aucune)"
+  },
+  "id": {
+    "help": "Apa itu Proyek?",
+    "noSubmission": "(tidak ada)"
   }
 }
 </i18n>
