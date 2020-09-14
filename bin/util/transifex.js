@@ -32,7 +32,8 @@ const parseVars = (pluralForm) => {
 // PLURALS
 
 const pluralFormCounts = new Map()
-  .set('cs', 4);
+  .set('cs', 4)
+  .set('id', 1);
 
 // PluralForms is an array-like object with an element for each plural form of a
 // message. It provides methods to convert to or from an Vue I18n message or a
