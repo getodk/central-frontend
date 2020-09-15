@@ -514,11 +514,15 @@ export default {
     "news": "Berita",
     "rightNow": {
       "users": {
-        "full": "{webUsers} dapat mengelola Proyek lewat website ini.",
+        "full": [
+          "{webUsers} dapat mengelola Proyek lewat website ini."
+        ],
         "webUsers": "Pengguna Web"
       },
       "projects": {
-        "full": "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat.",
+        "full": [
+          "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat."
+        ],
         "projects": "Proyek"
       }
     },

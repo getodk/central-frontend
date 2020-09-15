@@ -474,11 +474,15 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": "{countOfFiles} siap untuk diunggah.",
+        "full": [
+          "{countOfFiles} siap untuk diunggah."
+        ],
         "countOfFiles": "{count} berkas"
       },
       "someUnmatched": {
-        "full": "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing.",
+        "full": [
+          "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing."
+        ],
         "countOfFiles": "{count} berkas"
       },
       "noneMatched": "Kami tidak mengenali dokumen yang ingin Anda unggah. Mohon ubah nama dokumen sesuai dengan nama-nama yang terdaftar di atas, atau seret dokumen satu per satu ke targetnya masing-masing."

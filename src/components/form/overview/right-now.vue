@@ -209,7 +209,9 @@ export default {
       "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
     },
     "submissions": {
-      "full": "{submissions} untuk formulir ini sudah disimpan.",
+      "full": [
+        "{submissions} untuk formulir ini sudah disimpan."
+      ],
       "submissions": "Kiriman data"
     }
   }
