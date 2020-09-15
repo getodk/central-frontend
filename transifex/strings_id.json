@@ -1064,11 +1064,11 @@
         },
         "1": {
           "full": {
-            "string": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel , lalu {clickHere}.",
+            "string": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel, lalu {clickHere}.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
           },
           "clickHere": {
-            "string": "Klik di sini untuk memilih",
+            "string": "klik di sini untuk memilih",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
         }
