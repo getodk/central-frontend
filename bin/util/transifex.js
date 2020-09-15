@@ -347,7 +347,7 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
 
   // Read the root messages.
   const messages = parse(
-    fs.readFileSync(`${localesDir}/${sourceLocale}.json`).toString(),
+    fs.readFileSync(`${localesDir}/${sourceLocale}.json5`).toString(),
     reviver
   );
 
