@@ -165,11 +165,15 @@ export default {
   },
   "id": {
     "appUsers": {
-      "full": "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini.",
+      "full": [
+        "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini."
+      ],
       "appUsers": "Pengguna Aplikasi"
     },
     "forms": {
-      "full": "{forms} yang dapat diunduh dan diberikan sebagai survei di klien seluler.",
+      "full": [
+        "{forms} yang dapat diunduh dan diberikan sebagai survei di klien seluler."
+      ],
       "forms": "Formulir"
     }
   }

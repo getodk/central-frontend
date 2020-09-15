@@ -400,7 +400,7 @@ class Translation {
 
   toJSON(key) {
     if (this.translated.isEmpty()) return undefined;
-    return key === 'full' && this.translated.length !== 1
+    return key === 'full' && this.source.length !== 1
       ? Array.from(this.translated) // Needed for $tcPath().
       : this.translated.toVueI18n();
   }

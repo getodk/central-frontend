@@ -153,8 +153,8 @@ export default {
         "dragAndDrop": "seret dan lepas"
       },
       {
-        "full": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel , lalu {clickHere}.",
-        "clickHere": "Klik di sini untuk memilih"
+        "full": "Apabila Anda ingin memilih dokumen dari prompt, pastikan nama dokumen sudah sama dengan yang ada pada tabel, lalu {clickHere}.",
+        "clickHere": "klik di sini untuk memilih"
       }
     ]
   }
