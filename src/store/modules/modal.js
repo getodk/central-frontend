@@ -22,19 +22,15 @@ export default {
   },
   actions: {
     showModal({ commit }, ref) {
-      const $ref = $(ref);
-      // We do not call $ref.modal('show') if the component is not attached to
-      // the document, because modal() has side effects on the document. Most
-      // tests do not attach the component to the document.
-      if ($ref.closest('body').length !== 0) $ref.modal('show');
+      // We do not call .modal('show') if the component is not attached to the
+      // document, because .modal() has side effects on the document. Most tests
+      // do not attach the component to the document.
+      if (ref.closest('body') != null) $(ref).modal('show');
       commit('setModalRef', ref);
     },
     hideModal({ state, commit }) {
-      const $ref = $(state.ref);
-      // We do not call $ref.modal('hide') if the component is not attached to
-      // the document, because modal() has side effects on the document. Most
-      // tests do not attach the component to the document.
-      if ($ref.closest('body').length !== 0) $ref.modal('hide');
+      const { ref } = state;
+      if (ref.closest('body') != null) $(ref).modal('hide');
       commit('setModalRef', null);
     }
   }

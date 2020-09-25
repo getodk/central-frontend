@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="modal" tabindex="-1" :data-backdrop="bsBackdrop"
+  <div class="modal" tabindex="-1" :data-backdrop="backdrop ? 'static' : 'false'"
     data-keyboard="false" role="dialog" :aria-labelledby="titleId"
     @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
     @focusout="refocus">
@@ -34,6 +34,20 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Alert from './alert.vue';
+
+/*
+We manually toggle the modal:
+
+  - If the `backdrop` prop is `true`, we specify data-backdrop="static" rather
+    than "true". We also add our own event listeners.
+  - We specify data-keyboard="false" and add our own event listener.
+
+We do this for two reasons:
+
+  - It simplifies communication with the parent component: the modal hides only
+    after the parent component sets the `state` prop to `false`.
+  - It is needed to implement the `hideable` prop.
+*/
 
 let id = 0;
 
@@ -64,12 +78,6 @@ export default {
     };
   },
   computed: {
-    bsBackdrop() {
-      // We use 'static' rather than 'true', because using 'true' would make it
-      // possible for the modal to hide without communicating that change to its
-      // parent component. See toggle() for more details.
-      return this.backdrop ? 'static' : 'false';
-    },
     stateAndAlertAt() {
       return [this.state, this.$store.state.alert.at];
     }
@@ -109,21 +117,14 @@ export default {
   },
   beforeDestroy() {
     this.toggle(false);
-    // TODO. Does this actually remove all modal-related event handlers?
     $(this.$el).off();
   },
   methods: {
-    /* toggle() manually toggles the modal. It is the only way the modal is
-    shown or hidden: we do not use Bootstrap's listeners to toggle the modal. If
-    we used Bootstrap's listeners to do so, the modal would hide without
-    communicating the change to its parent component -- adding complexity to the
-    communication between the modal and its parent. Foregoing those listeners
-    also aids modularity, because parent components can use this modal component
-    without knowing that it uses Bootstrap. */
     toggle(state) {
       if (state)
         this.$store.dispatch('showModal', this.$el);
-      // In some cases, the router may hide the modal before toggle() is called.
+      // The router may dispatch the 'hideModal' action before toggle() is
+      // called.
       else if (this.$store.state.modal.ref != null)
         this.$store.dispatch('hideModal');
     },
@@ -152,7 +153,7 @@ export default {
         // Do not focus the .modal element if it is already focused or if it
         // contains the active element.
         if (document.activeElement != null &&
-          $(document.activeElement).closest('.modal')[0] === this.$el)
+          document.activeElement.closest('.modal') === this.$el)
           return;
         this.$el.focus();
       });
