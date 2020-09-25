@@ -19,19 +19,22 @@ except according to the terms contained in the LICENSE file.
     <td>
       <time-and-user :iso="version.publishedAt" :user="version.publishedBy"/>
     </td>
-    <td><form-version-standard-buttons :version="version"/></td>
+    <td>
+      <form-version-def-dropdown :version="version"
+        @view-xml="$emit('view-xml')"/>
+    </td>
   </tr>
 </template>
 
 <script>
 import Form from '../../presenters/form';
-import FormVersionStandardButtons from './standard-buttons.vue';
+import FormVersionDefDropdown from './def-dropdown.vue';
 import TimeAndUser from '../time-and-user.vue';
 import routes from '../../mixins/routes';
 
 export default {
   name: 'FormVersionRow',
-  components: { FormVersionStandardButtons, TimeAndUser },
+  components: { FormVersionDefDropdown, TimeAndUser },
   mixins: [routes()],
   props: {
     version: {

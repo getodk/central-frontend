@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div id="form-overview">
     <div class="row">
       <div class="col-xs-6">
-        <form-overview-right-now v-if="form != null"/>
+        <form-overview-right-now v-if="form != null"
+          @view-xml="showModal('viewXml')"/>
         <page-section condensed>
           <template #heading>
             <span>{{ $t('checklist') }}</span>
@@ -37,6 +38,10 @@ except according to the terms contained in the LICENSE file.
                     <strong>{{ $t('draft.any.versionCaption.draftVersion') }}</strong>
                   </template>
                 </i18n>
+                <div>
+                  <form-version-standard-buttons :version="formDraft.get()"
+                    @view-xml="showModal('viewXml')"/>
+                </div>
               </template>
             </form-version-summary-item>
             <form-draft-checklist/>
@@ -52,6 +57,8 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
+
+    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="hideModal('submissionOptions')"/>
   </div>
@@ -61,6 +68,7 @@ except according to the terms contained in the LICENSE file.
 import FormChecklist from './checklist.vue';
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
+import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
@@ -74,12 +82,17 @@ export default {
     FormChecklist,
     FormDraftChecklist,
     FormOverviewRightNow,
+    FormVersionStandardButtons,
     FormVersionSummaryItem,
+    FormVersionViewXml: loadAsyncComponent('FormVersionViewXml'),
     PageSection,
     ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
   },
   mixins: [
-    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
+    modal({
+      viewXml: 'FormVersionViewXml',
+      submissionOptions: 'ProjectSubmissionOptions'
+    }),
     validateData()
   ],
   props: {
@@ -94,6 +107,10 @@ export default {
   },
   data() {
     return {
+      // Modals
+      viewXml: {
+        state: false
+      },
       submissionOptions: {
         state: false
       }

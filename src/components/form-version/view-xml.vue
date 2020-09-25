@@ -1,0 +1,91 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
+<!-- We show the XForm XML in a modal rather than showing it in a new tab and
+trying to leverage browsers' ability to render XML as a tree. That's because
+rather than rendering an XForm as an XML tree, the browser will render it as
+XHTML, because XForms include the XHTML namespace. There doesn't seem to be a
+way to force browsers to render the XML as a tree, so we format it ourselves.
+Somewhat related: https://support.google.com/chrome/thread/10921150?hl=en -->
+<template>
+  <modal id="form-version-view-xml" :state="state" hideable backdrop
+    @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <pre><spinner :state="initiallyLoading"/><code>{{ formattedXml }}</code></pre>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="$emit('hide')">
+          {{ $t('action.close') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script>
+// xml-formatter suggests using dist/browser/xml-formatter.js in the browser,
+// but I wasn't able to get that to work -- maybe because we use webpack?
+// Importing this way seems to work and also results in a small bundle.
+import formatXml from 'xml-formatter';
+
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
+import { requestData } from '../../store/modules/request';
+
+export default {
+  name: 'FormVersionViewXml',
+  components: { Modal, Spinner },
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    ...requestData(['formVersionXml']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['formVersionXml']);
+    },
+    // XSLT might be a way to implement this without a dependency, but Firefox
+    // doesn't seem to support the `indent` attribute of <xsl:output>:
+    // https://stackoverflow.com/questions/376373/pretty-printing-xml-with-javascript
+    formattedXml() {
+      return this.formVersionXml != null
+        ? formatXml(this.formVersionXml, { collapseContent: true })
+        : '';
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+#form-version-view-xml {
+  pre {
+    min-height: 120px;
+    // 129px is the height of the modal, not including the <pre> element. The
+    // aim is for the modal not to exceed 70vh (unless the viewport is quite
+    // short).
+    max-height: max(calc(70vh - 129px), 120px);
+    // Spinner is positioned absolutely.
+    position: relative;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "View XML"
+  }
+}
+</i18n>

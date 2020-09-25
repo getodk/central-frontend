@@ -9,13 +9,16 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- A SummaryItem component that shows the version string of a form version -->
 <template>
-  <summary-item icon="file-o">
+  <summary-item icon="file-o" class="form-version-summary-item">
     <template #heading>
-      <span :class="versionClass" :title="version.versionOrBlank()">
-        {{ version.versionOrBlank() }}
-      </span>
-      <span><form-version-standard-buttons :version="version" preview/></span>
+      <div class="version" :class="{ 'blank-version': version.version === '' }">
+        <span :title="version.versionOrBlank()">
+          {{ version.versionOrBlank() }}
+        </span>
+      </div>
     </template>
     <template #body>
       <slot name="body"></slot>
@@ -25,24 +28,15 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Form from '../../presenters/form';
-import FormVersionStandardButtons from './standard-buttons.vue';
 import SummaryItem from '../summary-item.vue';
 
 export default {
   name: 'FormVersionSummaryItem',
-  components: { FormVersionStandardButtons, SummaryItem },
+  components: { SummaryItem },
   props: {
     version: {
       type: Form,
       required: true
-    }
-  },
-  computed: {
-    versionClass() {
-      const htmlClass = ['form-version-summary-item-version'];
-      if (this.version.version === '')
-        htmlClass.push('form-version-summary-item-blank-version');
-      return htmlClass;
     }
   }
 };
@@ -51,30 +45,14 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-.form-version-summary-item-version {
-  $buttons-margin-left: 12px;
-  // Approximate width
-  $buttons-width: 210px;
-
-  display: inline-block;
-  font-family: $font-family-monospace;
-  max-width: calc(100% - #{$buttons-width + $buttons-margin-left});
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  + span {
-    bottom: 10px;
-    margin-left: $buttons-margin-left;
-    position: relative;
+.form-version-summary-item .summary-item-heading {
+  .version {
+    font-family: $font-family-monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-}
 
-.form-version-summary-item-blank-version {
-  font-family: inherit;
-
-  + span {
-    bottom: 5px;
-  }
+  .blank-version { font-family: inherit; }
 }
 </style>
