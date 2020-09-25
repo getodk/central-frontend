@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="selectable" @click="select">
-    <!-- The slot should only contain text. -->
     <slot></slot>
   </div>
 </template>
@@ -22,7 +21,7 @@ export default {
   methods: {
     select() {
       const selection = getSelection();
-      // Select all the text unless the user has selected specific text.
+      // Select all unless the user has made a specific selection.
       if (selection.isCollapsed) selection.selectAllChildren(this.$el);
     }
   }
