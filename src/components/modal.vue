@@ -92,7 +92,10 @@ export default {
       this.$emit('hide');
     },
     state(state) {
-      this.toggle(state);
+      if (state)
+        this.showModal();
+      else
+        this.hideModal();
     },
     // Hides the alert when this.state changes. We use a strategy similar to the
     // one here: https://github.com/vuejs/vue/issues/844.
@@ -113,20 +116,26 @@ export default {
       .on('hidden.bs.modal', () => {
         this.$emit('hidden');
       });
-    if (this.state) this.toggle(true);
+    if (this.state) this.showModal();
   },
   beforeDestroy() {
-    this.toggle(false);
+    this.hideModal();
     $(this.$el).off();
   },
   methods: {
-    toggle(state) {
-      if (state)
-        this.$store.dispatch('showModal', this.$el);
-      // The router may dispatch the 'hideModal' action before toggle() is
+    showModal() {
+      this.$store.dispatch('showModal', this.$el);
+    },
+    hideModal() {
+      // The router may dispatch the 'hideModal' action before hideModal() is
       // called.
-      else if (this.$store.state.modal.ref != null)
+      if (this.$store.state.modal.ref != null)
         this.$store.dispatch('hideModal');
+
+      const selection = getSelection();
+      const { anchorNode } = selection;
+      if (anchorNode != null && this.$el.contains(anchorNode))
+        selection.removeAllRanges();
     },
     hideIfCan() {
       if (this.hideable) this.$emit('hide');
