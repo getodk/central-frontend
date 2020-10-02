@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
       </tr>
     </thead>
     <tbody v-if="forms != null">
-      <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
+      <form-row v-for="(form,index) of formsToShow" :id="index" :key="form.xmlFormId" :form="form"
         :columns="columns"/>
     </tbody>
   </table>
