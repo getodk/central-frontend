@@ -22,13 +22,9 @@ except according to the terms contained in the LICENSE file.
         <a href="#" @click.prevent="viewXml">{{ $t('action.viewXml') }}</a>
       </li>
       <li>
+        <!-- '(.xml)' may be an issue for an RTL locale. -->
         <a :href="defPath('xml')" :download="`${version.xmlFormId}.xml`">
-          <template v-if="version.excelContentType == null">
-            {{ $t('action.downloadXml') }}
-          </template>
-          <template v-else>
-            {{ $t('action.downloadXForm') }} (.xml)
-          </template>
+          {{ $t('action.downloadXForm') }} (.xml)
         </a>
       </li>
       <li v-if="version.excelContentType != null">
@@ -88,7 +84,6 @@ export default {
       // This is the text of a button. "Definition" refers to a Form definition.
       "def": "Definition",
       "viewXml": "View XML in browser",
-      "downloadXml": "Download XML",
       // This is the text of a link to download a Form definition. The word
       // "XForm" should not be translated.
       "downloadXForm": "Download as XForm",

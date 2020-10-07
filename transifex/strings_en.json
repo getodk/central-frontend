@@ -1728,10 +1728,6 @@
           "string": "View XML in browser",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
-        "downloadXml": {
-          "string": "Download XML",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "downloadXForm": {
           "string": "Download as XForm",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."

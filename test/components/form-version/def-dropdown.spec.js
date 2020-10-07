@@ -71,20 +71,8 @@ describe('FormVersionDefDropdown', () => {
   });
 
   describe('download XML', () => {
-    it('shows the correct text for a version without an XLSForm', () => {
-      const form = testData.extendedForms
-        .createPast(1, { excelContentType: null })
-        .last();
-      const dropdown = mount(FormVersionDefDropdown, {
-        propsData: { version: new Form(form) }
-      });
-      dropdown.find('a')[1].text().trim().should.equal('Download XML');
-    });
-
-    it('shows the correct text for a version with an XLSForm', () => {
-      const form = testData.extendedForms
-        .createPast(1, { excelContentType: 'application/vnd.ms-excel' })
-        .last();
+    it('shows the correct text', () => {
+      const form = testData.extendedForms.createPast(1).last();
       const dropdown = mount(FormVersionDefDropdown, {
         propsData: { version: new Form(form) }
       });
