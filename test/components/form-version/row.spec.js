@@ -1,6 +1,6 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
-import FormVersionStandardButtons from '../../../src/components/form-version/standard-buttons.vue';
+import FormVersionViewXml from '../../../src/components/form-version/view-xml.vue';
 import TimeAndUser from '../../../src/components/time-and-user.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -52,11 +52,13 @@ describe('FormVersionRow', () => {
     });
   });
 
-  it('shows standard form definition buttons', () => {
+  it('toggles the "View XML" modal', () => {
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f/versions').then(app => {
-      const row = app.first(FormVersionRow);
-      row.find(FormVersionStandardButtons).length.should.equal(1);
+    return load('/projects/1/forms/f/versions').testModalToggles({
+      modal: FormVersionViewXml,
+      show: '.form-version-row .form-version-def-dropdown a',
+      hide: '.btn-primary',
+      respond: (series) => series.respondWithData(() => '<x/>')
     });
   });
 });

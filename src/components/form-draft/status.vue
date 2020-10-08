@@ -37,10 +37,16 @@ except according to the terms contained in the LICENSE file.
                     <strong>{{ $t('currentDraft.versionCaption.draftVersion') }}</strong>
                   </template>
                 </i18n>
-                <button id="form-draft-status-upload-button" type="button"
-                  class="btn btn-primary" @click="showModal('upload')">
-                  <span class="icon-upload"></span>{{ $t('currentDraft.action.upload') }}&hellip;
-                </button>
+                <div id="form-draft-status-standard-buttons-container">
+                  <form-version-standard-buttons :version="formDraft"
+                    @view-xml="showModal('viewXml')"/>
+                </div>
+                <div>
+                  <button id="form-draft-status-upload-button" type="button"
+                    class="btn btn-primary" @click="showModal('upload')">
+                    <span class="icon-upload"></span>{{ $t('currentDraft.action.upload') }}&hellip;
+                  </button>
+                </div>
               </template>
             </form-version-summary-item>
           </template>
@@ -63,6 +69,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
+    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
     <form-new v-bind="upload" @hide="hideModal('upload')"
       @success="afterUpload"/>
     <form-draft-publish v-bind="publish" @hide="hideModal('publish')"
@@ -77,6 +84,7 @@ import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
+import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
@@ -85,6 +93,7 @@ import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
+import { loadAsyncComponent } from '../../util/async-components';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -95,11 +104,13 @@ export default {
     FormDraftChecklist,
     FormDraftPublish,
     FormNew,
+    FormVersionStandardButtons,
     FormVersionSummaryItem,
+    FormVersionViewXml: loadAsyncComponent('FormVersionViewXml'),
     Loading,
     PageSection
   },
-  mixins: [modal(), routes(), validateData()],
+  mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes(), validateData()],
   props: {
     projectId: {
       type: String,
@@ -113,6 +124,9 @@ export default {
   data() {
     return {
       // Modals
+      viewXml: {
+        state: false
+      },
       upload: {
         state: false
       },
@@ -185,9 +199,8 @@ export default {
 </script>
 
 <style lang="scss">
-#form-draft-status-publish-button {
-  margin-right: 10px;
-}
+#form-draft-status-standard-buttons-container { margin-bottom: 5px; }
+#form-draft-status-publish-button { margin-right: 10px; }
 </style>
 
 <i18n lang="json5">

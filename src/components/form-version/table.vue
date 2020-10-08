@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     </thead>
     <tbody v-if="formVersions != null">
       <form-version-row v-for="version of formVersions" :key="version.version"
-        :version="version"/>
+        :version="version" @view-xml="$emit('view-xml')"/>
     </tbody>
   </table>
 </template>

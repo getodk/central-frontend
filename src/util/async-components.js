@@ -23,6 +23,10 @@ const loader = (load) => {
 };
 
 const loaders = new Map()
+  .set('FormVersionViewXml', loader(() => import(
+    /* webpackChunkName: "component-form-version-view-xml" */
+    '../components/form-version/view-xml.vue'
+  )))
   .set('ProjectSubmissionOptions', loader(() => import(
     /* webpackChunkName: "component-project-submission-options" */
     '../components/project/submission-options.vue'

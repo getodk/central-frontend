@@ -23,6 +23,10 @@ except according to the terms contained in the LICENSE file.
               <strong>{{ $t('version.publishedVersion') }}</strong>
             </template>
           </i18n>
+          <div>
+            <form-version-standard-buttons :version="form"
+              @view-xml="$emit('view-xml')"/>
+          </div>
         </template>
       </form-version-summary-item>
       <summary-item :icon="stateIcon">
@@ -51,6 +55,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
 import FormVersionSummaryItem from '../../form-version/summary-item.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
@@ -59,7 +64,12 @@ import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'FormOverviewRightNow',
-  components: { FormVersionSummaryItem, PageSection, SummaryItem },
+  components: {
+    FormVersionStandardButtons,
+    FormVersionSummaryItem,
+    PageSection,
+    SummaryItem
+  },
   mixins: [routes()],
   computed: {
     // The component assumes that this data will exist when the component is

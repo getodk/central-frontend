@@ -12,36 +12,50 @@ export function testNoRequest(callback = undefined) {
 }
 
 // Tests buttons that toggle a modal.
-export function testModalToggles(
-  modalComponent,
-  // A button within the series' component that shows the modal
-  showButtonSelector,
-  // A button within the modal that hides the modal
-  hideButtonSelector
-) {
-  return this.afterResponses(component => {
-    const modal = component.first(modalComponent);
+export function testModalToggles(...args) {
+  if (args.length > 1) {
+    return this.testModalToggles({
+      modal: args[0],
+      show: args[1],
+      hide: args[2]
+    });
+  }
+  const {
+    // Modal component
+    modal,
+    // Selector for a button within the series' component that shows the modal
+    show,
+    // Selector for a button within the modal that hides the modal
+    hide,
+    // Function that responds to any requests that are sent when the modal is
+    // shown
+    respond = (series) => series
+  } = args[0];
+
+  return this
     // First, test that the show button actually shows the modal.
-    modal.getProp('state').should.be.false();
-    return trigger.click(component, showButtonSelector)
-      .then(() => {
-        modal.getProp('state').should.be.true();
-        // Next, test that modalComponent listens for `hide` events from Modal.
-        return trigger.click(modal, '.close');
-      })
-      .then(() => {
-        modal.getProp('state').should.be.false();
-        // Finally, test that the hide button actually hides the modal.
-        return trigger.click(component, showButtonSelector);
-      })
-      .then(() => {
-        modal.getProp('state').should.be.true();
-        return trigger.click(modal, hideButtonSelector);
-      })
-      .then(() => {
-        modal.getProp('state').should.be.false();
-      });
-  });
+    .afterResponses(component => {
+      component.first(modal).getProp('state').should.be.false();
+    })
+    .request(trigger.click(show))
+    .modify(respond)
+    .afterResponses(async (component) => {
+      const m = component.first(modal);
+      m.getProp('state').should.be.true();
+
+      // Next, test that `modal` listens for `hide` events from Modal.
+      await trigger.click(m, '.close');
+      m.getProp('state').should.be.false();
+    })
+    // Finally, test that the hide button actually hides the modal.
+    .request(trigger.click(show))
+    .modify(respond)
+    .afterResponses(async (component) => {
+      const m = component.first(modal);
+      m.getProp('state').should.be.true();
+      await trigger.click(m, hide);
+      m.getProp('state').should.be.false();
+    });
 }
 
 

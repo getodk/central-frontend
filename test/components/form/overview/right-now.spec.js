@@ -1,5 +1,6 @@
 import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
 import FormVersionSummaryItem from '../../../../src/components/form-version/summary-item.vue';
+import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
@@ -15,6 +16,16 @@ describe('FormOverviewRightNow', () => {
         .first(FormOverviewRightNow)
         .first(FormVersionSummaryItem);
       component.getProp('version').version.should.equal('v1');
+    });
+  });
+
+  it('toggles the "View XML" modal', () => {
+    testData.extendedForms.createPast(1);
+    return load('/projects/1/forms/f').testModalToggles({
+      modal: FormVersionViewXml,
+      show: '#form-overview-right-now .form-version-def-dropdown a',
+      hide: '.btn-primary',
+      respond: (series) => series.respondWithData(() => '<x/>')
     });
   });
 

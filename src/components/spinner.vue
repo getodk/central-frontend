@@ -9,6 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- `Spinner` toggles a spinner according to its `state` prop. `Spinner` is
+positioned absolutely, so you may need to set the position of an ancestor
+element. -->
 <template>
   <div :class="{ spinner: true, active: state }">
     <div class="spinner-glyph"></div>

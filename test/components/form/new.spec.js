@@ -355,19 +355,25 @@ describe('FormNew', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const text = app.first('.form-version-summary-item-version').text();
-          text.trim().should.equal('v1');
-
-          return trigger.click(app, '#form-draft-status-upload-button');
+          const version = app.first('.form-version-summary-item .version');
+          version.text().trim().should.equal('v1');
         })
-        .request(upload)
-        .respondWithSuccess()
-        .respondWithData(() =>
-          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .request(async (app) => {
+          await trigger.click(app, '#form-draft-status-upload-button');
+          await upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const text = app.first('.form-version-summary-item-version').text();
-          text.trim().should.equal('v2');
+          const version = app.first('.form-version-summary-item .version');
+          version.text().trim().should.equal('v2');
         });
     });
 

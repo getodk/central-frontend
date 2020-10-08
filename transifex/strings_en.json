@@ -1718,21 +1718,23 @@
         }
       }
     },
-    "FormVersionStandardButtons": {
+    "FormVersionDefDropdown": {
       "action": {
-        "downloadXForm": {
-          "string": "Download XML",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "format": {
-        "xForm": {
-          "string": "As XForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as. The word \"XForm\" should not be translated."
+        "def": {
+          "string": "Definition",
+          "developer_comment": "This is the text of a button. \"Definition\" refers to a Form definition."
         },
-        "xlsForm": {
-          "string": "As XLSForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as. The word \"XLSForm\" should not be translated."
+        "viewXml": {
+          "string": "View XML in browser",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "downloadXForm": {
+          "string": "Download as XForm",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
+        },
+        "downloadXlsForm": {
+          "string": "Download as XLSForm",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -1746,6 +1748,12 @@
           "string": "Definition",
           "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
         }
+      }
+    },
+    "FormVersionViewXml": {
+      "title": {
+        "string": "View XML",
+        "developer_comment": "This is the title at the top of a pop-up."
       }
     },
     "Loading": {

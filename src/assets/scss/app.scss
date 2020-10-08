@@ -33,6 +33,13 @@ h1, .h1 {
 
 p { max-width: $max-width-p; }
 
+pre {
+  background-color: $color-subpanel-background;
+  border-color: $color-subpanel-border;
+
+  code { white-space: pre; }
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,10 +101,12 @@ class. */
   overflow: hidden;
   position: relative;
 
-  &:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
-    outline: none;
-  }
+  &:focus { outline: none; }
+}
+
+.btn-group.open .dropdown-toggle { box-shadow: none; }
+.btn, .btn-group.open .dropdown-toggle {
+  &:focus { box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18); }
 }
 
 .btn-primary {

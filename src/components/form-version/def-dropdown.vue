@@ -1,0 +1,96 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div class="form-version-def-dropdown btn-group">
+    <button :id="toggleId" type="button" class="btn btn-primary dropdown-toggle"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="icon-code"></span>
+      <span>{{ $t('action.def') }}</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" :aria-labelledby="toggleId">
+      <li>
+        <a href="#" @click.prevent="viewXml">{{ $t('action.viewXml') }}</a>
+      </li>
+      <li>
+        <!-- '(.xml)' may be an issue for an RTL locale. -->
+        <a :href="defPath('xml')" :download="`${version.xmlFormId}.xml`">
+          {{ $t('action.downloadXForm') }} (.xml)
+        </a>
+      </li>
+      <li v-if="version.excelContentType != null">
+        <a :href="defPath(excelExtension)">
+          {{ $t('action.downloadXlsForm') }} (.{{ excelExtension }})
+        </a>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import Form from '../../presenters/form';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+
+export default {
+  name: 'FormVersionDefDropdown',
+  props: {
+    version: {
+      type: Form,
+      required: true
+    }
+  },
+  computed: {
+    toggleId() {
+      return `form-version-def-dropdown-toggle${this.version.key}`;
+    },
+    excelExtension() {
+      return this.version.excelContentType === 'application/vnd.ms-excel'
+        ? 'xls'
+        : 'xlsx';
+    }
+  },
+  methods: {
+    defPath(extension) {
+      const { projectId, xmlFormId, publishedAt } = this.version;
+      return publishedAt != null
+        ? apiPaths.formVersionDef(projectId, xmlFormId, this.version.version, extension)
+        : apiPaths.formDraftDef(projectId, xmlFormId, extension);
+    },
+    viewXml() {
+      this.$store.dispatch('get', [{
+        key: 'formVersionXml',
+        url: this.defPath('xml')
+      }]).catch(noop);
+      this.$emit('view-xml');
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      // This is the text of a button. "Definition" refers to a Form definition.
+      "def": "Definition",
+      "viewXml": "View XML in browser",
+      // This is the text of a link to download a Form definition. The word
+      // "XForm" should not be translated.
+      "downloadXForm": "Download as XForm",
+      // This is the text of a link to download a Form definition. The word
+      // "XLSForm" should not be translated.
+      "downloadXlsForm": "Download as XLSForm"
+    }
+  }
+}
+</i18n>
