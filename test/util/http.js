@@ -698,20 +698,20 @@ class MockHttp {
   /* eslint-disable no-console */
   _checkStateAfterWait() {
     if (this._errorFromBeforeEachNav != null) {
-      console.log('the beforeEachNav() callback threw an error');
-      throw this._errorFromBeforeEachNav;
+      console.error(this._errorFromBeforeEachNav);
+      throw new Error('beforeEachNav() callback threw an error');
     }
     if (this._errorFromBeforeAnyResponse != null) {
-      console.log('the beforeAnyResponse() callback threw an error');
-      throw this._errorFromBeforeAnyResponse;
+      console.error(this._errorFromBeforeAnyResponse);
+      throw new Error('beforeAnyResponse() callback threw an error');
     }
     if (this._errorFromBeforeEachResponse != null) {
-      console.log('the beforeEachResponse() callback threw an error');
-      throw this._errorFromBeforeEachResponse;
+      console.error(this._errorFromBeforeEachResponse);
+      throw new Error('beforeEachResponse() callback threw an error');
     }
     if (this._errorFromResponse != null) {
-      console.log('a response callback threw an error');
-      throw this._errorFromResponse;
+      console.error(this._errorFromResponse);
+      throw new Error('a response callback threw an error');
     }
     if (this._requestWithoutResponse || this._responseWithoutRequest) {
       this._listRequestResponseLog();
