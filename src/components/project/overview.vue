@@ -49,11 +49,6 @@ export default {
       return this.project != null && this.project.permits('project.update');
     }
   },
-  watch: {
-    projectId() {
-      this.$emit('fetch-forms');
-    }
-  },
   created() {
     this.$emit('fetch-forms', false);
   },

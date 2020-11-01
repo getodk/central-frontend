@@ -144,14 +144,6 @@ export default {
         : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
     }
   },
-  watch: {
-    projectId() {
-      this.fetchData(true);
-      this.q = '';
-      this.searchAssignments = null;
-      this.assignRequestCount = 0;
-    }
-  },
   created() {
     this.fetchData(false);
   },
