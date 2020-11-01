@@ -32,5 +32,5 @@ const loaders = new Map()
     '../components/project/submission-options.vue'
   )));
 
-export const loadAsyncComponent = (name) => loaders.get(name).load;
-export const loadedAsyncComponent = (name) => loaders.get(name).loaded;
+export const loadAsync = (name) => loaders.get(name).load;
+export const loadedAsync = (name) => loaders.get(name).loaded;

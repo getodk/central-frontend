@@ -24,14 +24,14 @@ import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
-import { loadAsyncComponent } from '../../util/async-components';
+import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
 
 export default {
   name: 'FormVersionList',
   components: {
     FormVersionTable,
-    FormVersionViewXml: loadAsyncComponent('FormVersionViewXml'),
+    FormVersionViewXml: loadAsync('FormVersionViewXml'),
     Loading
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), validateData()],

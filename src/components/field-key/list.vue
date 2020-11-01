@@ -74,7 +74,7 @@ import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
-import { loadAsyncComponent } from '../../util/async-components';
+import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
 const popoverContentTemplate = `
@@ -94,7 +94,7 @@ export default {
     FieldKeyNew,
     FieldKeyRevoke,
     Loading,
-    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
+    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
   },
   mixins: [
     modal({ submissionOptions: 'ProjectSubmissionOptions' }),

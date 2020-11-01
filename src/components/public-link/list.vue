@@ -62,7 +62,7 @@ import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
-import { loadAsyncComponent } from '../../util/async-components';
+import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -71,7 +71,7 @@ export default {
   components: {
     DocLink,
     Loading,
-    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions'),
+    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions'),
     PublicLinkCreate,
     PublicLinkRevoke,
     PublicLinkTable
