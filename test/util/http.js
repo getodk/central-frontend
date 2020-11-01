@@ -370,11 +370,10 @@ class MockHttp {
   callback may itself send one or more requests. (Note that the callback will
   also be run for those requests.)
 
-  When there are concurrent requests, the beforeEachResponse() callback is run
-  once between each pair of responses. Vue.nextTick() is called before and after
-  the beforeEachResponse() callback, giving Vue a chance to react. Together,
-  that means that for two concurrent requests, we would see the following
-  sequence:
+  When there are concurrent requests, the beforeEachResponse() callback will be
+  run once between each pair of responses. Vue will also react between each pair
+  of responses. Together, that means that for two concurrent requests, we will
+  see the following sequence:
 
     1. Two requests are sent concurrently.
        -> Vue reacts.
@@ -536,11 +535,6 @@ class MockHttp {
         // this part of the promise chain to be fulfilled, because this response
         // will not necessarily be an error even if the prevous one was.
         .catch(() => {})
-        // Either the initial requests have just been sent, in which case this
-        // is the first response, or a previous response has been returned
-        // (perhaps just now). Either way, run Vue.nextTick() so that Vue has a
-        // chance to react.
-        .then(() => Vue.nextTick())
         .then(() => (index === 0 && this._beforeAnyResponse != null
           ? this._tryBeforeAnyResponse()
           : null))
@@ -572,8 +566,7 @@ class MockHttp {
   }
 
   // _tryBeforeAnyResponse() runs this._beforeAnyResponse(), catching any
-  // resulting error. Afterwards, it runs Vue.nextTick() so that Vue has a
-  // chance to react to any changes that the callback made.
+  // resulting error.
   _tryBeforeAnyResponse() {
     return Promise.resolve()
       .then(() => this._beforeAnyResponse(this._component))
@@ -581,15 +574,12 @@ class MockHttp {
         // We do not re-throw the error, because doing so would prevent Frontend
         // from receiving the response to follow.
         this._errorFromBeforeAnyResponse = error;
-      })
-      .finally(() => Vue.nextTick());
+      });
   }
 
   // _tryBeforeEachResponse() runs this._beforeEachResponse(), catching any
   // resulting error. It does not run this._beforeEachResponse() if the callback
-  // resulted in an error for a previous response. After running
-  // this._beforeEachResponse(), _tryBeforeEachResponse() runs Vue.nextTick() so
-  // that Vue has a chance to react to any changes that the callback made.
+  // resulted in an error for a previous response.
   _tryBeforeEachResponse(config, index) {
     if (this._errorFromBeforeEachResponse != null) return null;
     return Promise.resolve()
@@ -598,8 +588,7 @@ class MockHttp {
         // We do not re-throw the error, because doing so would prevent Frontend
         // from receiving the response to follow.
         this._errorFromBeforeEachResponse = e;
-      })
-      .finally(() => Vue.nextTick());
+      });
   }
 
   _tryBeforeEachNav(to, from) {
