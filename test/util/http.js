@@ -675,16 +675,17 @@ class MockHttp {
     throw new Error('a request was sent before the request() callback was run');
   }
 
+  /* eslint-disable no-console */
   _listRequestResponseLog() {
-    // eslint-disable-next-line no-console
     console.log('request/response log for the last series executed:');
     if (this._requestResponseLog.length === 0)
-      console.log('(empty)'); // eslint-disable-line no-console
+      console.log('(empty)');
     else {
       for (const entry of this._requestResponseLog)
-        console.log(entry); // eslint-disable-line no-console
+        console.log(entry);
     }
   }
+  /* eslint-enable no-console */
 
   _restoreHttp() {
     // If this._previousPromise was rejected, the current series did not set
@@ -694,24 +695,21 @@ class MockHttp {
     if (this._inProgress) Vue.prototype.$http = this._previousHttp;
   }
 
+  /* eslint-disable no-console */
   _checkStateAfterWait() {
     if (this._errorFromBeforeEachNav != null) {
-      // eslint-disable-next-line no-console
       console.log('the beforeEachNav() callback threw an error');
       throw this._errorFromBeforeEachNav;
     }
     if (this._errorFromBeforeAnyResponse != null) {
-      // eslint-disable-next-line no-console
       console.log('the beforeAnyResponse() callback threw an error');
       throw this._errorFromBeforeAnyResponse;
     }
     if (this._errorFromBeforeEachResponse != null) {
-      // eslint-disable-next-line no-console
       console.log('the beforeEachResponse() callback threw an error');
       throw this._errorFromBeforeEachResponse;
     }
     if (this._errorFromResponse != null) {
-      // eslint-disable-next-line no-console
       console.log('a response callback threw an error');
       throw this._errorFromResponse;
     }
@@ -723,6 +721,7 @@ class MockHttp {
         throw new Error('response without request: not all responses were requested');
     }
   }
+  /* eslint-enable no-console */
 
   _cleanUpAfterResponses() {
     this._inProgress = false;
