@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import store from './store';
 import { routeProps } from './util/router';
 
 /*
@@ -448,9 +447,7 @@ const routes = [
   }),
   asyncRoute({
     path: '/account/edit',
-    name: 'AccountEdit',
-    component: 'UserEdit',
-    props: () => ({ id: store.state.request.data.currentUser.id.toString() }),
+    component: 'AccountEdit',
     loading: 'page'
   }),
 

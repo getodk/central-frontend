@@ -27,6 +27,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-account-claim" */
     '../components/account/claim.vue'
   )))
+  .set('AccountEdit', loader(() => import(
+    /* webpackChunkName: "component-account-edit" */
+    '../components/account/edit.vue'
+  )))
   .set('AccountResetPassword', loader(() => import(
     /* webpackChunkName: "component-account-reset-password" */
     '../components/account/reset-password.vue'

@@ -47,6 +47,7 @@ const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
 );
 
 const mapsByComponent = {
+  AccountEdit: mapKeys(['user']),
   AccountLogin: new Map(),
   AccountClaim: new Map(),
   ProjectList: mapKeys(['projects', 'users']),
@@ -77,7 +78,8 @@ const mapsByComponent = {
   BackupList: mapKeys(['backupsConfig', 'audits'], {
     audits: () => testData.standardAudits.sorted()
   }),
-  AuditList: mapKeys(['audits'])
+  AuditList: mapKeys(['audits']),
+  NotFound: new Map()
 };
 
 export default (name) => {

@@ -305,6 +305,28 @@ describe('router', () => {
         app.vm.$route.path.should.equal('/');
       });
 
+      it('does not redirect the user from /account/edit', async () => {
+        const app = await load('/account/edit');
+        app.vm.$route.path.should.equal('/account/edit');
+      });
+
+      it('redirects the user from /users/:id/edit', () =>
+        mockRoute('/users/2/edit')
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
+      it('redirects a user navigating from /account/edit to /users/:id/edit', () => {
+        testData.extendedProjects.createPast(1);
+        return load('/account/edit')
+          .complete()
+          .load('/users/1/edit', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+
       it('redirects the user from /system/backups', () =>
         mockRoute('/system/backups')
           .respondFor('/', { users: false })
