@@ -37,8 +37,8 @@ const loadFlatpickrLocale = (locale) => {
     /* webpackChunkName: "flatpickr-locale-[request]" */
     `flatpickr/dist/l10n/${locale}.js`
   )
-    .then(config => {
-      flatpickrLocales[locale] = config.default[locale];
+    .then(m => {
+      flatpickrLocales[locale] = m.default[locale];
     });
 };
 
@@ -62,8 +62,8 @@ const loadMessages = (locale) => {
     /* webpackChunkName: "i18n-[request]" */
     `../locales/${locale}.json`
   )
-    .then(messages => {
-      i18n.setLocaleMessage(locale, messages.default);
+    .then(m => {
+      i18n.setLocaleMessage(locale, m.default);
     });
 };
 

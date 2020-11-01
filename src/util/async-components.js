@@ -14,9 +14,9 @@ const loader = (load) => {
   const obj = {
     loaded: false,
     load: async () => {
-      const result = await load();
+      const m = await load();
       obj.loaded = true;
-      return result;
+      return m;
     }
   };
   return obj;
