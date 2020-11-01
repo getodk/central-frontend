@@ -174,7 +174,7 @@ class MockHttp {
     // cycles, previousPromise is the promise from the previous series.
     // previousPromise is used to chain series.
     previousPromise = null,
-    route = null,
+    location = null,
     beforeEachNavGuard = null,
     mount = null,
     request = null,
@@ -184,7 +184,7 @@ class MockHttp {
     beforeEachResponse = null
   } = {}) {
     this._previousPromise = previousPromise;
-    this._route = route;
+    this._location = location;
     this._beforeEachNavGuard = beforeEachNavGuard;
     this._mount = mount;
     this._request = request;
@@ -196,7 +196,7 @@ class MockHttp {
   _with(options) {
     return new MockHttp({
       previousPromise: this._previousPromise,
-      route: this._route,
+      location: this._location,
       beforeEachNavGuard: this._beforeEachNavGuard,
       mount: this._mount,
       request: this._request,
@@ -219,9 +219,9 @@ class MockHttp {
   request, do not specify request() in the same series. Instead, specify
   request() in a chained series. */
   route(location) {
-    if (this._route != null)
+    if (this._location != null)
       throw new Error('cannot call route() more than once in a single series');
-    return this._with({ route: location });
+    return this._with({ location });
   }
 
   beforeEachNav(callback) {
@@ -428,7 +428,7 @@ class MockHttp {
     if (typeof optionsOrCallback === 'function')
       return this.afterResponses({ callback: optionsOrCallback });
     const { callback, pollWork = undefined } = optionsOrCallback;
-    if (this._route == null && this._mount == null && this._request == null)
+    if (this._location == null && this._mount == null && this._request == null)
       throw new Error('route(), mount(), and/or request() required');
     const promise = this._initialPromise()
       .then(() => {
@@ -607,14 +607,14 @@ class MockHttp {
   }
 
   _routeAndMount() {
-    if (this._route == null) {
+    if (this._location == null) {
       if (this._mount != null) this._component = this._mount();
       return undefined;
     }
     return new Promise((resolve, reject) => {
       let complete = false;
       router.push(
-        this._route,
+        this._location,
         () => {
           complete = true;
           // If a component has not been mounted
@@ -627,11 +627,11 @@ class MockHttp {
             Vue.nextTick(resolve);
         },
         /* The router.push() onAbort callback seems to be called when the
-        navigation to this._route is aborted, even if a navigation is ultimately
+        navigation to this._location is aborted, even if a navigation is ultimately
         confirmed. Here we examine the router state to determine whether a
         navigation was ultimately confirmed. (Note that this implementation will
         not work if an asynchronous navigation guard is called after the
-        navigation to this._route is aborted: the onAbort callback waits a tick,
+        navigation to this._location is aborted: the onAbort callback waits a tick,
         but that might not be long enough for an asynchronous guard to
         return.) */
         () => {
@@ -653,7 +653,7 @@ class MockHttp {
   }
 
   _checkStateBeforeRequest() {
-    /* this._route and this._mount() are allowed to result in requests, but if
+    /* this.route() and this.mount() are allowed to result in requests, but if
     they do, no request callback should be specified. We check for that case by
     examining this._requestResponseLog, which will have an entry if there has
     been a request already. (Note, however, that the response to the request
@@ -792,7 +792,7 @@ class MockHttp {
   // PROMISE METHODS
 
   toPromise() {
-    const anySetup = this._route != null ||
+    const anySetup = this._location != null ||
       this._beforeEachNavGuard != null || this._mount != null ||
       this._request != null || this._responses.length !== 0 ||
       this._beforeAnyResponse != null || this._beforeEachResponse != null;
