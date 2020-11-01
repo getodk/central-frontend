@@ -8,6 +8,7 @@ import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
 import { mount as lifecycleMount } from './lifecycle';
+import { noop } from '../../src/util/util';
 import { trigger } from './event';
 import { wait, waitUntil } from './util';
 
@@ -294,13 +295,13 @@ class MockHttp {
   }
 
   // respondForComponent() responds with all the responses expected for the
-  // specified component. This method is used by respondFor() and elsewhere, but
-  // it is rarely used in tests.
+  // specified component. This method is used in respondFor() and elsewhere, but
+  // it is rarely used directly in tests.
   respondForComponent(component, options = undefined) {
     return [...requestDataByComponent(component.name)].reduce(
       (series, [key, callback]) => {
-        if (options != null && options[key] != null) {
-          const option = options[key];
+        const option = options != null ? options[key] : null;
+        if (option != null) {
           if (option === false) return series;
           return typeof option === 'number'
             ? series.respondWithProblem(option)
@@ -534,7 +535,7 @@ class MockHttp {
         // error, then this._responsesPromise will be rejected. However, we need
         // this part of the promise chain to be fulfilled, because this response
         // will not necessarily be an error even if the prevous one was.
-        .catch(() => {})
+        .catch(noop)
         .then(() => (index === 0 && this._beforeAnyResponse != null
           ? this._tryBeforeAnyResponse()
           : null))
@@ -570,10 +571,10 @@ class MockHttp {
   _tryBeforeAnyResponse() {
     return Promise.resolve()
       .then(() => this._beforeAnyResponse(this._component))
-      .catch(error => {
+      .catch(e => {
         // We do not re-throw the error, because doing so would prevent Frontend
         // from receiving the response to follow.
-        this._errorFromBeforeAnyResponse = error;
+        this._errorFromBeforeAnyResponse = e;
       });
   }
 
@@ -581,7 +582,7 @@ class MockHttp {
   // resulting error. It does not run this._beforeEachResponse() if the callback
   // resulted in an error for a previous response.
   _tryBeforeEachResponse(config, index) {
-    if (this._errorFromBeforeEachResponse != null) return null;
+    if (this._errorFromBeforeEachResponse != null) return undefined;
     return Promise.resolve()
       .then(() => this._beforeEachResponse(this._component, config, index))
       .catch(e => {
@@ -650,9 +651,9 @@ class MockHttp {
   /* eslint-disable no-console */
   _listRequestResponseLog() {
     console.log('request/response log for the last series executed:');
-    if (this._requestResponseLog.length === 0)
+    if (this._requestResponseLog.length === 0) {
       console.log('(empty)');
-    else {
+    } else {
       for (const entry of this._requestResponseLog)
         console.log(entry);
     }
@@ -824,14 +825,10 @@ const mockHttpForBottomComponent = (
   for (let i = 0; i < matched.length - 1; i += 1) {
     const { name } = matched[i].components.default;
     for (const [key, callback] of requestDataByComponent(name)) {
-      if (respondForOptions != null && respondForOptions[key] != null) {
-        const option = respondForOptions[key];
-        requestData[key] = typeof option === 'number'
-          ? { problem: option }
-          : option();
-      } else {
-        requestData[key] = callback();
-      }
+      const option = respondForOptions != null ? respondForOptions[key] : null;
+      requestData[key] = option != null
+        ? (typeof option === 'number' ? { problem: option } : option())
+        : callback();
     }
   }
   mountOptionsWithData.requestData = requestData;
