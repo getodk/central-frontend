@@ -28,20 +28,15 @@ export default {
     }
   },
   computed: {
-    fromISO() {
-      return DateTime.fromISO(this.iso);
-    },
-    withLocale() {
-      return this.fromISO.locale === this.$i18n.locale
-        ? this.fromISO
-        : this.fromISO.setLocale(this.$i18n.locale);
+    dateTime() {
+      return DateTime.fromISO(this.iso, { locale: this.$i18n.locale });
     },
     title() {
-      return this.iso != null ? formatDateTime(this.fromISO) : null;
+      return this.iso != null ? formatDateTime(this.dateTime) : null;
     },
     text() {
       return this.iso != null
-        ? formatDateTime(this.withLocale, true)
+        ? formatDateTime(this.dateTime, true)
         : this.blank;
     }
   }

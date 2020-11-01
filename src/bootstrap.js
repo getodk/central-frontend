@@ -9,9 +9,9 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+
+// Needed for the collapse plugin.
 import 'bootstrap/js/transition';
+// Needed for a responsive navbar.
 import 'bootstrap/js/collapse';
 import 'bootstrap/js/dropdown';
-import 'bootstrap/js/modal';
-import 'bootstrap/js/tooltip';
-import 'bootstrap/js/popover';

@@ -49,14 +49,14 @@ describe('DateTime', () => {
     });
   });
 
-  it('re-evaluates withLocale after a locale change', () => {
+  it('re-evaluates dateTime after a locale change', () => {
     const component = mount(DateTime, {
       propsData: { iso: '2020-01-01T12:34:56Z' }
     });
-    component.vm.withLocale.locale.should.equal('en');
+    component.vm.dateTime.locale.should.equal('en');
     return loadLocale('es')
       .then(() => {
-        component.vm.withLocale.locale.should.equal('es');
+        component.vm.dateTime.locale.should.equal('es');
       })
       .finally(() => loadLocale('en'));
   });

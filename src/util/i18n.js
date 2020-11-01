@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { Settings } from 'luxon';
 
 import i18n, { locales } from '../i18n';
 
@@ -52,7 +51,6 @@ const loaded = new Set([i18n.fallbackLocale]);
 
 const setLocale = (locale) => {
   i18n.locale = locale;
-  Settings.defaultLocale = locale;
   document.querySelector('html').setAttribute('lang', locale);
 };
 

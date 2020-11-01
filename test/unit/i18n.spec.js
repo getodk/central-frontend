@@ -1,5 +1,3 @@
-import { Settings } from 'luxon';
-
 import i18n from '../../src/i18n';
 import { flatpickrLocales, loadLocale } from '../../src/util/i18n';
 import { i18nProps } from '../util/i18n';
@@ -8,7 +6,6 @@ describe('util/i18n', () => {
   describe('loadLocale()', () => {
     afterEach(() => {
       i18n.locale = 'en';
-      Settings.defaultLocale = 'en';
       document.querySelector('html').setAttribute('lang', 'en');
     });
 
@@ -21,11 +18,6 @@ describe('util/i18n', () => {
     it('changes the lang attribute', () =>
       loadLocale('es').then(() => {
         document.querySelector('html').getAttribute('lang').should.equal('es');
-      }));
-
-    it('changes the default locale for Luxon', () =>
-      loadLocale('es').then(() => {
-        Settings.defaultLocale.should.equal('es');
       }));
 
     it('loads the flatpickr locale', () =>

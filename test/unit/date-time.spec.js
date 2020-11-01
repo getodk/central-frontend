@@ -131,6 +131,14 @@ const cases = [
 ];
 
 describe('util/date-time', () => {
+  let restoreLocale;
+  before(() => {
+    restoreLocale = setLuxon({ defaultLocale: 'en' });
+  });
+  after(() => {
+    restoreLocale();
+  });
+
   for (const testCase of cases) {
     const { zoneName = 'UTC', now, iso, formattedDate, formattedTime } = testCase;
     const [absoluteDate, relativeDate = absoluteDate] = formattedDate;
