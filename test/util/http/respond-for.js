@@ -50,8 +50,7 @@ const mapsByComponent = {
   AccountLogin: new Map(),
   AccountClaim: new Map(),
   ProjectList: mapKeys(['projects', 'users']),
-  ProjectHome: mapKeys(['project']),
-  ProjectShow: new Map(),
+  ProjectShow: mapKeys(['project']),
   ProjectOverview: mapKeys(['forms']),
   ProjectUserList: mapKeys(['roles', 'projectAssignments']),
   FieldKeyList: mapKeys(['fieldKeys']),
@@ -62,7 +61,7 @@ const mapsByComponent = {
     'formSummaryAssignments'
   ]),
   ProjectSettings: new Map(),
-  FormShow: mapKeys(['form', 'formDraft', 'attachments']),
+  FormShow: mapKeys(['project', 'form', 'formDraft', 'attachments']),
   FormOverview: new Map(),
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),

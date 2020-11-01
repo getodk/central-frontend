@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       even before the server has responded to ProjectHome's request for the
       project. -->
       <router-view v-show="project != null" :key="$route.path"
-        @fetch-project="$emit('fetch-project')" @fetch-forms="fetchForms"
+        @fetch-project="fetchProject" @fetch-forms="fetchForms"
         @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
@@ -109,8 +109,19 @@ export default {
       return this.projectPath();
     }
   },
+  created() {
+    this.fetchProject(false);
+  },
   methods: {
-    fetchForms(resend = undefined) {
+    fetchProject(resend) {
+      this.$store.dispatch('get', [{
+        key: 'project',
+        url: apiPaths.project(this.projectId),
+        extended: true,
+        resend
+      }]).catch(noop);
+    },
+    fetchForms(resend) {
       this.$store.dispatch('get', [{
         key: 'forms',
         url: apiPaths.forms(this.projectId),
@@ -118,7 +129,7 @@ export default {
         resend
       }]).catch(noop);
     },
-    fetchFieldKeys(resend = undefined) {
+    fetchFieldKeys(resend) {
       this.$store.dispatch('get', [{
         key: 'fieldKeys',
         url: apiPaths.fieldKeys(this.projectId),

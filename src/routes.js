@@ -25,7 +25,6 @@ import FormSubmissions from './components/form/submissions.vue';
 import FormVersionList from './components/form-version/list.vue';
 import NotFound from './components/not-found.vue';
 import ProjectFormAccess from './components/project/form-access.vue';
-import ProjectHome from './components/project/home.vue';
 import ProjectList from './components/project/list.vue';
 import ProjectOverview from './components/project/overview.vue';
 import ProjectSettings from './components/project/settings.vue';
@@ -150,198 +149,190 @@ const routes = [
   { path: '/', component: ProjectList },
   {
     path: '/projects/:projectId([1-9]\\d*)',
-    component: ProjectHome,
+    component: ProjectShow,
     props: true,
     children: [
       {
         path: '',
-        component: ProjectShow,
+        component: ProjectOverview,
         props: true,
-        children: [
-          {
-            path: '',
-            component: ProjectOverview,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits('form.list')
-              }
-            }
-          },
-          {
-            path: 'users',
-            component: ProjectUserList,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'assignment.list',
-                  'assignment.create',
-                  'assignment.delete'
-                ])
-              }
-            }
-          },
-          {
-            path: 'app-users',
-            component: FieldKeyList,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'field_key.list',
-                  'field_key.create',
-                  'session.end'
-                ])
-              }
-            }
-          },
-          {
-            path: 'form-access',
-            component: ProjectFormAccess,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'form.list',
-                  'field_key.list',
-                  'assignment.list',
-                  'project.update',
-                  'form.update',
-                  'assignment.create',
-                  'assignment.delete'
-                ])
-              }
-            }
-          },
-          {
-            path: 'settings',
-            component: ProjectSettings,
-            meta: {
-              validateData: {
-                project: (project) => project.permits(['project.update'])
-              }
-            }
+        meta: {
+          validateData: {
+            project: (project) => project.permits('form.list')
           }
-        ]
+        }
       },
-      // Note the unlikely possibility that
-      // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
-      // will be unable to navigate to a form route.
       {
-        path: 'forms/:xmlFormId',
-        component: FormShow,
+        path: 'users',
+        component: ProjectUserList,
         props: true,
-        children: [
-          {
-            path: '',
-            component: FormOverview,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) =>
-                  project.permits(['form.read', 'assignment.list']),
-                form: (form) => form.publishedAt != null
-              }
-            }
-          },
-          {
-            path: 'versions',
-            component: FormVersionList,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) =>
-                  // Including submission.list in order to exclude Data
-                  // Collectors.
-                  project.permits(['form.read', 'submission.list']),
-                form: (form) => form.publishedAt != null
-              }
-            }
-          },
-          {
-            path: 'submissions',
-            component: FormSubmissions,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'form.read',
-                  'submission.list',
-                  'submission.read'
-                ]),
-                form: (form) => form.publishedAt != null
-              }
-            }
-          },
-          {
-            path: 'public-links',
-            component: PublicLinkList,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'form.read',
-                  'public_link.list',
-                  'public_link.create',
-                  'session.end'
-                ]),
-                form: (form) => form.publishedAt != null
-              }
-            }
-          },
-          {
-            path: 'settings',
-            component: FormSettings,
-            meta: {
-              validateData: {
-                project: (project) =>
-                  project.permits(['form.read', 'form.update', 'form.delete']),
-                form: (form) => form.publishedAt != null
-              }
-            }
-          },
-          {
-            path: 'draft',
-            component: FormDraftStatus,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) =>
-                  project.permits(['form.read', 'form.update', 'form.delete']),
-                formDraft: (formDraft) => formDraft.isDefined()
-              }
-            }
-          },
-          {
-            path: 'draft/attachments',
-            component: FormAttachmentList,
-            meta: {
-              validateData: {
-                project: (project) =>
-                  project.permits(['form.read', 'form.update']),
-                attachments: (option) => option
-                  .map(attachments => attachments.length !== 0)
-                  .orElse(false)
-              }
-            }
-          },
-          {
-            path: 'draft/testing',
-            component: FormDraftTesting,
-            props: true,
-            meta: {
-              validateData: {
-                project: (project) => project.permits([
-                  'form.read',
-                  'submission.list',
-                  'submission.read'
-                ]),
-                formDraft: (formDraft) => formDraft.isDefined()
-              }
-            }
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'assignment.list',
+              'assignment.create',
+              'assignment.delete'
+            ])
           }
-        ]
+        }
+      },
+      {
+        path: 'app-users',
+        component: FieldKeyList,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'field_key.list',
+              'field_key.create',
+              'session.end'
+            ])
+          }
+        }
+      },
+      {
+        path: 'form-access',
+        component: ProjectFormAccess,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'form.list',
+              'field_key.list',
+              'assignment.list',
+              'project.update',
+              'form.update',
+              'assignment.create',
+              'assignment.delete'
+            ])
+          }
+        }
+      },
+      {
+        path: 'settings',
+        component: ProjectSettings,
+        meta: {
+          validateData: {
+            project: (project) => project.permits(['project.update'])
+          }
+        }
+      }
+    ]
+  },
+  // Note the unlikely possibility that
+  // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
+  // will be unable to navigate to a form route.
+  {
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId',
+    component: FormShow,
+    props: true,
+    children: [
+      {
+        path: '',
+        component: FormOverview,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) =>
+              project.permits(['form.read', 'assignment.list']),
+            form: (form) => form.publishedAt != null
+          }
+        }
+      },
+      {
+        path: 'versions',
+        component: FormVersionList,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) =>
+              // Including submission.list in order to exclude Data
+              // Collectors.
+              project.permits(['form.read', 'submission.list']),
+            form: (form) => form.publishedAt != null
+          }
+        }
+      },
+      {
+        path: 'submissions',
+        component: FormSubmissions,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'form.read',
+              'submission.list',
+              'submission.read'
+            ]),
+            form: (form) => form.publishedAt != null
+          }
+        }
+      },
+      {
+        path: 'public-links',
+        component: PublicLinkList,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'form.read',
+              'public_link.list',
+              'public_link.create',
+              'session.end'
+            ]),
+            form: (form) => form.publishedAt != null
+          }
+        }
+      },
+      {
+        path: 'settings',
+        component: FormSettings,
+        meta: {
+          validateData: {
+            project: (project) =>
+              project.permits(['form.read', 'form.update', 'form.delete']),
+            form: (form) => form.publishedAt != null
+          }
+        }
+      },
+      {
+        path: 'draft',
+        component: FormDraftStatus,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) =>
+              project.permits(['form.read', 'form.update', 'form.delete']),
+            formDraft: (formDraft) => formDraft.isDefined()
+          }
+        }
+      },
+      {
+        path: 'draft/attachments',
+        component: FormAttachmentList,
+        meta: {
+          validateData: {
+            project: (project) => project.permits(['form.read', 'form.update']),
+            attachments: (option) => option
+              .map(attachments => attachments.length !== 0)
+              .orElse(false)
+          }
+        }
+      },
+      {
+        path: 'draft/testing',
+        component: FormDraftTesting,
+        props: true,
+        meta: {
+          validateData: {
+            project: (project) => project.permits([
+              'form.read',
+              'submission.list',
+              'submission.read'
+            ]),
+            formDraft: (formDraft) => formDraft.isDefined()
+          }
+        }
       }
     ]
   },

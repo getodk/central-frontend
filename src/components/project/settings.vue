@@ -105,7 +105,7 @@ export default {
   methods: {
     afterEnableEncryption() {
       this.hideModal('enableEncryption');
-      this.$emit('fetch-project');
+      this.$emit('fetch-project', true);
     },
     afterArchive(project) {
       this.$router.push(this.projectPath(), () => {

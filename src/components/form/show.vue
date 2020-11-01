@@ -88,6 +88,14 @@ export default {
     this.fetchData();
   },
   methods: {
+    fetchProject() {
+      this.$store.dispatch('get', [{
+        key: 'project',
+        url: apiPaths.project(this.projectId),
+        extended: true,
+        resend: false
+      }]).catch(noop);
+    },
     // Wait for up to a total of 10 minutes, not including request time.
     waitToRequestEnketoId(tries) {
       if (tries < 20) return 3000;
@@ -165,6 +173,7 @@ export default {
       ]).catch(noop);
     },
     fetchData() {
+      this.fetchProject();
       this.fetchForm();
       this.fetchDraft();
     },
