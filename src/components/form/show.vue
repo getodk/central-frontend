@@ -15,10 +15,9 @@ except according to the terms contained in the LICENSE file.
       @create-draft="createDraft"/>
     <page-body>
       <loading :state="initiallyLoading || awaitingResponse"/>
-      <!-- <router-view> is immediately created and can send its own requests
-      even before the server has responded to the requests from ProjectHome and
-      FormShow. -->
-      <router-view v-show="dataExists && !awaitingResponse" :key="$route.path"
+      <!-- <router-view> may send its own requests before the server has
+      responded to the requests from FormShow. -->
+      <router-view v-show="dataExists && !awaitingResponse"
         @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
@@ -79,10 +78,6 @@ export default {
     dataExists() {
       return this.$store.getters.dataExists(requestKeys);
     }
-  },
-  watch: {
-    projectId: 'fetchData',
-    xmlFormId: 'fetchData'
   },
   created() {
     this.fetchData();

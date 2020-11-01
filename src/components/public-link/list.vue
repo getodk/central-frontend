@@ -60,7 +60,6 @@ import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
@@ -76,11 +75,7 @@ export default {
     PublicLinkRevoke,
     PublicLinkTable
   },
-  mixins: [
-    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
-    routes(),
-    validateData()
-  ],
+  mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
   props: {
     projectId: {
       type: String,

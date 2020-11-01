@@ -75,23 +75,19 @@ describe('ProjectShow', () => {
     }
   });
 
-  it('shows a loading message until all responses are received', () => {
+  it('shows a loading message until response for project is received', () => {
     mockLogin();
-    return mockRoute('/projects/1')
-      .beforeEachResponse((app, config, index) => {
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/settings')
+      .beforeEachResponse(app => {
         const loading = app.find(Loading);
         loading.length.should.equal(2);
-        // ProjectShow
-        loading[0].getProp('state').should.equal(index === 0);
-        // ProjectOverview
-        loading[1].getProp('state').should.equal(true);
+        loading[0].getProp('state').should.equal(true);
       })
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() => testData.extendedForms.createPast(1).sorted())
       .afterResponses(app => {
         const loading = app.find(Loading);
-        const states = loading.map(component => component.getProp('state'));
-        states.should.eql([false, false]);
+        loading.length.should.equal(2);
+        loading[0].getProp('state').should.equal(false);
       });
   });
 

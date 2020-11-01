@@ -84,13 +84,12 @@ import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectSettings',
   components: { DocLink, ProjectArchive, ProjectEdit, ProjectEnableEncryption },
-  mixins: [modal(), routes(), validateData()],
+  mixins: [modal(), routes()],
   data() {
     return {
       enableEncryption: {

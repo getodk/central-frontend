@@ -98,6 +98,8 @@ function request({
   const { currentRoute } = this.$store.state.router;
   return this.$http.request(configForPossibleBackendRequest(axiosConfig, token))
     .catch(error => {
+      // this.$store seems to be defined even after the component has been
+      // destroyed.
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;

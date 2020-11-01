@@ -9,35 +9,46 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import AccountClaim from './components/account/claim.vue';
 import AccountLogin from './components/account/login.vue';
-import AccountResetPassword from './components/account/reset-password.vue';
-import AuditList from './components/audit/list.vue';
-import BackupList from './components/backup/list.vue';
-import FieldKeyList from './components/field-key/list.vue';
-import FormAttachmentList from './components/form-attachment/list.vue';
-import FormDraftStatus from './components/form-draft/status.vue';
-import FormDraftTesting from './components/form-draft/testing.vue';
-import FormOverview from './components/form/overview.vue';
-import FormSettings from './components/form/settings.vue';
-import FormShow from './components/form/show.vue';
-import FormSubmissions from './components/form/submissions.vue';
-import FormVersionList from './components/form-version/list.vue';
-import NotFound from './components/not-found.vue';
-import ProjectFormAccess from './components/project/form-access.vue';
-import ProjectList from './components/project/list.vue';
-import ProjectOverview from './components/project/overview.vue';
-import ProjectSettings from './components/project/settings.vue';
-import ProjectShow from './components/project/show.vue';
-import ProjectUserList from './components/project/user/list.vue';
-import PublicLinkList from './components/public-link/list.vue';
-import SystemHome from './components/system/home.vue';
-import UserEdit from './components/user/edit.vue';
-import UserHome from './components/user/home.vue';
-import UserList from './components/user/list.vue';
+import AsyncRoute from './components/async-route.vue';
 import store from './store';
+import { routeProps } from './util/router';
 
 /*
+Lazy-Loading Routes
+-------------------
+
+We lazy-load all routes except for /login. We show a loading message while the
+async component is loading and an alert if there is a load error. Note that
+while Vue provides similar loading-state functionality for async components, Vue
+Router does not support it directly: see
+https://github.com/vuejs/vue-router/pull/2140. Instead, we use a wrapper
+component, AsyncRoute, that will load and render the async component.
+
+Because we use a wrapper component, navigation itself is not asynchronous. For
+example, if a user clicks a link to /users but has not loaded UserList yet, they
+will immediately navigate to /users, where they will see a loading message; they
+will not stay on the previous page while UserList loads. This should make it
+easier to reason about navigation (simplifying AccountLogin, for example).
+
+However, a downside of this approach is that an async component cannot use an
+in-component navigation guard.
+
+Route Names
+-----------
+
+All bottom-level routes should have a name. When lazy-loading routes, a
+bottom-level route is automatically given the same name as its component by
+default. Only bottom-level routes should have a name: otherwise, Vue Router will
+log a warning (see https://github.com/vuejs/vue-router/issues/629).
+
+In general, we try not to use route names to drive behavior. We use routes names
+with the preserveData meta field below, but outside this file, we prefer route
+paths to route names where possible.
+
+Route Meta Fields
+-----------------
+
 The following meta fields are supported for bottom-level routes:
 
   Login
@@ -65,7 +76,7 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  Response data
+  Response Data
   -------------
 
   - preserveData (optional)
@@ -95,8 +106,6 @@ The following meta fields are supported for bottom-level routes:
 
   - validateData (optional)
 
-    Note: You must use a mixin in combination with this meta field.
-
     Some routes can be navigated to only if certain conditions are met. For
     example, the user may have to be able to perform certain verbs sitewide.
 
@@ -119,53 +128,101 @@ The following meta fields are supported for bottom-level routes:
 
     There may be data that will be cleared after the route change or that has
     never been requested, but will be requested after the component is created.
-    That data can't be checked in a navigation guard, so a watcher is added to
-    the component for each condition: the watcher will check the associated data
-    as soon as it exists. The watcher will also continue watching the data,
-    checking that it continues to meet the condition.
-
-    The component must use the validateData mixin: this is what actually defines
-    the navigation guards and the watchers. The router only defines the
-    validateData conditions; the mixin is what implements them. The mixin does
-    so by using the validateData meta field of this.$route.
+    That data can't be checked in a navigation guard, so a watcher is also added
+    for each condition; the watcher will check the associated data as soon as it
+    exists. The watcher will also continue watching the data, checking that it
+    continues to meet the condition.
 */
+
+/*
+asyncRoute() returns a config for a route that is lazy-loaded. Specify a
+standard route config to asyncRoute() with the following additions:
+
+  - component. Instead of component options, specify the component name.
+  - loading. Indicates how to render the loading message, which depends on how
+    the component fits into the larger page structure. Specify 'page' if the
+    component renders a page; specify 'tab' if it renders a tab pane.
+  - key (optional)
+
+    The `key` option determines whether a component is re-rendered after a route
+    update, for example, after a param change.
+
+    By default, we use the `key` attribute to re-render the component whenever
+    the route path changes. In other words, we opt out of the default Vue
+    Router behavior, which reuses the component instance. Re-rendering the
+    component simplifies component code and makes it easier to reason about
+    component state.
+
+    However, when using nested routes, we may wish to reuse a parent component
+    instance while re-rendering a child component. To reuse a component instance
+    associated with a route, specify a function that returns a value for the
+    `key` attribute. If the value does not change after the route update, the
+    component instance will be reused. For example, to reuse a component
+    instance associated with a parent route, you can specify a function that
+    returns the part of the path that corresponds to the parent route. See the
+    routes below for specific examples.
+*/
+const asyncRoute = (options) => {
+  const { component, props, loading, key, ...config } = options;
+  config.component = AsyncRoute;
+  // Props for AsyncRoute
+  config.props = (route) => ({
+    componentName: component,
+    // Props for the async component
+    props: routeProps(route, props),
+    loading,
+    k: key != null ? key(route.params) : route.path
+  });
+  if (config.name == null && config.children == null) config.name = component;
+  if (config.meta == null) config.meta = {};
+  config.meta.asyncRoute = { componentName: component };
+  return config;
+};
+
 const routes = [
   {
     path: '/login',
+    name: 'AccountLogin',
     component: AccountLogin,
     meta: { requireLogin: false, requireAnonymity: true }
   },
-  {
+  asyncRoute({
     path: '/reset-password',
-    component: AccountResetPassword,
+    component: 'AccountResetPassword',
+    loading: 'page',
     meta: { requireLogin: false, requireAnonymity: true }
-  },
-  {
+  }),
+  asyncRoute({
     path: '/account/claim',
-    component: AccountClaim,
+    component: 'AccountClaim',
+    loading: 'page',
     meta: { restoreSession: false, requireLogin: false, requireAnonymity: true }
-  },
+  }),
 
-  { path: '/', component: ProjectList },
-  {
+  asyncRoute({ path: '/', component: 'ProjectList', loading: 'page' }),
+  asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)',
-    component: ProjectShow,
+    component: 'ProjectShow',
     props: true,
+    loading: 'page',
+    key: ({ projectId }) => `/projects/${projectId}`,
     children: [
-      {
+      asyncRoute({
         path: '',
-        component: ProjectOverview,
+        component: 'ProjectOverview',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits('form.list')
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'users',
-        component: ProjectUserList,
+        component: 'ProjectUserList',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -175,11 +232,12 @@ const routes = [
             ])
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'app-users',
-        component: FieldKeyList,
+        component: 'FieldKeyList',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -189,11 +247,12 @@ const routes = [
             ])
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'form-access',
-        component: ProjectFormAccess,
+        component: 'ProjectFormAccess',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -207,30 +266,35 @@ const routes = [
             ])
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'settings',
-        component: ProjectSettings,
+        component: 'ProjectSettings',
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits(['project.update'])
           }
         }
-      }
+      })
     ]
-  },
+  }),
   // Note the unlikely possibility that
   // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
   // will be unable to navigate to a form route.
-  {
+  asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId',
-    component: FormShow,
+    component: 'FormShow',
     props: true,
+    loading: 'page',
+    key: ({ projectId, xmlFormId }) =>
+      `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`,
     children: [
-      {
+      asyncRoute({
         path: '',
-        component: FormOverview,
+        component: 'FormOverview',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) =>
@@ -238,11 +302,12 @@ const routes = [
             form: (form) => form.publishedAt != null
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'versions',
-        component: FormVersionList,
+        component: 'FormVersionList',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) =>
@@ -252,11 +317,12 @@ const routes = [
             form: (form) => form.publishedAt != null
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'submissions',
-        component: FormSubmissions,
+        component: 'FormSubmissions',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -267,11 +333,12 @@ const routes = [
             form: (form) => form.publishedAt != null
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'public-links',
-        component: PublicLinkList,
+        component: 'PublicLinkList',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -283,10 +350,11 @@ const routes = [
             form: (form) => form.publishedAt != null
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'settings',
-        component: FormSettings,
+        component: 'FormSettings',
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) =>
@@ -294,11 +362,12 @@ const routes = [
             form: (form) => form.publishedAt != null
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'draft',
-        component: FormDraftStatus,
+        component: 'FormDraftStatus',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) =>
@@ -306,10 +375,11 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'draft/attachments',
-        component: FormAttachmentList,
+        component: 'FormAttachmentList',
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits(['form.read', 'form.update']),
@@ -318,11 +388,12 @@ const routes = [
               .orElse(false)
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'draft/testing',
-        component: FormDraftTesting,
+        component: 'FormDraftTesting',
         props: true,
+        loading: 'tab',
         meta: {
           validateData: {
             project: (project) => project.permits([
@@ -333,17 +404,20 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           }
         }
-      }
+      })
     ]
-  },
+  }),
 
-  {
+  asyncRoute({
     path: '/users',
-    component: UserHome,
+    component: 'UserHome',
+    loading: 'page',
+    key: () => '/users',
     children: [
-      {
+      asyncRoute({
         path: '',
-        component: UserList,
+        component: 'UserList',
+        loading: 'tab',
         meta: {
           validateData: {
             currentUser: (currentUser) => currentUser.can([
@@ -357,34 +431,39 @@ const routes = [
             ])
           }
         }
-      }
+      })
     ]
-  },
-  {
+  }),
+  asyncRoute({
     path: '/users/:id([1-9]\\d*)/edit',
-    component: UserEdit,
+    component: 'UserEdit',
     props: true,
+    loading: 'page',
     meta: {
       validateData: {
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       }
     }
-  },
-  {
+  }),
+  asyncRoute({
     path: '/account/edit',
     name: 'AccountEdit',
-    component: UserEdit,
-    props: () => ({ id: store.state.request.data.currentUser.id.toString() })
-  },
+    component: 'UserEdit',
+    props: () => ({ id: store.state.request.data.currentUser.id.toString() }),
+    loading: 'page'
+  }),
 
-  {
+  asyncRoute({
     path: '/system',
-    component: SystemHome,
+    component: 'SystemHome',
+    loading: 'page',
+    key: () => '/system',
     children: [
-      {
+      asyncRoute({
         path: 'backups',
-        component: BackupList,
+        component: 'BackupList',
+        loading: 'tab',
         meta: {
           validateData: {
             currentUser: (currentUser) => currentUser.can([
@@ -395,24 +474,26 @@ const routes = [
             ])
           }
         }
-      },
-      {
+      }),
+      asyncRoute({
         path: 'audits',
-        component: AuditList,
+        component: 'AuditList',
+        loading: 'tab',
         meta: {
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           }
         }
-      }
+      })
     ]
-  },
+  }),
 
-  {
+  asyncRoute({
     path: '*',
-    component: NotFound,
+    component: 'NotFound',
+    loading: 'page',
     meta: { restoreSession: false, requireLogin: false }
-  }
+  })
 ];
 export default routes;
 
@@ -421,66 +502,32 @@ export default routes;
 ////////////////////////////////////////////////////////////////////////////////
 // TRAVERSE ROUTES
 
-const flattenedRoutes = [];
-const bottomRoutes = [];
+const routesByName = {};
 {
+  // Normalizes the values of meta fields, including by setting defaults.
+  const normalizeMeta = (meta) => ({
+    restoreSession: true,
+    requireLogin: true,
+    requireAnonymity: false,
+    preserveData: {},
+    ...meta,
+    validateData: meta != null && meta.validateData != null
+      ? Object.entries(meta.validateData)
+      : []
+  });
+
   const stack = [...routes];
   while (stack.length !== 0) {
     const route = stack.pop();
-    flattenedRoutes.push(route);
     if (route.children != null) {
+      if (route.meta == null) route.meta = {};
+
       for (const child of route.children)
         stack.push(child);
     } else {
-      bottomRoutes.push(route);
+      route.meta = normalizeMeta(route.meta);
+      routesByName[route.name] = route;
     }
-  }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// ROUTE NAMES
-
-// All bottom-level routes (and only bottom-level routes) should have a name. If
-// a name is not specified for a bottom-level route above, it is given the same
-// name as its component.
-const routesByName = {};
-for (const route of bottomRoutes) {
-  if (route.name == null) {
-    if (route.component.name == null)
-      throw new Error('component without a name');
-    route.name = route.component.name;
-  }
-
-  if (routesByName[route.name] != null) throw new Error('duplicate route name');
-  routesByName[route.name] = route;
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// NORMALIZE META FIELDS
-
-// All bottom-level routes (and only bottom-level routes) should have meta
-// fields. Here we normalize the values of meta fields, including by setting
-// defaults.
-for (const route of flattenedRoutes) {
-  if (route.children != null) {
-    if (route.meta != null)
-      throw new Error('only bottom-level routes can have meta fields');
-  } else {
-    route.meta = {
-      restoreSession: true,
-      requireLogin: true,
-      requireAnonymity: false,
-      preserveData: {},
-      ...route.meta
-    };
-    const { meta } = route;
-    meta.validateData = meta.validateData != null
-      ? Object.entries(meta.validateData)
-      : [];
   }
 }
 
@@ -510,12 +557,10 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 };
 
 // Data that does not change with navigation
-for (const key of ['session', 'currentUser', 'roles']) {
-  preserveDataForKey({
-    key,
-    to: bottomRoutes.map(route => route.name),
-    params: []
-  });
+{
+  const names = Object.keys(routesByName);
+  for (const key of ['session', 'currentUser', 'roles'])
+    preserveDataForKey({ key, to: names, params: [] });
 }
 
 // Tabs

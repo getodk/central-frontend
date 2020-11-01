@@ -77,7 +77,6 @@ import DocLink from '../../doc-link.vue';
 import FormGroup from '../../form-group.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
-import validateData from '../../../mixins/validate-data';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
@@ -85,7 +84,6 @@ import { requestData } from '../../../store/modules/request';
 export default {
   name: 'ProjectUserList',
   components: { DocLink, FormGroup, Loading, ProjectUserRow },
-  mixins: [validateData()],
   props: {
     projectId: {
       type: String,

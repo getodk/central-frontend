@@ -15,6 +15,7 @@ import store from '../src/store';
 import testData from './data';
 import { clearNavGuards, initNavGuards } from './util/router';
 import { destroyMarkedComponents } from './util/lifecycle';
+import { loadAsyncRouteComponents } from './util/async-components';
 import { noop } from '../src/util/util';
 import { setHttp } from './util/http';
 import './assertions';
@@ -122,6 +123,10 @@ afterEach(() => {
     );
   });
 });
+
+// Even if a route is lazy-loaded, load() will need synchronous access to the
+// async components associated with the route.
+before(loadAsyncRouteComponents);
 
 initNavGuards();
 afterEach(clearNavGuards);

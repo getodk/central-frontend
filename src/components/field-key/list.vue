@@ -73,7 +73,6 @@ import FieldKeyRow from './row.vue';
 import Loading from '../loading.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
 import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
@@ -96,11 +95,7 @@ export default {
     Loading,
     ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
   },
-  mixins: [
-    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
-    routes(),
-    validateData()
-  ],
+  mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
   props: {
     projectId: {
       type: String,

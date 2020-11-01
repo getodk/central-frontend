@@ -72,7 +72,6 @@ import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
-import validateData from '../../mixins/validate-data';
 import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
@@ -92,8 +91,7 @@ export default {
     modal({
       viewXml: 'FormVersionViewXml',
       submissionOptions: 'ProjectSubmissionOptions'
-    }),
-    validateData()
+    })
   ],
   props: {
     projectId: {

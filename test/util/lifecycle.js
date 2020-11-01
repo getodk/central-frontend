@@ -15,6 +15,10 @@ const componentsToDestroy = [];
 
 export const destroyMarkedComponents = () => {
   for (const component of componentsToDestroy) {
+    // If the component is attached to the document, component.destroy() would
+    // remove $el from the DOM, then call $destroy(). We do the same thing here,
+    // but in the opposite order, because the 'hideModal' action expects the
+    // component to be attached to the document.
     const { vm } = component;
     vm.$destroy();
     const { $el } = vm;
@@ -60,11 +64,11 @@ const optionsSupportedWithI18n = new Set([
 
 export const mount = (component, options = {}) => {
   // If the component uses a single file component i18n custom block, then its
-  // $i18n property will be different from the root VueI18n object. Because most
-  // components with an i18n custom block assume access to the root VueI18n
-  // object, we will wrap the component in another component (Root), which will
-  // be the root component and whose $i18n property will be the root VueI18n
-  // object.
+  // $i18n property will be different from the root VueI18n instance. Because
+  // many components with an i18n custom block also access the root VueI18n
+  // instance, we will transparently wrap the component in another component
+  // (Root), which will be the root component and whose $i18n property will be
+  // the root VueI18n instance.
   if (component.__i18n != null) {
     for (const name of Object.keys(options)) {
       if (!optionsSupportedWithI18n.has(name)) {
@@ -77,7 +81,15 @@ export const mount = (component, options = {}) => {
       ...options,
       propsData: { component, props: options.propsData }
     });
-    return root.first(component);
+    const wrapper = root.first(component);
+    // Vue logs a warning if setProps() is called on a child component: it wants
+    // the props to be passed from the parent component (in this case, `root`).
+    wrapper.setProps = (props) => {
+      root.setProps({
+        props: { ...root.getProp('props'), ...props }
+      });
+    };
+    return wrapper;
   }
 
   if (options.attachToDocument === true) {

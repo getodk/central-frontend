@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { last } from 'ramda';
 
 import App from '../../src/components/app.vue';
 import requestDataByComponent from './http/respond-for';
@@ -7,8 +8,10 @@ import store from '../../src/store';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
+import { loadAsyncCache } from './async-components';
 import { mount as lifecycleMount } from './lifecycle';
 import { noop } from '../../src/util/util';
+import { routeProps } from '../../src/util/router';
 import { trigger } from './event';
 import { wait, waitUntil } from './util';
 
@@ -168,6 +171,15 @@ the comments above each method below.
 */
 
 let inProgress = false;
+
+// Returns the components associated with a route. If the route is lazy-loaded,
+// any async component will be unwrapped from AsyncRoute.
+const routeComponents = (route) => route.matched.map(routeRecord => {
+  const { asyncRoute } = routeRecord.meta;
+  return asyncRoute == null
+    ? routeRecord.components.default
+    : loadAsyncCache.get(asyncRoute.componentName).default;
+});
 
 class MockHttp {
   constructor({
@@ -340,9 +352,8 @@ class MockHttp {
   The property names of `options` correspond to request keys.
   */
   respondFor(location, options = undefined) {
-    return router.resolve(location).route.matched.reduce(
-      (series, routeRecord) =>
-        series.respondForComponent(routeRecord.components.default, options),
+    return routeComponents(router.resolve(location).route).reduce(
+      (series, component) => series.respondForComponent(component, options),
       this
     );
   }
@@ -439,6 +450,11 @@ class MockHttp {
         });
       })
       .then(() => this._navigateAndMount())
+      // If both this.route() and this.request() were specified, then wait for
+      // any async components associated with the route to load.
+      .then(() => (this._location && this._request != null
+        ? wait()
+        : undefined))
       .then(() => {
         if (this._request == null) return undefined;
         this._checkStateBeforeRequest();
@@ -811,20 +827,20 @@ const mockHttpForBottomComponent = (
   respondForOptions
 ) => {
   const { route } = router.resolve(location);
-  const { matched } = route;
-  if (matched.length === 0) throw new Error('no matching route');
-  const bottomRouteRecord = matched[matched.length - 1];
-  const bottomComponent = bottomRouteRecord.components.default;
+  const components = routeComponents(route);
+  const bottomComponent = last(components);
 
   const mountOptionsWithData = { ...mountOptions };
 
-  if (bottomRouteRecord.props.default === true)
-    mountOptionsWithData.propsData = route.params;
+  const bottomRouteRecord = last(route.matched);
+  const props = routeProps(route, bottomRouteRecord.props.default);
+  mountOptionsWithData.propsData = bottomRouteRecord.meta.asyncRoute == null
+    ? props
+    : props.props;
 
   const requestData = {};
-  for (let i = 0; i < matched.length - 1; i += 1) {
-    const { name } = matched[i].components.default;
-    for (const [key, callback] of requestDataByComponent(name)) {
+  for (let i = 0; i < components.length - 1; i += 1) {
+    for (const [key, callback] of requestDataByComponent(components[i].name)) {
       const option = respondForOptions != null ? respondForOptions[key] : null;
       requestData[key] = option != null
         ? (typeof option === 'number' ? { problem: option } : option())

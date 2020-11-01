@@ -85,13 +85,15 @@ import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
+// Import PageSection before SummaryItem (in FormVersionSummaryItem) in order to
+// have the same import order as other components: see
+// https://github.com/vuejs/vue-cli/issues/3771
+import PageSection from '../page/section.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
-import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
@@ -110,7 +112,7 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes(), validateData()],
+  mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
   props: {
     projectId: {
       type: String,

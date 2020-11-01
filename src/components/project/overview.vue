@@ -28,13 +28,12 @@ import FormList from '../form/list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
-  mixins: [routes(), validateData()],
+  mixins: [routes()],
   props: {
     projectId: {
       type: String,

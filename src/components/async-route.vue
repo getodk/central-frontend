@@ -1,0 +1,123 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div v-if="loading === 'tab'">
+    <loading :state="showsLoading"/>
+    <component :is="component" v-if="component != null" :key="k" v-bind="props"
+      v-on="$listeners"/>
+  </div>
+  <page-body v-else-if="showsLoading">
+    <loading :state="true"/>
+  </page-body>
+  <component :is="component" v-else-if="component != null" :key="k"
+    v-bind="props" v-on="$listeners"/>
+</template>
+
+<script>
+import Loading from './loading.vue';
+import PageBody from './page/body.vue';
+import { loadAsync, loadedAsync } from '../util/async-components';
+import { noop } from '../util/util';
+
+export default {
+  name: 'AsyncRoute',
+  components: { Loading, PageBody },
+  // See routes.js for more information about these props.
+  props: {
+    componentName: {
+      type: String,
+      required: true
+    },
+    props: {
+      type: Object,
+      required: true
+    },
+    // `loading` determines how the loading message is rendered. I'm not sure
+    // that the approach here of using a string prop is quite right. However,
+    // since there are only two options at the moment, I think it's OK to use a
+    // string prop for now. We may wish to revisit this if we add more options.
+    loading: {
+      type: String,
+      required: true
+    },
+    // "k" for "key". (`key` is a reserved prop name.)
+    k: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      component: null,
+      showsLoading: false,
+      cancel: noop
+    };
+  },
+  watch: {
+    componentName: 'load'
+  },
+  created() {
+    this.load();
+  },
+  beforeDestroy() {
+    this.cancel();
+  },
+  methods: {
+    load() {
+      this.cancel();
+
+      this.component = null;
+      this.showsLoading = !loadedAsync(this.componentName);
+      let canceled = false;
+      this.cancel = () => {
+        canceled = true;
+      };
+      loadAsync(this.componentName)()
+        /*
+        A few things can happen between when the async component starts loading
+        and when it finishes:
+
+          - this.componentName can change. This often happens after a route
+            change (though not always, especially for a component associated
+            with a parent route).
+          - this.componentName can change, then change back. In that case, there
+            are multiple pending promises for the same async component, and they
+            will each now be resolved (though all but the last have been
+            canceled).
+          - The AsyncRoute component may be destroyed.
+        */
+        .then(m => {
+          if (!canceled) {
+            this.showsLoading = false;
+            this.component = m.default;
+          }
+        })
+        .catch(() => {
+          if (!canceled) {
+            this.$alert().danger(this.$i18n.t('alert.loadError'));
+            this.showsLoading = false;
+          }
+        });
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "loadError": "The page you requested could not be loaded. Please check that you are online and try again."
+    }
+  }
+}
+</i18n>

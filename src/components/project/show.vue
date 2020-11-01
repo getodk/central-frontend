@@ -49,12 +49,10 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="$store.getters.initiallyLoading(['project'])"/>
-      <!-- <router-view> is immediately created and can send its own requests
-      even before the server has responded to ProjectHome's request for the
-      project. -->
-      <router-view v-show="project != null" :key="$route.path"
-        @fetch-project="fetchProject" @fetch-forms="fetchForms"
-        @fetch-field-keys="fetchFieldKeys"/>
+      <!-- <router-view> may send its own requests before the server has
+      responded to ProjectShow's request for the project. -->
+      <router-view v-show="project != null" @fetch-project="fetchProject"
+        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
 </template>

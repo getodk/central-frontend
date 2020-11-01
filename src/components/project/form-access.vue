@@ -55,7 +55,6 @@ import ProjectFormAccessTable from './form-access/table.vue';
 import Spinner from '../spinner.vue';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -71,7 +70,7 @@ export default {
     ProjectFormAccessTable,
     Spinner
   },
-  mixins: [modal(), request(), validateData()],
+  mixins: [modal(), request()],
   props: {
     projectId: {
       type: String,

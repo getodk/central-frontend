@@ -40,7 +40,6 @@ import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -57,7 +56,7 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [modal(), validateData()],
+  mixins: [modal()],
   data() {
     return {
       newBackup: {
