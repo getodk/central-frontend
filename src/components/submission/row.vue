@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <span class="encryption-overlay"></span>
       </td>
     </template>
-    <td>{{ submission.__id.replace(/^uuid:/, '') }}</td>
+    <td>{{ submission.__id }}</td>
   </tr>
 </template>
 
