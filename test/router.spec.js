@@ -321,7 +321,8 @@ describe('router', () => {
         testData.extendedProjects.createPast(1);
         return load('/account/edit')
           .complete()
-          .load('/users/1/edit', { users: false })
+          .route('/users/1/edit')
+          .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           });
