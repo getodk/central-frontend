@@ -51,25 +51,22 @@ describe('FormShow', () => {
       });
   });
 
-  it('shows a loading message until all responses are received', () =>
-    mockRoute('/projects/1/forms/f/draft/attachments')
+  it('shows a loading message until all responses are received', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
+    testData.standardFormAttachments.createPast(1);
+    return load('/projects/1/forms/f/draft/attachments')
       .beforeEachResponse(app => {
         const loading = app.find(Loading);
-        loading.length.should.equal(1);
+        loading.length.should.equal(2);
         loading[0].getProp('state').should.eql(true);
       })
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() => testData.extendedForms
-        .createPast(1, { xmlFormId: 'f', draft: true })
-        .last())
-      .respondWithData(() => testData.extendedFormDrafts.last())
-      .respondWithData(() =>
-        testData.standardFormAttachments.createPast(1).sorted())
       .afterResponses(app => {
         const loading = app.find(Loading);
-        loading.length.should.equal(1);
+        loading.length.should.equal(2);
         loading[0].getProp('state').should.eql(false);
-      }));
+      });
+  });
 
   describe('draft enketoId', () => {
     it('does not fetch the enketoId if the draft has an enketoId', () => {

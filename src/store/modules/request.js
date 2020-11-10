@@ -180,8 +180,8 @@ export default {
 
         Callback to run if the request is successful and is not canceled. get()
         also returns a promise, on which you can call then() and catch(). (See
-        "Return Value" below for more information.) There are two times when you
-        may wish to use `success` rather than then():
+        "Return Value" below for more information.) There are a couple of times
+        when you may wish to use `success` rather than then():
 
         1. If get() is used to send multiple requests, a different `success`
            callback can be specified for each request. On the other hand, the
@@ -192,7 +192,8 @@ export default {
            thumb, if the callback changes local state that is only used in the
            DOM, use then(). If the callback changes the store state or changes
            local state that is used outside the DOM, avoid inconsistent state by
-           specifying `success`.
+           specifying `success`. The callback will be run after the data is
+           reconciled, but before the validateData watchers.
 
       Existing Data
       -------------

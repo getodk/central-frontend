@@ -33,6 +33,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import 'bootstrap/js/modal';
+
 import Alert from './alert.vue';
 
 /*

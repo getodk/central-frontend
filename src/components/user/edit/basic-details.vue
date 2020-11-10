@@ -49,6 +49,8 @@ export default {
       displayName
     };
   },
+  // The component assumes that this data will exist when the component is
+  // created.
   computed: requestData(['currentUser', 'user']),
   methods: {
     submit() {

@@ -9,6 +9,22 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { last } from 'ramda';
+
+export const forceReplace = (router, store, location) => {
+  if (store.state.router.unsavedChanges)
+    store.commit('setUnsavedChanges', false);
+  router.replace(location);
+};
+
+// Returns the props for a route component.
+export const routeProps = (route, props) => {
+  if (props == null || props === false) return {};
+  if (props === true) return route.params;
+  if (typeof props === 'function') return props(route);
+  // Object mode
+  return props;
+};
 
 /*
 preservesData() returns `true` if the data for `key` should not be cleared when
@@ -21,15 +37,11 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
 export const preservesData = (key, to, from) => {
   // First navigation
   if (from.matched.length === 0) return true;
-  const { preserveData } = to.matched[to.matched.length - 1].meta;
-  if (preserveData[key] == null) return false;
-  const fromName = from.matched[from.matched.length - 1].name;
-  const params = preserveData[key][fromName];
+  const forKey = last(to.matched).meta.preserveData[key];
+  if (forKey == null) return false;
+  const params = forKey[last(from.matched).name];
   if (params == null) return false;
-  for (const param of params) {
-    if (to.params[param] !== from.params[param]) return false;
-  }
-  return true;
+  return params.every(param => to.params[param] === from.params[param]);
 };
 
 /*
@@ -41,7 +53,7 @@ condition specified for the `to` route. Otherwise it returns `true`.
   - store. The Vuex store.
 */
 export const canRoute = (to, from, store) => {
-  const { validateData } = to.matched[to.matched.length - 1].meta;
+  const { validateData } = last(to.matched).meta;
   for (const [key, validator] of validateData) {
     // If the data for the request key will be cleared after the navigation is
     // confirmed, we do not need to validate it.

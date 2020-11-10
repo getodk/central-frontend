@@ -68,13 +68,7 @@ To learn how a given component works, one of the best places to start is how the
 
 ### Component Names
 
-We specify a name for every component, which facilitates the use of the Vue devtools.
-
-If no name is specified for a bottom-level route, it is given the same name as its component. See [`routes.js`](/src/routes.js) for details.
-
-In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect. We also try not to use specific route names outside `routes.js`: we prefer route paths to route names where possible.
-
-#### Naming Conventions
+We specify a name for every component, which facilitates the use of the Vue devtools. In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect.
 
 Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormOverview`. The following are common suffixes:
 

@@ -72,8 +72,7 @@ import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
-import validateData from '../../mixins/validate-data';
-import { loadAsyncComponent } from '../../util/async-components';
+import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -84,16 +83,15 @@ export default {
     FormOverviewRightNow,
     FormVersionStandardButtons,
     FormVersionSummaryItem,
-    FormVersionViewXml: loadAsyncComponent('FormVersionViewXml'),
+    FormVersionViewXml: loadAsync('FormVersionViewXml'),
     PageSection,
-    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
+    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
   },
   mixins: [
     modal({
       viewXml: 'FormVersionViewXml',
       submissionOptions: 'ProjectSubmissionOptions'
-    }),
-    validateData()
+    })
   ],
   props: {
     projectId: {

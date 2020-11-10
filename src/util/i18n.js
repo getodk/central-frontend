@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
-import { Settings } from 'luxon';
 
 import i18n, { locales } from '../i18n';
 
@@ -37,8 +36,8 @@ const loadFlatpickrLocale = (locale) => {
     /* webpackChunkName: "flatpickr-locale-[request]" */
     `flatpickr/dist/l10n/${locale}.js`
   )
-    .then(config => {
-      flatpickrLocales[locale] = config.default[locale];
+    .then(m => {
+      flatpickrLocales[locale] = m.default[locale];
     });
 };
 
@@ -52,7 +51,6 @@ const loaded = new Set([i18n.fallbackLocale]);
 
 const setLocale = (locale) => {
   i18n.locale = locale;
-  Settings.defaultLocale = locale;
   document.querySelector('html').setAttribute('lang', locale);
 };
 
@@ -62,8 +60,8 @@ const loadMessages = (locale) => {
     /* webpackChunkName: "i18n-[request]" */
     `../locales/${locale}.json`
   )
-    .then(messages => {
-      i18n.setLocaleMessage(locale, messages.default);
+    .then(m => {
+      i18n.setLocaleMessage(locale, m.default);
     });
 };
 

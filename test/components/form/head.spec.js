@@ -253,7 +253,7 @@ describe('FormHead', () => {
           .beforeAnyResponse(app => {
             app.first(Loading).should.be.visible();
             app.first(FormHead).should.be.hidden();
-            app.first(FormOverview).should.be.hidden();
+            app.first(FormOverview).vm.$el.parentNode.should.be.hidden();
           })
           .respondWithSuccess()
           .respondFor('/projects/1/forms/f/draft', {

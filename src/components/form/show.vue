@@ -15,10 +15,9 @@ except according to the terms contained in the LICENSE file.
       @create-draft="createDraft"/>
     <page-body>
       <loading :state="initiallyLoading || awaitingResponse"/>
-      <!-- <router-view> is immediately created and can send its own requests
-      even before the server has responded to the requests from ProjectHome and
-      FormShow. -->
-      <router-view v-show="dataExists && !awaitingResponse" :key="$route.path"
+      <!-- <router-view> may send its own requests before the server has
+      responded to the requests from FormShow. -->
+      <router-view v-show="dataExists && !awaitingResponse"
         @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
@@ -80,14 +79,18 @@ export default {
       return this.$store.getters.dataExists(requestKeys);
     }
   },
-  watch: {
-    projectId: 'fetchData',
-    xmlFormId: 'fetchData'
-  },
   created() {
     this.fetchData();
   },
   methods: {
+    fetchProject() {
+      this.$store.dispatch('get', [{
+        key: 'project',
+        url: apiPaths.project(this.projectId),
+        extended: true,
+        resend: false
+      }]).catch(noop);
+    },
     // Wait for up to a total of 10 minutes, not including request time.
     waitToRequestEnketoId(tries) {
       if (tries < 20) return 3000;
@@ -165,6 +168,7 @@ export default {
       ]).catch(noop);
     },
     fetchData() {
+      this.fetchProject();
       this.fetchForm();
       this.fetchDraft();
     },

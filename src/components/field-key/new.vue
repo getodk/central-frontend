@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
             {{ $t('success[0]', created) }}
           </p>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p v-html="created.qrCodeHtml()"></p>
+          <p v-html="qrCodeHtml"></p>
           <i18n tag="p" path="success[1].full">
             <template #displayName>{{ created.displayName }}</template>
             <template #scanningCode>
@@ -71,6 +71,7 @@ import FieldKey from '../../presenters/field-key';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+import collectQr from '../../util/collect-qr';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -97,8 +98,15 @@ export default {
       created: null
     };
   },
-  // The modal assumes that this data will exist when the modal is shown.
-  computed: requestData(['project']),
+  computed: {
+    // The modal assumes that this data will exist when the modal is shown.
+    ...requestData(['project']),
+    qrCodeHtml() {
+      const { token, projectId } = this.created;
+      const url = apiPaths.serverUrlForFieldKey(token, projectId);
+      return collectQr(url, { errorCorrectionLevel: 'L', cellSize: 3 });
+    }
+  },
   watch: {
     state(state) {
       if (!state) {

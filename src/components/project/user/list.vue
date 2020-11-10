@@ -77,7 +77,6 @@ import DocLink from '../../doc-link.vue';
 import FormGroup from '../../form-group.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
-import validateData from '../../../mixins/validate-data';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
@@ -85,7 +84,6 @@ import { requestData } from '../../../store/modules/request';
 export default {
   name: 'ProjectUserList',
   components: { DocLink, FormGroup, Loading, ProjectUserRow },
-  mixins: [validateData()],
   props: {
     projectId: {
       type: String,
@@ -142,14 +140,6 @@ export default {
       return this.searchAssignments != null
         ? (this.searchAssignments.length === 0 ? this.$t('common.noResults') : '')
         : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
-    }
-  },
-  watch: {
-    projectId() {
-      this.fetchData(true);
-      this.q = '';
-      this.searchAssignments = null;
-      this.assignRequestCount = 0;
     }
   },
   created() {

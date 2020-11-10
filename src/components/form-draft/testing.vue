@@ -47,20 +47,20 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
+// Import PageSection before FloatRow in order to have the same import order as
+// FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
+import PageSection from '../page/section.vue';
 import FloatRow from '../float-row.vue';
 import Option from '../../util/option';
-import PageSection from '../page/section.vue';
 import SubmissionList from '../submission/list.vue';
 import collectQr from '../../util/collect-qr';
 import reconcileData from '../../store/modules/request/reconcile';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
   components: { DocLink, EnketoFill, FloatRow, PageSection, SubmissionList },
-  mixins: [validateData()],
   props: {
     projectId: {
       type: String,

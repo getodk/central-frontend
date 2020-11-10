@@ -47,11 +47,11 @@ const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
 );
 
 const mapsByComponent = {
+  AccountEdit: mapKeys(['user']),
   AccountLogin: new Map(),
   AccountClaim: new Map(),
   ProjectList: mapKeys(['projects', 'users']),
-  ProjectHome: mapKeys(['project']),
-  ProjectShow: new Map(),
+  ProjectShow: mapKeys(['project']),
   ProjectOverview: mapKeys(['forms']),
   ProjectUserList: mapKeys(['roles', 'projectAssignments']),
   FieldKeyList: mapKeys(['fieldKeys']),
@@ -62,7 +62,7 @@ const mapsByComponent = {
     'formSummaryAssignments'
   ]),
   ProjectSettings: new Map(),
-  FormShow: mapKeys(['form', 'formDraft', 'attachments']),
+  FormShow: mapKeys(['project', 'form', 'formDraft', 'attachments']),
   FormOverview: new Map(),
   FormVersionList: mapKeys(['formVersions']),
   FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
@@ -78,7 +78,8 @@ const mapsByComponent = {
   BackupList: mapKeys(['backupsConfig', 'audits'], {
     audits: () => testData.standardAudits.sorted()
   }),
-  AuditList: mapKeys(['audits'])
+  AuditList: mapKeys(['audits']),
+  NotFound: new Map()
 };
 
 export default (name) => {

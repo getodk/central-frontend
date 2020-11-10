@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -10,35 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-view @fetch-project="fetchData"/>
+  <user-edit :id="currentUser.id.toString()"/>
 </template>
 
 <script>
-import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import UserEdit from '../user/edit.vue';
+import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'ProjectHome',
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  watch: {
-    projectId: 'fetchData'
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'project',
-        url: apiPaths.project(this.projectId),
-        extended: true
-      }]).catch(noop);
-    }
-  }
+  name: 'AccountEdit',
+  components: { UserEdit },
+  // The component assumes that this data will exist when the component is
+  // created.
+  computed: requestData(['currentUser'])
 };
 </script>

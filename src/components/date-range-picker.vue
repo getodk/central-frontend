@@ -19,6 +19,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import flatPickr from 'vue-flatpickr-component';
 import { DateTime } from 'luxon';
+import 'flatpickr/dist/flatpickr.css';
 
 import { flatpickrLocales } from '../util/i18n';
 

@@ -28,7 +28,6 @@ import { DateTime } from 'luxon';
 import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import Loading from '../loading.vue';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -36,7 +35,6 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable, Loading },
-  mixins: [validateData()],
   data() {
     const today = DateTime.local().startOf('day');
     return {

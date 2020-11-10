@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import collectQr from '../util/collect-qr';
-import { apiPaths } from '../util/request';
 import { presenterClass } from './base';
 
 const props = [
@@ -25,13 +23,4 @@ const props = [
   'createdBy'
 ];
 
-const collectQrOptions = { errorCorrectionLevel: 'L', cellSize: 3 };
-
-export default class FieldKey extends presenterClass(props) {
-  qrCodeHtml() {
-    if (this._qrCodeHtml != null) return this._qrCodeHtml;
-    const url = apiPaths.serverUrlForFieldKey(this.token, this.projectId);
-    this._qrCodeHtml = collectQr(url, collectQrOptions);
-    return this._qrCodeHtml;
-  }
-}
+export default class FieldKey extends presenterClass(props) {}

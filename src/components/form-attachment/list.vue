@@ -63,7 +63,6 @@ import FormAttachmentUploadFiles from './upload-files.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -76,7 +75,7 @@ export default {
     FormAttachmentRow,
     FormAttachmentUploadFiles
   },
-  mixins: [dropZone(), modal(), request(), validateData()],
+  mixins: [dropZone(), modal(), request()],
   data() {
     return {
       dragDepth: 0,

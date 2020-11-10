@@ -30,7 +30,6 @@ import EnketoFill from '../enketo/fill.vue';
 import PageSection from '../page/section.vue';
 import SubmissionList from '../submission/list.vue';
 import reconcileData from '../../store/modules/request/reconcile';
-import validateData from '../../mixins/validate-data';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
@@ -39,7 +38,6 @@ const requestKeys = ['project', 'form'];
 export default {
   name: 'FormSubmissions',
   components: { EnketoFill, PageSection, SubmissionList },
-  mixins: [validateData()],
   props: {
     projectId: {
       type: String,

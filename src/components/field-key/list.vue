@@ -66,15 +66,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import 'bootstrap/js/tooltip';
+import 'bootstrap/js/popover';
+
 import DocLink from '../doc-link.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import FieldKeyRow from './row.vue';
 import Loading from '../loading.vue';
+import collectQr from '../../util/collect-qr';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import validateData from '../../mixins/validate-data';
-import { loadAsyncComponent } from '../../util/async-components';
+import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
 const popoverContentTemplate = `
@@ -94,13 +98,9 @@ export default {
     FieldKeyNew,
     FieldKeyRevoke,
     Loading,
-    ProjectSubmissionOptions: loadAsyncComponent('ProjectSubmissionOptions')
+    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
   },
-  mixins: [
-    modal({ submissionOptions: 'ProjectSubmissionOptions' }),
-    routes(),
-    validateData()
-  ],
+  mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
   props: {
     projectId: {
       type: String,
@@ -165,9 +165,11 @@ export default {
     },
     popoverContent(fieldKey) {
       const $content = $(popoverContentTemplate);
-      $content
-        .find('.field-key-list-img-container')
-        .append(fieldKey.qrCodeHtml());
+      const qrCodeHtml = collectQr(
+        apiPaths.serverUrlForFieldKey(fieldKey.token, fieldKey.projectId),
+        { errorCorrectionLevel: 'L', cellSize: 3 }
+      );
+      $content.find('.field-key-list-img-container').append(qrCodeHtml);
       $content.find('a').text(this.$t('qrCodeHelp'));
       return $content[0].outerHTML;
     },

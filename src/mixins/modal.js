@@ -25,7 +25,7 @@ name of the associated property. For example:
   modal({ submissionOptions: 'ProjectSubmissionOptions' })
 */
 
-import { loadedAsyncComponent } from '../util/async-components';
+import { loadedAsync } from '../util/async-components';
 
 // @vue/component
 const mixin = {
@@ -44,7 +44,7 @@ const mixinForAsyncModals = (asyncModals) => ({
   methods: {
     showModal(name) {
       const componentName = asyncModals[name];
-      if (componentName == null || loadedAsyncComponent(componentName))
+      if (componentName == null || loadedAsync(componentName))
         this[name].state = true;
     },
     hideModal: mixin.methods.hideModal

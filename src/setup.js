@@ -21,7 +21,6 @@ import './bootstrap';
 // Import global styles.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
-import 'flatpickr/dist/flatpickr.css';
 import './assets/scss/app.scss';
 
 import axios from 'axios';

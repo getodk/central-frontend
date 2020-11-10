@@ -62,15 +62,6 @@ export default {
     };
   },
   computed: requestData(['currentUser', 'user']),
-  watch: {
-    $route() {
-      this.oldPassword = '';
-      this.newPassword = '';
-      this.confirm = '';
-      this.mismatch = false;
-      this.invalidPassword = false;
-    }
-  },
   methods: {
     submit() {
       this.invalidPassword = this.newPassword.length < 10;
