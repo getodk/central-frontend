@@ -18,15 +18,8 @@ except according to the terms contained in the LICENSE file.
           <refresh-button :configs="configsForRefresh"/>
         </template>
         <template #right>
-          <a v-if="managedKey == null" id="submission-list-download-button"
-            :href="downloadPath" class="btn btn-primary" target="_blank">
-            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}
-          </a>
-          <button v-else id="submission-list-download-button" type="button"
-            class="btn btn-primary" @click="showModal('decrypt')">
-            <span class="icon-arrow-circle-down"></span>{{ downloadButtonText }}&hellip;
-          </button>
-
+          <submission-download-dropdown :base-url="baseUrl"
+            :form-version="formVersion" @decrypt="showDecrypt"/>
           <button id="submission-list-analyze-button" type="button"
             class="btn btn-primary" :disabled="analyzeDisabled"
             :title="analyzeDisabled ? $t('analyzeDisabled') : null"
@@ -51,8 +44,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </template>
 
-    <submission-decrypt :state="decrypt.state" :managed-key="managedKey"
-      :form-action="downloadPath" @hide="hideModal('decrypt')"/>
+    <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
     <submission-analyze :state="analyze.state" :base-url="baseUrl"
       @hide="hideModal('analyze')"/>
   </div>
@@ -66,6 +58,7 @@ import RefreshButton from '../refresh-button.vue';
 import Spinner from '../spinner.vue';
 import SubmissionAnalyze from './analyze.vue';
 import SubmissionDecrypt from './decrypt.vue';
+import SubmissionDownloadDropdown from './download-dropdown.vue';
 import SubmissionTable from './table.vue';
 import modal from '../../mixins/modal';
 import { requestData } from '../../store/modules/request';
@@ -82,6 +75,7 @@ export default {
     Spinner,
     SubmissionAnalyze,
     SubmissionDecrypt,
+    SubmissionDownloadDropdown,
     SubmissionTable
   },
   mixins: [modal()],
@@ -122,7 +116,8 @@ export default {
       message: null,
       // Modals
       decrypt: {
-        state: false
+        state: false,
+        formAction: null
       },
       analyze: {
         state: false
@@ -142,20 +137,6 @@ export default {
           this.processChunk();
         }
       }];
-    },
-    // Returns a managed key if there is one among this.keys. Returns null if
-    // there is no managed key or if this.keys is null (because this.keys is
-    // still loading, for example).
-    managedKey() {
-      return this.keys != null ? this.keys.find(key => key.managed) : null;
-    },
-    downloadPath() {
-      return `${this.baseUrl}/submissions.csv.zip`;
-    },
-    downloadButtonText() {
-      return this.formVersion.submissions > 1
-        ? this.$tcn('action.download.withCount', this.formVersion.submissions)
-        : this.$t('action.download.withoutCount');
     },
     analyzeDisabled() {
       // If an encrypted form has no submissions, then there will never be
@@ -285,6 +266,10 @@ export default {
         .catch(() => {
           this.message = null;
         });
+    },
+    showDecrypt(formAction) {
+      this.decrypt.formAction = formAction;
+      this.showModal('decrypt');
     }
   }
 };
@@ -293,9 +278,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#submission-list-download-button {
-  margin-right: 5px;
-}
+#submission-list-analyze-button { margin-left: 5px; }
 
 #submission-list-message {
   margin-left: 28px;
@@ -322,10 +305,6 @@ export default {
 {
   "en": {
     "action": {
-      "download": {
-        "withCount": "Download all {count} record | Download all {count} records",
-        "withoutCount": "Download all records"
-      },
       "analyze": "Analyze via OData"
     },
     "analyzeDisabled": "OData access is unavailable due to Form encryption",

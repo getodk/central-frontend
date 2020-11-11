@@ -368,30 +368,6 @@ describe('SubmissionList', () => {
       }
     });
 
-    describe('download button', () => {
-      it('shows the number of submissions', () => {
-        createSubmissions(2);
-        return loadSubmissionList()
-          .afterResponses(page => {
-            const button = page.first('#submission-list-download-button');
-            const text = button.text().trim().replace(/\s+/g, ' ');
-            const count = testData.extendedSubmissions.size;
-            text.should.equal(`Download all ${count} records`);
-          });
-      });
-
-      it('has the correct href', () => {
-        createSubmissions(1);
-        return loadSubmissionList()
-          .afterResponses(page => {
-            const button = page.first('#submission-list-download-button');
-            const $button = $(button.element);
-            $button.prop('tagName').should.equal('A');
-            $button.attr('href').should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
-          });
-      });
-    });
-
     describe('load by chunk', () => {
       const checkTopSkip = ({ url }, top, skip) => {
         url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
@@ -460,14 +436,6 @@ describe('SubmissionList', () => {
             tested.should.be.true();
             checkIds(component, 2);
           });
-      });
-
-      it('shows the total in the download button even if there are multiple chunks', () => {
-        createSubmissions(10);
-        return loadSubmissionList([2]).afterResponses(component => {
-          const button = component.first('#submission-list-download-button');
-          button.text().trim().iTrim().should.equal('Download all 10 records');
-        });
       });
 
       it('clicking refresh button loads only first chunk of submissions', () => {
@@ -734,9 +702,8 @@ describe('SubmissionList', () => {
               attachments: false
             })
             .afterResponses(app => {
-              const button = app.first('#submission-list-download-button');
-              const text = button.text().trim().iTrim();
-              text.should.equal('Download all 10 records');
+              const button = app.first('#submission-download-dropdown-toggle');
+              button.text().trim().should.equal('Download all 10 records');
             })
             .request(app => trigger.click(app, '.btn-refresh'))
             .respondWithData(() => {
@@ -744,9 +711,8 @@ describe('SubmissionList', () => {
               return testData.submissionOData();
             })
             .afterResponses(app => {
-              const button = app.first('#submission-list-download-button');
-              const text = button.text().trim().iTrim();
-              text.should.equal('Download all 11 records');
+              const button = app.first('#submission-download-dropdown-toggle');
+              button.text().trim().should.equal('Download all 11 records');
             });
         });
 
