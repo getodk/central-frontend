@@ -47,8 +47,7 @@ trigger.click = (...args) => {
   const [wrapper, selector] = args;
   const target = selector == null ? wrapper : wrapper.first(selector);
   target.trigger('click');
-  const nextTick = Vue.nextTick();
-  return selector == null ? nextTick : nextTick.then(() => wrapper);
+  return Vue.nextTick().then(() => wrapper);
 };
 
 // Define methods for events that change the value of an <input> or <select>
@@ -191,8 +190,7 @@ for (const eventName of ['dragenter', 'dragover', 'dragleave', 'drop']) {
       target: targetElement,
       originalEvent: $.Event(eventName, { dataTransfer: dataTransfer(files) })
     }));
-    const nextTick = Vue.nextTick();
-    return selector == null ? nextTick : nextTick.then(() => wrapper);
+    return Vue.nextTick().then(() => wrapper);
   };
 }
 
