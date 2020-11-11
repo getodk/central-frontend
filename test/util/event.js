@@ -44,7 +44,9 @@ trigger.click = (...args) => {
     return (wrapper) => trigger.click(wrapper, ...args);
   const [wrapper, selector] = args;
   const target = selector == null ? wrapper : wrapper.first(selector);
-  target.trigger('click');
+  // The avoriaz trigger() method triggers an event that does not bubble, so we
+  // trigger our own event.
+  unwrapElement(target).click();
   return Promise.resolve(wrapper);
 };
 
