@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import { unwrapElement } from './util';
 
 
@@ -26,8 +24,8 @@ export const dataTransfer = (files) => {
 export const trigger = {};
 
 /*
-trigger.click() triggers a click event, then waits a tick for the DOM to update.
-For example:
+trigger.click() triggers a click event, then waits a tick for Vue to react. For
+example:
 
   // Specify an Avoriaz wrapper.
   trigger.click(wrapper);
@@ -38,7 +36,7 @@ For example:
   // If the wrapper is omitted, trigger.click() returns a function that expects
   // the wrapper.
   const clickButton = trigger.click('button');
-  return clickButton(wrapper);
+  clickButton(wrapper);
 */
 trigger.click = (...args) => {
   if (args.length === 0) throw new Error('invalid arguments');
@@ -47,7 +45,7 @@ trigger.click = (...args) => {
   const [wrapper, selector] = args;
   const target = selector == null ? wrapper : wrapper.first(selector);
   target.trigger('click');
-  return Vue.nextTick().then(() => wrapper);
+  return Promise.resolve(wrapper);
 };
 
 // Define methods for events that change the value of an <input> or <select>
@@ -63,7 +61,7 @@ for (const [name, event] of [['changeValue', 'change'], ['input', 'input']]) {
     if (target.element.value === value) throw new Error('no change');
     target.element.value = value;
     target.trigger(event);
-    return Vue.nextTick().then(() => wrapper);
+    return Promise.resolve(wrapper);
   };
 }
 
@@ -73,7 +71,7 @@ trigger.check = (wrapper, selector = null) => {
   if (target.element.checked) throw new Error('already checked');
   target.element.checked = true;
   target.trigger('change');
-  return Vue.nextTick().then(() => wrapper);
+  return Promise.resolve(wrapper);
 };
 
 // Unchecks a checkbox or radio input, triggering a change event.
@@ -82,7 +80,7 @@ trigger.uncheck = (wrapper, selector = null) => {
   if (!target.element.checked) throw new Error('already unchecked');
   target.element.checked = false;
   target.trigger('change');
-  return Vue.nextTick().then(() => wrapper);
+  return Promise.resolve(wrapper);
 };
 
 /*
@@ -168,12 +166,10 @@ trigger.submit = (...args) => {
   const promise = fieldSelectorsAndValues != null
     ? trigger.fillForm(form, fieldSelectorsAndValues)
     : Promise.resolve();
-  return promise
-    .then(() => {
-      form.trigger('submit');
-      return Vue.nextTick();
-    })
-    .then(() => wrapper);
+  return promise.then(() => {
+    form.trigger('submit');
+    return wrapper;
+  });
 };
 // Deprecated: use trigger.submit() instead.
 export const submitForm = trigger.submit;
@@ -190,7 +186,7 @@ for (const eventName of ['dragenter', 'dragover', 'dragleave', 'drop']) {
       target: targetElement,
       originalEvent: $.Event(eventName, { dataTransfer: dataTransfer(files) })
     }));
-    return Vue.nextTick().then(() => wrapper);
+    return Promise.resolve(wrapper);
   };
 }
 
