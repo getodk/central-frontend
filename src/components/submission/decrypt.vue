@@ -39,6 +39,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import callWait from '../../mixins/call-wait';
@@ -54,11 +56,7 @@ export default {
       type: Boolean,
       default: false
     },
-    managedKey: Object, // eslint-disable-line vue/require-default-prop
-    formAction: {
-      type: String,
-      required: true
-    },
+    formAction: String, // eslint-disable-line vue/require-default-prop
     delayBetweenChecks: {
       type: Number,
       default: 1000
@@ -70,9 +68,10 @@ export default {
       passphrase: ''
     };
   },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['session']),
+  computed: {
+    ...requestData(['session']),
+    ...mapGetters(['managedKey'])
+  },
   watch: {
     state() {
       if (!this.state) {

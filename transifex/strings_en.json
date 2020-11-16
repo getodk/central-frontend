@@ -2658,18 +2658,30 @@
         }
       }
     },
-    "SubmissionList": {
+    "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "withCount": {
-            "string": "{count, plural, one {Download all {count} record} other {Download all {count} records}}",
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} record} other {Download {count} records}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
-          "withoutCount": {
-            "string": "Download all records",
+          "withMedia": {
+            "string": "All data and media files (.zip)",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withoutMedia": {
+            "string": "All data without media files (.zip)",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "primaryDataTable": {
+            "string": "Primary data table (.csv)",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
-        },
+        }
+      }
+    },
+    "SubmissionList": {
+      "action": {
         "analyze": {
           "string": "Analyze via OData",
           "developer_comment": "This is the text for an action, for example, the text of a button."
