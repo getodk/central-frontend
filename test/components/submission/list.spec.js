@@ -703,7 +703,7 @@ describe('SubmissionList', () => {
             })
             .afterResponses(app => {
               const button = app.first('#submission-download-dropdown-toggle');
-              button.text().trim().should.equal('Download all 10 records');
+              button.text().trim().should.equal('Download 10 records');
             })
             .request(app => trigger.click(app, '.btn-refresh'))
             .respondWithData(() => {
@@ -712,7 +712,7 @@ describe('SubmissionList', () => {
             })
             .afterResponses(app => {
               const button = app.first('#submission-download-dropdown-toggle');
-              button.text().trim().should.equal('Download all 11 records');
+              button.text().trim().should.equal('Download 11 records');
             });
         });
 

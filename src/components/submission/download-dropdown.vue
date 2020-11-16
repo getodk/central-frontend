@@ -20,12 +20,12 @@ except according to the terms contained in the LICENSE file.
     </button>
     <ul class="dropdown-menu"
       aria-labelledby="submission-download-dropdown-toggle" @click="download">
-      <li>
+      <li :class="{ disabled: disablesDownloadWithMedia }">
         <a :href="`${baseUrl}/submissions.csv.zip`" :target="target">
           {{ $t('action.download.withMedia') }}
         </a>
       </li>
-      <li :class="{ disabled: disablesDownloadWithoutMedia }">
+      <li>
         <a :href="`${baseUrl}/submissions.csv.zip?media=false`"
           :target="target">
           {{ $t('action.download.withoutMedia') }}
@@ -62,19 +62,17 @@ export default {
     ...requestData(['fields']),
     ...mapGetters(['managedKey']),
     buttonText() {
-      if (this.formVersion.submissions <= 1)
-        return this.$t('action.download.allRecords.withoutCount');
       return this.$tcn(
-        'action.download.allRecords.withCount',
+        'action.download.unfiltered',
         this.formVersion.submissions
       );
     },
-    target() {
-      return this.managedKey == null ? '_blank' : null;
-    },
-    disablesDownloadWithoutMedia() {
+    disablesDownloadWithMedia() {
       // The link will be enabled while this.fields is loading.
       return this.fields != null && !this.fields.some(field => field.binary);
+    },
+    target() {
+      return this.managedKey == null ? '_blank' : null;
     }
   },
   methods: {
@@ -98,10 +96,7 @@ export default {
   "en": {
     "action": {
       "download": {
-        "allRecords": {
-          "withCount": "Download all {count} record | Download all {count} records",
-          "withoutCount": "Download all records"
-        },
+        "unfiltered": "Download {count} record | Download {count} records",
         "withMedia": "All data and media files (.zip)",
         "withoutMedia": "All data without media files (.zip)",
         "primaryDataTable": "Primary data table (.csv)"

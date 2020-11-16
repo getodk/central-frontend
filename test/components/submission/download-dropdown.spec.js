@@ -22,22 +22,10 @@ const mountComponent = () => {
 
 describe('SubmissionDownloadDropdown', () => {
   describe('button text', () => {
-    it('shows the correct text if there are no submissions', () => {
-      testData.extendedForms.createPast(1, { submissions: 0 });
-      const text = mountComponent().first('button').text().trim();
-      text.should.equal('Download all records');
-    });
-
-    it('shows the correct text if there is 1 submission', () => {
-      testData.extendedForms.createPast(1, { submissions: 1 });
-      const text = mountComponent().first('button').text().trim();
-      text.should.equal('Download all records');
-    });
-
-    it('shows the correct text if there are 2 submissions', () => {
+    it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
       const text = mountComponent().first('button').text().trim();
-      text.should.equal('Download all 2 records');
+      text.should.equal('Download 2 records');
     });
   });
 
@@ -68,12 +56,12 @@ describe('SubmissionDownloadDropdown', () => {
         });
       });
 
-      it('disables the "without media" link', () => {
-        mountComponent().find('li')[1].hasClass('disabled').should.be.true();
+      it('disables the "with media" link', () => {
+        mountComponent().first('li').hasClass('disabled').should.be.true();
       });
 
       it('prevents default', () => {
-        const a = mountComponent().find('a')[1];
+        const a = mountComponent().first('a');
         const event = new MouseEvent('click', {
           bubbles: true,
           cancelable: true
@@ -90,7 +78,9 @@ describe('SubmissionDownloadDropdown', () => {
     });
 
     it('emits a decrypt event for the "with media" link', () => {
-      testData.extendedForms.createPast(1);
+      testData.extendedForms.createPast(1, {
+        fields: [{ path: '/b', type: 'binary', binary: true }]
+      });
       const dropdown = mountComponent();
       const $emit = sinon.fake();
       sinon.replace(dropdown.vm, '$emit', $emit);
@@ -102,9 +92,7 @@ describe('SubmissionDownloadDropdown', () => {
     });
 
     it('emits a decrypt event for the "without media" link', () => {
-      testData.extendedForms.createPast(1, {
-        fields: [{ path: '/b', type: 'binary', binary: true }]
-      });
+      testData.extendedForms.createPast(1);
       const dropdown = mountComponent();
       const $emit = sinon.fake();
       sinon.replace(dropdown.vm, '$emit', $emit);
@@ -129,7 +117,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('prevents default', () => {
       testData.extendedForms.createPast(1);
-      const a = mountComponent().first('a');
+      const a = mountComponent().find('a')[1];
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
@@ -150,15 +138,15 @@ describe('SubmissionDownloadDropdown', () => {
         });
       });
 
-      it('disables the "without media" link', () => {
-        mountComponent().find('li')[1].hasClass('disabled').should.be.true();
+      it('disables the "with media" link', () => {
+        mountComponent().first('li').hasClass('disabled').should.be.true();
       });
 
       it('does not emit a decrypt event', () => {
         const dropdown = mountComponent();
         const $emit = sinon.fake();
         sinon.replace(dropdown.vm, '$emit', $emit);
-        trigger.click(dropdown.find('a')[1]);
+        trigger.click(dropdown, 'a');
         $emit.called.should.be.false();
       });
     });

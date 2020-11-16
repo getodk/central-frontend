@@ -2661,15 +2661,9 @@
     "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "allRecords": {
-            "withCount": {
-              "string": "{count, plural, one {Download all {count} record} other {Download all {count} records}}",
-              "developer_comment": "This is the text for an action, for example, the text of a button."
-            },
-            "withoutCount": {
-              "string": "Download all records",
-              "developer_comment": "This is the text for an action, for example, the text of a button."
-            }
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} record} other {Download {count} records}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withMedia": {
             "string": "All data and media files (.zip)",
