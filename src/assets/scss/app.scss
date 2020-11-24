@@ -432,8 +432,6 @@ becomes more complicated.
 }
 
 .panel-default {
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
-
   .panel-heading {
     background-color: $color-accent-primary;
     color: #fff;
@@ -445,8 +443,6 @@ becomes more complicated.
   }
 
   .panel-body {
-    padding: 25px 15px;
-
     .form-group .form-control {
       background-color: $color-panel-input-background;
     }
@@ -454,7 +450,13 @@ becomes more complicated.
 }
 
 .panel-main {
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
   margin-top: 70px;
+
+  .panel-body {
+    padding-bottom: 25px;
+    padding-top: 25px;
+  }
 }
 
 // Intended to be styled similarly to .table.
@@ -565,23 +567,5 @@ becomes more complicated.
         }
       }
     }
-  }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// POPOVERS
-
-.popover {
-  background-color: $color-action-background;
-  padding: 0;
-
-  &.left .arrow::after {
-    border-left-color: $color-action-background;
-  }
-
-  .popover-content {
-    padding: 0;
   }
 }

@@ -41,11 +41,7 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody v-if="fieldKeys != null">
-        <!-- Using fieldKey.key rather than fieldKey.id for the v-for key to
-        ensure that there will be no component reuse if fieldKeys changes. Such
-        component reuse could add complexity around our use of the Bootstrap
-        plugin. -->
-        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.key"
+        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
           @show-code="showPopover" @revoke="showRevoke"/>
       </tbody>
@@ -56,8 +52,12 @@ except according to the terms contained in the LICENSE file.
       {{ $t('emptyTable') }}
     </p>
 
-    <field-key-new v-bind="newFieldKey" @hide="hideModal('newFieldKey')"
-      @success="afterCreate"/>
+    <popover ref="popover" :target="popover.target" placement="left"
+      @hide="hidePopover">
+      <field-key-qr-panel :field-key="popover.fieldKey" :managed="managed"/>
+    </popover>
+    <field-key-new :state="newFieldKey.state" :managed="managed"
+      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="hideModal('submissionOptions')"/>
     <field-key-revoke v-bind="revoke" @hide="hideRevoke"
@@ -66,38 +66,29 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import 'bootstrap/js/tooltip';
-import 'bootstrap/js/popover';
-
+import Popover from '../popover.vue';
 import DocLink from '../doc-link.vue';
+import Loading from '../loading.vue';
+import FieldKeyQrPanel from './qr-panel.vue';
+import FieldKeyRow from './row.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
-import FieldKeyRow from './row.vue';
-import Loading from '../loading.vue';
-import collectQr from '../../util/collect-qr';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
-
-const popoverContentTemplate = `
-  <div id="field-key-list-popover-content">
-    <div class="field-key-list-img-container"></div>
-    <div>
-      <a href="https://docs.getodk.org/collect-import-export/" target="_blank"></a>
-    </div>
-  </div>
-`;
 
 export default {
   name: 'FieldKeyList',
   components: {
+    Popover,
     DocLink,
+    Loading,
+    FieldKeyQrPanel,
     FieldKeyRow,
     FieldKeyNew,
     FieldKeyRevoke,
-    Loading,
     ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
   },
   mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
@@ -111,9 +102,12 @@ export default {
     return {
       // The id of the highlighted app user
       highlighted: null,
-      enabledPopoverLinks: new Set(),
-      // The <a> element whose popover is currently shown.
-      popoverLink: null,
+      // `true` to show a managed code; `false` to show a legacy code.
+      managed: true,
+      popover: {
+        target: null,
+        fieldKey: null
+      },
       // Modals
       newFieldKey: {
         state: false
@@ -127,71 +121,49 @@ export default {
       }
     };
   },
+  // The component does not assume that this data will exist when the component
+  // is created.
   computed: requestData(['fieldKeys']),
   created() {
     this.fetchData(false);
   },
   mounted() {
-    $('body').on('click.field-key-list', this.hidePopoverAfterClickOutside);
+    document.addEventListener('click', this.switchCode);
   },
   beforeDestroy() {
-    this.hidePopover();
-    $('body').off('.field-key-list');
+    document.removeEventListener('click', this.switchCode);
   },
   methods: {
     fetchData(resend) {
       this.$emit('fetch-field-keys', resend);
       this.highlighted = null;
-      this.enabledPopoverLinks = new Set();
+    },
+    showPopover(fieldKey, link) {
+      this.popover.target = link;
+      this.popover.fieldKey = fieldKey;
     },
     hidePopover() {
-      if (this.popoverLink == null) return;
-      $(this.popoverLink).popover('hide');
-      this.popoverLink = null;
+      this.popover.target = null;
+      this.popover.fieldKey = null;
     },
-    // Hides the popover upon a click outside the popover and outside a popover
-    // link.
-    hidePopoverAfterClickOutside(event) {
-      if (this.popoverLink == null) return;
-      const popover = $('#field-key-list-popover-content').closest('.popover')[0];
-      if (event.target === popover || $.contains(popover, event.target))
+    switchCode(event) {
+      if (event.target.closest('.field-key-qr-panel .switch-code') == null)
         return;
-      // If the target is a different popover link from the one whose popover is
-      // currently shown, showPopover() will hide the popover: we do not need to
-      // do so here.
-      if ($(event.target).closest('.field-key-row-popover-link').length !== 0)
-        return;
-      this.hidePopover();
-    },
-    popoverContent(fieldKey) {
-      const $content = $(popoverContentTemplate);
-      const qrCodeHtml = collectQr(
-        apiPaths.serverUrlForFieldKey(fieldKey.token, fieldKey.projectId),
-        { errorCorrectionLevel: 'L', cellSize: 3 }
-      );
-      $content.find('.field-key-list-img-container').append(qrCodeHtml);
-      $content.find('a').text(this.$t('qrCodeHelp'));
-      return $content[0].outerHTML;
-    },
-    enablePopover(fieldKey, $popoverLink) {
-      if (this.enabledPopoverLinks.has(fieldKey.id)) return;
-      $popoverLink.popover({
-        animation: false,
-        container: 'body',
-        trigger: 'manual',
-        placement: 'left',
-        content: this.popoverContent(fieldKey),
-        html: true
-      });
-      this.enabledPopoverLinks.add(fieldKey.id);
-    },
-    showPopover(fieldKey, popoverLink) {
-      if (popoverLink === this.popoverLink) return;
-      this.hidePopover();
-      const $popoverLink = $(popoverLink);
-      this.enablePopover(fieldKey, $popoverLink);
-      $popoverLink.popover('show');
-      this.popoverLink = popoverLink;
+
+      event.preventDefault();
+      this.managed = !this.managed;
+
+      if (this.popover.target != null) {
+        this.$nextTick(() => {
+          // Changing this.managed may change the height of the popover: the
+          // height of the QR code may change, and there may be a locale for
+          // which the height of the text will change.
+          this.$refs.popover.update();
+
+          document.querySelector('.popover .field-key-qr-panel .switch-code')
+            .focus();
+        });
+      }
     },
     showRevoke(fieldKey) {
       this.revoke.fieldKey = fieldKey;
@@ -224,19 +196,6 @@ export default {
 
   th.actions { width: 125px; }
 }
-
-#field-key-list-popover-content {
-  padding: 3px;
-
-  .field-key-list-img-container {
-    border: 3px solid $color-subpanel-border;
-    margin-bottom: 3px;
-  }
-
-  a {
-    color: white;
-  }
-}
 </style>
 
 <i18n lang="json5">
@@ -261,8 +220,6 @@ export default {
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"
     },
-    // Linked to a help file about QR codes to configure data collection clients.
-    "qrCodeHelp": "What’s this?",
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",

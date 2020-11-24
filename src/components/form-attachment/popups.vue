@@ -196,27 +196,25 @@ $popup-width: 300px;
       right: 10px;
       top: -25px;
 
-      $outline-color: #0096c1;
       $lin-offset: 4px;
       $diag-offset: 3px;
       text-shadow:
-        #{-$lin-offset} 0 0 $outline-color,
-        0 #{-$lin-offset} 0 $outline-color,
-        #{$lin-offset}  0 0 $outline-color,
-        0 #{$lin-offset}  0 $outline-color,
-        #{-$diag-offset} #{-$diag-offset} 0 $outline-color,
-        #{$diag-offset}  #{-$diag-offset} 0 $outline-color,
-        #{-$diag-offset} #{$diag-offset}  0 $outline-color,
-        #{$diag-offset}  #{$diag-offset}  0 $outline-color;
+        #{-$lin-offset} 0 0 $color-action-overlay,
+        0 #{-$lin-offset} 0 $color-action-overlay,
+        #{$lin-offset}  0 0 $color-action-overlay,
+        0 #{$lin-offset}  0 $color-action-overlay,
+        #{-$diag-offset} #{-$diag-offset} 0 $color-action-overlay,
+        #{$diag-offset}  #{-$diag-offset} 0 $color-action-overlay,
+        #{-$diag-offset} #{$diag-offset}  0 $color-action-overlay,
+        #{$diag-offset}  #{$diag-offset}  0 $color-action-overlay;
 
       &::after {
+        background-color: $color-action-overlay;
+        content: '';
+        height: 45px;
         left: 20px;
         position: absolute;
         top: 20px;
-
-        background-color: $outline-color;
-        content: '';
-        height: 45px;
         width: 45px;
         z-index: -1;
       }

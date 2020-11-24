@@ -224,5 +224,5 @@ router.afterEach(() => {
 });
 
 router.afterEach(() => {
-  if (store.state.modal.ref != null) store.dispatch('hideModal');
+  if (store.getters.modalShown) store.dispatch('hideModal');
 });

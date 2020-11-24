@@ -2,7 +2,6 @@ import DateTime from '../../../src/components/date-time.vue';
 import FieldKeyRow from '../../../src/components/field-key/row.vue';
 import TimeAndUser from '../../../src/components/time-and-user.vue';
 import testData from '../../data';
-import { collectQrData } from '../../util/collect-qr';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
@@ -10,10 +9,10 @@ import { trigger } from '../../util/event';
 describe('FieldKeyRow', () => {
   beforeEach(() => {
     mockLogin({ displayName: 'Alice' });
-    testData.extendedProjects.createPast(1, { appUsers: 1 });
   });
 
   it('shows the display name', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1, { displayName: 'My App User' });
     return load('/projects/1/app-users').then(app => {
       const text = app.first(FieldKeyRow).first('td').text().trim();
@@ -22,6 +21,7 @@ describe('FieldKeyRow', () => {
   });
 
   it('renders the Created column correctly', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
     const { createdAt } = testData.extendedFieldKeys.createPast(1).last();
     return load('/projects/1/app-users').then(app => {
       const timeAndUser = app.first(FieldKeyRow).first(TimeAndUser);
@@ -31,6 +31,7 @@ describe('FieldKeyRow', () => {
   });
 
   it('shows lastUsed', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
     const now = new Date().toISOString();
     testData.extendedFieldKeys.createPast(1, { lastUsed: now });
     return load('/projects/1/app-users').then(app => {
@@ -38,39 +39,76 @@ describe('FieldKeyRow', () => {
     });
   });
 
-  describe('QR code', () => {
+  describe('after the user clicks "See code"', () => {
     beforeEach(() => {
-      testData.extendedFieldKeys.createPast(1);
+      testData.extendedProjects.createPast(1, { appUsers: 2 });
+      testData.extendedFieldKeys
+        .createPast(1, { displayName: 'App User 1' })
+        .createPast(1, { displayName: 'App User 2' });
     });
 
-    it('is initially hidden', () =>
-      load('/projects/1/app-users', { attachToDocument: true }, {}).then(() => {
-        should.not.exist(document.querySelector('#field-key-list-popover-content'));
-      }));
+    it('shows the popover', async () => {
+      const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+      document.querySelectorAll('.popover').length.should.equal(0);
+      await trigger.click(app, '.field-key-row-popover-link');
+      await app.vm.$nextTick();
+      document.querySelectorAll('.popover').length.should.equal(1);
+    });
 
-    it('is shown after the user clicks the link', () =>
-      load('/projects/1/app-users', { attachToDocument: true }, {})
-        .then(trigger.click('.field-key-row-popover-link'))
-        .then(() => {
-          should.exist(document.querySelector('#field-key-list-popover-content'));
-        }));
+    it("shows the app user's display name", async () => {
+      const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+      await trigger.click(app, '.field-key-row-popover-link');
+      await app.vm.$nextTick();
+      const text = document.querySelector('.popover p').textContent;
+      text.should.containEql('App User 2');
+    });
 
-    it('encodes the correct data', () =>
-      load('/projects/1/app-users', { attachToDocument: true }, {})
-        .then(trigger.click('.field-key-row-popover-link'))
-        .then(() => {
-          const img = document.querySelector('#field-key-list-popover-content img');
-          const data = collectQrData(img);
-          const { token } = testData.extendedFieldKeys.last();
-          const url = `${window.location.origin}/v1/key/${token}/projects/1`;
-          data.should.eql({
-            general: { server_url: url },
-            admin: {}
-          });
-        }));
+    it('defaults to a managed code', async () => {
+      const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+      await trigger.click(app, '.field-key-row-popover-link');
+      await app.vm.$nextTick();
+      const panel = document.querySelector('.popover .field-key-qr-panel');
+      panel.classList.contains('legacy').should.be.false();
+    });
+
+    describe('after user clicks link to switch to a legacy code', () => {
+      it('shows a legacy code', async () => {
+        const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+        await trigger.click(app, '.field-key-row-popover-link');
+        await app.vm.$nextTick();
+        document.querySelector('.popover .switch-code').click();
+        await app.vm.$nextTick();
+        const panel = document.querySelector('.popover .field-key-qr-panel');
+        panel.classList.contains('legacy').should.be.true();
+      });
+
+      it('focuses the link to switch back to a managed code', async () => {
+        const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+        await trigger.click(app, '.field-key-row-popover-link');
+        await app.vm.$nextTick();
+        document.querySelector('.popover .switch-code').click();
+        await app.vm.$nextTick();
+        document.querySelector('.popover .switch-code').should.be.focused();
+      });
+
+      it('shows a legacy code in the next popover', async () => {
+        const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
+        await trigger.click(app, '.field-key-row-popover-link');
+        await app.vm.$nextTick();
+        document.querySelector('.popover .switch-code').click();
+        await app.vm.$nextTick();
+        await trigger.click(app.find('.field-key-row-popover-link')[1]);
+        await app.vm.$nextTick();
+        const panel = document.querySelector('.popover .field-key-qr-panel');
+        const text = panel.querySelectorAll('p')[1].textContent;
+        text.should.containEql('App User 1');
+        panel.classList.contains('legacy').should.be.true();
+      });
+    });
   });
 
   it('indicates if access is revoked', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1, { token: null });
     return load('/projects/1/app-users').then(app => {
       const text = app.first(FieldKeyRow).find('td')[3].text().trim();

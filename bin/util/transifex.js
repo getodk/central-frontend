@@ -175,41 +175,129 @@ const pathOfLinkedMessage = (pluralForms) => {
 ////////////////////////////////////////////////////////////////////////////////
 // JSON CONVERSION
 
-// Generates comments related to component interpolation.
-const generateCommentForFull = (obj, key) => {
-  const { full } = obj;
-  if (full == null) return null;
-  if (!(full instanceof PluralForms))
-    logThenThrow(full, 'invalid full property');
+/*
+Our convention for component interpolation is to group all the messages used in
+the component interpolation in a flat object. The object will have a property
+named `full` whose path is passed to the <i18n> component. A component
+interpolation is identified by the presence of a property named `full`, so
+`full` should not be used as a property name outside component interpolation.
 
-  if (key !== 'full') {
-    return full.length === 1
-      ? `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text:\n\n${full[0]}`
+A component interpolation can be nested, for example, if only part of a link is
+formatted in bold. We still use a single flat object in that case, grouping
+together the messages of the entire component interpolation.
+
+generateCommentsForFull() generates the developer comments for the messages used
+in a component interpolation. Because a component interpolation can be nested,
+generateCommentsForFull() uses the ComponentInterpolationNode class to represent
+the component interpolation as a tree; each node is a message that may use other
+messages.
+*/
+
+class ComponentInterpolationNode {
+  static fromMessages(messages) {
+    const nodesByKey = {};
+    const entries = Object.entries(messages);
+    for (const [key, value] of entries) {
+      if (!(value instanceof PluralForms))
+        logThenThrow(messages, 'invalid message');
+      nodesByKey[key] = new ComponentInterpolationNode(key, value);
+    }
+    for (const [key] of entries) {
+      if (key !== 'full') {
+        const node = nodesByKey[key];
+        const [parentKey] = entries.find(([, pluralForms]) =>
+          pluralForms[0].includes(`{${key}}`));
+        if (parentKey == null) logThenThrow(messages, 'parent not found');
+        const parentNode = nodesByKey[parentKey];
+        node._parentNode = parentNode;
+        parentNode._childNodes.push(node);
+      }
+    }
+    if (!nodesByKey.full.hasChildNodes())
+      logThenThrow(messages, 'invalid component interpolation');
+    return nodesByKey.full;
+  }
+
+  constructor(key, pluralForms) {
+    this._parentNode = null;
+    this._childNodes = [];
+    this._key = key;
+    this._pluralForms = pluralForms;
+  }
+
+  get parentNode() { return this._parentNode; }
+  get childNodes() { return this._childNodes; }
+  get key() { return this._key; }
+  get pluralForms() { return this._pluralForms; }
+
+  hasChildNodes() { return this._childNodes.length !== 0; }
+
+  visitDescendants(callback) {
+    for (const childNode of this._childNodes) {
+      callback(childNode);
+      childNode.visitDescendants(callback);
+    }
+  }
+}
+
+const generateCommentsForFull = (messages) => {
+  const rootNode = ComponentInterpolationNode.fromMessages(messages);
+  const comments = { full: '' };
+
+  const commentOnChildNode = (node, expandedMessage) => {
+    comments[node.key] = 'This text will be formatted within ODK Central, for example, it might be bold or a link. ';
+    comments[node.key] += rootNode.pluralForms.length === 1
+      ? `It will be inserted where {${node.key}} is in the following text:`
       // Showing the plural form instead of the singular, because that is what
       // Transifex initially shows for an English string with a plural form.
-      : `This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {${key}} is in the following text. (The plural form of the text is shown.)\n\n${full[1]}`;
+      : `It will be inserted where {${node.key}} is in the following text. (The plural form of the text is shown.)`;
+    comments[node.key] += `\n\n${expandedMessage}`;
+
+    if (node.hasChildNodes()) {
+      const messageForChildNodes = expandedMessage.replace(
+        `{${node.key}}`,
+        node.pluralForms[node.pluralForms.length - 1]
+      );
+      for (const child of node.childNodes)
+        commentOnChildNode(child, messageForChildNodes);
+    }
+  };
+  for (const childNode of rootNode.childNodes) {
+    const message = rootNode.pluralForms[rootNode.pluralForms.length - 1];
+    commentOnChildNode(childNode, message);
   }
 
-  const siblings = Object.entries(obj).filter(([k, v]) => {
-    if (k === 'full') return false;
-    if (!(v instanceof PluralForms)) logThenThrow(obj, 'invalid sibling');
-    return true;
-  });
-  if (siblings.length === 0) logThenThrow(obj, 'sibling not found');
+  const commentOnParentNode = (node) => {
+    if (comments[node.key] !== '') comments[node.key] += '\n\n';
 
-  if (siblings.length === 1) {
-    const [k, forms] = siblings[0];
-    return forms.length === 1
-      ? `{${k}} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n${forms[0]}`
-      : `{${k}} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n${forms[1]}`;
-  }
+    if (node.childNodes.length === 1 && !node.childNodes[0].hasChildNodes()) {
+      const childNode = node.childNodes[0];
+      comments[node.key] += node.parentNode == null
+        ? `{${childNode.key}} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link.`
+        : `Note that {${childNode.key}} is a separate string that will be translated below.`;
+      comments[node.key] += ' ';
+      comments[node.key] += childNode.pluralForms.length === 1
+        ? `Its text is:\n\n${childNode.pluralForms[0]}`
+        : `In its plural form, its text is:\n\n${childNode.pluralForms[1]}`;
+    } else {
+      comments[node.key] += node.parentNode == null
+        ? 'The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.'
+        : 'Note that the following are separate strings that will be translated below:';
+      comments[node.key] += '\n';
+      node.visitDescendants(descendant => {
+        comments[node.key] += '\n';
+        comments[node.key] += descendant.pluralForms.length === 1
+          ? `- {${descendant.key}} has the text: ${descendant.pluralForms[0]}`
+          : `- {${descendant.key}} has the plural form: ${descendant.pluralForms[1]}`;
+      });
 
-  const joined = siblings
-    .map(([k, forms]) => (forms.length === 1
-      ? `- {${k}} has the text: ${forms[0]}`
-      : `- {${k}} has the plural form: ${forms[1]}`))
-    .join('\n');
-  return `The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n${joined}`;
+      for (const childNode of node.childNodes)
+        if (childNode.hasChildNodes()) commentOnParentNode(childNode);
+    }
+  };
+  commentOnParentNode(rootNode);
+
+  return comments;
 };
 
 // Converts Vue I18n JSON to Structured JSON, returning an object.
@@ -247,6 +335,9 @@ const _restructure = (
   // Structured JSON does not seem to support arrays.
   const structured = {};
   const entries = Object.entries(value);
+  const commentsForFull = value.full != null
+    ? generateCommentsForFull(value)
+    : null;
   for (const [k, v] of entries) {
     // If `v` is a linked locale message, validate it, then skip it so that it
     // does not appear in the Structured JSON.
@@ -290,7 +381,7 @@ const _restructure = (
         ? comments.map(comment => comment.value.trim()).join(' ')
         : commentForPath,
       commentsByKey[k] != null ? commentsByKey[k] : commentForKey,
-      generateCommentForFull(value, k),
+      commentsForFull != null ? commentsForFull[k] : null,
       commentsByKey
     );
 
