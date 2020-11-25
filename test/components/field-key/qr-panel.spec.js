@@ -18,7 +18,7 @@ describe('FieldKeyQrPanel', () => {
   });
 
   describe('QR code', () => {
-    it('shows a QR code with the correct data for a managed code', () => {
+    it('shows a managed QR code with the correct data', () => {
       const panel = mountComponent({ managed: true });
       const { token } = testData.extendedFieldKeys.last();
       panel.first(CollectQr).getProp('settings').should.eql({
@@ -27,7 +27,7 @@ describe('FieldKeyQrPanel', () => {
       });
     });
 
-    it('shows a QR code with the correct data for a legacy code', () => {
+    it('shows a legacy QR code with the correct data', () => {
       const panel = mountComponent({ managed: false });
       const { token } = testData.extendedFieldKeys.last();
       panel.first(CollectQr).getProp('settings').should.eql({
@@ -37,28 +37,28 @@ describe('FieldKeyQrPanel', () => {
   });
 
   describe('text', () => {
-    it('shows the correct text for a managed code', () => {
+    it('shows the correct text for a managed QR code', () => {
       const panel = mountComponent({ managed: true });
       const title = panel.first('.panel-title').text().trim();
       title.should.equal('Client Configuration Code');
       const body = panel.first('p').text().trim();
-      body.should.startWith('This is a Managed Code.');
+      body.should.startWith('This is a Managed QR Code.');
       body.should.containEql('Collect will exactly match the Forms available to “My App User”');
       body.should.containEql('For the old behavior,');
     });
 
-    it('shows the correct text for a legacy code', () => {
+    it('shows the correct text for a legacy QR code', () => {
       const panel = mountComponent({ managed: false });
       const title = panel.first('.panel-title').text().trim();
       title.should.equal('Legacy Client Configuration Code');
       const body = panel.first('p').text().trim();
-      body.should.startWith('This is a Legacy Code.');
+      body.should.startWith('This is a Legacy QR Code.');
       body.should.containEql('Users will have to manually Get Blank Forms');
       body.should.containEql('For a more controlled and foolproof process,');
     });
   });
 
-  it('adds a class for a legacy code', () => {
+  it('adds a class for a legacy QR code', () => {
     mountComponent({ managed: false }).hasClass('legacy').should.be.true();
   });
 });

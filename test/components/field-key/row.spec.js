@@ -63,7 +63,7 @@ describe('FieldKeyRow', () => {
       text.should.containEql('App User 2');
     });
 
-    it('defaults to a managed code', async () => {
+    it('defaults to a managed QR code', async () => {
       const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
       await trigger.click(app, '.field-key-row-popover-link');
       await app.vm.$nextTick();
@@ -71,8 +71,8 @@ describe('FieldKeyRow', () => {
       panel.classList.contains('legacy').should.be.false();
     });
 
-    describe('after user clicks link to switch to a legacy code', () => {
-      it('shows a legacy code', async () => {
+    describe('after user clicks link to switch to a legacy QR code', () => {
+      it('shows a legacy QR code', async () => {
         const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
         await trigger.click(app, '.field-key-row-popover-link');
         await app.vm.$nextTick();
@@ -82,7 +82,7 @@ describe('FieldKeyRow', () => {
         panel.classList.contains('legacy').should.be.true();
       });
 
-      it('focuses the link to switch back to a managed code', async () => {
+      it('focuses the link to switch back to a managed QR code', async () => {
         const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
         await trigger.click(app, '.field-key-row-popover-link');
         await app.vm.$nextTick();
@@ -91,7 +91,7 @@ describe('FieldKeyRow', () => {
         document.querySelector('.popover .switch-code').should.be.focused();
       });
 
-      it('shows a legacy code in the next popover', async () => {
+      it('shows a legacy QR code in the next popover', async () => {
         const app = await load('/projects/1/app-users', { attachToDocument: true }, {});
         await trigger.click(app, '.field-key-row-popover-link');
         await app.vm.$nextTick();

@@ -77,7 +77,7 @@ describe('FieldKeyNew', () => {
             panel.getProp('fieldKey').id.should.equal(id);
           }));
 
-      it('defaults to a managed code', () =>
+      it('defaults to a managed QR code', () =>
         load('/projects/1/app-users')
           .complete()
           .modify(create)
@@ -86,8 +86,8 @@ describe('FieldKeyNew', () => {
             panel.getProp('managed').should.be.true();
           }));
 
-      describe('after user clicks link to switch to a legacy code', () => {
-        it('shows a legacy code in the modal', () =>
+      describe('after user clicks link to switch to a legacy QR code', () => {
+        it('shows a legacy QR code in the modal', () =>
           load('/projects/1/app-users', { attachToDocument: true }, {})
             .complete()
             .modify(create)
@@ -97,7 +97,7 @@ describe('FieldKeyNew', () => {
               panel.getProp('managed').should.be.false();
             }));
 
-        it('shows a legacy code in the next popover', () =>
+        it('shows a legacy QR code in the next popover', () =>
           load('/projects/1/app-users', { attachToDocument: true }, {})
             .complete()
             .modify(create)
@@ -114,7 +114,7 @@ describe('FieldKeyNew', () => {
               panel.classList.contains('legacy').should.be.true();
             }));
 
-        it('allows the user to switch back to a managed code', () =>
+        it('allows the user to switch back to a managed QR code', () =>
           load('/projects/1/app-users', { attachToDocument: true }, {})
             .complete()
             .modify(create)
@@ -126,7 +126,7 @@ describe('FieldKeyNew', () => {
             }));
       });
 
-      it('shows a legacy code in modal after user switches in popover', () =>
+      it('shows a legacy QR code in modal after user switches in popover', () =>
         load('/projects/1/app-users', { attachToDocument: true }, {})
           .afterResponses(async (app) => {
             await trigger.click(app, '.field-key-row-popover-link');

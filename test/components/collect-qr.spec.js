@@ -16,6 +16,8 @@ const mountComponent = (propsData) => mount(CollectQr, {
 });
 
 const qrData = (component) => {
+  // Using querySelector() rather than avoriaz first(), because avoriaz can't
+  // seem to find the <img> element (maybe because we use v-html?).
   const img = component.vm.$el.querySelector('img');
   const width = img.getAttribute('width');
   const height = img.getAttribute('height');
@@ -68,8 +70,6 @@ describe('CollectQr', () => {
     const componentM = mountComponent({ errorCorrectionLevel: 'M' });
 
     const widthL = parseInt(
-      // Using querySelector() rather than avoriaz first(), because avoriaz
-      // can't seem to find the <img> element (maybe because we use v-html?).
       componentL.vm.$el.querySelector('img').getAttribute('width'),
       10
     );

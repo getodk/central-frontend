@@ -88,10 +88,14 @@ export default {
   },
   watch: {
     state(state) {
-      if (state)
-        this.$nextTick(this.show);
-      else
+      if (state) {
+        // The DOM hasn't updated yet, but it should be OK to show the modal
+        // now: I think it will all happen in the same event loop. (That said,
+        // at some point we may end up wanting to call .modal('handleUpdate').)
+        this.show();
+      } else {
         this.hide();
+      }
     },
     // Hides the alert when this.state changes. We use a strategy similar to the
     // one here: https://github.com/vuejs/vue/issues/844.

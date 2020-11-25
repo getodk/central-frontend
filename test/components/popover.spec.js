@@ -1,11 +1,11 @@
 import Popover from '../../src/components/popover.vue';
-import PopoverLinks from '../util/components/popover-links.vue';
+import TestUtilPopoverLinks from '../util/components/popover-links.vue';
 
 import { mount } from '../util/lifecycle';
 
 describe('Popover', () => {
   it('shows a popover after it is triggered', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelectorAll('.popover').length.should.equal(0);
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
@@ -15,7 +15,7 @@ describe('Popover', () => {
   });
 
   it('hides the popover after a click outside the popover', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     document.querySelectorAll('.popover').length.should.equal(1);
@@ -25,7 +25,7 @@ describe('Popover', () => {
   });
 
   it('does not hide the popover after a click on the popover', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     document.querySelectorAll('.popover').length.should.equal(1);
@@ -35,7 +35,7 @@ describe('Popover', () => {
   });
 
   it('does not hide popover after a click on the triggering element', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     document.querySelectorAll('.popover').length.should.equal(1);
@@ -45,7 +45,7 @@ describe('Popover', () => {
   });
 
   it('does not re-render popover after a click on the triggering element', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     const p = document.querySelector('.popover p');
@@ -55,7 +55,7 @@ describe('Popover', () => {
   });
 
   it('shows a new popover after one is triggered', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     const popoversForFoo = document.querySelectorAll('.popover');
@@ -69,7 +69,7 @@ describe('Popover', () => {
   });
 
   it('updates the popover after update() is called', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     document.querySelector('.popover p').textContent.should.equal('foo');
@@ -86,7 +86,7 @@ describe('Popover', () => {
   });
 
   it('uses the placement prop', async () => {
-    const component = mount(PopoverLinks, { attachToDocument: true });
+    const component = mount(TestUtilPopoverLinks, { attachToDocument: true });
     document.querySelector('#show-foo').click();
     await component.vm.$nextTick();
     const popover = document.querySelector('.popover');

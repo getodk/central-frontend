@@ -13,9 +13,9 @@ except according to the terms contained in the LICENSE file.
   <div class="field-key-qr-panel panel panel-default"
     :class="{ legacy: !managed }">
     <div class="panel-heading">
-      <div class="panel-title">
+      <h1 class="panel-title">
         {{ managed ? $t('title.managed') : $t('title.legacy') }}
-      </div>
+      </h1>
       <span class="icon-mobile"></span>
     </div>
     <div v-if="fieldKey != null" class="panel-body">
@@ -107,23 +107,23 @@ export default {
   }
 
   // The icon is not animated, because in the popover, switching between a
-  // managed and a legacy code would reset the animation.
+  // managed and a legacy QR code would reset the animation.
   .icon-mobile {
     color: $color-action-overlay;
     font-size: 98px;
     position: absolute;
-    top: -27px;
-    right: 20px;
-    transform: rotate(18deg);
+    right: 18px;
+    top: -32px;
+    transform: rotate(15deg);
 
     &::after {
       background-color: #fff;
       content: '';
-      height: 66px;
+      height: 65px;
       left: 5px;
       position: absolute;
-      top: 15px;
-      width: 35px;
+      top: 18px;
+      width: 32px;
       z-index: -1;
     }
   }
@@ -131,8 +131,11 @@ export default {
   .collect-qr {
     float: left;
     margin-right: 15px;
+  }
 
-    + p { margin-top: 5px; }
+  p {
+    &:first-child { margin-top: 5px; }
+    &:last-child { margin-bottom: 5px; }
   }
 
   &.legacy {
@@ -155,13 +158,11 @@ export default {
       {
         "managed": {
           "full": "This is a {managedCode}.",
-          // "Code" refers to a QR code.
-          "managedCode": "Managed Code"
+          "managedCode": "Managed QR Code"
         },
         "legacy": {
           "full": "This is a {legacyCode}.",
-          // "Code" refers to a QR code.
-          "legacyCode": "Legacy Code"
+          "legacyCode": "Legacy QR Code"
         }
       },
       // "Get Blank Form" is the text of a button in ODK Collect.
@@ -173,14 +174,12 @@ export default {
         "managed": {
           "full": "For the old behavior, {switchToLegacy}.",
           "switchToLegacy": "switch to a {legacyCode}",
-          // "Code" refers to a QR code.
-          "legacyCode": "Legacy Code"
+          "legacyCode": "Legacy QR Code"
         },
         "legacy": {
           "full": "For a more controlled and foolproof process, {switchToManaged}.",
           "switchToManaged": "switch to a {managedCode}",
-          // "Code" refers to a QR code.
-          "managedCode": "Managed Code"
+          "managedCode": "Managed QR Code"
         }
       },
       "Scan this QR code to configure a device with the account “{displayName}”."

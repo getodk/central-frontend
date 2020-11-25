@@ -102,7 +102,7 @@ export default {
     return {
       // The id of the highlighted app user
       highlighted: null,
-      // `true` to show a managed code; `false` to show a legacy code.
+      // `true` to show a managed QR code; `false` to show a legacy QR code.
       managed: true,
       popover: {
         target: null,

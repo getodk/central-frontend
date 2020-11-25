@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <span class="collect-qr" v-html="html"></span>
+  <span class="collect-qr" v-html="imgHtml"></span>
 </template>
 
 <script>
@@ -46,7 +46,7 @@ export default {
         admin: {}
       };
     },
-    html() {
+    imgHtml() {
       const code = qrcode(0, this.errorCorrectionLevel);
       const json = JSON.stringify(this.fullSettings);
       code.addData(btoa(pako.deflate(json, { to: 'string' })));
