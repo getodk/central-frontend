@@ -75,6 +75,8 @@ export default {
   data() {
     id += 1;
     return {
+      // jQuery wrapper of the .modal element
+      wrapper: null,
       titleId: `modal-title${id}`,
       mousedownOutsideDialog: false
     };
@@ -85,14 +87,6 @@ export default {
     }
   },
   watch: {
-    $route() {
-      // When the current route changes, any Modal that is shown becomes hidden.
-      // Emitting a 'hide' event here does not actually hide the Modal -- the
-      // router does that -- but it should ensure that the Modal's `state` prop
-      // matches the DOM. Further, modal components that contain state typically
-      // reset themselves when they are hidden.
-      this.$emit('hide');
-    },
     state(state) {
       if (state)
         this.$nextTick(this.show);
@@ -111,27 +105,29 @@ export default {
     }
   },
   mounted() {
-    $(this.$el)
-      .on('shown.bs.modal', () => {
-        this.$emit('shown');
-      })
-      .on('hidden.bs.modal', () => {
-        this.$emit('hidden');
-      });
     if (this.state) this.show();
   },
   beforeDestroy() {
-    this.hide();
-    $(this.$el).off();
+    if (this.state) this.hide();
   },
   methods: {
     show() {
-      this.$store.dispatch('showModal', this.$el);
+      // We do not call .modal('show') if the component is not attached to the
+      // document, because .modal() has side effects on the document. Most tests
+      // do not attach the component to the document.
+      if (this.$el.closest('body') == null) return;
+
+      this.wrapper = $(this.$el)
+        .one('shown.bs.modal', () => {
+          this.$emit('shown');
+        })
+        .modal('show');
     },
     hide() {
-      // The router may dispatch the 'hideModal' action before hideModal() is
-      // called.
-      if (this.$store.getters.modalShown) this.$store.dispatch('hideModal');
+      if (this.wrapper != null) {
+        this.wrapper.modal('hide');
+        this.wrapper = null;
+      }
 
       const selection = getSelection();
       const { anchorNode } = selection;
