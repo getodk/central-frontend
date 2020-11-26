@@ -222,7 +222,3 @@ router.afterEach(() => {
 router.afterEach(() => {
   if (store.state.alert.state) store.commit('hideAlert');
 });
-
-router.afterEach(() => {
-  if (store.state.modal.ref != null) store.dispatch('hideModal');
-});

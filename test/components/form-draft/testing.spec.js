@@ -1,9 +1,10 @@
 import ChecklistStep from '../../../src/components/checklist-step.vue';
+import CollectQr from '../../../src/components/collect-qr.vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
+import FormDraftStatus from '../../../src/components/form-draft/status.vue';
+
 import testData from '../../data';
-import { collectQrData } from '../../util/collect-qr';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -16,25 +17,18 @@ describe('FormDraftTesting', () => {
     component.first(EnketoFill).should.be.visible();
   });
 
-  it('shows a QR code that encodes the correct settings', () => {
+  it('shows a QR code that encodes the correct settings', async () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });
-    return load('/projects/1/forms/f/draft/testing', { component: true }, {})
-      .then(component => {
-        // avoriaz can't seem to find the <img> element (maybe because we use
-        // v-html?). We use a little vanilla JavaScript to find it ourselves.
-        const span = component.first('#form-draft-testing-info .float-row span').element;
-        span.children.length.should.equal(1);
-        const img = span.children[0];
-        img.tagName.should.equal('IMG');
-        const { draftToken } = testData.extendedFormDrafts.last();
-        collectQrData(img).should.eql({
-          general: {
-            server_url: `${window.location.origin}/v1/test/${draftToken}/projects/1/forms/f/draft`
-          },
-          admin: {}
-        });
-      });
+    const component = await load(
+      '/projects/1/forms/f/draft/testing',
+      { component: true },
+      {}
+    );
+    const { draftToken } = testData.extendedFormDrafts.last();
+    component.first(CollectQr).getProp('settings').should.eql({
+      server_url: `/v1/test/${draftToken}/projects/1/forms/f/draft`
+    });
   });
 
   describe('SubmissionList props', () => {

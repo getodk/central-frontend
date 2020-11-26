@@ -35,8 +35,8 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-4">
         <float-row>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-if="formDraft != null" v-html="qrCodeHtml"></span>
+          <collect-qr v-if="formDraft != null" :settings="qrSettings"
+            error-correction-level="Q" :cell-size="3"/>
         </float-row>
       </div>
     </div>
@@ -45,22 +45,30 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DocLink from '../doc-link.vue';
-import EnketoFill from '../enketo/fill.vue';
 // Import PageSection before FloatRow in order to have the same import order as
 // FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
 import PageSection from '../page/section.vue';
 import FloatRow from '../float-row.vue';
-import Option from '../../util/option';
+import CollectQr from '../collect-qr.vue';
+import DocLink from '../doc-link.vue';
+import EnketoFill from '../enketo/fill.vue';
 import SubmissionList from '../submission/list.vue';
-import collectQr from '../../util/collect-qr';
+
+import Option from '../../util/option';
 import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
-  components: { DocLink, EnketoFill, FloatRow, PageSection, SubmissionList },
+  components: {
+    PageSection,
+    FloatRow,
+    CollectQr,
+    DocLink,
+    EnketoFill,
+    SubmissionList
+  },
   props: {
     projectId: {
       type: String,
@@ -75,13 +83,14 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData([{ key: 'formDraft', getOption: true }]),
-    qrCodeHtml() {
-      const url = apiPaths.serverUrlForFormDraft(
-        this.formDraft.draftToken,
-        this.projectId,
-        this.xmlFormId
-      );
-      return collectQr(url, { errorCorrectionLevel: 'Q', cellSize: 3 });
+    qrSettings() {
+      return {
+        server_url: apiPaths.serverUrlForFormDraft(
+          this.formDraft.draftToken,
+          this.projectId,
+          this.xmlFormId
+        )
+      };
     },
     baseUrl() {
       return apiPaths.formDraft(this.projectId, this.xmlFormId);

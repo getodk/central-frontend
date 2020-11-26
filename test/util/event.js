@@ -53,7 +53,7 @@ trigger.click = (...args) => {
 // Define methods for events that change the value of an <input> or <select>
 // element. Many tests will use trigger.changeValue(), but if a component uses
 // v-model, the test will probably use either trigger.input(),
-// trigger.fillForm(), or trigger.submitForm().
+// trigger.fillForm(), or trigger.submit().
 for (const [name, event] of [['changeValue', 'change'], ['input', 'input']]) {
   trigger[name] = (wrapper, ...args) => {
     if (args.length === 0) throw new Error('value required');

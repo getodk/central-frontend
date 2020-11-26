@@ -38,14 +38,8 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('common.success') }}</strong>
             {{ $t('success[0]', created) }}
           </p>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <p v-html="qrCodeHtml"></p>
-          <i18n tag="p" path="success[1].full">
-            <template #displayName>{{ created.displayName }}</template>
-            <template #scanningCode>
-              <doc-link to="collect-import-export/">{{ $t('success[1].scanningCode') }}</doc-link>
-            </template>
-          </i18n>
+          <field-key-qr-panel :field-key="created" :managed="managed"/>
+          <p>{{ $t('success[1]', created) }}</p>
           <i18n tag="p" path="success[2].full">
             <template #formAccessSettings>
               <a :href="projectPath('form-access')" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
@@ -66,12 +60,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DocLink from '../doc-link.vue';
-import FieldKey from '../../presenters/field-key';
 import FormGroup from '../form-group.vue';
-import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import collectQr from '../../util/collect-qr';
+import Modal from '../modal.vue';
+import FieldKeyQrPanel from './qr-panel.vue';
+
+import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -80,10 +74,14 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
-  components: { DocLink, FormGroup, Modal, Spinner },
+  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel },
   mixins: [request(), routes()],
   props: {
     state: {
+      type: Boolean,
+      default: false
+    },
+    managed: {
       type: Boolean,
       default: false
     }
@@ -98,15 +96,8 @@ export default {
       created: null
     };
   },
-  computed: {
-    // The modal assumes that this data will exist when the modal is shown.
-    ...requestData(['project']),
-    qrCodeHtml() {
-      const { token, projectId } = this.created;
-      const url = apiPaths.serverUrlForFieldKey(token, projectId);
-      return collectQr(url, { errorCorrectionLevel: 'L', cellSize: 3 });
-    }
-  },
+  // The modal assumes that this data will exist when the modal is shown.
+  computed: requestData(['project']),
   watch: {
     state(state) {
       if (!state) {
@@ -164,8 +155,6 @@ export default {
 @import '../../assets/scss/variables';
 
 #field-key-new-success {
-  text-align: center;
-
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
@@ -173,9 +162,9 @@ export default {
     vertical-align: middle;
   }
 
-  img {
-    margin-top: -5px;
-    margin-bottom: 20px;
+  .field-key-qr-panel {
+    box-shadow: $box-shadow-popover;
+    margin: 15px auto 30px;
   }
 }
 </style>
@@ -190,10 +179,8 @@ export default {
     ],
     "success": [
       "The App User “{displayName}” has been created.",
-      {
-        "full": "You can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”",
-        "scanningCode": "scanning the code above"
-      },
+      // Clicking "See code" displays a QR code.
+      "You can configure a mobile device for “{displayName}” right now, or you can do it later from the App Users table by clicking “See code.”",
       {
         "full": "You may wish to visit this Project’s {formAccessSettings} to give this user access to Forms.",
         "formAccessSettings": "Form Access settings"

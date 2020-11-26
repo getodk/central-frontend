@@ -17,8 +17,8 @@ export const destroyMarkedComponents = () => {
   for (const component of componentsToDestroy) {
     // If the component is attached to the document, component.destroy() would
     // remove $el from the DOM, then call $destroy(). We do the same thing here,
-    // but in the opposite order, because the 'hideModal' action expects the
-    // component to be attached to the document.
+    // but in the opposite order, as a beforeDestroy hook may assume that the
+    // component is still attached to the document.
     const { vm } = component;
     vm.$destroy();
     const { $el } = vm;

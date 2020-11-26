@@ -75,6 +75,8 @@ export default {
   data() {
     id += 1;
     return {
+      // jQuery wrapper of the .modal element
+      wrapper: null,
       titleId: `modal-title${id}`,
       mousedownOutsideDialog: false
     };
@@ -85,19 +87,15 @@ export default {
     }
   },
   watch: {
-    $route() {
-      // When the current route changes, any Modal that is shown becomes hidden.
-      // Emitting a 'hide' event here does not actually hide the Modal -- the
-      // router does that -- but it should ensure that the Modal's `state` prop
-      // matches the DOM. Further, modal components that contain state typically
-      // reset themselves when they are hidden.
-      this.$emit('hide');
-    },
     state(state) {
-      if (state)
-        this.showModal();
-      else
-        this.hideModal();
+      if (state) {
+        // The DOM hasn't updated yet, but it should be OK to show the modal
+        // now: I think it will all happen in the same event loop. (That said,
+        // at some point we may end up wanting to call .modal('handleUpdate').)
+        this.show();
+      } else {
+        this.hide();
+      }
     },
     // Hides the alert when this.state changes. We use a strategy similar to the
     // one here: https://github.com/vuejs/vue/issues/844.
@@ -111,28 +109,29 @@ export default {
     }
   },
   mounted() {
-    $(this.$el)
-      .on('shown.bs.modal', () => {
-        this.$emit('shown');
-      })
-      .on('hidden.bs.modal', () => {
-        this.$emit('hidden');
-      });
-    if (this.state) this.showModal();
+    if (this.state) this.show();
   },
   beforeDestroy() {
-    this.hideModal();
-    $(this.$el).off();
+    if (this.state) this.hide();
   },
   methods: {
-    showModal() {
-      this.$store.dispatch('showModal', this.$el);
+    show() {
+      // We do not call .modal('show') if the component is not attached to the
+      // document, because .modal() has side effects on the document. Most tests
+      // do not attach the component to the document.
+      if (this.$el.closest('body') == null) return;
+
+      this.wrapper = $(this.$el)
+        .one('shown.bs.modal', () => {
+          this.$emit('shown');
+        })
+        .modal('show');
     },
-    hideModal() {
-      // The router may dispatch the 'hideModal' action before hideModal() is
-      // called.
-      if (this.$store.state.modal.ref != null)
-        this.$store.dispatch('hideModal');
+    hide() {
+      if (this.wrapper != null) {
+        this.wrapper.modal('hide');
+        this.wrapper = null;
+      }
 
       const selection = getSelection();
       const { anchorNode } = selection;

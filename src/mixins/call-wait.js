@@ -83,15 +83,17 @@ const mixin = {
             if (canceled) return;
             if (success) {
               delete this.calls[name];
-              return;
+            } else {
+              count += 1;
+              const delay = wait(count);
+              if (delay == null)
+                delete this.calls[name];
+              else
+                timeoutId = setTimeout(f, delay);
             }
-            count += 1;
-            const delay = wait(count);
-            if (delay != null) timeoutId = setTimeout(f, delay);
           })
           .catch(() => {
-            cancel();
-            delete this.calls[name];
+            if (!canceled) delete this.calls[name];
           });
       };
       timeoutId = setTimeout(f, wait(0));

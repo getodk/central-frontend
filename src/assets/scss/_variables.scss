@@ -41,6 +41,7 @@ $color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
 $color-action-background-disabled: #999;
+$color-action-overlay: #0096c1;
 $color-input: #555;
 $color-input-inactive: #777;
 $color-input-background: #eee;
@@ -64,13 +65,21 @@ $padding-left-table-data: 8px;
 $padding-right-table-data: 8px;
 $padding-top-table-data: 8px;
 
-// Modals
+$color-subpanel-background: #eee;
+$color-subpanel-active: #ddd;
+$color-subpanel-border: #e6e6e6;
+$color-subpanel-border-strong: #c3c3c3;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// COMPONENTS
+
+// Modal
 $padding-modal-body: 15px;
 
 // PageBody
 $margin-top-page-body: 20px;
 
-$color-subpanel-background: #eee;
-$color-subpanel-active: #ddd;
-$color-subpanel-border: #e6e6e6;
-$color-subpanel-border-strong: #c3c3c3;
+// Popover
+$box-shadow-popover: 0 5px 10px rgba(0, 0, 0, 0.2);
