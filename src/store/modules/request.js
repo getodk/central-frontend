@@ -93,6 +93,15 @@ export default {
       }
       return any;
     },
+    refreshing: ({ requests, data }) => (keys) => {
+      let any = false;
+      for (const key of keys) {
+        const { state } = requests[key].last;
+        if (state === 'error') return false;
+        if (state === 'loading' && data[key] != null) any = true;
+      }
+      return any;
+    },
     dataExists: ({ data }) => (keys) => {
       for (const key of keys) {
         if (data[key] == null) return false;

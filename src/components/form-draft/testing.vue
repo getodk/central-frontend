@@ -40,7 +40,10 @@ except according to the terms contained in the LICENSE file.
         </float-row>
       </div>
     </div>
-    <submission-list :base-url="baseUrl" :form-version="formDraft"/>
+
+    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
+    <submission-list v-show="keys != null" :base-url="baseUrl"
+      :form-version="formDraft"/>
   </div>
 </template>
 
@@ -52,11 +55,13 @@ import FloatRow from '../float-row.vue';
 import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
+import Loading from '../loading.vue';
 import SubmissionList from '../submission/list.vue';
 
 import Option from '../../util/option';
 import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -67,6 +72,7 @@ export default {
     CollectQr,
     DocLink,
     EnketoFill,
+    Loading,
     SubmissionList
   },
   props: {
@@ -82,7 +88,7 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData([{ key: 'formDraft', getOption: true }]),
+    ...requestData([{ key: 'formDraft', getOption: true }, 'keys']),
     qrSettings() {
       return {
         server_url: apiPaths.serverUrlForFormDraft(
@@ -97,21 +103,35 @@ export default {
     }
   },
   created() {
-    const deactivate = reconcileData.add(
-      'formDraft', 'submissionsChunk',
-      (formDraft, submissionsChunk, commit) => {
-        if (formDraft.isDefined() &&
-          formDraft.get().submissions !== submissionsChunk['@odata.count']) {
-          commit('setData', {
-            key: 'formDraft',
-            value: Option.of(formDraft.get().with({
-              submissions: submissionsChunk['@odata.count']
-            }))
-          });
+    this.fetchData();
+    this.reconcileSubmissionCount();
+  },
+  methods: {
+    fetchData() {
+      this.$store.dispatch('get', [{
+        // We do not reconcile `keys` and formDraft.keyId.
+        key: 'keys',
+        url: apiPaths.formDraftSubmissionKeys(this.projectId, this.xmlFormId)
+      }]).catch(noop);
+    },
+    reconcileSubmissionCount() {
+      const deactivate = reconcileData.add(
+        'formDraft', 'odataChunk',
+        (formDraft, odataChunk, commit) => {
+          if (formDraft.isDefined() &&
+            formDraft.get().submissions !== odataChunk['@odata.count'] &&
+            !odataChunk.filtered) {
+            commit('setData', {
+              key: 'formDraft',
+              value: Option.of(formDraft.get().with({
+                submissions: odataChunk['@odata.count']
+              }))
+            });
+          }
         }
-      }
-    );
-    this.$once('hook:beforeDestroy', deactivate);
+      );
+      this.$once('hook:beforeDestroy', deactivate);
+    }
   }
 };
 </script>

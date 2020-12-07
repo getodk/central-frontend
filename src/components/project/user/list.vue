@@ -40,15 +40,20 @@ are Project Manager, Project Viewer, and Data Collector. -->
         </template>
       </i18n>
     </div>
-    <form id="project-user-list-search-form" @submit.prevent>
-      <!-- When search is disabled, we hide rather than disable this button,
-      because Bootstrap does not have CSS for .close[disabled]. -->
-      <button v-show="q != '' && !searchDisabled" type="button" class="close"
-        :aria-label="$t('action.clearSearch')" @click="clearSearch">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <form-group :value="q" :placeholder="searchLabel"
-        :disabled="searchDisabled" autocomplete="off" @change="changeQ"/>
+    <form id="project-user-list-search-form" class="form-inline"
+      @submit.prevent>
+      <label class="form-group">
+        <input class="form-control" :value="q" :placeholder="searchLabel"
+          :disabled="searchDisabled" autocomplete="off"
+          @change="changeQ($event.target.value)">
+        <!-- When search is disabled, we hide rather than disable this button,
+        because Bootstrap does not have CSS for .close[disabled]. -->
+        <button v-show="q !== '' && !searchDisabled" type="button" class="close"
+          :aria-label="$t('action.clearSearch')" @click="clearSearch">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="form-label">{{ searchLabel }}</span>
+      </label>
     </form>
 
     <table class="table">
@@ -74,16 +79,16 @@ are Project Manager, Project Viewer, and Data Collector. -->
 
 <script>
 import DocLink from '../../doc-link.vue';
-import FormGroup from '../../form-group.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
+
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, FormGroup, Loading, ProjectUserRow },
+  components: { DocLink, Loading, ProjectUserRow },
   props: {
     projectId: {
       type: String,
@@ -242,30 +247,10 @@ export default {
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#project-user-list-search-form {
-  position: relative;
-  width: 275px;
-
-  .form-control {
-    // Add padding so that .close does not overlay long input text.
-    padding-right: 21px;
-    width: 250px;
-  }
-
-  .close {
-    // Similar to .alert-dismissable .close.
-    position: relative;
-    right: 30px;
-    top: 4px;
-    // 1 greater than the z-index for .form-control
-    z-index: 2;
-
-    opacity: 0.5;
-
-    &:hover, &:focus {
-      opacity: 0.2;
-    }
-  }
+#project-user-list-search-form .form-control {
+  // Add padding so that the .close button does not overlay long input text.
+  padding-right: 21px;
+  width: 250px;
 }
 
 #project-user-list table {

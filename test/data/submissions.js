@@ -14,7 +14,7 @@ const fakeDateTime = () => {
 };
 
 // Returns a random OData value for a particular field of a submission.
-const oDataValue = (field, instanceId) => {
+const odataValue = (field, instanceId) => {
   switch (field.type) {
     case 'int':
       return faker.random.number();
@@ -58,7 +58,7 @@ const oDataValue = (field, instanceId) => {
 // `exists` indicates for each field type whether a field of that type should
 // have a value. `partial` takes precedence over `exists`: see partialOData in
 // extendedSubmissions.
-const oData = ({ form, instanceId, partial, exists }) => form._fields.reduce(
+const odata = ({ form, instanceId, partial, exists }) => form._fields.reduce(
   (data, field) => {
     // Once we resolve issue #82 for Backend, we should implement repeat groups.
     if (field.type === 'repeat') return data;
@@ -70,7 +70,7 @@ const oData = ({ form, instanceId, partial, exists }) => form._fields.reduce(
     if (field.type == null)
       return set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
     return exists[field.type] === true
-      ? set(fieldLens, oDataValue(field, instanceId), data)
+      ? set(fieldLens, odataValue(field, instanceId), data)
       : data;
   },
   partial
@@ -85,6 +85,7 @@ export const extendedSubmissions = dataStore({
     form = extendedForms.first(),
     instanceId = faker.random.uuid(),
     status = null,
+    submitter = extendedUsers.first(),
 
     hasInt = faker.random.boolean(),
     hasDecimal = faker.random.boolean(),
@@ -104,7 +105,6 @@ export const extendedSubmissions = dataStore({
   }) => {
     if (form === undefined) throw new Error('form not found');
     if (extendedUsers.size === 0) throw new Error('user not found');
-    const submitter = extendedUsers.first();
     const createdAt = inPast
       ? fakePastDate([lastCreatedAt, form.createdAt, submitter.createdAt])
       : new Date().toISOString();
@@ -116,7 +116,7 @@ export const extendedSubmissions = dataStore({
       // An actual submission JSON response does not have this property. We
       // include it here so that it is easy to match submission data and
       // metadata during testing.
-      _oData: oData({
+      _odata: odata({
         form,
         instanceId,
         partial: {
@@ -151,5 +151,5 @@ export const extendedSubmissions = dataStore({
 export const submissionOData = (top = 250, skip = 0) => ({
   '@odata.count': extendedSubmissions.size,
   value: extendedSubmissions.sorted().slice(skip, skip + top)
-    .map(submission => submission._oData)
+    .map(submission => submission._odata)
 });

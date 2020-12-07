@@ -1,19 +1,14 @@
+import sinon from 'sinon';
+
 import AuditFiltersAction from '../../../../src/components/audit/filters/action.vue';
-import TestUtilVModel from '../../../util/components/v-model.vue';
+
 import { mount } from '../../../util/lifecycle';
 import { trigger } from '../../../util/event';
 
-const mountComponent = ({ value = 'nonverbose', parent = false } = {}) => {
-  if (parent) {
-    const component = mount(TestUtilVModel, {
-      propsData: { component: AuditFiltersAction, value }
-    });
-    return component.first(AuditFiltersAction);
-  }
-  return mount(AuditFiltersAction, {
+const mountComponent = ({ value = 'nonverbose' } = {}) =>
+  mount(AuditFiltersAction, {
     propsData: { value }
   });
-};
 
 describe('AuditFiltersAction', () => {
   describe('options', () => {
@@ -45,9 +40,10 @@ describe('AuditFiltersAction', () => {
   });
 
   it('emits an input event', () => {
-    const component = mountComponent({ value: 'nonverbose', parent: true });
-    return trigger.changeValue(component, 'select', 'user').then(() => {
-      component.getProp('value').should.equal('user');
-    });
+    const component = mountComponent({ value: 'nonverbose' });
+    const $emit = sinon.fake();
+    sinon.replace(component.vm, '$emit', $emit);
+    trigger.changeValue(component, 'select', 'user');
+    $emit.calledWith('input', 'user').should.be.true();
   });
 });

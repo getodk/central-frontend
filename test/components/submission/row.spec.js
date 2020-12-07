@@ -6,7 +6,7 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (propsData = undefined) => mount(SubmissionRow, {
   propsData: {
-    submission: testData.extendedSubmissions.last()._oData,
+    submission: testData.extendedSubmissions.last()._odata,
     ...propsData
   }
 });

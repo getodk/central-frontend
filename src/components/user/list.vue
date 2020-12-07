@@ -27,7 +27,12 @@ either is an Administrator or has no role. -->
       </i18n>
     </div>
     <div class="table-actions">
-      <refresh-button :configs="configsForRefresh"/>
+      <button id="user-list-refresh-button" type="button"
+        class="btn btn-primary" :disabled="refreshing"
+        @click="fetchData({ clear: false })">
+        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+        <spinner :state="refreshing"/>
+      </button>
     </div>
     <table id="user-list-table" class="table">
       <thead>
@@ -49,21 +54,21 @@ either is an Administrator or has no role. -->
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword"
-      @hide="hideModal('resetPassword')" @success="afterResetPassword"/>
-    <user-retire v-bind="retire" @hide="hideModal('retire')"
-      @success="afterRetire"/>
+    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
+      @success="afterResetPassword"/>
+    <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
   </div>
 </template>
 
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import RefreshButton from '../refresh-button.vue';
+import Spinner from '../spinner.vue';
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
+
 import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -73,7 +78,7 @@ export default {
   components: {
     DocLink,
     Loading,
-    RefreshButton,
+    Spinner,
     UserNew,
     UserResetPassword,
     UserRetire,
@@ -101,45 +106,44 @@ export default {
     };
   },
   computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
     ...requestData(['users']),
-    configsForRefresh() {
-      return this.configsForGet(true);
+    refreshing() {
+      return this.$store.getters.refreshing(['users', 'actors']);
     }
   },
   created() {
-    this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
+    this.fetchData();
   },
   methods: {
-    configsForGet(resetHighlighted) {
-      return [
+    fetchData({ clear = true, highlighted = null } = {}) {
+      if (clear) this.adminIds = null;
+      return this.$store.dispatch('get', [
         {
           key: 'users',
           url: '/users',
+          clear,
           success: () => {
-            if (resetHighlighted) {
-              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-              this.highlighted = null;
-            }
+            this.highlighted = highlighted;
           }
         },
         {
           key: 'actors',
           url: '/assignments/admin',
+          clear,
           success: ({ actors }) => {
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
             this.adminIds = new Set();
             for (const actor of actors)
               this.adminIds.add(actor.id);
           }
         }
-      ];
+      ]).catch(noop);
     },
     afterCreate(user) {
-      this.adminIds = null;
-      this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
+      this.fetchData({ highlighted: user.id });
       this.hideModal('newUser');
       this.$alert().success(this.$t('alert.create', user));
-      this.highlighted = user.id;
     },
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
@@ -175,7 +179,12 @@ export default {
       this.resetPassword.user = user;
       this.showModal('resetPassword');
     },
+    hideResetPassword() {
+      this.hideModal('resetPassword');
+      this.resetPassword.user = null;
+    },
     afterResetPassword(user) {
+      this.hideResetPassword();
       this.hideModal('resetPassword');
       this.$alert().success(this.$t('alert.resetPassword', user));
     },
@@ -183,9 +192,13 @@ export default {
       this.retire.user = user;
       this.showModal('retire');
     },
-    afterRetire(user) {
-      this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
+    hideRetire() {
       this.hideModal('retire');
+      this.retire.user = null;
+    },
+    afterRetire(user) {
+      this.fetchData();
+      this.hideRetire();
       this.$alert().success(this.$t('alert.retire', user));
     }
   }

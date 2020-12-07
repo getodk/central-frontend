@@ -55,10 +55,13 @@ trigger.click = (...args) => {
 // v-model, the test will probably use either trigger.input(),
 // trigger.fillForm(), or trigger.submit().
 for (const [name, event] of [['changeValue', 'change'], ['input', 'input']]) {
-  trigger[name] = (wrapper, ...args) => {
+  trigger[name] = (...args) => {
     if (args.length === 0) throw new Error('value required');
-    if (args.length === 1) return trigger[name](wrapper, null, args[0]);
-    const [selector, value] = args;
+    if (typeof args[0] === 'string')
+      return (wrapper) => trigger[name](wrapper, ...args);
+    if (args.length === 1) throw new Error('value required');
+    if (args.length === 2) return trigger[name](args[0], null, args[1]);
+    const [wrapper, selector, value] = args;
     const target = selector == null ? wrapper : wrapper.first(selector);
     if (target.element.value === value) throw new Error('no change');
     target.element.value = value;

@@ -201,11 +201,14 @@ a {
 ////////////////////////////////////////////////////////////////////////////////
 // FORMS
 
+$form-group-padding-bottom: 15px;
 .form-group {
   display: block;
   font-weight: normal;
-  padding-bottom: 15px;
+  padding-bottom: $form-group-padding-bottom;
+  position: relative;
 
+  $form-control-z-index: 1;
   .form-control {
     background: $color-input-background;
     border: none;
@@ -214,22 +217,58 @@ a {
     box-shadow: none;
     color: $color-input;
     position: relative;
-    z-index: 1;
+    z-index: $form-control-z-index;
 
     &:focus {
       border-bottom-color: $color-action-foreground;
       box-shadow: none;
     }
 
-    &::placeholder {
-      color: $color-text;
-    }
+    &::placeholder { color: $color-text; }
 
     &[disabled], &[readonly] {
-      &, &::placeholder {
-        color: $color-input-inactive;
-      }
+      &, &::placeholder { color: $color-input-inactive; }
     }
+  }
+
+  .form-label {
+    color: $color-input-inactive;
+    display: block;
+    font-size: 11px;
+    height: 0;
+    padding-left: 12px;
+    transform: translateY(2px);
+    transition: 0.15s transform, 0.15s color;
+  }
+  .form-control {
+    &:focus ~ .form-label { color: $color-action-foreground; }
+    &:placeholder-shown ~ .form-label { transform: translateY(-15px); }
+  }
+
+  .close {
+    float: none;
+    opacity: 0.5;
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    z-index: $form-control-z-index + 1;
+
+    &:hover, &:focus { opacity: 0.2; }
+  }
+}
+
+.form-inline {
+  margin-bottom: 15px;
+  padding-bottom: $form-group-padding-bottom;
+
+  .form-group {
+    margin-left: 10px;
+    padding-bottom: 0;
+  }
+
+  .icon-filter {
+    color: #999;
+    margin-right: $margin-right-icon;
   }
 }
 
@@ -253,6 +292,9 @@ a {
       box-shadow: none;
     }
   }
+
+  .form-label { color: $color-danger; }
+  .form-control:focus ~ .form-label { color: $color-danger-dark; }
 }
 
 // In Safari, the effect of this class is not visible on input and select

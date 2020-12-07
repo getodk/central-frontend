@@ -58,6 +58,50 @@ export function testModalToggles(...args) {
     });
 }
 
+export function testRefreshButton({
+  button,
+  table,
+  collection,
+  respondWithData = [() => collection.sorted()]
+}) {
+  const testRowCount = (component) => {
+    const tables = component.find(table);
+    if (tables.length === 0) throw new Error('table not found');
+    if (tables.length > 1) throw new Error('multiple tables found');
+    const rowCount = tables[0].find('tbody tr').length;
+    rowCount.should.equal(collection.size);
+  };
+
+  // Series 1: Test that the table is initially rendered as expected.
+  return this
+    .afterResponses(testRowCount)
+    // Series 2: Click the refresh button and return a successful response (or
+    // responses). The table should not disappear during the refresh, and it
+    // should be updated afterwards.
+    .request(trigger.click(button))
+    .modify(series => {
+      collection.createNew();
+      return respondWithData.reduce(
+        (acc, callback) => acc.respondWithData(callback),
+        series
+      );
+    })
+    .beforeEachResponse(testRowCount)
+    .afterResponses(testRowCount)
+    // Series 3: Click the refresh button again, this time returning a Problem
+    // response (or responses).
+    .request(trigger.click(button))
+    .modify(series => respondWithData.reduce(
+      (acc) => acc.respondWithProblem(),
+      series
+    ))
+    .afterResponses(component => {
+      // The table should not disappear.
+      testRowCount(component);
+      component.should.alert();
+    });
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

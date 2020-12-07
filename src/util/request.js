@@ -13,7 +13,7 @@ import Vue from 'vue';
 
 import i18n from '../i18n';
 
-const queryString = (query) => {
+export const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
   if (entries.length === 0) return '';
@@ -23,6 +23,7 @@ const queryString = (query) => {
   const qs = params.toString();
   return qs !== '' ? `?${qs}` : qs;
 };
+
 const projectPath = (suffix) => (id, query = undefined) =>
   `/v1/projects/${id}${suffix}${queryString(query)}`;
 const formPath = (suffix, queryDefaults = undefined) =>
@@ -50,7 +51,6 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  fields: formPath('/fields', { odata: true }),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
@@ -77,6 +77,8 @@ export const apiPaths = {
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
+  formDraftSubmissionKeys: formPath('/draft/submissions/keys'),
+  submissionKeys: formPath('/submissions/keys'),
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
