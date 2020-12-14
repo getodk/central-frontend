@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
             <!-- Adding a title attribute in case the column header is so long
             that it is truncated. -->
             <th v-for="field of fields" :key="field.path"
-              class="submission-table-field" :title="field.header()">
+              :title="field.header()">
               {{ field.header() }}
             </th>
             <th>{{ $t('header.instanceId') }}</th>
@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #submission-table1 {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
@@ -102,13 +102,9 @@ export default {
   width: auto;
 
   th, td {
-    &.submission-table-field {
-      max-width: 250px;
-    }
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include text-overflow-ellipsis;
+    max-width: 250px;
+    &:last-child { max-width: 300px; }
   }
 }
 </style>

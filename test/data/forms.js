@@ -5,6 +5,7 @@ import { dataStore, view } from './data-store';
 import { extendedProjects } from './projects';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
+import { fields as testDataFields } from './fields';
 import { toActor } from './actors';
 
 
@@ -14,39 +15,6 @@ import { toActor } from './actors';
 
 // There is no direct access to these stores: they are not exported. Instead,
 // use the views defined below.
-
-const defaultFields = (hasInstanceId) => {
-  const instanceIdFields = [];
-  if (hasInstanceId) {
-    if (faker.random.boolean())
-      instanceIdFields.push(
-        { path: '/meta', type: 'structure' },
-        { path: '/meta/instanceID', type: 'string' }
-      );
-    else
-      instanceIdFields.push({ path: '/instanceID', type: 'string' });
-  }
-
-  return [
-    ...instanceIdFields,
-    { path: '/testInt', type: 'int' },
-    { path: '/testDecimal', type: 'decimal' },
-    { path: '/testDate', type: 'date' },
-    { path: '/testTime', type: 'time' },
-    { path: '/testDateTime', type: 'dateTime' },
-    { path: '/testGeopoint', type: 'geopoint' },
-    { path: '/testGroup', type: 'structure' },
-    { path: '/testGroup/testBinary', type: 'binary', binary: true },
-    // The column header for this question will be the same as the
-    // previous question's.
-    { path: '/testGroup-testBinary', type: 'binary', binary: true },
-    { path: '/testBranch' },
-    { path: '/testString1', type: 'string' },
-    { path: '/testString2', type: 'string' },
-    { path: '/testRepeat', type: 'repeat' },
-    { path: '/testRepeat/testString3', type: 'string' }
-  ];
-};
 
 let formVersions;
 
@@ -75,9 +43,7 @@ const forms = dataStore({
     createdBy = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
-
-    hasInstanceId = faker.random.boolean(),
-    fields = defaultFields(hasInstanceId),
+    fields = [testDataFields.string('/s')],
 
     ...rest
   }) => {

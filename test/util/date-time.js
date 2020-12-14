@@ -29,7 +29,9 @@ export const setLuxon = (settings) => {
     original[name] = Settings[name];
     setLuxonSetting(name, value);
   }
-  return () => setLuxon(original);
+  return () => {
+    setLuxon(original);
+  };
 };
 
 // Returns an ISO string for a date in the past that is no earlier than the

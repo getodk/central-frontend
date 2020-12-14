@@ -1,10 +1,11 @@
-import Form from '../../../src/presenters/form';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import Spinner from '../../../src/components/spinner.vue';
+
+import Form from '../../../src/presenters/form';
+
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { setLuxon } from '../../util/date-time';
 import { trigger } from '../../util/event';
 
 // Create submissions along with the associated project and form.
@@ -46,274 +47,17 @@ describe('SubmissionList', () => {
   beforeEach(mockLogin);
 
   describe('after login', () => {
-    describe('table data', () => {
-      describe('right half of the table', () => {
-        const headers = [
-          'testInt',
-          'testDecimal',
-          'testDate',
-          'testTime',
-          'testDateTime',
-          'testGeopoint',
-          'testGroup-testBinary',
-          'testGroup-testBinary',
-          'testBranch',
-          'testString1',
-          'Instance ID'
-        ];
-        const tdByRowAndColumn = (tr, header) => {
-          const index = headers.indexOf(header);
-          if (index === -1) throw new Error('header not found');
-          return tr.find('td')[index];
-        };
-
-        it('contains the correct column headers', () => {
-          testData.extendedProjects.createPast(1);
-          testData.extendedForms
-            .createPast(1, { hasInstanceId: true, submissions: 1 });
-          testData.extendedSubmissions.createPast(1);
-          return loadSubmissionList().afterResponses(component => {
-            const th = component.find('#submission-table2 th');
-            th.map(wrapper => wrapper.text().trim()).should.eql(headers);
-          });
-        });
-
-        it('contains the correct instance IDs', () => {
-          createSubmissions(2);
-          return loadSubmissionList().afterResponses(component => {
-            const tr = component.find('#submission-table2 tbody tr');
-            const submissions = testData.extendedSubmissions.sorted();
-            tr.length.should.equal(submissions.length);
-            for (let i = 0; i < tr.length; i += 1) {
-              const td = tdByRowAndColumn(tr[i], 'Instance ID');
-              td.text().trim().should.equal(submissions[i].instanceId);
-            }
-          });
-        });
-
-        it('correctly formats int values', () => {
-          createSubmissions(1, { hasInt: true });
-          return loadSubmissionList().afterResponses(component => {
-            const td = tdByRowAndColumn(
-              component.first('#submission-table2 tbody tr'),
-              'testInt'
-            );
-            const submission = testData.extendedSubmissions.last();
-            const localeString = submission._odata.testInt.toLocaleString();
-            td.text().trim().should.equal(localeString);
-            td.hasClass('submission-cell-int').should.be.true();
-          });
-        });
-
-        describe('decimal values', () => {
-          it('adds the correct class', () => {
-            createSubmissions(1, { hasDecimal: true });
-            return loadSubmissionList()
-              .afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#submission-table2 tbody tr'),
-                  'testDecimal'
-                );
-                td.hasClass('submission-cell-decimal').should.be.true();
-              });
-          });
-
-          // Array of test cases, where each case is an array with the following
-          // structure:
-          // [raw value, expected formatted value]
-          const cases = [
-            [1, '1'],
-            [1234, '1,234'],
-            [1.2, '1.2'],
-            [-1.2, '-1.2'],
-            [1234.5678901234, '1,234.5678901234'],
-            [-1234.567890123, '-1,234.567890123'],
-            [0.0000000000001, '0.0000000000001'],
-            [-0.000000000001, '-0.000000000001'],
-            // More than 15 characters
-            [1000000000000000, '1,000,000,000,000,000'],
-            [-100000000000000, '-100,000,000,000,000'],
-            [10000000000000.1, '10,000,000,000,000.1'],
-            [-1000000000000.1, '-1,000,000,000,000.1'],
-            [1234.56789012345, '1,234.5678901235'],
-            [-1234.5678901234, '-1,234.567890123'],
-            [0.00000000000001, '0'],
-            [-0.0000000000001, '-0']
-          ];
-          for (const [testDecimal, localeString] of cases) {
-            it(`correctly formats ${testDecimal}`, () => {
-              createSubmissions(1, { testDecimal });
-              return loadSubmissionList().afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#submission-table2 tbody tr'),
-                  'testDecimal'
-                );
-                td.text().trim().should.equal(localeString);
-              });
-            });
-          }
-        });
-
-        it('correctly formats string values', () => {
-          createSubmissions(1, { hasStrings: true });
-          return loadSubmissionList().afterResponses(component => {
-            const td = tdByRowAndColumn(
-              component.first('#submission-table2 tbody tr'),
-              'testString1'
-            );
-            const { testString1 } = testData.extendedSubmissions.last()._odata;
-            td.text().trim().should.equal(testString1.trim());
-            td.getAttribute('title').should.equal(testString1);
-          });
-        });
-
-        describe('date values', () => {
-          // Each test case is an array with the following structure:
-          // [raw value, expected formatted value]
-          const cases = [
-            ['2018-01-01', '2018/01/01'],
-            // If we end up needing to support time zones, we should check that
-            // the existing code accounts for DST.
-            ['2018-01-01Z', 'Invalid DateTime'],
-            ['2018-01-01+01:00', 'Invalid DateTime'],
-            // A date value that is not ISO 8601
-            ['2018/01/01', 'Invalid DateTime']
-          ];
-          for (const [testDate, formatted] of cases) {
-            it(`correctly formats ${testDate}`, () => {
-              createSubmissions(1, { testDate });
-              return loadSubmissionList().afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#submission-table2 tbody tr'),
-                  'testDate'
-                );
-                td.text().trim().should.equal(formatted);
-              });
-            });
-          }
-        });
-
-        describe('time values', () => {
-          /*
-          Each test case is an array with the following structure:
-
-          [
-            default time zone (mocking the system time zone),
-            ISO 8601 string to use as the current timestamp (mocking the system time),
-            raw value,
-            expected formatted value
-          ]
-          */
-          const cases = [
-            ['UTC+1', null, '01:02:03.567', '01:02:03'],
-            ['UTC+1', null, '00:00:00Z', '00:00:00'],
-            ['UTC+1', null, '02:00:00+02:00', '02:00:00'],
-            ['UTC+1', null, '12 a.m.', 'Invalid DateTime'],
-            // DST invalid time
-            ['America/New_York', '2017-03-12', '02:30:00', '02:30:00'],
-            ['America/New_York', '2017-03-12', '02:30:00Z', '02:30:00'],
-            // DST ambiguous time
-            ['America/New_York', '2017-11-05', '01:30:00', '01:30:00'],
-            ['America/New_York', '2017-11-05', '01:30:00Z', '01:30:00']
-          ];
-          for (const [defaultZoneName, now, testTime, formatted] of cases) {
-            it(`correctly formats ${testTime}`, () => {
-              createSubmissions(1, { testTime });
-
-              const settings = { defaultZoneName };
-              if (now != null) settings.now = now;
-              const restoreLuxon = setLuxon(settings);
-
-              return loadSubmissionList()
-                .afterResponses(component => {
-                  const td = tdByRowAndColumn(
-                    component.first('#submission-table2 tbody tr'),
-                    'testTime'
-                  );
-                  td.text().trim().should.equal(formatted);
-                })
-                .finally(restoreLuxon);
-            });
-          }
-        });
-
-        describe('dateTime values', () => {
-          /*
-          Each test case is an array with the following structure:
-
-          [
-            default time zone (mocking the system time zone),
-            ISO 8601 string to use as the current timestamp (mocking the system time),
-            raw value,
-            expected formatted value
-          ]
-          */
-          const cases = [
-            ['UTC+1', null, '2018-01-01T01:02:03.567', '2018/01/01 01:02:03'],
-            ['UTC+1', null, '2018-01-01T00:00:00Z', '2018/01/01 01:00:00'],
-            ['UTC+1', null, '2018-01-01T02:00:00+02:00', '2018/01/01 01:00:00'],
-            ['UTC+1', null, '2018/01/01T00:00:00', 'Invalid DateTime'],
-            // DST invalid time
-            ['America/New_York', '2017-03-12', '2017-03-12T02:30:00', '2017/03/12 03:30:00'],
-            ['America/New_York', '2017-03-12', '2017-03-12T02:30:00Z', '2017/03/11 21:30:00'],
-            // DST ambiguous time
-            ['America/New_York', '2017-11-05', '2017-11-05T01:30:00', '2017/11/05 01:30:00'],
-            ['America/New_York', '2017-11-05', '2017-11-05T01:30:00Z', '2017/11/04 21:30:00']
-          ];
-          for (const [defaultZoneName, now, testDateTime, formatted] of cases) {
-            it(`correctly formats ${testDateTime}`, () => {
-              createSubmissions(1, { testDateTime });
-
-              const settings = { defaultZoneName };
-              if (now != null) settings.now = now;
-              const restoreLuxon = setLuxon(settings);
-
-              return loadSubmissionList()
-                .afterResponses(component => {
-                  const td = tdByRowAndColumn(
-                    component.first('#submission-table2 tbody tr'),
-                    'testDateTime'
-                  );
-                  td.text().trim().should.equal(formatted);
-                })
-                .finally(restoreLuxon);
-            });
-          }
-        });
-
-        describe('geopoint values', () => {
-          const geopoint = (...coordinates) => ({ type: 'Point', coordinates });
-          // Each test case is an array with the following structure:
-          // [raw value, expected formatted value]
-          const cases = [
-            [geopoint(0.1234567, 0.1234567), '0.1234567 0.1234567'],
-            [geopoint(0.123456, 0.123456), '0.1234560 0.1234560'],
-            [geopoint(0.12345678, 0.12345678), '0.1234568 0.1234568'],
-            [geopoint(0.1234567, 0.1234567, 0.1), '0.1234567 0.1234567 0.1'],
-            [geopoint(0.1234567, 0.1234567, 0), '0.1234567 0.1234567 0.0'],
-            [geopoint(0.1234567, 0.1234567, 0.15), '0.1234567 0.1234567 0.2']
-          ];
-          for (const [testGeopoint, formatted] of cases) {
-            it(`correctly formats ${testGeopoint.coordinates.join(' ')}`, () => {
-              createSubmissions(1, { testGeopoint });
-              return loadSubmissionList().afterResponses(component => {
-                const td = tdByRowAndColumn(
-                  component.first('#submission-table2 tbody tr'),
-                  'testGeopoint'
-                );
-                td.text().trim().should.equal(formatted);
-              });
-            });
-          }
-        });
-      });
-    });
-
     describe('encrypted submissions', () => {
       it('indicates whether a submission is encrypted', () => {
         const key = testData.standardKeys.createPast(1).last();
         testData.extendedProjects.createPast(1, { key });
-        testData.extendedForms.createPast(1, { submissions: 2 });
+        testData.extendedForms.createPast(1, {
+          fields: [
+            testData.fields.string('/s1'),
+            testData.fields.string('/s2')
+          ],
+          submissions: 2
+        });
         testData.extendedSubmissions
           .createPast(1, { status: null })
           .createPast(1, { status: 'NotDecrypted' });
@@ -322,11 +66,11 @@ describe('SubmissionList', () => {
           tr.length.should.equal(2);
 
           tr[1].hasClass('encrypted-submission').should.be.false();
-          tr[1].find('td').length.should.equal(11);
+          tr[1].find('td').length.should.equal(3);
 
           tr[0].hasClass('encrypted-submission').should.be.true();
           tr[0].find('td').length.should.equal(2);
-          tr[0].first('td').getAttribute('colspan').should.equal('10');
+          tr[0].first('td').getAttribute('colspan').should.equal('2');
         });
       });
 

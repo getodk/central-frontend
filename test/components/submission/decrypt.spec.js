@@ -25,7 +25,9 @@ const loadSubmissionList = (attachToDocument = false) => {
     forms: 1
   });
   testData.extendedForms.size.should.equal(0);
-  const form = testData.extendedForms.createPast(1).last();
+  const form = testData.extendedForms
+    .createPast(1, { fields: [testData.fields.binary('/b')] })
+    .last();
 
   return mockHttp()
     .mount(SubmissionList, {
