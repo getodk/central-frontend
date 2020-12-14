@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="form-attachment-upload-files" :state="state" backdrop hideable
-    @hide="$emit('hide')" @shown="focusLink">
+  <modal id="form-attachment-upload-files" :state="state" hideable backdrop
+    @hide="$emit('hide')" @shown="$refs.link.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -23,7 +23,8 @@ except according to the terms contained in the LICENSE file.
         <i18n tag="p" path="introduction[1].full">
           <template #clickHere>
             <input v-show="false" ref="input" type="file" multiple>
-            <a ref="link" href="#" role="button" @click.prevent="clickInput">
+            <a ref="link" href="#" role="button"
+              @click.prevent="$refs.input.click()">
               <span class="icon-folder-open"></span>
               <span>{{ $t('introduction[1].clickHere') }}</span>
             </a>
@@ -54,19 +55,13 @@ export default {
   mounted() {
     // Using a jQuery event handler rather than a Vue one in order to facilitate
     // testing: it is possible to mock a jQuery event but not a Vue event.
-    $(this.$refs.input).on('change.form-attachment-upload-files', (event) =>
-      this.$emit('select', event.target.files));
+    $(this.$refs.input).on('change.form-attachment-upload-files', (event) => {
+      this.$emit('select', event.target.files);
+      this.$refs.input.value = '';
+    });
   },
   beforeDestroy() {
     $(this.$refs.input).off('.form-attachment-upload-files');
-  },
-  methods: {
-    focusLink() {
-      $(this.$refs.link).focus();
-    },
-    clickInput() {
-      $(this.$refs.input).click();
-    }
   }
 };
 </script>

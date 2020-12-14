@@ -5,7 +5,7 @@ import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/lifecycle';
+import { mount } from '../../util/lifecycle';
 
 const xlsForm = () => new File(
   [''],
@@ -113,7 +113,7 @@ describe('FormNew', () => {
     beforeEach(mockLogin);
 
     it('shows an info alert if no file is selected', () => {
-      const modal = mountAndMark(FormNew, {
+      const modal = mount(FormNew, {
         propsData: { state: true },
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
@@ -125,7 +125,7 @@ describe('FormNew', () => {
     });
 
     it('hides the alert after a file is selected', () => {
-      const modal = mountAndMark(FormNew, {
+      const modal = mount(FormNew, {
         propsData: { state: true },
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       });
@@ -139,21 +139,32 @@ describe('FormNew', () => {
         });
     });
 
-    it('saves the file after it is selected using the file input', () => {
-      const modal = mountAndMark(FormNew, {
-        propsData: { state: true },
-        requestData: {
-          project: testData.extendedProjects.createPast(1).last()
-        }
+    describe('after the file is selected using the file input', () => {
+      beforeEach(() => {
+        testData.extendedProjects.createPast(1);
       });
-      return selectFileByInput(modal, xlsForm())
-        .then(() => {
-          modal.data().file.name.should.equal('my_form.xlsx');
+
+      it('sets the file data property', async () => {
+        const modal = mount(FormNew, {
+          propsData: { state: true },
+          requestData: { project: testData.extendedProjects.last() }
         });
+        await selectFileByInput(modal, xlsForm());
+        modal.data().file.name.should.equal('my_form.xlsx');
+      });
+
+      it('resets the input', async () => {
+        const modal = mount(FormNew, {
+          propsData: { state: true },
+          requestData: { project: testData.extendedProjects.last() }
+        });
+        await selectFileByInput(modal, xlsForm());
+        modal.first('input').element.value.should.equal('');
+      });
     });
 
     it('saves the file after it is dragged and dropped', () => {
-      const modal = mountAndMark(FormNew, {
+      const modal = mount(FormNew, {
         propsData: { state: true },
         requestData: {
           project: testData.extendedProjects.createPast(1).last()
