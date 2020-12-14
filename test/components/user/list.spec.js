@@ -96,19 +96,6 @@ describe('UserList', () => {
           }
         }));
 
-    it('refreshes data after a click on the refresh button', () => {
-      testData.extendedUsers.createPast(1);
-      return load('/users').testRefreshButton({
-        button: '#user-list-refresh-button',
-        table: '#user-list-table',
-        collection: testData.standardUsers,
-        respondWithData: [
-          () => testData.standardUsers.sorted(),
-          () => testData.standardUsers.sorted().map(testData.toActor)
-        ]
-      });
-    });
-
     describe('changing a role', () => {
       const loadUsersAndChangeRole =
         ({ rowIndex, selectValue }) =>

@@ -194,7 +194,7 @@
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
     // This text is shown next to options for filtering a table.
-    "filter": "Filter by",
+    "filter": "Filter",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",

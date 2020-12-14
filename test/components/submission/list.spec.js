@@ -355,18 +355,23 @@ describe('SubmissionList', () => {
     });
 
     describe('after the refresh button is clicked', () => {
-      for (let i = 1; i <= 2; i += 1) {
-        it(`refreshes part ${i} of the table`, () => {
-          testData.extendedForms.createPast(1, { submissions: 1 });
-          testData.extendedSubmissions.createPast(1);
-          return load('/projects/1/forms/f/submissions').testRefreshButton({
-            button: '#submission-list-refresh-button',
-            table: `#submission-table${i}`,
-            collection: testData.extendedSubmissions,
-            respondWithData: [testData.submissionOData]
-          });
-        });
-      }
+      it('completes a background refresh', () => {
+        testData.extendedForms.createPast(1, { submissions: 1 });
+        testData.extendedSubmissions.createPast(1);
+        const assertRowCount = (count) => (component) => {
+          component.find('#submission-table1 tbody tr').length.should.equal(count);
+          component.find('#submission-table2 tbody tr').length.should.equal(count);
+        };
+        return load('/projects/1/forms/f/submissions', { component: true }, {})
+          .afterResponses(assertRowCount(1))
+          .request(trigger.click('#submission-list-refresh-button'))
+          .beforeEachResponse(assertRowCount(1))
+          .respondWithData(() => {
+            testData.extendedSubmissions.createNew();
+            return testData.submissionOData();
+          })
+          .afterResponse(assertRowCount(2));
+      });
 
       it('does not show a loading message', () => {
         testData.extendedForms.createPast(1, { submissions: 1 });
@@ -398,40 +403,35 @@ describe('SubmissionList', () => {
           text.should.equal(submissions[i + offset].instanceId);
         }
       };
-      const checkMessage = (component, spinnerShown, text) => {
+      const checkMessage = (component, text) => {
         const message = component.first('#submission-list-message');
-        const spinners = component.find(Spinner)
-          .filter(wrapper => $.contains(message.element, wrapper.vm.$el));
-        spinners.length.should.equal(1);
-        spinners[0].getProp('state').should.equal(spinnerShown);
-        message.first('#submission-list-message-text').text().trim().should.equal(text);
+        if (text == null) {
+          message.should.be.hidden();
+        } else {
+          message.should.not.be.hidden();
+
+          const spinners = component.find(Spinner).filter(spinner =>
+            message.element.contains(spinner.vm.$el));
+          spinners.length.should.equal(1);
+          spinners[0].getProp('state').should.equal(true);
+
+          message.first('#submission-list-message-text').text().trim().should.equal(text);
+        }
       };
 
       it('loads a single submission', () => {
-        let tested = false;
         createSubmissions(1);
         return loadSubmissionList()
-          .beforeEachResponse((component, request) => {
-            if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading 1 Submission…');
-            tested = true;
-          })
-          .then(() => {
-            tested.should.be.true();
+          .beforeEachResponse((component) => {
+            checkMessage(component, 'Loading 1 Submission…');
           });
       });
 
       it('loads all submissions if there are few of them', () => {
-        let tested = false;
         createSubmissions(2);
         return loadSubmissionList()
-          .beforeEachResponse((component, request) => {
-            if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading 2 Submissions…');
-            tested = true;
-          })
-          .then(() => {
-            tested.should.be.true();
+          .beforeEachResponse((component) => {
+            checkMessage(component, 'Loading 2 Submissions…');
           });
       });
 
@@ -441,7 +441,7 @@ describe('SubmissionList', () => {
         return loadSubmissionList(() => 2)
           .beforeEachResponse((component, request) => {
             if (!request.url.includes('.svc/Submissions')) return;
-            checkMessage(component, true, 'Loading the first 2 of 3 Submissions…');
+            checkMessage(component, 'Loading the first 2 of 3 Submissions…');
             checkTopSkip(request, 2, 0);
             tested = true;
           })
@@ -467,18 +467,14 @@ describe('SubmissionList', () => {
 
       describe('scrolling', () => {
         it('scrolling to the bottom loads the next chunk of submissions', () => {
-          let tested = false;
           createSubmissions(12);
           // Chunk 1
           return loadSubmissionList((skip) => (skip < 8 ? 2 : 3))
-            .beforeEachResponse((component, request) => {
-              if (!request.url.includes('.svc/Submissions')) return;
-              checkMessage(component, true, 'Loading the first 2 of 12 Submissions…');
-              tested = true;
+            .beforeEachResponse(component => {
+              checkMessage(component, 'Loading the first 2 of 12 Submissions…');
             })
             .afterResponses(component => {
-              tested.should.be.true();
-              checkMessage(component, false, '10 rows remain.');
+              checkMessage(component, null);
             })
             // Chunk 2
             .request(component => {
@@ -486,12 +482,12 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 2);
-              checkMessage(component, true, 'Loading 2 more of 10 remaining Submissions…');
+              checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 2))
             .afterResponse(component => {
               checkIds(component, 4);
-              checkMessage(component, false, '8 rows remain.');
+              checkMessage(component, null);
             })
             // Chunk 3
             .request(component => {
@@ -499,12 +495,12 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 4);
-              checkMessage(component, true, 'Loading 2 more of 8 remaining Submissions…');
+              checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 4))
             .afterResponse(component => {
               checkIds(component, 6);
-              checkMessage(component, false, '6 rows remain.');
+              checkMessage(component, null);
             })
             // Chunk 4 (last small chunk)
             .request(component => {
@@ -512,12 +508,12 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 2, 6);
-              checkMessage(component, true, 'Loading 2 more of 6 remaining Submissions…');
+              checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 6))
             .afterResponse(component => {
               checkIds(component, 8);
-              checkMessage(component, false, '4 rows remain.');
+              checkMessage(component, null);
             })
             // Chunk 5
             .request(component => {
@@ -525,12 +521,12 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 3, 8);
-              checkMessage(component, true, 'Loading 3 more of 4 remaining Submissions…');
+              checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(3, 8))
             .afterResponse(component => {
               checkIds(component, 11);
-              checkMessage(component, false, '1 row remains.');
+              checkMessage(component, null);
             })
             // Chunk 6
             .request(component => {
@@ -538,12 +534,12 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, request) => {
               checkTopSkip(request, 3, 11);
-              checkMessage(component, true, 'Loading the last Submission…');
+              checkMessage(component, 'Loading the last Submission…');
             })
             .respondWithData(() => testData.submissionOData(3, 11))
             .afterResponse(component => {
               checkIds(component, 12);
-              component.first('#submission-list-message').should.be.hidden();
+              checkMessage(component, null);
             });
         });
 
@@ -735,7 +731,7 @@ describe('SubmissionList', () => {
             .beforeEachResponse((component, config, index) => {
               if (index === 2) {
                 checkTopSkip(config, 2, 0);
-                checkMessage(component, true, 'Loading the first 2 of 4 Submissions…');
+                checkMessage(component, 'Loading the first 2 of 4 Submissions…');
               }
             })
             .complete()
@@ -746,7 +742,7 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
-              checkMessage(component, true, 'Loading the last 2 Submissions…');
+              checkMessage(component, 'Loading the last 2 Submissions…');
             })
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(4);
@@ -755,7 +751,7 @@ describe('SubmissionList', () => {
             })
             .afterResponse(component => {
               checkIds(component, 2, 4);
-              checkMessage(component, false, '2 rows remain.');
+              checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=4.
             .request(component => {
@@ -763,13 +759,13 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
-              checkMessage(component, true, 'Loading the last 2 Submissions…');
+              checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
             .respondWithData(() => testData.submissionOData(2, 4))
             .afterResponse(component => {
               checkIds(component, 2, 4);
-              checkMessage(component, false, '2 rows remain.');
+              checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=6.
             .request(component => {
@@ -777,13 +773,13 @@ describe('SubmissionList', () => {
             })
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
-              checkMessage(component, true, 'Loading the last 2 Submissions…');
+              checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the last 2 submissions.
             .respondWithData(() => testData.submissionOData(2, 6))
             .afterResponse(component => {
               checkIds(component, 4, 4);
-              component.first('#submission-list-message').should.be.hidden();
+              checkMessage(component, null);
             })
             // 8 submissions exist. No request will be sent.
             .testNoRequest(component => {

@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="submission-filters">
-    <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
+    <div class="form-group">
+      <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
+    </div>
     <submission-filters-submitter :value="submitterId"
       @input="$emit('update:submitterId', $event)"/>
     <date-range-picker :value="submissionDate"

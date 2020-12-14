@@ -33,20 +33,11 @@ except according to the terms contained in the LICENSE file.
           :submissions="submissions" :fields="fields"
           :original-count="originalCount" :shows-submitter="showsSubmitter"/>
       </template>
-      <div v-show="odataLoadingMessage != null || anyRemaining"
-        id="submission-list-message">
+      <div v-show="odataLoadingMessage != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
           <spinner :state="odataLoadingMessage != null"/>
         </div>
-        <div id="submission-list-message-text">
-          <template v-if="odataLoadingMessage != null">
-            {{ odataLoadingMessage }}
-          </template>
-          <!-- TODO. Is this ever very visible? -->
-          <template v-else-if="anyRemaining">
-            {{ $tcn('remaining', originalCount - submissions.length) }}
-          </template>
-        </div>
+        <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
       </div>
     </div>
     <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
@@ -169,7 +160,6 @@ export default {
       const remaining = this.originalCount - this.submissions.length;
       const top = this.top(this.skip);
       if (remaining > top) {
-        // TODO. Is this right for the filter case?
         return this.$tcn(`${pathPrefix}.middle`, remaining, {
           top: this.$n(top, 'default')
         });
@@ -177,10 +167,6 @@ export default {
       return remaining > 1
         ? this.$tcn(`${pathPrefix}.last.multiple`, remaining)
         : this.$t(`${pathPrefix}.last.one`);
-    },
-    anyRemaining() {
-      return this.submissions != null &&
-        this.submissions.length < this.originalCount;
     }
   },
   watch: {
@@ -267,7 +253,8 @@ export default {
     // This method may need to change once we support submission deletion.
     onScroll() {
       if (this.formVersion != null && this.keys != null &&
-        this.fields != null && !this.loadingOData && this.anyRemaining &&
+        this.fields != null && this.submissions != null &&
+        this.submissions.length < this.originalCount && !this.loadingOData &&
         this.scrolledToBottom()) {
         this.fetchChunk(this.skip, false);
       }
@@ -289,7 +276,7 @@ export default {
 #submission-list {
   // Make sure there is enough space for the DateRangePicker and the
   // SubmissionDownloadDropdown when they are open.
-  min-height: 350px;
+  min-height: 375px;
 }
 
 #submission-filters + #submission-list-refresh-button { margin-left: 10px; }
@@ -350,8 +337,7 @@ export default {
       }
     },
     "emptyTable": "There are no Submissions yet.",
-    "noMatching": "There are no matching Submissions.",
-    "remaining": "{count} row remains. | {count} rows remain."
+    "noMatching": "There are no matching Submissions."
   }
 }
 </i18n>

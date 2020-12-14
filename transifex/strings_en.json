@@ -402,7 +402,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "filter": {
-      "string": "Filter by",
+      "string": "Filter",
       "developer_comment": "This text is shown next to options for filtering a table."
     },
     "no": {
@@ -2841,9 +2841,6 @@
       },
       "noMatching": {
         "string": "There are no matching Submissions."
-      },
-      "remaining": {
-        "string": "{count, plural, one {{count} row remains.} other {{count} rows remain.}}"
       }
     },
     "SubmissionRow": {

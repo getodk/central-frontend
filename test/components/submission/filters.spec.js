@@ -3,6 +3,7 @@ import { DateTime, Settings } from 'luxon';
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionRow from '../../../src/components/submission/row.vue';
+import SubmissionTable from '../../../src/components/submission/table.vue';
 
 import Form from '../../../src/presenters/form';
 
@@ -60,6 +61,31 @@ describe('SubmissionFilters', () => {
       .respondWithData(testData.submissionOData);
   });
 
+  it('re-renders the table after the submitter filter is changed', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    testData.extendedForms.createPast(1, { submissions: 3 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
+    return loadSubmissionList()
+      .complete()
+      .request(component => { component.vm.onScroll(); })
+      .respondWithData(() => testData.submissionOData(2, 2))
+      .afterResponse(component => {
+        component.find(SubmissionRow).length.should.equal(6);
+      })
+      .request(trigger.changeValue(
+        '#submission-filters-submitter select',
+        fieldKey.id.toString()
+      ))
+      .beforeEachResponse(component => {
+        component.find(SubmissionTable).length.should.equal(0);
+      })
+      .respondWithData(() => testData.submissionOData(2, 0))
+      .afterResponse(component => {
+        component.find(SubmissionRow).length.should.equal(4);
+      });
+  });
+
   it('sends a request after the submission date filter is changed', () => {
     testData.extendedForms.createPast(1);
     return loadSubmissionList()
@@ -82,7 +108,7 @@ describe('SubmissionFilters', () => {
         end.should.startWith('1970-01-02T23:59:59.999');
         DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
       })
-      .respondWithData(testData.submissionOData);
+      .respondWithData(() => testData.submissionOData(0));
   });
 
   it('specifies both filters in the query parameter', () => {

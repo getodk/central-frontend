@@ -262,8 +262,9 @@ $form-group-padding-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
 
   .form-group {
-    margin-left: 10px;
     padding-bottom: 0;
+
+    + .form-group { margin-left: 10px; }
   }
 
   .icon-filter {

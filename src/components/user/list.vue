@@ -26,14 +26,6 @@ either is an Administrator or has no role. -->
         </template>
       </i18n>
     </div>
-    <div class="table-actions">
-      <button id="user-list-refresh-button" type="button"
-        class="btn btn-primary" :disabled="refreshing"
-        @click="fetchData({ clear: false })">
-        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-        <spinner :state="refreshing"/>
-      </button>
-    </div>
     <table id="user-list-table" class="table">
       <thead>
         <tr>
@@ -63,7 +55,6 @@ either is an Administrator or has no role. -->
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import Spinner from '../spinner.vue';
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
@@ -78,7 +69,6 @@ export default {
   components: {
     DocLink,
     Loading,
-    Spinner,
     UserNew,
     UserResetPassword,
     UserRetire,
@@ -105,33 +95,23 @@ export default {
       }
     };
   },
-  computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['users']),
-    refreshing() {
-      return this.$store.getters.refreshing(['users', 'actors']);
-    }
-  },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['users']),
   created() {
     this.fetchData();
   },
   methods: {
-    fetchData({ clear = true, highlighted = null } = {}) {
-      if (clear) this.adminIds = null;
+    fetchData() {
+      this.adminIds = null;
       return this.$store.dispatch('get', [
         {
           key: 'users',
-          url: '/users',
-          clear,
-          success: () => {
-            this.highlighted = highlighted;
-          }
+          url: '/users'
         },
         {
           key: 'actors',
           url: '/assignments/admin',
-          clear,
           success: ({ actors }) => {
             this.adminIds = new Set();
             for (const actor of actors)
@@ -141,9 +121,10 @@ export default {
       ]).catch(noop);
     },
     afterCreate(user) {
-      this.fetchData({ highlighted: user.id });
+      this.fetchData();
       this.hideModal('newUser');
       this.$alert().success(this.$t('alert.create', user));
+      this.highlighted = user.id;
     },
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
@@ -200,6 +181,7 @@ export default {
       this.fetchData();
       this.hideRetire();
       this.$alert().success(this.$t('alert.retire', user));
+      this.highlighted = null;
     }
   }
 };

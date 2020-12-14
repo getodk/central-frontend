@@ -19,11 +19,12 @@ describe('SubmissionAnalyze', () => {
 
   it('toggles the modal', () => {
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f/submissions').testModalToggles({
-      modal: SubmissionAnalyze,
-      show: '#submission-data-access-analyze-button',
-      hide: '.btn-primary'
-    });
+    return load('/projects/1/forms/f/submissions', { component: true }, {})
+      .testModalToggles({
+        modal: SubmissionAnalyze,
+        show: '#submission-data-access-analyze-button',
+        hide: '.btn-primary'
+      });
   });
 
   describe('tool info', () => {
