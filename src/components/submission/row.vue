@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <!-- The frozen columns of the table -->
-  <tr v-if="fieldColumns == null">
+  <tr v-if="fields == null">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="showsSubmitter" class="submitter-name"
       :title="submission.__system.submitterName">
@@ -23,11 +23,11 @@ except according to the terms contained in the LICENSE file.
   <tr v-else
     :class="{ 'encrypted-submission': submission.__system.status != null }">
     <template v-if="submission.__system.status == null">
-      <submission-cell v-for="column of fieldColumns" :key="column.path"
-        :base-url="baseUrl" :submission="submission" :column="column"/>
+      <submission-cell v-for="field of fields" :key="field.path"
+        :base-url="baseUrl" :submission="submission" :field="field"/>
     </template>
-    <template v-else-if="fieldColumns.length !== 0">
-      <td class="encrypted-data" :colspan="fieldColumns.length">
+    <template v-else-if="fields.length !== 0">
+      <td class="encrypted-data" :colspan="fields.length">
         <span class="icon-lock"></span>
         <span class="encryption-message">{{ $t('encryptionMessage') }}</span>
         <span class="encryption-overlay"></span>
@@ -57,7 +57,7 @@ export default {
       type: Number,
       default: 0
     },
-    fieldColumns: Array, // eslint-disable-line vue/require-default-prop
+    fields: Array, // eslint-disable-line vue/require-default-prop
     showsSubmitter: {
       type: Boolean,
       default: false

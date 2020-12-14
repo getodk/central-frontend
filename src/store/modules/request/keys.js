@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Audit from '../../../presenters/audit';
+import Field from '../../../presenters/field';
 import FieldKey from '../../../presenters/field-key';
 import Form from '../../../presenters/form';
 import FormAttachment from '../../../presenters/form-attachment';
@@ -81,6 +82,7 @@ export const transforms = {
   project: ({ data }) => new Project(data),
   forms: formPresenters,
   form: formPresenter,
+  fields: ({ data }) => data.map(field => new Field(field)),
   formVersions: formPresenters,
   formDraft: option(formPresenter),
   attachments: option(({ data }) =>
@@ -120,6 +122,29 @@ const dataGetters = {
     ];
   },
 
+  selectableFields: ({ data: { fields } }) => {
+    if (fields == null) return null;
+    const selectable = [];
+    // The path of the top-level repeat group currently being traversed
+    let repeat = null;
+    for (const field of fields) {
+      const { path } = field;
+      if (repeat == null || !path.startsWith(repeat)) {
+        repeat = null;
+        // Note that `type` may be `undefined`, though I have seen this only in
+        // the Widgets sample form (<branch>):
+        // https://github.com/getodk/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
+        const { type } = field;
+        if (type === 'repeat') {
+          repeat = `${path}/`;
+        } else if (type !== 'structure' && path !== '/meta/instanceID' &&
+          path !== '/instanceID') {
+          selectable.push(field);
+        }
+      }
+    }
+    return selectable;
+  },
   missingAttachmentCount: ({ data: { attachments } }) => {
     if (attachments == null) return null;
     if (attachments.isEmpty()) return 0;

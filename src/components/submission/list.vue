@@ -15,6 +15,9 @@ except according to the terms contained in the LICENSE file.
     <div v-show="fields != null">
       <form class="form-inline" @submit.prevent>
         <submission-filters v-if="filterable" v-bind.sync="filters"/>
+        <submission-field-dropdown
+          v-if="fields != null && selectableFields.length > 11"
+          v-model="selectedFields"/>
         <button id="submission-list-refresh-button" type="button"
           class="btn btn-primary" :disabled="refreshing"
           @click="fetchChunk(0, false)">
@@ -30,7 +33,7 @@ except according to the terms contained in the LICENSE file.
           {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
         </p>
         <submission-table v-else-if="fields != null" :base-url="baseUrl"
-          :submissions="submissions" :fields="fields"
+          :submissions="submissions" :fields="selectedFields"
           :original-count="originalCount" :shows-submitter="showsSubmitter"/>
       </template>
       <div v-show="odataLoadingMessage != null" id="submission-list-message">
@@ -46,11 +49,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { last } from 'ramda';
+import { mapGetters } from 'vuex';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
 import SubmissionDecrypt from './decrypt.vue';
 import SubmissionDownloadDropdown from './download-dropdown.vue';
+import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 
@@ -67,6 +72,7 @@ export default {
     Spinner,
     SubmissionDecrypt,
     SubmissionDownloadDropdown,
+    SubmissionFieldDropdown,
     SubmissionFilters,
     SubmissionTable
   },
@@ -106,6 +112,7 @@ export default {
         submitterId: '',
         submissionDate: []
       },
+      selectedFields: null,
       refreshing: false,
       submissions: null,
       instanceIds: new Set(),
@@ -124,6 +131,7 @@ export default {
   },
   computed: {
     ...requestData(['keys', 'fields', 'odataChunk', 'submitters']),
+    ...mapGetters(['selectableFields']),
     odataFilter() {
       const conditions = [];
       if (this.filters.submitterId !== '')
@@ -172,6 +180,9 @@ export default {
   watch: {
     'filters.submitterId': 'filter',
     'filters.submissionDate': 'filter',
+    selectedFields(_, oldFields) {
+      if (oldFields != null) this.fetchChunk(0, true);
+    },
     loadingOData(loading) {
       if (!loading) this.refreshing = false;
     }
@@ -240,7 +251,13 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'fields',
-        url: `${this.baseUrl}/fields?odata=true`
+        url: `${this.baseUrl}/fields?odata=true`,
+        success: () => {
+          // We also use 11 in the SubmissionFieldDropdown v-if.
+          this.selectedFields = this.selectableFields.length <= 11
+            ? this.selectableFields
+            : this.selectableFields.slice(0, 10);
+        }
       }]).catch(noop);
       this.fetchChunk(0, true);
       if (this.filterable) {
@@ -279,8 +296,11 @@ export default {
   min-height: 375px;
 }
 
+#submission-filters + #submission-field-dropdown { margin-left: 15px }
 #submission-filters + #submission-list-refresh-button { margin-left: 10px; }
-
+#submission-field-dropdown + #submission-list-refresh-button {
+  margin-left: 15px;
+}
 #submission-download-dropdown {
   float: right;
   top: 3px;

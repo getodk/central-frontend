@@ -1,5 +1,7 @@
 import SubmissionCell from '../../../src/components/submission/cell.vue';
-import SubmissionTable from '../../../src/components/submission/table.vue';
+
+import Field from '../../../src/presenters/field';
+
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
@@ -8,9 +10,7 @@ const mountComponent = () => mount(SubmissionCell, {
   propsData: {
     baseUrl: '/base',
     submission: testData.submissionOData().value[0],
-    column: SubmissionTable.methods.fieldToColumn(
-      testData.extendedForms.last()._fields[0]
-    )
+    field: new Field(testData.extendedForms.last()._fields[0])
   }
 });
 

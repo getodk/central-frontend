@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <td :class="htmlClass" :title="title">
-    <template v-if="column.binary === true">
+    <template v-if="field.binary === true">
       <a v-if="formattedValue !== ''" class="binary-link" :href="formattedValue"
         target="_blank" :title="$t('binaryLinkTitle')">
         <span class="icon-check"></span> <span class="icon-download"></span>
@@ -27,6 +27,7 @@ except according to the terms contained in the LICENSE file.
 import { DateTime, Settings } from 'luxon';
 import { path } from 'ramda';
 
+import Field from '../../presenters/field';
 import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
 
 const typeOptions = {
@@ -51,16 +52,16 @@ export default {
       type: Object,
       required: true
     },
-    column: {
-      type: Object,
+    field: {
+      type: Field,
       required: true
     }
   },
   computed: {
     htmlClass() {
       const htmlClass = ['submission-table-field'];
-      if (this.column.binary === true) htmlClass.push('submission-cell-binary');
-      const { type } = this.column;
+      if (this.field.binary === true) htmlClass.push('submission-cell-binary');
+      const { type } = this.field;
       if (type != null) {
         const options = typeOptions[type];
         if (options != null && options.htmlClass === true)
@@ -69,17 +70,17 @@ export default {
       return htmlClass;
     },
     formattedValue() {
-      const rawValue = path(this.column.pathComponents, this.submission);
+      const rawValue = path(this.field.splitPath(), this.submission);
       if (rawValue == null) return '';
       // A field could have a `binary` property that is `true` but a `type`
       // property that does not equal 'binary'. Backend treats the `binary`
       // property as authoritative.
-      if (this.column.binary === true) {
+      if (this.field.binary === true) {
         const encodedId = encodeURIComponent(this.submission.__id);
         const encodedName = encodeURIComponent(rawValue);
         return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
       }
-      switch (this.column.type) {
+      switch (this.field.type) {
         case 'int':
           return this.$n(rawValue, 'default');
         // The ODK XForms specification seems to allow decimal values that
@@ -151,9 +152,8 @@ export default {
       }
     },
     title() {
-      if (this.column.binary === true || this.formattedValue === '')
-        return null;
-      const { type } = this.column;
+      if (this.field.binary === true || this.formattedValue === '') return null;
+      const { type } = this.field;
       if (type == null) return null;
       const options = typeOptions[type];
       return options != null && options.title === true
