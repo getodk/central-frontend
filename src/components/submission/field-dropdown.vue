@@ -110,6 +110,9 @@ export default {
         total: this.$n(this.selectableFields.length, 'default')
       });
     },
+    searchToLowerCase() {
+      return this.search.toLowerCase();
+    },
     disablesSelectAll() {
       if (this.checkedCount === maxCheckedCount) return true;
       const countIfSelectAll = this.selectableFields.reduce(
@@ -147,7 +150,8 @@ export default {
       this.$refs.search.focus();
     },
     matchesSearch(field) {
-      return this.search === '' || field.header().includes(this.search);
+      return this.search === '' ||
+        field.header().toLowerCase().includes(this.searchToLowerCase);
     },
     selectAll() {
       if (this.disablesSelectAll) return;
@@ -197,7 +201,6 @@ export default {
 
   $line-height: 1;
   .dropdown-menu {
-    background-color: #fff;
     border-radius: 0;
     line-height: $line-height;
     margin-top: 0;
@@ -223,6 +226,11 @@ export default {
       width: 100%;
 
       &, &:focus { border-bottom: none; }
+
+      &::placeholder {
+        color: #666;
+        font-style: italic;
+      }
     }
 
     .close {
@@ -238,7 +246,6 @@ export default {
     background-color: $color-subpanel-background;
     font-size: 14px;
     list-style: none;
-    // TODO. Implement the release criteria.
     max-height: 250px;
     overflow: visible auto;
     padding-bottom: 3px;
@@ -250,8 +257,12 @@ export default {
     li {
       padding-left: $hpadding;
       padding-right: $hpadding;
-      // 22px is the same as the other <li> elements.
-      &:last-child { height: 22px; }
+
+      &:last-child {
+        // 22px is the same as the other <li> elements.
+        height: 22px;
+        padding-top: 3px;
+      }
 
       display: none;
       &:last-child { display: list-item; }

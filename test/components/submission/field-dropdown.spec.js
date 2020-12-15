@@ -208,6 +208,17 @@ describe('SubmissionFieldDropdown', () => {
       matches[0].first('span').text().should.equal('s1');
     });
 
+    it('completes a case-insensitive search', async () => {
+      commitFields([string('/s'), string('/S'), string('/x')]);
+      const dropdown = mount(SubmissionFieldDropdown, {
+        propsData: { value: [] }
+      });
+      await trigger.input(dropdown, '.search input', 's');
+      dropdown.find('.search-match').length.should.equal(2);
+      await trigger.input(dropdown, '.search input', 'S');
+      dropdown.find('.search-match').length.should.equal(2);
+    });
+
     it('shows a message if there are no matches', async () => {
       commitFields([string('/s1')]);
       const dropdown = mount(SubmissionFieldDropdown, {
