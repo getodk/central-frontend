@@ -72,14 +72,24 @@ except according to the terms contained in the LICENSE file.
       </i18n>
     </template>
 
-    <button v-if="status === 'notConfigured'" type="button"
-      class="btn btn-primary" @click="$emit('create')">
-      <span class="icon-plus-circle"></span>{{ $t('action.setUp') }}&hellip;
-    </button>
-    <button v-else type="button" class="btn btn-primary"
-      @click="$emit('terminate')">
-      <span class="icon-times-circle"></span>{{ $t('action.terminate') }}&hellip;
-    </button>
+    <div>
+      <template v-if="status === 'notConfigured'">
+        <button type="button" class="btn btn-primary" @click="$emit('create')">
+          <span class="icon-plus-circle"></span>{{ $t('action.setUp') }}&hellip;
+        </button>
+      </template>
+      <template v-else>
+        <a class="btn btn-primary" :class="{ disabled: downloading }"
+          href="/v1/backup" @click="download">
+          <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
+          <spinner :state="downloading"/>
+        </a>
+        <button type="button" class="btn btn-danger"
+          @click="$emit('terminate')">
+          <span class="icon-times-circle"></span>{{ $t('action.terminate') }}&hellip;
+        </button>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -88,12 +98,19 @@ import { DateTime } from 'luxon';
 import { mapGetters } from 'vuex';
 
 import DateTimeComponent from '../date-time.vue';
+import Spinner from '../spinner.vue';
+
 import { ago } from '../../util/date-time';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupStatus',
-  components: { DateTime: DateTimeComponent },
+  components: { DateTime: DateTimeComponent, Spinner },
+  data() {
+    return {
+      downloading: false
+    };
+  },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -124,6 +141,16 @@ export default {
           return 'icon-times-circle';
       }
     }
+  },
+  methods: {
+    download(event) {
+      if (!this.downloading) {
+        this.$alert().success(this.$t('alert.download'));
+        this.downloading = true;
+      } else {
+        event.preventDefault();
+      }
+    }
   }
 };
 </script>
@@ -135,13 +162,7 @@ export default {
   margin-bottom: 35px;
   position: relative;
 
-  p, button {
-    margin-left: 41px;
-  }
-
-  p:first-of-type {
-    font-size: 28px;
-  }
+  .btn + .btn { margin-left: 5px; }
 }
 
 #backup-status-icon {
@@ -149,17 +170,12 @@ export default {
   position: absolute;
   top: 4px;
 
-  &.icon-question-circle {
-    color: #999;
-  }
+  &.icon-question-circle { color: #999; }
+  &.icon-check-circle { color: $color-success; }
+  &.icon-times-circle { color: $color-danger; }
 
-  &.icon-check-circle {
-    color: $color-success;
-  }
-
-  &.icon-times-circle {
-    color: $color-danger;
-  }
+  ~ * { margin-left: 41px; }
+  + p { font-size: 28px; }
 }
 </style>
 
@@ -209,7 +225,11 @@ export default {
     ],
     "action": {
       "setUp": "Set up now",
+      "download": "Download backup now",
       "terminate": "Terminate"
+    },
+    "alert": {
+      "download": "The backup is running now, and will be encrypted and downloaded to your computer once it completes."
     }
   }
 }

@@ -733,9 +733,18 @@
           "string": "Set up now",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
+        "download": {
+          "string": "Download backup now",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "terminate": {
           "string": "Terminate",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "download": {
+          "string": "The backup is running now, and will be encrypted and downloaded to your computer once it completes."
         }
       }
     },

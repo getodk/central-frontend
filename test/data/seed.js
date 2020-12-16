@@ -14,6 +14,7 @@ export default () => {
         'assignment.delete',
         'audit.read',
         'backup.create',
+        'backup.run',
         'backup.terminate',
         'config.read',
         'field_key.create',

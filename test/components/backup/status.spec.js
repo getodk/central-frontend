@@ -1,10 +1,20 @@
 import BackupStatus from '../../../src/components/backup/status.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import Spinner from '../../../src/components/spinner.vue';
+
 import testData from '../../data';
 import { ago } from '../../../src/util/date-time';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/lifecycle';
+import { mount } from '../../util/lifecycle';
+import { trigger } from '../../util/event';
 
+const mountComponent = () => mount(BackupStatus, {
+  requestData: {
+    backupsConfig: testData.standardBackupsConfigs.last(),
+    audits: testData.standardAudits.sorted()
+  }
+});
 const assertContent = (component, iconClass, title, buttonText) => {
   const icon = component.first('#backup-status-icon');
   icon.hasClass(iconClass).should.be.true();
@@ -19,7 +29,7 @@ describe('BackupStatus', () => {
   beforeEach(mockLogin);
 
   it('renders correctly if backups are not configured', () => {
-    const component = mountAndMark(BackupStatus, {
+    const component = mount(BackupStatus, {
       requestData: {
         backupsConfig: { problem: 404.1 }
       }
@@ -33,7 +43,7 @@ describe('BackupStatus', () => {
   });
 
   it('renders correctly if the latest recent attempt was a success', () => {
-    const component = mountAndMark(BackupStatus, {
+    const component = mount(BackupStatus, {
       requestData: {
         backupsConfig: testData.standardBackupsConfigs
           .createPast(1, { setAt: ago({ days: 4 }).toISO() })
@@ -59,7 +69,7 @@ describe('BackupStatus', () => {
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {
-    const component = mountAndMark(BackupStatus, {
+    const component = mount(BackupStatus, {
       requestData: {
         backupsConfig: testData.standardBackupsConfigs
           .createPast(1, { setAt: ago({ days: 2 }).toISO() })
@@ -82,7 +92,7 @@ describe('BackupStatus', () => {
 
   describe('no recent attempt for the current config', () => {
     it('renders correctly if the config was recently set up', () => {
-      const component = mountAndMark(BackupStatus, {
+      const component = mount(BackupStatus, {
         requestData: {
           backupsConfig: testData.standardBackupsConfigs
             .createPast(1, { setAt: ago({ days: 2 }).toISO() })
@@ -99,7 +109,7 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if latest attempt was a recent failure for previous config', () => {
-      const component = mountAndMark(BackupStatus, {
+      const component = mount(BackupStatus, {
         requestData: {
           backupsConfig: testData.standardBackupsConfigs
             .createPast(1, { setAt: ago({ days: 1 }).toISO() })
@@ -121,7 +131,7 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if the config was not recently set up', () => {
-      const component = mountAndMark(BackupStatus, {
+      const component = mount(BackupStatus, {
         requestData: {
           backupsConfig: testData.standardBackupsConfigs
             .createPast(1, { setAt: ago({ days: 4 }).toISO() })
@@ -138,7 +148,7 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if latest non-recent attempt was a success', () => {
-      const component = mountAndMark(BackupStatus, {
+      const component = mount(BackupStatus, {
         requestData: {
           backupsConfig: testData.standardBackupsConfigs
             .createPast(1, { setAt: ago({ days: 5 }).toISO() })
@@ -157,6 +167,58 @@ describe('BackupStatus', () => {
         'Something is wrong!',
         'Terminate…'
       );
+    });
+  });
+
+  describe('download link', () => {
+    beforeEach(() => {
+      testData.standardBackupsConfigs.createPast(1, {
+        setAt: ago({ days: 1 }).toISO()
+      });
+    });
+
+    it('renders the link if backups are configured', () => {
+      mountComponent().find('[href="/v1/backup"]').length.should.equal(1);
+    });
+
+    describe('after the link is clicked', () => {
+      it('shows a success alert', async () => {
+        const app = await load('/system/backups');
+        const a = app.first('#backup-status [href="/v1/backup"]');
+        // Needed for Karma.
+        a.element.setAttribute('target', '_blank');
+        await trigger.click(a);
+        app.should.alert('success');
+      });
+
+      it('disables the link', async () => {
+        const a = mountComponent().first('[href="/v1/backup"]');
+        a.element.setAttribute('target', '_blank');
+        await trigger.click(a);
+        a.hasClass('disabled').should.be.true();
+      });
+
+      it('prevents default if it is clicked again', () => {
+        const a = mountComponent().first('[href="/v1/backup"]');
+        a.element.setAttribute('target', '_blank');
+        const click = () => a.element.dispatchEvent(new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true
+        }));
+        click().should.be.true();
+        click().should.be.false();
+      });
+
+      it('shows a spinner', async () => {
+        const component = mountComponent();
+        const spinners = component.find(Spinner);
+        spinners.length.should.equal(1);
+        spinners[0].getProp('state').should.be.false();
+        const a = component.first('[href="/v1/backup"]');
+        a.element.setAttribute('target', '_blank');
+        await trigger.click(a);
+        spinners[0].getProp('state').should.be.true();
+      });
     });
   });
 });
