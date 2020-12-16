@@ -229,7 +229,7 @@ export default {
       "terminate": "Terminate"
     },
     "alert": {
-      "download": "The backup is running now, and will be encrypted and downloaded to your computer once it completes."
+      "download": "The backup is running now, and will be encrypted and downloaded to your computer once it completes. This may take a while."
     }
   }
 }
