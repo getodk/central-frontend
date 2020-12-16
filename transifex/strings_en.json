@@ -1889,6 +1889,20 @@
         }
       }
     },
+    "NavbarHelpDropdown": {
+      "docs": {
+        "string": "Docs",
+        "developer_comment": "This is the text of a link that links to the documentation."
+      },
+      "forum": {
+        "string": "Forum",
+        "developer_comment": "This is the text of a link that links to the ODK forum."
+      },
+      "version": {
+        "string": "Version",
+        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+      }
+    },
     "NavbarLinks": {
       "projects": {
         "string": "Projects",

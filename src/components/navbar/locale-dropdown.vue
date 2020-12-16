@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <li id="navbar-locale-dropdown" class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
       aria-haspopup="true" aria-expanded="false">
       {{ $i18n.locale }}<span class="caret"></span>
     </a>
