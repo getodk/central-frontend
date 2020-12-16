@@ -3,6 +3,7 @@ import * as Assignments from './assignments';
 import * as Audits from './audits';
 import * as BackupsConfigs from './backups-configs';
 import * as FieldKeys from './field-keys';
+import * as Fields from './fields';
 import * as FormAttachments from './form-attachments';
 import * as Forms from './forms';
 import * as Keys from './keys';
@@ -22,6 +23,7 @@ const testData = Object.assign(
   Audits,
   BackupsConfigs,
   FieldKeys,
+  Fields,
   FormAttachments,
   Forms,
   Keys,

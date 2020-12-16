@@ -1,5 +1,11 @@
 @import './variables';
 
+@mixin text-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // A list that shows descriptive text
 @mixin text-list {
   max-width: $max-width-p;

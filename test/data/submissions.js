@@ -2,6 +2,8 @@ import faker from 'faker';
 import { DateTime } from 'luxon';
 import { comparator, hasPath, lensPath, set } from 'ramda';
 
+import Field from '../../src/presenters/field';
+
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
@@ -49,32 +51,30 @@ const odataValue = (field, instanceId) => {
     }
     case 'binary':
       return faker.system.commonFileName('jpg');
+    case null:
+      return faker.random.boolean() ? 'y' : 'n';
     default:
       throw new Error('invalid field type');
   }
 };
 
 // Returns random OData for a form submission. `partial` seeds the OData.
-// `exists` indicates for each field type whether a field of that type should
-// have a value. `partial` takes precedence over `exists`: see partialOData in
-// extendedSubmissions.
-const odata = ({ form, instanceId, partial, exists }) => form._fields.reduce(
-  (data, field) => {
-    // Once we resolve issue #82 for Backend, we should implement repeat groups.
-    if (field.type === 'repeat') return data;
-    const pathComponents = field.path.slice(1).split('/');
-    // `partial` may have already specified a value for the field.
-    if (hasPath(pathComponents, data)) return data;
-    const fieldLens = lensPath(pathComponents);
-    if (field.type === 'structure') return set(fieldLens, {}, data);
-    if (field.type == null)
-      return set(fieldLens, faker.random.boolean() ? 'y' : 'n', data);
-    return exists[field.type] === true
-      ? set(fieldLens, odataValue(field, instanceId), data)
-      : data;
-  },
-  partial
-);
+const odata = ({ form, instanceId, partial }) => form._fields
+  .map(field => new Field(field))
+  .reduce(
+    (data, field) => {
+      if (field.type === 'repeat') return data;
+      // `partial` may have already specified a value for the field.
+      return hasPath(field.splitPath(), data)
+        ? data
+        : set(
+          lensPath(field.splitPath()),
+          field.type === 'structure' ? {} : odataValue(field, instanceId),
+          data
+        );
+    },
+    partial
+  );
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
@@ -86,21 +86,6 @@ export const extendedSubmissions = dataStore({
     instanceId = faker.random.uuid(),
     status = null,
     submitter = extendedUsers.first(),
-
-    hasInt = faker.random.boolean(),
-    hasDecimal = faker.random.boolean(),
-    // We should probably rename this to hasString at some point for
-    // consistency.
-    hasStrings = faker.random.boolean(),
-    hasDate = faker.random.boolean(),
-    hasTime = faker.random.boolean(),
-    hasDateTime = faker.random.boolean(),
-    hasGeopoint = faker.random.boolean(),
-    hasBinary = faker.random.boolean(),
-
-    // partialOData takes precedence over the has* parameters. For example, if
-    // partialOData specifies a value for an int field, then even if hasInt is
-    // false, the int field will have the specified value.
     ...partialOData
   }) => {
     if (form === undefined) throw new Error('form not found');
@@ -128,16 +113,6 @@ export const extendedSubmissions = dataStore({
             submitterId: submitter.id.toString(),
             submitterName: submitter.displayName
           }
-        },
-        exists: {
-          int: hasInt,
-          decimal: hasDecimal,
-          string: hasStrings,
-          date: hasDate,
-          time: hasTime,
-          dateTime: hasDateTime,
-          geopoint: hasGeopoint,
-          binary: hasBinary
         }
       })
     };

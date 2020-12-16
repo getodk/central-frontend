@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <!-- The frozen columns of the table -->
-  <tr v-if="fieldColumns == null">
+  <tr v-if="fields == null">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="showsSubmitter" class="submitter-name"
       :title="submission.__system.submitterName">
@@ -23,27 +23,51 @@ except according to the terms contained in the LICENSE file.
   <tr v-else
     :class="{ 'encrypted-submission': submission.__system.status != null }">
     <template v-if="submission.__system.status == null">
-      <submission-cell v-for="column of fieldColumns" :key="column.path"
-        :base-url="baseUrl" :submission="submission" :column="column"/>
+      <td v-for="field of fields" :key="field.path" :class="fieldClass(field)"
+        :title="field.binary !== true ? formattedValue(submission, field) : null">
+        <template v-if="field.binary === true">
+          <a v-if="rawValue(submission, field) != null" class="binary-link"
+            :href="formattedValue(submission, field)" target="_blank"
+            :title="$t('submission.binaryLinkTitle')">
+            <span class="icon-check"></span> <span class="icon-download"></span>
+          </a>
+        </template>
+        <template v-else>{{ formattedValue(submission, field) }}</template>
+      </td>
     </template>
-    <template v-else-if="fieldColumns.length !== 0">
-      <td class="encrypted-data" :colspan="fieldColumns.length">
+    <template v-else-if="fields.length !== 0">
+      <td class="encrypted-data" :colspan="fields.length">
         <span class="icon-lock"></span>
-        <span class="encryption-message">{{ $t('encryptionMessage') }}</span>
+        <span class="encryption-message">{{ $t('submission.encryptionMessage') }}</span>
         <span class="encryption-overlay"></span>
       </td>
     </template>
-    <td>{{ submission.__id }}</td>
+    <td :title="submission.__id">{{ submission.__id }}</td>
   </tr>
 </template>
 
 <script>
-import DateTime from '../date-time.vue';
-import SubmissionCell from './cell.vue';
+import { DateTime, Settings } from 'luxon';
+import { path } from 'ramda';
+
+import DateTimeComponent from '../date-time.vue';
+
+import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
+
+/*
+We may render many rows and/or many columns, so performance matters in this
+component. SubmissionRow components may be frequently created or destroyed, so
+it matters how long it takes to render a component and how long it takes to
+destroy one. (Note that destroying may take longer than rendering!)
+
+We used to have a SubmissionCell component, but that was too slow: now
+everything is done in this component. We also used to have an i18n custom block,
+but that again was significantly slower.
+*/
 
 export default {
   name: 'SubmissionRow',
-  components: { DateTime, SubmissionCell },
+  components: { DateTime: DateTimeComponent },
   props: {
     baseUrl: {
       type: String,
@@ -57,105 +81,179 @@ export default {
       type: Number,
       default: 0
     },
-    fieldColumns: Array, // eslint-disable-line vue/require-default-prop
+    fields: Array, // eslint-disable-line vue/require-default-prop
     showsSubmitter: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    fieldClass(field) {
+      if (field.binary === true) return 'binary-field';
+      if (field.type === 'int') return 'int-field';
+      if (field.type === 'decimal') return 'decimal-field';
+      return null;
+    },
+    rawValue(submission, field) {
+      return path(field.splitPath(), submission);
+    },
+    formattedValue(submission, field) {
+      const rawValue = this.rawValue(submission, field);
+      if (rawValue == null) return null;
+      // A field could have a `binary` property that is `true` but a `type`
+      // property that does not equal 'binary'. Backend treats the `binary`
+      // property as authoritative.
+      if (field.binary === true) {
+        const encodedId = encodeURIComponent(submission.__id);
+        const encodedName = encodeURIComponent(rawValue);
+        return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
+      }
+      switch (field.type) {
+        case 'int':
+          return this.$n(rawValue, 'default');
+        // The ODK XForms specification seems to allow decimal values that
+        // cannot be precisely stored as a Number. However, Collect limits
+        // decimal input to 15 characters, resulting in only values that can be
+        // precisely stored as a Number.
+        case 'decimal': {
+          if (Number.isInteger(rawValue)) return this.$n(rawValue, 'default');
+          // Non-integers outside this range are more than 15 characters
+          // (including the sign and decimal point).
+          if (rawValue >= 10000000000000 || rawValue <= -1000000000000)
+            return this.$n(rawValue, 'maximumFractionDigits1');
+          const integerDigits = Math.floor(Math.abs(rawValue)).toString().length;
+          const signCharacters = rawValue < 0 ? 1 : 0;
+          // 14, not 15, because the decimal point consumes a character.
+          const fractionDigits = 14 - integerDigits - signCharacters;
+          return this.$n(rawValue, `maximumFractionDigits${fractionDigits}`);
+        }
+
+        // There may be differences between ISO 8601 and the the ODK XForms
+        // specification for date or time values, but the values that Collect
+        // sends seem to be ISO 8601. Here, we attempt to parse a date or time
+        // value as ISO 8601, but if the resulting DateTime is invalid, we
+        // indicate that to the user.
+        case 'date':
+          return formatDate(DateTime.fromISO(rawValue));
+        case 'time': {
+          /* Collect does not allow the user to select a time value's associated
+          time zone. However, Collect may add a time zone designator to the
+          value nonetheless. In that case, we will remove the time zone
+          designator before displaying the value in the table. By default,
+          DateTime.fromISO() returns a local DateTime. However, if the system
+          date is the date of a DST shift, rawValue may imply an invalid or
+          ambiguous time: since rawValue includes a time but not a date,
+          DateTime will use the system date. To avoid that, we temporarily set
+          the default time zone to UTC. */
+          const originalZoneName = Settings.defaultZoneName;
+          Settings.defaultZoneName = 'utc';
+          const time = DateTime.fromISO(rawValue, { setZone: true });
+          Settings.defaultZoneName = originalZoneName;
+          return formatTime(time);
+        }
+        // rawValue is an Edm.DateTimeOffset. Again, there may be differences
+        // between ISO 8601 and the Edm.DateTimeOffset specification. However,
+        // ISO 8601 is the only likely format for rawValue. As with a date or
+        // time value, we attempt to parse a dateTime value as ISO 8601,
+        // indicating any failure to the user.
+        case 'dateTime':
+          return formatDateTime(DateTime.fromISO(rawValue));
+
+        case 'geopoint': {
+          const { coordinates } = rawValue;
+          // Limiting the number of decimal places helps ensure that the
+          // formatted value fits within the column width. For longitude and
+          // latitude, 7 fraction digits provide precision of 0.011m at the
+          // equator.
+          const lon = this.$n(coordinates[0], 'fractionDigits7');
+          const lat = this.$n(coordinates[1], 'fractionDigits7');
+          const altitude = coordinates.length > 2
+            ? this.$n(coordinates[2], 'fractionDigits1')
+            : null;
+          return altitude != null
+            ? `${lon} ${lat} ${altitude}`
+            : `${lon} ${lat}`;
+        }
+
+        default:
+          return rawValue;
+      }
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
-$icon-lock-margin-left: 3px;
-$icon-lock-margin-right: 12px;
+@import '../../assets/scss/mixins';
 
 #submission-table1 td {
   &.row-number {
     color: #999;
     font-size: 11px;
-    // Adding min-width so that the table's width does not increase as the row
-    // numbers increase.
-    min-width: 42px;
     padding-top: 11px;
     text-align: right;
     vertical-align: middle;
   }
 
   &.submitter-name {
+    @include text-overflow-ellipsis;
     max-width: 250px;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 
-#submission-table2 .encrypted-submission {
-  .icon-lock {
-    font-size: 16px;
-    color: #666;
-    margin-left: $icon-lock-margin-left;
-    margin-right: $icon-lock-margin-right;
-    vertical-align: -2px;
-  }
+#submission-table2 {
+  .int-field, .decimal-field { text-align: right; }
 
-  .encryption-message {
-    font-style: italic;
-  }
+  .binary-field { text-align: center; }
+  .binary-link {
+    background-color: $color-subpanel-background;
+    border-radius: 99px;
+    padding: 4px 7px;
+    text-decoration: none;
 
-  ~ .encrypted-submission {
-    .encrypted-data {
-      position: relative;
+    .icon-check {
+      color: $color-success;
+      margin-right: 0;
     }
 
-    .encryption-message {
-      display: none;
+    .icon-download {
+      border-left: 1px dotted #ccc;
+      color: #bbb;
+      padding-left: 5px;
+    }
+    &:hover .icon-download { color: $color-action-foreground; }
+  }
+
+  .encrypted-submission {
+    $icon-lock-margin-left: 3px;
+    $icon-lock-margin-right: 12px;
+    .icon-lock {
+      font-size: 16px;
+      color: #666;
+      margin-left: $icon-lock-margin-left;
+      margin-right: $icon-lock-margin-right;
+      vertical-align: -2px;
     }
 
-    .encryption-overlay {
-      background-color: #ddd;
-      display: inline-block;
-      height: 12px;
-      position: absolute;
-      // Adding 4px in order to vertically center the overlay.
-      top: $padding-top-table-data + 4px;
-      // 12px is the width of the .icon-lock (plus a pixel or two for good
-      // measure).
-      width: calc(100% - #{$padding-left-table-data + $icon-lock-margin-left} -
-        12px - #{$icon-lock-margin-right + $padding-right-table-data});
+    .encryption-message { font-style: italic; }
+
+    ~ .encrypted-submission {
+      .encrypted-data { position: relative; }
+      .encryption-message { display: none; }
+
+      .encryption-overlay {
+        background-color: #ddd;
+        display: inline-block;
+        height: 12px;
+        position: absolute;
+        // Adding 4px in order to vertically center the overlay.
+        top: $padding-top-table-data + 4px;
+        // 12px is the width of the .icon-lock (plus a pixel or two for good
+        // measure).
+        width: calc(100% - #{$padding-left-table-data + $icon-lock-margin-left} -
+          12px - #{$icon-lock-margin-right + $padding-right-table-data});
+      }
     }
   }
 }
 </style>
-
-<i18n lang="json5">
-{
-  "en": {
-    "encryptionMessage": "Data preview is not available due to encryption."
-  }
-}
-</i18n>
-
-<!-- Autogenerated by destructure.js -->
-<i18n>
-{
-  "cs": {
-    "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování."
-  },
-  "de": {
-    "encryptionMessage": "Datenvorschau ist wegen der Verschlüsselung nicht verfügbar."
-  },
-  "es": {
-    "encryptionMessage": "La vista previa de los datos no está disponible debido al cifrado del formulario."
-  },
-  "fr": {
-    "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
-  },
-  "id": {
-    "encryptionMessage": "Pratinjau data tidak tersedia karena enkripsi."
-  }
-}
-</i18n>

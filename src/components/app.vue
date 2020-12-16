@@ -37,14 +37,7 @@ export default {
   // Vue seems to create App before confirming the navigation.
   computed: mapState({
     anyNavigationConfirmed: (state) => state.router.anyNavigationConfirmed
-  }),
-  mounted() {
-    // The `disabled` class on an <a> element does not prevent keyboard
-    // navigation.
-    $(this.$refs.app).on('click', 'a.disabled', (event) => {
-      event.preventDefault();
-    });
-  }
+  })
 };
 </script>
 

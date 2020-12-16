@@ -182,6 +182,10 @@
     // This is a link to more information.
     "learnMore": "Learn more."
   },
+  "submission": {
+    "binaryLinkTitle": "File was submitted. Click to download.",
+    "encryptionMessage": "Data preview is not available due to encryption."
+  },
   "common": {
     // This is shown in a dropdown that allows the user to filter to only show
     // data for particular users.

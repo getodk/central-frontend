@@ -31,15 +31,14 @@ except according to the terms contained in the LICENSE file.
     <!-- The next table element displays the data and instance ID of each
     submission. -->
     <div class="table-container">
-      <table id="submission-table2"
-        class="table" :class="{ 'field-subset': subsetShown }">
+      <table id="submission-table2" class="table">
         <thead>
           <tr>
             <!-- Adding a title attribute in case the column header is so long
             that it is truncated. -->
-            <th v-for="column of fieldColumnsToShow" :key="column.path"
-              class="submission-table-field" :title="column.header">
-              {{ column.header }}
+            <th v-for="field of fields" :key="field.path"
+              :title="field.header()">
+              {{ field.header() }}
             </th>
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
@@ -47,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <tbody>
           <submission-row v-for="submission of submissions"
             :key="submission.__id" :base-url="baseUrl" :submission="submission"
-            :field-columns="fieldColumnsToShow"/>
+            :fields="fields"/>
         </tbody>
       </table>
     </div>
@@ -56,8 +55,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SubmissionRow from './row.vue';
-
-const instanceIdPaths = ['/meta/instanceID', '/instanceID'];
 
 export default {
   name: 'SubmissionTable',
@@ -83,52 +80,12 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    const { columns, anyRepeat } = this.analyzeFields();
-    const fieldColumnsToShow = columns.slice(0, 10);
-    const subsetShown = fieldColumnsToShow.length !== columns.length || anyRepeat;
-    return { fieldColumnsToShow, subsetShown };
-  },
-  methods: {
-    // Returns a column object, which is essentially a field object with
-    // additional properties.
-    fieldToColumn(field) {
-      const pathComponents = field.path.split('/');
-      pathComponents.shift();
-      return { ...field, pathComponents, header: pathComponents.join('-') };
-    },
-    analyzeFields() {
-      const columns = [];
-      let anyRepeat = false;
-      // The path of the top-level repeat group currently being traversed
-      let repeat = null;
-      for (const field of this.fields) {
-        const { path } = field;
-        if (repeat == null || !path.startsWith(repeat)) {
-          repeat = null;
-          // Note that `type` may be `undefined`, though I have seen this only
-          // in the Widgets sample form (<branch>):
-          // https://github.com/getodk/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
-          const { type } = field;
-          if (type === 'repeat') {
-            anyRepeat = true;
-            repeat = `${path}/`;
-          } else if (!(type === 'structure' ||
-            // We use the submission's __id property to display its instance ID.
-            (type === 'string' && instanceIdPaths.includes(path)))) {
-            columns.push(this.fieldToColumn(field));
-          }
-        }
-      }
-      return { columns, anyRepeat };
-    }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #submission-table1 {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
@@ -137,82 +94,17 @@ export default {
   // not overlay the box shadow.
   z-index: 1;
 
-  th:last-child {
-    border-right: $border-bottom-table-heading;
-  }
-
-  td:last-child {
-    border-right: $border-top-table-data;
-  }
+  th:last-child { border-right: $border-bottom-table-heading; }
+  td:last-child { border-right: $border-top-table-data; }
 }
 
 #submission-table2 {
+  width: auto;
+
   th, td {
-    &.submission-table-field {
-      max-width: 250px;
-    }
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &.field-subset {
-    $subset-padding-left: 30px;
-
-    thead th:last-child {
-      $color-fill: $color-table-heading-background;
-      $color-break: $color-page-background;
-      $zig-size: 10px;
-      background: linear-gradient(-135deg, $color-fill 5px, transparent 0) 0 5px,
-        linear-gradient(135deg, $color-break 9px, $color-fill 0) 0 5px;
-      background-position: 10px 5px;
-      background-repeat: repeat-y;
-      background-size: $zig-size $zig-size;
-      overflow: visible; // this is okay for "Instance ID", which is never truncated.
-      padding-left: $subset-padding-left;
-      position: relative;
-
-      &::before {
-        background: linear-gradient(-135deg, transparent 9px, $color-fill 0) 0 5px,
-          linear-gradient(135deg, $color-fill 5px, $color-break 0) 0 5px;
-        background-position: left top;
-        background-repeat: repeat-y;
-        background-size: $zig-size $zig-size;
-        content: '';
-        display: block;
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: $zig-size;
-      }
-
-      &::after { // TODO: is there a cleverer way to do this?
-        border-bottom: 1px solid $color-page-background;
-        content: '';
-        display: block;
-        left: 7px;
-        position: absolute;
-        top: 100%;
-        width: 11px;
-      }
-    }
-
-    tbody td:last-child {
-      padding-left: $subset-padding-left;
-      position: relative;
-
-      &::before {
-        color: #999;
-        content: '…';
-        display: block;
-        left: 4px;
-        top: 4px;
-        pointer-events: none;
-        position: absolute
-      }
-    }
+    @include text-overflow-ellipsis;
+    max-width: 250px;
+    &:last-child { max-width: 300px; }
   }
 }
 </style>
