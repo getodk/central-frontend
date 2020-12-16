@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
       <div id="navbar-collapse" class="collapse navbar-collapse">
         <navbar-links v-if="loggedIn"/>
         <ul class="nav navbar-nav navbar-right">
+          <navbar-help-dropdown/>
           <navbar-locale-dropdown/>
           <navbar-actions :logged-in="loggedIn"/>
         </ul>
@@ -36,13 +37,20 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import NavbarActions from './navbar/actions.vue';
+import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
+
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
-  components: { NavbarActions, NavbarLinks, NavbarLocaleDropdown },
+  components: {
+    NavbarActions,
+    NavbarHelpDropdown,
+    NavbarLinks,
+    NavbarLocaleDropdown
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -137,15 +145,8 @@ $shadow-color: #dedede;
     }
   }
 
-  .navbar-right {
-    margin-right: -25px;
-
-    > li {
-      margin-right: 10px;
-
-      &:last-child { margin-right: 0; }
-    }
-  }
+  .navbar-right { margin-right: -25px; }
+  #navbar-actions { margin-left: 10px; }
 }
 
 // Navbar is collapsed.

@@ -1,0 +1,53 @@
+<!--
+Copyright 2020 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <li id="navbar-help-dropdown" class="dropdown">
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-question-circle"></span><span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <doc-link to="central-intro/">{{ $t('docs') }}</doc-link>
+      </li>
+      <li>
+        <a href="https://forum.getodk.org/" target="_blank">{{ $t('forum') }}</a>
+      </li>
+      <li>
+        <a href="/version.txt" target="_blank">{{ $t('version') }}</a>
+      </li>
+    </ul>
+  </li>
+</template>
+
+<script>
+import DocLink from '../doc-link.vue';
+
+export default {
+  name: 'NavbarHelpDropdown',
+  components: { DocLink }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the text of a link that links to the documentation.
+    "docs": "Docs",
+    // This is the text of a link.
+    "forum": "Community forum",
+    // This is the text of a link that shows what version of ODK Central is in
+    // use.
+    "version": "Version"
+  }
+}
+</i18n>
