@@ -131,10 +131,10 @@ export default {
   },
   watch: {
     state(state) {
-      if (state) return;
-      this.file = null;
-      this.warnings = null;
-      this.$refs.input.value = '';
+      if (!state) {
+        this.file = null;
+        this.warnings = null;
+      }
     }
   },
   mounted() {
@@ -142,6 +142,7 @@ export default {
     // testing: it is possible to mock a jQuery event but not a Vue event.
     $(this.$refs.input).on('change.form-new', (event) => {
       this.afterFileSelection(event.target.files[0]);
+      this.$refs.input.value = '';
     });
   },
   beforeDestroy() {

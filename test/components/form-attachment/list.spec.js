@@ -5,11 +5,14 @@ import FormAttachmentList from '../../../src/components/form-attachment/list.vue
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
+
+import { noop } from '../../../src/util/util';
+
 import testData from '../../data';
 import { dataTransfer, trigger } from '../../util/event';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { noop } from '../../../src/util/util';
+import { mount } from '../../util/lifecycle';
 
 // It is expected that test data is created before loadAttachments() is called.
 const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
@@ -24,18 +27,15 @@ const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
   return load(path, { component: !route, attachToDocument }, {});
 };
 const blankFiles = (names) => names.map(name => new File([''], name));
-const selectFilesUsingModal = (app, files) =>
-  trigger.click(app, '#form-attachment-list .heading-with-button button')
-    .then(() =>
-      trigger.click(app, '#form-attachment-upload-files a[role="button"]'))
-    .then(() => {
-      const input = app.first('#form-attachment-upload-files input[type="file"]');
-      const target = { files: dataTransfer(files).files };
-      const event = $.Event('change', { target });
-      $(input.element).trigger(event);
-      return app.vm.$nextTick();
-    })
-    .then(() => app);
+const selectFilesUsingModal = async (component, files) => {
+  await trigger.click(component, '#form-attachment-upload-files a[role="button"]');
+  const input = component.first('#form-attachment-upload-files input[type="file"]');
+  const target = { files: dataTransfer(files).files };
+  const event = $.Event('change', { target });
+  $(input.element).trigger(event);
+  await component.vm.$nextTick();
+  return component;
+};
 
 describe('FormAttachmentList', () => {
   beforeEach(mockLogin);
@@ -898,6 +898,14 @@ describe('FormAttachmentList', () => {
 
     describe('select multiple files', () => {
       testMultipleFileSelection(selectFilesUsingModal);
+    });
+
+    it('resets the input after a file is selected', async () => {
+      const modal = mount(FormAttachmentUploadFiles, {
+        propsData: { state: true }
+      });
+      await selectFilesUsingModal(modal, blankFiles(['a']));
+      modal.first('input').element.value.should.equal('');
     });
   });
 
