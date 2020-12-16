@@ -466,6 +466,7 @@ const routes = [
             currentUser: (currentUser) => currentUser.can([
               'config.read',
               'backup.create',
+              'backup.run',
               'backup.terminate',
               'audit.read'
             ])
