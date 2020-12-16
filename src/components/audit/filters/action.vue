@@ -10,15 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="audit-filters-action" class="form-group">
-    <select class="form-control" :value="value" :aria-label="$t('field.type')"
+  <label id="audit-filters-action" class="form-group">
+    <select class="form-control" :value="value"
       @change="$emit('input', $event.target.value)">
       <option v-for="option of options" :key="option.value"
         :class="option.htmlClass" :value="option.value">
         {{ option.text }}
       </option>
     </select>
-  </div>
+    <span class="form-label">{{ $t('field.type') }}</span>
+  </label>
 </template>
 
 <script>

@@ -10,72 +10,64 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <template v-if="formVersion != null && keys != null">
-      <float-row class="table-actions">
-        <template #left>
-          <refresh-button :configs="configsForRefresh"/>
-        </template>
-        <template #right>
-          <submission-download-dropdown :base-url="baseUrl"
-            :form-version="formVersion" @decrypt="showDecrypt"/>
-          <button id="submission-list-analyze-button" type="button"
-            class="btn btn-primary" :disabled="analyzeDisabled"
-            :title="analyzeDisabled ? $t('analyzeDisabled') : null"
-            @click="showModal('analyze')">
-            <span class="icon-plug"></span>{{ $t('action.analyze') }}&hellip;
-          </button>
-        </template>
-      </float-row>
+  <div id="submission-list">
+    <loading :state="$store.getters.initiallyLoading(['fields'])"/>
+    <div v-show="fields != null">
+      <form class="form-inline" @submit.prevent>
+        <submission-filters v-if="filterable" v-bind.sync="filters"/>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-primary" :disabled="refreshing"
+          @click="fetchChunk(0, false)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
+        <submission-download-dropdown v-if="formVersion != null"
+          :base-url="baseUrl" :form-version="formVersion"
+          :odata-filter="odataFilter" @decrypt="showDecrypt"/>
+      </form>
       <template v-if="submissions != null">
         <p v-if="submissions.length === 0" class="empty-table-message">
-          {{ $t('emptyTable') }}
+          {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
         </p>
         <submission-table v-else-if="fields != null" :base-url="baseUrl"
           :submissions="submissions" :fields="fields"
           :original-count="originalCount" :shows-submitter="showsSubmitter"/>
       </template>
-      <div v-if="message != null" id="submission-list-message">
+      <div v-show="odataLoadingMessage != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
-          <spinner :state="message.spinner"/>
+          <spinner :state="odataLoadingMessage != null"/>
         </div>
-        <div id="submission-list-message-text">{{ message.text }}</div>
+        <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
       </div>
-    </template>
-
+    </div>
     <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
-    <submission-analyze :state="analyze.state" :base-url="baseUrl"
-      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
 <script>
-import FloatRow from '../float-row.vue';
-import Form from '../../presenters/form';
+import { last } from 'ramda';
+
 import Loading from '../loading.vue';
-import RefreshButton from '../refresh-button.vue';
 import Spinner from '../spinner.vue';
-import SubmissionAnalyze from './analyze.vue';
 import SubmissionDecrypt from './decrypt.vue';
 import SubmissionDownloadDropdown from './download-dropdown.vue';
+import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
-import modal from '../../mixins/modal';
-import { requestData } from '../../store/modules/request';
 
-const REQUEST_KEYS = ['keys', 'fields', 'submissionsChunk'];
-const MAX_SMALL_CHUNKS = 4;
+import Form from '../../presenters/form';
+import modal from '../../mixins/modal';
+import { noop } from '../../util/util';
+import { queryString } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionList',
   components: {
-    FloatRow,
     Loading,
-    RefreshButton,
     Spinner,
-    SubmissionAnalyze,
     SubmissionDecrypt,
     SubmissionDownloadDropdown,
+    SubmissionFilters,
     SubmissionTable
   },
   mixins: [modal()],
@@ -85,13 +77,18 @@ export default {
       required: true
     },
     formVersion: Form, // eslint-disable-line vue/require-default-prop
+    filterable: {
+      type: Boolean,
+      default: false
+    },
     showsSubmitter: {
       type: Boolean,
       default: false
     },
-    chunkSizes: {
-      type: Object,
-      default: () => ({ small: 250, large: 1000 })
+    // Returns the value of the $top query parameter.
+    top: {
+      type: Function,
+      default: (skip) => (skip < 1000 ? 250 : 1000)
     },
     // Function that returns true if the user has scrolled to the bottom of the
     // page (or close to it) and false if not. Implementing this as a prop in
@@ -105,167 +102,165 @@ export default {
   },
   data() {
     return {
+      filters: {
+        submitterId: '',
+        submissionDate: []
+      },
+      refreshing: false,
       submissions: null,
       instanceIds: new Set(),
       // The count of submissions at the time of the initial fetch or last
       // refresh
       originalCount: null,
-      // The number of chunks that have been fetched since the initial fetch or
-      // last refresh
-      chunkCount: 0,
-      message: null,
-      // Modals
+      // The number of submissions that have been skipped so far. This should
+      // equal submissions.length unless a submission has been created since the
+      // initial fetch or last refresh.
+      skip: 0,
       decrypt: {
         state: false,
         formAction: null
-      },
-      analyze: {
-        state: false
       }
     };
   },
   computed: {
-    ...requestData(REQUEST_KEYS),
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
+    ...requestData(['keys', 'fields', 'odataChunk', 'submitters']),
+    odataFilter() {
+      const conditions = [];
+      if (this.filters.submitterId !== '')
+        conditions.push(`__system/submitterId eq ${this.filters.submitterId}`);
+      if (this.filters.submissionDate.length !== 0) {
+        const start = this.filters.submissionDate[0].toISO();
+        const end = this.filters.submissionDate[1].endOf('day').toISO();
+        conditions.push(`__system/submissionDate ge ${start}`);
+        conditions.push(`__system/submissionDate le ${end}`);
+      }
+      return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
-    configsForRefresh() {
-      return [{
-        key: 'submissionsChunk',
-        url: this.oDataUrl(this.chunkSizes.small),
-        success: () => {
-          this.processChunk();
-        }
-      }];
+    loadingOData() {
+      return this.$store.getters.loading('odataChunk');
     },
-    analyzeDisabled() {
-      // If an encrypted form has no submissions, then there will never be
-      // decrypted submissions available to OData (as long as the form remains
-      // encrypted).
-      return (this.formVersion.keyId != null && this.formVersion.submissions === 0) ||
-        this.keys.length !== 0;
+    odataLoadingMessage() {
+      if (!this.loadingOData || this.refreshing) return null;
+      if (this.submissions == null) {
+        if (this.odataFilter != null)
+          return this.$t('loading.filtered.withoutCount');
+        if (this.formVersion == null || this.formVersion.submissions === 0)
+          return this.$t('loading.withoutCount');
+        const top = this.top(this.skip);
+        if (this.formVersion.submissions <= top)
+          return this.$tcn('loading.all', this.formVersion.submissions);
+        return this.$tcn('loading.first', this.formVersion.submissions, {
+          top: this.$n(top, 'default')
+        });
+      }
+
+      const pathPrefix = this.odataFilter == null
+        ? 'loading'
+        : 'loading.filtered';
+      const remaining = this.originalCount - this.submissions.length;
+      const top = this.top(this.skip);
+      if (remaining > top) {
+        return this.$tcn(`${pathPrefix}.middle`, remaining, {
+          top: this.$n(top, 'default')
+        });
+      }
+      return remaining > 1
+        ? this.$tcn(`${pathPrefix}.last.multiple`, remaining)
+        : this.$t(`${pathPrefix}.last.one`);
+    }
+  },
+  watch: {
+    'filters.submitterId': 'filter',
+    'filters.submissionDate': 'filter',
+    loadingOData(loading) {
+      if (!loading) this.refreshing = false;
     }
   },
   created() {
-    this.fetchInitialData();
+    this.fetchData();
   },
   mounted() {
-    $(window).on('scroll.submission-list', this.onScroll);
+    document.addEventListener('scroll', this.onScroll);
   },
   beforeDestroy() {
-    $(window).off('.submission-list');
+    document.removeEventListener('scroll', this.onScroll);
   },
   methods: {
-    loadingMessageText({ top, skip = 0 }) {
-      if (skip === 0) {
-        if (this.formVersion == null || this.formVersion.submissions === 0)
-          return this.$t('loading.withoutCount');
-        if (this.formVersion.submissions <= top)
-          return this.$tcn('loading.all', this.formVersion.submissions);
-        return this.$t('loading.first', { top, count: this.formVersion.submissions });
-      }
-      const remaining = this.originalCount - this.submissions.length;
-      // This case should be rare or impossible.
-      if (remaining <= 0) return this.$t('loading.withoutCount');
-      if (remaining > top)
-        return this.$t('loading.middle', { top, count: remaining });
-      return remaining > 1
-        ? this.$tcn('loading.last.multiple', remaining)
-        : this.$t('loading.last.one');
+    clearSubmissions() {
+      if (this.odataChunk != null)
+        this.$store.commit('clearData', 'odataChunk');
+      this.submissions = null;
+      this.instanceIds.clear();
+      this.originalCount = null;
+      this.skip = 0;
     },
-    oDataUrl(top, skip = 0) {
-      return `${this.baseUrl}.svc/Submissions?%24top=${top}&%24skip=${skip}&%24count=true`;
+    replaceSubmissions() {
+      this.submissions = this.odataChunk.value;
+      this.instanceIds.clear();
+      for (const submission of this.submissions)
+        this.instanceIds.add(submission.__id);
+      this.originalCount = this.odataChunk['@odata.count'];
     },
-    processChunk(replace = true) {
-      if (replace) {
-        this.submissions = this.submissionsChunk.value;
-        this.instanceIds.clear();
-        for (const submission of this.submissions)
+    pushSubmissions() {
+      const lastSubmissionDate = last(this.submissions).__system.submissionDate;
+      for (const submission of this.odataChunk.value) {
+        // If one or more submissions have been created since the initial fetch
+        // or last refresh, then the latest chunk of submissions may include a
+        // newly created submission or a submission that is already shown in the
+        // table.
+        if (submission.__system.submissionDate <= lastSubmissionDate &&
+          !this.instanceIds.has(submission.__id)) {
+          this.submissions.push(submission);
           this.instanceIds.add(submission.__id);
-        this.originalCount = this.submissionsChunk['@odata.count'];
-        this.chunkCount = 1;
-      } else {
-        const lastSubmission = this.submissions[this.submissions.length - 1];
-        const lastSubmissionDate = lastSubmission.__system.submissionDate;
-        for (const submission of this.submissionsChunk.value) {
-          // If one or more submissions have been created since the initial
-          // fetch or last refresh, then the latest chunk of submissions may
-          // include a newly created submission or a submission that is already
-          // shown in the table.
-          if (submission.__system.submissionDate <= lastSubmissionDate &&
-            !this.instanceIds.has(submission.__id)) {
-            this.submissions.push(submission);
-            this.instanceIds.add(submission.__id);
-          }
         }
-        this.chunkCount += 1;
       }
-
-      const remaining = this.originalCount - this.submissions.length;
-      this.message = remaining > 0
-        ? { text: this.$tcn('remaining', remaining), spinner: false }
-        : null;
     },
-    fetchInitialData() {
-      this.message = {
-        text: this.loadingMessageText({ top: this.chunkSizes.small }),
-        spinner: true
-      };
-      this.$store.dispatch('get', [
-        {
-          // We do not reconcile `keys` and formDraft.keyId.
-          key: 'keys',
-          url: `${this.baseUrl}/submissions/keys`
-        },
-        {
-          key: 'fields',
-          url: `${this.baseUrl}/fields?odata=true`
-        },
-        {
-          key: 'submissionsChunk',
-          url: this.oDataUrl(this.chunkSizes.small),
-          success: () => {
-            this.processChunk();
-          }
+    fetchChunk(skip, clear) {
+      if (clear) this.clearSubmissions();
+      this.refreshing = !clear && skip === 0;
+      const top = this.top(skip);
+      const query = { $top: top, $skip: skip, $count: true };
+      if (this.odataFilter != null) query.$filter = this.odataFilter;
+      return this.$store.dispatch('get', [{
+        key: 'odataChunk',
+        url: `${this.baseUrl}.svc/Submissions${queryString(query)}`,
+        // We use this.odataChunk['@odata.count'] to access the filtered count,
+        // so we don't clear this.odataChunk here. this.clearSubmissions() will
+        // clear this.odataChunk.
+        clear: false,
+        success: () => {
+          if (skip === 0)
+            this.replaceSubmissions();
+          else
+            this.pushSubmissions();
+          this.skip = top + skip;
         }
-      ])
-        .catch(() => {
-          this.message = null;
-        });
+      }]).catch(noop);
     },
-    // Returns the value of the $skip query parameter for skipping the specified
-    // number of chunks.
-    skip(chunkCount) {
-      if (chunkCount <= MAX_SMALL_CHUNKS)
-        return chunkCount * this.chunkSizes.small;
-      return (MAX_SMALL_CHUNKS * this.chunkSizes.small) +
-        ((chunkCount - MAX_SMALL_CHUNKS) * this.chunkSizes.large);
+    fetchData() {
+      this.$store.dispatch('get', [{
+        key: 'fields',
+        url: `${this.baseUrl}/fields?odata=true`
+      }]).catch(noop);
+      this.fetchChunk(0, true);
+      if (this.filterable) {
+        this.$store.dispatch('get', [{
+          key: 'submitters',
+          url: `${this.baseUrl}/submissions/submitters`
+        }]).catch(noop);
+      }
     },
     // This method may need to change once we support submission deletion.
     onScroll() {
-      if (this.formVersion == null || !this.dataExists) return;
-      // Return if the next chunk of submissions is already loading.
-      if (this.$store.getters.loading('submissionsChunk')) return;
-      const skip = this.skip(this.chunkCount);
-      if (skip >= this.formVersion.submissions || !this.scrolledToBottom())
-        return;
-      const top = this.chunkCount < MAX_SMALL_CHUNKS
-        ? this.chunkSizes.small
-        : this.chunkSizes.large;
-      this.message = {
-        text: this.loadingMessageText({ top, skip }),
-        spinner: true
-      };
-      this.$store.dispatch('get', [{
-        key: 'submissionsChunk',
-        url: this.oDataUrl(top, skip),
-        success: () => {
-          this.processChunk(false);
-        }
-      }])
-        .catch(() => {
-          this.message = null;
-        });
+      if (this.formVersion != null && this.keys != null &&
+        this.fields != null && this.submissions != null &&
+        this.submissions.length < this.originalCount && !this.loadingOData &&
+        this.scrolledToBottom()) {
+        this.fetchChunk(this.skip, false);
+      }
+    },
+    filter() {
+      this.fetchChunk(0, true);
     },
     showDecrypt(formAction) {
       this.decrypt.formAction = formAction;
@@ -278,7 +273,18 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#submission-list-analyze-button { margin-left: 5px; }
+#submission-list {
+  // Make sure there is enough space for the DateRangePicker and the
+  // SubmissionDownloadDropdown when they are open.
+  min-height: 375px;
+}
+
+#submission-filters + #submission-list-refresh-button { margin-left: 10px; }
+
+#submission-download-dropdown {
+  float: right;
+  top: 3px;
+}
 
 #submission-list-message {
   margin-left: 28px;
@@ -286,11 +292,10 @@ export default {
   position: relative;
 
   #submission-list-spinner-container {
-    float: left;
     margin-right: 8px;
     position: absolute;
     top: 8px;
-    width: 16px; // TODO: eventually probably better not to default spinner to center.
+    width: 16px; // eventually probably better not to default spinner to center.
   }
 
   #submission-list-message-text {
@@ -304,25 +309,35 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "analyze": "Analyze via OData"
-    },
-    "analyzeDisabled": "OData access is unavailable due to Form encryption",
     "loading": {
       // This text is shown when the number of Submissions loading is unknown.
       "withoutCount": "Loading Submissions…",
       "all": "Loading {count} Submission… | Loading {count} Submissions…",
-      // {top} and {count} are both numbers that are at least 250.
-      "first": "Loading the first {top} of {count} Submissions…",
-      // {top} and {count} are both numbers that are at least 250.
-      "middle": "Loading {top} more of {count} remaining Submissions…",
+      // {top} is a number that is either 250 or 1000. {count} may be any number
+      // that is at least 250. The string will be pluralized based on {count}.
+      "first": "Loading the first {top} of {count} Submission… | Loading the first {top} of {count} Submissions…",
+      // {top} is a number that is either 250 or 1000. {count} may be any number
+      // that is at least 250. The string will be pluralized based on {count}.
+      "middle": "Loading {top} more of {count} remaining Submission… | Loading {top} more of {count} remaining Submissions…",
       "last": {
         "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
         "one": "Loading the last Submission…"
+      },
+      "filtered": {
+        // This text is shown when the number of Submissions loading is unknown.
+        "withoutCount": "Loading matching Submissions…",
+        // {top} is a number that is either 250 or 1000. {count} may be any
+        // number that is at least 250. The string will be pluralized based on
+        // {count}.
+        "middle": "Loading {top} more of {count} remaining matching Submission… | Loading {top} more of {count} remaining matching Submissions…",
+        "last": {
+          "multiple": "Loading the last {count} matching Submission… | Loading the last {count} matching Submissions…",
+          "one": "Loading the last matching Submission…"
+        }
       }
     },
     "emptyTable": "There are no Submissions yet.",
-    "remaining": "{count} row remains. | {count} rows remain."
+    "noMatching": "There are no matching Submissions."
   }
 }
 </i18n>

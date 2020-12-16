@@ -46,14 +46,13 @@ export default {
   font-size: 24px;
   margin-bottom: 20px;
   margin-top: 10px;
+  position: relative;
 
   > span:first-child {
     color: $color-accent-primary;
     font-weight: bold;
 
-    + .btn {
-      margin-left: 6px;
-    }
+    + .btn { margin-left: 12px; }
   }
 }
 

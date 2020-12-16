@@ -12,7 +12,6 @@ import { loadAsyncCache } from './async-components';
 import { mount as lifecycleMount } from './lifecycle';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
-import { trigger } from './event';
 import { wait, waitUntil } from './util';
 
 
@@ -717,76 +716,7 @@ class MockHttp {
     inProgress = false;
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // COMMON TESTS
 
-  testRefreshButton(options) {
-    // Options
-    const normalizedOptions = this._testRefreshButtonOptions(options);
-    const { collection, respondWithData, tableSelector } = normalizedOptions;
-
-    // Helper functions
-    const testRowCount = (component) => {
-      const tables = component.find(tableSelector);
-      if (tables.length === 0) throw new Error('table not found');
-      if (tables.length > 1) throw new Error('multiple tables found');
-      const rowCount = tables[0].find('tbody tr').length;
-      rowCount.should.equal(collection.size);
-    };
-
-    // Series 1: Test that the table is initially rendered as expected.
-    let series = this.respondWithData(() => {
-      collection.createNew();
-      return respondWithData[0]();
-    });
-    for (let i = 1; i < respondWithData.length; i += 1)
-      series = series.respondWithData(respondWithData[i]);
-    series = series.afterResponses(testRowCount);
-    // Series 2: Click the refresh button and return a successful response (or
-    // responses). The table should not disappear during the refresh, and it
-    // should be updated afterwards.
-    series = series
-      .request(component => trigger.click(component, '.btn-refresh'))
-      .respondWithData(() => {
-        collection.createNew();
-        return respondWithData[0]();
-      });
-    for (let i = 1; i < respondWithData.length; i += 1)
-      series = series.respondWithData(respondWithData[i]);
-    series = series
-      .beforeEachResponse(testRowCount)
-      .afterResponses(testRowCount);
-    // Series 3: Click the refresh button again, this time returning a Problem
-    // response (or responses).
-    series = series
-      .request(component => trigger.click(component, '.btn-refresh'));
-    for (let i = 0; i < respondWithData.length; i += 1)
-      series = series.respondWithProblem();
-    return series.afterResponses(component => {
-      // The table should not disappear.
-      testRowCount(component);
-      component.should.alert();
-    });
-  }
-
-  _testRefreshButtonOptions(options) {
-    const { collection } = options;
-    const defaults = {
-      respondWithData: [() => collection.sorted()],
-      tableSelector: 'table'
-    };
-    const normalizedOptions = { ...defaults, ...options };
-
-    // respondWithData
-    if (Array.isArray(normalizedOptions.respondWithData)) {
-      if (normalizedOptions.respondWithData.length === 0)
-        throw new Error('data response required');
-    } else {
-      normalizedOptions.respondWithData = [normalizedOptions.respondWithData];
-    }
-
-    return normalizedOptions;
-  }
 
   //////////////////////////////////////////////////////////////////////////////
   // PROMISE METHODS

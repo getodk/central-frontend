@@ -1,5 +1,5 @@
 <!--
-Copyright 2019 ODK Central Developers
+Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -10,33 +10,46 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form class="form-inline" @submit.prevent>
+  <span id="submission-filters">
     <div class="form-group">
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
-    <audit-filters-action :value="action"
-      @input="$emit('update:action', $event)"/>
-    <date-range-picker :value="dateRange" :placeholder="$t('field.dateRange')"
-      required @input="$emit('update:dateRange', $event)"/>
-  </form>
+    <submission-filters-submitter :value="submitterId"
+      @input="$emit('update:submitterId', $event)"/>
+    <date-range-picker :value="submissionDate"
+      :placeholder="$t('field.submissionDate')"
+      @input="$emit('update:submissionDate', $event)"/>
+  </span>
 </template>
 
 <script>
-import AuditFiltersAction from './filters/action.vue';
 import DateRangePicker from '../date-range-picker.vue';
+import SubmissionFiltersSubmitter from './filters/submitter.vue';
 
 export default {
-  name: 'AuditFilters',
-  components: { AuditFiltersAction, DateRangePicker },
+  name: 'SubmissionFilters',
+  components: { DateRangePicker, SubmissionFiltersSubmitter },
   props: {
-    action: {
+    submitterId: {
       type: String,
       required: true
     },
-    dateRange: {
+    submissionDate: {
       type: Array,
       required: true
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "field": {
+      // This is the text of a form field that allows the user to filter by a
+      // date range.
+      "submissionDate": "Submitted at"
+    }
+  }
+}
+</i18n>

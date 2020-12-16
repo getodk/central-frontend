@@ -10,14 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-group">
-    <flat-pickr v-model="flatpickrValue" :config="config" class="form-control"
-      :placeholder="placeholder" :aria-label="placeholder" @on-close="close"/>
-  </div>
+  <label class="form-group">
+    <!-- We use a class to indicate whether the input is required, because
+    flatpickr does not support the `required` attribute:
+    https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
+    <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
+      class="form-control" :class="{ required }"
+      :placeholder="`${placeholder}${star}`" autocomplete="off"
+      @on-close="close"/>
+    <template v-if="!required">
+      <button v-show="value.length === 2" type="button" class="close"
+        :aria-label="$t('action.clear')" @click="clear">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </template>
+    <span class="form-label">{{ placeholder }}{{ star }}</span>
+  </label>
 </template>
 
 <script>
-import flatPickr from 'vue-flatpickr-component';
+import flatpickr from 'vue-flatpickr-component';
+
 import { DateTime } from 'luxon';
 import 'flatpickr/dist/flatpickr.css';
 
@@ -25,12 +38,16 @@ import { flatpickrLocales } from '../util/i18n';
 
 export default {
   name: 'DateRangePicker',
-  components: { flatPickr },
+  components: { flatpickr },
   props: {
-    // An array of two DateTime objects
+    // Either an array of two DateTime objects or an empty array
     value: {
       type: Array,
       required: true
+    },
+    required: {
+      type: Boolean,
+      default: false
     },
     placeholder: {
       type: String,
@@ -39,7 +56,7 @@ export default {
   },
   data() {
     return {
-      // We initialize flatpickrValue as an array of Date objects, but
+      // We initialize this.flatpickrValue as an array of Date objects, but
       // vue-flatpickr-component will replace it with a string when the user
       // makes a selection.
       flatpickrValue: this.value.map(dateTime => dateTime.toJSDate())
@@ -69,6 +86,9 @@ export default {
       // https://github.com/flatpickr/flatpickr/issues/2019
       if (this.flatpickrLocale != null) config.locale = this.flatpickrLocale;
       return config;
+    },
+    star() {
+      return this.required ? '*' : '';
     }
   },
   watch: {
@@ -77,34 +97,54 @@ export default {
     }
   },
   methods: {
+    // Converts an array of Date objects from a selection to an array of
+    // DateTime objects. If the selection was incomplete -- if fewer dates were
+    // selected than expected -- then default values will be used for one or
+    // both DateTime objects. Returns the DateTime objects along with an
+    // indicator of whether the selection was complete.
     selectedDatesToDateTimes(dates) {
       // dates.length === 0 if the user opens the calendar, clears the selection
       // (for example, by pressing backspace), then closes the calendar. (There
-      // doesn't seem to be an easy way to turn off this behavior.)
+      // doesn't seem to be an easy way to turn off this behavior for if
+      // this.required is `true`.)
       if (dates.length === 0) {
+        if (!this.required) return [dates, true];
         const today = DateTime.local().startOf('day');
-        return [today, today];
+        return [[today, today], false];
       }
       // dates.length === 1 if the user opens the calendar, selects a date, then
-      // closes the calendar without selecting a second date -- in other words,
-      // if the user makes an incomplete selection of a single date.
+      // closes the calendar without selecting a second date.
       if (dates.length === 1) {
         const dateTime = DateTime.fromJSDate(dates[0]);
-        return [dateTime, dateTime];
+        return [[dateTime, dateTime], false];
       }
-      return dates.map(DateTime.fromJSDate);
+      return [dates.map(DateTime.fromJSDate), true];
     },
     close(selectedDates) {
-      const newValue = this.selectedDatesToDateTimes(selectedDates);
-      if (newValue[0].valueOf() !== this.value[0].valueOf() ||
-        newValue[1].valueOf() !== this.value[1].valueOf())
+      const [newValue, complete] = this.selectedDatesToDateTimes(selectedDates);
+      const newEqualsOld = newValue.length === 0
+        ? this.value.length === 0
+        : this.value.length === 2 &&
+          newValue[0].valueOf() === this.value[0].valueOf() &&
+          newValue[1].valueOf() === this.value[1].valueOf();
+      if (!newEqualsOld) {
         this.$emit('input', newValue);
-      // newValue represents a complete date range selection. However, if
-      // selectedDates.length < 2, the actual selection is incomplete and
-      // therefore does not match newValue. In that case, even if this.value
-      // will not change, we need to set this.flatpickrValue.
-      else if (selectedDates.length < 2)
+      // newValue represents a complete selection, so if the actual
+      // selection was incomplete, it does not match newValue. In that case,
+      // even if this.value will not change, we need to set this.flatpickrValue.
+      } else if (!complete) {
         this.flatpickrValue = newValue.map(dateTime => dateTime.toJSDate());
+      }
+    },
+    clear() {
+      this.$emit('input', []);
+
+      // The .close button will be hidden, so we focus the flatpickr input.
+      // Focusing it will open the calendar, which we don't want, so we
+      // immediately close the calendar using the approach described here:
+      // https://github.com/ankurk91/vue-flatpickr-component/issues/33
+      this.$refs.flatpickr.$el.focus();
+      this.$refs.flatpickr.fp.close();
     }
   }
 };
@@ -118,12 +158,12 @@ export default {
 .form-group .flatpickr-input[readonly] {
   color: $color-input;
 
-  &::placeholder {
-    color: $color-text;
-  }
+  &::placeholder { color: $color-text; }
 }
 
 .form-inline .flatpickr-input {
-  width: 192px;
+  // Leave space for the .close button.
+  width: 201px;
+  &.required { width: 189px };
 }
 </style>

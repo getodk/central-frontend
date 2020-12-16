@@ -96,15 +96,6 @@ describe('UserList', () => {
           }
         }));
 
-    it('refreshes data after a click on the refresh button', () =>
-      mockRoute('/users').testRefreshButton({
-        collection: testData.standardUsers,
-        respondWithData: [
-          () => testData.standardUsers.sorted(),
-          () => testData.standardUsers.sorted().map(testData.toActor)
-        ]
-      }));
-
     describe('changing a role', () => {
       const loadUsersAndChangeRole =
         ({ rowIndex, selectValue }) =>

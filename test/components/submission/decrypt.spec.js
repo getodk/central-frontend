@@ -1,8 +1,10 @@
 import sinon from 'sinon';
 
-import Form from '../../../src/presenters/form';
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
+
+import Form from '../../../src/presenters/form';
+
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../util/event';
 import { mockHttp } from '../../util/http';
@@ -31,9 +33,9 @@ const loadSubmissionList = (attachToDocument = false) => {
         baseUrl: '/v1/projects/1/forms/f',
         formVersion: new Form(form)
       },
+      requestData: { keys: [key] },
       attachToDocument
     })
-    .respondWithData(() => [key])
     .respondWithData(() => form._fields)
     .respondWithData(testData.submissionOData);
 };

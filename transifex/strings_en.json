@@ -140,6 +140,10 @@
       "string": "Cancel",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "clear": {
+      "string": "Clear",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "close": {
       "string": "Close",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -191,6 +195,10 @@
     "proceed": {
       "string": "Proceed",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "refresh": {
+      "string": "Refresh",
+      "developer_comment": "This is the text of a button that refreshes data."
     },
     "resetPassword": {
       "string": "Reset password",
@@ -377,6 +385,10 @@
     }
   },
   "common": {
+    "anybody": {
+      "string": "(Anybody)",
+      "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
+    },
     "areYouSure": {
       "string": "Are you sure you wish to proceed?",
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
@@ -388,6 +400,10 @@
     "dangerZone": {
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "filter": {
+      "string": "Filter",
+      "developer_comment": "This text is shown next to options for filtering a table."
     },
     "no": {
       "string": "No"
@@ -500,12 +516,6 @@
         "loadError": {
           "string": "The page you requested could not be loaded. Please check that you are online and try again."
         }
-      }
-    },
-    "AuditFilters": {
-      "filter": {
-        "string": "Filter by",
-        "developer_comment": "This text is shown next to options for filtering a table."
       }
     },
     "AuditList": {
@@ -2618,14 +2628,6 @@
         }
       }
     },
-    "RefreshButton": {
-      "action": {
-        "refresh": {
-          "string": "Refresh list",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "SubmissionAnalyze": {
       "title": {
         "string": "Using OData",
@@ -2707,6 +2709,21 @@
         "string": "File was submitted. Click to download."
       }
     },
+    "SubmissionDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "API access",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "Analyze via OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      }
+    },
     "SubmissionDecrypt": {
       "title": {
         "string": "Decrypt and Download",
@@ -2734,6 +2751,16 @@
             "string": "{count, plural, one {Download {count} record} other {Download {count} records}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
+          "filtered": {
+            "withoutCount": {
+              "string": "Download matching records",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, one {Download {count} matching record} other {Download {count} matching records}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          },
           "withMedia": {
             "string": "All data and media files (.zip)",
             "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -2749,16 +2776,23 @@
         }
       }
     },
-    "SubmissionList": {
-      "action": {
-        "analyze": {
-          "string": "Analyze via OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+    "SubmissionFilters": {
+      "field": {
+        "submissionDate": {
+          "string": "Submitted at",
+          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
-      },
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
-      },
+      }
+    },
+    "SubmissionFiltersSubmitter": {
+      "field": {
+        "submitter": {
+          "string": "Submitted by",
+          "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
+        }
+      }
+    },
+    "SubmissionList": {
       "loading": {
         "withoutCount": {
           "string": "Loading Submissions…",
@@ -2768,12 +2802,12 @@
           "string": "{count, plural, one {Loading {count} Submission…} other {Loading {count} Submissions…}}"
         },
         "first": {
-          "string": "Loading the first {top} of {count} Submissions…",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} other {Loading the first {top} of {count} Submissions…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "Loading {top} more of {count} remaining Submissions…",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, one {Loading {top} more of {count} remaining Submission…} other {Loading {top} more of {count} remaining Submissions…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
@@ -2782,13 +2816,31 @@
           "one": {
             "string": "Loading the last Submission…"
           }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Loading matching Submissions…",
+            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Submission…} other {Loading {top} more of {count} remaining matching Submissions…}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {Loading the last {count} matching Submission…} other {Loading the last {count} matching Submissions…}}"
+            },
+            "one": {
+              "string": "Loading the last matching Submission…"
+            }
+          }
         }
       },
       "emptyTable": {
         "string": "There are no Submissions yet."
       },
-      "remaining": {
-        "string": "{count, plural, one {{count} row remains.} other {{count} rows remain.}}"
+      "noMatching": {
+        "string": "There are no matching Submissions."
       }
     },
     "SubmissionRow": {

@@ -9,9 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- Use this component for a .form-group element with a label. (Use HTML for a
-.form-group element without a label.) -->
 <template>
   <label class="form-group" :class="{ 'has-error': hasError }">
     <slot name="before"></slot>
@@ -71,29 +68,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-@import '../assets/scss/variables';
-
-.form-group {
-  .form-control {
-    &:focus + .form-label { color: $color-action-foreground; }
-    &:placeholder-shown + .form-label { transform: translateY(-15px); }
-  }
-
-  .form-label {
-    color: $color-input-inactive;
-    display: block;
-    font-size: 11px;
-    height: 0;
-    padding-left: 12px;
-    transform: translateY(2px);
-    transition: 0.15s transform, 0.15s color;
-  }
-}
-
-.has-error {
-  .form-label { color: $color-danger; }
-  .form-control:focus + .form-label { color: $color-danger-dark; }
-}
-</style>

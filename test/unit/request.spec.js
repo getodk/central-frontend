@@ -1,8 +1,26 @@
 import i18n from '../../src/i18n';
-import { apiPaths, configForPossibleBackendRequest, requestAlertMessage } from '../../src/util/request';
+import { apiPaths, configForPossibleBackendRequest, queryString, requestAlertMessage } from '../../src/util/request';
 import { i18nProps } from '../util/i18n';
 
 describe('util/request', () => {
+  describe('queryString()', () => {
+    it('returns a query string', () => {
+      queryString({ x: '1/2', y: '1 2' }).should.eql('?x=1%2F2&y=1+2');
+    });
+
+    it('skips a property whose value is null', () => {
+      queryString({ x: 1, y: null }).should.eql('?x=1');
+    });
+
+    it('returns an empty string for an empty object', () => {
+      queryString({}).should.equal('');
+    });
+
+    it('returns an empty string for null', () => {
+      queryString(null).should.equal('');
+    });
+  });
+
   describe('apiPaths', () => {
     it('session', () => {
       apiPaths.session('xyz').should.equal('/v1/sessions/xyz');
@@ -63,11 +81,6 @@ describe('util/request', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
     });
 
-    it('fields', () => {
-      const path = apiPaths.fields(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/fields?odata=true');
-    });
-
     it('formActors', () => {
       const path = apiPaths.formActors(1, 'a b', 'app-user');
       path.should.equal('/v1/projects/1/forms/a%20b/assignments/app-user');
@@ -126,6 +139,16 @@ describe('util/request', () => {
     it('formDraftAttachment', () => {
       const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
+    });
+
+    it('formDraftSubmissionKeys', () => {
+      const path = apiPaths.formDraftSubmissionKeys(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/keys');
+    });
+
+    it('submissionKeys', () => {
+      const path = apiPaths.submissionKeys(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
     });
 
     it('publicLinks', () => {

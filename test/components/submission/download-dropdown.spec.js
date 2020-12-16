@@ -1,19 +1,23 @@
 import sinon from 'sinon';
 
-import Form from '../../../src/presenters/form';
 import SubmissionDownloadDropdown from '../../../src/components/submission/download-dropdown.vue';
+
+import Form from '../../../src/presenters/form';
+
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
-const mountComponent = () => {
+const mountComponent = (options = {}) => {
   const formVersion = testData.extendedForms.last();
   return mount(SubmissionDownloadDropdown, {
     propsData: {
+      ...options.propsData,
       baseUrl: '/v1/projects/1/forms/f',
       formVersion: new Form(formVersion)
     },
     requestData: {
+      ...options.requestData,
       fields: formVersion._fields,
       keys: testData.standardKeys.sorted()
     }
@@ -26,6 +30,31 @@ describe('SubmissionDownloadDropdown', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
       const text = mountComponent().first('button').text().trim();
       text.should.equal('Download 2 records');
+    });
+
+    describe('submissions are filtered', () => {
+      it('shows correct text while first chunk of submissions is loading', () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const dropdown = mountComponent({
+          propsData: { odataFilter: '__system/submitterId eq 1' }
+        });
+        const text = dropdown.first('button').text().trim();
+        text.should.equal('Download matching records');
+      });
+
+      it('shows correct text after first chunk of submissions has loaded', async () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const dropdown = mountComponent({
+          propsData: { odataFilter: '__system/submitterId eq 1' }
+        });
+        dropdown.vm.$store.commit('setData', {
+          key: 'odataChunk',
+          value: { '@odata.count': 1 }
+        });
+        await dropdown.vm.$nextTick();
+        const text = dropdown.first('button').text().trim();
+        text.should.equal('Download 1 matching record');
+      });
     });
   });
 
@@ -150,5 +179,18 @@ describe('SubmissionDownloadDropdown', () => {
         $emit.called.should.be.false();
       });
     });
+  });
+
+  it('passes along the OData filter', () => {
+    testData.extendedProjects.createPast(1, { key: null });
+    testData.extendedForms.createPast(1);
+    const dropdown = mountComponent({
+      propsData: { odataFilter: '__system/submitterId eq 1' }
+    });
+    dropdown.find('a').map(a => a.getAttribute('href')).should.eql([
+      '/v1/projects/1/forms/f/submissions.csv.zip?%24filter=__system%2FsubmitterId+eq+1',
+      '/v1/projects/1/forms/f/submissions.csv.zip?media=false&%24filter=__system%2FsubmitterId+eq+1',
+      '/v1/projects/1/forms/f/submissions.csv?%24filter=__system%2FsubmitterId+eq+1'
+    ]);
   });
 });

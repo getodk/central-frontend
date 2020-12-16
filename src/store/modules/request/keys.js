@@ -45,10 +45,11 @@ export const keys = [
   // Form draft attachments
   'attachments',
   // A single chunk of submissions OData for a particular form version
-  'submissionsChunk',
-  'publicLinks',
+  'odataChunk',
   // Encryption keys for a particular form version
   'keys',
+  'submitters',
+  'publicLinks',
   'fieldKeys',
 
   'backupsConfig',
@@ -84,6 +85,10 @@ export const transforms = {
   formDraft: option(formPresenter),
   attachments: option(({ data }) =>
     data.map(attachment => new FormAttachment(attachment))),
+  odataChunk: ({ data, config }) => ({
+    ...data,
+    filtered: config.url.includes('%24filter=')
+  }),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
   backupsConfig: option(),

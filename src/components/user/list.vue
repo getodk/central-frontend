@@ -26,9 +26,6 @@ either is an Administrator or has no role. -->
         </template>
       </i18n>
     </div>
-    <div class="table-actions">
-      <refresh-button :configs="configsForRefresh"/>
-    </div>
     <table id="user-list-table" class="table">
       <thead>
         <tr>
@@ -49,21 +46,20 @@ either is an Administrator or has no role. -->
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword"
-      @hide="hideModal('resetPassword')" @success="afterResetPassword"/>
-    <user-retire v-bind="retire" @hide="hideModal('retire')"
-      @success="afterRetire"/>
+    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
+      @success="afterResetPassword"/>
+    <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
   </div>
 </template>
 
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import RefreshButton from '../refresh-button.vue';
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
+
 import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -73,7 +69,6 @@ export default {
   components: {
     DocLink,
     Loading,
-    RefreshButton,
     UserNew,
     UserResetPassword,
     UserRetire,
@@ -100,43 +95,33 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(['users']),
-    configsForRefresh() {
-      return this.configsForGet(true);
-    }
-  },
+  // The component does not assume that this data will exist when the component
+  // is created.
+  computed: requestData(['users']),
   created() {
-    this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
+    this.fetchData();
   },
   methods: {
-    configsForGet(resetHighlighted) {
-      return [
+    fetchData() {
+      this.adminIds = null;
+      return this.$store.dispatch('get', [
         {
           key: 'users',
-          url: '/users',
-          success: () => {
-            if (resetHighlighted) {
-              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-              this.highlighted = null;
-            }
-          }
+          url: '/users'
         },
         {
           key: 'actors',
           url: '/assignments/admin',
           success: ({ actors }) => {
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
             this.adminIds = new Set();
             for (const actor of actors)
               this.adminIds.add(actor.id);
           }
         }
-      ];
+      ]).catch(noop);
     },
     afterCreate(user) {
-      this.adminIds = null;
-      this.$store.dispatch('get', this.configsForGet(false)).catch(noop);
+      this.fetchData();
       this.hideModal('newUser');
       this.$alert().success(this.$t('alert.create', user));
       this.highlighted = user.id;
@@ -175,7 +160,12 @@ export default {
       this.resetPassword.user = user;
       this.showModal('resetPassword');
     },
+    hideResetPassword() {
+      this.hideModal('resetPassword');
+      this.resetPassword.user = null;
+    },
     afterResetPassword(user) {
+      this.hideResetPassword();
       this.hideModal('resetPassword');
       this.$alert().success(this.$t('alert.resetPassword', user));
     },
@@ -183,10 +173,15 @@ export default {
       this.retire.user = user;
       this.showModal('retire');
     },
-    afterRetire(user) {
-      this.$store.dispatch('get', this.configsForGet(true)).catch(noop);
+    hideRetire() {
       this.hideModal('retire');
+      this.retire.user = null;
+    },
+    afterRetire(user) {
+      this.fetchData();
+      this.hideRetire();
       this.$alert().success(this.$t('alert.retire', user));
+      this.highlighted = null;
     }
   }
 };

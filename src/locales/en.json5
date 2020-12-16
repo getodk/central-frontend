@@ -98,6 +98,7 @@
   },
   "action": {
     "cancel": "Cancel",
+    "clear": "Clear",
     "close": "Close",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
@@ -113,6 +114,8 @@
     "noCancel": "No, cancel",
     "ok": "Okay",
     "proceed": "Proceed",
+    // This is the text of a button that refreshes data.
+    "refresh": "Refresh",
     "resetPassword": "Reset password",
     "save": "Save",
     "yesProceed": "Yes, proceed"
@@ -180,6 +183,9 @@
     "learnMore": "Learn more."
   },
   "common": {
+    // This is shown in a dropdown that allows the user to filter to only show
+    // data for particular users.
+    "anybody": "(Anybody)",
     // Here we ask the user to confirm that they wish to complete an action that
     // they have initiated.
     "areYouSure": "Are you sure you wish to proceed?",
@@ -187,6 +193,8 @@
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
+    // This text is shown next to options for filtering a table.
+    "filter": "Filter",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",

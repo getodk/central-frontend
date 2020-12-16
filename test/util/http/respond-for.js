@@ -23,8 +23,13 @@ const defaults = {
   attachments: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.standardFormAttachments.sorted()
     : { problem: 404.1 }),
-  submissionsChunk: testData.submissionOData,
+  odataChunk: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
+  submitters: () => testData.extendedFieldKeys
+    .sorted()
+    .sort((fieldKey1, fieldKey2) =>
+      fieldKey1.displayName.localeCompare(fieldKey2.displayName))
+    .map(testData.toActor),
   publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
@@ -65,12 +70,12 @@ const mapsByComponent = {
   FormShow: mapKeys(['project', 'form', 'formDraft', 'attachments']),
   FormOverview: new Map(),
   FormVersionList: mapKeys(['formVersions']),
-  FormSubmissions: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  FormSubmissions: mapKeys(['keys', 'fields', 'odataChunk', 'submitters']),
   PublicLinkList: mapKeys(['publicLinks']),
   FormSettings: new Map(),
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
-  FormDraftTesting: mapKeys(['keys', 'fields', 'submissionsChunk']),
+  FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),
   UserEdit: mapKeys(['user']),
