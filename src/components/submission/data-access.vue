@@ -20,8 +20,7 @@ except according to the terms contained in the LICENSE file.
       class="btn btn-primary" :disabled="analyzeDisabled"
       :title="analyzeDisabled ? $t('analyzeDisabled') : null"
       @click="$emit('analyze')">
-      <!-- TODO. Update the icon. -->
-      <span class="icon-plug"></span>{{ $t('action.analyze') }}&hellip;
+      <span class="icon-bar-chart"></span>{{ $t('action.analyze') }}&hellip;
     </button>
   </span>
 </template>
