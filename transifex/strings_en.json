@@ -1895,8 +1895,8 @@
         "developer_comment": "This is the text of a link that links to the documentation."
       },
       "forum": {
-        "string": "Community forum",
-        "developer_comment": "This is the text of a link."
+        "string": "Forum",
+        "developer_comment": "This is the text of a link that links to the ODK forum."
       },
       "version": {
         "string": "Version",

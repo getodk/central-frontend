@@ -43,8 +43,8 @@ export default {
   "en": {
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
-    // This is the text of a link.
-    "forum": "Community forum",
+    // This is the text of a link that links to the ODK forum.
+    "forum": "Forum",
     // This is the text of a link that shows what version of ODK Central is in
     // use.
     "version": "Version"
