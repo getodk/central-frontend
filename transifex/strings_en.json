@@ -744,7 +744,7 @@
       },
       "alert": {
         "download": {
-          "string": "The backup is running now, and will be encrypted and downloaded to your computer once it completes. This may take a while."
+          "string": "The backup is running now, and will be encrypted and downloaded to your computer. This may take a while. Once the download begins, you can leave this page."
         }
       }
     },
