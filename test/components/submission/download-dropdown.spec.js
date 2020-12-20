@@ -67,7 +67,7 @@ describe('SubmissionDownloadDropdown', () => {
       testData.extendedForms.createPast(1);
       mountComponent().find('a').map(a => a.getAttribute('href')).should.eql([
         '/v1/projects/1/forms/f/submissions.csv.zip',
-        '/v1/projects/1/forms/f/submissions.csv.zip?media=false',
+        '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false',
         '/v1/projects/1/forms/f/submissions.csv'
       ]);
     });
@@ -128,7 +128,7 @@ describe('SubmissionDownloadDropdown', () => {
       trigger.click(dropdown.find('a')[1]);
       $emit.getCall(0).args.should.eql([
         'decrypt',
-        '/v1/projects/1/forms/f/submissions.csv.zip?media=false'
+        '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false'
       ]);
     });
 
@@ -189,7 +189,7 @@ describe('SubmissionDownloadDropdown', () => {
     });
     dropdown.find('a').map(a => a.getAttribute('href')).should.eql([
       '/v1/projects/1/forms/f/submissions.csv.zip?%24filter=__system%2FsubmitterId+eq+1',
-      '/v1/projects/1/forms/f/submissions.csv.zip?media=false&%24filter=__system%2FsubmitterId+eq+1',
+      '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false&%24filter=__system%2FsubmitterId+eq+1',
       '/v1/projects/1/forms/f/submissions.csv?%24filter=__system%2FsubmitterId+eq+1'
     ]);
   });
