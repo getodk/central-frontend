@@ -104,7 +104,7 @@ export default {
   th, td {
     @include text-overflow-ellipsis;
     max-width: 250px;
-    &:last-child { max-width: 300px; }
+    &:last-child { max-width: 325px; }
   }
 }
 </style>
