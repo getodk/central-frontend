@@ -204,10 +204,7 @@ export default {
     ],
     "success": [
       "Uživatel aplikace “{displayName}” byl vytvořen.",
-      {
-        "full": "Nyní můžete pro „{displayName}“ nakonfigurovat mobilní zařízení do aplikace pomocí {scanningCode}. Nebo to můžete udělat později z tabulky Uživatelé aplikací kliknutím na „Zobrazit kód“.",
-        "scanningCode": "skenování výše uvedeného kódu"
-      },
+      "Mobilní zařízení pro “{displayName}“ můžete nakonfigurovat právě teď, nebo to můžete udělat později z tabulky Uživatelé aplikace kliknutím na “Zobrazit kód“.",
       {
         "full": "Možná budete chtít navštívit toto {formAccessSettings} projektu a dát tomuto uživateli přístup k formulářům.",
         "formAccessSettings": "Nastavení přístupu k formuláři"
@@ -222,17 +219,6 @@ export default {
     "introduction": [
       "Der Benutzer hat zunächst keinen Zugriff auf Formulare. Sie können seinen Zugriff auf Formulare später erstellen."
     ],
-    "success": [
-      "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
-      {
-        "full": "Konfigurieren Sie ein mobiles Gerät für {displayName}, indem Sie {scanningCode} einscannen. Sie können den Code später unter \"Code anzeigen\" finden.",
-        "scanningCode": "den obigen Code einscannen"
-      },
-      {
-        "full": "Sie können dem Benutzer jetzt auf der Seite {formAccessSettings} Zugriff zu den Formularen geben.",
-        "formAccessSettings": "Einstellungen Formular-Zugriff"
-      }
-    ],
     "action": {
       "createAnother": "Noch einen erstellen"
     }
@@ -244,13 +230,10 @@ export default {
     ],
     "success": [
       "Se ha creado el usuario móvil {displayName}",
-      {
-        "full": "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo {scanningCode} en su aplicación. O puede hacerlo más tarde desde la tabla de usuarios móviles haciendo clic en \"Ver código\".",
-        "scanningCode": "Escaneando el código de arriba"
-      },
+      "Puede configurar un dispositivo móvil para \"{displayName}\" ahora mismo, o puede hacerlo más tarde desde la tabla de Usuarios móviles de la aplicación haciendo clic en \"Ver código\".",
       {
         "full": "Es posible que desee visitar la {formAccessSettings} de este proyecto para dar acceso a este usuario a los formularios.",
-        "formAccessSettings": "configuración de acceso a formularios"
+        "formAccessSettings": "Configuración de acceso a Formulario"
       }
     ],
     "action": {
@@ -262,17 +245,6 @@ export default {
     "introduction": [
       "Cet utilisateur n'aura accès à aucun formulaire dans un premier temps. Vous pourrez lui en assigner quand il aura été créé."
     ],
-    "success": [
-      "L'utilisateur mobile “{displayName}” a été créé.",
-      {
-        "full": "Vous pouvez configurer un appareil mobile pour “{displayName}” dès maintenant en {scanningCode} dans leur application. Ou vous pouvez le faire plus tard depuis le tableau des utilisateurs mobiles en cliquant sur \"Voir le code.\"",
-        "scanningCode": "scannant le code ci-dessous"
-      },
-      {
-        "full": "Vous pourriez vouloir visiter les {formAccessSettings} de ce projet pour donner accès aux formulaires à cet utilisateur.",
-        "formAccessSettings": "Paramètres d'accès aux formulaires"
-      }
-    ],
     "action": {
       "createAnother": "En créer un autre"
     }
@@ -281,17 +253,6 @@ export default {
     "title": "Buat Pengguna Aplikasi",
     "introduction": [
       "Pengguna ini belum bisa mengakses formulir apapun. Anda bisa membagikan formulir setelah akun Pengguna dibuat."
-    ],
-    "success": [
-      "Pengguna Aplikasi \"{displayName}\" telah dibuat.",
-      {
-        "full": "Anda bisa mengonfigurasi perangkat seluler nutuk \"{displayName}\" sekarang dengan cara {scanningCode} di aplikasi. Atau Anda bisa melakukannya nanti lewat tabel Pengguna Aplikasi dengan mengklik \"Lihat kode\".",
-        "scanningCode": "memindai kode di atas"
-      },
-      {
-        "full": "Anda mungkin ingin mengunjungi {formAccessSettings} proyek ini untuk memberikan Pengguna ini akses formulir.",
-        "formAccessSettings": "pengaturan Akses Formulir"
-      }
     ],
     "action": {
       "createAnother": "Buat baru"

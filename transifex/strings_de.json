@@ -140,6 +140,10 @@
       "string": "Abbrechen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "clear": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "close": {
       "string": "Schließen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -191,6 +195,10 @@
     "proceed": {
       "string": "Fortfahren",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "refresh": {
+      "string": "",
+      "developer_comment": "This is the text of a button that refreshes data."
     },
     "resetPassword": {
       "string": "Passwort zurücksetzen",
@@ -367,7 +375,7 @@
         "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
       },
       "helpArticle": {
-        "string": "diesen Hilfe-Artikel",
+        "string": "Hilfe-Artikel",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
       }
     },
@@ -376,7 +384,19 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "submission": {
+    "binaryLinkTitle": {
+      "string": ""
+    },
+    "encryptionMessage": {
+      "string": ""
+    }
+  },
   "common": {
+    "anybody": {
+      "string": "",
+      "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
+    },
     "areYouSure": {
       "string": "Wollen Sie wirklich fortfahren?",
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
@@ -388,6 +408,10 @@
     "dangerZone": {
       "string": "Gefahrenbereich",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "filter": {
+      "string": "",
+      "developer_comment": "This text is shown next to options for filtering a table."
     },
     "no": {
       "string": "Nein"
@@ -495,10 +519,11 @@
         }
       }
     },
-    "AuditFilters": {
-      "filter": {
-        "string": "Filtern nach",
-        "developer_comment": "This text is shown next to options for filtering a table."
+    "AsyncRoute": {
+      "alert": {
+        "loadError": {
+          "string": ""
+        }
       }
     },
     "AuditList": {
@@ -708,9 +733,18 @@
           "string": "Jetzt konfigurieren",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
+        "download": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "terminate": {
           "string": "Beenden",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "download": {
+          "string": ""
         }
       }
     },
@@ -793,10 +827,6 @@
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
         }
       },
-      "qrCodeHelp": {
-        "string": "Was ist das",
-        "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
-      },
       "emptyTable": {
         "string": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen."
       },
@@ -824,14 +854,8 @@
           "string": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
         },
         "1": {
-          "full": {
-            "string": "Konfigurieren Sie ein mobiles Gerät für {displayName}, indem Sie {scanningCode} einscannen. Sie können den Code später unter \"Code anzeigen\" finden.",
-            "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
-          },
-          "scanningCode": {
-            "string": "den obigen Code einscannen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {scanningCode} is in the following text:\n\nYou can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”"
-          }
+          "string": "",
+          "developer_comment": "Clicking \"See code\" displays a QR code."
         },
         "2": {
           "full": {
@@ -848,6 +872,85 @@
         "createAnother": {
           "string": "Noch einen erstellen",
           "developer_comment": "This is the text of a button that is used to create another App User."
+        }
+      }
+    },
+    "FieldKeyQrPanel": {
+      "title": {
+        "managed": {
+          "string": "",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        },
+        "legacy": {
+          "string": "",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        }
+      },
+      "body": {
+        "0": {
+          "managed": {
+            "full": {
+              "string": "",
+              "developer_comment": "{managedCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nThis is a {managedCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "",
+              "developer_comment": "{legacyCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nThis is a {legacyCode}."
+            }
+          }
+        },
+        "1": {
+          "managed": {
+            "string": "",
+            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+          },
+          "legacy": {
+            "string": "",
+            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+          }
+        },
+        "2": {
+          "managed": {
+            "full": {
+              "string": "",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToLegacy} has the text: switch to a {legacyCode}\n- {legacyCode} has the text: Legacy QR Code"
+            },
+            "switchToLegacy": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToLegacy} is in the following text:\n\nFor the old behavior, {switchToLegacy}.\n\nNote that {legacyCode} is a separate string that will be translated below. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nFor the old behavior, switch to a {legacyCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToManaged} has the text: switch to a {managedCode}\n- {managedCode} has the text: Managed QR Code"
+            },
+            "switchToManaged": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToManaged} is in the following text:\n\nFor a more controlled and foolproof process, {switchToManaged}.\n\nNote that {managedCode} is a separate string that will be translated below. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nFor a more controlled and foolproof process, switch to a {managedCode}."
+            }
+          }
+        },
+        "3": {
+          "string": ""
         }
       }
     },
@@ -1207,7 +1310,7 @@
       },
       "action": {
         "abandon": {
-          "string": "Abbrechen",
+          "string": "Ja, Löschen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -1240,12 +1343,12 @@
             "0": {
               "status": {
                 "string": "Wenn Sie Änderungen am Formular selbst vorgenommen haben, etwa am Fragetext oder an den Logikregeln, sollten Sie jetzt das neue XML- oder XLSFormular mit der Schaltfläche auf der rechten Seite hochladen.",
-                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
+                "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
               },
               "link": {
                 "full": {
                   "string": "Wenn Sie Änderungen am Formular selbst vorgenommen haben, etwa am Fragetext oder an den Logikregeln, sollten Sie jetzt das neue Formular {upload}.",
-                  "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                  "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
                   "string": "hochladen",
@@ -1530,10 +1633,12 @@
       "introduction": {
         "0": {
           "create": {
-            "string": "Um ein Formular zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch."
+            "string": "Um ein Formular zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           },
           "update": {
-            "string": "Um einen Entwurf zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch."
+            "string": "Um einen Entwurf zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           }
         },
         "1": {
@@ -1580,7 +1685,8 @@
           "string": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten)."
         },
         "400_15": {
-          "string": "Das XLSForm konnte nicht konvertiert werden: {error}"
+          "string": "Das XLSForm konnte nicht konvertiert werden: {error}",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "409_3": {
           "string": "Es gibt bereits ein Formular in diesem Projekt mit der Formular ID \"{xmlFormId}\"."
@@ -1588,7 +1694,8 @@
       },
       "warningsText": {
         "0": {
-          "string": "Die XLSForm-Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme (Warnungen bei der Umwandlung):"
+          "string": "Die XLSForm-Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme (Warnungen bei der Umwandlung):",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "1": {
           "string": "Bitte beheben Sie die Probleme und versuchen es erneut."
@@ -1714,21 +1821,23 @@
         }
       }
     },
-    "FormVersionStandardButtons": {
+    "FormVersionDefDropdown": {
       "action": {
-        "downloadXForm": {
-          "string": "XML herunterladen",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "format": {
-        "xForm": {
-          "string": "Als XForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        "def": {
+          "string": "Definition",
+          "developer_comment": "This is the text of a button. \"Definition\" refers to a Form definition."
         },
-        "xlsForm": {
-          "string": "Als XLSForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        "viewXml": {
+          "string": "XML im Browser ansehen",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "downloadXForm": {
+          "string": "Als XForm herunterladen",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
+        },
+        "downloadXlsForm": {
+          "string": "Als XLSForm herunterladen",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -1742,6 +1851,12 @@
           "string": "Definition",
           "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
         }
+      }
+    },
+    "FormVersionViewXml": {
+      "title": {
+        "string": "XML ansehen",
+        "developer_comment": "This is the title at the top of a pop-up."
       }
     },
     "Loading": {
@@ -1772,6 +1887,20 @@
         "logOut": {
           "string": "Sie haben erfolgreich ausgeloggt."
         }
+      }
+    },
+    "NavbarHelpDropdown": {
+      "docs": {
+        "string": "",
+        "developer_comment": "This is the text of a link that links to the documentation."
+      },
+      "forum": {
+        "string": "",
+        "developer_comment": "This is the text of a link that links to the ODK forum."
+      },
+      "version": {
+        "string": "",
+        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
       }
     },
     "NavbarLinks": {
@@ -2530,14 +2659,6 @@
         }
       }
     },
-    "RefreshButton": {
-      "action": {
-        "refresh": {
-          "string": "Liste aktualisieren",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "SubmissionAnalyze": {
       "title": {
         "string": "OData verwenden",
@@ -2614,9 +2735,19 @@
         }
       }
     },
-    "SubmissionCell": {
-      "binaryLinkTitle": {
-        "string": "Datei wurde übermittelt. Klicken Sie, um sie herunterzuladen."
+    "SubmissionDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": ""
       }
     },
     "SubmissionDecrypt": {
@@ -2639,26 +2770,90 @@
         }
       }
     },
-    "SubmissionList": {
+    "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "withCount": {
-            "string": "{count, plural, one {{count} Datensatz herunterladen} other {Alle {count} Datensätze herunterladen}}",
+          "unfiltered": {
+            "string": "{count, plural, one {} other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
-          "withoutCount": {
-            "string": "Alle Datensätze herunterladen",
+          "filtered": {
+            "withoutCount": {
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, one {} other {}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          },
+          "withMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withoutMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "primaryDataTable": {
+            "string": "",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        }
+      }
+    },
+    "SubmissionFieldDropdown": {
+      "placeholder": {
+        "string": "",
+        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
+      },
+      "field": {
+        "columns": {
+          "string": "",
+          "developer_comment": "This is shown beneath text that indicates the number of columns that the user has selected to display in a table. For example, that text may read \"10 of 100\", where 10 is the number of columns selected, and 100 is the total number of columns."
         },
-        "analyze": {
-          "string": "Mittels OData analysieren",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+        "search": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
         }
       },
-      "analyzeDisabled": {
-        "string": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar."
+      "disabled": {
+        "string": ""
       },
+      "action": {
+        "select": {
+          "full": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
+          },
+          "all": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+          }
+        }
+      }
+    },
+    "SubmissionFilters": {
+      "field": {
+        "submissionDate": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+        }
+      }
+    },
+    "SubmissionFiltersSubmitter": {
+      "field": {
+        "submitter": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
+        }
+      }
+    },
+    "SubmissionList": {
       "loading": {
         "withoutCount": {
           "string": "Übermittlungen laden...",
@@ -2668,12 +2863,12 @@
           "string": "{count, plural, one {{count} Übermittlung laden...} other {{count} Übermittlungen laden...}}"
         },
         "first": {
-          "string": "Die ersten {top} von {count} Übermittlungen laden...",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "{top} weitere von {count} verbliebenen Übermittlungen laden...",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
@@ -2682,18 +2877,31 @@
           "one": {
             "string": "Letzte Übermittlung laden..."
           }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "",
+            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {} other {}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {} other {}}"
+            },
+            "one": {
+              "string": ""
+            }
+          }
         }
       },
       "emptyTable": {
         "string": "Es gibt noch keine Übermittlungen."
       },
-      "remaining": {
-        "string": "{count, plural, one {{count} Zeile verbleibend.} other {{count} Zeilen verbleibend.}}"
-      }
-    },
-    "SubmissionRow": {
-      "encryptionMessage": {
-        "string": "Datenvorschau ist wegen der Verschlüsselung nicht verfügbar."
+      "noMatching": {
+        "string": ""
       }
     },
     "SubmissionTable": {

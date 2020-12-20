@@ -140,6 +140,10 @@
       "string": "Batal",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "clear": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "close": {
       "string": "Tutup",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -191,6 +195,10 @@
     "proceed": {
       "string": "Lanjutkan",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "refresh": {
+      "string": "",
+      "developer_comment": "This is the text of a button that refreshes data."
     },
     "resetPassword": {
       "string": "Atur Ulang Kata Sandi",
@@ -376,7 +384,19 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "submission": {
+    "binaryLinkTitle": {
+      "string": ""
+    },
+    "encryptionMessage": {
+      "string": ""
+    }
+  },
   "common": {
+    "anybody": {
+      "string": "",
+      "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
+    },
     "areYouSure": {
       "string": "Apakah Anda yakin ingin melanjutkan?",
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
@@ -388,6 +408,10 @@
     "dangerZone": {
       "string": "Zona Bahaya",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "filter": {
+      "string": "",
+      "developer_comment": "This text is shown next to options for filtering a table."
     },
     "no": {
       "string": "Tidak"
@@ -495,10 +519,11 @@
         }
       }
     },
-    "AuditFilters": {
-      "filter": {
-        "string": "Saring berdasarkan",
-        "developer_comment": "This text is shown next to options for filtering a table."
+    "AsyncRoute": {
+      "alert": {
+        "loadError": {
+          "string": ""
+        }
       }
     },
     "AuditList": {
@@ -708,9 +733,18 @@
           "string": "Atur sekarang",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
+        "download": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "terminate": {
           "string": "Putuskan",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "download": {
+          "string": ""
         }
       }
     },
@@ -793,10 +827,6 @@
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
         }
       },
-      "qrCodeHelp": {
-        "string": "Apakah ini?",
-        "developer_comment": "Linked to a help file about QR codes to configure data collection clients."
-      },
       "emptyTable": {
         "string": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda."
       },
@@ -824,14 +854,8 @@
           "string": "Pengguna Aplikasi \"{displayName}\" telah dibuat."
         },
         "1": {
-          "full": {
-            "string": "Anda bisa mengonfigurasi perangkat seluler nutuk \"{displayName}\" sekarang dengan cara {scanningCode} di aplikasi. Atau Anda bisa melakukannya nanti lewat tabel Pengguna Aplikasi dengan mengklik \"Lihat kode\".",
-            "developer_comment": "{scanningCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nscanning the code above"
-          },
-          "scanningCode": {
-            "string": "memindai kode di atas",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {scanningCode} is in the following text:\n\nYou can configure a mobile device for “{displayName}” right now by {scanningCode} into their app. Or you can do it later from the App Users table by clicking “See code.”"
-          }
+          "string": "",
+          "developer_comment": "Clicking \"See code\" displays a QR code."
         },
         "2": {
           "full": {
@@ -848,6 +872,85 @@
         "createAnother": {
           "string": "Buat baru",
           "developer_comment": "This is the text of a button that is used to create another App User."
+        }
+      }
+    },
+    "FieldKeyQrPanel": {
+      "title": {
+        "managed": {
+          "string": "",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        },
+        "legacy": {
+          "string": "",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        }
+      },
+      "body": {
+        "0": {
+          "managed": {
+            "full": {
+              "string": "",
+              "developer_comment": "{managedCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nThis is a {managedCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "",
+              "developer_comment": "{legacyCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nThis is a {legacyCode}."
+            }
+          }
+        },
+        "1": {
+          "managed": {
+            "string": "",
+            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+          },
+          "legacy": {
+            "string": "",
+            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+          }
+        },
+        "2": {
+          "managed": {
+            "full": {
+              "string": "",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToLegacy} has the text: switch to a {legacyCode}\n- {legacyCode} has the text: Legacy QR Code"
+            },
+            "switchToLegacy": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToLegacy} is in the following text:\n\nFor the old behavior, {switchToLegacy}.\n\nNote that {legacyCode} is a separate string that will be translated below. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nFor the old behavior, switch to a {legacyCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToManaged} has the text: switch to a {managedCode}\n- {managedCode} has the text: Managed QR Code"
+            },
+            "switchToManaged": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToManaged} is in the following text:\n\nFor a more controlled and foolproof process, {switchToManaged}.\n\nNote that {managedCode} is a separate string that will be translated below. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nFor a more controlled and foolproof process, switch to a {managedCode}."
+            }
+          }
+        },
+        "3": {
+          "string": ""
         }
       }
     },
@@ -1240,12 +1343,12 @@
             "0": {
               "status": {
                 "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya mengunggah XML baru atau XLSForm menggunakan tombol yang ada di sebelah kanan.",
-                "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form."
+                "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
               },
               "link": {
                 "full": {
                   "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya {upload} XML baru atau XLSForm.",
-                  "developer_comment": "This refers to changes to the form definition as opposed to just the media associated with the Form.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                  "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
                   "string": "Unggah",
@@ -1530,10 +1633,12 @@
       "introduction": {
         "0": {
           "create": {
-            "string": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel."
+            "string": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           },
           "update": {
-            "string": "Untuk memperbarui draf, unggan dokumen XForms XML atau dokumen XLSForm Excel."
+            "string": "Untuk memperbarui draf, unggan dokumen XForms XML atau dokumen XLSForm Excel.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           }
         },
         "1": {
@@ -1580,7 +1685,8 @@
           "string": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\")."
         },
         "400_15": {
-          "string": "XLSForm tidak bisa diubah: {error}"
+          "string": "XLSForm tidak bisa diubah: {error}",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "409_3": {
           "string": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
@@ -1588,7 +1694,8 @@
       },
       "warningsText": {
         "0": {
-          "string": "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):"
+          "string": "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "1": {
           "string": "Mohon perbaiki dan coba lagi."
@@ -1714,21 +1821,23 @@
         }
       }
     },
-    "FormVersionStandardButtons": {
+    "FormVersionDefDropdown": {
       "action": {
-        "downloadXForm": {
-          "string": "Unduh XML",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "format": {
-        "xForm": {
-          "string": "Sebagai XForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        "def": {
+          "string": "",
+          "developer_comment": "This is the text of a button. \"Definition\" refers to a Form definition."
         },
-        "xlsForm": {
-          "string": "Sebagai XLSForm",
-          "developer_comment": "Here, the user selects the format that a Form should be downloaded as."
+        "viewXml": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "downloadXForm": {
+          "string": "",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
+        },
+        "downloadXlsForm": {
+          "string": "",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -1742,6 +1851,12 @@
           "string": "Definisi",
           "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
         }
+      }
+    },
+    "FormVersionViewXml": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
       }
     },
     "Loading": {
@@ -1772,6 +1887,20 @@
         "logOut": {
           "string": "Anda sudah berhasil keluar."
         }
+      }
+    },
+    "NavbarHelpDropdown": {
+      "docs": {
+        "string": "",
+        "developer_comment": "This is the text of a link that links to the documentation."
+      },
+      "forum": {
+        "string": "",
+        "developer_comment": "This is the text of a link that links to the ODK forum."
+      },
+      "version": {
+        "string": "",
+        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
       }
     },
     "NavbarLinks": {
@@ -2530,14 +2659,6 @@
         }
       }
     },
-    "RefreshButton": {
-      "action": {
-        "refresh": {
-          "string": "Daftar Muat Ulang",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "SubmissionAnalyze": {
       "title": {
         "string": "Menggunakan OData",
@@ -2614,9 +2735,19 @@
         }
       }
     },
-    "SubmissionCell": {
-      "binaryLinkTitle": {
-        "string": "Dokumen telah dikirim. Klik untuk mengunduh."
+    "SubmissionDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": ""
       }
     },
     "SubmissionDecrypt": {
@@ -2639,26 +2770,90 @@
         }
       }
     },
-    "SubmissionList": {
+    "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "withCount": {
-            "string": "{count, plural, other {Unduh semua {count} catatan.}}",
+          "unfiltered": {
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
-          "withoutCount": {
-            "string": "Unduh semua catatan",
+          "filtered": {
+            "withoutCount": {
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, other {}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          },
+          "withMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withoutMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "primaryDataTable": {
+            "string": "",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        }
+      }
+    },
+    "SubmissionFieldDropdown": {
+      "placeholder": {
+        "string": "",
+        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
+      },
+      "field": {
+        "columns": {
+          "string": "",
+          "developer_comment": "This is shown beneath text that indicates the number of columns that the user has selected to display in a table. For example, that text may read \"10 of 100\", where 10 is the number of columns selected, and 100 is the total number of columns."
         },
-        "analyze": {
-          "string": "Analisis lewat OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+        "search": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
         }
       },
-      "analyzeDisabled": {
-        "string": "Akses OData tidak tersedia karena enkripsi formulir"
+      "disabled": {
+        "string": ""
       },
+      "action": {
+        "select": {
+          "full": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
+          },
+          "all": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+          }
+        }
+      }
+    },
+    "SubmissionFilters": {
+      "field": {
+        "submissionDate": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+        }
+      }
+    },
+    "SubmissionFiltersSubmitter": {
+      "field": {
+        "submitter": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
+        }
+      }
+    },
+    "SubmissionList": {
       "loading": {
         "withoutCount": {
           "string": "Memuat kiriman data...",
@@ -2668,12 +2863,12 @@
           "string": "{count, plural, other {Memuat {count} kiriman data...}}"
         },
         "first": {
-          "string": "Memuat {top} pertama dari {count} kiriman data...",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "Memuat {top} lebih dari {count} sisa kiriman data...",
-          "developer_comment": "{top} and {count} are both numbers that are at least 250."
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
@@ -2682,18 +2877,31 @@
           "one": {
             "string": "Memuat kiriman data terakhir..."
           }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "",
+            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, other {}}"
+            },
+            "one": {
+              "string": ""
+            }
+          }
         }
       },
       "emptyTable": {
         "string": "Belum ada kiriman data."
       },
-      "remaining": {
-        "string": "{count, plural, other {{count} baris tersisa.}}"
-      }
-    },
-    "SubmissionRow": {
-      "encryptionMessage": {
-        "string": "Pratinjau data tidak tersedia karena enkripsi."
+      "noMatching": {
+        "string": ""
       }
     },
     "SubmissionTable": {

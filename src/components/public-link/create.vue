@@ -121,7 +121,11 @@ export default {
     "title": "Vytvořit veřejně přístupný odkaz",
     "introduction": [
       "Kdokoli s tímto odkazem bude moci vyplnit tento formulář ve webovém prohlížeči. Zobrazovaný název používejte, abyste si připomněli, kde jste ho zveřejnili, s kým jste jej sdíleli, kdy má být aktivní atd."
-    ]
+    ],
+    "field": {
+      "once": "Samostatný příspěvek"
+    },
+    "onceHelp": "Povolit pouze jeden příspěvek na jeden prohlížeč"
   },
   "de": {
     "title": "Öffentlichen Zugangslink erstellen",

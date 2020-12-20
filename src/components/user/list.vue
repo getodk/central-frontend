@@ -260,7 +260,7 @@ export default {
       "create": "Crear usuario web"
     },
     "heading": [
-      "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un rol, se le puede asignar uno en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tal como {collect}, cree usuarios móviles en cada proyecto."
+      "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un Rol, se le puede asignar un Rol en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tal como {collect}, cree Usuarios móviles en cada proyecto."
     ],
     "header": {
       "sitewideRole": "Rol de sitio"

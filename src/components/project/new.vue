@@ -111,7 +111,7 @@ export default {
   "es": {
     "title": "Crear proyecto",
     "introduction": [
-      "Los proyectos agrupan formularios y Usuarios de aplicativos móviles juntos para facilitar su organización y manejo, tanto en este sitio web como en su dispositivo de recolección de datos."
+      "Los proyectos agrupan formularios y Usuarios móviles juntos para facilitar su organización y manejo, tanto en este sitio web como en su dispositivo de recolección de datos."
     ]
   },
   "fr": {

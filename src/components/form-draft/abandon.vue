@@ -151,7 +151,7 @@ export default {
       ]
     },
     "action": {
-      "abandon": "Abbrechen"
+      "abandon": "Ja, Löschen"
     }
   },
   "es": {
