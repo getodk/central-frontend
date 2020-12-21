@@ -268,7 +268,7 @@ export default {
     },
     "introduction": [
       "Vous êtes sur le point de rendre cette ébauche la version publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers médias qui y sont liés.",
-      "Les vraies soumissions existantes ne seront pas affectées, mais toutes les soumissions de test de cette ébauche seront supprimées.",
+      "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées.",
       "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous."
     ],
     "field": {

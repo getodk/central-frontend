@@ -175,7 +175,7 @@ export default {
     "tab": {
       "overview": "Descripción general",
       "users": "Roles del proyecto",
-      "formAccess": "Acceso a formularios",
+      "formAccess": "Acceso a Formulario",
       "settings": "Configuración"
     }
   },

@@ -71,6 +71,7 @@ export default {
 {
   "cs": {
     "header": {
+      "once": "Samostatný příspěvek",
       "accessLink": "Odkaz"
     }
   },

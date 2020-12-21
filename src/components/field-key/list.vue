@@ -250,7 +250,6 @@ export default {
       "lastUsed": "Naposledy použitý",
       "configureClient": "Konfigurovat klienta"
     },
-    "qrCodeHelp": "Co je to?",
     "emptyTable": "Zatím nejsou žádní uživatelé aplikace. Pro stažení formulářů a odeslání dat z vašeho zařízení budete muset vytvořit nějaké.",
     "alert": {
       "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen.",
@@ -275,7 +274,6 @@ export default {
       "lastUsed": "Zuletzt benutzt",
       "configureClient": "Client konfigurieren"
     },
-    "qrCodeHelp": "Was ist das",
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
       "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
@@ -289,7 +287,7 @@ export default {
     "heading": [
       {
         "full": "Los usuarios móviles se utilizan para recolectar datos desde una aplicación tal como {collect}. Típicamente representan un rol compartido como “Vacunador” pero también pueden representar a individuos. Los usuarios móviles en este proyecto solo pueden descargar y usar formularios en este proyecto. Cuando usted crea un nuevo usuario móvil, al principio este no tendrá acceso a ningún formulario. Para definir los formularios a los que cada usuario móvil puede acceder, utilice la pestaña {formAccess}.",
-        "formAccess": "Acceso a formularios"
+        "formAccess": "Acceso a Formulario"
       },
       {
         "full": "Los usuarios móviles son más apropiados cuando los recopiladores de datos necesitan acceso a varios formularios, están fuera de línea o tiene un Formulario complejo. Si necesita que los encuestados se autoinforme o tengan un formulario solo en línea, {clickHere} busque otras opciones.",
@@ -300,7 +298,6 @@ export default {
       "lastUsed": "Última utilizada",
       "configureClient": "Configurar cliente"
     },
-    "qrCodeHelp": "¿Qué es esto?",
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
       "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
@@ -325,7 +322,6 @@ export default {
       "lastUsed": "Dernière utilisation",
       "configureClient": "Configurer le client"
     },
-    "qrCodeHelp": "Qu'est-ce que c'est ?",
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
     "alert": {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
@@ -350,7 +346,6 @@ export default {
       "lastUsed": "Terakhir Digunakan",
       "configureClient": "Klien Konfigurasi"
     },
-    "qrCodeHelp": "Apakah ini?",
     "emptyTable": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda.",
     "alert": {
       "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat.",

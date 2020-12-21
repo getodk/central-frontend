@@ -300,11 +300,11 @@ export default {
         ]
       },
       {
-        "title": "Gestionar retiro de formularios",
+        "title": "Gestionar retiro de Formulario",
         "body": [
           {
             "full": "Cuando llegue al final de su recopilación de datos, puede usar los controles de estado del formulario en la {formAccessTab} para controlar si, por ejemplo, los usuarios móviles podrán ver o crear nuevos envíos a este formulario.",
-            "formAccessTab": "pestaña acceso a formularios de la página del proyecto"
+            "formAccessTab": "Pestaña acceso a Formulario de la página del proyecto"
           }
         ]
       }

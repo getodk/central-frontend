@@ -366,114 +366,59 @@ export default {
 <i18n>
 {
   "cs": {
-    "action": {
-      "download": {
-        "withCount": "Stáhnout {count} záznam | Stáhnout tyto {count} záznamy | Stáhnout všech {count} záznamů | Stáhnout všech {count} záznamů",
-        "withoutCount": "Stáhnout všechny záznamy"
-      },
-      "analyze": "Analyzovat přes OData"
-    },
-    "analyzeDisabled": "Přístup k datům OData není k dispozici kvůli šifrování formulářů",
     "loading": {
       "withoutCount": "Načítání příspěvků…",
       "all": "Načítání {count} příspěvku ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ...",
-      "first": "Načítání prvních {top} ze {count} příspěvků…",
-      "middle": "Načítání {top} dalších ze {count} zbývajících příspěvků…",
       "last": {
         "multiple": "Načítání posledního {count} příspěvku… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků…",
         "one": "Načítání posledního příspěvku…"
       }
     },
-    "emptyTable": "Zatím neexistují žádné příspěvky.",
-    "remaining": "{count} řádka zbývá | {count} řádky zbývají. | {count} řádek zbývá. | {count} řádek zbývá."
+    "emptyTable": "Zatím neexistují žádné příspěvky."
   },
   "de": {
-    "action": {
-      "download": {
-        "withCount": "{count} Datensatz herunterladen | Alle {count} Datensätze herunterladen",
-        "withoutCount": "Alle Datensätze herunterladen"
-      },
-      "analyze": "Mittels OData analysieren"
-    },
-    "analyzeDisabled": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar.",
     "loading": {
       "withoutCount": "Übermittlungen laden...",
       "all": "{count} Übermittlung laden... | {count} Übermittlungen laden...",
-      "first": "Die ersten {top} von {count} Übermittlungen laden...",
-      "middle": "{top} weitere von {count} verbliebenen Übermittlungen laden...",
       "last": {
         "multiple": "Die letzte {count} Übermittlung laden... | Die letzten {count} Übermittlungen laden...",
         "one": "Letzte Übermittlung laden..."
       }
     },
-    "emptyTable": "Es gibt noch keine Übermittlungen.",
-    "remaining": "{count} Zeile verbleibend. | {count} Zeilen verbleibend."
+    "emptyTable": "Es gibt noch keine Übermittlungen."
   },
   "es": {
-    "action": {
-      "download": {
-        "withCount": "Descargar {count} registro | Descargar todos los {count} registros",
-        "withoutCount": "Descargar todos los registros"
-      },
-      "analyze": "Analizar vía OData"
-    },
-    "analyzeDisabled": "El acceso a OData no está disponible debido al cifrado del formulario",
     "loading": {
       "withoutCount": "Cargando los envíos...",
       "all": "Cargando {count} envío... | Cargando {count} envíos...",
-      "first": "Cargando los primeros {top} de {count} envíos...",
-      "middle": "Cargando {top} más de {count} envíos restantes...",
       "last": {
         "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos...",
         "one": "Cargando el último envío..."
       }
     },
-    "emptyTable": "No hay envíos todavía.",
-    "remaining": "{count} archivo permanece. | {count} archivos permanecen."
+    "emptyTable": "No hay envíos todavía."
   },
   "fr": {
-    "action": {
-      "download": {
-        "withCount": "Télécharger le {count} enregistrement | Télécharger tous les {count} enregistrements",
-        "withoutCount": "Télécharger tous les enregistrements"
-      },
-      "analyze": "Analyser via OData"
-    },
-    "analyzeDisabled": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire",
     "loading": {
       "withoutCount": "Chargement des soumissions...",
       "all": "Chargement de {count} soumission... | Chargement de {count} soumissions...",
-      "first": "Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres des {count} soumissions restantes...",
       "last": {
         "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
         "one": "Chargement la dernière soumission..."
       }
     },
-    "emptyTable": "Il n'y a pas encore de soumissions.",
-    "remaining": "{count} ligne restante. | {count} lignes restantes."
+    "emptyTable": "Il n'y a pas encore de soumissions."
   },
   "id": {
-    "action": {
-      "download": {
-        "withCount": "Unduh semua {count} catatan.",
-        "withoutCount": "Unduh semua catatan"
-      },
-      "analyze": "Analisis lewat OData"
-    },
-    "analyzeDisabled": "Akses OData tidak tersedia karena enkripsi formulir",
     "loading": {
       "withoutCount": "Memuat kiriman data...",
       "all": "Memuat {count} kiriman data...",
-      "first": "Memuat {top} pertama dari {count} kiriman data...",
-      "middle": "Memuat {top} lebih dari {count} sisa kiriman data...",
       "last": {
         "multiple": "Memuat {count} kiriman data terakhir...",
         "one": "Memuat kiriman data terakhir..."
       }
     },
-    "emptyTable": "Belum ada kiriman data.",
-    "remaining": "{count} baris tersisa."
+    "emptyTable": "Belum ada kiriman data."
   }
 }
 </i18n>
