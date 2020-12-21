@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </li>
       <li>
-        <a :href="href('.csv.zip', { media: false })" :target="target">
+        <a :href="href('.csv.zip', { attachments: false })" :target="target">
           {{ $t('action.download.withoutMedia') }}
         </a>
       </li>
