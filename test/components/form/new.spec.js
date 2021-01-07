@@ -163,21 +163,35 @@ describe('FormNew', () => {
       });
     });
 
-    it('saves the file after it is dragged and dropped', () => {
-      const modal = mount(FormNew, {
-        propsData: { state: true },
-        requestData: {
-          project: testData.extendedProjects.createPast(1).last()
-        }
+    describe('drag and drop', () => {
+      beforeEach(() => {
+        testData.extendedProjects.createPast(1);
       });
-      return trigger.dragAndDrop(modal, '#form-new-drop-zone', [xlsForm()])
-        .then(() => {
-          modal.data().file.name.should.equal('my_form.xlsx');
+
+      it('adds a class to drop zone while file is dragged', async () => {
+        const modal = mount(FormNew, {
+          propsData: { state: true },
+          requestData: { project: testData.extendedProjects.last() }
         });
+        const dropZone = modal.first('#form-new-drop-zone');
+        const files = [xlsForm()];
+        await trigger.dragenter(dropZone, files);
+        await trigger.dragover(dropZone, files);
+        dropZone.hasClass('form-new-dragover').should.be.true();
+      });
+
+      it('saves the file after it is dragged and dropped', async () => {
+        const modal = mount(FormNew, {
+          propsData: { state: true },
+          requestData: { project: testData.extendedProjects.last() }
+        });
+        await trigger.dragAndDrop(modal, '#form-new-drop-zone', [xlsForm()]);
+        modal.data().file.name.should.equal('my_form.xlsx');
+      });
     });
   });
 
-  describe('request url', () => {
+  describe('request URL', () => {
     beforeEach(mockLogin);
 
     it('sends a request to .../forms when creating a form', () => {
@@ -291,6 +305,27 @@ describe('FormNew', () => {
         disabled: ['.modal-warnings .btn-primary', '.btn-link'],
         modal: true
       });
+  });
+
+  it('disables the drop zone while the request is in progress', () => {
+    mockLogin();
+    return mockHttp()
+      .mount(FormNew, {
+        propsData: { state: true },
+        requestData: { project: testData.extendedProjects.createPast(1).last() }
+      })
+      .request(async (modal) => {
+        await selectFileByInput(modal, xlsForm());
+        await trigger.click(modal, '#form-new-upload-button');
+      })
+      .beforeEachResponse(modal => {
+        modal.vm.disabled.should.be.true();
+        const dropZone = modal.first('#form-new-drop-zone');
+        dropZone.hasClass('form-new-disabled').should.be.true();
+        const button = dropZone.first('.btn-primary');
+        button.hasAttribute('disabled').should.be.true();
+      })
+      .respondWithProblem();
   });
 
   describe('after creating a form', () => {
