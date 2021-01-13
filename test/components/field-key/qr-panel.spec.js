@@ -23,7 +23,8 @@ describe('FieldKeyQrPanel', () => {
       const { token } = testData.extendedFieldKeys.last();
       panel.first(CollectQr).getProp('settings').should.eql({
         server_url: `/v1/key/${token}/projects/1`,
-        form_update_mode: 'match_exactly'
+        form_update_mode: 'match_exactly',
+        autosend: 'wifi_and_cellular'
       });
     });
 

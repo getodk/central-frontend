@@ -87,7 +87,10 @@ export default {
       const settings = {
         server_url: apiPaths.serverUrlForFieldKey(token, projectId)
       };
-      if (this.managed) settings.form_update_mode = 'match_exactly';
+      if (this.managed) {
+        settings.form_update_mode = 'match_exactly';
+        settings.autosend = 'wifi_and_cellular';
+      }
       return settings;
     }
   }
@@ -167,8 +170,8 @@ export default {
       },
       // "Get Blank Form" is the text of a button in ODK Collect.
       {
-        "managed": "Collect will exactly match the Forms available to “{displayName}” including automatically applying updates. Users will not need to manually Get Blank Forms.",
-        "legacy": "Users will have to manually Get Blank Forms on the device and determine which Forms to update.",
+        "managed": "Collect will exactly match the Forms available to “{displayName}” including automatically applying updates. Users will not need to manually Get Blank Forms. Additionally, finalized Forms will be sent automatically as soon as a connection is found.",
+        "legacy": "Users will have to manually Get Blank Forms on the device and determine which Forms to update."
       },
       {
         "managed": {
