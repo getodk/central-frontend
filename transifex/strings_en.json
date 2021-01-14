@@ -911,12 +911,12 @@
         },
         "1": {
           "managed": {
-            "string": "Collect will exactly match the Forms available to “{displayName}” including automatically applying updates. Users will not need to manually Get Blank Forms.",
+            "string": "Collect will exactly match the Forms available to “{displayName}” including automatically applying updates. Users will not need to manually Get Blank Forms. Additionally, finalized Forms will be sent automatically as soon as a connection is found.",
             "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
           },
           "legacy": {
-            "string": "Users will have to manually Get Blank Forms on the device and determine which Forms to update.",
-            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+            "string": "Users will have to manually Get Blank Forms on the device and determine which Forms to update. They will also need to manually Send Finalized Forms.",
+            "developer_comment": "\"Get Blank Form\" and \"Send Finalized Form\" are the text of buttons in ODK Collect."
           }
         },
         "2": {
