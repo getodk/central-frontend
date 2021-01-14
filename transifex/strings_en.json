@@ -915,8 +915,8 @@
             "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
           },
           "legacy": {
-            "string": "Users will have to manually Get Blank Forms on the device and determine which Forms to update.",
-            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+            "string": "Users will have to manually Get Blank Forms on the device and determine which Forms to update. They will also need to manually Send Finalized Forms.",
+            "developer_comment": "\"Get Blank Form\" and \"Send Finalized Form\" are the text of buttons in ODK Collect."
           }
         },
         "2": {
