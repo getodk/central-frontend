@@ -473,7 +473,8 @@
         "string": "Something went wrong: there was no response to your request."
       },
       "errorNotProblem": {
-        "string": "Something went wrong: the server returned an invalid error."
+        "string": "Something went wrong: error code {status}.",
+        "developer_comment": "{status} is an HTTP status code, for example, 404."
       }
     }
   },

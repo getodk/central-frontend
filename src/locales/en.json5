@@ -239,7 +239,8 @@
     "request": {
       "noRequest": "Something went wrong: there was no request.",
       "noResponse": "Something went wrong: there was no response to your request.",
-      "errorNotProblem": "Something went wrong: the server returned an invalid error."
+      // {status} is an HTTP status code, for example, 404.
+      "errorNotProblem": "Something went wrong: error code {status}."
     }
   },
   "router": {

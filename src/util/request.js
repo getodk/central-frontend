@@ -119,11 +119,12 @@ export const logAxiosError = (error) => {
 export const requestAlertMessage = (axiosError, options = {}) => {
   // No Problem response
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
-  if (axiosError.response == null) return i18n.t('util.request.noResponse');
-  const { data } = axiosError.response;
-  if (!isProblem(data)) return i18n.t('util.request.errorNotProblem');
+  const { response } = axiosError;
+  if (response == null) return i18n.t('util.request.noResponse');
+  if (!isProblem(response.data))
+    return i18n.t('util.request.errorNotProblem', response);
 
-  const problem = data;
+  const problem = response.data;
 
   const { problemToAlert } = options;
   if (problemToAlert != null) {

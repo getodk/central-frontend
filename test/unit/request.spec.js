@@ -264,9 +264,12 @@ describe('util/request', () => {
     it('returns a message if the response is not a Problem', () => {
       const error = new Error();
       error.request = {};
-      error.response = { x: 1 };
+      error.response = {
+        status: 500,
+        data: { x: 1 }
+      };
       const message = requestAlertMessage(error);
-      message.should.equal('Something went wrong: the server returned an invalid error.');
+      message.should.equal('Something went wrong: error code 500.');
     });
 
     it('returns the Problem message by default', () => {
