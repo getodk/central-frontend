@@ -207,6 +207,13 @@
     "success": "Success!",
     "yes": "Yes"
   },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
+      }
+    }
+  },
   "presenter": {
     "Form": {
       // This is shown for a Form with a blank version name.

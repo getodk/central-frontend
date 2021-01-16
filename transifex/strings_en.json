@@ -431,6 +431,15 @@
       "string": "Yes"
     }
   },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": {
+          "string": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
+        }
+      }
+    }
+  },
   "presenter": {
     "Form": {
       "blankVersion": {
