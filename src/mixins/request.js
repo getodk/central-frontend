@@ -118,11 +118,10 @@ function request({
         return error.response;
 
       logAxiosError(error);
-      const message = requestAlertMessage(error, {
+      this.$alert().danger(requestAlertMessage(error, {
         problemToAlert,
         component: this
-      });
-      this.$store.commit('setAlert', { type: 'danger', message });
+      }));
       throw error;
     })
     .then(response => {

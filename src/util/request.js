@@ -106,13 +106,11 @@ export const isProblem = (data) => data != null && typeof data === 'object' &&
   data.code != null && data.message != null;
 
 export const logAxiosError = (error) => {
-  const { $logger } = Vue.prototype;
-  if (error.response != null)
-    $logger.log(error.response.data);
-  else if (error.request != null)
-    $logger.log(error.request);
-  else
-    $logger.log('Error', error.message);
+  if (error.response == null) {
+    Vue.prototype.$logger.log(error.request != null
+      ? error.request
+      : error.message);
+  }
 };
 
 // See the `request` mixin for a description of this function's behavior.
