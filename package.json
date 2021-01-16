@@ -12,7 +12,7 @@
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
   "dependencies": {
-    "axios": "~0.18",
+    "axios": "~0.21",
     "bootstrap": "~3",
     "core-js": "~3.6",
     "flatpickr": "~4.6",
