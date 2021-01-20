@@ -43,6 +43,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-backup-list" */
     '../components/backup/list.vue'
   )))
+  .set('Download', loader(() => import(
+    /* webpackChunkName: "component-download" */
+    '../components/download.vue'
+  )))
   .set('FieldKeyList', loader(() => import(
     /* webpackChunkName: "component-field-key-list" */
     '../components/field-key/list.vue'

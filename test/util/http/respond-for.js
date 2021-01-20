@@ -84,6 +84,7 @@ const mapsByComponent = {
     audits: () => testData.standardAudits.sorted()
   }),
   AuditList: mapKeys(['audits']),
+  Download: new Map(),
   NotFound: new Map()
 };
 

@@ -487,6 +487,13 @@ const routes = [
   }),
 
   asyncRoute({
+    path: '/dl/*',
+    component: 'Download',
+    loading: 'page',
+    key: () => '/dl'
+  }),
+
+  asyncRoute({
     path: '*',
     component: 'NotFound',
     loading: 'page',

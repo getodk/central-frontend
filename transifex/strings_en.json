@@ -772,6 +772,11 @@
         }
       }
     },
+    "Download": {
+      "body": {
+        "string": "{filename} will begin downloading soon. Once the download begins, you can leave this page."
+      }
+    },
     "EnketoFill": {
       "disabled": {
         "processing": {

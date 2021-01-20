@@ -1,7 +1,8 @@
 import i18n from '../src/i18n';
+import { loadLocale } from '../src/util/i18n';
+
 import testData from './data';
 import { load, mockRoute } from './util/http';
-import { loadLocale } from '../src/util/i18n';
 import { mockLogin } from './util/session';
 
 describe('router', () => {
@@ -94,7 +95,8 @@ describe('router', () => {
       '/users/2/edit',
       '/account/edit',
       '/system/backups',
-      '/system/audits'
+      '/system/audits',
+      '/dl/foo.txt'
     ];
 
     for (const path of paths) {
