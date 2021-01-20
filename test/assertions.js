@@ -1,6 +1,5 @@
 import should from 'should';
 
-import Alert from '../src/components/alert.vue';
 import { unwrapElement } from './util/util';
 
 // Asserts that an element is not individually hidden and that all its ancestors
@@ -42,9 +41,9 @@ should.Assertion.add('focused', function focused() {
 });
 
 should.Assertion.add('alert', function assertAlert(type = undefined, message = undefined) {
-  const alert = this.obj.first(Alert);
-  alert.vm.$el.style.display.should.equal('');
-  if (type != null) alert.hasClass(`alert-${type}`).should.be.true();
-  if (message != null)
-    alert.first('.alert-message').text().should.match(message);
+  this.params = { operator: 'to show an alert' };
+  const { alert } = this.obj.vm.$store.state;
+  alert.state.should.be.true();
+  if (type != null) alert.type.should.equal(type);
+  if (message != null) alert.message.should.match(message);
 });

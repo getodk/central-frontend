@@ -106,24 +106,23 @@ export const isProblem = (data) => data != null && typeof data === 'object' &&
   data.code != null && data.message != null;
 
 export const logAxiosError = (error) => {
-  const { $logger } = Vue.prototype;
-  if (error.response != null)
-    $logger.log(error.response.data);
-  else if (error.request != null)
-    $logger.log(error.request);
-  else
-    $logger.log('Error', error.message);
+  if (error.response == null) {
+    Vue.prototype.$logger.log(error.request != null
+      ? error.request
+      : error.message);
+  }
 };
 
 // See the `request` mixin for a description of this function's behavior.
 export const requestAlertMessage = (axiosError, options = {}) => {
   // No Problem response
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
-  if (axiosError.response == null) return i18n.t('util.request.noResponse');
-  const { data } = axiosError.response;
-  if (!isProblem(data)) return i18n.t('util.request.errorNotProblem');
+  const { response } = axiosError;
+  if (response == null) return i18n.t('util.request.noResponse');
+  if (!isProblem(response.data))
+    return i18n.t('util.request.errorNotProblem', response);
 
-  const problem = data;
+  const problem = response.data;
 
   const { problemToAlert } = options;
   if (problemToAlert != null) {

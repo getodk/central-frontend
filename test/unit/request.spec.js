@@ -1,5 +1,10 @@
+import Vue from 'vue';
+
+import sinon from 'sinon';
+
 import i18n from '../../src/i18n';
-import { apiPaths, configForPossibleBackendRequest, queryString, requestAlertMessage } from '../../src/util/request';
+import { apiPaths, configForPossibleBackendRequest, isProblem, logAxiosError, queryString, requestAlertMessage } from '../../src/util/request';
+
 import { i18nProps } from '../util/i18n';
 
 describe('util/request', () => {
@@ -239,6 +244,56 @@ describe('util/request', () => {
     });
   });
 
+  describe('isProblem()', () => {
+    it('returns true for a Problem', () => {
+      isProblem({ code: 404.1, message: 'Not found.' }).should.be.true();
+    });
+
+    it('returns false for null', () => {
+      isProblem(null).should.be.false();
+    });
+
+    it('returns false for a string', () => {
+      isProblem('foo').should.be.false();
+    });
+
+    it('returns false for an object without a code property', () => {
+      isProblem({ message: 'Not found.' }).should.be.false();
+    });
+
+    it('returns false for an object without a message property', () => {
+      isProblem({ code: 404.1 }).should.be.false();
+    });
+  });
+
+  describe('logAxiosError()', () => {
+    it('does not log if there was a response', () => {
+      const error = new Error();
+      error.response = {};
+      const log = sinon.fake();
+      sinon.replace(Vue.prototype.$logger, 'log', log);
+      logAxiosError(error);
+      log.called.should.be.false();
+    });
+
+    it('logs the request if there was one', () => {
+      const error = new Error();
+      error.request = {};
+      const log = sinon.fake();
+      sinon.replace(Vue.prototype.$logger, 'log', log);
+      logAxiosError(error);
+      log.calledWith(error.request).should.be.true();
+    });
+
+    it('logs the error message if there was no request', () => {
+      const error = new Error('foo');
+      const log = sinon.fake();
+      sinon.replace(Vue.prototype.$logger, 'log', log);
+      logAxiosError(error);
+      log.calledWith('foo').should.be.true();
+    });
+  });
+
   describe('requestAlertMessage()', () => {
     const errorWithProblem = (code = 500.1) => {
       const error = new Error();
@@ -264,9 +319,12 @@ describe('util/request', () => {
     it('returns a message if the response is not a Problem', () => {
       const error = new Error();
       error.request = {};
-      error.response = { x: 1 };
+      error.response = {
+        status: 500,
+        data: { x: 1 }
+      };
       const message = requestAlertMessage(error);
-      message.should.equal('Something went wrong: the server returned an invalid error.');
+      message.should.equal('Something went wrong: error code 500.');
     });
 
     it('returns the Problem message by default', () => {

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-show="state" :key="atEpoch" :class="htmlClass" role="alert">
     <!-- When the button is clicked, we simply hide the alert, rather than using
-    Bootstrap's alert plugin and calling $(...).alert('close'): the plugin would
+    the Bootstrap alert plugin and calling $().alert('close'): the plugin would
     remove the alert from the DOM. -->
     <button type="button" class="close" :aria-label="$t('action.close')"
       @click="hideAlert">
@@ -62,27 +62,27 @@ export default {
   // This only affects alerts in modals, as App's alert has a fixed position.
   margin-bottom: 15px;
 
-  &.alert-success {
-    background-color: $color-success-light;
-    border-top-color: $color-success;
-    color: $color-success;
-  }
-
-  &.alert-info {
-    background-color: $color-info-light;
-    border-top-color: $color-info;
-    color: $color-info;
-  }
-
-  &.alert-danger {
-    background-color: $color-danger-light;
-    border-top-color: $color-danger;
-    color: $color-danger;
-  }
-
   .alert-message {
     overflow-wrap: break-word;
     white-space: pre-wrap;
   }
+}
+
+.alert-success {
+  background-color: $color-success-light;
+  border-top-color: $color-success;
+  color: $color-success;
+}
+
+.alert-info {
+  background-color: $color-info-light;
+  border-top-color: $color-info;
+  color: $color-info;
+}
+
+.alert-danger {
+  background-color: $color-danger-light;
+  border-top-color: $color-danger;
+  color: $color-danger;
 }
 </style>
