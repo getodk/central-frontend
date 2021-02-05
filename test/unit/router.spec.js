@@ -1,13 +1,41 @@
 import sinon from 'sinon';
 
 import router from '../../src/router';
+import store from '../../src/store';
+import { confirmUnsavedChanges, forceReplace, routeProps } from '../../src/util/router';
+
 import testData from '../data';
-import { forceReplace, routeProps } from '../../src/util/router';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 import { trigger } from '../util/event';
 
 describe('util/router', () => {
+  describe('routeProps()', () => {
+    const { route } = router.resolve('/projects/1');
+
+    it('returns an empty object if props is undefined', () => {
+      routeProps(route, undefined).should.eql({});
+    });
+
+    it('returns an empty object if props is false', () => {
+      routeProps(route, false).should.eql({});
+    });
+
+    it('returns the route params if props is true', () => {
+      routeProps(route, true).should.eql({ projectId: '1' });
+    });
+
+    it('returns an object passed as props', () => {
+      const obj = { x: 1, y: 2 };
+      routeProps(route, obj).should.equal(obj);
+    });
+
+    it('returns the result of a function passed as props', () => {
+      const props = routeProps(route, (r) => ({ x: 1, y: 2, ...r.params }));
+      props.should.eql({ x: 1, y: 2, projectId: '1' });
+    });
+  });
+
   describe('forceReplace()', () => {
     beforeEach(mockLogin);
 
@@ -43,29 +71,21 @@ describe('util/router', () => {
     });
   });
 
-  describe('routeProps()', () => {
-    const { route } = router.resolve('/projects/1');
-
-    it('returns an empty object if props is undefined', () => {
-      routeProps(route, undefined).should.eql({});
+  describe('confirmUnsavedChanges()', () => {
+    it('returns true if there are no unsaved changes', () => {
+      confirmUnsavedChanges(store).should.be.true();
     });
 
-    it('returns an empty object if props is false', () => {
-      routeProps(route, false).should.eql({});
+    it('returns true if the user confirms', () => {
+      store.commit('setUnsavedChanges', true);
+      sinon.replace(window, 'confirm', () => true);
+      confirmUnsavedChanges(store).should.be.true();
     });
 
-    it('returns the route params if props is true', () => {
-      routeProps(route, true).should.eql({ projectId: '1' });
-    });
-
-    it('returns an object passed as props', () => {
-      const obj = { x: 1, y: 2 };
-      routeProps(route, obj).should.equal(obj);
-    });
-
-    it('returns the result of a function passed as props', () => {
-      const props = routeProps(route, (r) => ({ x: 1, y: 2, ...r.params }));
-      props.should.eql({ x: 1, y: 2, projectId: '1' });
+    it('returns false if the user does not confirm', () => {
+      store.commit('setUnsavedChanges', true);
+      sinon.replace(window, 'confirm', () => false);
+      confirmUnsavedChanges(store).should.be.false();
     });
   });
 });

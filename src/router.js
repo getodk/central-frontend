@@ -13,10 +13,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { last } from 'ramda';
 
-import i18n from './i18n';
 import routes from './routes';
 import store from './store';
-import { canRoute, forceReplace, preservesData } from './util/router';
+import { canRoute, confirmUnsavedChanges, forceReplace, preservesData } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
@@ -196,14 +195,7 @@ window.addEventListener('beforeunload', (event) => {
 });
 
 router.beforeEach((to, from, next) => {
-  if (!store.state.router.unsavedChanges) {
-    next();
-    return;
-  }
-
-  // eslint-disable-next-line no-alert
-  const result = window.confirm(i18n.t('router.unsavedChanges'));
-  if (result)
+  if (confirmUnsavedChanges(store))
     next();
   else
     next(false);

@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
@@ -34,7 +36,7 @@ describe('NavbarActions', () => {
       });
   });
 
-  describe('logging out', () => {
+  describe('after the user clicks "Log out"', () => {
     beforeEach(() => {
       mockLogin({ role: 'none' });
     });
@@ -68,5 +70,14 @@ describe('NavbarActions', () => {
       logOut().then(app => {
         app.should.alert('success', 'You have logged out successfully.');
       }));
+
+    it('does not log out if the user does not confirm unsaved changes', () => {
+      sinon.replace(window, 'confirm', () => false);
+      return load('/account/edit')
+        .afterResponses(app => {
+          app.vm.$store.commit('setUnsavedChanges', true);
+        })
+        .testNoRequest(trigger.click('#navbar-actions-log-out'));
+    });
   });
 });
