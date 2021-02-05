@@ -23,11 +23,15 @@ import { wait, waitUntil } from './util';
 export const setHttp = (respond) => {
   const http = (config) => respond(config);
   http.request = http;
-  http.get = (url, config) => http({ ...config, method: 'get', url });
-  http.post = (url, data, config) => http({ ...config, method: 'post', url, data });
-  http.put = (url, data, config) => http({ ...config, method: 'put', url, data });
-  http.patch = (url, data, config) => http({ ...config, method: 'patch', url, data });
-  http.delete = (url, config) => http({ ...config, method: 'delete', url });
+  http.get = (url, config) => http({ ...config, method: 'GET', url });
+  http.post = (url, data, config) => {
+    const full = { ...config, method: 'POST', url };
+    if (data != null) full.data = data;
+    return http(full);
+  };
+  http.put = (url, data, config) => http({ ...config, method: 'PUT', url, data });
+  http.patch = (url, data, config) => http({ ...config, method: 'PATCH', url, data });
+  http.delete = (url, config) => http({ ...config, method: 'DELETE', url });
   http.defaults = {
     headers: {
       common: {}
