@@ -19,6 +19,7 @@ import { canRoute, confirmUnsavedChanges, forceReplace, preservesData } from './
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
+import { localStore } from './util/storage';
 import { noop } from './util/util';
 
 const router = new VueRouter({ routes });
@@ -69,11 +70,8 @@ router.afterEach(to => {
 // INITIAL REQUESTS
 
 const initialLocale = () => {
-  try {
-    const locale = localStorage.getItem('locale');
-    if (locale != null) return locale;
-  } catch (e) {}
-  return navigator.language.split('-', 1)[0];
+  const locale = localStore.getItem('locale');
+  return locale != null ? locale : navigator.language.split('-', 1)[0];
 };
 
 // Implements the restoreSession meta field.
