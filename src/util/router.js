@@ -52,7 +52,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
   - from. A Route object.
 */
 export const preservesData = (key, to, from) => {
-  // First navigation
+  // Initial navigation
   if (from.matched.length === 0) return true;
   const forKey = last(to.matched).meta.preserveData[key];
   if (forKey == null) return false;

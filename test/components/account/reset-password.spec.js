@@ -3,17 +3,6 @@ import { mockRoute } from '../../util/http';
 import { submitForm } from '../../util/event';
 
 describe('AccountResetPassword', () => {
-  describe('routing', () => {
-    it('redirects if user navigates to /reset-password, then session is restored', () =>
-      mockRoute('/reset-password')
-        .restoreSession(true)
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.administrators.sorted())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
-  });
-
   it('focuses the input', () =>
     mockRoute('/reset-password', { attachToDocument: true })
       .restoreSession(false)

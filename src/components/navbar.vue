@@ -54,15 +54,14 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['session']),
-    /* Usually once the user has a session (either after their session has been
-    restored or after they have logged in), we render a fuller navbar. However,
-    if after logging in, the user is redirected to a lazy-loaded route or
-    outside Frontend, they will remain on /login until they are redirected. In
-    that case, we do not render the fuller navbar until the user is
-    redirected. */
+    ...requestData(['currentUser']),
+    // Usually once the user is logged in (either after their session has been
+    // restored or after they have submitted the login form), we render a fuller
+    // navbar. However, if after submitting the login form, the user is
+    // redirected to outside Frontend, they will remain on /login until they are
+    // redirected. In that case, we do not render the fuller navbar.
     loggedIn() {
-      return this.session != null && this.$route.path !== '/login';
+      return this.currentUser != null && this.$route.path !== '/login';
     }
   }
 };

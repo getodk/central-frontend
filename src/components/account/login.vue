@@ -43,8 +43,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { enketoBasePath } from '../../util/util';
+import { localStore } from '../../util/storage';
+import { logIn } from '../../util/session';
 
 export default {
   name: 'AccountLogin',
@@ -89,21 +92,22 @@ export default {
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {
+      const sessionExpires = localStore.getItem('sessionExpires');
+      if (sessionExpires != null && parseInt(sessionExpires, 10) > Date.now()) {
+        this.$alert().info(this.$t('alert.alreadyLoggedIn'));
+        return;
+      }
+
       this.disabled = true;
       this.request({
         method: 'POST',
-        url: '/sessions',
+        url: '/v1/sessions',
         data: { email: this.email, password: this.password }
       })
-        .then(({ data }) => this.$store.dispatch('get', [{
-          key: 'currentUser',
-          url: '/users/current',
-          headers: { Authorization: `Bearer ${data.token}` },
-          extended: true,
-          success: () => {
-            this.$store.commit('setData', { key: 'session', value: data });
-          }
-        }]))
+        .then(({ data }) => {
+          this.$store.commit('setData', { key: 'session', value: data });
+          return logIn(this.$router, this.$store, true);
+        })
         .then(() => {
           this.navigateToNext(
             this.$route.query.next,
@@ -133,6 +137,9 @@ export default {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Log in",
+    "alert": {
+      "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue."
+    },
     "problem": {
       "401_2": "Incorrect email address and/or password."
     }

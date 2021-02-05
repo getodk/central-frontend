@@ -52,9 +52,10 @@ const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
 );
 
 const mapsByComponent = {
-  AccountEdit: mapKeys(['user']),
   AccountLogin: new Map(),
+  AccountResetPassword: new Map(),
   AccountClaim: new Map(),
+
   ProjectList: mapKeys(['projects', 'users']),
   ProjectShow: mapKeys(['project']),
   ProjectOverview: mapKeys(['forms']),
@@ -76,15 +77,20 @@ const mapsByComponent = {
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
   FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
+
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),
   UserEdit: mapKeys(['user']),
+  AccountEdit: mapKeys(['user']),
+
   SystemHome: new Map(),
   BackupList: mapKeys(['backupsConfig', 'audits'], {
     audits: () => testData.standardAudits.sorted()
   }),
   AuditList: mapKeys(['audits']),
+
   Download: new Map(),
+
   NotFound: new Map()
 };
 

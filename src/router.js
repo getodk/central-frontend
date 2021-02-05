@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { last } from 'ramda';
 
@@ -20,6 +19,7 @@ import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
+import { logIn } from './util/session';
 import { noop } from './util/util';
 
 const router = new VueRouter({ routes });
@@ -75,18 +75,19 @@ const initialLocale = () => {
 };
 
 // Implements the restoreSession meta field.
-const restoreSession = (to) => {
-  if (!last(to.matched).meta.restoreSession) return Promise.resolve();
-  return Vue.prototype.$http.get('/v1/sessions/restore')
-    .then(({ data }) => store.dispatch('get', [{
-      key: 'currentUser',
-      url: '/users/current',
-      headers: { Authorization: `Bearer ${data.token}` },
-      extended: true,
-      success: () => {
-        store.commit('setData', { key: 'session', value: data });
-      }
-    }]));
+const restoreSession = async (to) => {
+  if (!last(to.matched).meta.restoreSession) return;
+  const sessionExpires = localStore.getItem('sessionExpires');
+  // We send a request if sessionExpires == null, partly in case there was a
+  // logout error.
+  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
+    return;
+  await store.dispatch('get', [{
+    key: 'session',
+    url: '/v1/sessions/restore',
+    alert: false
+  }]);
+  await logIn(router, store, false);
 };
 
 router.beforeEach((to, from, next) => {
@@ -141,8 +142,7 @@ router.afterEach((to, from) => {
   for (const key of requestKeys) {
     if (!preservesData(key, to, from)) {
       if (store.state.request.data[key] != null) store.commit('clearData', key);
-      if (store.state.request.requests[key].last.state === 'loading')
-        store.commit('cancelRequest', key);
+      if (store.getters.loading(key)) store.commit('cancelRequest', key);
     }
   }
 });

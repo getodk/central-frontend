@@ -9,14 +9,17 @@ import { mount } from 'avoriaz';
 import 'should';
 
 import Blank from '../src/components/blank.vue';
+
 import i18n from '../src/i18n';
 import router from '../src/router';
 import store from '../src/store';
+import { cancelScheduledLogout } from '../src/util/session';
+import { noop } from '../src/util/util';
+
 import testData from './data';
 import { clearNavGuards, initNavGuards } from './util/router';
 import { destroyMarkedComponents } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/async-components';
-import { noop } from '../src/util/util';
 import { setHttp } from './util/http';
 import './assertions';
 
@@ -134,7 +137,7 @@ afterEach(clearNavGuards);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// VUEX
+// OTHER APP STATE
 
 afterEach(() => {
   store.commit('resetAlert');
@@ -142,14 +145,19 @@ afterEach(() => {
   store.commit('clearData');
 });
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// VUE I18N
-
 afterEach(() => {
   if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
 });
+
+{
+  // Save localStorage in case it is mocked.
+  const storage = localStorage;
+  afterEach(() => {
+    storage.clear();
+  });
+}
+
+afterEach(cancelScheduledLogout);
 
 
 
@@ -158,15 +166,6 @@ afterEach(() => {
 
 afterEach(() => {
   sinon.restore();
-});
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// LOCAL STORAGE
-
-afterEach(() => {
-  localStorage.clear();
 });
 
 

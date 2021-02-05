@@ -2,16 +2,18 @@ import Vue from 'vue';
 import { last } from 'ramda';
 
 import App from '../../src/components/app.vue';
-import requestDataByComponent from './http/respond-for';
 import router from '../../src/router';
 import store from '../../src/store';
+import { noop } from '../../src/util/util';
+import { routeProps } from '../../src/util/router';
+
+import requestDataByComponent from './http/respond-for';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
 import { loadAsyncCache } from './async-components';
+import { mockAxiosResponse } from './axios';
 import { mount as lifecycleMount } from './lifecycle';
-import { noop } from '../../src/util/util';
-import { routeProps } from '../../src/util/router';
 import { wait, waitUntil } from './util';
 
 
@@ -43,7 +45,7 @@ export const setHttp = (respond) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// mockHttp(), mockRoute(), load()
+// mockHttp() and load()
 
 /*
 MockHttp mocks a series of request-response cycles. It allows you to mount a
@@ -276,17 +278,7 @@ class MockHttp {
     return this._with({
       responses: [
         ...this._responses,
-        () => {
-          const result = callback();
-          const { problem } = result;
-          if (problem == null) return { status: 200, data: result };
-          if (typeof problem === 'object')
-            return { status: Math.floor(problem.code), data: problem };
-          return {
-            status: Math.floor(problem),
-            data: { code: problem, message: 'There was a problem.' }
-          };
-        }
+        (config) => mockAxiosResponse(callback(), config)
       ]
     });
   }
@@ -300,13 +292,10 @@ class MockHttp {
 
   restoreSession(restore) {
     if (!restore) return this.respondWithProblem(404.1);
+    if (testData.extendedUsers.size === 0) throw new Error('user not found');
     return this
       .respondWithData(() => testData.sessions.createNew())
-      .respondWithData(() => {
-        if (testData.extendedUsers.size !== 0)
-          throw new Error('user already exists');
-        return testData.extendedUsers.createPast(1, { role: 'admin' }).last();
-      });
+      .respondWithData(() => testData.extendedUsers.first());
   }
 
   // respondForComponent() responds with all the responses expected for the
@@ -564,20 +553,23 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           let response;
           try {
-            response = responseCallback();
+            response = responseCallback(config);
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
-          this._requestResponseLog.push(response);
-          const responseWithConfig = { ...response, config };
+
+          const withoutConfig = { ...response };
+          delete withoutConfig.config;
+          this._requestResponseLog.push(withoutConfig);
+
           if (response.status >= 200 && response.status < 300) {
-            resolve(responseWithConfig);
+            resolve(response);
           } else {
             const error = new Error();
             error.request = {};
-            error.response = responseWithConfig;
+            error.response = response;
             reject(error);
           }
         }));
@@ -643,7 +635,7 @@ class MockHttp {
   _navigateAndMount() {
     if (this._location != null && this._mount != null) {
       // If both this.route() and this.mount() were specified, then this is the
-      // initial navigation. In that case, we trigger the navigation, then mount
+      // first navigation. In that case, we trigger the navigation, then mount
       // the component without waiting for a confirmed navigation, matching what
       // happens in production.
       const promise = this._navigate();
@@ -747,14 +739,11 @@ class MockHttp {
 Object.assign(MockHttp.prototype, commonTests);
 
 export const mockHttp = () => new MockHttp();
-export const mockRoute = (location, mountOptions = undefined) => mockHttp()
-  .mount(App, { ...mountOptions, router })
-  .route(location);
 
 // Mounts the component for the bottom-level route matching `location`, setting
-// propsData and requestData and responding to requests that the component
-// sends. This is useful for tests that don't use the router or otherwise need
-// to mount App.
+// propsData. If respondForOptions is not `false`, it will also set requestData
+// and respond to the initial requests that the component sends. This is useful
+// for tests that don't use the router or otherwise need to mount App.
 const mockHttpForBottomComponent = (
   location,
   mountOptions,
@@ -764,13 +753,14 @@ const mockHttpForBottomComponent = (
   const components = routeComponents(route);
   const bottomComponent = last(components);
 
-  const mountOptionsWithData = { ...mountOptions };
-
   const bottomRouteRecord = last(route.matched);
   const props = routeProps(route, bottomRouteRecord.props.default);
-  mountOptionsWithData.propsData = bottomRouteRecord.meta.asyncRoute == null
+  const propsData = bottomRouteRecord.meta.asyncRoute == null
     ? props
     : props.props;
+
+  if (respondForOptions === false)
+    return mockHttp().mount(bottomComponent, { ...mountOptions, propsData });
 
   const requestData = {};
   for (let i = 0; i < components.length - 1; i += 1) {
@@ -781,10 +771,9 @@ const mockHttpForBottomComponent = (
         : callback();
     }
   }
-  mountOptionsWithData.requestData = requestData;
 
   return mockHttp()
-    .mount(bottomComponent, mountOptionsWithData)
+    .mount(bottomComponent, { ...mountOptions, propsData, requestData })
     .respondForComponent(bottomComponent, respondForOptions);
 };
 export const load = (
@@ -807,6 +796,14 @@ export const load = (
     );
   }
 
-  return mockRoute(location, mountOptions)
-    .respondFor(location, respondForOptions);
+  return mockHttp()
+    .mount(App, { ...mountOptions, router })
+    .route(location)
+    .modify(series => (respondForOptions !== false
+      ? series.respondFor(location, respondForOptions)
+      : series));
 };
+
+// Deprecated
+export const mockRoute = (location, mountOptions = undefined) =>
+  load(location, mountOptions, false);
