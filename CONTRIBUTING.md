@@ -229,3 +229,38 @@ You can use `mockHttp().testStandardButton()` to test some of these things for a
   * If a field is required, add an asterisk to its label and its placeholder.
 * If the user submits a form with an invalid field, the user should be informed about the validation error.
   * If the user resubmits the form, and it is invalid for a different reason, the user should be informed about the new validation error.
+
+### Testing
+
+To run tests, type `npm run test`.
+
+Our tests use:
+
+- Karma, a test runner that we have configured to run tests in Headless Chrome
+- Mocha, a test framework
+- Should.js, for assertions
+- Sinon.JS, for spies and stubs
+- faker.js, to generate test data
+- avoriaz, to test Vue components
+
+We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
+
+We generate and store test data specific to ODK Central using the [`testData` object](/test/data/index.js), which uses faker.js.
+
+We have built some functionality on top of avoriaz, in particular [`mount()`](/test/util/lifecycle.js) and [`trigger`](/test/util/event.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
+
+Many tests involve sending a request. You can mock a series of request-response cycles by using `load()` or `mockHttp()`, defined in [`test/util/http.js`](/test/util/http.js). You can use these to implement common tests, for example, testing some standard button things: see [`/test/util/http/common.js`](/test/util/http/common.js).
+
+As provided by default by Mocha, add `.only` after any `describe()` or `it()` call in the tests to run only the marked tests. For example:
+
+```js
+it.only('does something', () => {
+  // ...
+});
+```
+
+We want to improve our testing in two major ways. (Let us know if this is something you can help with!)
+
+- Moving away from Karma
+  - Vue CLI does not offer core support for Karma. Perhaps the easiest move would be to the unit-mocha plugin for Vue CLI, which uses JSDOM.
+- Moving from avoriaz to Vue Test Utils
