@@ -13,6 +13,14 @@ except according to the terms contained in the LICENSE file.
 
 ## Contributing Code
 
+### Guidelines
+
+Our **code style** is loosely based on the [Airbnb Javascript Style Guide](https://github.com/airbnb/javascript), and you can run `npm run lint` to check your code against it. We do make [some exceptions](/.eslintrc.js) to their rules, and we do make exceptions to the linter when we have a reason and consensus to do so.
+
+As you write code, please try to follow **existing conventions** in the codebase.
+
+We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [_Testing_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
+
 ### Vue
 
 We use Vue.js along with Vue Router, Vuex, and Vue CLI.
