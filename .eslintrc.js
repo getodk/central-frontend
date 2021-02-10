@@ -11,7 +11,7 @@ module.exports = {
     node: true
   },
   globals: {
-    '$': false,
+    $: false,
     alert: false,
     document: false,
     window: false
@@ -20,7 +20,7 @@ module.exports = {
     'arrow-parens': 'off',
     'class-methods-use-this': 'off',
     'comma-dangle': ['error', 'never'],
-    'curly': 'off',
+    curly: 'off',
     'implicit-arrow-linebreak': 'off',
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true

@@ -56,9 +56,3 @@ To build ODK Central Frontend files for production with minification, run `npm r
 Note that this repository's `nginx.conf` is for development only.
 
 For more information on deploying to production, see the [ODK Central repository](https://github.com/getodk/central).
-
-## Testing
-
-To run unit tests, type `npm run test`.
-
-For linting, run `npm run lint`. We use [rules](/.eslintrc.json) based on the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript).
