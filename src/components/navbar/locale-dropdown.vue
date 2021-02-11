@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { loadLocale } from '../../util/i18n';
+import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
 import { noop } from '../../util/util';
 
@@ -46,7 +47,7 @@ export default {
       this.loading = true;
       return loadLocale(locale)
         .then(() => {
-          localStorage.setItem('locale', locale);
+          localStore.setItem('locale', locale);
         })
         .catch(noop)
         .finally(() => {

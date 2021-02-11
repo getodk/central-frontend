@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
@@ -34,39 +36,45 @@ describe('NavbarActions', () => {
       });
   });
 
-  describe('logging out', () => {
+  describe('after the user clicks "Log out"', () => {
     beforeEach(() => {
       mockLogin({ role: 'none' });
     });
 
-    // We need to attach the component to the document, because some of
-    // Bootstrap's dropdown event handlers are on the document.
-    const logOut = () => load('/account/edit', { attachToDocument: true }, {})
-      .complete()
-      .request(app => {
-        const toggle = app.first('.navbar-right .dropdown-toggle');
-        // Using $(...).click() rather than `trigger`, because `trigger` only
-        // triggers Vue event handlers, not jQuery ones (I think). (Or is it
-        // needed because the events that `trigger` creates do not bubble?)
-        $(toggle.element).click();
-        return app.vm.$nextTick()
-          .then(() => trigger.click(app, '#navbar-actions-log-out'));
-      })
-      .respondWithProblem();
+    it('logs out', () =>
+      load('/account/edit')
+        .complete()
+        .request(trigger.click('#navbar-actions-log-out'))
+        .respondWithSuccess()
+        .afterResponse(app => {
+          should.not.exist(app.vm.$store.state.request.data.session);
+        }));
 
-    it('clears the session', () =>
-      logOut().then(app => {
-        should.not.exist(app.vm.$store.state.request.data.session);
-      }));
-
-    it('redirects the user to /login', () =>
-      logOut().then(app => {
-        app.vm.$route.path.should.equal('/login');
-      }));
+    it('does not set the ?next query parameter', () =>
+      load('/account/edit')
+        .complete()
+        .request(trigger.click('#navbar-actions-log-out'))
+        .respondWithSuccess()
+        .afterResponse(app => {
+          app.vm.$route.fullPath.should.equal('/login');
+        }));
 
     it('shows a success alert', () =>
-      logOut().then(app => {
-        app.should.alert('success', 'You have logged out successfully.');
-      }));
+      load('/account/edit')
+        .complete()
+        .request(trigger.click('#navbar-actions-log-out'))
+        .respondWithSuccess()
+        .afterResponse(app => {
+          app.should.alert('success', 'You have logged out successfully.');
+        }));
+
+    it('does not log out if the user does not confirm unsaved changes', () => {
+      sinon.replace(window, 'confirm', () => false);
+      return load('/account/edit')
+        .afterResponses(app => {
+          app.vm.$store.commit('setUnsavedChanges', true);
+        })
+        .testNoRequest(trigger.click('#navbar-actions-log-out'));
+    });
   });
 });

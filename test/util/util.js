@@ -22,6 +22,7 @@ export const waitUntil = (f) => new Promise(resolve => {
   waiter();
 });
 
+// Deprecated. Use sinon.useFakeTimers() instead.
 export const fakeSetTimeout = () => {
   const callbacks = new Map();
   let currentId = 0;

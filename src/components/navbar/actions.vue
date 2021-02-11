@@ -39,7 +39,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
-import { apiPaths } from '../../util/request';
+import { confirmUnsavedChanges } from '../../util/router';
+import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -54,17 +55,16 @@ export default {
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['currentUser', 'session']),
+  computed: requestData(['currentUser']),
   methods: {
     logOut() {
-      this.request({
-        method: 'DELETE',
-        url: apiPaths.session(this.session.token)
-      }).catch(noop);
-      this.$store.commit('clearData');
-      this.$router.push('/login', () => {
-        this.$alert().success(this.$t('alert.logOut'));
-      });
+      if (confirmUnsavedChanges(this.$store)) {
+        logOut(this.$router, this.$store, false)
+          .then(() => {
+            this.$alert().success(this.$t('alert.logOut'));
+          })
+          .catch(noop);
+      }
     }
   }
 };

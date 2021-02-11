@@ -241,6 +241,14 @@
       "noResponse": "Something went wrong: there was no response to your request.",
       // {status} is an HTTP status code, for example, 404.
       "errorNotProblem": "Something went wrong: error code {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Your session will expire in 2 minutes, and you be automatically logged out.",
+        "expired": "Your session has expired. To continue working, please log in again.",
+        // {message} is a more detailed error message.
+        "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
+      }
     }
   },
   "router": {

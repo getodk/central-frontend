@@ -93,9 +93,8 @@ function request({
     throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
 
   const { data } = axiosConfig;
-  // This limit is set in the nginx config.
+  // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    // The alert message also mentions the 100 MB limit.
     this.$alert().danger(i18n.t('mixin.request.alert.fileSize', data));
     return Promise.reject(new Error('file size exceeds limit'));
   }
@@ -111,11 +110,12 @@ function request({
       // destroyed.
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
-      if (this.awaitingResponse != null) this.awaitingResponse = false;
 
       if (fulfillProblem != null && error.response != null &&
         isProblem(error.response.data) && fulfillProblem(error.response.data))
         return error.response;
+
+      if (this.awaitingResponse != null) this.awaitingResponse = false;
 
       logAxiosError(error);
       this.$alert().danger(requestAlertMessage(error, {
@@ -142,8 +142,10 @@ const mixin = {
   },
   methods: {
     request,
-    post(url, data, config = undefined) {
-      return this.request({ ...config, method: 'POST', url, data });
+    post(url, data = undefined, config = undefined) {
+      const full = { ...config, method: 'POST', url };
+      if (data != null) full.data = data;
+      return this.request(full);
     },
     put(url, data, config = undefined) {
       return this.request({ ...config, method: 'PUT', url, data });
@@ -151,7 +153,7 @@ const mixin = {
     patch(url, data, config = undefined) {
       return this.request({ ...config, method: 'PATCH', url, data });
     },
-    delete: function del(url, config = undefined) {
+    delete(url, config = undefined) {
       return this.request({ ...config, method: 'DELETE', url });
     }
   }

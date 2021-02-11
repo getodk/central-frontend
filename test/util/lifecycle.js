@@ -1,10 +1,12 @@
 import { mount as avoriazMount } from 'avoriaz';
 
 import Root from './lifecycle/root.vue';
+
 import i18n from '../../src/i18n';
 import router from '../../src/router';
 import store from '../../src/store';
-import { transforms } from '../../src/store/modules/request/keys';
+
+import { setData } from './store';
 
 
 
@@ -31,29 +33,6 @@ export const destroyMarkedComponents = () => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // MOUNT
-
-const successfulResponse = (data) => ({
-  status: 200,
-  data,
-  get config() { throw new Error(); }
-});
-const problemResponse = (code) => ({
-  status: Math.floor(code),
-  data: { code, message: 'Problem' },
-  get config() { throw new Error(); }
-});
-const setRequestData = (data) => {
-  for (const [key, value] of Object.entries(data)) {
-    const transform = transforms[key];
-    if (transform == null && value.problem != null)
-      throw new Error('unexpected problem response');
-    const response = value.problem == null
-      ? successfulResponse(value)
-      : problemResponse(value);
-    const transformed = transform != null ? transform(response) : response.data;
-    store.commit('setData', { key, value: transformed });
-  }
-};
 
 const optionsSupportedWithI18n = new Set([
   'propsData',
@@ -106,7 +85,7 @@ export const mount = (component, options = {}) => {
   mountOptions.store = store;
   mountOptions.i18n = i18n;
 
-  if (requestData != null) setRequestData(requestData);
+  if (requestData != null) setData(requestData);
 
   const wrapper = avoriazMount(component, mountOptions);
   componentsToDestroy.push(wrapper);

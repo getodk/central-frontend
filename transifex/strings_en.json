@@ -476,6 +476,20 @@
         "string": "Something went wrong: error code {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
       }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": {
+          "string": "Your session will expire in 2 minutes, and you be automatically logged out."
+        },
+        "expired": {
+          "string": "Your session has expired. To continue working, please log in again."
+        },
+        "logoutError": {
+          "string": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}",
+          "developer_comment": "{message} is a more detailed error message."
+        }
+      }
     }
   },
   "router": {
@@ -511,6 +525,11 @@
       "title": {
         "string": "Log in",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "alreadyLoggedIn": {
+          "string": "A user is already logged in. Please refresh the page to continue."
+        }
       },
       "problem": {
         "401_2": {

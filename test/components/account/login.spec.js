@@ -1,22 +1,18 @@
 import sinon from 'sinon';
 
 import AccountLogin from '../../../src/components/account/login.vue';
+
 import testData from '../../data';
-import { load, mockRoute } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { submitForm } from '../../util/event';
+import { trigger } from '../../util/event';
+
+const submit = trigger.submit('#account-login form', [
+  ['input[type="email"]', 'test@email.com'],
+  ['input[type="password"]', 'foo']
+]);
 
 describe('AccountLogin', () => {
-  describe('routing', () => {
-    it('does not redirect if user navigates to /account-edit, then session is restored', () =>
-      mockRoute('/account/edit')
-        .restoreSession(true)
-        .respondWithData(() => testData.standardUsers.first())
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/account/edit');
-        }));
-  });
-
   it('focuses the first input', () =>
     load('/login', { attachToDocument: true }, {})
       .restoreSession(false)
@@ -24,24 +20,75 @@ describe('AccountLogin', () => {
         app.first('#account-login input[type="email"]').should.be.focused();
       }));
 
+  it('sends the correct request', () =>
+    load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .beforeEachResponse((_, { method, url, data }) => {
+        method.should.equal('POST');
+        url.should.equal('/v1/sessions');
+        data.should.eql({ email: 'test@email.com', password: 'foo' });
+      })
+      .respondWithProblem());
+
   it('implements some standard button things', () =>
     load('/login')
       .restoreSession(false)
       .complete()
-      .request(app => submitForm(app, '#account-login form', [
-        ['input[type="email"]', 'test@email.com'],
-        ['input[type="password"]', 'password']
-      ]))
-      .standardButton());
+      .testStandardButton({
+        button: '#account-login .btn-primary',
+        request: submit,
+        disabled: ['#account-login .btn-link']
+      }));
+
+  it('logs in', () => {
+    testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+    return load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.first())
+      .respondFor('/')
+      .afterResponses(app => {
+        const { data } = app.vm.$store.state.request;
+        should.exist(data.session);
+        should.exist(data.currentUser);
+      });
+  });
+
+  it('sets local storage', () => {
+    testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+    return load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.first())
+      .respondFor('/')
+      .afterResponses(() => {
+        should.exist(localStorage.getItem('sessionExpires'));
+      });
+  });
+
+  it('shows an alert if there is an existing session', () => {
+    localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+    return load('/login')
+      .restoreSession(false)
+      .afterResponses(submit)
+      .then(app => {
+        app.should.alert('info', (message) => {
+          message.should.startWith('A user is already logged in.');
+        });
+      });
+  });
 
   it('shows a danger alert for incorrect credentials', () =>
     load('/login')
       .restoreSession(false)
       .complete()
-      .request(app => submitForm(app, '#account-login form', [
-        ['input[type="email"]', 'test@email.com'],
-        ['input[type="password"]', 'password']
-      ]))
+      .request(submit)
       .respondWithProblem(401.2)
       .afterResponse(app => {
         app.should.alert('danger', 'Incorrect email address and/or password.');
@@ -106,10 +153,7 @@ describe('AccountLogin', () => {
       return load('/login?next=%2Fusers')
         .restoreSession(false)
         .complete()
-        .request(app => submitForm(app, '#account-login form', [
-          ['input[type="email"]', 'test@email.com'],
-          ['input[type="password"]', 'password']
-        ]))
+        .request(submit)
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())
         .respondFor('/users')
@@ -126,10 +170,7 @@ describe('AccountLogin', () => {
       return load('/login?next=%2Fusers')
         .restoreSession(false)
         .complete()
-        .request(app => submitForm(app, '#account-login form', [
-          ['input[type="email"]', 'test@email.com'],
-          ['input[type="password"]', 'password']
-        ]))
+        .request(submit)
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())
         .respondFor('/', { users: false })
@@ -138,13 +179,15 @@ describe('AccountLogin', () => {
         });
     });
 
-    it("does not use the param if the user's session is restored", () =>
-      load('/login?next=%2Fusers')
+    it("does not use the param if the user's session is restored", () => {
+      testData.extendedUsers.createPast(1);
+      return load('/login?next=%2Fusers')
         .restoreSession(true)
         .respondFor('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
-        }));
+        });
+    });
 
     it('does not use the param if a logged in user navigates to /login', () => {
       mockLogin();
@@ -163,12 +206,12 @@ describe('AccountLogin', () => {
         .restoreSession(false)
         .complete()
         .request(app => {
-          const accountLogin = app.first(AccountLogin);
-          sinon.replace(accountLogin.vm, 'navigateToNext', sinon.fake());
-          return submitForm(accountLogin, 'form', [
-            ['input[type="email"]', 'test@email.com'],
-            ['input[type="password"]', 'password']
-          ]);
+          sinon.replace(
+            app.first(AccountLogin).vm,
+            'navigateToNext',
+            sinon.fake()
+          );
+          return submit(app);
         })
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())

@@ -1,12 +1,15 @@
 import Navbar from '../../src/components/navbar.vue';
-import { load, mockRoute } from '../util/http';
+
+import testData from '../data';
+import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 import { trigger } from '../util/event';
 
 describe('Navbar', () => {
   describe('visibility', () => {
-    it('does not show the navbar until the first confirmed navigation', () =>
-      mockRoute('/login')
+    it('does not show the navbar until the first confirmed navigation', () => {
+      testData.extendedUsers.createPast(1);
+      return load('/login')
         .beforeEachNav(app => {
           app.first(Navbar).should.be.hidden();
         })
@@ -14,7 +17,8 @@ describe('Navbar', () => {
         .respondFor('/')
         .afterResponses(app => {
           app.first(Navbar).should.be.visible();
-        }));
+        });
+    });
 
     it('shows the navbar for AccountClaim', () => {
       const location = {

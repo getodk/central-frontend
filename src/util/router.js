@@ -11,11 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import { last } from 'ramda';
 
-export const forceReplace = (router, store, location) => {
-  if (store.state.router.unsavedChanges)
-    store.commit('setUnsavedChanges', false);
-  router.replace(location);
-};
+import i18n from '../i18n';
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
@@ -26,6 +22,27 @@ export const routeProps = (route, props) => {
   return props;
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UNSAVED CHANGES
+
+export const forceReplace = (router, store, location) => {
+  if (store.state.router.unsavedChanges)
+    store.commit('setUnsavedChanges', false);
+  router.replace(location);
+};
+
+export const confirmUnsavedChanges = (store) =>
+  !store.state.router.unsavedChanges ||
+  // eslint-disable-next-line no-alert
+  window.confirm(i18n.t('router.unsavedChanges'));
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// RESPONSE DATA
+
 /*
 preservesData() returns `true` if the data for `key` should not be cleared when
 the route changes from `from` to `to`. Otherwise it returns `false`.
@@ -35,7 +52,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
   - from. A Route object.
 */
 export const preservesData = (key, to, from) => {
-  // First navigation
+  // Initial navigation
   if (from.matched.length === 0) return true;
   const forKey = last(to.matched).meta.preserveData[key];
   if (forKey == null) return false;

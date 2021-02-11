@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import i18n from '../src/i18n';
 import { loadLocale } from '../src/util/i18n';
 
@@ -59,7 +61,7 @@ describe('router', () => {
         });
     });
 
-    it('only loads the locale before the first navigation', () => {
+    it('only loads the locale during the initial navigation', () => {
       setLanguage('es');
       return load('/login')
         .restoreSession(false)
@@ -70,6 +72,62 @@ describe('router', () => {
         .then(() => {
           i18n.locale.should.equal('es');
         });
+    });
+  });
+
+  describe('restoreSession', () => {
+    describe('restoreSession is false for the first route', () => {
+      const location = {
+        path: '/account/claim',
+        query: { token: 'a'.repeat(64) }
+      };
+
+      it('does not restore the session during the initial navigation', () =>
+        load(location).testNoRequest());
+
+      it('does not restore the session in a later navigation', () =>
+        load(location)
+          .complete()
+          .route('/login')
+          .testNoRequest());
+    });
+
+    describe('restoreSession is true for the first route', () => {
+      beforeEach(() => {
+        testData.extendedUsers.createPast(1);
+      });
+
+      it('sends the correct request', () =>
+        load('/users', {}, false)
+          .beforeEachResponse((_, { method, url }) => {
+            method.should.equal('GET');
+            url.should.equal('/v1/sessions/restore');
+          })
+          .restoreSession(false));
+
+      it('does not redirect the user from a location that requires login', () =>
+        load('/users', {}, false)
+          .restoreSession(true)
+          .respondFor('/users')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/users');
+          }));
+
+      it('does not set sessionExpires', () => {
+        const setItem = sinon.fake();
+        sinon.replace(Storage.prototype, 'setItem', setItem);
+        return load('/users', {}, false)
+          .restoreSession(true)
+          .respondFor('/users')
+          .afterResponses(() => {
+            setItem.called.should.be.false();
+          });
+      });
+
+      it('does not send a request if the session has expired', () => {
+        localStorage.setItem('sessionExpires', '0');
+        return load('/users', {}, false).testNoRequest();
+      });
     });
   });
 
