@@ -6,6 +6,10 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
+const mountComponent = () => mount(SubmissionAnalyze, {
+  propsData: { state: true },
+  requestData: { form: testData.extendedForms.last() }
+});
 const clickTab = (wrapper, tabText) => {
   for (const a of wrapper.find('#submission-analyze .nav-tabs a')) {
     if (a.text().trim() === tabText)
@@ -28,14 +32,11 @@ describe('SubmissionAnalyze', () => {
   });
 
   describe('tool info', () => {
-    let modal;
     beforeEach(() => {
-      modal = mount(SubmissionAnalyze, {
-        propsData: { state: true, baseUrl: '/v1/projects/1/forms/f' }
-      });
+      testData.extendedForms.createPast(1);
     });
 
-    const assertContent = (tabText, urlSuffix, helpSubstring) => {
+    const assertContent = (modal, tabText, urlSuffix, helpSubstring) => {
       // Test the text of the active tab.
       const activeTab = modal.first('.nav-tabs li.active');
       activeTab.first('a').text().trim().should.equal(tabText);
@@ -45,28 +46,35 @@ describe('SubmissionAnalyze', () => {
       actualURL.should.equal(`${baseURL}${urlSuffix}`);
       // Test the help text.
       const help = modal.first('#submission-analyze-tool-help');
-      help.text().iTrim().should.containEql(helpSubstring);
+      help.text().should.containEql(helpSubstring);
     };
 
     it('defaults to the Excel/Power BI tab', () => {
-      assertContent('Excel/Power BI', '', 'For help using OData with Excel,');
+      const modal = mountComponent();
+      assertContent(modal, 'Excel/Power BI', '', 'For help using OData with Excel,');
     });
 
-    it('renders the Excel/Power BI tab correctly', () =>
-      clickTab(modal, 'R')
+    it('renders the Excel/Power BI tab correctly', () => {
+      const modal = mountComponent();
+      return clickTab(modal, 'R')
         .then(() => clickTab(modal, 'Excel/Power BI'))
         .then(() => {
-          assertContent('Excel/Power BI', '', 'For help using OData with Excel,');
-        }));
+          assertContent(modal, 'Excel/Power BI', '', 'For help using OData with Excel,');
+        });
+    });
 
-    it('renders the R tab correctly', () =>
-      clickTab(modal, 'R').then(() => {
-        assertContent('R', '', 'from R,');
-      }));
+    it('renders the R tab correctly', () => {
+      const modal = mountComponent();
+      return clickTab(modal, 'R').then(() => {
+        assertContent(modal, 'R', '', 'from R,');
+      });
+    });
 
-    it('renders the Other tab correctly', () =>
-      clickTab(modal, 'Other').then(() => {
-        assertContent('Other', '', 'For a full description of our OData support,');
-      }));
+    it('renders the Other tab correctly', () => {
+      const modal = mountComponent();
+      return clickTab(modal, 'Other').then(() => {
+        assertContent(modal, 'Other', '', 'For a full description of our OData support,');
+      });
+    });
   });
 });

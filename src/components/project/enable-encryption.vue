@@ -10,8 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="project-enable-encryption" :state="state" backdrop
-    :hideable="!awaitingResponse" @hide="$emit(success ? 'success' : 'hide')">
+  <modal id="project-enable-encryption" :state="state"
+    :hideable="!awaitingResponse" backdrop
+    @hide="$emit(success ? 'success' : 'hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <template v-if="step === 0">
@@ -46,6 +47,10 @@ except according to the terms contained in the LICENSE file.
             <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][5]') }}</p>
+            </div>
+            <div class="info-item">
+              <span class="icon-close"></span>
+              <p>{{ $t('steps[0].introduction[0][6]') }}</p>
             </div>
           </div>
           <div class="info-block">
@@ -259,7 +264,8 @@ export default {
               "To use the automatic Central encryption process on these Forms, remove the {base64RsaPublicKey} configuration."
             ],
             "You will no longer be able to preview Submission data online.",
-            "You will no longer be able to connect to data over OData."
+            "You will no longer be able to connect to data over OData.",
+            "You will no longer be able to edit Submissions in your web browser."
           ],
           [
             "In addition, the following are true in this version of ODK Central:",

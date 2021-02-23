@@ -73,16 +73,11 @@ $spinner-width: 3px;
     height: $spinner-size;
     width: $spinner-size;
 
-    .btn-primary &, .btn-secondary &, .btn-danger & {
+    .btn-primary &, .btn-danger & {
       border-color: #fff;
     }
 
     .btn-primary & {
-      box-shadow: 0 0 20px 10px $color-action-background-disabled,
-                  0 0 6px 3px $color-action-background-disabled inset;
-    }
-
-    .btn-secondary & {
       box-shadow: 0 0 20px 10px $color-action-background-disabled,
                   0 0 6px 3px $color-action-background-disabled inset;
     }
@@ -108,11 +103,6 @@ $spinner-width: 3px;
     width: $spinner-width;
 
     .btn-primary & {
-      border-right-color: $color-action-background-disabled;
-      border-top-color: $color-action-background-disabled;
-    }
-
-    .btn-secondary & {
       border-right-color: $color-action-background-disabled;
       border-top-color: $color-action-background-disabled;
     }

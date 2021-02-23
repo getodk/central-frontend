@@ -69,6 +69,7 @@ module.exports = {
       math: 'always'
     }],
     'vue/max-attributes-per-line': 'off',
+    'vue/require-default-prop': 'off',
     'vue/singleline-html-element-content-newline': 'off'
   }
 };

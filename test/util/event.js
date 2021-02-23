@@ -1,7 +1,3 @@
-import { unwrapElement } from './util';
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // dataTransfer()
 
@@ -23,11 +19,45 @@ export const dataTransfer = (files) => {
 
 export const trigger = {};
 
+// See below for examples of these functions.
+const triggerFunction = (f) => {
+  const withWrapper = (wrapper, ...rest) => {
+    if (rest.length < f.length - 1) throw new Error('too few arguments');
+    let target = wrapper;
+    if (rest.length > f.length - 1) {
+      try {
+        target = wrapper.first(rest[0]);
+        rest.shift();
+      } catch (e) {}
+    }
+    return Promise.resolve(f(target, ...rest)).then(() => wrapper);
+  };
+  return (...args) => {
+    if (args.length === 0) throw new Error('too few arguments');
+    const firstArgIsWrapper = args[0] != null && typeof args[0] === 'object' &&
+      args[0].element instanceof HTMLElement;
+    return firstArgIsWrapper
+      ? withWrapper(...args)
+      : (wrapper) => withWrapper(wrapper, ...args);
+  };
+};
+
+trigger.mouseover = triggerFunction(target => {
+  target.element.dispatchEvent(new MouseEvent('mouseover', {
+    bubbles: true,
+    cancelable: true
+  }));
+});
+
+trigger.mouseleave = triggerFunction(target => {
+  target.trigger('mouseleave');
+});
+
 /*
 trigger.click() triggers a click event, then waits a tick for Vue to react. For
 example:
 
-  // Specify an Avoriaz wrapper.
+  // Specify an avoriaz wrapper.
   trigger.click(wrapper);
 
   // To trigger a click on a descendant element, specify a selector.
@@ -38,61 +68,47 @@ example:
   const clickButton = trigger.click('button');
   clickButton(wrapper);
 */
-trigger.click = (...args) => {
-  if (args.length === 0) throw new Error('invalid arguments');
-  if (typeof args[0] === 'string')
-    return (wrapper) => trigger.click(wrapper, ...args);
-  const [wrapper, selector] = args;
-  const target = selector == null ? wrapper : wrapper.first(selector);
+trigger.click = triggerFunction(target => {
   // The avoriaz trigger() method triggers an event that does not bubble, so we
   // trigger our own event.
-  unwrapElement(target).click();
-  return Promise.resolve(wrapper);
-};
+  target.element.click();
+});
+
+/* eslint-disable no-param-reassign */
 
 // Define methods for events that change the value of an <input> or <select>
 // element. Many tests will use trigger.changeValue(), but if a component uses
-// v-model, the test will probably use either trigger.input(),
+// v-model, the test will probably use one of trigger.input(),
 // trigger.fillForm(), or trigger.submit().
 for (const [name, event] of [['changeValue', 'change'], ['input', 'input']]) {
-  trigger[name] = (...args) => {
-    if (args.length === 0) throw new Error('value required');
-    if (typeof args[0] === 'string')
-      return (wrapper) => trigger[name](wrapper, ...args);
-    if (args.length === 1) throw new Error('value required');
-    if (args.length === 2) return trigger[name](args[0], null, args[1]);
-    const [wrapper, selector, value] = args;
-    const target = selector == null ? wrapper : wrapper.first(selector);
+  trigger[name] = triggerFunction((target, value) => {
     if (target.element.value === value) throw new Error('no change');
     target.element.value = value;
     target.trigger(event);
-    return Promise.resolve(wrapper);
-  };
+  });
 }
 
 // Checks a checkbox or radio input, triggering a change event.
-trigger.check = (wrapper, selector = null) => {
-  const target = selector != null ? wrapper.first(selector) : wrapper;
-  if (target.element.checked) throw new Error('already checked');
-  target.element.checked = true;
-  target.trigger('change');
-  return Promise.resolve(wrapper);
-};
+trigger.check = triggerFunction(input => {
+  if (input.element.checked) throw new Error('already checked');
+  input.element.checked = true;
+  input.trigger('change');
+});
 
 // Unchecks a checkbox or radio input, triggering a change event.
-trigger.uncheck = (wrapper, selector = null) => {
-  const target = selector != null ? wrapper.first(selector) : wrapper;
-  if (!target.element.checked) throw new Error('already unchecked');
-  target.element.checked = false;
-  target.trigger('change');
-  return Promise.resolve(wrapper);
-};
+trigger.uncheck = triggerFunction(input => {
+  if (!input.element.checked) throw new Error('already unchecked');
+  input.element.checked = false;
+  input.trigger('change');
+});
+
+/* eslint-enable no-param-reassign */
 
 /*
 trigger.fillForm() fills one or more form fields. It is designed to work with
 v-model. For example:
 
-  // First specify an Avoriaz wrapper that wraps a DOM node or Vue component
+  // First specify an avoriaz wrapper that wraps a DOM node or Vue component
   // that contains the fields. Then for each field, specify how to select the
   // field, as well as the field's value. trigger.fillForm() returns a promise
   // that resolves to the wrapper.
@@ -109,40 +125,36 @@ v-model. For example:
   ]);
   fillInput(wrapper);
 */
-trigger.fillForm = (...args) => {
-  if (args.length === 0) throw new Error('invalid arguments');
-  if (Array.isArray(args[0]))
-    return (wrapper) => trigger.fillForm(wrapper, ...args);
-  const [wrapper, selectorsAndValues] = args;
-  const promise = selectorsAndValues.reduce(
-    (acc, [selector, value]) => acc.then(() => {
-      const field = wrapper.first(selector);
-      const { tagName } = unwrapElement(field);
-      if (tagName === 'INPUT') {
-        const type = field.hasAttribute('type')
-          ? field.getAttribute('type')
-          : 'text';
-        if (type === 'checkbox' || type === 'radio') {
-          if (value === true) return trigger.check(field);
-          if (value === false) return trigger.uncheck(field);
-          throw new Error('invalid value');
-        }
-        return trigger.input(field, value);
+trigger.fillForm = triggerFunction(async (container, selectorsAndValues) => {
+  for (const [selector, value] of selectorsAndValues) {
+    const field = container.first(selector);
+    const { tagName } = field.element;
+    /* eslint-disable no-await-in-loop */
+    if (tagName === 'INPUT') {
+      const { type } = field.element;
+      if (type === 'checkbox' || type === 'radio') {
+        if (value)
+          await trigger.check(field);
+        else
+          await trigger.uncheck(field);
+      } else {
+        await trigger.input(field, value);
       }
-      if (tagName === 'SELECT') return trigger.changeValue(field, value);
+    } else if (tagName === 'SELECT') {
+      await trigger.changeValue(field, value);
+    } else {
       throw new Error('unsupported element');
-    }),
-    Promise.resolve()
-  );
-  return promise.then(() => wrapper);
-};
+    }
+    /* eslint-enable no-await-in-loop */
+  }
+});
 // Deprecated: use trigger.fillForm() instead.
 export const { fillForm } = trigger;
 
 /*
 trigger.submit() submits a form. For example:
 
-  // Triggers a submit event on a form element. `wrapper` is an Avoriaz wrapper.
+  // Triggers a submit event on a form element. `wrapper` is an avoriaz wrapper.
   // trigger.submit() returns a promise that resolves to the wrapper.
   trigger.submit(wrapper);
 
@@ -160,45 +172,26 @@ trigger.submit() submits a form. For example:
   const submitForm = trigger.submit('form');
   submitForm(wrapper);
 */
-trigger.submit = (...args) => {
-  if (args.length === 0) throw new Error('invalid arguments');
-  if (typeof args[0] === 'string' || Array.isArray(args[0]))
-    return (wrapper) => trigger.submit(wrapper, ...args);
-  if (args.length === 2 && Array.isArray(args[1]))
-    return trigger.submit(args[0], null, args[1]);
-  const [wrapper, formSelector, fieldSelectorsAndValues] = args;
-  const form = formSelector != null ? wrapper.first(formSelector) : wrapper;
-  const promise = fieldSelectorsAndValues != null
-    ? trigger.fillForm(form, fieldSelectorsAndValues)
-    : Promise.resolve();
-  return promise.then(() => {
-    form.trigger('submit');
-    return wrapper;
-  });
-};
+trigger.submit = triggerFunction(async (form, fieldSelectorsAndValues = undefined) => {
+  if (fieldSelectorsAndValues != null)
+    await trigger.fillForm(form, fieldSelectorsAndValues);
+  form.trigger('submit');
+});
 // Deprecated: use trigger.submit() instead.
 export const submitForm = trigger.submit;
 
-// Drag events
-for (const eventName of ['dragenter', 'dragover', 'dragleave', 'drop']) {
-  trigger[eventName] = (wrapper, ...args) => {
-    if (args.length === 0) throw new Error('files required');
-    if (args.length === 1) return trigger[eventName](wrapper, null, args[0]);
-    const [selector, files] = args;
-    const target = selector == null ? wrapper : wrapper.first(selector);
-    const targetElement = unwrapElement(target);
-    $(targetElement).trigger($.Event(eventName, {
-      target: targetElement,
-      originalEvent: $.Event(eventName, { dataTransfer: dataTransfer(files) })
+for (const type of ['dragenter', 'dragover', 'dragleave', 'drop']) {
+  trigger[type] = triggerFunction((target, files) => {
+    $(target.element).trigger($.Event(type, {
+      target: target.element,
+      originalEvent: $.Event(type, { dataTransfer: dataTransfer(files) })
     }));
-    return Promise.resolve(wrapper);
-  };
+  });
 }
 
-// Note that these `trigger` methods do not pass information to each other: each
-// uses `args` without knowledge of any previous use. That means that each
-// method instantiates its own data transfer object, and if `selector` is
-// specified, each searches for the event target.
-trigger.dragAndDrop = (...args) => trigger.dragenter(...args)
-  .then(() => trigger.dragover(...args))
-  .then(() => trigger.drop(...args));
+trigger.dragAndDrop = triggerFunction(async (target, files) => {
+  // Each method will instantiate its own DataTransfer object.
+  await trigger.dragenter(target, files);
+  await trigger.dragover(target, files);
+  return trigger.drop(target, files);
+});

@@ -43,21 +43,17 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import Form from '../../presenters/form';
-import { queryString } from '../../util/request';
+import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDownloadDropdown',
   props: {
-    baseUrl: {
-      type: String,
-      required: true
-    },
     formVersion: {
       type: Form,
       required: true
     },
-    odataFilter: String // eslint-disable-line vue/require-default-prop
+    odataFilter: String
   },
   computed: {
     ...requestData(['fields', 'odataChunk']),
@@ -98,10 +94,15 @@ export default {
       }
     },
     href(extension, query = undefined) {
-      const queryWithFilter = this.odataFilter == null
-        ? query
-        : { ...query, $filter: this.odataFilter };
-      return `${this.baseUrl}/submissions${extension}${queryString(queryWithFilter)}`;
+      return apiPaths.submissions(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        this.formVersion.publishedAt == null,
+        extension,
+        this.odataFilter == null
+          ? query
+          : { ...query, $filter: this.odataFilter }
+      );
     }
   }
 };

@@ -35,6 +35,28 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     }
   },
+  "reviewState": {
+    "received": {
+      "string": "Received",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "approved": {
+      "string": "Approved",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "hasIssues": {
+      "string": "Has issues",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "needsReview": {
+      "string": "Needs review",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "rejected": {
+      "string": "Rejected",
+      "developer_comment": "This is a possible Review State for a Submission."
+    }
+  },
   "audit": {
     "category": {
       "nonverbose": {
@@ -174,6 +196,10 @@
     },
     "looksGood": {
       "string": "Looks good, proceed",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "more": {
+      "string": "More",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "neverMind": {
@@ -385,6 +411,20 @@
     }
   },
   "submission": {
+    "missingMedia": {
+      "string": "Missing media",
+      "developer_comment": "This is a possible state for a Submission."
+    },
+    "action": {
+      "edit": {
+        "string": "Edit ({count})",
+        "developer_comment": "{count} is the number of previous edits."
+      }
+    },
+    "editDisabled": {
+      "string": "You cannot edit encrypted Submissions.",
+      "developer_comment": "This is shown when the Edit button is disabled."
+    },
     "binaryLinkTitle": {
       "string": "File was submitted. Click to download."
     },
@@ -2041,6 +2081,9 @@
               },
               "5": {
                 "string": "You will no longer be able to connect to data over OData."
+              },
+              "6": {
+                "string": "You will no longer be able to edit Submissions in your web browser."
               }
             },
             "1": {
@@ -2946,6 +2989,10 @@
         },
         "submissionDate": {
           "string": "Submitted at",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "stateAndActions": {
+          "string": "State and actions",
           "developer_comment": "This is the text of a table column header."
         },
         "instanceId": {

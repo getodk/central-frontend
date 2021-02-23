@@ -45,24 +45,7 @@ pre {
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-.btn, a {
-  .caret { margin-left: 6px; }
-}
-
-[class^="icon-"], [class*=" icon-"] {
-  vertical-align: -1px;
-
-  .btn > &:first-child, a > &:first-child {
-    margin-right: $margin-right-icon;
-    + .caret { margin-left: 0; }
-  }
-
-  a > &:first-child {
-    // Using inline-block so that the icon is not underlined even when the link
-    // has `text-decoration: underline`.
-    display: inline-block;
-  }
-}
+[class^="icon-"], [class*=" icon-"] { vertical-align: -1px; }
 
 /* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
 IcoMoon styles end up applying to it, because our IcoMoon selectors select on
@@ -91,6 +74,26 @@ class. */
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
+.btn, a {
+  .caret { margin-left: 6px; }
+
+
+  > [class^="icon-"], > [class*=" icon-"] {
+    &:first-child {
+      // There should not be white space between an icon and text content that
+      // follows it. For a link in particular, the underlining will be off if
+      // there is white space.
+      margin-right: $margin-right-icon;
+
+      + .caret { margin-left: 0; }
+    }
+  }
+}
+
+.btn, .btn-group.open .dropdown-toggle {
+  &:focus { box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18); }
+}
+
 .btn {
   border: none;
   border-radius: 2px;
@@ -101,45 +104,38 @@ class. */
   overflow: hidden;
   position: relative;
 
-  &:focus { outline: none; }
-}
-
-.btn-group.open .dropdown-toggle { box-shadow: none; }
-.btn, .btn-group.open .dropdown-toggle {
-  &:focus { box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18); }
+  &:focus, &:active:focus { outline: none; }
 }
 
 .btn-primary {
   background-color: $color-action-background;
+  &[disabled] { background-color: $color-action-background-disabled; }
 
-  &:hover, &:focus {
+  &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
-  }
-
-  &[disabled] {
-    &, &:hover, &:focus {
-      background-color: $color-action-background-disabled;
-    }
+    &[disabled] { background-color: $color-action-background-disabled; }
   }
 }
 
-.btn-secondary {
-  @extend .btn-primary;
+.btn-default {
+  background-color: #ddd;
 
-  &, &:hover, &:focus {
-    color: #fff;
+  &:hover, &:focus, &:active:focus {
+    background-color: #ccc;
+    &[disabled] { background-color: #ddd; }
+  }
+
+  > [class^="icon-"], > [class*=" icon-"] {
+    &:first-child { color: $color-action-background; }
   }
 }
 
 .btn-danger {
   background-color: $color-danger;
 
-  &:hover, &:focus {
+  &:hover, &:focus, &:active:focus {
     background-color: $color-danger-dark;
-
-    &[disabled] {
-      background-color: $color-danger;
-    }
+    &[disabled] { background-color: $color-danger; }
   }
 }
 
@@ -178,6 +174,14 @@ a {
     &.btn { color: #fff; }
   }
 
+  > [class^="icon-"], > [class*=" icon-"] {
+    &:first-child {
+      // Using inline-block so that the icon is not underlined even when the
+      // link has `text-decoration: underline`.
+      display: inline-block;
+    }
+  }
+
   > .icon-angle-right:last-child { color: $color-accent-primary; }
 }
 
@@ -188,11 +192,12 @@ a {
     background-clip: content-box;
     box-shadow: none;
   }
-
-  &:active:focus {
-    outline: none;
-  }
 }
+
+.btn-group.open .dropdown-toggle { box-shadow: none; }
+
+.btn-group > .btn:focus { box-shadow: none; }
+.btn-group .btn + .btn { margin-left: 0; }
 
 
 

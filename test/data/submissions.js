@@ -58,8 +58,8 @@ const odataValue = (field, instanceId) => {
   }
 };
 
-// Returns random OData for a form submission. `partial` seeds the OData.
-const odata = ({ form, instanceId, partial }) => form._fields
+// Returns random OData for a submission. `partial` seeds the OData.
+const odata = (instanceId, fields, partial) => fields
   .map(field => new Field(field))
   .reduce(
     (data, field) => {
@@ -82,37 +82,55 @@ export const extendedSubmissions = dataStore({
     inPast,
     lastCreatedAt,
 
-    form = extendedForms.first(),
+    // `form` is deprecated. Use formVersion instead.
+    form = extendedForms.size !== 0
+      ? extendedForms.first()
+      // The lastSubmission property of the form will likely not match the
+      // submission.
+      : extendedForms.createPast(1, { submissions: 1 }).last(),
+    formVersion = form,
     instanceId = faker.random.uuid(),
-    status = null,
+
     submitter = extendedUsers.first(),
+    attachmentsPresent = 0,
+    attachmentsExpected = 0,
+    status = null,
+    reviewState = null,
+    edits = 0,
+
     ...partialOData
   }) => {
-    if (form === undefined) throw new Error('form not found');
     if (extendedUsers.size === 0) throw new Error('user not found');
-    const createdAt = inPast
-      ? fakePastDate([lastCreatedAt, form.createdAt, submitter.createdAt])
-      : new Date().toISOString();
+    const createdAt = !inPast
+      ? new Date().toISOString()
+      : fakePastDate([
+        lastCreatedAt,
+        formVersion.publishedAt != null
+          ? formVersion.publishedAt
+          : formVersion.createdAt,
+        submitter.createdAt
+      ]);
     return {
       instanceId,
+      submitterId: submitter.id,
       submitter: toActor(submitter),
       createdAt,
       updatedAt: null,
       // An actual submission JSON response does not have this property. We
       // include it here so that it is easy to match submission data and
       // metadata during testing.
-      _odata: odata({
-        form,
-        instanceId,
-        partial: {
-          ...partialOData,
-          __id: instanceId,
-          __system: {
-            status,
-            submissionDate: createdAt,
-            submitterId: submitter.id.toString(),
-            submitterName: submitter.displayName
-          }
+      _odata: odata(instanceId, formVersion._fields, {
+        ...partialOData,
+        __id: instanceId,
+        __system: {
+          submissionDate: createdAt,
+          submitterId: submitter.id.toString(),
+          submitterName: submitter.displayName,
+          attachmentsPresent,
+          attachmentsExpected,
+          status,
+          reviewState,
+          edits
         }
       })
     };

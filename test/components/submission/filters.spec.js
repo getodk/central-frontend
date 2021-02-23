@@ -1,37 +1,15 @@
 import { DateTime, Settings } from 'luxon';
 
+import sinon from 'sinon';
+
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
-import SubmissionList from '../../../src/components/submission/list.vue';
-import SubmissionRow from '../../../src/components/submission/row.vue';
+import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
 
-import Form from '../../../src/presenters/form';
-
 import testData from '../../data';
-import { load, mockHttp } from '../../util/http';
+import { load } from '../../util/http';
+import { loadSubmissionList } from '../../util/submission';
 import { trigger } from '../../util/event';
-
-const loadSubmissionList = () => {
-  const form = testData.extendedForms.last();
-  return mockHttp()
-    .mount(SubmissionList, {
-      propsData: {
-        baseUrl: '/v1/projects/1/forms/f',
-        formVersion: new Form(form),
-        filterable: true,
-        top: () => 2,
-        scrolledToBottom: () => true
-      },
-      requestData: { keys: [] }
-    })
-    .respondWithData(() => form._fields)
-    .respondWithData(() => testData.submissionOData(2, 0))
-    .respondWithData(() => testData.extendedFieldKeys
-      .sorted()
-      .sort((fieldKey1, fieldKey2) =>
-        fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-      .map(testData.toActor));
-};
 
 describe('SubmissionFilters', () => {
   it('initially does not filter submissions', () => {
@@ -66,12 +44,17 @@ describe('SubmissionFilters', () => {
     testData.extendedForms.createPast(1, { submissions: 3 });
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-    return loadSubmissionList()
+    return loadSubmissionList({
+      propsData: { top: () => 2 }
+    })
       .complete()
-      .request(component => { component.vm.onScroll(); })
+      .request(component => {
+        sinon.replace(component.vm, 'scrolledToBottom', () => true);
+        document.dispatchEvent(new Event('scroll'));
+      })
       .respondWithData(() => testData.submissionOData(2, 2))
       .afterResponse(component => {
-        component.find(SubmissionRow).length.should.equal(6);
+        component.find(SubmissionMetadataRow).length.should.equal(3);
       })
       .request(trigger.changeValue(
         '#submission-filters-submitter select',
@@ -82,7 +65,7 @@ describe('SubmissionFilters', () => {
       })
       .respondWithData(() => testData.submissionOData(2, 0))
       .afterResponse(component => {
-        component.find(SubmissionRow).length.should.equal(4);
+        component.find(SubmissionMetadataRow).length.should.equal(2);
       });
   });
 
@@ -156,7 +139,7 @@ describe('SubmissionFilters', () => {
         '@odata.count': 1
       }))
       .afterResponse(component => {
-        component.first(SubmissionRow).getProp('rowNumber').should.equal(1);
+        component.first(SubmissionMetadataRow).getProp('rowNumber').should.equal(1);
       });
   });
 
@@ -192,7 +175,9 @@ describe('SubmissionFilters', () => {
       testData.extendedForms.createPast(1, { submissions: 3 });
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-      return loadSubmissionList()
+      return loadSubmissionList({
+        propsData: { top: () => 2 }
+      })
         .complete()
         .request(trigger.changeValue(
           '#submission-filters-submitter select',
@@ -210,7 +195,9 @@ describe('SubmissionFilters', () => {
       testData.extendedForms.createPast(1, { submissions: 5 });
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(5, { submitter: fieldKey });
-      return loadSubmissionList()
+      return loadSubmissionList({
+        propsData: { top: () => 2 }
+      })
         .complete()
         .request(trigger.changeValue(
           '#submission-filters-submitter select',
@@ -218,7 +205,10 @@ describe('SubmissionFilters', () => {
         ))
         .respondWithData(() => testData.submissionOData(2, 0))
         .complete()
-        .request(component => { component.vm.onScroll(); })
+        .request(component => {
+          sinon.replace(component.vm, 'scrolledToBottom', () => true);
+          document.dispatchEvent(new Event('scroll'));
+        })
         .beforeEachResponse(component => {
           const text = component.first('#submission-list-message-text').text();
           text.trim().should.equal('Loading 2 more of 3 remaining matching Submissions…');
@@ -232,7 +222,9 @@ describe('SubmissionFilters', () => {
         testData.extendedForms.createPast(1, { submissions: 3 });
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-        return loadSubmissionList()
+        return loadSubmissionList({
+          propsData: { top: () => 2 }
+        })
           .complete()
           .request(trigger.changeValue(
             '#submission-filters-submitter select',
@@ -240,7 +232,10 @@ describe('SubmissionFilters', () => {
           ))
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
-          .request(component => { component.vm.onScroll(); })
+          .request(component => {
+            sinon.replace(component.vm, 'scrolledToBottom', () => true);
+            document.dispatchEvent(new Event('scroll'));
+          })
           .beforeEachResponse(component => {
             const text = component.first('#submission-list-message-text').text();
             text.trim().should.equal('Loading the last matching Submission…');
@@ -253,7 +248,9 @@ describe('SubmissionFilters', () => {
         testData.extendedForms.createPast(1, { submissions: 4 });
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(4, { submitter: fieldKey });
-        return loadSubmissionList()
+        return loadSubmissionList({
+          propsData: { top: () => 2 }
+        })
           .complete()
           .request(trigger.changeValue(
             '#submission-filters-submitter select',
@@ -261,7 +258,10 @@ describe('SubmissionFilters', () => {
           ))
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
-          .request(component => { component.vm.onScroll(); })
+          .request(component => {
+            sinon.replace(component.vm, 'scrolledToBottom', () => true);
+            document.dispatchEvent(new Event('scroll'));
+          })
           .beforeEachResponse(component => {
             const text = component.first('#submission-list-message-text').text();
             text.trim().should.equal('Loading the last 2 matching Submissions…');

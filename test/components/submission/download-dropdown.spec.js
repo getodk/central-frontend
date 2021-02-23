@@ -9,17 +9,13 @@ import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 const mountComponent = (options = {}) => {
-  const formVersion = testData.extendedForms.last();
+  const form = testData.extendedForms.last();
   return mount(SubmissionDownloadDropdown, {
-    propsData: {
-      ...options.propsData,
-      baseUrl: '/v1/projects/1/forms/f',
-      formVersion: new Form(formVersion)
-    },
+    propsData: { formVersion: new Form(form), ...options.propsData },
     requestData: {
-      ...options.requestData,
-      fields: formVersion._fields,
-      keys: testData.standardKeys.sorted()
+      fields: form._fields,
+      keys: testData.standardKeys.sorted(),
+      ...options.requestData
     }
   });
 };
@@ -63,12 +59,21 @@ describe('SubmissionDownloadDropdown', () => {
       testData.extendedProjects.createPast(1, { key: null });
     });
 
-    it('sets the correct href attributes', () => {
-      testData.extendedForms.createPast(1);
+    it('sets the correct href attributes for a form', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
       mountComponent().find('a').map(a => a.getAttribute('href')).should.eql([
-        '/v1/projects/1/forms/f/submissions.csv.zip',
-        '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false',
-        '/v1/projects/1/forms/f/submissions.csv'
+        '/v1/projects/1/forms/a%20b/submissions.csv.zip',
+        '/v1/projects/1/forms/a%20b/submissions.csv.zip?attachments=false',
+        '/v1/projects/1/forms/a%20b/submissions.csv'
+      ]);
+    });
+
+    it('sets the correct href attributes for a form draft', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
+      mountComponent().find('a').map(a => a.getAttribute('href')).should.eql([
+        '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip',
+        '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip?attachments=false',
+        '/v1/projects/1/forms/a%20b/draft/submissions.csv'
       ]);
     });
 

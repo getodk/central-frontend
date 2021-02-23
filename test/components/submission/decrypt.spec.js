@@ -1,45 +1,26 @@
 import sinon from 'sinon';
 
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
-import SubmissionList from '../../../src/components/submission/list.vue';
-
-import Form from '../../../src/presenters/form';
 
 import testData from '../../data';
 import { fillForm, submitForm, trigger } from '../../util/event';
-import { mockHttp } from '../../util/http';
+import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
-const loadSubmissionList = (attachToDocument = false) => {
+const createData = () => {
   // Create test data.
   if (testData.standardKeys.size === 0)
     testData.standardKeys.createPast(1, { managed: true });
-  else
-    testData.standardKeys.size.should.equal(1);
   const key = testData.standardKeys.last();
-  testData.extendedProjects.size.should.equal(0);
   testData.extendedProjects.createPast(1, {
     key: key.managed ? key : null,
     forms: 1
   });
-  testData.extendedForms.size.should.equal(0);
-  const form = testData.extendedForms
-    .createPast(1, { fields: [testData.fields.binary('/b')] })
-    .last();
-
-  return mockHttp()
-    .mount(SubmissionList, {
-      propsData: {
-        baseUrl: '/v1/projects/1/forms/f',
-        formVersion: new Form(form)
-      },
-      requestData: { keys: [key] },
-      attachToDocument
-    })
-    .respondWithData(() => form._fields)
-    .respondWithData(testData.submissionOData);
+  testData.extendedForms.createPast(1, {
+    fields: [testData.fields.binary('/b')]
+  });
 };
 const submitDecryptForm = (formAction) => {
   const keys = testData.standardKeys.createPast(1, { managed: true }).sorted();
@@ -56,14 +37,17 @@ const submitDecryptForm = (formAction) => {
 describe('SubmissionDecrypt', () => {
   beforeEach(mockLogin);
 
-  it('toggles the modal', () =>
-    loadSubmissionList().testModalToggles({
+  it('toggles the modal', () => {
+    createData();
+    return loadSubmissionList().testModalToggles({
       modal: SubmissionDecrypt,
       show: '#submission-download-dropdown a',
       hide: '.btn-link'
-    }));
+    });
+  });
 
   it('receives the form action from SubmissionDownloadDropdown', async () => {
+    createData();
     const component = await loadSubmissionList();
     const modal = component.first(SubmissionDecrypt);
     should.not.exist(modal.getProp('formAction'));
@@ -71,13 +55,12 @@ describe('SubmissionDecrypt', () => {
     modal.getProp('formAction').should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
   });
 
-  it('focuses the passphrase input', () =>
-    loadSubmissionList(true)
-      .afterResponses(component =>
-        trigger.click(component, '#submission-download-dropdown a'))
-      .then(component => {
-        component.first('input').should.be.focused();
-      }));
+  it('focuses the passphrase input', async () => {
+    createData();
+    const component = await loadSubmissionList({ attachToDocument: true });
+    await trigger.click(component, '#submission-download-dropdown a');
+    component.first(SubmissionDecrypt).first('input').should.be.focused();
+  });
 
   it('shows a hint if there is one', () => {
     const keys = testData.standardKeys
@@ -96,6 +79,7 @@ describe('SubmissionDecrypt', () => {
   });
 
   it('resets the form after the modal is hidden', async () => {
+    createData();
     const component = await loadSubmissionList();
     await trigger.click(component, '#submission-download-dropdown a');
     const modal = component.first(SubmissionDecrypt);

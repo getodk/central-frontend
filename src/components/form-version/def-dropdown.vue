@@ -23,13 +23,13 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li>
         <!-- '(.xml)' may be an issue for an RTL locale. -->
-        <a :href="defPath('xml')" :download="`${version.xmlFormId}.xml`">
+        <a :href="defPath('.xml')" :download="`${version.xmlFormId}.xml`">
           {{ $t('action.downloadXForm') }} (.xml)
         </a>
       </li>
       <li v-if="version.excelContentType != null">
         <a :href="defPath(excelExtension)">
-          {{ $t('action.downloadXlsForm') }} (.{{ excelExtension }})
+          {{ $t('action.downloadXlsForm') }} ({{ excelExtension }})
         </a>
       </li>
     </ul>
@@ -55,8 +55,8 @@ export default {
     },
     excelExtension() {
       return this.version.excelContentType === 'application/vnd.ms-excel'
-        ? 'xls'
-        : 'xlsx';
+        ? '.xls'
+        : '.xlsx';
     }
   },
   methods: {
@@ -69,7 +69,7 @@ export default {
     viewXml() {
       this.$store.dispatch('get', [{
         key: 'formVersionXml',
-        url: this.defPath('xml')
+        url: this.defPath('.xml')
       }]).catch(noop);
       this.$emit('view-xml');
     }

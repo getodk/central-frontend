@@ -26,14 +26,17 @@ export const queryString = (query) => {
 
 const projectPath = (suffix) => (id, query = undefined) =>
   `/v1/projects/${id}${suffix}${queryString(query)}`;
-const formPath = (suffix, queryDefaults = undefined) =>
-  (projectId, xmlFormId, query = undefined) => {
+const formPath = (suffix) => (projectId, xmlFormId, query = undefined) => {
+  const encodedFormId = encodeURIComponent(xmlFormId);
+  const qs = queryString(query);
+  return `/v1/projects/${projectId}/forms/${encodedFormId}${suffix}${qs}`;
+};
+const formOrDraftPath = (suffix) =>
+  (projectId, xmlFormId, draft = false, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
-    const combinedQuery = queryDefaults != null
-      ? (query != null ? { ...queryDefaults, ...query } : queryDefaults)
-      : query;
-    const qs = queryString(combinedQuery);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}${suffix}${qs}`;
+    const draftPath = draft ? '/draft' : '';
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}${suffix}${qs}`;
   };
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
@@ -51,20 +54,22 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
+  odataSvc: formOrDraftPath('.svc'),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/assignments/${role}`;
   },
+  fields: formOrDraftPath('/fields'),
   formVersions: formPath('/versions'),
   formVersionDef: (projectId, xmlFormId, version, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedVersion = version !== '' ? encodeURIComponent(version) : '___';
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}.${extension}`;
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}${extension}`;
   },
   formDraft: formPath('/draft'),
   formDraftDef: (projectId, xmlFormId, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/draft.${extension}`;
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/draft${extension}`;
   },
   serverUrlForFormDraft: (token, projectId, xmlFormId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
@@ -77,8 +82,27 @@ export const apiPaths = {
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
   },
-  formDraftSubmissionKeys: formPath('/draft/submissions/keys'),
-  submissionKeys: formPath('/submissions/keys'),
+  submissions: (projectId, xmlFormId, draft, extension, query = undefined) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const draftPath = draft ? '/draft' : '';
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/submissions${extension}${qs}`;
+  },
+  odataSubmissions: formOrDraftPath('.svc/Submissions'),
+  submissionKeys: formOrDraftPath('/submissions/keys'),
+  submitters: formOrDraftPath('/submissions/submitters'),
+  editSubmission: (projectId, xmlFormId, instanceId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/edit`;
+  },
+  submissionAttachment: (projectId, xmlFormId, draft, instanceId, attachmentName) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const draftPath = draft ? '/draft' : '';
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    const encodedName = encodeURIComponent(attachmentName);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+  },
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

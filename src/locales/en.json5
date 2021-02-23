@@ -25,6 +25,14 @@
     // Form State.
     "closed": "Closed"
   },
+  // This is a possible Review State for a Submission.
+  "reviewState": {
+    "received": "Received",
+    "approved": "Approved",
+    "hasIssues": "Has issues",
+    "needsReview": "Needs review",
+    "rejected": "Rejected"
+  },
   "audit": {
     // This is a category of actions performed on the server. It is shown in a
     // dropdown when filtering the log of actions by type.
@@ -109,6 +117,7 @@
     "editProfile": "Edit profile",
     "logIn": "Log in",
     "looksGood": "Looks good, proceed",
+    "more": "More",
     "neverMind": "Never mind, cancel",
     "next": "Next",
     "noCancel": "No, cancel",
@@ -183,6 +192,14 @@
     "learnMore": "Learn more."
   },
   "submission": {
+    // This is a possible state for a Submission.
+    "missingMedia": "Missing media",
+    "action": {
+      // {count} is the number of previous edits.
+      "edit": "Edit ({count})"
+    },
+    // This is shown when the Edit button is disabled.
+    "editDisabled": "You cannot edit encrypted Submissions.",
     "binaryLinkTitle": "File was submitted. Click to download.",
     "encryptionMessage": "Data preview is not available due to encryption."
   },

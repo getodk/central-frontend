@@ -10,18 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <!-- The frozen columns of the table -->
-  <tr v-if="fields == null">
-    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
-    <td v-if="showsSubmitter" class="submitter-name"
-      :title="submission.__system.submitterName">
-      {{ submission.__system.submitterName }}
-    </td>
-    <td><date-time :iso="submission.__system.submissionDate"/></td>
-  </tr>
-  <!-- The rest of the table -->
-  <tr v-else
-    :class="{ 'encrypted-submission': submission.__system.status != null }">
+  <tr :class="htmlClass">
     <template v-if="submission.__system.status == null">
       <td v-for="field of fields" :key="field.path" :class="fieldClass(field)"
         :title="field.binary !== true ? formattedValue(submission, field) : null">
@@ -50,14 +39,13 @@ except according to the terms contained in the LICENSE file.
 import { DateTime, Settings } from 'luxon';
 import { path } from 'ramda';
 
-import DateTimeComponent from '../date-time.vue';
-
+import { apiPaths } from '../../util/request';
 import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
 
 /*
 We may render many rows and/or many columns, so performance matters in this
-component. SubmissionRow components may be frequently created or destroyed, so
-it matters how long it takes to render a component and how long it takes to
+component. SubmissionDataRow components may be frequently created or destroyed,
+so it matters how long it takes to render a component and how long it takes to
 destroy one. (Note that destroying may take longer than rendering!)
 
 We used to have a SubmissionCell component, but that was too slow: now
@@ -66,25 +54,31 @@ but that again was significantly slower.
 */
 
 export default {
-  name: 'SubmissionRow',
-  components: { DateTime: DateTimeComponent },
+  name: 'SubmissionDataRow',
   props: {
-    baseUrl: {
+    projectId: {
       type: String,
-      default: ''
+      required: true
     },
+    xmlFormId: {
+      type: String,
+      required: true
+    },
+    draft: Boolean,
     submission: {
       type: Object,
       required: true
     },
-    rowNumber: {
-      type: Number,
-      default: 0
-    },
-    fields: Array, // eslint-disable-line vue/require-default-prop
-    showsSubmitter: {
-      type: Boolean,
-      default: false
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
+  computed: {
+    htmlClass() {
+      return {
+        'encrypted-submission': this.submission.__system.status != null
+      };
     }
   },
   methods: {
@@ -104,9 +98,13 @@ export default {
       // property that does not equal 'binary'. Backend treats the `binary`
       // property as authoritative.
       if (field.binary === true) {
-        const encodedId = encodeURIComponent(submission.__id);
-        const encodedName = encodeURIComponent(rawValue);
-        return `${this.baseUrl}/submissions/${encodedId}/attachments/${encodedName}`;
+        return apiPaths.submissionAttachment(
+          this.projectId,
+          this.xmlFormId,
+          this.draft,
+          this.submission.__id,
+          rawValue
+        );
       }
       switch (field.type) {
         case 'int':
@@ -184,24 +182,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
 
-#submission-table1 td {
-  &.row-number {
-    color: #999;
-    font-size: 11px;
-    padding-top: 11px;
-    text-align: right;
-    vertical-align: middle;
-  }
-
-  &.submitter-name {
-    @include text-overflow-ellipsis;
-    max-width: 250px;
-  }
-}
-
-#submission-table2 {
+#submission-table-data {
   .int-field, .decimal-field { text-align: right; }
 
   .binary-field { text-align: center; }

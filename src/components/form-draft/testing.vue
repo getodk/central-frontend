@@ -42,8 +42,8 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <submission-list v-show="keys != null" :base-url="baseUrl"
-      :form-version="formDraft"/>
+    <submission-list v-show="keys != null" :project-id="projectId"
+      :xml-form-id="xmlFormId" draft/>
   </div>
 </template>
 
@@ -111,7 +111,7 @@ export default {
       this.$store.dispatch('get', [{
         // We do not reconcile `keys` and formDraft.keyId.
         key: 'keys',
-        url: apiPaths.formDraftSubmissionKeys(this.projectId, this.xmlFormId)
+        url: apiPaths.submissionKeys(this.projectId, this.xmlFormId, true)
       }]).catch(noop);
     },
     reconcileSubmissionCount() {

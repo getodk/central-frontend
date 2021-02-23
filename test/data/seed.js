@@ -32,6 +32,7 @@ export default () => {
         'submission.create',
         'submission.list',
         'submission.read',
+        'submission.update',
         'user.create',
         'user.list',
         'user.read',
@@ -68,7 +69,8 @@ export default () => {
         'session.end',
         'submission.create',
         'submission.list',
-        'submission.read'
+        'submission.read',
+        'submission.update'
       ]
     })
     .createPast(1, {

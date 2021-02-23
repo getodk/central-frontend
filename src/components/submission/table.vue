@@ -11,29 +11,26 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <!-- This table element contains the frozen columns of the submissions
-    table, which display metadata about each submission. -->
-    <table id="submission-table1" class="table table-frozen">
+    <table id="submission-table-metadata" class="table table-frozen">
       <thead>
         <tr>
           <th><!-- Row number --></th>
-          <th v-if="showsSubmitter">{{ $t('header.submitterName') }}</th>
+          <th v-if="!draft">{{ $t('header.submitterName') }}</th>
           <th>{{ $t('header.submissionDate') }}</th>
+          <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
         </tr>
       </thead>
-      <tbody>
-        <submission-row v-for="(submission, index) in submissions"
-          :key="submission.__id" :submission="submission"
-          :row-number="originalCount - index"
-          :shows-submitter="showsSubmitter"/>
+      <tbody ref="metadataBody">
+        <submission-metadata-row v-for="(submission, index) in submissions"
+          :key="submission.__id" :project-id="projectId"
+          :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
+          :row-number="originalCount - index" :can-update="canUpdate"/>
       </tbody>
     </table>
-    <!-- The next table element displays the data and instance ID of each
-    submission. -->
     <div class="table-container">
-      <table id="submission-table2" class="table">
+      <table id="submission-table-data" class="table">
         <thead>
-          <tr>
+          <tr v-if="fields != null">
             <!-- Adding a title attribute in case the column header is so long
             that it is truncated. -->
             <th v-for="field of fields" :key="field.path"
@@ -43,10 +40,13 @@ except according to the terms contained in the LICENSE file.
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
-        <tbody>
-          <submission-row v-for="submission of submissions"
-            :key="submission.__id" :base-url="baseUrl" :submission="submission"
-            :fields="fields"/>
+        <tbody ref="dataBody">
+          <template v-if="fields != null">
+            <submission-data-row v-for="(submission, index) in submissions"
+              :key="submission.__id" :project-id="projectId"
+              :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
+              :fields="fields" :data-index="index + 1"/>
+          </template>
         </tbody>
       </table>
     </div>
@@ -54,32 +54,70 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import SubmissionRow from './row.vue';
+import SubmissionDataRow from './data-row.vue';
+import SubmissionMetadataRow from './metadata-row.vue';
+
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionTable',
-  components: { SubmissionRow },
+  components: { SubmissionDataRow, SubmissionMetadataRow },
   props: {
-    baseUrl: {
+    projectId: {
       type: String,
       required: true
     },
+    xmlFormId: {
+      type: String,
+      required: true
+    },
+    draft: Boolean,
     submissions: {
       type: Array,
       required: true
     },
-    fields: {
-      type: Array,
-      required: true
-    },
+    fields: Array,
     originalCount: {
       type: Number,
       required: true
-    },
-    showsSubmitter: {
-      type: Boolean,
-      default: false
     }
+  },
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['project']),
+    canUpdate() {
+      return this.project != null && this.project.permits('submission.update');
+    }
+  },
+  mounted() {
+    let index;
+    let metadataRow;
+    const mouseover = (event) => {
+      const { dataset } = event.target.closest('tr');
+      if (dataset.index !== index) {
+        if (index != null) metadataRow.classList.remove('actions-shown');
+        index = dataset.index; // eslint-disable-line prefer-destructuring
+        metadataRow = this.$refs.metadataBody.querySelector(`tr:nth-child(${index})`);
+        // The SubmissionMetadataRow element does not have a class binding, so I
+        // think we can add this class without Vue removing it.
+        metadataRow.classList.add('actions-shown');
+      }
+    };
+    const mouseleave = () => {
+      if (index != null) {
+        metadataRow.classList.remove('actions-shown');
+        index = null;
+        metadataRow = null;
+      }
+    };
+    const { dataBody } = this.$refs;
+    dataBody.addEventListener('mouseover', mouseover);
+    dataBody.addEventListener('mouseleave', mouseleave);
+    this.$once('hook:beforeDestroy', () => {
+      dataBody.removeEventListener('mouseover', mouseover);
+      dataBody.removeEventListener('mouseleave', mouseleave);
+    });
   }
 };
 </script>
@@ -87,7 +125,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#submission-table1 {
+#submission-table-metadata {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
   position: relative;
   // Adding z-index so that the background color of the other table's thead does
@@ -98,7 +136,7 @@ export default {
   td:last-child { border-right: $border-top-table-data; }
 }
 
-#submission-table2 {
+#submission-table-data {
   width: auto;
 
   th, td {
@@ -115,6 +153,7 @@ export default {
     "header": {
       "submitterName": "Submitted by",
       "submissionDate": "Submitted at",
+      "stateAndActions": "State and actions",
       "instanceId": "Instance ID"
     }
   }
