@@ -14,18 +14,6 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-// It is expected that test data is created before loadAttachments() is called.
-const loadAttachments = ({ route = false, attachToDocument = false } = {}) => {
-  testData.extendedProjects.size.should.equal(1);
-  testData.extendedForms.size.should.equal(1);
-  testData.extendedForms.last().xmlFormId.should.equal('f');
-  testData.extendedFormVersions.size.should.equal(1);
-  should.not.exist(testData.extendedFormVersions.last().publishedAt);
-  testData.standardFormAttachments.size.should.not.equal(0);
-
-  const path = '/projects/1/forms/f/draft/attachments';
-  return load(path, { component: !route, attachToDocument }, {});
-};
 const blankFiles = (names) => names.map(name => new File([''], name));
 const selectFilesUsingModal = async (component, files) => {
   await trigger.click(component, '#form-attachment-upload-files a[role="button"]');
@@ -45,22 +33,6 @@ describe('FormAttachmentList', () => {
       testData.extendedForms.createPast(1, { draft: true });
     });
 
-    it('correctly sorts the table', () => {
-      const attachments = testData.standardFormAttachments
-        .createPast(1, { exists: true })
-        .createPast(1, { exists: false })
-        .sorted();
-      return loadAttachments().then(component => {
-        const tr = component.find('#form-attachment-list-table tbody tr');
-        tr.length.should.equal(attachments.length);
-        for (let i = 0; i < tr.length; i += 1) {
-          const td = tr[i].find('td');
-          const attachment = attachments[i];
-          td[1].text().trim().should.equal(attachment.name);
-        }
-      });
-    });
-
     describe('attachment type', () => {
       const cases = [
         ['image', 'Image'],
@@ -71,78 +43,81 @@ describe('FormAttachmentList', () => {
         ['not.a.type', 'not.a.type']
       ];
       for (const [type, displayName] of cases) {
-        it(`is correct for ${type}`, () => {
+        it(`is correct for ${type}`, async () => {
           testData.standardFormAttachments.createPast(1, { type });
-          return loadAttachments().then(component => {
-            const td = component.first('#form-attachment-list-table tbody td');
-            td.text().trim().should.equal(displayName);
+          const component = await load('/projects/1/forms/f/draft/attachments', {
+            root: false
           });
+          const td = component.first('#form-attachment-list-table tbody td');
+          td.text().trim().should.equal(displayName);
         });
       }
     });
 
-    it('adds a title attribute for the attachment name', () => {
-      testData.standardFormAttachments.createPast(1);
-      return loadAttachments().then(component => component
-        .first('#form-attachment-list-table tbody tr')
-        .find('td')[1]
-        .getAttribute('title')
-        .should.equal(testData.standardFormAttachments.last().name));
+    it('adds a title attribute for the attachment name', async () => {
+      testData.standardFormAttachments.createPast(1, { name: 'foo.jpg' });
+      const component = await load('/projects/1/forms/f/draft/attachments', {
+        root: false
+      });
+      const td = component.first(FormAttachmentRow).find('td')[1];
+      td.getAttribute('title').should.equal('foo.jpg');
     });
 
-    it('shows a download link if the attachment exists', () => {
-      testData.standardFormAttachments.createPast(1, { exists: true });
-      return loadAttachments().then(component => {
-        const $a = $(component.vm.$el)
-          .find('#form-attachment-list-table tbody td')
-          .eq(1)
-          .find('a');
-        $a.prop('tagName').should.equal('A');
-        const form = testData.extendedForms.last();
-        const encodedFormId = encodeURIComponent(form.xmlFormId);
-        const { name } = testData.standardFormAttachments.last();
-        const encodedName = encodeURIComponent(name);
-        $a.attr('href').should.equal(`/v1/projects/1/forms/${encodedFormId}/draft/attachments/${encodedName}`);
+    it('shows a download link if the attachment exists', async () => {
+      testData.standardFormAttachments.createPast(1, {
+        name: 'foo bar.jpg',
+        exists: true
       });
+      const component = await load('/projects/1/forms/f/draft/attachments', {
+        root: false
+      });
+      const a = component.first(FormAttachmentRow).find('td')[1].first('a');
+      const href = a.getAttribute('href');
+      href.should.equal('/v1/projects/1/forms/f/draft/attachments/foo%20bar.jpg');
     });
 
     describe('updatedAt', () => {
-      it('formats updatedAt for an existing attachment', () => {
+      it('formats updatedAt for an existing attachment', async () => {
         const { updatedAt } = testData.standardFormAttachments
           .createPast(1, { exists: true })
           .last();
-        return loadAttachments().then(component => {
-          const row = component.first(FormAttachmentRow);
-          row.first(DateTime).getProp('iso').should.equal(updatedAt);
+        const component = await load('/projects/1/forms/f/draft/attachments', {
+          root: false
         });
+        const dateTime = component.first(FormAttachmentRow).first(DateTime);
+        dateTime.getProp('iso').should.equal(updatedAt);
       });
 
-      it('correctly renders an attachment that has never been uploaded', () => {
-        testData.standardFormAttachments
-          .createPast(1, { exists: false, hasUpdatedAt: false });
-        return loadAttachments().then(component => {
-          const span = component
-            .find('#form-attachment-list-table tbody td')[2]
-            .find('span');
-          span.length.should.equal(2);
-          span[0].hasClass('icon-exclamation-triangle').should.be.true();
-          span[1].getAttribute('title').should.containEql('To upload files,');
-          span[1].text().trim().should.equal('Not yet uploaded');
+      it('correctly renders an attachment that has never been uploaded', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          exists: false,
+          hasUpdatedAt: false
         });
+        const component = await load('/projects/1/forms/f/draft/attachments', {
+          root: false
+        });
+        const td = component.find('#form-attachment-list-table tbody td')[2];
+        const span = td.find('span');
+        span.length.should.equal(2);
+        span[0].hasClass('icon-exclamation-triangle').should.be.true();
+        span[1].getAttribute('title').should.containEql('To upload files,');
+        span[1].text().trim().should.equal('Not yet uploaded');
       });
 
-      it('correctly renders a deleted attachment', () => {
-        testData.standardFormAttachments
-          .createPast(1, { exists: false, hasUpdatedAt: true });
-        return loadAttachments().then(component => {
-          const span = component
-            .find('#form-attachment-list-table tbody td')[2]
-            .find('span');
-          span.length.should.equal(2);
-          span[0].hasClass('icon-exclamation-triangle').should.be.true();
-          span[1].getAttribute('title').should.containEql('To upload files,');
-          span[1].text().trim().should.equal('Not yet uploaded');
+      it('correctly renders a deleted attachment', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          exists: false,
+          hasUpdatedAt: true
         });
+        const component = await load('/projects/1/forms/f/draft/attachments', {
+          root: false
+        });
+        const td = component.find('#form-attachment-list-table tbody td')[2];
+        const span = td.find('span');
+        span.length.should.equal(2);
+        span[0].hasClass('icon-exclamation-triangle').should.be.true();
+        span[1].getAttribute('title').should.containEql('To upload files,');
+        span[1].text().trim().should.equal('Not yet uploaded');
       });
     });
   });
@@ -172,7 +147,7 @@ describe('FormAttachmentList', () => {
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
           .createPast(1, { name: 'c' });
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(component => {
             app = component;
           })
@@ -203,7 +178,7 @@ describe('FormAttachmentList', () => {
           .createPast(1, { name: 'a', exists: true })
           .createPast(1, { name: 'b', exists: false })
           .createPast(1, { name: 'c' });
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(component => {
             app = component;
           })
@@ -231,7 +206,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly if there are no unmatched files', () =>
-        loadAttachments({ route: true, attachToDocument: true })
+        load('/projects/1/forms/f/draft/attachments', { attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'b'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
@@ -243,7 +218,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly if there is one unmatched file', () =>
-        loadAttachments({ route: true, attachToDocument: true })
+        load('/projects/1/forms/f/draft/attachments', { attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
@@ -259,7 +234,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly if there are multiple unmatched files', () =>
-        loadAttachments({ route: true, attachToDocument: true })
+        load('/projects/1/forms/f/draft/attachments', { attachToDocument: true })
           .then(app => select(app, blankFiles(['a', 'd', 'e'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
@@ -275,7 +250,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly if all files are unmatched', () =>
-        loadAttachments({ route: true, attachToDocument: true })
+        load('/projects/1/forms/f/draft/attachments', { attachToDocument: true })
           .then(app => select(app, blankFiles(['d', 'e'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
@@ -287,7 +262,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('allows the user to close the popup if all files are unmatched', () =>
-        loadAttachments({ route: true })
+        load('/projects/1/forms/f/draft/attachments')
           .then(app => select(app, blankFiles(['d', 'e'])))
           .then(app => {
             const popup = app.first('#form-attachment-popups-main');
@@ -322,8 +297,8 @@ describe('FormAttachmentList', () => {
   The user must be logged in before these tests.
   */
   const testSingleFileSelection = (select) => {
-    const loadAndSelect = (filename, options = {}) =>
-      loadAttachments({ ...options, route: true })
+    const loadAndSelect = (filename, mountOptions = {}) =>
+      load('/projects/1/forms/f/draft/attachments', mountOptions)
         .then(app => select(app, blankFiles([filename])));
 
     describe('after a selection', () => {
@@ -595,9 +570,7 @@ describe('FormAttachmentList', () => {
           beforeEach(() => {
             testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments.createPast(2);
-            // Specifying `route: true` in order to trigger the Vue activated
-            // hook, which attaches the jQuery event handlers.
-            return loadAttachments({ route: true }).then(component => {
+            return load('/projects/1/forms/f/draft/attachments').then(component => {
               app = component;
               return trigger.dragenter(
                 app,
@@ -636,7 +609,7 @@ describe('FormAttachmentList', () => {
               .createPast(1, { name: 'd' });
           });
 
-          const confirmUploads = () => loadAttachments({ route: true })
+          const confirmUploads = () => load('/projects/1/forms/f/draft/attachments')
             .afterResponses(app => trigger.dragAndDrop(
               app,
               FormAttachmentList,
@@ -826,7 +799,7 @@ describe('FormAttachmentList', () => {
           beforeEach(() => {
             testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments.createPast(2);
-            return loadAttachments({ route: true }).then(component => {
+            return load('/projects/1/forms/f/draft/attachments').then(component => {
               app = component;
               return trigger.dragenter(
                 app,
@@ -854,7 +827,7 @@ describe('FormAttachmentList', () => {
 
         describe('confirming the upload', () => {
           testSingleFileUpload(attachmentName =>
-            loadAttachments({ route: true })
+            load('/projects/1/forms/f/draft/attachments')
               .afterResponses(app => trigger.dragAndDrop(
                 app,
                 FormAttachmentList,
@@ -868,28 +841,17 @@ describe('FormAttachmentList', () => {
   }
 
   describe('upload files modal', () => {
-    describe('state', () => {
-      beforeEach(() => {
-        testData.extendedForms.createPast(1, { draft: true });
-        testData.standardFormAttachments
-          .createPast(1, { name: 'a' })
-          .createPast(1, { name: 'b' });
-      });
-
-      it('is initially hidden', () =>
-        loadAttachments().then(component => {
-          const modal = component.first(FormAttachmentUploadFiles);
-          modal.getProp('state').should.be.false();
-        }));
-
-      it('is shown after button click', () =>
-        loadAttachments()
-          .then(component =>
-            trigger.click(component, '.heading-with-button button'))
-          .then(component => {
-            const modal = component.first(FormAttachmentUploadFiles);
-            modal.getProp('state').should.be.true();
-          }));
+    it('toggles the modal', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      testData.standardFormAttachments
+        .createPast(1, { name: 'a' })
+        .createPast(1, { name: 'b' });
+      return load('/projects/1/forms/f/draft/attachments', { root: false })
+        .testModalToggles({
+          modal: FormAttachmentUploadFiles,
+          show: '.heading-with-button button',
+          hide: '.btn-primary'
+        });
     });
 
     describe('select single file', () => {
@@ -930,7 +892,7 @@ describe('FormAttachmentList', () => {
 
       it('highlights only the target row', () => {
         testData.standardFormAttachments.createPast(2);
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(app => trigger.dragenter(
             app,
             '#form-attachment-list-table tbody tr',
@@ -946,7 +908,7 @@ describe('FormAttachmentList', () => {
 
       it('shows a Replace label if the attachment exists', () => {
         testData.standardFormAttachments.createPast(2, { exists: true });
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(app => trigger.dragenter(
             app,
             '#form-attachment-list-table tbody tr',
@@ -962,7 +924,7 @@ describe('FormAttachmentList', () => {
 
       it('does not show a Replace label if the attachment does not exist', () => {
         testData.standardFormAttachments.createPast(2, { exists: false });
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(app => trigger.dragenter(
             app,
             '#form-attachment-list-table tbody tr',
@@ -977,7 +939,7 @@ describe('FormAttachmentList', () => {
         testData.standardFormAttachments
           .createPast(1, { name: 'first_attachment' })
           .createPast(1, { name: 'second_attachment' });
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .then(app => trigger.dragenter(
             app,
             '#form-attachment-list-table tbody tr',
@@ -993,7 +955,7 @@ describe('FormAttachmentList', () => {
     });
 
     describe('dropping over an attachment with the same name', () => {
-      testSingleFileUpload(attachmentName => loadAttachments({ route: true })
+      testSingleFileUpload(attachmentName => load('/projects/1/forms/f/draft/attachments')
         .complete()
         .request(app =>
           dragAndDropOntoRow(app, attachmentName, attachmentName)));
@@ -1008,7 +970,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('is shown after the drop', () =>
-        loadAttachments({ route: true })
+        load('/projects/1/forms/f/draft/attachments')
           .afterResponses(app => {
             const modal = app.first(FormAttachmentNameMismatch);
             modal.getProp('state').should.be.false();
@@ -1021,7 +983,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('is hidden upon cancel', () =>
-        loadAttachments({ route: true })
+        load('/projects/1/forms/f/draft/attachments')
           .afterResponses(app =>
             dragAndDropOntoRow(app, 'a', 'mismatching_file'))
           .then(app => {
@@ -1033,7 +995,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly for an existing attachment', () =>
-        loadAttachments({ route: true })
+        load('/projects/1/forms/f/draft/attachments')
           .afterResponses(app =>
             dragAndDropOntoRow(app, 'a', 'mismatching_file'))
           .then(app => {
@@ -1043,7 +1005,7 @@ describe('FormAttachmentList', () => {
           }));
 
       it('renders correctly for a missing attachment', () =>
-        loadAttachments({ route: true })
+        load('/projects/1/forms/f/draft/attachments')
           .afterResponses(app =>
             dragAndDropOntoRow(app, 'b', 'mismatching_file'))
           .then(app => {
@@ -1054,7 +1016,7 @@ describe('FormAttachmentList', () => {
     });
 
     describe('uploading after a name mismatch', () => {
-      testSingleFileUpload(attachmentName => loadAttachments({ route: true })
+      testSingleFileUpload(attachmentName => load('/projects/1/forms/f/draft/attachments')
         .afterResponses(app =>
           dragAndDropOntoRow(app, attachmentName, 'mismatching_file'))
         .request(app => {
@@ -1088,7 +1050,7 @@ describe('FormAttachmentList', () => {
         testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments.createPast(1, { name });
         const file = new File([contents], name);
-        return loadAttachments({ route: true })
+        return load('/projects/1/forms/f/draft/attachments')
           .complete()
           .request(app =>
             trigger.dragAndDrop(app, '#form-attachment-list-table tbody tr', [file]))

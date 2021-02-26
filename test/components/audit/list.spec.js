@@ -5,7 +5,7 @@ describe('AuditList', () => {
   beforeEach(mockLogin);
 
   it('sends the correct request', () =>
-    load('/system/audits', { component: true }, {})
+    load('/system/audits', { root: false })
       .beforeEachResponse((component, { method, url, headers }) => {
         method.should.equal('GET');
         // We test the query parameters in the AuditFilters tests.
@@ -14,7 +14,7 @@ describe('AuditList', () => {
       }));
 
   it('shows a message if there are no audit log entries', () =>
-    load('/system/audits', { component: true }, {}).then(component => {
+    load('/system/audits', { root: false }).then(component => {
       component.first('.empty-table-message').should.be.visible();
     }));
 });

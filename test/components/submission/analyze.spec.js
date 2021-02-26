@@ -23,7 +23,7 @@ describe('SubmissionAnalyze', () => {
 
   it('toggles the modal', () => {
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f/submissions', { component: true }, {})
+    return load('/projects/1/forms/f/submissions', { root: false })
       .testModalToggles({
         modal: SubmissionAnalyze,
         show: '#submission-data-access-analyze-button',
