@@ -119,9 +119,9 @@ export const logOut = (router, store, setNext) => {
 
   store.commit('clearData');
 
-  // We do not navigate to /login for a logout during login or otherwise during
-  // the initial navigation. Note that after the initial navigation, navigation
-  // is synchronous, so a logout during later navigation is not possible.
+  // We do not navigate to /login for a logout during login or during the
+  // initial navigation. After the initial navigation, navigation is
+  // synchronous, so a logout during navigation is not possible.
   if (!store.state.router.anyNavigationConfirmed ||
     router.currentRoute.path === '/login') {
     if (store.getters.loading('currentUser'))

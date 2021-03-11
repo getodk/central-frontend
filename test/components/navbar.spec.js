@@ -1,5 +1,7 @@
 import Navbar from '../../src/components/navbar.vue';
 
+import router from '../../src/router';
+
 import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
@@ -9,15 +11,18 @@ describe('Navbar', () => {
   describe('visibility', () => {
     it('does not show the navbar until the first confirmed navigation', () => {
       testData.extendedUsers.createPast(1);
-      return load('/login')
-        .beforeEachNav(app => {
-          app.first(Navbar).should.be.hidden();
-        })
+      let wasHidden;
+      const removeGuard = router.afterEach(() => {
+        wasHidden = document.querySelector('.navbar').style.display === 'none';
+      });
+      return load('/login', { attachToDocument: true })
         .restoreSession(true)
         .respondFor('/')
         .afterResponses(app => {
+          wasHidden.should.be.true();
           app.first(Navbar).should.be.visible();
-        });
+        })
+        .finally(removeGuard);
     });
 
     it('shows the navbar for AccountClaim', () => {

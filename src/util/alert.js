@@ -32,5 +32,5 @@ export class StoreAlert { // eslint-disable-line import/prefer-default-export
   warning(message) { this._setAlert('warning', message); }
   danger(message) { this._setAlert('danger', message); }
 
-  blank() { this._store.commit('resetAlert'); }
+  blank() { this._store.commit('hideAlert'); }
 }

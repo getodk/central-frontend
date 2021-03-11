@@ -16,13 +16,15 @@ describe('store/modules/alert', () => {
     });
 
     describe('hideAlert', () => {
-      it('sets state to false', () => {
+      it('resets properties', () => {
         store.commit('setAlert', {
           type: 'info',
           message: 'Something happened!'
         });
         store.commit('hideAlert');
-        store.state.alert.state.should.be.false();
+        const { alert } = store.state;
+        alert.state.should.be.false();
+        should.not.exist(alert.message);
       });
     });
   });

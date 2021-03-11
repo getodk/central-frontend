@@ -20,7 +20,8 @@ const mountComponent = (propsData = undefined) => mount(SubmissionTable, {
     originalCount: testData.extendedSubmissions.size,
     ...propsData
   },
-  requestData: { project: testData.extendedProjects.last() }
+  requestData: { project: testData.extendedProjects.last() },
+  router: true
 });
 
 const headers = (table) => table.find('th').map(th => th.text().trim());

@@ -97,7 +97,13 @@ Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mi
 
 We support a number of route meta fields, which we document in [`/src/routes.js`](/src/routes.js). The router ([`/src/router.js`](/src/router.js)) contains a fair amount of logic, which is driven largely by the meta fields.
 
-We also store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
+The initial navigation is asynchronous, in part because it tries to restore the session. However, after the initial navigation, all navigation is synchronous. This should make it easier to reason about navigation (simplifying `AccountLogin`, for example).
+
+If the user navigates to a location to which the `validateData` meta field forbids access, the user will be redirected to either `/` (if they are logged in) or `/login` (if they are not logged in). That means that unless the user is already at `/` or `/login`, navigating to a different location will always result in some confirmed navigation: either the first navigation will be confirmed, or the redirect will be confirmed. In other words, the user is guaranteed to navigate elsewhere: the route will change. Nonetheless, `router.push()` and `router.replace()` may return a rejected promise, if the first navigation is aborted. If that is a possibility, call `catch()` on the promise.
+
+Before the user's session expires, the user will be automatically redirected to `/login`. Further, in general, the user is permitted to change the route at any time. That means that components should be prepared to be destroyed at any point. For example, if a component starts asynchronous work, it should probably check when that work completes whether the route has changed.
+
+We store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
 ### Internationalization
 

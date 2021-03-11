@@ -29,6 +29,7 @@ export default {
     },
     hideAlert(state) {
       state.state = false;
+      state.message = null;
     },
     resetAlert(state) {
       state.type = 'danger';

@@ -197,9 +197,10 @@ export default {
       $('html, body').animate({ scrollTop });
     },
     afterCreate(project) {
-      this.$router.push(this.projectPath(project.id), () => {
-        this.$alert().success(this.$t('alert.create'));
-      });
+      this.$router.push(this.projectPath(project.id))
+        .then(() => {
+          this.$alert().success(this.$t('alert.create'));
+        });
     }
   }
 };

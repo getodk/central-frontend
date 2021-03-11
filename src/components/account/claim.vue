@@ -71,10 +71,9 @@ export default {
         headers,
         data: { new: this.password }
       })
+        .then(() => this.$router.push('/login'))
         .then(() => {
-          this.$router.push('/login', () => {
-            this.$alert().success(this.$t('alert.success'));
-          });
+          this.$alert().success(this.$t('alert.success'));
         })
         .catch(noop);
     }

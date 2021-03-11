@@ -14,7 +14,8 @@ const mountComponent = (propsData = undefined) => mount(SubmissionMetadataRow, {
     rowNumber: 1,
     canUpdate: true,
     ...propsData
-  }
+  },
+  router: true
 });
 
 describe('SubmissionMetadataRow', () => {
@@ -165,7 +166,7 @@ describe('SubmissionMetadataRow', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
     const href = mountComponent().first('.btn-default').getAttribute('href');
-    href.should.equal('/projects/1/forms/a%20b/submissions/c%20d');
+    href.should.equal('#/projects/1/forms/a%20b/submissions/c%20d');
   });
 
   it('does not render the "State and actions" column for a form draft', () => {

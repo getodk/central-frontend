@@ -37,10 +37,12 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-pencil"></span><span>{{ editText }}</span>
           </button>
         </template>
-        <a class="btn btn-default" :href="submissionPath" target="_blank">
-          <span class="icon-chevron-right"></span>
-          <span>{{ $t('action.more') }}</span>
-        </a>
+        <router-link v-slot="{ href }" :to="submissionPath" custom>
+          <a class="btn btn-default" :href="href" target="_blank">
+            <span class="icon-chevron-right"></span>
+            <span>{{ $t('action.more') }}</span>
+          </a>
+        </router-link>
       </div>
     </td>
   </tr>

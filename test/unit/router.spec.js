@@ -43,13 +43,15 @@ describe('util/router', () => {
       testData.extendedProjects.createPast(1);
       return load('/')
         .complete()
-        .request(app => {
-          forceReplace(app.vm.$router, app.vm.$store, '/users');
-        })
+        .request(app => forceReplace(app.vm.$router, app.vm.$store, '/users'))
         .respondFor('/users')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/users');
         });
+    });
+
+    it('returns a promise', () => {
+      forceReplace(router, store, '/').should.be.a.Promise();
     });
 
     it('does not show a prompt if there are unsaved changes', () => {
@@ -58,11 +60,11 @@ describe('util/router', () => {
       const fake = sinon.fake();
       sinon.replace(window, 'confirm', fake);
       return load('/projects/1/form-access')
-        .afterResponses(app =>
-          trigger.changeValue(app, '#project-form-access-table select', 'closed'))
-        .request(app => {
-          forceReplace(app.vm.$router, app.vm.$store, '/');
-        })
+        .afterResponses(trigger.changeValue(
+          '#project-form-access-table select',
+          'closed'
+        ))
+        .request(app => forceReplace(app.vm.$router, app.vm.$store, '/'))
         .respondFor('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');

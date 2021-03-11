@@ -25,9 +25,10 @@ except according to the terms contained in the LICENSE file.
                 :disabled="awaitingResponse">
                 {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
               </button>
-              <router-link to="/login" tag="button" type="button"
-                class="btn btn-link">
-                {{ $t('action.cancel') }}
+              <router-link v-slot="{ navigate }" to="/login" custom>
+                <button type="button" class="btn btn-link" @click="navigate">
+                  {{ $t('action.cancel') }}
+                </button>
               </router-link>
             </div>
           </form>
@@ -60,11 +61,12 @@ export default {
     submit() {
       this
         .post('/users/reset/initiate', { email: this.email })
-        .then(() => this.$router.push('/login', () => {
+        .then(() => this.$router.push('/login'))
+        .then(() => {
           this.$alert().success(this.$t('alert.success', {
             email: this.email
           }));
-        }))
+        })
         .catch(noop);
     }
   }

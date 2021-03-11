@@ -29,7 +29,8 @@ export const loadSubmissionList = (mountOptions = {}) => {
           : { problem: 404.1 },
         keys: testData.standardKeys.sorted(),
         ...mountOptions.requestData
-      }
+      },
+      router: true
     })
     .respondWithData(() => form._fields)
     .respondWithData(() => testData.submissionOData(top(0)))

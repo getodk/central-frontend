@@ -69,11 +69,12 @@ export default {
   computed: requestData(['form']),
   methods: {
     afterDelete(form) {
-      this.$router.push(this.projectPath(), () => {
-        this.$alert().success(this.$t('alert.delete', {
-          name: form.nameOrId()
-        }));
-      });
+      this.$router.push(this.projectPath())
+        .then(() => {
+          this.$alert().success(this.$t('alert.delete', {
+            name: form.nameOrId()
+          }));
+        });
     }
   }
 };

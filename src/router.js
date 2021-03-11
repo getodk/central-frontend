@@ -31,14 +31,8 @@ export default router;
 // ROUTER STATE
 
 // Set select properties of store.state.router.
-
-router.beforeEach((to, from, next) => {
-  store.commit('triggerNavigation');
-  next();
-});
 router.afterEach(to => {
-  store.commit('setCurrentRoute', to);
-  store.commit('confirmNavigation');
+  store.commit('confirmNavigation', to);
 });
 
 
@@ -96,15 +90,11 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  Promise.all([
-    loadLocale(initialLocale()).catch(noop),
-    restoreSession(to).catch(noop)
-  ])
+  Promise.allSettled([loadLocale(initialLocale()), restoreSession(to)])
     .then(() => {
       store.commit('setSendInitialRequests', false);
       next();
-    })
-    .catch(noop);
+    });
 });
 
 
