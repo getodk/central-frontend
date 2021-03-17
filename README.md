@@ -31,7 +31,7 @@ You will also need to set up [ODK Central Backend](https://github.com/getodk/cen
 
 Follow these instructions to run ODK Central Frontend in development. For deploying to production, see the next section.
 
-First, run ODK Central Backend. If you haven't already, you will need to create a user using an ODK Central Backend command line script. You will probably also want to promote that user to a sitewide administrator. See the [ODK Central Backend readme](https://github.com/getodk/central-backend) for more information.
+First, run ODK Central Backend. If you haven't already, you will need to create a user using an ODK Central Backend command line script. You will probably also want to promote that user to a sitewide administrator. See the ODK Central Backend [readme](https://github.com/getodk/central-backend) for more information.
 
 Next, build ODK Central Frontend files for development by running `npm run dev`. The files will be outputted to `dist/`. As you update the source code, the files will be automatically rebuilt.
 
@@ -41,13 +41,15 @@ Finally, run NGINX by changing the working directory to the root directory of th
 nginx -c "$PWD/nginx.conf" -p "$PWD/dist/"
 ```
 
-We specify `-p "$PWD/dist/"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to `dist/`.
-
-NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests.
+NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests. We specify `-p "$PWD/dist/"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to `dist/`.
 
 ODK Central Frontend will be available on port 8989.
 
-Some ODK Central Frontend functionality requires HTTPS, for example, downloading files from ODK Central Backend. To access this functionality in development, one option is to use [`ngrok`](https://ngrok.com/download). By default, ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Some functionality additionally requires you to specify the HTTPS URL to ODK Central Backend, for example, getting a form in ODK Collect. To do so, set the `default.env.domain` property in [`config/default.json`](https://github.com/getodk/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart the ODK Central Backend server if it is already running.
+ODK Central Frontend communicates with ODK Central Backend in part using a session cookie. The cookie is `Secure`, but will be sent over HTTP on localhost. ODK Central Frontend also interacts with data collection clients and with services:
+
+- To upload an XLSForm, run [pyxform-http](https://github.com/getodk/pyxform-http). ODK Central Frontend communicates with pyxform-http through ODK Central Backend.
+- You can use ODK Collect to scan an app user QR code, download a form, and submit data. One option to do so is to use [`ngrok`](https://ngrok.com/download). ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Within ODK Central Backend, you will also need to set the `default.env.domain` property in [`config/default.json`](https://github.com/getodk/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart ODK Central Backend if it is already running.
+- Enketo is a web form engine used to show form previews and allow for web-based data entry. The development `nginx.conf` is not configured to work with Enketo.
 
 ## Deploying to production
 
@@ -55,4 +57,4 @@ To build ODK Central Frontend files for production with minification, run `npm r
 
 Note that this repository's `nginx.conf` is for development only.
 
-For more information on deploying to production, see the [ODK Central repository](https://github.com/getodk/central).
+For more information on deploying to production, see the [`central`](https://github.com/getodk/central) repository.
