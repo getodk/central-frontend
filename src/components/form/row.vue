@@ -13,7 +13,13 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-row">
     <td class="name">
       <link-if-can :to="primaryFormPath(form)">
-        <span>{{ form.nameOrId() }}</span><span class="icon-angle-right"></span>
+        <span v-if="form.state === 'closed'" class="icon-times-circle form-icon-closed form-icon"
+          :title="$t('formClosedTip')"></span>
+        <span v-else-if="form.state === 'closing'" class="icon-clock-o form-icon-closing form-icon"
+          :title="$t('formClosingTip')"></span>
+        <span v-else-if="form.publishedAt === null" class="icon-edit form-icon-unpublished form-icon"
+          :title="$t('formUnpublishedTip')"></span>
+        <span :class="[form.state === 'closed' ? 'form-name-closed' : '']">{{ form.nameOrId() }}</span><span class="icon-angle-right"></span>
       </link-if-can>
     </td>
     <td v-if="columns.has('idAndVersion')" class="id-and-version">
@@ -25,7 +31,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td v-if="columns.has('submissions')" class="submissions">
-      <div>
+      <div v-if="form.publishedAt != null">
         <router-link :to="submissionsPath">
           <span>{{ $tcn('count.submission', form.submissions) }}</span>
           <span class="icon-angle-right"></span>
@@ -112,6 +118,29 @@ export default {
         vertical-align: 2px;
       }
     }
+
+    .form-icon {
+      font-size: 20px;
+      vertical-align: 2px;
+      margin-right: 9px;
+      cursor: help;
+    }
+
+    .form-name-closed {
+      color: #bbb;
+    }
+
+    .form-icon-unpublished {
+      color: #999;
+    }
+
+    .form-icon-closed{
+      color: #cc0000;
+    }
+
+    .form-icon-closing{
+      color: #eabc00;
+    }
   }
 
   .form-id, .version {
@@ -146,7 +175,10 @@ export default {
     "lastSubmission": "(last {dateTime})",
     "action": {
       "fill": "Fill Form"
-    }
+    },
+    "formClosedTip": "This Form is closed. It is not downloadable and does not accept Submissions.",
+    "formClosingTip": "This Form is closing. It is not downloadable but still accepts Submissions.",
+    "formUnpublishedTip": "This Form does not yet have a published version.",
   }
 }
 </i18n>

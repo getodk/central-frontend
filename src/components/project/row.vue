@@ -14,6 +14,8 @@ except according to the terms contained in the LICENSE file.
     <td>
       <div class="name">
         <router-link :to="projectPath(project.id)">
+          <span v-if="project.keyId" class="icon-lock text-muted project-icon"
+            :title="$t('encryptionTip')"></span>
           <span>{{ project.nameWithArchived() }}</span>
           <span class="icon-angle-right"></span>
         </router-link>
@@ -72,6 +74,11 @@ export default {
       font-size: 20px;
       margin-left: 9px;
     }
+
+    .project-icon {
+      font-size: 20px;
+      cursor: help;
+    }
   }
 }
 </style>
@@ -82,7 +89,8 @@ export default {
     "help": "What are Projects?",
     // This text is shown under the "Latest Submission" column of the Projects
     // table. It is shown for a Project with no Submissions.
-    "noSubmission": "(none)"
+    "noSubmission": "(none)",
+    "encryptionTip": "This Project uses managed encryption.",
   }
 }
 </i18n>
