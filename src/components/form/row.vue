@@ -127,7 +127,7 @@ export default {
     }
 
     .form-name-closed {
-      color: #bbb;
+      color: #999;
     }
 
     .form-icon-unpublished {
@@ -135,11 +135,11 @@ export default {
     }
 
     .form-icon-closed{
-      color: #cc0000;
+      color: $color-danger;
     }
 
     .form-icon-closing{
-      color: #eabc00;
+      color: $color-warning;
     }
   }
 

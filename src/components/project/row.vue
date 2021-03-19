@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <td>
       <div class="name">
         <router-link :to="projectPath(project.id)">
-          <span v-if="project.keyId" class="icon-lock text-muted project-icon"
+          <span v-if="project.keyId" class="icon-lock project-icon"
             :title="$t('encryptionTip')"></span>
           <span>{{ project.nameWithArchived() }}</span>
           <span class="icon-angle-right"></span>
@@ -78,6 +78,7 @@ export default {
     .project-icon {
       font-size: 20px;
       cursor: help;
+      color: #999;
     }
   }
 }
