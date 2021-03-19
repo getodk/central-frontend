@@ -13,28 +13,19 @@ except according to the terms contained in the LICENSE file.
   <ul id="navbar-links" class="nav navbar-nav">
     <li :class="{ active: projectsLinkIsActive }">
       <router-link id="navbar-links-projects" to="/">
-        {{ $t('projects') }}
-        <span v-show="projectsLinkIsActive" class="sr-only">
-          {{ $t('current') }}
-        </span>
+        {{ $t('projects') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/users')"
       :class="{ active: routePathStartsWith('/users') }">
       <router-link id="navbar-links-users" to="/users">
-        {{ $t('users') }}
-        <span v-show="routePathStartsWith('/users')" class="sr-only">
-          {{ $t('current') }}
-        </span>
+        {{ $t('users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/system/backups')"
       :class="{ active: routePathStartsWith('/system') }">
       <router-link id="navbar-links-system" to="/system/backups">
-        {{ $t('system') }}
-        <span v-show="routePathStartsWith('/system')" class="sr-only">
-          {{ $t('current') }}
-        </span>
+        {{ $t('system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
   </ul>
@@ -61,6 +52,11 @@ export default {
 </script>
 
 <style lang="scss">
+#navbar-links {
+  .sr-only { display: none; }
+  .active .sr-only { display: block; }
+}
+
 @media (min-width: 768px) {
   // It would probably be better to add the margin to the <li> element rather
   // than the <a> element.

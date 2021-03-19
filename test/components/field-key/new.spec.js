@@ -247,7 +247,7 @@ describe('FieldKeyNew', () => {
         .complete()
         .modify(create)
         .complete()
-        .request(trigger.click('#field-key-new a[href="/projects/1/form-access"]'))
+        .request(trigger.click('#field-key-new a[href="#/projects/1/form-access"]'))
         .beforeEachResponse((_, { url }, index) => {
           if (index === 1) url.should.equal('/v1/projects/1/app-users');
         })

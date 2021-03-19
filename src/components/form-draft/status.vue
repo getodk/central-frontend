@@ -178,22 +178,25 @@ export default {
       this.$emit('fetch-form');
       this.$store.commit('clearData', 'formVersions');
       this.clearDraft();
-      this.$router.push(this.formPath(), () => {
-        this.$alert().success(this.$t('alert.publish'));
-      });
+      this.$router.push(this.formPath())
+        .then(() => {
+          this.$alert().success(this.$t('alert.publish'));
+        });
     },
     afterAbandon(form) {
       if (form.publishedAt != null) {
         this.clearDraft();
-        this.$router.push(this.formPath(), () => {
-          this.$alert().success(this.$t('alert.abandon'));
-        });
+        this.$router.push(this.formPath())
+          .then(() => {
+            this.$alert().success(this.$t('alert.abandon'));
+          });
       } else {
-        this.$router.push(this.projectPath(), () => {
-          this.$alert().success(this.$t('alert.delete', {
-            name: form.nameOrId()
-          }));
-        });
+        this.$router.push(this.projectPath())
+          .then(() => {
+            this.$alert().success(this.$t('alert.delete', {
+              name: form.nameOrId()
+            }));
+          });
       }
     }
   }

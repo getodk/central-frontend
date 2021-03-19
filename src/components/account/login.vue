@@ -28,9 +28,11 @@ except according to the terms contained in the LICENSE file.
                 :disabled="disabled">
                 {{ $t('action.logIn') }} <spinner :state="disabled"/>
               </button>
-              <router-link to="/reset-password" tag="button" type="button"
-                class="btn btn-link" :disabled="disabled">
-                {{ $t('action.resetPassword') }}
+              <router-link v-slot="{ navigate }" to="/reset-password" custom>
+                <button type="button" class="btn btn-link" :disabled="disabled"
+                  @click="navigate">
+                  {{ $t('action.resetPassword') }}
+                </button>
               </router-link>
             </div>
           </form>
@@ -45,7 +47,7 @@ import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
-import { enketoBasePath } from '../../util/util';
+import { enketoBasePath, noop } from '../../util/util';
 import { localStore } from '../../util/storage';
 import { logIn } from '../../util/session';
 
@@ -117,7 +119,7 @@ export default {
               // outside Frontend, the buttons might be re-enabled before the
               // external page is loaded.
               this.disabled = false;
-              this.$router.replace(location);
+              this.$router.replace(location).catch(noop);
             },
             (url) => {
               window.location.replace(url);

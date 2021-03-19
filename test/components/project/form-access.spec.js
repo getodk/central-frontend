@@ -1,8 +1,6 @@
-import ProjectFormAccess from '../../../src/components/project/form-access.vue';
 import testData from '../../data';
+import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
 // Loads ProjectFormAccess, rendering one row for the table.
@@ -72,19 +70,9 @@ describe('ProjectFormAccess', () => {
         th[4].getAttribute('title').should.equal('App User 1');
       }));
 
-    it('shows a message if there are no forms', () => {
-      const component = mountAndMark(ProjectFormAccess, {
-        propsData: {
-          projectId: '1'
-        },
-        requestData: {
-          project: testData.extendedProjects.createPast(1).last(),
-          forms: [],
-          fieldKeys: [],
-          roles: testData.standardRoles.sorted(),
-          formSummaryAssignments: []
-        }
-      });
+    it('shows a message if there are no forms', async () => {
+      testData.extendedProjects.createPast(1);
+      const component = await load('/projects/1/form-access');
       component.first('.empty-table-message').should.be.visible();
     });
 
@@ -126,26 +114,10 @@ describe('ProjectFormAccess', () => {
             button.should.be.disabled();
           }));
 
-      // Because Karma does not allow us to navigate away from the HTML page, we
-      // only test navigation away within Frontend.
-      it('shows a prompt if the user navigates elsewhere', () => {
-        let prompted = false;
-        const originalConfirm = window.confirm;
-        window.confirm = () => {
-          prompted = true;
-          return true;
-        };
-
-        return loadFormAccess()
-          .afterResponses(app => trigger
-            .changeValue(app, '#project-form-access-table select', 'open'))
-          .route('/projects/1')
-          .then(() => {
-            prompted.should.be.true();
-          })
-          .finally(() => {
-            window.confirm = originalConfirm;
-          });
+      it('sets unsavedChanges to true', async () => {
+        const app = await loadFormAccess();
+        await trigger.changeValue(app, '#project-form-access-table select', 'open');
+        app.vm.$store.state.router.unsavedChanges.should.be.true();
       });
     });
 
@@ -189,24 +161,10 @@ describe('ProjectFormAccess', () => {
             button.should.be.disabled();
           }));
 
-      it('shows a prompt if the user navigates elsewhere', () => {
-        let prompted = false;
-        const originalConfirm = window.confirm;
-        window.confirm = () => {
-          prompted = true;
-          return true;
-        };
-
-        return loadFormAccess()
-          .afterResponses(app => trigger
-            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
-          .route('/projects/1')
-          .then(() => {
-            prompted.should.be.true();
-          })
-          .finally(() => {
-            window.confirm = originalConfirm;
-          });
+      it('sets unsavedChanges to true', async () => {
+        const app = await loadFormAccess();
+        await trigger.uncheck(app, '#project-form-access-table input[type="checkbox"]');
+        app.vm.$store.state.router.unsavedChanges.should.be.true();
       });
     });
 
@@ -327,23 +285,9 @@ describe('ProjectFormAccess', () => {
           td[4].first('input').element.checked.should.be.true();
         }));
 
-      it('does not show a prompt if the user navigates elsewhere', () => {
-        let prompted = false;
-        const originalConfirm = window.confirm;
-        window.confirm = () => {
-          prompted = true;
-          return true;
-        };
-
-        return saveWithSuccess()
-          .complete()
-          .route('/projects/1')
-          .then(() => {
-            prompted.should.be.false();
-          })
-          .finally(() => {
-            window.confirm = originalConfirm;
-          });
+      it('sets unsavedChanges to false', async () => {
+        const app = await saveWithSuccess();
+        app.vm.$store.state.router.unsavedChanges.should.be.false();
       });
     });
   });

@@ -2,6 +2,7 @@ import sinon from 'sinon';
 
 import i18n from '../src/i18n';
 import { loadLocale } from '../src/util/i18n';
+import { noop } from '../src/util/util';
 
 import testData from './data';
 import { load, mockRoute } from './util/http';
@@ -77,16 +78,17 @@ describe('router', () => {
 
   describe('restoreSession', () => {
     describe('restoreSession is false for the first route', () => {
-      const location = {
-        path: '/account/claim',
-        query: { token: 'a'.repeat(64) }
-      };
-
-      it('does not restore the session during the initial navigation', () =>
-        load(location).testNoRequest());
+      const paths = [
+        `/account/claim?${'a'.repeat(64)}`,
+        '/not-found'
+      ];
+      for (const path of paths) {
+        it(`does not restore session for a user navigating to ${path}`, () =>
+          load(path).testNoRequest());
+      }
 
       it('does not restore the session in a later navigation', () =>
-        load(location)
+        load(`/account/claim?${'a'.repeat(64)}`)
           .complete()
           .route('/login')
           .testNoRequest());
@@ -188,6 +190,23 @@ describe('router', () => {
           });
       });
     }
+  });
+
+  describe('requireLogin is false and requireAnonymity is false', () => {
+    it('does not redirect an anonymous user', async () => {
+      const app = await load('/not-found');
+      app.vm.$route.path.should.equal('/not-found');
+    });
+
+    it('does not redirect a user who is logged in', () => {
+      mockLogin();
+      return load('/account/edit')
+        .complete()
+        .route('/not-found')
+        .then(app => {
+          app.vm.$route.path.should.equal('/not-found');
+        });
+    });
   });
 
   describe('preserveData', () => {
@@ -758,13 +777,14 @@ describe('router', () => {
             app.vm.$route.path.should.equal('/');
           }));
 
-      it('redirects a user navigating from a different form', () =>
-        load('/projects/1/forms/f2/draft/attachments', {}, {
+      it('redirects a user navigating from a different form', () => {
+        testData.standardFormAttachments.createPast(1, {
+          form: testData.extendedForms.first()
+        });
+        return load('/projects/1/forms/f2/draft/attachments', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: () => testData.standardFormAttachments
-            .createPast(1, { form: testData.extendedForms.first() })
-            .sorted()
+          attachments: () => testData.standardFormAttachments.sorted()
         })
           .complete()
           .load('/projects/1/forms/f/draft/attachments', {
@@ -774,7 +794,74 @@ describe('router', () => {
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
+          });
+      });
+    });
+  });
+
+  // Karma does not allow us to navigate away from the document. Further, if
+  // there is a beforeunload event, Karma seems to result in an error even if
+  // the event is canceled. Because of that, we only test navigation away within
+  // Frontend.
+  describe('unsavedChanges', () => {
+    beforeEach(mockLogin);
+
+    it('navigates away if there are no unsaved changes', () => {
+      const confirm = sinon.fake();
+      sinon.replace(window, 'confirm', confirm);
+      return load('/account/edit')
+        .complete()
+        .load('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+          confirm.called.should.be.false();
+        });
+    });
+
+    describe('user confirms', () => {
+      beforeEach(() => {
+        sinon.replace(window, 'confirm', () => true);
+      });
+
+      it('navigates away', () =>
+        load('/account/edit')
+          .afterResponses(app => {
+            app.vm.$store.commit('setUnsavedChanges', true);
+          })
+          .load('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
           }));
+
+      it('sets unsavedChanges to false', () =>
+        load('/account/edit')
+          .afterResponses(app => {
+            app.vm.$store.commit('setUnsavedChanges', true);
+          })
+          .load('/')
+          .afterResponses(app => {
+            app.vm.$store.state.router.unsavedChanges.should.be.false();
+          }));
+    });
+
+    describe('user does not confirm', () => {
+      beforeEach(() => {
+        sinon.replace(window, 'confirm', () => false);
+      });
+
+      it('does not navigate away', () =>
+        load('/account/edit').then(app => {
+          app.vm.$store.commit('setUnsavedChanges', true);
+          app.vm.$router.push('/').catch(noop);
+          app.vm.$route.path.should.equal('/account/edit');
+        }));
+
+      it('does not change unsavedChanges', () =>
+        load('/account/edit').then(app => {
+          app.vm.$store.commit('setUnsavedChanges', true);
+          app.vm.$router.push('/').catch(noop);
+          app.vm.$store.state.router.unsavedChanges.should.be.true();
+        }));
     });
   });
 });

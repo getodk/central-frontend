@@ -8,16 +8,16 @@ import sinon from 'sinon';
 import { mount } from 'avoriaz';
 import 'should';
 
-import Blank from '../src/components/blank.vue';
-
 import i18n from '../src/i18n';
 import router from '../src/router';
 import store from '../src/store';
 import { cancelScheduledLogout } from '../src/util/session';
+import { forceReplace } from '../src/util/router';
 import { noop } from '../src/util/util';
 
+import TestUtilBlank from './util/components/blank.vue';
+
 import testData from './data';
-import { clearNavGuards, initNavGuards } from './util/router';
 import { destroyMarkedComponents } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { setHttp } from './util/http';
@@ -39,10 +39,19 @@ String.prototype.iTrim = function iTrim() {
 ////////////////////////////////////////////////////////////////////////////////
 // UTILITIES
 
-setHttp(config => {
-  console.log('unhandled request', config); // eslint-disable-line no-console
-  return Promise.reject(new Error());
-});
+{
+  let unhandled = null;
+  setHttp(config => {
+    if (unhandled == null) unhandled = config;
+    return Promise.reject(new Error('unhandled request'));
+  });
+  afterEach(() => {
+    if (unhandled != null) {
+      console.log(unhandled); // eslint-disable-line no-console
+      throw new Error('A request was sent, but not handled. Are you using mockHttp()?');
+    }
+  });
+}
 
 Vue.prototype.$logger = { log: noop, error: noop };
 
@@ -65,74 +74,69 @@ afterEach(() => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// SINON
+
+afterEach(() => {
+  sinon.restore();
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // ROUTER
 
 /*
-There are two pieces of complexity in how we use the router during testing,
-having to do with (1) the number of routers and (2) the number of components
-into which the router is injected.
+We use a single global router, which we will inject into many components during
+testing. The router has an `app` property, which seems to be set when the router
+is injected into a component and unset when the component is destroyed.
 
-We use the single, global router during testing rather than instantiating a
-different router for each test. We do so because each Vue router attaches a
-history listener to the window, but does not remove it: see
-vuejs/vue-router#2341. Because Karma runs all tests in a single window, multiple
-history listeners could conflict with each other.
+This sounds like it should work for our tests, but there are complications
+related to our use of hash mode. When the router is injected into a component,
+it examines the hash to determine the initial location. However, during testing,
+the hash diverges from the current route over time: Headless Chrome seems to
+rate-limit hash changes. The router seems to work despite this, but it becomes
+an issue when the router is injected into a component.
 
-Whenever the router is injected into a component, the undocumented
-VueRouter.prototype.init() is run. init() is what attaches the history listener,
-and it does so whenever the number of non-destroyed components into which the
-router has been previously injected is 0. That happens when (1) the first
-component is mounted, or (2) another component is mounted after all previous
-components have been destroyed. Vue Router seems to assume that the second case
-is not possible: see
-https://github.com/vuejs/vue-router/pull/2706#discussion_r274414101. For us, the
-second case is not possible during production, but it would be possible (and
-actually common) during testing, because each test destroys any component it
-mounts. Also, again, because Karma runs all tests in a single window, we need
-the router not to attach multiple listeners. For these reasons, we need to
-ensure that the second case never occurs, even during testing. To do so, we
-inject the router into a component that does not use the router, then we never
-destroy the component. This approach is admittedly fragile, relying on
-undocumented VueRouter behavior, and it may need to change with updates to the
-vue-router package.
+To work around this, we inject the router into multiple components concurrently.
+Vue Router seems to support this: in addition to the `app` property, the router
+has a mostly undocumented property named `apps`. Below, we inject the router
+into a simple component, thereby setting up the router; we will never destroy
+this component. When a test later injects the router into a new component, the
+router will not examine the hash. Instead, to set the initial location, we
+navigate to the location before mounting the component.
+
+This approach seems fragile, and we could consider alternatives:
+
+  - Mock the <router-link> component so that we only need to inject the router
+    when there is navigation.
+  - Use abstract mode during testing.
 */
-store.commit('setSendInitialRequests', false);
-mount(Blank, { router });
-store.commit('setSendInitialRequests', true);
 
-let lastRoute = null;
-afterEach(() => {
-  if (router.currentRoute === lastRoute) {
-    store.commit('resetRouterState');
-    return undefined;
-  }
-
-  return new Promise((resolve, reject) => {
-    store.commit('setUnsavedChanges', false);
-    const random = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-    // If the next test that uses the router tries to navigate to the current
-    // location, the navigation will be aborted. To prevent that, we navigate to
-    // a unique location before the next test.
-    router.push(
-      `/not-found/${random}`,
-      () => {
-        store.commit('resetRouterState');
-        lastRoute = router.currentRoute;
-        resolve();
-      },
-      () => {
-        reject(new Error('navigation aborted'));
-      }
-    );
-  });
+before(() => {
+  store.commit('setSendInitialRequests', false);
+  mount(TestUtilBlank, { router });
+  store.commit('resetRouterState');
 });
+
+{
+  let lastRoute = null;
+  afterEach(async () => {
+    if (router.currentRoute !== lastRoute) {
+      // If the next test that uses the router tries to navigate to the current
+      // location, the navigation will be aborted. To prevent that, we navigate
+      // to a unique location before the next test.
+      const random = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+      await forceReplace(router, store, `/not-found/${random}`);
+      lastRoute = router.currentRoute;
+    }
+
+    store.commit('resetRouterState');
+  });
+}
 
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
 before(loadAsyncRouteComponents);
-
-initNavGuards();
-afterEach(clearNavGuards);
 
 
 
@@ -149,24 +153,11 @@ afterEach(() => {
   if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
 });
 
-{
-  // Save localStorage in case it is mocked.
-  const storage = localStorage;
-  afterEach(() => {
-    storage.clear();
-  });
-}
+afterEach(() => {
+  localStorage.clear();
+});
 
 afterEach(cancelScheduledLogout);
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// SINON
-
-afterEach(() => {
-  sinon.restore();
-});
 
 
 

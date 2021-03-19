@@ -107,9 +107,10 @@ export default {
       this.$emit('fetch-project', true);
     },
     afterArchive(project) {
-      this.$router.push(this.projectPath(), () => {
-        this.$alert().success(this.$t('alert.archive', project));
-      });
+      this.$router.push(this.projectPath())
+        .then(() => {
+          this.$alert().success(this.$t('alert.archive', project));
+        });
     }
   }
 };

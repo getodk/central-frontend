@@ -27,11 +27,9 @@ component, AsyncRoute, that will load and render the async component.
 Because we use a wrapper component, navigation itself is not asynchronous. For
 example, if a user clicks a link to /users but has not loaded UserList yet, they
 will immediately navigate to /users, where they will see a loading message; they
-will not stay on the previous page while UserList loads. This should make it
-easier to reason about navigation (simplifying AccountLogin, for example).
-
-However, a downside of this approach is that an async component cannot use an
-in-component navigation guard.
+will not stay on the previous page while UserList loads. However, a downside of
+this approach is that an async component cannot use an in-component navigation
+guard.
 
 Route Names
 -----------

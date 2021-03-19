@@ -19,22 +19,14 @@ export default {
     // here as well.
     currentRoute: null,
     anyNavigationConfirmed: false,
-    // Used for testing.
-    lastNavigationWasConfirmed: false,
     sendInitialRequests: true,
     unsavedChanges: false
   },
   mutations: {
     /* eslint-disable no-param-reassign */
-    setCurrentRoute(state, route) {
+    confirmNavigation(state, route) {
       state.currentRoute = route;
-    },
-    triggerNavigation(state) {
-      state.lastNavigationWasConfirmed = false;
-    },
-    confirmNavigation(state) {
       state.anyNavigationConfirmed = true;
-      state.lastNavigationWasConfirmed = true;
     },
     setSendInitialRequests(state, sendInitialRequests) {
       state.sendInitialRequests = sendInitialRequests;
@@ -44,9 +36,8 @@ export default {
     },
     resetRouterState(state) {
       state.currentRoute = null;
-      state.sendInitialRequests = true;
       state.anyNavigationConfirmed = false;
-      state.lastNavigationWasConfirmed = false;
+      state.sendInitialRequests = true;
       state.unsavedChanges = false;
     }
     /* eslint-enable no-param-reassign */

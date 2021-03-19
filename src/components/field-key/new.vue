@@ -42,7 +42,10 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t('success[1]', created) }}</p>
           <i18n tag="p" path="success[2].full">
             <template #formAccessSettings>
-              <a :href="projectPath('form-access')" @click.prevent="navigateToFormAccess">{{ $t('success[2].formAccessSettings') }}</a>
+              <router-link v-slot="{ href, navigate }"
+                :to="projectPath('form-access')" custom>
+                <a :href="href" @click="navigateToFormAccess(navigate, $event)">{{ $t('success[2].formAccessSettings') }}</a>
+              </router-link>
             </template>
           </i18n>
         </div>
@@ -136,10 +139,10 @@ export default {
       else
         this.complete();
     },
-    navigateToFormAccess() {
+    navigateToFormAccess(navigate, event) {
       // Clear fieldKeys so that the Form Access tab will fetch it again.
       this.$store.commit('clearData', 'fieldKeys');
-      this.$router.push(this.projectPath('form-access'));
+      navigate(event);
     },
     createAnother() {
       this.step = 0;
