@@ -26,6 +26,10 @@ const triggerFunction = (f) => {
     let target = wrapper;
     if (rest.length > f.length - 1) {
       try {
+        // If rest[0] is a valid avoriaz selector, then we will use it to
+        // select. However, it is difficult to determine whether it is a valid
+        // selector. Here we try using it as a selector; if it is not a valid
+        // selector, then avoriaz will throw an error.
         target = wrapper.first(rest[0]);
         rest.shift();
       } catch (e) {}

@@ -70,7 +70,7 @@ describe('SubmissionMetadataRow', () => {
         reviewState: 'needsReview'
       });
       const state = mountComponent().first('.state');
-      state.find('.icon-comments').length.should.equal(1);
+      state.find('.icon-eye').length.should.equal(1);
       state.text().should.equal('Needs review');
     });
 

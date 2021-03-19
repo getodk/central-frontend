@@ -53,7 +53,7 @@ import { apiPaths } from '../../util/request';
 
 const iconsByReviewState = {
   hasIssues: 'icon-comments',
-  needsReview: 'icon-comments',
+  needsReview: 'icon-eye',
   approved: 'icon-check-circle',
   rejected: 'icon-times-circle'
 };
@@ -152,7 +152,7 @@ export default {
     margin-right: #{$edits-and-angle-width + 15px};
   }
 
-  .icon-comments { margin-right: $margin-right-icon; }
+  .icon-comments, .icon-eye { margin-right: $margin-right-icon; }
   .icon-circle-o, .icon-dot-circle-o, .icon-check-circle, .icon-times-circle {
     margin-left: 1px;
     margin-right: #{$margin-right-icon + 1px};
@@ -160,7 +160,7 @@ export default {
 
   .icon-circle-o { color: $color-warning; }
   .icon-dot-circle-o { color: #999; }
-  .icon-comments { color: $color-warning; }
+  .icon-comments, .icon-eye { color: $color-warning; }
   .icon-check-circle { color: $color-success; }
   .icon-times-circle { color: $color-danger; }
 

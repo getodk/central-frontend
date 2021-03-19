@@ -45,7 +45,7 @@ pre {
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-[class^="icon-"], [class*=" icon-"] { vertical-align: -1px; }
+[class^="icon-"] { vertical-align: -1px; }
 
 /* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
 IcoMoon styles end up applying to it, because our IcoMoon selectors select on
@@ -77,16 +77,13 @@ class. */
 .btn, a {
   .caret { margin-left: 6px; }
 
+  > [class^="icon-"]:first-child {
+    // There should not be white space between an icon and text content that
+    // follows it. For a link in particular, the underlining will be off if
+    // there is white space.
+    margin-right: $margin-right-icon;
 
-  > [class^="icon-"], > [class*=" icon-"] {
-    &:first-child {
-      // There should not be white space between an icon and text content that
-      // follows it. For a link in particular, the underlining will be off if
-      // there is white space.
-      margin-right: $margin-right-icon;
-
-      + .caret { margin-left: 0; }
-    }
+    + .caret { margin-left: 0; }
   }
 }
 
@@ -125,9 +122,7 @@ class. */
     &[disabled] { background-color: #ddd; }
   }
 
-  > [class^="icon-"], > [class*=" icon-"] {
-    &:first-child { color: $color-action-background; }
-  }
+  > [class^="icon-"]:first-child { color: $color-action-background; }
 }
 
 .btn-danger {
@@ -174,12 +169,10 @@ a {
     &.btn { color: #fff; }
   }
 
-  > [class^="icon-"], > [class*=" icon-"] {
-    &:first-child {
-      // Using inline-block so that the icon is not underlined even when the
-      // link has `text-decoration: underline`.
-      display: inline-block;
-    }
+  > [class^="icon-"]:first-child {
+    // Using inline-block so that the icon is not underlined even when the link
+    // has `text-decoration: underline`.
+    display: inline-block;
   }
 
   > .icon-angle-right:last-child { color: $color-accent-primary; }

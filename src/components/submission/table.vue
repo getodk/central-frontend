@@ -93,12 +93,13 @@ export default {
   mounted() {
     let index;
     let metadataRow;
+    const { metadataBody, dataBody } = this.$refs;
     const mouseover = (event) => {
       const { dataset } = event.target.closest('tr');
       if (dataset.index !== index) {
         if (index != null) metadataRow.classList.remove('actions-shown');
         index = dataset.index; // eslint-disable-line prefer-destructuring
-        metadataRow = this.$refs.metadataBody.querySelector(`tr:nth-child(${index})`);
+        metadataRow = metadataBody.querySelector(`tr:nth-child(${index})`);
         // The SubmissionMetadataRow element does not have a class binding, so I
         // think we can add this class without Vue removing it.
         metadataRow.classList.add('actions-shown');
@@ -111,7 +112,6 @@ export default {
         metadataRow = null;
       }
     };
-    const { dataBody } = this.$refs;
     dataBody.addEventListener('mouseover', mouseover);
     dataBody.addEventListener('mouseleave', mouseleave);
     this.$once('hook:beforeDestroy', () => {
