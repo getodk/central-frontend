@@ -13,18 +13,16 @@ describe('FormDraftTesting', () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });
     const path = '/projects/1/forms/f/draft/testing';
-    const component = await load(path, { component: true }, {});
+    const component = await load(path, { root: false });
     component.first(EnketoFill).should.be.visible();
   });
 
   it('shows a QR code that encodes the correct settings', async () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });
-    const component = await load(
-      '/projects/1/forms/f/draft/testing',
-      { component: true },
-      {}
-    );
+    const component = await load('/projects/1/forms/f/draft/testing', {
+      root: false
+    });
     const { draftToken } = testData.extendedFormDrafts.last();
     component.first(CollectQr).getProp('settings').should.eql({
       server_url: `/v1/test/${draftToken}/projects/1/forms/f/draft`
@@ -41,7 +39,7 @@ describe('FormDraftTesting', () => {
         .last();
       testData.extendedSubmissions.createPast(2, { formVersion: draft });
       const component = await load('/projects/1/forms/f/draft/testing', {
-        component: true
+        root: false
       });
       const dropdown = component.first(SubmissionDownloadDropdown);
       dropdown.first('button').text().should.equal('Download 2 records');

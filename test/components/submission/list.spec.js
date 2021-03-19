@@ -71,7 +71,7 @@ describe('SubmissionList', () => {
           component.find(SubmissionMetadataRow).length.should.equal(count);
           component.find(SubmissionDataRow).length.should.equal(count);
         };
-        return load('/projects/1/forms/f/submissions', { component: true })
+        return load('/projects/1/forms/f/submissions', { root: false })
           .afterResponses(assertRowCount(1))
           .request(trigger.click('#submission-list-refresh-button'))
           .beforeEachResponse(assertRowCount(1))
@@ -261,7 +261,7 @@ describe('SubmissionList', () => {
 
         it('does nothing upon scroll if keys request results in error', () => {
           createSubmissions(251);
-          return load('/projects/1/forms/f/submissions', { component: true }, {
+          return load('/projects/1/forms/f/submissions', { root: false }, {
             keys: 500.1
           })
             .complete()
@@ -277,7 +277,7 @@ describe('SubmissionList', () => {
 
         it('does nothing upon scroll if fields request results in error', () => {
           createSubmissions(251);
-          return load('/projects/1/forms/f/submissions', { component: true }, {
+          return load('/projects/1/forms/f/submissions', { root: false }, {
             fields: 500.1
           })
             .complete()
@@ -293,7 +293,7 @@ describe('SubmissionList', () => {
 
         it('does nothing upon scroll if submissions request results in error', () => {
           createSubmissions(251);
-          return load('/projects/1/forms/f/submissions', { component: true }, {
+          return load('/projects/1/forms/f/submissions', { root: false }, {
             odataChunk: 500.1
           })
             .complete()
@@ -461,7 +461,7 @@ describe('SubmissionList', () => {
 
         it('does not update originalCount', () => {
           createSubmissions(251);
-          return load('/projects/1/forms/f/submissions', { component: true })
+          return load('/projects/1/forms/f/submissions', { root: false })
             .afterResponses(component => {
               const { originalCount } = component.first(SubmissionList).data();
               originalCount.should.equal(251);

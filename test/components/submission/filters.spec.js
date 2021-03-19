@@ -9,9 +9,12 @@ import SubmissionTable from '../../../src/components/submission/table.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
+import { mockLogin } from '../../util/session';
 import { trigger } from '../../util/event';
 
 describe('SubmissionFilters', () => {
+  beforeEach(mockLogin);
+
   it('initially does not filter submissions', () => {
     testData.extendedForms.createPast(1);
     return loadSubmissionList()
@@ -152,7 +155,7 @@ describe('SubmissionFilters', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedFieldKeys.createPast(1).last()
     });
-    return load('/projects/1/forms/f/submissions', { component: true }, {})
+    return load('/projects/1/forms/f/submissions', { root: false })
       .afterResponses(component => {
         component.vm.$store.state.request.data.form.submissions.should.equal(2);
       })

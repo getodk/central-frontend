@@ -7,7 +7,7 @@ import store from '../../src/store';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
 
-import requestDataByComponent from './http/respond-for';
+import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { beforeEachNav } from './router';
@@ -48,7 +48,7 @@ export const setHttp = (respond) => {
 // mockHttp() and load()
 
 /*
-MockHttp mocks a series of request-response cycles. It allows you to mount a
+mockHttp() mocks a series of request-response cycles. It allows you to mount a
 component, specify one or more requests, then examine the component once the
 responses to the requests have been processed.
 
@@ -56,39 +56,34 @@ First, specify a component to mount. Some components will send a request after
 being mounted, for example:
 
   mockHttp()
-    .mount(AuditList, { router });
+    .mount(AuditList)
 
 Other components will not send a request. Specify a request after mounting the
 component:
 
-  mockLogin();
   mockHttp()
     // Mounting AccountResetPassword does not send a request.
     .mount(AccountResetPassword, { router })
     // Sends a POST request.
-    .request(component => submitForm(component, 'form', [
+    .request(trigger.submit('form', [
       ['input[type="email"]', 'example@getodk.org']
-    ]));
+    ]))
 
 After specifying the request, specify the response as a callback:
 
   mockHttp()
-    .mount(AuditList, { router })
-    .respondWithData(() => testData.extendedAudits.sorted());
+    .mount(AuditList)
+    .respondWithData(() => testData.extendedAudits.sorted())
 
 Sometimes, mount() and/or request() will send more than one request. Simply
 specify all the responses, in order of the request:
 
+  mockLogin();
+  testData.extendedProjects.createPast(3);
   mockHttp()
-    .mount(App, { router })
-    .request(component => submitForm(component, '#account-login form', [
-      ['input[type="email"]', 'example@getodk.org'],
-      ['input[type="password"]', 'password']
-    ]))
-    .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() => testData.extendedUsers
-      .createPast(1, { email: 'example@getodk.org' })
-      .last());
+    .mount(ProjectList, { router })
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted());
 
 In rare cases, you may know that mount() and/or request() will not send any
 request. In that case, simply do not specify a response. What is important is
@@ -97,12 +92,14 @@ that the number of requests matches the number of responses.
 After specifying the requests and responses, you can examine the state of the
 component once the responses have been processed:
 
+  mockLogin();
+  testData.extendedProjects.createPast(3);
   mockHttp()
     .mount(ProjectList, { router })
-    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
+    .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.find('#project-list-table tbody tr').length.should.equal(3);
+      component.find(ProjectRow).length.should.equal(3);
     });
 
 It is not until afterResponses() that the component is actually mounted and the
@@ -121,12 +118,14 @@ In other words, using mockHttp() involves two phases:
 afterResponses() returns a thenable, which usually is ultimately returned to
 Mocha. You can call then(), catch(), or finally() on the thenable:
 
+  mockLogin();
+  testData.extendedProjects.createPast(3);
   mockHttp()
     .mount(ProjectList, { router })
-    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
+    .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.find('#project-list-table tbody tr').length.should.equal(3);
+      component.find(ProjectRow).length.should.equal(3);
     })
     .then(() => {
       console.log('table has 3 rows');
@@ -138,25 +137,22 @@ Mocha. You can call then(), catch(), or finally() on the thenable:
 Alternatively, you can follow the series with a new series of request-response
 cycles: series can be chained. For example:
 
+  mockLogin();
+  testData.extendedAudits.createPast(1, {
+    actor: testData.extendedUsers.first(),
+    action: 'user.create',
+    actee: testData.toActor(testData.extendedUsers.first())
+  });
   mockHttp()
-    .mount(App, { router })
-    .request(component => submitForm(component, '#account-login form', [
-      ['input[type="email"]', 'example@getodk.org'],
-      ['input[type="password"]', 'password']
-    ]))
-    .respondWithData(() => testData.sessions.createNew())
-    .respondWithData(() => testData.extendedUsers
-      .createPast(1, { email: 'example@getodk.org' })
-      .last())
-    .respondWithData(() => testData.extendedProjects.createPast(3).sorted())
-    .respondWithData(() => testData.standardUsers.sorted())
+    .mount(AuditList)
+    .respondWithData(() => testData.extendedAudits.sorted())
     .afterResponses(component => {
-      component.find('#project-list-table tbody tr').length.should.equal(3);
+      component.find(AuditRow).length.should.equal(1);
     })
-    .request(component => trigger.click(component, '#navbar-links-users'))
-    .respondWithData(() => testData.standardUsers.sorted())
+    .request(trigger.changeValue('#audit-filters-action select', 'user.delete'))
+    .respondWithData(() => [])
     .afterResponses(component => {
-      component.find('#user-list-table tbody tr').length.should.equal(1);
+      component.find(AuditRow).length.should.equal(0);
     });
 
 Notice how the mounted component is passed to each request() and
@@ -164,15 +160,108 @@ afterResponses() callback, even in the second series.
 
 In some cases, you may need multiple series of request-response cycles, yet do
 not need to assert something in each series. In that case, use complete(), which
-is a shortcut for `afterResponses(component => component)`. Because it calls
+is a shortcut for afterResponses(component => component). Because it calls
 afterResponses(), complete() will also execute the series.
 
-If you are testing a single page, you can usually use mockHttp(). However, if a
-test changes the current route, or if the page uses <router-link>, you should
-use mockRoute().
+Using the router
+----------------
 
-There is a lot you can do with mockHttp(), and you can learn more by reviewing
-the comments above each method below.
+If a test uses the router, for example, if a component uses <router-link>,
+specify the router to mount().
+
+If a test changes the route, mount the App component and specify the initial
+location:
+
+  mockLogin();
+  testData.extendedProjects.createPast(3);
+  mockHttp()
+    .mount(App, { router })
+    .route('/')
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted());
+
+From there, you can navigate to a new location. If doing so will send one or
+more requests, also specify the responses. For example:
+
+  mockLogin();
+  testData.extendedProjects.createPast(3);
+  mockHttp()
+    .mount(App, { router })
+    .route('/')
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted());
+    .complete()
+    .route('/system/audits')
+    .respondWithData(() => testData.extendedAudits.sorted());
+
+A shortcut for specifying responses
+-----------------------------------
+
+Specifying responses can lead to repetitive code. As a shortcut, call load()
+with a location to automatically specify the responses for the route. For
+example, instead of:
+
+  mockHttp()
+    .mount(App, { router })
+    .route('/')
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
+
+you can call:
+
+  load('/')
+
+You can also call load() to change the route, specifying responses for the new
+location:
+
+  mockLogin();
+  testData.extendedProjects.createPast(3);
+  load('/')
+    .complete()
+    .load('/system/audits')
+
+/test/util/http/data.js maps each route to its responses.
+
+Common load() options
+---------------------
+
+By default, load() mounts App and specifies responses. However, you can also
+choose not to mount App or not to specify responses.
+
+If a test changes the route, then it should mount App. However, if a test
+doesn't change the route or otherwise need to mount App, then it can simply
+mount the component associated with the route. For example,
+
+  load('/', { root: false })
+
+is equivalent to:
+
+  mockHttp()
+    .mount(ProjectList, { router })
+    .route('/')
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted())
+
+Although it is rarely necessary to do so, it is also possible not to specify
+responses. For example,
+
+  load('/', {}, false)
+
+is equivalent to:
+
+  mockHttp()
+    .mount(App, { router })
+    .route('/')
+
+A component may send a request but not be associated with a route, for example,
+many modals. To test a component like this, use mockHttp(), or use load() to
+mount the component's parent component.
+
+Additional options
+------------------
+
+There is a lot you can do with mockHttp() and load(). You can learn more by
+reviewing the comments above each method below.
 */
 
 let inProgress = false;
@@ -740,42 +829,46 @@ Object.assign(MockHttp.prototype, commonTests);
 
 export const mockHttp = () => new MockHttp();
 
-// Mounts the component for the bottom-level route matching `location`, setting
-// propsData. If respondForOptions is not `false`, it will also set requestData
-// and respond to the initial requests that the component sends. This is useful
-// for tests that don't use the router or otherwise need to mount App.
-const mockHttpForBottomComponent = (
-  location,
-  mountOptions,
-  respondForOptions
-) => {
+// Mounts the component associated with the bottom-level route matching
+// `location`, setting propsData. If respondForOptions is not `false`, it will
+// also set requestData and respond to the initial requests that the component
+// sends.
+const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   const { route } = router.resolve(location);
   const components = routeComponents(route);
   const bottomComponent = last(components);
 
+  const fullMountOptions = { ...mountOptions, router };
+
   const bottomRouteRecord = last(route.matched);
   const props = routeProps(route, bottomRouteRecord.props.default);
-  const propsData = bottomRouteRecord.meta.asyncRoute == null
+  fullMountOptions.propsData = bottomRouteRecord.meta.asyncRoute == null
     ? props
     : props.props;
 
-  if (respondForOptions === false)
-    return mockHttp().mount(bottomComponent, { ...mountOptions, propsData });
-
-  const requestData = {};
-  for (let i = 0; i < components.length - 1; i += 1) {
-    for (const [key, callback] of requestDataByComponent(components[i].name)) {
-      const option = respondForOptions != null ? respondForOptions[key] : null;
-      requestData[key] = option != null
-        ? (typeof option === 'number' ? { problem: option } : option())
-        : callback();
+  if (respondForOptions !== false) {
+    const requestData = {};
+    for (let i = 0; i < components.length - 1; i += 1) {
+      for (const [key, callback] of requestDataByComponent(components[i].name)) {
+        const option = respondForOptions != null
+          ? respondForOptions[key]
+          : null;
+        requestData[key] = option != null
+          ? (typeof option === 'number' ? { problem: option } : option())
+          : callback();
+      }
     }
+    fullMountOptions.requestData = requestData;
   }
 
   return mockHttp()
-    .mount(bottomComponent, { ...mountOptions, propsData, requestData })
-    .respondForComponent(bottomComponent, respondForOptions);
+    .mount(bottomComponent, fullMountOptions)
+    .route(location)
+    .modify(series => (respondForOptions !== false
+      ? series.respondForComponent(bottomComponent, respondForOptions)
+      : series));
 };
+
 export const load = (
   location,
   mountOptions = undefined,
@@ -789,14 +882,9 @@ export const load = (
     }
   }
 
-  if (mountOptions != null && mountOptions.component === true) {
-    const optionsWithoutComponent = { ...mountOptions };
-    delete optionsWithoutComponent.component;
-    return mockHttpForBottomComponent(
-      location,
-      optionsWithoutComponent,
-      respondForOptions
-    );
+  if (mountOptions != null && mountOptions.root === false) {
+    const { root, ...optionsWithoutRoot } = mountOptions;
+    return loadBottomComponent(location, optionsWithoutRoot, respondForOptions);
   }
 
   return mockHttp()

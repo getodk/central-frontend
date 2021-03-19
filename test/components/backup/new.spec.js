@@ -51,7 +51,7 @@ describe('BackupNew', () => {
   beforeEach(mockLogin);
 
   it('toggles the modal', () =>
-    load('/system/backups', { component: true }, {}).testModalToggles(
+    load('/system/backups', { root: false }).testModalToggles(
       BackupNew,
       '#backup-status button',
       '.btn-link'

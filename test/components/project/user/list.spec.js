@@ -27,10 +27,6 @@ const createData = (roles) => {
     }
   }
 };
-const loadList = ({ roles, route = false }) => {
-  createData(roles);
-  return load('/projects/1/users', { component: !route }, {});
-};
 const changeQ = (component, q) =>
   trigger.changeValue(component, '#project-user-list-search-form input', q);
 // Changes the role select element of the first row of the table.
@@ -48,36 +44,42 @@ const changeRole = (component, systemOrNone) => {
 };
 // Loads two assignments, then submits a search that returns four users, one of
 // whom has an assignment.
-const search = (route = undefined) => loadList({
-  roles: ['none', 'viewer', 'manager', 'none', 'none', 'none'],
-  route
-})
-  .complete()
-  .request(component => changeQ(component, 'some search term'))
-  .respondWithData(() => [
-    // For the first element, we choose a user without an assignment in order to
-    // facilitate the use of changeRole(). Otherwise, the order of the search
-    // results should not matter and might not match what Backend would actually
-    // return.
-    testData.standardUsers.get(3),
-    testData.standardUsers.get(4),
-    testData.standardUsers.get(5),
-    testData.standardUsers.get(1)
-  ]);
+const search = (mountOptions = {}) => {
+  createData(['none', 'viewer', 'manager', 'none', 'none', 'none']);
+  return load('/projects/1/users', mountOptions)
+    .complete()
+    .request(component => changeQ(component, 'some search term'))
+    .respondWithData(() => [
+      // For the first element, we choose a user without an assignment in order to
+      // to facilitate the use of changeRole(). Otherwise, the order of the
+      // search results should not matter and might not match what Backend would
+      // actually return.
+      testData.standardUsers.get(3),
+      testData.standardUsers.get(4),
+      testData.standardUsers.get(5),
+      testData.standardUsers.get(1)
+    ]);
+};
 
 describe('ProjectUserList', () => {
   describe('behavior of the component before any role change', () => {
     describe('before the initial data is received', () => {
-      it('disables the search input', () =>
-        loadList({ roles: ['none'] }).beforeEachResponse(component => {
-          const input = component.first('#project-user-list-search-form input');
-          input.should.be.disabled();
-        }));
+      it('disables the search input', () => {
+        createData(['none']);
+        return load('/projects/1/users', { root: false })
+          .beforeEachResponse(component => {
+            const input = component.first('#project-user-list-search-form input');
+            input.should.be.disabled();
+          });
+      });
 
-      it('hides the .close button', () =>
-        loadList({ roles: ['none'] }).beforeEachResponse(component => {
-          component.first('.close').should.be.hidden();
-        }));
+      it('hides the .close button', () => {
+        createData(['none']);
+        return load('/projects/1/users', { root: false })
+          .beforeEachResponse(component => {
+            component.first('.close').should.be.hidden();
+          });
+      });
     });
 
     describe('search label', () => {
@@ -125,8 +127,9 @@ describe('ProjectUserList', () => {
       });
     });
 
-    it('shows the table data', () =>
-      loadList({ roles: ['none', 'viewer', 'manager'] })
+    it('shows the table data', () => {
+      createData(['none', 'viewer', 'manager']);
+      return load('/projects/1/users', { root: false })
         .afterResponses(component => {
           const tr = component.find('tbody tr');
           tr.length.should.equal(2);
@@ -141,10 +144,12 @@ describe('ProjectUserList', () => {
           tr[1].first('select').element.value.should.equal(
             standardRoles.find(role => role.system === 'manager').id.toString()
           );
-        }));
+        });
+    });
 
-    it('renders the select correctly for the current user', () =>
-      loadList({ roles: ['manager', 'manager'] }).afterResponses(component => {
+    it('renders the select correctly for the current user', () => {
+      createData(['manager', 'manager']);
+      return load('/projects/1/users', { root: false }).afterResponses(component => {
         const tr = component.find('tbody tr');
         tr.length.should.equal(2);
         const selects = tr.map(wrapper => wrapper.first('select'));
@@ -155,20 +160,24 @@ describe('ProjectUserList', () => {
 
         selects[1].should.not.be.disabled();
         selects[1].element.title.should.equal('');
-      }));
+      });
+    });
 
     describe('no assignments', () => {
-      it('shows the table headers and a message', () =>
-        loadList({ roles: ['none'] }).afterResponses(component => {
+      it('shows the table headers and a message', () => {
+        createData(['none']);
+        return load('/projects/1/users', { root: false }).afterResponses(component => {
           component.find('thead tr').length.should.equal(1);
 
           const message = component.first('.empty-table-message');
           message.should.be.visible();
           message.text().trim().should.startWith('There are no users');
-        }));
+        });
+      });
 
-      it('shows the message again after a search is cleared', () =>
-        loadList({ roles: ['none'] })
+      it('shows the message again after a search is cleared', () => {
+        createData(['none']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeQ(component, 'some search term'))
           .respondWithData(() => testData.standardUsers.sorted())
@@ -179,23 +188,27 @@ describe('ProjectUserList', () => {
           .respondWithData(() => testData.extendedProjectAssignments.sorted())
           .afterResponse(component => {
             component.first('.empty-table-message').should.be.visible();
-          }));
+          });
+      });
     });
   });
 
   describe('changing a role without searching', () => {
     describe('request verbs', () => {
-      it('sends a single DELETE request after a change from Manager to None', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('sends a single DELETE request after a change from Manager to None', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'none'))
           .beforeEachResponse((component, config) => {
             config.method.should.equal('DELETE');
           })
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
 
-      it('sends a single POST request if Manager is then re-selected', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('sends a single POST request if Manager is then re-selected', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'none'))
           .respondWithSuccess()
@@ -204,42 +217,50 @@ describe('ProjectUserList', () => {
           .beforeEachResponse((component, config) => {
             config.method.should.equal('POST');
           })
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
 
-      it('sends two requests after a change from Manager to Viewer', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('sends two requests after a change from Manager to Viewer', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse((component, config, index) => {
             config.method.should.equal(index === 0 ? 'DELETE' : 'POST');
           })
           .respondWithSuccess()
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
     });
 
     describe('during the request', () => {
-      it('disables the select', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('disables the select', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
             component.first('select').should.be.disabled();
           })
           .respondWithSuccess()
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
 
-      it('shows a spinner', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('shows a spinner', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
             component.first(Spinner).getProp('state').should.be.true();
           })
           .respondWithSuccess()
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
 
-      it('disables the search input', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('disables the search input', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
@@ -247,32 +268,38 @@ describe('ProjectUserList', () => {
             form.first('input').should.be.disabled();
           })
           .respondWithSuccess()
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
 
-      it('hides the .close button', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('hides the .close button', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
             component.first('.close').should.be.hidden();
           })
           .respondWithSuccess()
-          .respondWithSuccess());
+          .respondWithSuccess();
+      });
     });
 
     describe('after a successful change', () => {
-      it('shows a success alert', () =>
-        loadList({ roles: ['none', 'manager'], route: true })
+      it('shows a success alert', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users')
           .complete()
           .request(app => changeRole(app, 'viewer'))
           .respondWithSuccess()
           .respondWithSuccess()
           .afterResponses(app => {
             app.should.alert('success');
-          }));
+          });
+      });
 
-      it('shows the new role in the table', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('shows the new role in the table', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .respondWithSuccess()
@@ -282,10 +309,12 @@ describe('ProjectUserList', () => {
             component.first('select').element.value.should.equal(
               standardRoles.find(role => role.system === 'viewer').id.toString()
             );
-          }));
+          });
+      });
 
-      it('remembers change from Manager to Viewer if user navigates away', () =>
-        loadList({ roles: ['none', 'manager'], route: true })
+      it('remembers change from Manager to Viewer if user navigates away', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users')
           .complete()
           .request(app => changeRole(app, 'viewer'))
           .respondWithSuccess()
@@ -299,12 +328,14 @@ describe('ProjectUserList', () => {
             app.first('#project-user-list select').element.value.should.equal(
               standardRoles.find(role => role.system === 'viewer').id.toString()
             );
-          }));
+          });
+      });
     });
 
     describe('after the second request fails', () => {
-      it('shows a danger alert', () =>
-        loadList({ roles: ['none', 'manager'], route: true })
+      it('shows a danger alert', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users')
           .complete()
           .request(app => changeRole(app, 'viewer'))
           .respondWithSuccess()
@@ -314,39 +345,42 @@ describe('ProjectUserList', () => {
               'danger',
               'Something went wrong. “User 2” has been removed from the Project.'
             );
-          }));
+          });
+      });
 
-      it('shows that the user has no role', () =>
-        loadList({ roles: ['none', 'manager'] })
+      it('shows that the user has no role', () => {
+        createData(['none', 'manager']);
+        return load('/projects/1/users', { root: false })
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .respondWithSuccess()
           .respondWithProblem()
           .afterResponses(component => {
             component.first('select').element.value.should.equal('');
-          }));
+          });
+      });
     });
   });
 
   describe('during a search request', () => {
     it('hides the assignments', () =>
-      search().beforeAnyResponse(component => {
+      search({ root: false }).beforeAnyResponse(component => {
         component.find('tbody tr').length.should.equal(0);
       }));
 
     it('does not disable the search input', () =>
-      search().beforeAnyResponse(component => {
+      search({ root: false }).beforeAnyResponse(component => {
         const form = component.first('#project-user-list-search-form');
         form.first('input').should.not.be.disabled();
       }));
 
     it('shows the .close button', () =>
-      search().beforeAnyResponse(component => {
+      search({ root: false }).beforeAnyResponse(component => {
         component.first('.close').should.be.visible();
       }));
 
     it('allows another search, canceling the first search', () =>
-      search()
+      search({ root: false })
         // Sends a request for a second search.
         .beforeAnyResponse(component =>
           changeQ(component, 'some other search term'))
@@ -359,8 +393,9 @@ describe('ProjectUserList', () => {
   });
 
   describe('search results', () => {
-    it('shows a message if there are no search results', () =>
-      loadList({ roles: ['none', 'manager'] })
+    it('shows a message if there are no search results', () => {
+      createData(['none', 'manager']);
+      return load('/projects/1/users', { root: false })
         .complete()
         .request(component => changeQ(component, 'some search term'))
         .respondWithData(() => [])
@@ -368,10 +403,11 @@ describe('ProjectUserList', () => {
           const message = component.first('.empty-table-message');
           message.should.be.visible();
           message.text().trim().should.equal('No results');
-        }));
+        });
+    });
 
     it('shows the search results', () =>
-      search().afterResponse(component => {
+      search({ root: false }).afterResponse(component => {
         const tr = component.find('tbody tr');
         tr.length.should.equal(4);
 
@@ -392,7 +428,7 @@ describe('ProjectUserList', () => {
       }));
 
     it('shows the .close button', () =>
-      search().afterResponse(component => {
+      search({ root: false }).afterResponse(component => {
         component.first('.close').should.be.visible();
       }));
   });
@@ -400,7 +436,7 @@ describe('ProjectUserList', () => {
   describe('changing a role after search', () => {
     describe('request verbs', () => {
       it('sends a single POST request after a change from None to Manager', () =>
-        search()
+        search({ root: false })
           .complete()
           .request(component => changeRole(component, 'manager'))
           .beforeEachResponse((component, config) => {
@@ -409,7 +445,7 @@ describe('ProjectUserList', () => {
           .respondWithSuccess());
 
       it('sends a single DELETE request if None is then re-selected', () =>
-        search()
+        search({ root: false })
           .complete()
           .request(component => changeRole(component, 'manager'))
           .respondWithSuccess()
@@ -422,7 +458,7 @@ describe('ProjectUserList', () => {
     });
 
     it('remembers change from None to Manager if user navigates away', () =>
-      search(true)
+      search()
         .complete()
         .request(app => changeRole(app, 'manager'))
         .respondWithSuccess()
@@ -436,7 +472,7 @@ describe('ProjectUserList', () => {
   });
 
   describe('clearing the search', () => {
-    const giveRoleThenClearSearch = (clickClose = true) => search()
+    const giveRoleThenClearSearch = (clickClose = true) => search({ root: false })
       .complete()
       .request(component => changeRole(component, 'manager'))
       .respondWithSuccess()

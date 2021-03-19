@@ -11,7 +11,7 @@ describe('FormSubmissions', () => {
       mockLogin({ role: 'admin' });
       testData.extendedForms.createPast(1);
       const path = '/projects/1/forms/f/submissions';
-      const component = await load(path, { component: true }, {});
+      const component = await load(path, { root: false });
       component.first(EnketoFill).should.be.visible();
     });
 
@@ -20,7 +20,7 @@ describe('FormSubmissions', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1);
       const path = '/projects/1/forms/f/submissions';
-      const component = await load(path, { component: true }, {});
+      const component = await load(path, { root: false });
       component.find(EnketoFill).length.should.equal(0);
     });
   });
@@ -36,7 +36,7 @@ describe('FormSubmissions', () => {
       });
       testData.extendedSubmissions.createPast(1);
       const component = await load('/projects/1/forms/f/submissions', {
-        component: true
+        root: false
       });
       const dropdown = component.first(SubmissionDownloadDropdown);
       dropdown.first('button').text().should.equal('Download 1 record');

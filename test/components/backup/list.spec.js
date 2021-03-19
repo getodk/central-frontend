@@ -9,7 +9,7 @@ describe('BackupList', () => {
 
   it('sends the correct requests', () => {
     let success = false;
-    return load('/system/backups', { component: true }, {})
+    return load('/system/backups', { root: false })
       .beforeEachResponse((component, { method, url }, index) => {
         method.should.equal('GET');
         if (index === 0) {
@@ -29,13 +29,13 @@ describe('BackupList', () => {
       success: false,
       loggedAt: ago({ days: 1 }).toISO()
     });
-    return load('/system/backups', { component: true }, {}).then(component => {
+    return load('/system/backups', { root: false }).then(component => {
       component.find(AuditTable).length.should.equal(1);
     });
   });
 
   it('does not render a table if there are no audit log entries', () =>
-    load('/system/backups', { component: true }, {}).then(component => {
+    load('/system/backups', { root: false }).then(component => {
       component.find(AuditTable).length.should.equal(0);
     }));
 });

@@ -38,6 +38,7 @@ const optionsSupportedWithI18n = new Set([
   'propsData',
   'slots',
   'attachToDocument',
+  'router',
   'requestData'
 ]);
 
@@ -81,7 +82,10 @@ export const mount = (component, options = {}) => {
   const { requestData, ...mountOptions } = options;
 
   // Normalize the options.
-  if (mountOptions.router === true) mountOptions.router = router;
+  if (mountOptions.router === true)
+    mountOptions.router = router;
+  else if (mountOptions.router === false)
+    delete mountOptions.router;
   mountOptions.store = store;
   mountOptions.i18n = i18n;
 

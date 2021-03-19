@@ -9,7 +9,7 @@ describe('BackupTerminate', () => {
 
   it('toggles the modal', () => {
     testData.standardBackupsConfigs.createPast(1);
-    return load('/system/backups', { component: true }, {}).testModalToggles(
+    return load('/system/backups', { root: false }).testModalToggles(
       BackupTerminate,
       '#backup-status button',
       '.btn-link'

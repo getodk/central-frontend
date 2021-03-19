@@ -12,7 +12,7 @@ describe('AuditFilters', () => {
   beforeEach(mockLogin);
 
   it('initially specifies nonverbose for action', () =>
-    load('/system/audits', { component: true }, {})
+    load('/system/audits', { root: false })
       .beforeEachResponse((component, config) => {
         config.url.should.containEql('action=nonverbose');
         const value = component.first(AuditFiltersAction).getProp('value');
@@ -20,7 +20,7 @@ describe('AuditFilters', () => {
       }));
 
   it('sends a request after the action filter is changed', () =>
-    load('/system/audits', { component: true }, {})
+    load('/system/audits', { root: false })
       .complete()
       .request(component => trigger.changeValue(
         component,
@@ -36,7 +36,7 @@ describe('AuditFilters', () => {
     // Not specifying a time zone, because flatpickr will use the system time
     // zone even if we specify a different time zone for Luxon.
     const restoreLuxon = setLuxon({ now: '1970-01-01T12:00:00' });
-    return load('/system/audits', { component: true }, {})
+    return load('/system/audits', { root: false })
       .beforeEachResponse((component, config) => {
         const index = config.url.indexOf('?');
         index.should.not.equal(-1);
@@ -58,7 +58,7 @@ describe('AuditFilters', () => {
   });
 
   it('sends a request after the date range is changed', () =>
-    load('/system/audits', { component: true }, {})
+    load('/system/audits', { root: false })
       .complete()
       .request(component => {
         const start = DateTime.fromISO('1970-01-02').toJSDate();
