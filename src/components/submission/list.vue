@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="$store.getters.initiallyLoading(['fields'])"/>
     <div v-show="fields != null">
       <form class="form-inline" @submit.prevent>
-        <submission-filters v-if="filterable" v-bind.sync="filters"/>
+        <submission-filters v-if="!draft" v-bind.sync="filters"/>
         <submission-field-dropdown
           v-if="fields != null && selectableFields.length > 11"
           v-model="selectedFields"/>
@@ -25,16 +25,17 @@ except according to the terms contained in the LICENSE file.
           <spinner :state="refreshing"/>
         </button>
         <submission-download-dropdown v-if="formVersion != null"
-          :base-url="baseUrl" :form-version="formVersion"
-          :odata-filter="odataFilter" @decrypt="showDecrypt"/>
+          :form-version="formVersion" :odata-filter="odataFilter"
+          @decrypt="showDecrypt"/>
       </form>
       <template v-if="submissions != null">
-        <p v-if="submissions.length === 0" class="empty-table-message">
+        <submission-table v-if="submissions.length !== 0"
+          :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
+          :submissions="submissions" :fields="selectedFields"
+          :original-count="originalCount"/>
+        <p v-else class="empty-table-message">
           {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
         </p>
-        <submission-table v-else-if="fields != null" :base-url="baseUrl"
-          :submissions="submissions" :fields="selectedFields"
-          :original-count="originalCount" :shows-submitter="showsSubmitter"/>
       </template>
       <div v-show="odataLoadingMessage != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
@@ -59,10 +60,9 @@ import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 
-import Form from '../../presenters/form';
 import modal from '../../mixins/modal';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { queryString } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -78,32 +78,19 @@ export default {
   },
   mixins: [modal()],
   props: {
-    baseUrl: {
+    projectId: {
       type: String,
       required: true
     },
-    formVersion: Form, // eslint-disable-line vue/require-default-prop
-    filterable: {
-      type: Boolean,
-      default: false
+    xmlFormId: {
+      type: String,
+      required: true
     },
-    showsSubmitter: {
-      type: Boolean,
-      default: false
-    },
+    draft: Boolean,
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
       default: (skip) => (skip < 1000 ? 250 : 1000)
-    },
-    // Function that returns true if the user has scrolled to the bottom of the
-    // page (or close to it) and false if not. Implementing this as a prop in
-    // order to facilitate testing.
-    scrolledToBottom: {
-      type: Function,
-      default: () =>
-        // Using pageYOffset rather than scrollY in order to support IE.
-        window.pageYOffset + window.innerHeight >= document.body.offsetHeight - 5
     }
   },
   data() {
@@ -130,7 +117,14 @@ export default {
     };
   },
   computed: {
-    ...requestData(['keys', 'fields', 'odataChunk', 'submitters']),
+    ...requestData([
+      'form',
+      { key: 'formDraft', getOption: true },
+      'keys',
+      'fields',
+      'odataChunk',
+      'submitters'
+    ]),
     ...mapGetters(['selectableFields']),
     odataFilter() {
       const conditions = [];
@@ -146,6 +140,9 @@ export default {
     },
     loadingOData() {
       return this.$store.getters.loading('odataChunk');
+    },
+    formVersion() {
+      return this.draft ? this.formDraft : this.form;
     },
     odataLoadingMessage() {
       if (!this.loadingOData || this.refreshing) return null;
@@ -191,10 +188,10 @@ export default {
     this.fetchData();
   },
   mounted() {
-    document.addEventListener('scroll', this.onScroll);
+    document.addEventListener('scroll', this.afterScroll);
   },
   beforeDestroy() {
-    document.removeEventListener('scroll', this.onScroll);
+    document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
     clearSubmissions() {
@@ -234,7 +231,12 @@ export default {
       if (this.odataFilter != null) query.$filter = this.odataFilter;
       return this.$store.dispatch('get', [{
         key: 'odataChunk',
-        url: `${this.baseUrl}.svc/Submissions${queryString(query)}`,
+        url: apiPaths.odataSubmissions(
+          this.projectId,
+          this.xmlFormId,
+          this.draft,
+          query
+        ),
         // We use this.odataChunk['@odata.count'] to access the filtered count,
         // so we don't clear this.odataChunk here. this.clearSubmissions() will
         // clear this.odataChunk.
@@ -251,7 +253,9 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'fields',
-        url: `${this.baseUrl}/fields?odata=true`,
+        url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
+          odata: true
+        }),
         success: () => {
           // We also use 11 in the SubmissionFieldDropdown v-if.
           this.selectedFields = this.selectableFields.length <= 11
@@ -260,15 +264,20 @@ export default {
         }
       }]).catch(noop);
       this.fetchChunk(0, true);
-      if (this.filterable) {
+      if (!this.draft) {
         this.$store.dispatch('get', [{
           key: 'submitters',
-          url: `${this.baseUrl}/submissions/submitters`
+          url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
         }]).catch(noop);
       }
     },
+    scrolledToBottom() {
+      // Using pageYOffset rather than scrollY in order to support IE.
+      return window.pageYOffset + window.innerHeight >=
+        document.body.offsetHeight - 5;
+    },
     // This method may need to change once we support submission deletion.
-    onScroll() {
+    afterScroll() {
       if (this.formVersion != null && this.keys != null &&
         this.fields != null && this.submissions != null &&
         this.submissions.length < this.originalCount && !this.loadingOData &&

@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </ul>
       </div>
       <div id="submission-analyze-odata-url" class="modal-introduction">
-        <selectable>{{ oDataUrl }}</selectable>
+        <selectable>{{ odataUrl }}</selectable>
       </div>
       <div id="submission-analyze-tool-help" class="modal-introduction">
         <i18n v-if="tool === 'microsoft'" tag="p" path="help.microsoft.full">
@@ -93,18 +93,14 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
+import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
+
 export default {
   name: 'SubmissionAnalyze',
   components: { Modal, Selectable },
   props: {
-    baseUrl: {
-      type: String,
-      required: true
-    },
-    state: {
-      type: Boolean,
-      default: false
-    }
+    state: Boolean
   },
   data() {
     return {
@@ -112,8 +108,11 @@ export default {
     };
   },
   computed: {
-    oDataUrl() {
-      return `${window.location.origin}${this.baseUrl}.svc`;
+    ...requestData(['form']),
+    odataUrl() {
+      if (this.form == null) return '';
+      const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
+      return `${window.location.origin}${path}`;
     }
   },
   watch: {

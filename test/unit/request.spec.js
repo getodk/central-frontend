@@ -86,9 +86,33 @@ describe('util/request', () => {
       apiPaths.form(1, 'a b').should.equal('/v1/projects/1/forms/a%20b');
     });
 
+    describe('odataSvc', () => {
+      it('returns the correct path', () => {
+        const path = apiPaths.odataSvc(1, 'a b');
+        path.should.equal('/v1/projects/1/forms/a%20b.svc');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.odataSvc(1, 'a b', true);
+        path.should.equal('/v1/projects/1/forms/a%20b/draft.svc');
+      });
+    });
+
     it('formActors', () => {
       const path = apiPaths.formActors(1, 'a b', 'app-user');
       path.should.equal('/v1/projects/1/forms/a%20b/assignments/app-user');
+    });
+
+    describe('fields', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.fields(1, 'a b');
+        path.should.equal('/v1/projects/1/forms/a%20b/fields');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.fields(1, 'a b', true);
+        path.should.equal('/v1/projects/1/forms/a%20b/draft/fields');
+      });
     });
 
     it('formVersions', () => {
@@ -97,12 +121,12 @@ describe('util/request', () => {
     });
 
     it('formVersionDef', () => {
-      const path = apiPaths.formVersionDef(1, 'a b', 'c d', 'xml');
+      const path = apiPaths.formVersionDef(1, 'a b', 'c d', '.xml');
       path.should.equal('/v1/projects/1/forms/a%20b/versions/c%20d.xml');
     });
 
     it('formVersionDef: empty version', () => {
-      const path = apiPaths.formVersionDef(1, 'a b', '', 'xml');
+      const path = apiPaths.formVersionDef(1, 'a b', '', '.xml');
       path.should.equal('/v1/projects/1/forms/a%20b/versions/___.xml');
     });
 
@@ -117,7 +141,7 @@ describe('util/request', () => {
     });
 
     it('formDraftDef', () => {
-      const path = apiPaths.formDraftDef(1, 'a b', 'xml');
+      const path = apiPaths.formDraftDef(1, 'a b', '.xml');
       path.should.equal('/v1/projects/1/forms/a%20b/draft.xml');
     });
 
@@ -146,14 +170,81 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
     });
 
-    it('formDraftSubmissionKeys', () => {
-      const path = apiPaths.formDraftSubmissionKeys(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/keys');
+    describe('submissions', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.submissions(1, 'a b', false, '.csv.zip');
+        path.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.submissions(1, 'a b', true, '.csv.zip');
+        path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv.zip');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.submissions(1, 'a b', false, '.csv.zip', {
+          attachments: false
+        });
+        path.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip?attachments=false');
+      });
     });
 
-    it('submissionKeys', () => {
-      const path = apiPaths.submissionKeys(1, 'a b');
-      path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
+    describe('odataSubmissions', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.odataSubmissions(1, 'a b');
+        path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.odataSubmissions(1, 'a b', true);
+        path.should.equal('/v1/projects/1/forms/a%20b/draft.svc/Submissions');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.odataSubmissions(1, 'a b', false, { $count: true });
+        path.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions?%24count=true');
+      });
+    });
+
+    describe('submissionKeys', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.submissionKeys(1, 'a b');
+        path.should.equal('/v1/projects/1/forms/a%20b/submissions/keys');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.submissionKeys(1, 'a b', true);
+        path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/keys');
+      });
+    });
+
+    describe('submitters', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.submitters(1, 'a b');
+        path.should.equal('/v1/projects/1/forms/a%20b/submissions/submitters');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.submitters(1, 'a b', true);
+        path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/submitters');
+      });
+    });
+
+    it('editSubmission', () => {
+      const path = apiPaths.editSubmission(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
+    });
+
+    describe('submissionAttachment', () => {
+      it('returns the correct path for a form', () => {
+        const path = apiPaths.submissionAttachment(1, 'a b', false, 'c d', 'e f');
+        path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/attachments/e%20f');
+      });
+
+      it('returns the correct path for a form draft', () => {
+        const path = apiPaths.submissionAttachment(1, 'a b', true, 'c d', 'e f');
+        path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/c%20d/attachments/e%20f');
+      });
     });
 
     it('publicLinks', () => {

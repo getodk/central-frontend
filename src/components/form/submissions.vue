@@ -22,12 +22,10 @@ except according to the terms contained in the LICENSE file.
           @analyze="showModal('analyze')"/>
       </template>
       <template #body>
-        <submission-list :base-url="baseUrl" :form-version="form"
-          filterable shows-submitter/>
+        <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
       </template>
     </page-section>
-    <submission-analyze :state="analyze.state" :base-url="baseUrl"
-      @hide="hideModal('analyze')"/>
+    <submission-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -80,9 +78,6 @@ export default {
     rendersEnketoFill() {
       return this.project != null &&
         this.project.permits('submission.create') && this.form != null;
-    },
-    baseUrl() {
-      return apiPaths.form(this.projectId, this.xmlFormId);
     }
   },
   created() {

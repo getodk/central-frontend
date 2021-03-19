@@ -33,6 +33,8 @@ export const extendedProjects = dataStore({
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = 0,
+    // The default value of this property does not necessarily match
+    // testData.extendedForms or testData.extendedSubmissions.
     lastSubmission = null,
     key = null,
     currentUser = extendedUsers.size !== 0
@@ -51,8 +53,6 @@ export const extendedProjects = dataStore({
     updatedAt: null,
     // Extended metadata
     forms,
-    // This property does not necessarily match testData.extendedForms or
-    // testData.extendedSubmissions.
     lastSubmission,
     appUsers,
     verbs: verbsForUserAndRole(currentUser, role)

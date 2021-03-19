@@ -781,10 +781,13 @@ export const load = (
   mountOptions = undefined,
   respondForOptions = undefined
 ) => {
-  // Prevent the user from accidentally specifying respondForOptions without
+  // Check whether the user has specified respondForOptions without
   // mountOptions.
-  if (mountOptions != null && respondForOptions == null)
-    throw new Error('specify either both sets of options or neither');
+  if (mountOptions != null && respondForOptions == null) {
+    for (const value of Object.values(mountOptions)) {
+      if (typeof value === 'function') throw new Error('invalid mount option');
+    }
+  }
 
   if (mountOptions != null && mountOptions.component === true) {
     const optionsWithoutComponent = { ...mountOptions };

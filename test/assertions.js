@@ -1,6 +1,10 @@
 import should from 'should';
 
-import { unwrapElement } from './util/util';
+// Returns an element that may be wrapped in an avoriaz wrapper.
+const unwrapElement = (elementOrWrapper) =>
+  (elementOrWrapper instanceof HTMLElement
+    ? elementOrWrapper
+    : elementOrWrapper.element);
 
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to
