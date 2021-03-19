@@ -176,8 +176,8 @@ export default {
     "action": {
       "fill": "Fill Form"
     },
-    "formClosedTip": "This Form is closed. It is not downloadable and does not accept Submissions.",
-    "formClosingTip": "This Form is closing. It is not downloadable but still accepts Submissions.",
+    "formClosedTip": "This Form is Closed. It is not downloadable and does not accept Submissions.",
+    "formClosingTip": "This Form is Closing. It is not downloadable but still accepts Submissions.",
     "formUnpublishedTip": "This Form does not yet have a published version.",
   }
 }

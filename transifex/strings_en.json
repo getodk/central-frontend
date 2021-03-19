@@ -1858,10 +1858,10 @@
         }
       },
       "formClosedTip": {
-        "string": "This Form is closed. It is not downloadable and does not accept Submissions."
+        "string": "This Form is Closed. It is not downloadable and does not accept Submissions."
       },
       "formClosingTip": {
-        "string": "This Form is closing. It is not downloadable but still accepts Submissions."
+        "string": "This Form is Closing. It is not downloadable but still accepts Submissions."
       },
       "formUnpublishedTip": {
         "string": "This Form does not yet have a published version."

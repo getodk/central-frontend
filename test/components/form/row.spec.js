@@ -154,7 +154,7 @@ describe('FormRow', () => {
       href.should.matchEach('#/projects/1/forms/a%20b/submissions');
     });
 
-    it('blank submission column for a form without a published version', async () => {
+    it('shows a blank submission column for a form without a published version', async () => {
       testData.extendedForms.createPast(1, {
         xmlFormId: 'a b',
         draft: true,
@@ -162,8 +162,8 @@ describe('FormRow', () => {
       });
       const app = await load('/projects/1');
       const a = app.find('.form-row .submissions a');
-      // Since the form does not have a published version, it does not have a
-      // lastSubmission property.
+      // Since the form does not have a published version, it does not have
+      // submissions to show (draft submissions are possible, but now shown here)
       a.length.should.equal(0);
     });
   });
