@@ -82,7 +82,7 @@ export default {
         case 'closing':
           return 'clock-o';
         default: // 'closed'
-          return 'lock';
+          return 'ban';
       }
     }
   }

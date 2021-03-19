@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-row">
     <td class="name">
       <link-if-can :to="primaryFormPath(form)">
-        <span v-if="form.state === 'closed'" class="icon-times-circle form-icon-closed form-icon"
+        <span v-if="form.state === 'closed'" class="icon-ban form-icon-closed form-icon"
           :title="$t('formClosedTip')"></span>
         <span v-else-if="form.state === 'closing'" class="icon-clock-o form-icon-closing form-icon"
           :title="$t('formClosingTip')"></span>
