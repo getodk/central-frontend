@@ -21,6 +21,30 @@ describe('FormRow', () => {
       const app = await load('/projects/1');
       app.first('.form-row .name').text().trim().should.equal('f');
     });
+
+    it('shows ban icon in form name link for closed form', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', state: 'closed' });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-ban').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form is Closed. It is not downloadable and does not accept Submissions.');
+    });
+
+    it('shows clock icon in form name link for closing form', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', state: 'closing' });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-clock-o').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form is Closing. It is not downloadable but still accepts Submissions.');
+    });
+
+    it('shows edit/pencil icon for unpublished draft form', async () => {
+      testData.extendedForms.createNew(1, { draft: true, publishedAt: null });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-edit').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form does not yet have a published version.');
+    });
   });
 
   describe('form link', () => {
@@ -163,7 +187,7 @@ describe('FormRow', () => {
       const app = await load('/projects/1');
       const a = app.find('.form-row .submissions a');
       // Since the form does not have a published version, it does not have
-      // submissions to show (draft submissions are possible, but now shown here)
+      // submissions to show (draft submissions are possible, but not shown here)
       a.length.should.equal(0);
     });
   });
