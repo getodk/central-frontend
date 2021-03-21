@@ -11,15 +11,42 @@ except according to the terms contained in the LICENSE file.
 -->
 # Contributing to ODK Central Frontend
 
+We want ODK Central Frontend to be easy to use, yet flexible for a wide variety of projects and organizations. To do that, we need your help!
+
+## Questions and Discussion
+
+If you are looking for help, please take a look at the [Documentation Website](https://docs.getodk.org/central-intro/). If that doesn't solve your problem, please head over to the [ODK Forum](https://forum.getodk.org/) and do a search to see if anybody else has had the same problem. If you've identified a new problem, please post on the forum. We prefer forum posts to Github issues because more of the community is on the forum.
+
+If you have suggestions about how to improve ODK Central, please share them with us on the [Features board](https://forum.getodk.org/c/features) of the ODK Forum.
+
+If you are looking for help on how ODK Central works internally or how to update its code, the ODK [developer Slack](https://slack.getodk.org/) is for you.
+
+## Contributing Translations
+
+If you know a language other than English, consider contributing translations through Transifex. For more information, please see the [ODK Central Translation Guide](https://docs.google.com/document/d/1C0MS_ytAEBHwbMkdR-QrtDrWAAh_EkJo2QRr4XyIOpk).
+
 ## Contributing Code
 
+### Getting Started
+
+Please see the [readme](https://github.com/getodk/central-frontend#setting-up-your-development-environment) for instructions on how to set up your development environment.
+
 ### Guidelines
+
+If you are starting work on a GitHub issue, please leave a comment saying so. If you run into trouble or have to stop working on an issue, please leave a comment as well. If an issue is labeled "needs discussion", additional discussion is needed before work can begin.
 
 Our **code style** is loosely based on the [Airbnb Javascript Style Guide](https://github.com/airbnb/javascript), and you can run `npm run lint` to check your code against it. We do make [some exceptions](/.eslintrc.js) to their rules, and we do make exceptions to the linter when we have a reason and consensus to do so.
 
 As you write code, please try to follow **existing conventions** in the codebase.
 
 We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [_Testing_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
+
+Please format your **commit messages** as follows:
+
+- Ensure that your first commit line is 72 characters or fewer, and if you include further text in your commit message that there is an empty line following the leading line.
+- Please be as descriptive as possible in the 72 characters allowed. This helps us a lot when writing release notes and tracking down regressions.
+
+Once you feel ready to share your progress, please feel free to submit a Pull Request even if you're not quite done. This lets others look over your work and make suggestions before you spend too much time in some particular direction. [Here](https://yangsu.github.io/pull-request-tutorial/) is a great guide on the process of creating a PR.
 
 ### Vue
 

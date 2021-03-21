@@ -15,7 +15,17 @@ except according to the terms contained in the LICENSE file.
 [![License](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build status](https://circleci.com/gh/getodk/central-frontend.svg?style=shield)](https://circleci.com/gh/getodk/central-frontend)
 
-ODK Central Frontend uses Vue.js to provide the frontend for [ODK Central](https://github.com/getodk/central). It is currently [under development](https://forum.getodk.org/t/whats-coming-in-central-over-the-next-few-years/19677).
+ODK Central is the [ODK](https://getodk.org/) server. It manages user accounts and permissions, stores form definitions, and allows data collection clients like ODK Collect to connect to it for form download and submission upload. ODK Central Frontend provides the frontend for ODK Central using Vue.js.
+
+This repository contains the code for the frontend of ODK Central. The [`central-backend`](https://github.com/getodk/central-backend) repository contains the code for the backend API server. The [`central`](https://github.com/getodk/central) repository contains the Docker code for building and running a production Central stack. You can find release notes in the `central` repository.
+
+The `master` branch of this repository reflects ongoing development for the next version of ODK Central. It may or may not be in sync with the `master` branch of the `central-backend` repository. For the latest stable version, see the [release tags](https://github.com/getodk/central-frontend/releases).
+
+You can learn more about ODK Central by visiting the [docs](https://docs.getodk.org/central-intro/).
+
+## Contributing
+
+We need your help to make ODK Central Frontend as useful as possible! Please see the [Contribution Guide](/CONTRIBUTING.md) for detailed information on discussion forums, project policies, code guidelines, and an overview of the software architecture.
 
 ## Setting up your development environment
 
@@ -25,13 +35,13 @@ Next, install dependencies by running `npm install`.
 
 Install NGINX. Depending on your operating system and how you install NGINX, you may need to change the absolute paths in the development [`nginx.conf`](/nginx.conf).
 
-You will also need to set up [ODK Central Backend](https://github.com/getodk/central-backend).
+You will also need to set up [ODK Central Backend](https://github.com/getodk/central-backend). You will need to create a user using an ODK Central Backend command line script. You will probably also want to promote that user to a sitewide administrator.
 
 ## Running in development
 
 Follow these instructions to run ODK Central Frontend in development. For deploying to production, see the next section.
 
-First, run ODK Central Backend. If you haven't already, you will need to create a user using an ODK Central Backend command line script. You will probably also want to promote that user to a sitewide administrator. See the ODK Central Backend [readme](https://github.com/getodk/central-backend) for more information.
+First, run ODK Central Backend.
 
 Next, build ODK Central Frontend files for development by running `npm run dev`. The files will be outputted to `dist/`. As you update the source code, the files will be automatically rebuilt.
 
@@ -53,7 +63,7 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 
 ## Deploying to production
 
-To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation for Vue CLI](https://cli.vuejs.org/).
+To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation](https://cli.vuejs.org/) for Vue CLI.
 
 Note that this repository's `nginx.conf` is for development only.
 
