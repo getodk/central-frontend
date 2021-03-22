@@ -166,7 +166,7 @@ Note that while Vue I18n supports date/time localization, we use Luxon to manage
 
 #### Transifex
 
-We use Transifex to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
+We use [Transifex](https://www.transifex.com/getodk/central/) to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
 
 `strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
