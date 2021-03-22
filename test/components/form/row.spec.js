@@ -22,12 +22,13 @@ describe('FormRow', () => {
       app.first('.form-row .name').text().trim().should.equal('f');
     });
 
-    it('shows ban icon in form name link for closed form', async () => {
+    it('shows ban icon and grayed out form name link for closed form', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', state: 'closed' });
       const app = await load('/projects/1');
       const item = app.first('.form-row .name a');
       item.find('.icon-ban').length.should.equal(1);
       item.first('.form-icon').getAttribute('title').should.equal('This Form is Closed. It is not downloadable and does not accept Submissions.');
+      item.find('.form-name-closed').length.should.equal(1);
     });
 
     it('shows clock icon in form name link for closing form', async () => {
@@ -39,7 +40,7 @@ describe('FormRow', () => {
     });
 
     it('shows edit/pencil icon for unpublished draft form', async () => {
-      testData.extendedForms.createNew(1, { draft: true, publishedAt: null });
+      testData.extendedForms.createPast(1, { draft: true, publishedAt: null });
       const app = await load('/projects/1');
       const item = app.first('.form-row .name a');
       item.find('.icon-edit').length.should.equal(1);
