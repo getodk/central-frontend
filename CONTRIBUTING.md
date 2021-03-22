@@ -261,8 +261,9 @@ To update the icons using the [IcoMoon website](https://icomoon.io/app/):
 3. Move the imported set above Font Awesome, using the 3-bar icon to the right of the imported set's title. (This should help preserve the icon order and minimize the diff.)
 4. Update the icons by selecting (highlighting) the new icons to add. They don't need to be moved or altered.
 5. Download the new font, then copy the files (`icomoon.css`, `fonts/*`, `icomoon.json`) into their locations in the repository.
-	* You will need to rename the files and update the paths in the CSS (`fonts/icomoon.ttf?...` becomes `/fonts/icomoon.ttf?...` with a beginning slash).
-	* You will also need to prettify the JSON file.
+    * You will need to rename the files and update the paths in the CSS (`fonts/icomoon.ttf?...` becomes `/fonts/icomoon.ttf?...` with a beginning slash).
+    * You will need to remove the second class selector in `icomoon.css` line 12 to just read: `[class^="icon-"] {`
+    * You will also need to prettify the JSON file.
 
 By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`. (I think these properties may change for the icons that were previously most recently added.)
 
