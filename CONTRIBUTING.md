@@ -11,15 +11,42 @@ except according to the terms contained in the LICENSE file.
 -->
 # Contributing to ODK Central Frontend
 
+We want ODK Central Frontend to be easy to use, yet flexible for a wide variety of projects and organizations. To do that, we need your help!
+
+## Questions and Discussion
+
+If you are looking for help, please take a look at the [Documentation Website](https://docs.getodk.org/central-intro/). If that doesn't solve your problem, please head over to the [ODK Forum](https://forum.getodk.org/) and do a search to see if anybody else has had the same problem. If you've identified a new problem, please post on the forum. We prefer forum posts to Github issues because more of the community is on the forum.
+
+If you have suggestions about how to improve ODK Central, please share them with us on the [Features board](https://forum.getodk.org/c/features) of the ODK Forum.
+
+If you are looking for help on how ODK Central works internally or how to update its code, the ODK [developer Slack](https://slack.getodk.org/) is for you.
+
+## Contributing Translations
+
+If you know a language other than English, consider contributing translations through Transifex. For more information, please see the [ODK Central Translation Guide](https://docs.google.com/document/d/1C0MS_ytAEBHwbMkdR-QrtDrWAAh_EkJo2QRr4XyIOpk).
+
 ## Contributing Code
 
+### Getting Started
+
+Please see the [readme](https://github.com/getodk/central-frontend#setting-up-your-development-environment) for instructions on how to set up your development environment.
+
 ### Guidelines
+
+If you are starting work on a GitHub issue, please leave a comment saying so. If you run into trouble or have to stop working on an issue, please leave a comment as well. If an issue is labeled "needs discussion", additional discussion is needed before work can begin.
 
 Our **code style** is loosely based on the [Airbnb Javascript Style Guide](https://github.com/airbnb/javascript), and you can run `npm run lint` to check your code against it. We do make [some exceptions](/.eslintrc.js) to their rules, and we do make exceptions to the linter when we have a reason and consensus to do so.
 
 As you write code, please try to follow **existing conventions** in the codebase.
 
 We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [_Testing_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
+
+Please format your **commit messages** as follows:
+
+- Ensure that your first commit line is 72 characters or fewer, and if you include further text in your commit message that there is an empty line following the leading line.
+- Please be as descriptive as possible in the 72 characters allowed. This helps us a lot when writing release notes and tracking down regressions.
+
+Once you feel ready to share your progress, please feel free to submit a Pull Request even if you're not quite done. This lets others look over your work and make suggestions before you spend too much time in some particular direction. [Here](https://yangsu.github.io/pull-request-tutorial/) is a great guide on the process of creating a PR.
 
 ### Vue
 
@@ -54,17 +81,21 @@ We define a number of global utilities as properties on `Vue.prototype`: see [`/
 
 - The utility accesses the component using `this` (example: `$alert()`).
 - The utility is used in templates, which do not have direct access to imports.
-- We mock or otherwise modify the utility in testing (examples: `$http`, `$logger`).
+- We mock the utility in testing (examples: `$http`, `$logger`).
 
 If a utility is used in a limited number of components, consider using a mixin instead of defining a global utility.
 
 ### HTTP Requests
 
-We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. However, components rarely even need to access `this.$http` directly. Most of the time, to send a GET request, you can use the `request` module of the Frontend Vuex store; to send a non-GET request, you can use the `request` mixin. The module and mixin both accept options and complete common tasks like error handling.
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [_Response Data_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
 
 ### Presenter Classes
 
-Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters`](/src/presenters)). This class extends the [base presenter class](/src/presenters/base.js). When you use the `request` module of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the store will automatically wrap the response data within a presenter object.
+Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters/`](/src/presenters/)). This class extends the [base presenter class](/src/presenters/base.js).
+
+Each presenter class defines a whitelist of properties that the presenter object can read from the underlying resource data. If a new property is added to a Backend resource, it must also be added to the presenter class before a presenter object can read it.
+
+When you use the [`request` module](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the `request` module will automatically wrap the response data within a presenter object.
 
 ### Learning About a Component
 
@@ -105,6 +136,22 @@ Before the user's session expires, the user will be automatically redirected to 
 
 We store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
+### Response Data
+
+Use the `get` action of the [`request` module](/src/store/modules/request.js) of the Vuex store to send a GET request. This will store the response data in the Vuex store, as well as complete common tasks like error handling.
+
+The `get` action may transform the response data, for example, by wrapping the data within a presenter object. These transformations are defined in [`/src/store/modules/request/keys.js`](/src/store/modules/request/keys.js). In general, `request/keys.js` defines the specific behavior that the `request` module implements for each type of data.
+
+In some cases, different responses may contradict each other, for example, if responses are returned at different times or if there are concurrent users. In that case, the `get` action will do what it can to reconcile the data. This reconciliation mechanism is implemented using the [`reconcileData`](/src/store/modules/request/reconcile.js) object. Each specific reconciliation is defined in the component that uses it.
+
+Some routes require certain conditions to be true about the response data. For example, a route might require the user to be able to perform certain verbs. This is implemented using the [`validateData`](/src/routes.js) route meta field.
+
+By default, response data is cleared after the user navigates to a new route. However, exceptions are specified using the [`preserveData`](/src/routes.js) route meta field. For example, as the user navigates between project routes, the response data for the project is preserved: a new request for the project is not sent.
+
+### Alerts
+
+We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` module](/src/store/modules/alert.js) of the Vuex store. To display an alert, a component can use the `$alert()` global utility.
+
 ### Internationalization
 
 We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
@@ -119,7 +166,7 @@ Note that while Vue I18n supports date/time localization, we use Luxon to manage
 
 #### Transifex
 
-We use Transifex to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
+We use [Transifex](https://www.transifex.com/getodk/central/) to manage our translations. Our Transifex source file, [`/transifex/strings_en.json`](/transifex/strings_en.json), is pulled into Transifex after a commit to the master branch.
 
 `strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
@@ -259,7 +306,7 @@ Our tests use:
 
 We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
 
-We generate and store test data specific to ODK Central using the [`testData` object](/test/data/index.js), which uses faker.js.
+We generate and store test data specific to ODK Central using the [`testData`](/test/data/index.js) object, which uses faker.js.
 
 We have built some functionality on top of avoriaz, in particular [`mount()`](/test/util/lifecycle.js) and [`trigger`](/test/util/event.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 

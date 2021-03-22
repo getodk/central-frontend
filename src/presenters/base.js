@@ -22,8 +22,8 @@ export class Presenter {
   }
 
   // Returns a unique ID for the object. This is particularly useful if the
-  // object has no other ID property. key() is typically used with v-for and
-  // v-bind:key. key() does _not_ return a Backend Key object.
+  // object has no other ID property. `key` is typically used with v-for and
+  // v-bind:key. `key` does _not_ return a Backend Key object.
   get key() {
     if (this._key != null) return this._key;
     key += 1;
