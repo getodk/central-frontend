@@ -252,7 +252,7 @@ Instead of scoped CSS, use `id` and `class` attributes to style components:
 
 #### Icons
 
-We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts/`](/public/fonts/), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css). Our IcoMoon definition is in the root directory at [`/icomoon.json`](/icomoon.js).
+We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts/`](/public/fonts/), and the CSS is [`/src/assets/css/icomoon.css`](/src/assets/css/icomoon.css). Our IcoMoon definition is in the root directory at [`/icomoon.json`](/icomoon.json).
 
 To update the icons using the [IcoMoon website](https://icomoon.io/app/):
 
@@ -265,6 +265,11 @@ To update the icons using the [IcoMoon website](https://icomoon.io/app/):
 	* You will also need to prettify the JSON file.
 
 By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`. (I think these properties may change for the icons that were previously most recently added.)
+
+Here are a few screenshots the IcoMoon interface from March 2021: 
+![Using IcoMoon Interface](docs/img/icomoon-choose-new-icons.png)
+![Choosing Font Awesome Icon Set](docs/img/icomoon-font-awesome.png)
+
 
 ### Standard Actions
 
