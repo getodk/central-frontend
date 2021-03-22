@@ -21,6 +21,31 @@ describe('FormRow', () => {
       const app = await load('/projects/1');
       app.first('.form-row .name').text().trim().should.equal('f');
     });
+
+    it('shows ban icon and grayed out form name link for closed form', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', state: 'closed' });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-ban').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form is Closed. It is not downloadable and does not accept Submissions.');
+      item.find('.form-name-closed').length.should.equal(1);
+    });
+
+    it('shows clock icon in form name link for closing form', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', state: 'closing' });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-clock-o').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form is Closing. It is not downloadable but still accepts Submissions.');
+    });
+
+    it('shows edit/pencil icon for unpublished draft form', async () => {
+      testData.extendedForms.createPast(1, { draft: true, publishedAt: null });
+      const app = await load('/projects/1');
+      const item = app.first('.form-row .name a');
+      item.find('.icon-edit').length.should.equal(1);
+      item.first('.form-icon').getAttribute('title').should.equal('This Form does not yet have a published version.');
+    });
   });
 
   describe('form link', () => {
@@ -154,7 +179,7 @@ describe('FormRow', () => {
       href.should.matchEach('#/projects/1/forms/a%20b/submissions');
     });
 
-    it('links to .../draft/testing for a form without a published version', async () => {
+    it('shows a blank submission column for a form without a published version', async () => {
       testData.extendedForms.createPast(1, {
         xmlFormId: 'a b',
         draft: true,
@@ -162,11 +187,9 @@ describe('FormRow', () => {
       });
       const app = await load('/projects/1');
       const a = app.find('.form-row .submissions a');
-      // Since the form does not have a published version, it does not have a
-      // lastSubmission property.
-      a.length.should.equal(1);
-      const href = a[0].getAttribute('href');
-      href.should.equal('#/projects/1/forms/a%20b/draft/testing');
+      // Since the form does not have a published version, it does not have
+      // submissions to show (draft submissions are possible, but not shown here)
+      a.length.should.equal(0);
     });
   });
 

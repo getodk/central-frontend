@@ -1856,6 +1856,15 @@
           "string": "Fill Form",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "formClosedTip": {
+        "string": "This Form is Closed. It is not downloadable and does not accept Submissions."
+      },
+      "formClosingTip": {
+        "string": "This Form is Closing. It is not downloadable but still accepts Submissions."
+      },
+      "formUnpublishedTip": {
+        "string": "This Form does not yet have a published version."
       }
     },
     "FormSettings": {
@@ -2414,6 +2423,9 @@
       "noSubmission": {
         "string": "(none)",
         "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
+      },
+      "encryptionTip": {
+        "string": "This Project uses managed encryption."
       }
     },
     "ProjectSettings": {

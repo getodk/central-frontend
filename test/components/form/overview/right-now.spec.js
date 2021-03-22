@@ -56,7 +56,7 @@ describe('FormOverviewRightNow', () => {
       testData.extendedForms.createPast(1, { state: 'closed' });
       return load('/projects/1/forms/f').then(app => {
         const item = app.find('.summary-item')[1];
-        item.find('.icon-lock').length.should.equal(1);
+        item.find('.icon-ban').length.should.equal(1);
         item.first('.summary-item-heading').text().trim().should.equal('Closed');
         item.first('.summary-item-body').text().trim().should.equal('This Form is not downloadable and does not accept Submissions.');
       });

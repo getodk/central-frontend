@@ -16,6 +16,16 @@ describe('ProjectRow', () => {
     });
   });
 
+  it('shows a lock icon for a project with managed encryption', () => {
+    const key = testData.standardKeys.createPast(1, { managed: true }).last();
+    testData.extendedProjects.createPast(1, { key });
+    return load('/').then(app => {
+      const item = app.first(ProjectRow).first('.name a');
+      item.find('.icon-lock').length.should.equal(1);
+      item.first('.project-icon').getAttribute('title').should.equal('This Project uses managed encryption.');
+    });
+  });
+
   describe('link to show projects introduction', () => {
     it('shows the link in a fresh install', async () => {
       testData.extendedProjects.createPast(1, { name: 'Default Project' });
