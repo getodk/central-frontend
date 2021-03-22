@@ -148,6 +148,10 @@ Some routes require certain conditions to be true about the response data. For e
 
 By default, response data is cleared after the user navigates to a new route. However, exceptions are specified using the [`preserveData`](/src/routes.js) route meta field. For example, as the user navigates between project routes, the response data for the project is preserved: a new request for the project is not sent.
 
+### Alerts
+
+We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` module](/src/store/modules/alert.js) of the Vuex store. To display an alert, a component can use the `$alert()` global utility.
+
 ### Internationalization
 
 We use the Vue I18n plugin for internationalization. The plugin is configured in [`/src/i18n.js`](/src/i18n.js) and [`vue.config.js`](/vue.config.js).
