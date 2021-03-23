@@ -39,7 +39,7 @@ Our **code style** is loosely based on the [Airbnb Javascript Style Guide](https
 
 As you write code, please try to follow **existing conventions** in the codebase.
 
-We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [_Testing_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
+We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [Testing](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
 
 Please format your **commit messages** as follows:
 
@@ -87,7 +87,7 @@ If a utility is used in a limited number of components, consider using a mixin i
 
 ### HTTP Requests
 
-We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [_Response Data_](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [Response Data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
 
 ### Presenter Classes
 
@@ -267,7 +267,7 @@ To update the icons using the [IcoMoon website](https://icomoon.io/app/):
 
 By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`. (I think these properties may change for the icons that were previously most recently added.)
 
-Here are a few screenshots the IcoMoon interface from March 2021: 
+Here are a few screenshots the IcoMoon interface from March 2021:
 ![Using IcoMoon Interface](docs/img/icomoon-choose-new-icons.png)
 ![Choosing Font Awesome Icon Set](docs/img/icomoon-font-awesome.png)
 
@@ -301,9 +301,13 @@ You can use `mockHttp().testStandardButton()` to test some of these things for a
 
 ### Testing
 
-To run tests, type `npm run test`.
+To run tests, type `npm run test`. This will run all `*.spec.js` files in [`/test/`](/test/).
 
-Our tests use:
+The core of our tests is the tests of the components and the tests of the router, which together implement most of the business logic. We also have unit tests of mixins, the Vuex store, utility functions, and so on. The directory structure of `/test/` largely mirrors that of `/src/`. For example, each test file in `/test/components/` corresponds to a component in `/src/components/`; each test file in `/test/mixins/` corresponds to a mixin in `/src/mixins/`. The exception is that the files in `/test/util/` do not test the files in `/src/util/`, but rather are test utility functions. The files in `/src/util/` are tested by those in `/test/unit/`.
+
+If you add code outside a `.vue` file (for example, a utility function), and it is easy to test in isolation, consider writing unit tests to verify the code. If a function's input is very easy to directly construct or mock, for example, it is likely a good candidate for unit testing. On the other hand, when writing code that is more closely related to other code, it may work best to test the functionality in a component test or a test of the router.
+
+Our tests use a number of external packages:
 
 - Karma, a test runner that we have configured to run tests in Headless Chrome
 - Mocha, a test framework
@@ -312,9 +316,9 @@ Our tests use:
 - faker.js, to generate test data
 - avoriaz, to test Vue components
 
-We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
+`npm run test` runs [`/test/index.js`](/test/index.js), which mocks global utilities and sets up Mocha hooks.
 
-We generate and store test data specific to ODK Central using the [`testData`](/test/data/index.js) object, which uses faker.js.
+We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
 
 We have built some functionality on top of avoriaz, in particular [`mount()`](/test/util/lifecycle.js) and [`trigger`](/test/util/event.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 
@@ -327,6 +331,18 @@ it.only('does something', () => {
   // ...
 });
 ```
+
+#### Test Data
+
+We generate and store test data specific to ODK Central using the [`testData`](/test/data/index.js) object, which uses faker.js. `testData` will persist data until the end of a test and can be thought of as a mock of ODK Central Backend and its database.
+
+`testData` defines a "store" for each Backend resource. For example, `testData.extendedProjects` is a store that generates and stores projects. A store can also be associated with one or more "views," each of which represents a way to format the data and will transform the data in the store. For example, `testData.extendedProjects` is the canonical store of projects, and the objects it generates have extended metadata properties; `testData.standardProjects` is a view onto that store and transforms the objects in the store by removing their extended metadata properties.
+
+Most Backend resources have a `createdAt` property. To generate an object whose `createdAt` property is in the past, use the `createPast()` method of the store or view. To generate an object whose `createdAt` property is set to the current time, use `createNew()`. Most of the time, you will use `createPast()`. For a test that mounts a component, use `createPast()` to set up data that exists before the component is mounted. Use `createNew()` for data created after the component is mounted, for example, after the component sends a POST request. You can pass options to `createPast()` and `createNew()`; each store accepts a different set of options.
+
+To learn more about stores and views, see [`/test/data/data-store.js`](/test/data/data-store.js).
+
+#### Improvements to Testing
 
 We want to improve our testing in two major ways. (Let us know if this is something you can help with!)
 
