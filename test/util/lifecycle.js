@@ -1,6 +1,6 @@
 import { mount as avoriazMount } from 'avoriaz';
 
-import Root from './lifecycle/root.vue';
+import TestUtilDynamic from './components/dynamic.vue';
 
 import i18n from '../../src/i18n';
 import router from '../../src/router';
@@ -47,17 +47,17 @@ export const mount = (component, options = {}) => {
   // $i18n property will be different from the root VueI18n instance. Because
   // many components with an i18n custom block also access the root VueI18n
   // instance, we will transparently wrap the component in another component
-  // (Root), which will be the root component and whose $i18n property will be
-  // the root VueI18n instance.
+  // (TestUtilDynamic), which will be the root component and whose $i18n
+  // property will be the root VueI18n instance.
   if (component.__i18n != null) {
     for (const name of Object.keys(options)) {
       if (!optionsSupportedWithI18n.has(name)) {
         // Some mount() options will not work with the current strategy to use
-        // Root.
+        // TestUtilDynamic.
         throw new Error('unknown or unsupported option');
       }
     }
-    const root = mount(Root, {
+    const root = mount(TestUtilDynamic, {
       ...options,
       propsData: { component, props: options.propsData }
     });
