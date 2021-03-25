@@ -244,11 +244,15 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
-        .beforeEachResponse((modal, config) => {
-          config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-          config.headers['X-XlsForm-FormId-Fallback'].should.equal('my_form');
+        .request(async (modal) => {
+          const type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+          const file = new File([''], 'formulář.xlsx', { type });
+          await selectFileByInput(modal, file);
+          return trigger.click(modal, '#form-new-upload-button');
+        })
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
         })
         .respondWithProblem());
 
@@ -260,15 +264,15 @@ describe('FormNew', () => {
             project: testData.extendedProjects.createPast(1).last()
           }
         })
-        .request(modal => {
+        .request(async (modal) => {
           const type = 'application/vnd.ms-excel';
-          const file = new File([''], 'my_form.xls', { type });
-          return selectFileByInput(modal, file)
-            .then(trigger.click('#form-new-upload-button'));
+          const file = new File([''], 'formulář.xls', { type });
+          await selectFileByInput(modal, file);
+          return trigger.click(modal, '#form-new-upload-button');
         })
-        .beforeEachResponse((modal, config) => {
-          config.headers['Content-Type'].should.equal('application/vnd.ms-excel');
-          config.headers['X-XlsForm-FormId-Fallback'].should.equal('my_form');
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.ms-excel');
+          headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
         })
         .respondWithProblem());
 

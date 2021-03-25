@@ -122,10 +122,9 @@ export default {
     // but that didn't work in Edge.)
     contentType() {
       const { name } = this.file;
-      if (name.length >= 5 && name.slice(-5) === '.xlsx')
+      if (name.endsWith('.xlsx'))
         return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      if (name.length >= 4 && name.slice(-4) === '.xls')
-        return 'application/vnd.ms-excel';
+      if (name.endsWith('.xls')) return 'application/vnd.ms-excel';
       return 'application/xml';
     }
   },
@@ -165,8 +164,10 @@ export default {
 
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
-      if (this.contentType !== 'application/xml')
-        headers['X-XlsForm-FormId-Fallback'] = this.file.name.replace(/\.xlsx?$/, '');
+      if (this.contentType !== 'application/xml') {
+        const fallback = this.file.name.replace(/\.xlsx?$/, '');
+        headers['X-XlsForm-FormId-Fallback'] = encodeURIComponent(fallback);
+      }
       const { currentRoute } = this.$store.state.router;
       this.request({
         method: 'POST',
