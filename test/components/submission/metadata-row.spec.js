@@ -151,7 +151,7 @@ describe('SubmissionMetadataRow', () => {
 
     it('disables the button if the submission is encrypted', () => {
       testData.extendedSubmissions.createPast(1, {
-        status: 'NotDecrypted',
+        status: 'notDecrypted',
         edits: 1000
       });
       const button = mountComponent().first('.btn-primary');

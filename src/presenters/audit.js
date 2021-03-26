@@ -16,6 +16,7 @@ const props = [
   'action',
   'actorId',
   'details',
+  'notes',
   'loggedAt',
   // Extended metadata
   'actee',

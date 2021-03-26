@@ -354,7 +354,7 @@ describe('SubmissionDataRow', () => {
         fields: [testData.fields.string('/s1'), testData.fields.string('/s2')],
         submissions: 1
       });
-      testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
+      testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent();
       row.hasClass('encrypted-submission').should.be.true();
       row.find('td').length.should.equal(2);
@@ -366,7 +366,7 @@ describe('SubmissionDataRow', () => {
         key: testData.standardKeys.createPast(1).last(),
         forms: 1
       });
-      testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
+      testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent({ fields: [] });
       const td = row.find('td');
       td.length.should.equal(1);

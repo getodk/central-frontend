@@ -114,6 +114,7 @@
     "createSubmission": "New",
     "done": "Done",
     "download": "Download",
+    "edit": "Edit",
     "editProfile": "Edit profile",
     "logIn": "Log in",
     "looksGood": "Looks good, proceed",
@@ -127,6 +128,7 @@
     "refresh": "Refresh",
     "resetPassword": "Reset password",
     "save": "Save",
+    "update": "Update",
     "yesProceed": "Yes, proceed"
   },
   "field": {
@@ -154,6 +156,9 @@
     "name": "Name",
     "submitterName": "Submitted by",
     "submissionDate": "Submitted at",
+    // This is the text of a table column header for a column that shows dates
+    // and times.
+    "time": "Time",
     "type": "Type"
   },
   "plural": {

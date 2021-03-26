@@ -44,7 +44,7 @@ describe('SubmissionDataAccess', () => {
       testData.extendedForms.createPast(1, { submissions: 1 });
       // The button should be disabled even if the key is not managed.
       testData.standardKeys.createPast(1, { managed: false });
-      testData.extendedSubmissions.createPast(1, { status: 'NotDecrypted' });
+      testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const button = mountComponent().first('button');
       button.hasAttribute('disabled').should.be.true();
       button.hasAttribute('title').should.be.true();

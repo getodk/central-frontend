@@ -1,13 +1,13 @@
 import faker from 'faker';
 import { DateTime } from 'luxon';
-import { comparator, hasPath, lensPath, set } from 'ramda';
+import { comparator, hasPath, lensPath, omit, set } from 'ramda';
 
 import Field from '../../src/presenters/field';
 
-import { dataStore } from './data-store';
+import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
-import { fakePastDate } from '../util/date-time';
+import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 
 const fakeDateTime = () => {
@@ -139,8 +139,13 @@ export const extendedSubmissions = dataStore({
     };
   },
   sort: comparator((submission1, submission2) =>
-    submission1.createdAt > submission2.createdAt)
+    isBefore(submission2.createdAt, submission1.createdAt))
 });
+
+export const standardSubmissions = view(
+  extendedSubmissions,
+  omit(['submitter'])
+);
 
 // Converts submission response objects to OData. Returns all data even for
 // encrypted submissions.

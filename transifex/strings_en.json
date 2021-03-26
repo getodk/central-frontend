@@ -186,6 +186,10 @@
       "string": "Download",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "edit": {
+      "string": "Edit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "editProfile": {
       "string": "Edit profile",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -232,6 +236,10 @@
     },
     "save": {
       "string": "Save",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "update": {
+      "string": "Update",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "yesProceed": {
@@ -321,6 +329,10 @@
     "submissionDate": {
       "string": "Submitted at",
       "developer_comment": "This is the text of a table column header."
+    },
+    "time": {
+      "string": "Time",
+      "developer_comment": "This is the text of a table column header for a column that shows dates and times."
     },
     "type": {
       "string": "Type",
@@ -623,10 +635,6 @@
     },
     "AuditTable": {
       "header": {
-        "time": {
-          "string": "Time",
-          "developer_comment": "This is the text of a table column header."
-        },
         "initiator": {
           "string": "Initiator",
           "developer_comment": "This is the text of a table column header."
@@ -2840,6 +2848,43 @@
         }
       }
     },
+    "SubmissionAuditList": {
+      "title": {
+        "string": "Actions",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "updateReviewState": {
+          "string": "Update State",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "emptyTable": {
+        "string": "There are no actions to show."
+      }
+    },
+    "SubmissionAuditRow": {
+      "edited": {
+        "string": "Edited",
+        "developer_comment": "This text is shown for a Submission that was edited."
+      }
+    },
+    "SubmissionAuditTable": {
+      "header": {
+        "takenBy": {
+          "string": "Taken by",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "action": {
+          "string": "Action",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "note": {
+          "string": "Note",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
     "SubmissionBasicDetails": {
       "deviceId": {
         "string": "Device ID"
@@ -3038,6 +3083,11 @@
           "string": "Back to Submissions Table",
           "developer_comment": "This is shown at the top of the page."
         }
+      },
+      "alert": {
+        "updateReviewState": {
+          "string": "Review State saved!"
+        }
       }
     },
     "SubmissionTable": {
@@ -3045,6 +3095,18 @@
         "stateAndActions": {
           "string": "State and actions",
           "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "SubmissionUpdateReviewState": {
+      "title": {
+        "string": "Update Review State",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "field": {
+        "notes": {
+          "string": "Notes and comments (optional)",
+          "developer_comment": "This is the text of a form field."
         }
       }
     },

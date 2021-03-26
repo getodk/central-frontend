@@ -51,11 +51,11 @@ export const keys = [
   'keys',
   'submitters',
   'submission',
+  'audits',
   'publicLinks',
   'fieldKeys',
 
-  'backupsConfig',
-  'audits'
+  'backupsConfig'
 ];
 
 
@@ -93,10 +93,10 @@ export const transforms = {
     filtered: config.url.includes('%24filter=')
   }),
   submission: ({ data }) => data.value[0],
+  audits: ({ data }) => data.map(audit => new Audit(audit)),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
-  backupsConfig: option(),
-  audits: ({ data }) => data.map(audit => new Audit(audit))
+  backupsConfig: option()
 };
 
 
