@@ -91,6 +91,11 @@ export const apiPaths = {
   odataSubmissions: formOrDraftPath('.svc/Submissions'),
   submissionKeys: formOrDraftPath('/submissions/keys'),
   submitters: formOrDraftPath('/submissions/submitters'),
+  odataSubmission: (projectId, xmlFormId, instanceId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId.replaceAll("'", "''"));
+    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions('${encodedInstanceId}')`;
+  },
   editSubmission: (projectId, xmlFormId, instanceId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);

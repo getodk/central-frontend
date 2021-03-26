@@ -57,8 +57,7 @@ export default {
   methods: {
     fetchData() {
       this.$store.dispatch('get', [{
-        // We do not reconcile `form` and `formVersions`. In the unusual case
-        // that `formVersions` is empty, we still render the component.
+        // We do not reconcile `form` and `formVersions`.
         key: 'formVersions',
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,

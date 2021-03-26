@@ -2,6 +2,8 @@ import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import FormHead from '../../../src/components/form/head.vue';
 import FormOverview from '../../../src/components/form/overview.vue';
 import Loading from '../../../src/components/loading.vue';
+import PageBack from '../../../src/components/page/back.vue';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -15,8 +17,7 @@ describe('FormHead', () => {
       testData.extendedProjects.createPast(1, { name: 'My Project', forms: 1 });
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
-        const text = app.first('#form-head-project-nav span').text().trim();
-        text.should.equal('My Project');
+        app.first('#page-back-title').text().should.equal('My Project');
       });
     });
 
@@ -28,25 +29,15 @@ describe('FormHead', () => {
       });
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
-        const text = app.first('#form-head-project-nav span').text().trim();
+        const text = app.first('#page-back-title').text();
         text.should.equal('My Project (archived)');
       });
     });
 
     it("renders the project's name as a link", () => {
       testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
-        const a = app.first('#form-head-project-nav span a');
-        a.getAttribute('href').should.equal('#/projects/1');
-      });
-    });
-
-    it('shows a link back to the project overview', () => {
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
-        const a = app.find('#form-head-project-nav a');
-        a.length.should.equal(2);
-        a[1].getAttribute('href').should.equal('#/projects/1');
+      return load('/projects/1/forms/f').then(component => {
+        component.first(PageBack).getProp('to').should.equal('/projects/1');
       });
     });
 

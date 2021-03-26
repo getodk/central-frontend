@@ -92,11 +92,12 @@ export const extendedSubmissions = dataStore({
     instanceId = faker.random.uuid(),
 
     submitter = extendedUsers.first(),
-    attachmentsPresent = 0,
     attachmentsExpected = 0,
+    attachmentsPresent = attachmentsExpected,
     status = null,
     reviewState = null,
     edits = 0,
+    deviceId = null,
 
     ...partialOData
   }) => {
@@ -112,6 +113,7 @@ export const extendedSubmissions = dataStore({
       ]);
     return {
       instanceId,
+      deviceId,
       submitterId: submitter.id,
       submitter: toActor(submitter),
       createdAt,
@@ -130,7 +132,8 @@ export const extendedSubmissions = dataStore({
           attachmentsExpected,
           status,
           reviewState,
-          edits
+          edits,
+          deviceId
         }
       })
     };

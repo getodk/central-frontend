@@ -230,6 +230,11 @@ describe('util/request', () => {
       });
     });
 
+    it('odataSubmission', () => {
+      const path = apiPaths.odataSubmission(1, 'a b', "'c d'");
+      path.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
+    });
+
     it('editSubmission', () => {
       const path = apiPaths.editSubmission(1, 'a b', 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');

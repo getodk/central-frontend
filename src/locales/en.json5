@@ -149,8 +149,11 @@
     "createdBy": "Created by",
     "displayName": "Display Name",
     "email": "Email Address",
+    "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
     "name": "Name",
+    "submitterName": "Submitted by",
+    "submissionDate": "Submitted at",
     "type": "Type"
   },
   "plural": {
@@ -210,6 +213,8 @@
     // Here we ask the user to confirm that they wish to complete an action that
     // they have initiated.
     "areYouSure": "Are you sure you wish to proceed?",
+    // This is a title shown above a section of the page.
+    "basicInfo": "Basic Information",
     // This is a title shown above a section of the page.
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.

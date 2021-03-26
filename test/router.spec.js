@@ -5,7 +5,7 @@ import { loadLocale } from '../src/util/i18n';
 import { noop } from '../src/util/util';
 
 import testData from './data';
-import { load, mockRoute } from './util/http';
+import { load } from './util/http';
 import { mockLogin } from './util/session';
 
 describe('router', () => {
@@ -149,6 +149,7 @@ describe('router', () => {
       '/projects/1/forms/f/draft',
       '/projects/1/forms/f/draft/attachments',
       '/projects/1/forms/f/draft/testing',
+      '/projects/1/forms/f/submissions/s',
       '/users',
       // The redirect should pass through the query string and hash.
       '/users?x=y#z',
@@ -161,7 +162,7 @@ describe('router', () => {
 
     for (const path of paths) {
       it(`redirects an anonymous user navigating to ${path}`, () =>
-        mockRoute(path)
+        load(path, {}, false)
           .restoreSession(false)
           .afterResponse(app => {
             const { $route } = app.vm;
@@ -371,6 +372,14 @@ describe('router', () => {
           .load('/projects/1/forms/f/settings', { project: false })
           .then(dataExists(['project'])));
     });
+
+    it('preserves project while navigating from submission detail page', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+      return load('/projects/1/forms/f/submissions/s')
+        .complete()
+        .load('/projects/1/forms/f/submissions', { project: false })
+        .afterResponses(dataExists(['project']));
+    });
   });
 
   describe('validateData', () => {
@@ -390,7 +399,7 @@ describe('router', () => {
       });
 
       it('redirects the user from /users/:id/edit', () =>
-        mockRoute('/users/2/edit')
+        load('/users/2/edit', {}, false)
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -408,14 +417,14 @@ describe('router', () => {
       });
 
       it('redirects the user from /system/backups', () =>
-        mockRoute('/system/backups')
+        load('/system/backups', {}, false)
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
 
       it('redirects the user from /system/audits', () =>
-        mockRoute('/system/audits')
+        load('/system/audits', {}, false)
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -558,50 +567,38 @@ describe('router', () => {
         testData.standardFormAttachments.createPast(1);
       });
 
-      describe('project routes', () => {
-        it('does not redirect the user from the project overview', async () => {
-          const app = await load('/projects/1');
-          app.vm.$route.path.should.equal('/projects/1');
-        });
-
-        for (const path of [
-          '/projects/1/users',
-          '/projects/1/app-users',
-          '/projects/1/form-access',
-          '/projects/1/settings'
-        ]) {
-          it(`redirects the user from ${path}`, () =>
-            load('/projects/1')
-              .complete()
-              .route(path)
-              .respondFor('/', { users: false })
-              .afterResponses(app => {
-                app.vm.$route.path.should.equal('/');
-              }));
-        }
+      it('does not redirect the user from the project overview', async () => {
+        const app = await load('/projects/1');
+        app.vm.$route.path.should.equal('/projects/1');
       });
 
-      describe('form routes', () => {
-        for (const path of [
-          '/projects/1/forms/f',
-          '/projects/1/forms/f/versions',
-          '/projects/1/forms/f/submissions',
-          '/projects/1/forms/f/public-links',
-          '/projects/1/forms/f/settings',
-          '/projects/1/forms/f/draft',
-          '/projects/1/forms/f/draft/attachments',
-          '/projects/1/forms/f/draft/testing'
-        ]) {
-          it(`redirects the user from ${path}`, () =>
-            load('/projects/1')
-              .complete()
-              .route(path)
-              .respondFor('/', { users: false })
-              .afterResponses(app => {
-                app.vm.$route.path.should.equal('/');
-              }));
-        }
-      });
+      for (const path of [
+        // ProjectShow
+        '/projects/1/users',
+        '/projects/1/app-users',
+        '/projects/1/form-access',
+        '/projects/1/settings',
+        // FormShow
+        '/projects/1/forms/f',
+        '/projects/1/forms/f/versions',
+        '/projects/1/forms/f/submissions',
+        '/projects/1/forms/f/public-links',
+        '/projects/1/forms/f/settings',
+        '/projects/1/forms/f/draft',
+        '/projects/1/forms/f/draft/attachments',
+        '/projects/1/forms/f/draft/testing',
+        // SubmissionShow
+        '/projects/1/forms/f/submissions/s'
+      ]) {
+        it(`redirects the user from ${path}`, () =>
+          load('/projects/1')
+            .complete()
+            .route(path)
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+      }
     });
 
     describe('form without a published version', () => {

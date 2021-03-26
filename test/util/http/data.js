@@ -30,6 +30,7 @@ const defaults = {
     .sort((fieldKey1, fieldKey2) =>
       fieldKey1.displayName.localeCompare(fieldKey2.displayName))
     .map(testData.toActor),
+  submission: testData.submissionOData,
   publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
@@ -77,6 +78,7 @@ const mapsByComponent = {
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
   FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
+  SubmissionShow: mapKeys(['project', 'submission']),
 
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),

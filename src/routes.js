@@ -295,7 +295,9 @@ const routes = [
         meta: {
           validateData: {
             project: (project) =>
-              project.permits(['form.read', 'assignment.list']),
+              // Including form.update in order to exclude project viewers and
+              // Data Collectors.
+              project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
           }
         }
@@ -308,8 +310,7 @@ const routes = [
         meta: {
           validateData: {
             project: (project) =>
-              // Including submission.list in order to exclude Data
-              // Collectors.
+              // Including submission.list in order to exclude Data Collectors.
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
           }
@@ -403,6 +404,17 @@ const routes = [
         }
       })
     ]
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId',
+    component: 'SubmissionShow',
+    props: true,
+    loading: 'page',
+    meta: {
+      validateData: {
+        project: (project) => project.permits('submission.read')
+      }
+    }
   }),
 
   asyncRoute({
@@ -610,7 +622,9 @@ preserveDataForKey({
     'FormSettings',
     'FormDraftStatus',
     'FormAttachmentList',
-    'FormDraftTesting'
+    'FormDraftTesting',
+    // SubmissionShow
+    'SubmissionShow'
   ],
   params: ['projectId']
 });

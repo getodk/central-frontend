@@ -6,6 +6,13 @@
   white-space: nowrap;
 }
 
+@mixin text-link {
+  &, &:hover, &:focus {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
 // A list that shows descriptive text
 @mixin text-list {
   max-width: $max-width-p;

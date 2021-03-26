@@ -151,10 +151,7 @@ export default {
 {
   "en": {
     "header": {
-      "submitterName": "Submitted by",
-      "submissionDate": "Submitted at",
-      "stateAndActions": "State and actions",
-      "instanceId": "Instance ID"
+      "stateAndActions": "State and actions"
     }
   }
 }
