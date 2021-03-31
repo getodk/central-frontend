@@ -202,3 +202,14 @@ router.afterEach(() => {
 router.afterEach(() => {
   if (store.state.alert.state) store.commit('hideAlert');
 });
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PAGE TITLES
+
+router.afterEach((to, from) => {
+  if (to.meta.title)
+    document.title = to.meta.title(store.state.request.data);
+  else
+    document.title = "ODK Central";
+});

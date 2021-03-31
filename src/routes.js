@@ -181,19 +181,32 @@ const routes = [
     path: '/login',
     name: 'AccountLogin',
     component: AccountLogin,
-    meta: { requireLogin: false, requireAnonymity: true }
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => "Log In" // TODO: i18n
+    }
   },
   asyncRoute({
     path: '/reset-password',
     component: 'AccountResetPassword',
     loading: 'page',
-    meta: { requireLogin: false, requireAnonymity: true }
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => "Reset Password" // TODO: i18n
+    }
   }),
   asyncRoute({
     path: '/account/claim',
     component: 'AccountClaim',
     loading: 'page',
-    meta: { restoreSession: false, requireLogin: false, requireAnonymity: true }
+    meta: {
+      restoreSession: false,
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => "Claim Account" // TODO i18n
+    }
   }),
 
   asyncRoute({ path: '/', component: 'ProjectList', loading: 'page' }),
@@ -212,7 +225,8 @@ const routes = [
         meta: {
           validateData: {
             project: (project) => project.permits('form.list')
-          }
+          },
+          title: () => "Project Overview" // TODO: add proj name
         }
       }),
       asyncRoute({
@@ -227,7 +241,8 @@ const routes = [
               'assignment.create',
               'assignment.delete'
             ])
-          }
+          },
+          title: () => "Project Roles" // TODO include proj name with pipe
         }
       }),
       asyncRoute({
@@ -242,7 +257,8 @@ const routes = [
               'field_key.create',
               'session.end'
             ])
-          }
+          },
+          title: () => "App Users" // TODO include proj name with pipe
         }
       }),
       asyncRoute({
@@ -261,7 +277,8 @@ const routes = [
               'assignment.create',
               'assignment.delete'
             ])
-          }
+          },
+          title: () => "Form Access" // TODO include proj name with pipe
         }
       }),
       asyncRoute({
@@ -271,7 +288,8 @@ const routes = [
         meta: {
           validateData: {
             project: (project) => project.permits(['project.update'])
-          }
+          },
+          title: () => "Project Settings" // TODO include proj name with pipe
         }
       })
     ]
@@ -299,7 +317,8 @@ const routes = [
               // Data Collectors.
               project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
-          }
+          },
+          title: () => "Form Overview" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -313,7 +332,8 @@ const routes = [
               // Including submission.list in order to exclude Data Collectors.
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
-          }
+          },
+          title: () => "Form Versions" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -329,7 +349,8 @@ const routes = [
               'submission.read'
             ]),
             form: (form) => form.publishedAt != null
-          }
+          },
+          title: () => "Submissions" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -346,7 +367,8 @@ const routes = [
               'session.end'
             ]),
             form: (form) => form.publishedAt != null
-          }
+          },
+          title: () => "Form Versions" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -358,7 +380,8 @@ const routes = [
             project: (project) =>
               project.permits(['form.read', 'form.update', 'form.delete']),
             form: (form) => form.publishedAt != null
-          }
+          },
+          title: () => "Form Settings" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -371,7 +394,8 @@ const routes = [
             project: (project) =>
               project.permits(['form.read', 'form.update', 'form.delete']),
             formDraft: (formDraft) => formDraft.isDefined()
-          }
+          },
+          title: () => "Form Draft" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -384,7 +408,8 @@ const routes = [
             attachments: (option) => option
               .map(attachments => attachments.length !== 0)
               .orElse(false)
-          }
+          },
+          title: () => "Form Attachments" // TODO include form name with pipe
         }
       }),
       asyncRoute({
@@ -400,7 +425,8 @@ const routes = [
               'submission.read'
             ]),
             formDraft: (formDraft) => formDraft.isDefined()
-          }
+          },
+          title: () => "Form Draft Testing" // TODO include form name with pipe
         }
       })
     ]
@@ -438,7 +464,8 @@ const routes = [
               'user.password.invalidate',
               'user.delete'
             ])
-          }
+          },
+          title: () => "Central Users" // TODO i18n
         }
       })
     ]
@@ -452,13 +479,17 @@ const routes = [
       validateData: {
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
-      }
+      },
+      title: () => "Edit User" // TODO i18n
     }
   }),
   asyncRoute({
     path: '/account/edit',
     component: 'AccountEdit',
-    loading: 'page'
+    loading: 'page',
+    meta: {
+      title: () => "Edit Acount" // TODO i18n
+    }
   }),
 
   asyncRoute({
@@ -480,7 +511,8 @@ const routes = [
               'backup.terminate',
               'audit.read'
             ])
-          }
+          },
+          title: () => "Backups" // TODO i18n
         }
       }),
       asyncRoute({
@@ -490,7 +522,8 @@ const routes = [
         meta: {
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
-          }
+          },
+          title: () => "Server Audit Logs" // TODO i18n
         }
       })
     ]
@@ -507,7 +540,11 @@ const routes = [
     path: '*',
     component: 'NotFound',
     loading: 'page',
-    meta: { restoreSession: false, requireLogin: false }
+    meta: {
+      restoreSession: false,
+      requireLogin: false,
+      title: () => "Page Not Found" // TODO i18n
+    }
   })
 ];
 export default routes;
