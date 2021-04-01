@@ -14,7 +14,7 @@ import { last } from 'ramda';
 
 import routes from './routes';
 import store from './store';
-import { canRoute, confirmUnsavedChanges, forceReplace, preservesData } from './util/router';
+import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
@@ -167,6 +167,11 @@ of the `key` attribute.)
           forceReplace(router, store, '/');
       }));
     }
+
+    const key = to.meta.delayedData;
+    unwatch.push(store.watch((state) => state.request.data[key], () => {
+      updateDocumentTitle(to);
+    }));
   });
 }
 
@@ -207,9 +212,6 @@ router.afterEach(() => {
 ////////////////////////////////////////////////////////////////////////////////
 // PAGE TITLES
 
-router.afterEach((to, from) => {
-  if (to.meta.title)
-    document.title = to.meta.title(store.state.request.data);
-  else
-    document.title = "ODK Central";
+router.afterEach((to) => {
+  updateDocumentTitle(to);
 });

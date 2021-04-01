@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import { routeProps } from './util/router';
+import { routeProps, getResourceNameFromStore } from './util/router';
+import store from './store';
 
 /*
 Lazy-Loading Routes
@@ -184,7 +185,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => "Log In" // TODO: i18n
+      title: () => 'Log In' // TODO: i18n
     }
   },
   asyncRoute({
@@ -194,7 +195,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => "Reset Password" // TODO: i18n
+      title: () => ['Reset Password'] // TODO: i18n
     }
   }),
   asyncRoute({
@@ -205,11 +206,18 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: () => "Claim Account" // TODO i18n
+      title: () => ['Claim Account'] // TODO i18n
     }
   }),
 
-  asyncRoute({ path: '/', component: 'ProjectList', loading: 'page' }),
+  asyncRoute({
+    path: '/',
+    component: 'ProjectList',
+    loading: 'page',
+    meta: {
+      title: () => ['Projects']
+    }
+  }),
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)',
     component: 'ProjectShow',
@@ -226,7 +234,8 @@ const routes = [
           validateData: {
             project: (project) => project.permits('form.list')
           },
-          title: () => "Project Overview" // TODO: add proj name
+          delayedData: 'project',
+          title: () => ['Overview', getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -242,7 +251,8 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: () => "Project Roles" // TODO include proj name with pipe
+          delayedData: 'project',
+          title: () => ['Project Roles', getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -258,7 +268,8 @@ const routes = [
               'session.end'
             ])
           },
-          title: () => "App Users" // TODO include proj name with pipe
+          delayedData: 'project',
+          title: () => ['App Users', getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -278,7 +289,8 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: () => "Form Access" // TODO include proj name with pipe
+          delayedData: 'project',
+          title: () => ['Form Access', getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -289,7 +301,8 @@ const routes = [
           validateData: {
             project: (project) => project.permits(['project.update'])
           },
-          title: () => "Project Settings" // TODO include proj name with pipe
+          delayedData: 'project',
+          title: () => ['Project Settings', getResourceNameFromStore('project', store)]
         }
       })
     ]
@@ -318,7 +331,8 @@ const routes = [
               project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
           },
-          title: () => "Form Overview" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Overview', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -333,7 +347,8 @@ const routes = [
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
           },
-          title: () => "Form Versions" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Versions', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -350,7 +365,8 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          title: () => "Submissions" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Submissions', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -368,7 +384,8 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          title: () => "Form Versions" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Public Access', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -381,7 +398,8 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             form: (form) => form.publishedAt != null
           },
-          title: () => "Form Settings" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Settings', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -395,7 +413,8 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          title: () => "Form Draft" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Draft Status', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -409,7 +428,8 @@ const routes = [
               .map(attachments => attachments.length !== 0)
               .orElse(false)
           },
-          title: () => "Form Attachments" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Attachments', getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -426,7 +446,8 @@ const routes = [
             ]),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          title: () => "Form Draft Testing" // TODO include form name with pipe
+          delayedData: 'form',
+          title: () => ['Draft Testing', getResourceNameFromStore('form', store)]
         }
       })
     ]
@@ -465,7 +486,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: () => "Central Users" // TODO i18n
+          title: () => ['Central Users'] // TODO i18n
         }
       })
     ]
@@ -480,7 +501,7 @@ const routes = [
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       },
-      title: () => "Edit User" // TODO i18n
+      title: () => ['Edit User'] // TODO i18n
     }
   }),
   asyncRoute({
@@ -488,7 +509,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: () => "Edit Acount" // TODO i18n
+      title: () => ['Edit Acount'] // TODO i18n
     }
   }),
 
@@ -512,7 +533,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: () => "Backups" // TODO i18n
+          title: () => ['Backups', 'System Management'] // TODO i18n
         }
       }),
       asyncRoute({
@@ -523,7 +544,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: () => "Server Audit Logs" // TODO i18n
+          title: () => ['Server Audit Logs', 'System Management'] // TODO i18n
         }
       })
     ]
@@ -543,7 +564,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: () => "Page Not Found" // TODO i18n
+      title: () => ['Page Not Found'] // TODO i18n
     }
   })
 ];
@@ -665,3 +686,5 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
+
+
