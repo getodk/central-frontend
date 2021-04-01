@@ -101,9 +101,7 @@ getResourceNameFromStore() checks the store for the name of a resource
 (project or form) to use in a dynamic responsive page title.
 
   - key. A key into the vuex store like 'form' or 'project'
-  - defaultName. A default name to return if the resource
-   does not exist or is not named.
-   E.g. 'Project Overview' instead of 'My Project Name'
+  - vuex store. Other util functions have store passed to them.
 */
 
 export const getResourceNameFromStore = (key, store) => {

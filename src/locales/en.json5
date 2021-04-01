@@ -5,6 +5,38 @@
 // tab: This is the text of a navigation tab.
 
 {
+  // These are common words to use in document titles
+  "title": {
+    "logIn": "Log In",
+    "resetPassword": "Reset Password",
+    "claimAccount": "Claim Account",
+    "projectList": "Projects", // essentially the homepage
+    "project": {
+      "overview": "Overview",
+      "roles": "Project Roles",
+      "formAccess": "Form Access",
+      "settings": "Project Settings"
+    },
+    "form": {
+      "overview": "Overview",
+      "versions": "Versions",
+      "submissions": "Submissions",
+      "publicAccess": "Public Access",
+      "settings": "Settings",
+      "draftStatus": "Draft Status",
+      "attachments": "Attachments",
+      "draftTesting": "Draft Testing",
+    },
+    "users": "Users",
+    "editUser": "Edit User",
+    "editAccount": "Edit Account",
+    "system": {
+      "system": "System",
+      "backups": "Backups",
+      "auditLogs": "Server Audit Logs"
+    },
+    "pageNotFound": "Page Not Found"
+  },
   // This is the name of a user Role.
   "role": {
     // This is shown when a user does not have a Role.

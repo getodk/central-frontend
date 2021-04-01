@@ -13,6 +13,7 @@ import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 import { routeProps, getResourceNameFromStore } from './util/router';
 import store from './store';
+import i18n from './i18n';
 
 /*
 Lazy-Loading Routes
@@ -185,7 +186,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => 'Log In' // TODO: i18n
+      title: () => [i18n.t('action.logIn')] // TODO: note that these are all in locales/en.json5
     }
   },
   asyncRoute({
@@ -195,7 +196,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => ['Reset Password'] // TODO: i18n
+      title: () => [i18n.t('action.resetPassword')]
     }
   }),
   asyncRoute({
@@ -206,7 +207,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: () => ['Claim Account'] // TODO i18n
+      title: () => [i18n.t('title.claimAccount')]
     }
   }),
 
@@ -215,7 +216,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: () => ['Projects']
+      title: () => [i18n.t("projectList")] // TODO: could also say nothing since it's the homepage
     }
   }),
   asyncRoute({
@@ -235,7 +236,7 @@ const routes = [
             project: (project) => project.permits('form.list')
           },
           delayedData: 'project',
-          title: () => ['Overview', getResourceNameFromStore('project', store)]
+          title: () => [i18n.t('project.overview'), getResourceNameFromStore('project', store)] // TODO: had word "overview" but could leave it out or translate it
         }
       }),
       asyncRoute({
@@ -252,7 +253,7 @@ const routes = [
             ])
           },
           delayedData: 'project',
-          title: () => ['Project Roles', getResourceNameFromStore('project', store)]
+          title: () => [i18n.t('project.roles'), getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -509,7 +510,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: () => ['Edit Acount'] // TODO i18n
+      title: () => [i18n.t('action.editProfile')] // TODO i18n
     }
   }),
 

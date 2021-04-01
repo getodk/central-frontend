@@ -1,4 +1,104 @@
 {
+  "title": {
+    "logIn": {
+      "string": "Log In",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "resetPassword": {
+      "string": "Reset Password",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "claimAccount": {
+      "string": "Claim Account",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "projectList": {
+      "string": "Projects",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "project": {
+      "overview": {
+        "string": "Overview",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "roles": {
+        "string": "Project Roles",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "formAccess": {
+        "string": "Form Access",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "settings": {
+        "string": "Project Settings",
+        "developer_comment": "These are common words to use in document titles"
+      }
+    },
+    "form": {
+      "overview": {
+        "string": "Overview",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "versions": {
+        "string": "Versions",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "submissions": {
+        "string": "Submissions",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "publicAccess": {
+        "string": "Public Access",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "settings": {
+        "string": "Settings",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "draftStatus": {
+        "string": "Draft Status",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "attachments": {
+        "string": "Attachments",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "draftTesting": {
+        "string": "Draft Testing",
+        "developer_comment": "These are common words to use in document titles"
+      }
+    },
+    "users": {
+      "string": "Users",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "editUser": {
+      "string": "Edit User",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "editAccount": {
+      "string": "Edit Account",
+      "developer_comment": "These are common words to use in document titles"
+    },
+    "system": {
+      "system": {
+        "string": "System",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "backups": {
+        "string": "Backups",
+        "developer_comment": "These are common words to use in document titles"
+      },
+      "auditLogs": {
+        "string": "Server Audit Logs",
+        "developer_comment": "These are common words to use in document titles"
+      }
+    },
+    "pageNotFound": {
+      "string": "Page Not Found",
+      "developer_comment": "These are common words to use in document titles"
+    }
+  },
   "role": {
     "none": {
       "string": "None",
