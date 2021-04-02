@@ -1,11 +1,10 @@
 // action: This is the text for an action, for example, the text of a button.
 // field: This is the text of a form field.
 // header: This is the text of a table column header.
-
+// title: This is the test of a document title
 // tab: This is the text of a navigation tab.
 
 {
-  // These are common words to use in document titles
   "title": {
     "logIn": "Log In",
     "resetPassword": "Reset Password",
@@ -14,6 +13,7 @@
     "project": {
       "overview": "Overview",
       "roles": "Project Roles",
+      "appUsers": "App Users",
       "formAccess": "Form Access",
       "settings": "Project Settings"
     },

@@ -186,7 +186,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => [i18n.t('action.logIn')] // TODO: note that these are all in locales/en.json5
+      title: () => [i18n.t('title.logIn')]
     }
   },
   asyncRoute({
@@ -196,7 +196,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => [i18n.t('action.resetPassword')]
+      title: () => [i18n.t('title.resetPassword')]
     }
   }),
   asyncRoute({
@@ -216,7 +216,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: () => [i18n.t('projectList')] // TODO: could also say nothing since it's the homepage
+      title: () => [i18n.t('title.projectList')] // TODO: say "Projects" or nothing since it's the homepage?
     }
   }),
   asyncRoute({
@@ -236,7 +236,7 @@ const routes = [
             project: (project) => project.permits('form.list')
           },
           delayedData: 'project',
-          title: () => [i18n.t('project.overview'), getResourceNameFromStore('project', store)] // TODO: had word "overview" but could leave it out or translate it
+          title: () => [i18n.t('title.project.overview'), getResourceNameFromStore('project', store)] // TODO: include overview or not?
         }
       }),
       asyncRoute({
@@ -253,7 +253,7 @@ const routes = [
             ])
           },
           delayedData: 'project',
-          title: () => [i18n.t('project.roles'), getResourceNameFromStore('project', store)]
+          title: () => [i18n.t('title.project.roles'), getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -270,7 +270,7 @@ const routes = [
             ])
           },
           delayedData: 'project',
-          title: () => ['App Users', getResourceNameFromStore('project', store)]
+          title: () => [i18n.t('title.project.appUsers'), getResourceNameFromStore('project', store)]
         }
       }),
       asyncRoute({
@@ -303,7 +303,7 @@ const routes = [
             project: (project) => project.permits(['project.update'])
           },
           delayedData: 'project',
-          title: () => ['Project Settings', getResourceNameFromStore('project', store)]
+          title: () => [i18n.t('title.project.formAccess'), getResourceNameFromStore('project', store)]
         }
       })
     ]
@@ -333,7 +333,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           delayedData: 'form',
-          title: () => ['Overview', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.overview'), getResourceNameFromStore('form', store)] // TODO: show project name, too?
         }
       }),
       asyncRoute({
@@ -349,7 +349,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           delayedData: 'form',
-          title: () => ['Versions', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.versions'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -367,7 +367,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           delayedData: 'form',
-          title: () => ['Submissions', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.submissions'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -386,7 +386,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           delayedData: 'form',
-          title: () => ['Public Access', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.publicAccess'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -400,7 +400,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           delayedData: 'form',
-          title: () => ['Settings', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.settings'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -415,7 +415,7 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           },
           delayedData: 'form',
-          title: () => ['Draft Status', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.draftStatus'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -430,7 +430,7 @@ const routes = [
               .orElse(false)
           },
           delayedData: 'form',
-          title: () => ['Attachments', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.attachments'), getResourceNameFromStore('form', store)]
         }
       }),
       asyncRoute({
@@ -448,7 +448,7 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           },
           delayedData: 'form',
-          title: () => ['Draft Testing', getResourceNameFromStore('form', store)]
+          title: () => [i18n.t('title.form.draftTesting'), getResourceNameFromStore('form', store)]
         }
       })
     ]
@@ -487,7 +487,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: () => ['Central Users'] // TODO i18n
+          title: () => [i18n.t('title.users')]
         }
       })
     ]
@@ -502,7 +502,7 @@ const routes = [
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       },
-      title: () => ['Edit User'] // TODO i18n
+      title: () => [i18n.t('title.editUser')]
     }
   }),
   asyncRoute({
@@ -510,7 +510,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: () => [i18n.t('action.editProfile')] // TODO i18n
+      title: () => [i18n.t('title.editAccount')]
     }
   }),
 
@@ -534,7 +534,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: () => ['Backups', 'System Management'] // TODO i18n
+          title: () => [i18n.t('title.system.backups'), i18n.t('title.system')]
         }
       }),
       asyncRoute({
@@ -545,7 +545,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: () => ['Server Audit Logs', 'System Management'] // TODO i18n
+          title: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system')]
         }
       })
     ]
@@ -565,7 +565,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: () => ['Page Not Found'] // TODO i18n
+      title: () => [i18n.t('title.pageNotFound')]
     }
   })
 ];
