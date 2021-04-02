@@ -29,7 +29,7 @@ import { loadLocale } from '../../util/i18n';
 import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
 import { noop } from '../../util/util';
-import { updateDocumentTitle } from '../../util/router.js'
+import { updateDocumentTitle } from '../../util/router';
 import store from '../../store';
 
 export default {
