@@ -75,6 +75,9 @@
         "string": "Server Audit Logs"
       }
     },
+    "download": {
+      "string": "Download"
+    },
     "pageNotFound": {
       "string": "Page Not Found"
     }

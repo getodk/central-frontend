@@ -34,6 +34,7 @@
       "backups": "Backups",
       "auditLogs": "Server Audit Logs"
     },
+    "download": "Download",
     "pageNotFound": "Page Not Found"
   },
   // This is the name of a user Role.

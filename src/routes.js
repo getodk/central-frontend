@@ -613,7 +613,10 @@ const routes = [
     path: '/dl/*',
     component: 'Download',
     loading: 'page',
-    key: () => '/dl'
+    key: () => '/dl',
+    //meta: {
+    //  title: { parts: () => [i18n.t('title.download')] }
+    //}
   }),
 
   asyncRoute({
@@ -645,7 +648,10 @@ const routesByName = {};
     ...meta,
     validateData: meta != null && meta.validateData != null
       ? Object.entries(meta.validateData)
-      : []
+      : [],
+    title: meta != null && meta.title != null
+      ? meta.title
+      : { parts: () => [] }
   });
 
   const stack = [...routes];
