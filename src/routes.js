@@ -11,8 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import { routeProps, getResourceNameFromStore } from './util/router';
-import store from './store';
+import { routeProps } from './util/router';
 import i18n from './i18n';
 
 /*
@@ -186,7 +185,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => [i18n.t('title.logIn')]
+      title: { parts: () => [i18n.t('title.logIn')] }
     }
   },
   asyncRoute({
@@ -196,7 +195,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: () => [i18n.t('title.resetPassword')]
+      title: { parts: () => [i18n.t('title.resetPassword')] }
     }
   }),
   asyncRoute({
@@ -207,7 +206,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: () => [i18n.t('title.claimAccount')]
+      title: { parts: () => [i18n.t('title.claimAccount')] }
     }
   }),
 
@@ -216,7 +215,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: () => [i18n.t('title.projectList')] // TODO: say "Projects" or nothing since it's the homepage?
+      title: { parts: () => [i18n.t('title.projectList')] } // TODO: say "Projects" or nothing since it's the homepage?
     }
   }),
   asyncRoute({
@@ -235,8 +234,10 @@ const routes = [
           validateData: {
             project: (project) => project.permits('form.list')
           },
-          delayedData: 'project',
-          title: () => [i18n.t('title.project.overview'), getResourceNameFromStore('project', store)] // TODO: include overview or not?
+          title: {
+            key: 'project', // store key for title data that may be delayed
+            parts: ({ project }) => [project != null ? project.name : null]
+          }
         }
       }),
       asyncRoute({
@@ -252,8 +253,13 @@ const routes = [
               'assignment.delete'
             ])
           },
-          delayedData: 'project',
-          title: () => [i18n.t('title.project.roles'), getResourceNameFromStore('project', store)]
+          title: {
+            key: 'project', // store key for title data that may be delayed
+            parts: ({ project }) => [
+              i18n.t('title.project.roles'),
+              project != null ? project.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -269,8 +275,13 @@ const routes = [
               'session.end'
             ])
           },
-          delayedData: 'project',
-          title: () => [i18n.t('title.project.appUsers'), getResourceNameFromStore('project', store)]
+          title: {
+            key: 'project', // store key for title data that may be delayed
+            parts: ({ project }) => [
+              i18n.t('title.project.appUsers'),
+              project != null ? project.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -290,8 +301,13 @@ const routes = [
               'assignment.delete'
             ])
           },
-          delayedData: 'project',
-          title: () => ['Form Access', getResourceNameFromStore('project', store)]
+          title: {
+            key: 'project', // store key for title data that may be delayed
+            parts: ({ project }) => [
+              i18n.t('title.project.formAccess'),
+              project != null ? project.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -302,8 +318,13 @@ const routes = [
           validateData: {
             project: (project) => project.permits(['project.update'])
           },
-          delayedData: 'project',
-          title: () => [i18n.t('title.project.formAccess'), getResourceNameFromStore('project', store)]
+          title: {
+            key: 'project', // store key for title data that may be delayed
+            parts: ({ project }) => [
+              i18n.t('title.project.settings'),
+              project != null ? project.name : null
+            ]
+          }
         }
       })
     ]
@@ -332,8 +353,10 @@ const routes = [
               project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.overview'), getResourceNameFromStore('form', store)] // TODO: show project name, too?
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [form != null ? form.name : null]
+          }
         }
       }),
       asyncRoute({
@@ -348,8 +371,13 @@ const routes = [
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.versions'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.versions'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -366,8 +394,13 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.submissions'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.submissions'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -385,8 +418,13 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.publicAccess'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.publicAccess'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -399,8 +437,13 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             form: (form) => form.publishedAt != null
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.settings'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.settings'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -414,8 +457,13 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.draftStatus'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.draftStatus'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -429,8 +477,13 @@ const routes = [
               .map(attachments => attachments.length !== 0)
               .orElse(false)
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.attachments'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.attachments'),
+              form != null ? form.name : null
+            ]
+          }
         }
       }),
       asyncRoute({
@@ -447,8 +500,13 @@ const routes = [
             ]),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          delayedData: 'form',
-          title: () => [i18n.t('title.form.draftTesting'), getResourceNameFromStore('form', store)]
+          title: {
+            key: 'form', // store key for title data that may be delayed
+            parts: ({ form }) => [
+              i18n.t('title.form.draftTesting'),
+              form != null ? form.name : null
+            ]
+          }
         }
       })
     ]
@@ -487,7 +545,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: () => [i18n.t('title.users')]
+          title: { parts: () => [i18n.t('title.users')] }
         }
       })
     ]
@@ -502,7 +560,7 @@ const routes = [
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       },
-      title: () => [i18n.t('title.editUser')]
+      title: { parts: () => [i18n.t('title.editUser')] }
     }
   }),
   asyncRoute({
@@ -510,7 +568,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: () => [i18n.t('title.editAccount')]
+      title: { parts: () => [i18n.t('title.editAccount')] }
     }
   }),
 
@@ -534,7 +592,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: () => [i18n.t('title.system.backups'), i18n.t('title.system')]
+          title: { parts: () => [i18n.t('title.system.backups'), i18n.t('title.system')] }
         }
       }),
       asyncRoute({
@@ -545,7 +603,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system')]
+          title: { parts: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system')] }
         }
       })
     ]
@@ -565,7 +623,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: () => [i18n.t('title.pageNotFound')]
+      title: { parts: () => [i18n.t('title.pageNotFound')] }
     }
   })
 ];

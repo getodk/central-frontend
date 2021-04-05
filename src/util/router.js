@@ -83,29 +83,17 @@ export const canRoute = (to, from, store) => {
 };
 
 /*
-updateDocumentTitle() updates the document title based on the route's meta title() function.
+updateDocumentTitle(to, store) updates the document title based on the route's title info.
 
-  - to. A Route object.
+  - to. A Route object for the current route.
+  - store. Gets destructured in title parts() to pick out the name of the
+    resource object (e.g. project or form).
 */
-export const updateDocumentTitle = (to) => {
-  const titlePath = (to.meta.title != null) ? to.meta.title() : [];
-  document.title = titlePath.concat('ODK Central').join(' | ');
-};
-
-
-////////////////////////////////////////////////////////////////////////////////
-// HELPER FOR GETTING RESOURCE NAMES FOR TITLES
-
-/*
-getResourceNameFromStore() checks the store for the name of a resource
-(project or form) to use in a dynamic responsive page title.
-
-  - key. A key into the vuex store like 'form' or 'project'
-  - vuex store. Other util functions have store passed to them.
-*/
-
-export const getResourceNameFromStore = (key, store) => {
-  if (store.state.request.data[key] != null)
-    return store.state.request.data[key].name;
-  return null;
+export const updateDocumentTitle = (to, store) => {
+  const titlePath = (to.meta.title != null && to.meta.title.parts != null)
+    ? to.meta.title.parts(store.state.request.data)
+    : [];
+  // Append ODK Central to every title, filter out any null values (e.g.
+  // project name before the project object was loaded), join with separator.
+  document.title = titlePath.concat('ODK Central').filter(x => x).join(' | ');
 };

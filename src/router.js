@@ -168,10 +168,12 @@ of the `key` attribute.)
       }));
     }
 
-    const key = to.meta.delayedData;
-    unwatch.push(store.watch((state) => state.request.data[key], () => {
-      updateDocumentTitle(to);
-    }));
+    if (to.meta.title.key != null) {
+      const { key } = to.meta.title;
+      unwatch.push(store.watch((state) => state.request.data[key], () => {
+        updateDocumentTitle(to, store);
+      }));
+    }
   });
 }
 
@@ -213,5 +215,5 @@ router.afterEach(() => {
 // PAGE TITLES
 
 router.afterEach((to) => {
-  updateDocumentTitle(to);
+  updateDocumentTitle(to, store);
 });

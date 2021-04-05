@@ -50,7 +50,7 @@ export default {
       return loadLocale(locale)
         .then(() => {
           localStore.setItem('locale', locale);
-          updateDocumentTitle(store.state.router.currentRoute);
+          updateDocumentTitle(store.state.router.currentRoute, store);
         })
         .catch(noop)
         .finally(() => {
