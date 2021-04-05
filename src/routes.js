@@ -592,7 +592,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: { parts: () => [i18n.t('title.system.backups'), i18n.t('title.system')] }
+          title: { parts: () => [i18n.t('title.system.backups'), i18n.t('title.system.system')] }
         }
       }),
       asyncRoute({
@@ -603,7 +603,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: { parts: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system')] }
+          title: { parts: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system.system')] }
         }
       })
     ]
