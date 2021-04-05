@@ -96,7 +96,7 @@ export const extendedSubmissions = dataStore({
     attachmentsPresent = attachmentsExpected,
     status = null,
     reviewState = null,
-    edits = 0,
+    edits = null,
     deviceId = null,
 
     ...partialOData
