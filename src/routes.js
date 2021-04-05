@@ -614,9 +614,9 @@ const routes = [
     component: 'Download',
     loading: 'page',
     key: () => '/dl',
-    //meta: {
-    //  title: { parts: () => [i18n.t('title.download')] }
-    //}
+    meta: {
+      title: { parts: () => [i18n.t('title.download')] }
+    }
   }),
 
   asyncRoute({
