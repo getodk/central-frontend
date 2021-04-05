@@ -93,7 +93,7 @@ export default {
     const { reviewState } = this.$store.state.request.data.submission.__system;
     return {
       awaitingResponse: false,
-      reviewState: reviewState != null ? reviewState : 'hasIssues',
+      reviewState: reviewState != null ? reviewState : 'approved',
       notes: ''
     };
   },
@@ -104,7 +104,7 @@ export default {
     state(state) {
       if (!state) {
         const { reviewState } = this.submission.__system;
-        this.reviewState = reviewState != null ? reviewState : 'hasIssues';
+        this.reviewState = reviewState != null ? reviewState : 'approved';
         this.notes = '';
       }
     }

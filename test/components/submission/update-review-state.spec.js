@@ -41,27 +41,27 @@ describe('SubmissionUpdateReviewState', () => {
 
   describe('review state selection', () => {
     it('sets the selection to the current review state', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
-      const radio = mountComponent().first('input[value="approved"]');
+      testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
+      const radio = mountComponent().first('input[value="hasIssues"]');
       radio.element.checked.should.be.true();
     });
 
-    it('sets the selection to hasIssues if current review state is received', () => {
+    it('sets the selection to approved if current review state is null', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
-      const radio = mountComponent().first('input[value="hasIssues"]');
+      const radio = mountComponent().first('input[value="approved"]');
       radio.element.checked.should.be.true();
     });
   });
 
   it('focuses the review state radio', () => {
-    testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
+    testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
     const modal = mountComponent({ attachToDocument: true });
-    modal.first('input[value="approved"]').should.be.focused();
+    modal.first('input[value="hasIssues"]').should.be.focused();
   });
 
   describe('resetting the form', () => {
     it('resets the form after the modal is hidden', async () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
+      testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const modal = mountComponent();
       await trigger.check(modal, 'input[value="rejected"]');
       await trigger.input(modal, 'textarea', 'Some notes');
@@ -69,19 +69,19 @@ describe('SubmissionUpdateReviewState', () => {
       await modal.vm.$nextTick();
       modal.setProps({ state: true });
       await modal.vm.$nextTick();
-      modal.first('input[value="approved"]').element.checked.should.be.true();
+      modal.first('input[value="hasIssues"]').element.checked.should.be.true();
       modal.first('textarea').element.value.should.equal('');
     });
 
-    it('resets review state to hasIssues if current state is received', async () => {
+    it('resets review state to approved if current state is null', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       const modal = mountComponent();
-      await trigger.check(modal, 'input[value="rejected"]');
+      await trigger.check(modal, 'input[value="hasIssues"]');
       modal.setProps({ state: false });
       await modal.vm.$nextTick();
       modal.setProps({ state: true });
       await modal.vm.$nextTick();
-      modal.first('input[value="hasIssues"]').element.checked.should.be.true();
+      modal.first('input[value="approved"]').element.checked.should.be.true();
     });
   });
 
@@ -96,17 +96,17 @@ describe('SubmissionUpdateReviewState', () => {
         reviewState: null
       });
       return mockHttpForComponent()
-        .request(trigger.submit('form', [['input[value="approved"]', true]]))
+        .request(trigger.submit('form', [['input[value="hasIssues"]', true]]))
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('PATCH');
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d');
-          data.should.eql({ reviewState: 'approved' });
+          data.should.eql({ reviewState: 'hasIssues' });
         })
         .respondWithProblem();
     });
 
     it('sends an X-Action-Notes header if there are notes', () => {
-      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { reviewState: null });
       return mockHttpForComponent()
         .request(trigger.submit('form', [['textarea', 'Some\nnotes']]))
         .beforeEachResponse((_, { headers }) => {
@@ -120,7 +120,7 @@ describe('SubmissionUpdateReviewState', () => {
     testData.extendedSubmissions.createPast(1, { reviewState: null });
     return mockHttpForComponent().testStandardButton({
       button: '.btn-primary',
-      request: trigger.submit('form', [['input[value="approved"]', true]]),
+      request: trigger.submit('form'),
       disabled: ['.btn-link'],
       modal: true
     });
@@ -138,14 +138,14 @@ describe('SubmissionUpdateReviewState', () => {
         .request(async (component) => {
           await trigger.click(component, '#submission-audit-list-update-review-state-button');
           return trigger.submit(component, '#submission-update-review-state form', [
-            ['input[value="approved"]', true]
+            ['input[value="hasIssues"]', true]
           ]);
         })
         .respondWithData(() => {
-          testData.extendedSubmissions.update(-1, { reviewState: 'approved' });
+          testData.extendedSubmissions.update(-1, { reviewState: 'hasIssues' });
           testData.extendedAudits.createPast(1, {
             action: 'submission.update',
-            details: { reviewState: 'approved' }
+            details: { reviewState: 'hasIssues' }
           });
           return testData.standardSubmissions.last();
         })
@@ -174,7 +174,7 @@ describe('SubmissionUpdateReviewState', () => {
     it('updates the store', async () => {
       const component = await submit();
       const { submission } = component.vm.$store.state.request.data;
-      submission.__system.reviewState.should.equal('approved');
+      submission.__system.reviewState.should.equal('hasIssues');
       // Check that other properties were copied correctly.
       submission.__id.should.equal('c d');
       submission.__system.submitterId.should.equal('1');
