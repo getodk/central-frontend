@@ -20,16 +20,16 @@ except according to the terms contained in the LICENSE file.
           <div class="col-xs-4">
             <div class="radio">
               <label>
+                <input v-model="reviewState" type="radio" value="approved">
+                <span class="icon-check-circle"></span>{{ $t('reviewState.approved') }}
+              </label>
+              <label>
                 <input v-model="reviewState" type="radio" value="hasIssues">
                 <span class="icon-comments"></span>{{ $t('reviewState.hasIssues') }}
               </label>
               <label>
                 <input v-model="reviewState" type="radio" value="needsReview">
                 <span class="icon-eye"></span>{{ $t('reviewState.needsReview') }}
-              </label>
-              <label>
-                <input v-model="reviewState" type="radio" value="approved">
-                <span class="icon-check-circle"></span>{{ $t('reviewState.approved') }}
               </label>
               <label>
                 <input v-model="reviewState" type="radio" value="rejected">
