@@ -1,106 +1,82 @@
 {
   "title": {
     "logIn": {
-      "string": "Log In",
-      "developer_comment": "This is the test of a document title"
+      "string": "Log In"
     },
     "resetPassword": {
-      "string": "Reset Password",
-      "developer_comment": "This is the test of a document title"
+      "string": "Reset Password"
     },
     "claimAccount": {
-      "string": "Claim Account",
-      "developer_comment": "This is the test of a document title"
+      "string": "Claim Account"
     },
     "projectList": {
-      "string": "Projects",
-      "developer_comment": "This is the test of a document title"
+      "string": "Projects"
     },
     "project": {
       "overview": {
-        "string": "Overview",
-        "developer_comment": "This is the test of a document title"
+        "string": "Overview"
       },
       "roles": {
-        "string": "Project Roles",
-        "developer_comment": "This is the test of a document title"
+        "string": "Project Roles"
       },
       "appUsers": {
-        "string": "App Users",
-        "developer_comment": "This is the test of a document title"
+        "string": "App Users"
       },
       "formAccess": {
-        "string": "Form Access",
-        "developer_comment": "This is the test of a document title"
+        "string": "Form Access"
       },
       "settings": {
-        "string": "Project Settings",
-        "developer_comment": "This is the test of a document title"
+        "string": "Project Settings"
       }
     },
     "form": {
       "overview": {
-        "string": "Overview",
-        "developer_comment": "This is the test of a document title"
+        "string": "Overview"
       },
       "versions": {
-        "string": "Versions",
-        "developer_comment": "This is the test of a document title"
+        "string": "Versions"
       },
       "submissions": {
-        "string": "Submissions",
-        "developer_comment": "This is the test of a document title"
+        "string": "Submissions"
       },
       "publicAccess": {
-        "string": "Public Access",
-        "developer_comment": "This is the test of a document title"
+        "string": "Public Access"
       },
       "settings": {
-        "string": "Settings",
-        "developer_comment": "This is the test of a document title"
+        "string": "Settings"
       },
       "draftStatus": {
-        "string": "Draft Status",
-        "developer_comment": "This is the test of a document title"
+        "string": "Draft Status"
       },
       "attachments": {
-        "string": "Attachments",
-        "developer_comment": "This is the test of a document title"
+        "string": "Attachments"
       },
       "draftTesting": {
-        "string": "Draft Testing",
-        "developer_comment": "This is the test of a document title"
+        "string": "Draft Testing"
       }
     },
     "users": {
-      "string": "Users",
-      "developer_comment": "This is the test of a document title"
+      "string": "Users"
     },
     "editUser": {
-      "string": "Edit User",
-      "developer_comment": "This is the test of a document title"
+      "string": "Edit User"
     },
     "editAccount": {
-      "string": "Edit Account",
-      "developer_comment": "This is the test of a document title"
+      "string": "Edit Account"
     },
     "system": {
       "system": {
-        "string": "System",
-        "developer_comment": "This is the test of a document title"
+        "string": "System"
       },
       "backups": {
-        "string": "Backups",
-        "developer_comment": "This is the test of a document title"
+        "string": "Backups"
       },
       "auditLogs": {
-        "string": "Server Audit Logs",
-        "developer_comment": "This is the test of a document title"
+        "string": "Server Audit Logs"
       }
     },
     "pageNotFound": {
-      "string": "Page Not Found",
-      "developer_comment": "This is the test of a document title"
+      "string": "Page Not Found"
     }
   },
   "role": {
@@ -1347,8 +1323,7 @@
           "developer_comment": "This is shown for a Media File that has not been uploaded."
         },
         "title": {
-          "string": "To upload files, drag and drop one or more files onto this page",
-          "developer_comment": "This is the test of a document title"
+          "string": "To upload files, drag and drop one or more files onto this page"
         }
       }
     },
@@ -2861,8 +2836,7 @@
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again.",
-          "developer_comment": "This is the test of a document title"
+          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again."
         }
       }
     },
