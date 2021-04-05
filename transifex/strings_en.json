@@ -2858,12 +2858,13 @@
           "string": "Update State",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
-      },
-      "emptyTable": {
-        "string": "There are no actions to show."
       }
     },
     "SubmissionAuditRow": {
+      "created": {
+        "string": "Submitted",
+        "developer_comment": "This text indicates that a Submission was submitted."
+      },
       "edited": {
         "string": "Edited",
         "developer_comment": "This text is shown for a Submission that was edited."

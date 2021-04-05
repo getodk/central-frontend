@@ -1,5 +1,4 @@
 import SubmissionAuditList from '../../../../src/components/submission/audit/list.vue';
-import SubmissionAuditRow from '../../../../src/components/submission/audit/row.vue';
 
 import testData from '../../../data';
 import { load } from '../../../util/http';
@@ -27,6 +26,7 @@ describe('SubmissionAuditList', () => {
     mockLogin();
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: "'c d'" });
+    testData.extendedAudits.createPast(1, { action: 'submission.create' });
     let count = 0;
     return load("/projects/1/forms/a%20b/submissions/'c%20d'")
       .beforeEachResponse((_, { method, url, headers }, index) => {
@@ -51,6 +51,7 @@ describe('SubmissionAuditList', () => {
     it('renders the button if the user can submission.update', () => {
       mockLogin({ role: 'admin' });
       testData.extendedSubmissions.createPast(1);
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       component.find('#submission-audit-list-update-review-state-button').length.should.equal(1);
     });
@@ -59,6 +60,7 @@ describe('SubmissionAuditList', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedSubmissions.createPast(1);
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       component.find('#submission-audit-list-update-review-state-button').length.should.equal(0);
     });
@@ -68,6 +70,7 @@ describe('SubmissionAuditList', () => {
     it('renders the button if the user can submission.update', () => {
       mockLogin({ role: 'admin' });
       testData.extendedSubmissions.createPast(1);
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       component.find('#submission-audit-list-edit-button').length.should.equal(1);
     });
@@ -76,6 +79,7 @@ describe('SubmissionAuditList', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedSubmissions.createPast(1);
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       component.find('#submission-audit-list-edit-button').length.should.equal(0);
     });
@@ -83,6 +87,7 @@ describe('SubmissionAuditList', () => {
     it('disables the button if the submission is encrypted', () => {
       mockLogin();
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       const btn = component.first('#submission-audit-list-edit-button');
       btn.hasAttribute('disabled').should.be.true();
@@ -96,44 +101,11 @@ describe('SubmissionAuditList', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       const btn = component.first('#submission-audit-list-edit-button');
       const href = btn.getAttribute('href');
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
-  });
-
-  it('filters the audit log entries', () => {
-    mockLogin();
-    testData.extendedSubmissions.createPast(1);
-    testData.extendedAudits
-      .createPast(1, { action: 'submission.create' })
-      .createPast(1, {
-        action: 'submission.update',
-        details: { reviewState: 'hasIssues' }
-      })
-      .createPast(1, { action: 'submission.update.version' })
-      // Filtered out
-      .createPast(1, {
-        action: 'submission.update',
-        details: { reviewState: null }
-      })
-      .createPast(1, {
-        action: 'submission.update',
-        // No-op PATCH
-        details: {}
-      });
-    const audits = mountComponent().find(SubmissionAuditRow)
-      .map(row => row.getProp('audit'));
-    audits.length.should.equal(2);
-    audits[0].action.should.equal('submission.update.version');
-    audits[1].action.should.equal('submission.update');
-    should.exist(audits[1].details.reviewState);
-  });
-
-  it('shows a message if there are no audit log entries', () => {
-    mockLogin();
-    testData.extendedSubmissions.createPast(1);
-    mountComponent().first('.empty-table-message').should.be.visible();
   });
 });

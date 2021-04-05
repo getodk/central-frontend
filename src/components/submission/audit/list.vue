@@ -34,12 +34,8 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <submission-audit-table :audits="auditsToShow"/>
+      <submission-audit-table/>
       <loading :state="$store.getters.initiallyLoading(['audits'])"/>
-      <p v-if="audits != null && auditsToShow.length === 0"
-        class="empty-table-message">
-        {{ $t('emptyTable') }}
-      </p>
     </template>
   </page-section>
 </template>
@@ -79,12 +75,6 @@ export default {
         this.xmlFormId,
         this.instanceId
       );
-    },
-    auditsToShow() {
-      if (this.audits == null) return null;
-      return this.audits.filter(audit =>
-        (audit.action === 'submission.update' && audit.details.reviewState != null) ||
-        audit.action === 'submission.update.version');
     }
   }
 };
@@ -101,8 +91,7 @@ export default {
     "title": "Actions",
     "action": {
       "updateReviewState": "Update State"
-    },
-    "emptyTable": "There are no actions to show."
+    }
   }
 }
 </i18n>

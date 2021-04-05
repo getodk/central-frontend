@@ -16,12 +16,14 @@ except according to the terms contained in the LICENSE file.
       <span :title="audit.actor.displayName">{{ audit.actor.displayName }}</span>
     </td>
     <td class="action">
-      <template v-if="audit.action === 'submission.update.version'">
-        <span class="icon-pencil"></span>{{ $t('edited') }}
+      <template v-if="audit.action === 'submission.create'">
+        <span class="icon-cloud-upload"></span>{{ $t('created') }}
+      </template>
+      <template v-else-if="audit.action === 'submission.update'">
+        <span :class="reviewStateIcon"></span>{{ reviewStateText }}
       </template>
       <template v-else>
-        <span :class="reviewStateIcon"></span>
-        <span>{{ $t(`reviewState.${audit.details.reviewState}`) }}</span>
+        <span class="icon-pencil"></span>{{ $t('edited') }}
       </template>
     </td>
     <td class="notes">{{ audit.notes }}</td>
@@ -51,7 +53,16 @@ export default {
   },
   computed: {
     reviewStateIcon() {
-      return iconsByReviewState[this.audit.details.reviewState];
+      const { reviewState } = this.audit.details;
+      return reviewState == null
+        ? 'icon-dot-circle-o'
+        : iconsByReviewState[reviewState];
+    },
+    reviewStateText() {
+      const { reviewState } = this.audit.details;
+      return reviewState == null
+        ? this.$t('reviewState.received')
+        : this.$t(`reviewState.${reviewState}`);
     }
   }
 };
@@ -67,11 +78,13 @@ export default {
 
   .action {
     .icon-comments, .icon-eye { margin-right: $margin-right-icon; }
-    .icon-pencil, .icon-check-circle, .icon-times-circle {
+    .icon-cloud-upload { margin-right: #{$margin-right-icon - 1px}; }
+    .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
       margin-left: 1px;
       margin-right: #{$margin-right-icon + 1px};
     }
 
+    .icon-cloud-upload, .icon-dot-circle-o { color: #999; }
     .icon-comments, .icon-eye, .icon-pencil { color: $color-warning; }
     .icon-check-circle { color: $color-success; }
     .icon-times-circle { color: $color-danger; }
@@ -87,6 +100,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This text indicates that a Submission was submitted.
+    "created": "Submitted",
     // This text is shown for a Submission that was edited.
     "edited": "Edited"
   }

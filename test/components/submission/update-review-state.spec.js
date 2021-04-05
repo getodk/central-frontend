@@ -31,6 +31,7 @@ describe('SubmissionUpdateReviewState', () => {
 
   it('toggles the modal', () => {
     testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+    testData.extendedAudits.createPast(1, { action: 'submission.create' });
     return load('/projects/1/forms/f/submissions/s', { root: false })
       .testModalToggles({
         modal: SubmissionUpdateReviewState,
@@ -133,6 +134,7 @@ describe('SubmissionUpdateReviewState', () => {
         instanceId: 'c d',
         reviewState: null
       });
+      testData.extendedAudits.createPast(1, { action: 'submission.create' });
       return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
         .complete()
         .request(async (component) => {
@@ -182,7 +184,7 @@ describe('SubmissionUpdateReviewState', () => {
 
     it('updates the number of rows in the table', async () => {
       const component = await submit();
-      component.find(SubmissionAuditRow).length.should.equal(1);
+      component.find(SubmissionAuditRow).length.should.equal(2);
     });
   });
 });
