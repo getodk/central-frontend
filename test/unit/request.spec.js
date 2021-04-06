@@ -230,6 +230,11 @@ describe('util/request', () => {
       });
     });
 
+    it('submission', () => {
+      const path = apiPaths.submission(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d');
+    });
+
     it('odataSubmission', () => {
       const path = apiPaths.odataSubmission(1, 'a b', "'c d'");
       path.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
@@ -250,6 +255,11 @@ describe('util/request', () => {
         const path = apiPaths.submissionAttachment(1, 'a b', true, 'c d', 'e f');
         path.should.equal('/v1/projects/1/forms/a%20b/draft/submissions/c%20d/attachments/e%20f');
       });
+    });
+
+    it('submissionAudits', () => {
+      const path = apiPaths.submissionAudits(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
     });
 
     it('publicLinks', () => {

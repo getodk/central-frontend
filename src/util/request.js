@@ -38,6 +38,13 @@ const formOrDraftPath = (suffix) =>
     const qs = queryString(query);
     return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}${suffix}${qs}`;
   };
+const submissionPath = (suffix) =>
+  (projectId, xmlFormId, instanceId, query = undefined) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}${suffix}${qs}`;
+  };
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
   session: (token) => `/v1/sessions/${token}`,
@@ -91,16 +98,13 @@ export const apiPaths = {
   odataSubmissions: formOrDraftPath('.svc/Submissions'),
   submissionKeys: formOrDraftPath('/submissions/keys'),
   submitters: formOrDraftPath('/submissions/submitters'),
+  submission: submissionPath(''),
   odataSubmission: (projectId, xmlFormId, instanceId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId.replaceAll("'", "''"));
     return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions('${encodedInstanceId}')`;
   },
-  editSubmission: (projectId, xmlFormId, instanceId) => {
-    const encodedFormId = encodeURIComponent(xmlFormId);
-    const encodedInstanceId = encodeURIComponent(instanceId);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/edit`;
-  },
+  editSubmission: submissionPath('/edit'),
   submissionAttachment: (projectId, xmlFormId, draft, instanceId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const draftPath = draft ? '/draft' : '';
@@ -108,6 +112,7 @@ export const apiPaths = {
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
   },
+  submissionAudits: submissionPath('/audits'),
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 ODK Central Developers
+Copyright 2021 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -9,18 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { presenterClass } from './base';
 
-const props = [
-  'acteeId',
-  'action',
-  'actorId',
-  'details',
-  'notes',
-  'loggedAt',
-  // Extended metadata
-  'actee',
-  'actor'
-];
-
-export default class Audit extends presenterClass(props) {}
+// eslint-disable-next-line import/prefer-default-export
+export const instanceNameOrId = (submission) => {
+  const { meta } = submission;
+  return meta != null && typeof meta.instanceName === 'string'
+    ? meta.instanceName
+    : submission.__id;
+};

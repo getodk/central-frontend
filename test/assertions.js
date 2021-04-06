@@ -29,6 +29,8 @@ should.Assertion.add('hidden', function hidden(computed = false) {
   display.should.equal('none');
 });
 
+// Deprecated. Make an explicit assertion about either the `disabled` attribute
+// or the HTML class.
 should.Assertion.add('disabled', function assertDisabled() {
   this.params = { operator: 'to be disabled' };
   const element = unwrapElement(this.obj);

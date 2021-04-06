@@ -144,6 +144,8 @@ trigger.fillForm = triggerFunction(async (container, selectorsAndValues) => {
       } else {
         await trigger.input(field, value);
       }
+    } else if (tagName === 'TEXTAREA') {
+      await trigger.input(field, value);
     } else if (tagName === 'SELECT') {
       await trigger.changeValue(field, value);
     } else {

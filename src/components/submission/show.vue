@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <template #back>{{ $t('back.back') }}</template>
     </page-back>
     <page-head v-show="submission != null">
-      <template #title>{{ instanceNameOrId }}</template>
+      <template #title>{{ submission != null ? instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
@@ -26,8 +26,15 @@ except according to the terms contained in the LICENSE file.
             <submission-basic-details v-if="submission != null"/>
           </div>
         </div>
+        <submission-audit-list :project-id="projectId" :xml-form-id="xmlFormId"
+          :instance-id="instanceId"
+          @update-review-state="showModal('updateReviewState')"/>
       </div>
     </page-body>
+    <submission-update-review-state v-if="submission != null"
+      :state="updateReviewState.state" :project-id="projectId"
+      :xml-form-id="xmlFormId" :instance-id="instanceId"
+      @hide="hideModal('updateReviewState')" @success="afterUpdateReviewState"/>
   </div>
 </template>
 
@@ -36,10 +43,14 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import SubmissionAuditList from './audit/list.vue';
 import SubmissionBasicDetails from './basic-details.vue';
+import SubmissionUpdateReviewState from './update-review-state.vue';
 
+import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
+import { instanceNameOrId } from '../../util/odata';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -50,9 +61,11 @@ export default {
     PageBack,
     PageBody,
     PageHead,
-    SubmissionBasicDetails
+    SubmissionAuditList,
+    SubmissionBasicDetails,
+    SubmissionUpdateReviewState
   },
-  mixins: [routes()],
+  mixins: [modal(), routes()],
   props: {
     projectId: {
       type: String,
@@ -67,6 +80,13 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      updateReviewState: {
+        state: false
+      }
+    };
+  },
   computed: {
     ...requestData(['submission']),
     initiallyLoading() {
@@ -76,17 +96,24 @@ export default {
       return this.$store.getters.dataExists(['project', 'submission']);
     },
     instanceNameOrId() {
-      if (this.submission == null) return null;
-      const { meta } = this.submission;
-      return meta != null && typeof meta.instanceName === 'string'
-        ? meta.instanceName
-        : this.submission.__id;
+      return instanceNameOrId(this.submission);
     }
   },
   created() {
     this.fetchData();
   },
   methods: {
+    fetchAudits() {
+      this.$store.dispatch('get', [{
+        key: 'audits',
+        url: apiPaths.submissionAudits(
+          this.projectId,
+          this.xmlFormId,
+          this.instanceId
+        ),
+        extended: true
+      }]).catch(noop);
+    },
     fetchData() {
       // We do not reconcile project.lastSubmission and
       // submission.__system.submisionDate.
@@ -106,6 +133,19 @@ export default {
           )
         }
       ]).catch(noop);
+      this.fetchAudits();
+    },
+    afterUpdateReviewState(reviewState) {
+      this.fetchAudits();
+      this.hideModal('updateReviewState');
+      this.$alert().success(this.$t('alert.updateReviewState'));
+      this.$store.commit('setData', {
+        key: 'submission',
+        value: {
+          ...this.submission,
+          __system: { ...this.submission.__system, reviewState }
+        }
+      });
     }
   }
 };
@@ -118,6 +158,9 @@ export default {
     "back": {
       "title": "Submission Detail",
       "back": "Back to Submissions Table"
+    },
+    "alert": {
+      "updateReviewState": "Review State saved!"
     }
   }
 }

@@ -33,7 +33,7 @@ export default {
   name: 'AuditTable',
   components: { AuditRow },
   props: {
-    audits: Array // eslint-disable-line vue/require-default-prop
+    audits: Array
   }
 };
 </script>
@@ -48,7 +48,6 @@ export default {
 {
   "en": {
     "header": {
-      "time": "Time",
       "initiator": "Initiator",
       "target": "Target",
       "details": "Details"
