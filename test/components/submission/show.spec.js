@@ -50,22 +50,4 @@ describe('SubmissionShow', () => {
     });
     component.first('#page-head-title').text().should.equal('s');
   });
-
-  it('shows the instance ID if /meta/instanceName is not a string', async () => {
-    testData.extendedForms.createPast(1, {
-      fields: [
-        testData.fields.int('/meta/instanceName'),
-        testData.fields.string('/s')
-      ],
-      submissions: 1
-    });
-    testData.extendedSubmissions.createPast(1, {
-      instanceId: 's',
-      meta: { instanceName: 1 }
-    });
-    const component = await load('/projects/1/forms/f/submissions/s', {
-      root: false
-    });
-    component.first('#page-head-title').text().should.equal('s');
-  });
 });

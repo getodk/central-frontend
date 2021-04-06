@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <template #back>{{ $t('back.back') }}</template>
     </page-back>
     <page-head v-show="submission != null">
-      <template #title>{{ instanceNameOrId }}</template>
+      <template #title>{{ submission != null ? instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
@@ -50,6 +50,7 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
+import { instanceNameOrId } from '../../util/odata';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -95,11 +96,7 @@ export default {
       return this.$store.getters.dataExists(['project', 'submission']);
     },
     instanceNameOrId() {
-      if (this.submission == null) return null;
-      const { meta } = this.submission;
-      return meta != null && typeof meta.instanceName === 'string'
-        ? meta.instanceName
-        : this.submission.__id;
+      return instanceNameOrId(this.submission);
     }
   },
   created() {
