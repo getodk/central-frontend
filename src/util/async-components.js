@@ -123,6 +123,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-public-link-list" */
     '../components/public-link/list.vue'
   )))
+  .set('SubmissionShow', loader(() => import(
+    /* webpackChunkName: "component-submission-show" */
+    '../components/submission/show.vue'
+  )))
   .set('SystemHome', loader(() => import(
     /* webpackChunkName: "component-system-home" */
     '../components/system/home.vue'

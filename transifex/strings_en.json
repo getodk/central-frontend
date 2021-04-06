@@ -302,12 +302,24 @@
       "string": "Email Address",
       "developer_comment": "This is the text of a table column header."
     },
+    "instanceId": {
+      "string": "Instance ID",
+      "developer_comment": "This is the text of a table column header."
+    },
     "lastSubmission": {
       "string": "Latest Submission",
       "developer_comment": "This is the text of a table column header."
     },
     "name": {
       "string": "Name",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "submitterName": {
+      "string": "Submitted by",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "submissionDate": {
+      "string": "Submitted at",
       "developer_comment": "This is the text of a table column header."
     },
     "type": {
@@ -440,6 +452,10 @@
     "areYouSure": {
       "string": "Are you sure you wish to proceed?",
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
+    },
+    "basicInfo": {
+      "string": "Basic Information",
+      "developer_comment": "This is a title shown above a section of the page."
     },
     "currentDraft": {
       "string": "Your Current Draft",
@@ -2824,6 +2840,25 @@
         }
       }
     },
+    "SubmissionBasicDetails": {
+      "deviceId": {
+        "string": "Device ID"
+      },
+      "attachments": {
+        "string": "Media files"
+      },
+      "present": {
+        "string": "{count, plural, one {{count} file} other {{count} files}}"
+      },
+      "expected": {
+        "string": "{count, plural, one {{count} expected} other {{count} expected}}",
+        "developer_comment": "This shows the number of files that were expected to be submitted."
+      },
+      "attachmentSummary": {
+        "string": "{present} / {expected}",
+        "developer_comment": "{present} shows the number of files that were submitted, and {expected} shows the number of files that were expected to be submitted. For example: \"2 files / 3 expected\""
+      }
+    },
     "SubmissionDataAccess": {
       "action": {
         "apiAccess": {
@@ -2993,22 +3028,22 @@
         "string": "There are no matching Submissions."
       }
     },
+    "SubmissionShow": {
+      "back": {
+        "title": {
+          "string": "Submission Detail",
+          "developer_comment": "This is shown at the top of the page."
+        },
+        "back": {
+          "string": "Back to Submissions Table",
+          "developer_comment": "This is shown at the top of the page."
+        }
+      }
+    },
     "SubmissionTable": {
       "header": {
-        "submitterName": {
-          "string": "Submitted by",
-          "developer_comment": "This is the text of a table column header."
-        },
-        "submissionDate": {
-          "string": "Submitted at",
-          "developer_comment": "This is the text of a table column header."
-        },
         "stateAndActions": {
           "string": "State and actions",
-          "developer_comment": "This is the text of a table column header."
-        },
-        "instanceId": {
-          "string": "Instance ID",
           "developer_comment": "This is the text of a table column header."
         }
       }
