@@ -519,6 +519,11 @@ const routes = [
     meta: {
       validateData: {
         project: (project) => project.permits('submission.read')
+      },
+      title: {
+        parts: () => [
+          i18n.t('title.submission') // TODO: possibly show submission UUID
+        ]
       }
     }
   }),

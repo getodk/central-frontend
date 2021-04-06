@@ -55,6 +55,9 @@
         "string": "Draft Testing"
       }
     },
+    "submission": {
+      "string": "Submission Details"
+    },
     "users": {
       "string": "Users"
     },
