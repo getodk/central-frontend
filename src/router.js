@@ -148,7 +148,7 @@ router.beforeEach((to, from, next) => {
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
-meta field changes.
+or title.key meta field changes.
 
 If a component sets up its own watchers on the response data, they should be run
 after the router's watchers. (That might not be the case if the component
@@ -161,7 +161,8 @@ of the `key` attribute.)
     while (unwatch.length !== 0)
       unwatch.pop()();
 
-    for (const [key, validator] of last(to.matched).meta.validateData) {
+    const { meta } = last(to.matched);
+    for (const [key, validator] of meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
         if (value != null && !validator(value))
           forceReplace(router, store, '/');
