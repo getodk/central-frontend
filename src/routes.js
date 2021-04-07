@@ -131,6 +131,9 @@ The following meta fields are supported for bottom-level routes:
     exists. The watcher will also continue watching the data, checking that it
     continues to meet the condition.
 
+Responsive Document Titles
+--------------------------
+
   - title
 
     The router updates the document title (text that appears in the browser tab
@@ -154,6 +157,19 @@ The following meta fields are supported for bottom-level routes:
     information. (If the information about a resource is already loaded, from viewing
     different pages about the same project or form for example, the router will be
     able to build the proper title parts the first time.)
+
+    Here is an example value with
+    * delayed data referenced by storage key `project`
+    * i18n
+    * fetching information from an object that may be null
+
+    {
+      key: 'project',
+      parts: ({ project }) => [
+        i18n.t('title.project.appUsers'),
+        project != null ? project.name : null
+      ]
+    }
 */
 
 /*
@@ -259,7 +275,7 @@ const routes = [
             project: (project) => project.permits('form.list')
           },
           title: {
-            key: 'project', // store key for title data that may be delayed
+            key: 'project',
             parts: ({ project }) => [project != null ? project.name : null]
           }
         }
@@ -278,7 +294,7 @@ const routes = [
             ])
           },
           title: {
-            key: 'project', // store key for title data that may be delayed
+            key: 'project',
             parts: ({ project }) => [
               i18n.t('title.project.roles'),
               project != null ? project.name : null
@@ -300,7 +316,7 @@ const routes = [
             ])
           },
           title: {
-            key: 'project', // store key for title data that may be delayed
+            key: 'project',
             parts: ({ project }) => [
               i18n.t('title.project.appUsers'),
               project != null ? project.name : null
@@ -326,7 +342,7 @@ const routes = [
             ])
           },
           title: {
-            key: 'project', // store key for title data that may be delayed
+            key: 'project',
             parts: ({ project }) => [
               i18n.t('title.project.formAccess'),
               project != null ? project.name : null
@@ -343,7 +359,7 @@ const routes = [
             project: (project) => project.permits(['project.update'])
           },
           title: {
-            key: 'project', // store key for title data that may be delayed
+            key: 'project',
             parts: ({ project }) => [
               i18n.t('title.project.settings'),
               project != null ? project.name : null
@@ -378,7 +394,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [form != null ? (form.name || form.xmlFormId) : null]
           }
         }
@@ -396,7 +412,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.versions'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -419,7 +435,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.submissions'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -443,7 +459,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.publicAccess'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -462,7 +478,7 @@ const routes = [
             form: (form) => form.publishedAt != null
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.settings'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -482,7 +498,7 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.draftStatus'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -502,7 +518,7 @@ const routes = [
               .orElse(false)
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.attachments'),
               form != null ? (form.name || form.xmlFormId) : null
@@ -525,7 +541,7 @@ const routes = [
             formDraft: (formDraft) => formDraft.isDefined()
           },
           title: {
-            key: 'form', // store key for title data that may be delayed
+            key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.draftTesting'),
               form != null ? (form.name || form.xmlFormId) : null
