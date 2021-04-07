@@ -215,7 +215,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('title.projectList')] } // TODO: say "Projects" or nothing since it's the homepage?
+      title: { parts: () => [i18n.t('title.projectList')] } // Homepage
     }
   }),
   asyncRoute({
