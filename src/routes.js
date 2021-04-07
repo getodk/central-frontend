@@ -565,7 +565,12 @@ const routes = [
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       },
-      title: { parts: () => [i18n.t('title.editUser')] }
+      title: {
+        key: 'user',
+        parts: ({ user }) => [
+          user != null ? user.displayName : null,
+        ]
+      }
     }
   }),
   asyncRoute({

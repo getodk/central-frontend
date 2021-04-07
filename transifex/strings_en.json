@@ -80,10 +80,6 @@
       "string": "Users",
       "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
-    "editUser": {
-      "string": "Edit User",
-      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
-    },
     "editAccount": {
       "string": "Edit Account",
       "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
