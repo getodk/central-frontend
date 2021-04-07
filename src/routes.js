@@ -355,7 +355,7 @@ const routes = [
           },
           title: {
             key: 'form', // store key for title data that may be delayed
-            parts: ({ form }) => [form != null ? form.name : null]
+            parts: ({ form }) => [form != null ? (form.name || form.xmlFormId) : null]
           }
         }
       }),
@@ -375,7 +375,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.versions'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -398,7 +398,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.submissions'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -422,7 +422,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.publicAccess'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -441,7 +441,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.settings'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -461,7 +461,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.draftStatus'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -481,7 +481,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.attachments'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
@@ -504,7 +504,7 @@ const routes = [
             key: 'form', // store key for title data that may be delayed
             parts: ({ form }) => [
               i18n.t('title.form.draftTesting'),
-              form != null ? form.name : null
+              form != null ? (form.name || form.xmlFormId) : null
             ]
           }
         }
