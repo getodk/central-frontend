@@ -1,88 +1,114 @@
 {
   "title": {
     "logIn": {
-      "string": "Log In"
+      "string": "Log In",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "resetPassword": {
-      "string": "Reset Password"
+      "string": "Reset Password",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "claimAccount": {
-      "string": "Claim Account"
+      "string": "Claim Account",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "projectList": {
-      "string": "Projects"
+      "string": "Projects",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "project": {
       "overview": {
-        "string": "Overview"
+        "string": "Overview",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "roles": {
-        "string": "Project Roles"
+        "string": "Project Roles",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "appUsers": {
-        "string": "App Users"
+        "string": "App Users",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "formAccess": {
-        "string": "Form Access"
+        "string": "Form Access",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "settings": {
-        "string": "Project Settings"
+        "string": "Project Settings",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       }
     },
     "form": {
       "overview": {
-        "string": "Overview"
+        "string": "Overview",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "versions": {
-        "string": "Versions"
+        "string": "Versions",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "submissions": {
-        "string": "Submissions"
+        "string": "Submissions",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "publicAccess": {
-        "string": "Public Access"
+        "string": "Public Access",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "settings": {
-        "string": "Settings"
+        "string": "Settings",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "draftStatus": {
-        "string": "Draft Status"
+        "string": "Draft Status",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "attachments": {
-        "string": "Attachments"
+        "string": "Attachments",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "draftTesting": {
-        "string": "Draft Testing"
+        "string": "Draft Testing",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       }
     },
     "submission": {
-      "string": "Submission Details"
+      "string": "Submission Details",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "users": {
-      "string": "Users"
+      "string": "Users",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "editUser": {
-      "string": "Edit User"
+      "string": "Edit User",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "editAccount": {
-      "string": "Edit Account"
+      "string": "Edit Account",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "system": {
       "system": {
-        "string": "System"
+        "string": "System",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "backups": {
-        "string": "Backups"
+        "string": "Backups",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       },
       "auditLogs": {
-        "string": "Server Audit Logs"
+        "string": "Server Audit Logs",
+        "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
       }
     },
     "download": {
-      "string": "Download"
+      "string": "Download",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     },
     "pageNotFound": {
-      "string": "Page Not Found"
+      "string": "Page Not Found",
+      "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
     }
   },
   "role": {
@@ -1329,7 +1355,8 @@
           "developer_comment": "This is shown for a Media File that has not been uploaded."
         },
         "title": {
-          "string": "To upload files, drag and drop one or more files onto this page"
+          "string": "To upload files, drag and drop one or more files onto this page",
+          "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
         }
       }
     },
@@ -2842,7 +2869,8 @@
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again."
+          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again.",
+          "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
         }
       }
     },
