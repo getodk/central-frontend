@@ -30,7 +30,6 @@ import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
 import { noop } from '../../util/util';
 import { updateDocumentTitle } from '../../util/router';
-import store from '../../store';
 
 export default {
   name: 'NavbarLocaleDropdown',
@@ -50,7 +49,7 @@ export default {
       return loadLocale(locale)
         .then(() => {
           localStore.setItem('locale', locale);
-          updateDocumentTitle(store.state.router.currentRoute, store);
+          updateDocumentTitle(this.$route, this.$store);
         })
         .catch(noop)
         .finally(() => {
