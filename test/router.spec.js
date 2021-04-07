@@ -861,4 +861,16 @@ describe('router', () => {
         }));
     });
   });
+
+  describe('updateDocumentTitle', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+    });
+
+    it('updates the static homepage title', async () => {
+      const app = await load('/');
+      document.title.should.equal("Projects | ODK Central");
+    });
+  });
 });
