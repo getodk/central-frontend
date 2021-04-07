@@ -568,7 +568,7 @@ const routes = [
       title: {
         key: 'user',
         parts: ({ user }) => [
-          user != null ? user.displayName : null,
+          user != null ? user.displayName : null
         ]
       }
     }
