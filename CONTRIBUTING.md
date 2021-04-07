@@ -136,6 +136,8 @@ Before the user's session expires, the user will be automatically redirected to 
 
 We store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
 
+The router is responsible for updating the document title (text in the browser tab and history) when navigating to a new route. It uses the `parts()` function in a route record's `meta.title` field. Much like with `validateData`, it may not have all the information it needs when first changing the route (e.g. navigating to a new Project page), so it watches for changes to the Vuex store (the key to watch is defined in `meta.title.key`) and then updates the page title again (e.g. using a Project's name after the project info has been fetched from the backend.)
+
 ### Response Data
 
 Use the `get` action of the [`request` module](/src/store/modules/request.js) of the Vuex store to send a GET request. This will store the response data in the Vuex store, as well as complete common tasks like error handling.
