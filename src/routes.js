@@ -130,6 +130,30 @@ The following meta fields are supported for bottom-level routes:
     for each condition; the watcher will check the associated data as soon as it
     exists. The watcher will also continue watching the data, checking that it
     continues to meet the condition.
+
+  - title
+
+    The router updates the document title (text that appears in the browser tab
+    and history) after a route is changed. It looks at the current route and
+    calls that route's title.parts() function, which returns a list of strings to
+    combine to build the full document title.
+
+    The parts() function likely uses the i18n translations (specified in
+    `src/locales/en.json5`).
+
+    It may also use fields of a particular resource (e.g. `project.name``). This is
+    passed in as parts({ <object> }) where the object is destructured from the
+    Vuex storage: `store.state.request.data`` (which has data stored at various keys
+    described here: `src/store/modules/request/keys.js`).
+
+    The IMPORTANT thing to note is that most resources are loaded asyncrounously
+    after the page is loaded, so the Project, Form, User, etc. object may not have
+    information about it right away. This is where the `title.key` field is used
+    to tell the router to watch for changes to the Vuex store for a particular key.
+    If it sees those changes, it will update the document title with the new
+    information. (If the information about a resource is already loaded, from viewing
+    different pages about the same project or form for example, the router will be
+    able to build the proper title parts the first time.)
 */
 
 /*
