@@ -1351,8 +1351,7 @@
           "developer_comment": "This is shown for a Media File that has not been uploaded."
         },
         "title": {
-          "string": "To upload files, drag and drop one or more files onto this page",
-          "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
+          "string": "To upload files, drag and drop one or more files onto this page"
         }
       }
     },
@@ -2865,8 +2864,7 @@
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again.",
-          "developer_comment": "This is text of the document/page title shown in the browser tab and in browser history."
+          "string": "Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again."
         }
       }
     },

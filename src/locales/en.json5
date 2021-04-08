@@ -1,10 +1,10 @@
 // action: This is the text for an action, for example, the text of a button.
 // field: This is the text of a form field.
 // header: This is the text of a table column header.
-// title: This is text of the document/page title shown in the browser tab and in browser history.
 // tab: This is the text of a navigation tab.
 
 {
+  // This is text of the document/page title shown in the browser tab and in browser history.
   "title": {
     "logIn": "Log In",
     "resetPassword": "Reset Password",
