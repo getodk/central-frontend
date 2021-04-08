@@ -169,8 +169,8 @@ of the `key` attribute.)
       }));
     }
 
-    if (to.meta.title.key != null) {
-      const { key } = to.meta.title;
+    if (meta.title.key != null) {
+      const { key } = meta.title;
       unwatch.push(store.watch((state) => state.request.data[key], () => {
         updateDocumentTitle(to, store);
       }));
