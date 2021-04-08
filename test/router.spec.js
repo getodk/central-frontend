@@ -869,8 +869,8 @@ describe('router', () => {
     });
 
     it('updates the static homepage title', async () => {
-      const app = await load('/');
-      document.title.should.equal("Projects | ODK Central");
+      await load('/');
+      document.title.should.equal('Projects | ODK Central');
     });
   });
 });
