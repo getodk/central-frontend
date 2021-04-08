@@ -862,15 +862,44 @@ describe('router', () => {
     });
   });
 
-  describe('updateDocumentTitle', () => {
+  describe('updateDocumentTitle()', () => {
     beforeEach(() => {
       mockLogin();
-      testData.extendedProjects.createPast(1);
     });
 
-    it('updates the static homepage title', async () => {
+    it('shows static homepage title', async () => {
       await load('/');
       document.title.should.equal('Projects | ODK Central');
+    });
+
+    it('updates title with project data', async () => {
+      testData.extendedProjects.createPast(1, { name: 'My Project' });
+      await load('/projects/1');
+      document.title.should.equal('My Project | ODK Central');
+    });
+
+    it('does not show project name if null', async () => {
+      testData.extendedProjects.createPast(1, { name: null });
+      await load('/projects/1');
+      document.title.should.equal('ODK Central');
+    });
+
+    it('updates title with form id when no form name', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: null });
+      await load('/projects/1/forms/f1');
+      document.title.should.equal('f1 | ODK Central');
+    });
+
+    it('updates title with form name', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
+      await load('/projects/1/forms/f1');
+      document.title.should.equal('My Form Name | ODK Central');
+    });
+
+    it('updates title with longer form path', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
+      await load('/projects/1/forms/f1/submissions');
+      document.title.should.equal('Submissions | My Form Name | ODK Central');
     });
   });
 });
