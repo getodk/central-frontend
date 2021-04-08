@@ -395,7 +395,7 @@ const routes = [
           },
           title: {
             key: 'form',
-            parts: ({ form }) => [form != null ? (form.name || form.xmlFormId) : null]
+            parts: ({ form }) => [form != null ? form.nameOrId() : null]
           }
         }
       }),
@@ -415,7 +415,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.versions'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -438,7 +438,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.submissions'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -462,7 +462,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.publicAccess'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -481,7 +481,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.settings'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -501,7 +501,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.draftStatus'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -521,7 +521,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.attachments'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
@@ -544,7 +544,7 @@ const routes = [
             key: 'form',
             parts: ({ form }) => [
               i18n.t('title.form.draftTesting'),
-              form != null ? (form.name || form.xmlFormId) : null
+              form != null ? form.nameOrId() : null
             ]
           }
         }
