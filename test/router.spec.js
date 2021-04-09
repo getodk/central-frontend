@@ -872,10 +872,21 @@ describe('router', () => {
       document.title.should.equal('Projects | ODK Central');
     });
 
-    it('updates title with project data', async () => {
-      testData.extendedProjects.createPast(1, { name: 'My Project' });
-      await load('/projects/1');
-      document.title.should.equal('My Project | ODK Central');
+    it('inspects title before and after project data loaded', () => {
+      testData.extendedProjects.createPast(1, { name: 'My Project Name' });
+      return load('/projects/1')
+        .beforeAnyResponse(() => {
+          document.title.should.equal('ODK Central');
+        })
+        .afterResponses(() => {
+          document.title.should.equal('My Project Name | ODK Central');
+        });
+    });
+
+    it('updates title with form name', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
+      await load('/projects/1/forms/f1');
+      document.title.should.equal('My Form Name | ODK Central');
     });
 
     it('does not show project name if null', async () => {
@@ -885,15 +896,9 @@ describe('router', () => {
     });
 
     it('updates title with form id when no form name', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: null });
+      testData.extendedForms.createPast(1, { xmlFormId: 'my-xml-id', name: null });
       await load('/projects/1/forms/f1');
-      document.title.should.equal('f1 | ODK Central');
-    });
-
-    it('updates title with form name', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
-      await load('/projects/1/forms/f1');
-      document.title.should.equal('My Form Name | ODK Central');
+      document.title.should.equal('my-xml-id | ODK Central');
     });
 
     it('updates title with longer form path', async () => {
@@ -902,15 +907,10 @@ describe('router', () => {
       document.title.should.equal('Submissions | My Form Name | ODK Central');
     });
 
-    it('inspects title before and after project data loaded', () => {
-      testData.extendedProjects.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
-      return load('/projects/1')
-        .beforeAnyResponse(app => {
-          document.title.should.equal('ODK Central');
-        })
-        .afterResponses(app => {
-          document.title.should.equal('My Form Name | ODK Central');
-        });
+    it('updates title with user name', async () => {
+      testData.extendedUsers.createPast(1, { displayName: 'A User Name' });
+      await load('/users/1/edit');
+      document.title.should.equal('A User Name | ODK Central');
     });
   });
 });
