@@ -901,5 +901,16 @@ describe('router', () => {
       await load('/projects/1/forms/f1/submissions');
       document.title.should.equal('Submissions | My Form Name | ODK Central');
     });
+
+    it('inspects title before and after project data loaded', () => {
+      testData.extendedProjects.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
+      return load('/projects/1')
+        .beforeAnyResponse(app => {
+          document.title.should.equal('ODK Central');
+        })
+        .afterResponses(app => {
+          document.title.should.equal('My Form Name | ODK Central');
+        });
+    });
   });
 });
