@@ -561,8 +561,9 @@ const routes = [
         project: (project) => project.permits('submission.read')
       },
       title: {
-        parts: () => [
-          i18n.tc('plural.submission', 1) // TODO: possibly show submission UUID
+        key: 'submission',
+        parts: ({ submission }) => [
+          submission != null ? submission.__id : null
         ]
       }
     }
