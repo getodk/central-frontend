@@ -4,39 +4,23 @@
 // tab: This is the text of a navigation tab.
 
 {
-  // This is text of the document/page title shown in the browser tab and in browser history.
-  "title": {
-    "logIn": "Log In",
-    "resetPassword": "Reset Password",
-    "claimAccount": "Claim Account",
-    "projectList": "Projects",
-    "project": {
-      "overview": "Overview",
-      "roles": "Project Roles",
-      "appUsers": "App Users",
-      "formAccess": "Form Access",
-      "settings": "Project Settings"
-    },
-    "form": {
-      "overview": "Overview",
-      "versions": "Versions",
-      "submissions": "Submissions",
-      "publicAccess": "Public Access",
-      "settings": "Settings",
-      "draftStatus": "Draft Status",
-      "attachments": "Attachments",
-      "draftTesting": "Draft Testing",
-    },
-    "submission": "Submission Details",
-    "users": "Users",
-    "editAccount": "Edit Account",
-    "system": {
-      "system": "System",
+  "projectHome": {
+    "formAccess": "Form Access",
+  },
+  "formHome": {
+    "versions": "Versions",
+    "publicAccess": "Public Access",
+    "draftStatus": "Draft Status",
+    "attachments": "Attachments",
+    "draftTesting": "Draft Testing",
+  },
+  "systemHome": {
+    // This is the title of the page for managing backups, audit logs, and other system-level functions.
+    "title": "System Management",
+    "tab": {
       "backups": "Backups",
-      "auditLogs": "Server Audit Logs"
-    },
-    "download": "Download",
-    "pageNotFound": "Page Not Found"
+      "audits": "Server Audit Logs"
+    }
   },
   // This is the name of a user Role.
   "role": {
@@ -160,6 +144,8 @@
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
     "resetPassword": "Reset password",
+    "claimAccount": "Claim account",
+    "claimAccount": "Claim account",
     "save": "Save",
     "update": "Update",
     "yesProceed": "Yes, proceed"
@@ -218,7 +204,8 @@
     "user": "User",
     "webUser": "Web User",
     "session": "Session",
-    "submissions": "Submissions"
+    "submissions": "Submissions",
+    "projectRoles": "Project Roles",
   },
   "moreInfo": {
     "clickHere": {
@@ -265,7 +252,8 @@
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     "success": "Success!",
-    "yes": "Yes"
+    "yes": "Yes",
+    "settings": "Settings",
   },
   "mixin": {
     "request": {
@@ -309,7 +297,8 @@
         // {message} is a more detailed error message.
         "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
       }
-    }
+    },
+    "pageNotFound": "Page Not Found"
   },
   "router": {
     "unsavedChanges": "Are you sure you want to leave this page? Your changes might not be saved."

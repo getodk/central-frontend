@@ -225,7 +225,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.logIn')] }
+      title: { parts: () => [i18n.t('action.logIn')] }
     }
   },
   asyncRoute({
@@ -235,7 +235,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.resetPassword')] }
+      title: { parts: () => [i18n.t('action.resetPassword')] }
     }
   }),
   asyncRoute({
@@ -246,7 +246,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.claimAccount')] }
+      title: { parts: () => [i18n.t('action.claimAccount')] }
     }
   }),
 
@@ -255,7 +255,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('title.projectList')] } // Homepage
+      title: { parts: () => [i18n.tc('plural.project', 4)] } // Homepage
     }
   }),
   asyncRoute({
@@ -296,7 +296,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('title.project.roles'),
+              i18n.t('resource.projectRoles'),
               project != null ? project.name : null
             ]
           }
@@ -318,7 +318,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('title.project.appUsers'),
+              i18n.tc('plural.appUser', 4),
               project != null ? project.name : null
             ]
           }
@@ -344,7 +344,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('title.project.formAccess'),
+              i18n.t('projectHome.formAccess'),
               project != null ? project.name : null
             ]
           }
@@ -361,7 +361,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('title.project.settings'),
+              i18n.t('common.settings'),
               project != null ? project.name : null
             ]
           }
@@ -414,7 +414,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.versions'),
+              i18n.t('formHome.versions'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -437,7 +437,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.submissions'),
+              i18n.t('resource.submissions'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -461,7 +461,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.publicAccess'),
+              i18n.t('formHome.publicAccess'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -480,7 +480,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.settings'),
+              i18n.t('common.settings'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -500,7 +500,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.draftStatus'),
+              i18n.t('formHome.draftStatus'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -520,7 +520,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.attachments'),
+              i18n.t('formHome.attachments'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -543,7 +543,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('title.form.draftTesting'),
+              i18n.t('formHome.draftTesting'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -562,7 +562,7 @@ const routes = [
       },
       title: {
         parts: () => [
-          i18n.t('title.submission') // TODO: possibly show submission UUID
+          i18n.tc('plural.submission', 1) // TODO: possibly show submission UUID
         ]
       }
     }
@@ -590,7 +590,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: { parts: () => [i18n.t('title.users')] }
+          title: { parts: () => [i18n.tc('plural.webUser', 4)] }
         }
       })
     ]
@@ -618,7 +618,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('title.editAccount')] }
+      title: { parts: () => [i18n.t('action.editProfile')] }
     }
   }),
 
@@ -642,7 +642,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: { parts: () => [i18n.t('title.system.backups'), i18n.t('title.system.system')] }
+          title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
         }
       }),
       asyncRoute({
@@ -653,7 +653,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: { parts: () => [i18n.t('title.system.auditLogs'), i18n.t('title.system.system')] }
+          title: { parts: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')] }
         }
       })
     ]
@@ -665,7 +665,7 @@ const routes = [
     loading: 'page',
     key: () => '/dl',
     meta: {
-      title: { parts: () => [i18n.t('title.download')] }
+      title: { parts: () => [i18n.t('action.download')] }
     }
   }),
 
@@ -676,7 +676,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: { parts: () => [i18n.t('title.pageNotFound')] }
+      title: { parts: () => [i18n.t('util.pageNotFound')] }
     }
   })
 ];

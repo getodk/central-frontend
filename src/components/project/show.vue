@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
           <router-link :to="tabPath('users')">
-            {{ $t('tab.users') }}
+            {{ $t('resource.projectRoles') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('app-users'))" :class="tabClass('app-users')"
@@ -144,7 +144,6 @@ export default {
   "en": {
     "tab": {
       "overview": "Overview",
-      "users": "Project Roles",
       "formAccess": "Form Access",
       "settings": "Settings"
     }
