@@ -414,7 +414,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHome.versions'),
+              i18n.t('formHead.tab.versions'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -461,7 +461,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHome.publicAccess'),
+              i18n.t('formHead.tab.publicAccess'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -500,7 +500,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHome.draftStatus'),
+              i18n.t('formHead.draft.tab.status'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -520,7 +520,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHome.attachments'),
+              i18n.t('formHead.draft.tab.attachments'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -543,7 +543,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHome.draftTesting'),
+              i18n.t('formHead.draft.tab.testing'),
               form != null ? form.nameOrId() : null
             ]
           }

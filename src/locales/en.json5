@@ -5,14 +5,22 @@
 
 {
   "projectHome": {
-    "formAccess": "Form Access",
+    "tab": {
+      "formAccess": "Form Access",
+    }
   },
-  "formHome": {
-    "versions": "Versions",
-    "publicAccess": "Public Access",
-    "draftStatus": "Draft Status",
-    "attachments": "Attachments",
-    "draftTesting": "Draft Testing",
+  "formHead": {
+    "tab": {
+      "versions": "Versions",
+      "publicAccess": "Public Access",
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Status",
+        "attachments": "Media Files",
+        "testing": "Testing"
+      }
+    }
   },
   "systemHome": {
     // This is the title of the page for managing backups, audit logs, and other system-level functions.
@@ -254,6 +262,7 @@
     "success": "Success!",
     "yes": "Yes",
     "settings": "Settings",
+    "overview": "Overview"
   },
   "mixin": {
     "request": {

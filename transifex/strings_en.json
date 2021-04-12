@@ -1,24 +1,38 @@
 {
   "projectHome": {
-    "formAccess": {
-      "string": "Form Access"
+    "tab": {
+      "formAccess": {
+        "string": "Form Access",
+        "developer_comment": "This is the text of a navigation tab."
+      }
     }
   },
-  "formHome": {
-    "versions": {
-      "string": "Versions"
+  "formHead": {
+    "tab": {
+      "versions": {
+        "string": "Versions",
+        "developer_comment": "This is the text of a navigation tab."
+      },
+      "publicAccess": {
+        "string": "Public Access",
+        "developer_comment": "This is the text of a navigation tab."
+      }
     },
-    "publicAccess": {
-      "string": "Public Access"
-    },
-    "draftStatus": {
-      "string": "Draft Status"
-    },
-    "attachments": {
-      "string": "Attachments"
-    },
-    "draftTesting": {
-      "string": "Draft Testing"
+    "draftNav": {
+      "tab": {
+        "status": {
+          "string": "Status",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "attachments": {
+          "string": "Media Files",
+          "developer_comment": "This is the text of a navigation tab."
+        },
+        "testing": {
+          "string": "Testing",
+          "developer_comment": "This is the text of a navigation tab."
+        }
+      }
     }
   },
   "systemHome": {
@@ -546,6 +560,9 @@
     },
     "settings": {
       "string": "Settings"
+    },
+    "overview": {
+      "string": "Overview"
     }
   },
   "mixin": {
@@ -1699,24 +1716,6 @@
         }
       },
       "formNav": {
-        "tab": {
-          "overview": {
-            "string": "Overview",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "versions": {
-            "string": "Versions",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "publicLinks": {
-            "string": "Public Access",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "settings": {
-            "string": "Settings",
-            "developer_comment": "This is the text of a navigation tab."
-          }
-        },
         "tabTitle": {
           "string": "These functions will become available once you publish your Draft Form",
           "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
@@ -1731,20 +1730,6 @@
           "create": {
             "string": "Create a new Draft",
             "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        },
-        "tab": {
-          "status": {
-            "string": "Status",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "attachments": {
-            "string": "Media Files",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "testing": {
-            "string": "Testing",
-            "developer_comment": "This is the text of a navigation tab."
           }
         }
       }
@@ -2555,22 +2540,6 @@
       "alert": {
         "archive": {
           "string": "The Project “{name}” was archived."
-        }
-      }
-    },
-    "ProjectShow": {
-      "tab": {
-        "overview": {
-          "string": "Overview",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "formAccess": {
-          "string": "Form Access",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "settings": {
-          "string": "Settings",
-          "developer_comment": "This is the text of a navigation tab."
         }
       }
     },
