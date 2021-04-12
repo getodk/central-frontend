@@ -344,7 +344,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('projectHome.formAccess'),
+              i18n.t('projectHome.tab.formAccess'),
               project != null ? project.name : null
             ]
           }
@@ -500,7 +500,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHead.draft.tab.status'),
+              i18n.t('formHead.draftNav.tab.status'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -520,7 +520,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHead.draft.tab.attachments'),
+              i18n.t('formHead.draftNav.tab.attachments'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -543,7 +543,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('formHead.draft.tab.testing'),
+              i18n.t('formHead.draftNav.tab.testing'),
               form != null ? form.nameOrId() : null
             ]
           }
