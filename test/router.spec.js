@@ -870,7 +870,8 @@ describe('router', () => {
     });
 
     // There is approximately 1 test per route
-    // excluding session-related routes like login, logout, claim account, password reset
+    // excluding session-related routes like claim account, password reset,
+    // which are handled in other test files.
     it('shows static homepage title for route /', async () => {
       await load('/');
       document.title.should.equal('Projects | ODK Central');
@@ -1006,5 +1007,14 @@ describe('router', () => {
       await load('/this-route-does-not-exist');
       document.title.should.equal('Page Not Found | ODK Central');
     });
+  });
+
+  describe('updateDocumentTitle() - logged out', () => {
+    it('shows page title on login screen', () =>
+      load('/login')
+        .restoreSession(false)
+        .afterResponses(() => {
+          document.title.should.equal('Log in | ODK Central');
+        }));
   });
 });
