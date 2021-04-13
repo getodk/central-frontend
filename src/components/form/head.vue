@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="rendersFormTabs" :class="formTabClass('')"
                 :title="formTabTitle" role="presentation">
                 <router-link :to="tabPath('')">
-                  {{ $t('common.overview') }}
+                  {{ $t('common.tab.overview') }}
                 </router-link>
               </li>
               <!-- No v-if, because anyone who can navigate to the form should
@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
                 :title="formTabTitle" role="presentation">
                 <router-link :to="tabPath('settings')">
-                  {{ $t('common.settings') }}
+                  {{ $t('common.tab.settings') }}
                 </router-link>
               </li>
             </ul>

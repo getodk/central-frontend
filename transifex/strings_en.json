@@ -1,9 +1,9 @@
 {
-  "projectHome": {
+  "projectShow": {
     "tab": {
       "formAccess": {
         "string": "Form Access",
-        "developer_comment": "This is the text of a navigation tab."
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -11,26 +11,26 @@
     "tab": {
       "versions": {
         "string": "Versions",
-        "developer_comment": "This is the text of a navigation tab."
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "publicAccess": {
         "string": "Public Access",
-        "developer_comment": "This is the text of a navigation tab."
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "draftNav": {
       "tab": {
         "status": {
           "string": "Status",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "attachments": {
           "string": "Media Files",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "testing": {
           "string": "Testing",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         }
       }
     }
@@ -43,11 +43,11 @@
     "tab": {
       "backups": {
         "string": "Backups",
-        "developer_comment": "This is the text of a navigation tab."
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "audits": {
         "string": "Server Audit Logs",
-        "developer_comment": "This is the text of a navigation tab."
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -443,6 +443,10 @@
       "string": "Project",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "projects": {
+      "string": "Projects",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "publicLink": {
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -453,6 +457,10 @@
     },
     "webUser": {
       "string": "Web User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUsers": {
+      "string": "Web Users",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "session": {
@@ -558,11 +566,15 @@
     "yes": {
       "string": "Yes"
     },
-    "settings": {
-      "string": "Settings"
-    },
-    "overview": {
-      "string": "Overview"
+    "tab": {
+      "settings": {
+        "string": "Settings",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "overview": {
+        "string": "Overview",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
     }
   },
   "mixin": {
@@ -626,7 +638,8 @@
       }
     },
     "pageNotFound": {
-      "string": "Page Not Found"
+      "string": "Page Not Found",
+      "developer_comment": "This text is shown at the top of a page when that URL is not accessible."
     }
   },
   "router": {
@@ -2806,7 +2819,7 @@
       "tab": {
         "microsoft": {
           "string": "Excel/Power BI",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
           "string": "Other",
@@ -3179,11 +3192,11 @@
       "tab": {
         "users": {
           "string": "Web Users",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "roles": {
           "string": "Role Settings",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         }
       },
       "comingSoon": {

@@ -1,10 +1,10 @@
 // action: This is the text for an action, for example, the text of a button.
 // field: This is the text of a form field.
 // header: This is the text of a table column header.
-// tab: This is the text of a navigation tab.
+// tab: This is the text of a navigation tab, which may also be shown as the page title (browser tab).
 
 {
-  "projectHome": {
+  "projectShow": {
     "tab": {
       "formAccess": "Form Access",
     }
@@ -153,7 +153,6 @@
     "refresh": "Refresh",
     "resetPassword": "Reset password",
     "claimAccount": "Claim account",
-    "claimAccount": "Claim account",
     "save": "Save",
     "update": "Update",
     "yesProceed": "Yes, proceed"
@@ -208,9 +207,11 @@
     "appUsers": "App Users",
     "form": "Form",
     "project": "Project",
+    "projects": "Projects",
     "publicLink": "Public Access Link",
     "user": "User",
     "webUser": "Web User",
+    "webUsers": "Web Users",
     "session": "Session",
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
@@ -261,8 +262,10 @@
     "rightNow": "Right Now",
     "success": "Success!",
     "yes": "Yes",
-    "settings": "Settings",
-    "overview": "Overview"
+    "tab": {
+      "settings": "Settings",
+      "overview": "Overview"
+    }
   },
   "mixin": {
     "request": {
@@ -307,6 +310,7 @@
         "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
       }
     },
+    // This text is shown at the top of a page when that URL is not accessible.
     "pageNotFound": "Page Not Found"
   },
   "router": {

@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <!-- Everyone with access to the project should be able to navigate to
         the project overview. -->
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">{{ $t('common.overview') }}</router-link>
+          <router-link :to="tabPath('')">{{ $t('common.tab.overview') }}</router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
@@ -36,13 +36,13 @@ except according to the terms contained in the LICENSE file.
         <li v-if="canRoute(tabPath('form-access'))"
           :class="tabClass('form-access')" role="presentation">
           <router-link :to="tabPath('form-access')">
-            {{ $t('projectHome.tab.formAccess') }}
+            {{ $t('projectShow.tab.formAccess') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
           role="presentation">
           <router-link :to="tabPath('settings')">
-            {{ $t('common.settings') }}
+            {{ $t('common.tab.settings') }}
           </router-link>
         </li>
       </template>

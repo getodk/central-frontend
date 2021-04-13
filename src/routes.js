@@ -255,7 +255,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.tc('plural.project', 4)] } // Homepage
+      title: { parts: () => [i18n.t('resource.projects')] } // Homepage
     }
   }),
   asyncRoute({
@@ -318,7 +318,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.tc('plural.appUser', 4),
+              i18n.t('resource.appUsers'),
               project != null ? project.name : null
             ]
           }
@@ -344,7 +344,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('projectHome.tab.formAccess'),
+              i18n.t('projectShow.tab.formAccess'),
               project != null ? project.name : null
             ]
           }
@@ -361,7 +361,7 @@ const routes = [
           title: {
             key: 'project',
             parts: ({ project }) => [
-              i18n.t('common.settings'),
+              i18n.t('common.tab.settings'),
               project != null ? project.name : null
             ]
           }
@@ -480,7 +480,7 @@ const routes = [
           title: {
             key: 'form',
             parts: ({ form }) => [
-              i18n.t('common.settings'),
+              i18n.t('common.tab.settings'),
               form != null ? form.nameOrId() : null
             ]
           }
@@ -591,7 +591,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: { parts: () => [i18n.tc('plural.webUser', 4)] }
+          title: { parts: () => [i18n.t('resource.webUsers')] }
         }
       })
     ]
