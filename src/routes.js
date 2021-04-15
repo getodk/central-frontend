@@ -13,6 +13,7 @@ import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 import { routeProps } from './util/router';
 import i18n from './i18n';
+import { instanceNameOrId } from './util/odata';
 
 /*
 Lazy-Loading Routes
@@ -563,7 +564,7 @@ const routes = [
       title: {
         key: 'submission',
         parts: ({ submission }) => [
-          submission != null ? submission.__id : null
+          submission != null ? instanceNameOrId(submission) : null
         ]
       }
     }
