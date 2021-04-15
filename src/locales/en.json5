@@ -4,6 +4,13 @@
 // tab: This is the text of a navigation tab, which may also be shown as the page title (browser tab).
 
 {
+  // This is the text shown as the title of a page including in the browser tab.
+  "title": {
+    "resetPassword": "Reset Password",
+    "claimAccount": "Claim Account",
+    "editProfile": "Edit Profile",
+    "pageNotFound": "Page Not Found"
+  },
   "projectShow": {
     "tab": {
       "formAccess": "Form Access",
@@ -309,9 +316,7 @@
         // {message} is a more detailed error message.
         "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
       }
-    },
-    // This text is shown at the top of a page when that URL is not accessible.
-    "pageNotFound": "Page Not Found"
+    }
   },
   "router": {
     "unsavedChanges": "Are you sure you want to leave this page? Your changes might not be saved."

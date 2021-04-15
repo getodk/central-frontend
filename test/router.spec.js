@@ -988,7 +988,7 @@ describe('router', () => {
 
     it('shows static title for /account/edit', async () => {
       await load('/account/edit');
-      document.title.should.equal('Edit profile | ODK Central');
+      document.title.should.equal('Edit Profile | ODK Central');
     });
 
     // System Management routes

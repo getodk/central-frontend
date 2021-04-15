@@ -1,4 +1,22 @@
 {
+  "title": {
+    "resetPassword": {
+      "string": "Reset Password",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "claimAccount": {
+      "string": "Claim Account",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "editProfile": {
+      "string": "Edit Profile",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "pageNotFound": {
+      "string": "Page Not Found",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    }
+  },
   "projectShow": {
     "tab": {
       "formAccess": {
@@ -636,10 +654,6 @@
           "developer_comment": "{message} is a more detailed error message."
         }
       }
-    },
-    "pageNotFound": {
-      "string": "Page Not Found",
-      "developer_comment": "This text is shown at the top of a page when that URL is not accessible."
     }
   },
   "router": {
@@ -672,10 +686,6 @@
       }
     },
     "AccountLogin": {
-      "title": {
-        "string": "Log in",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "alert": {
         "alreadyLoggedIn": {
           "string": "A user is already logged in. Please refresh the page to continue."

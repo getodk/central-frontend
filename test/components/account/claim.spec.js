@@ -48,7 +48,7 @@ describe('AccountClaim', () => {
 
   it('shows proper page title', () =>
     mockRoute(LOCATION)
-      .then(() => document.title.should.equal('Claim account | ODK Central')));
+      .then(() => document.title.should.equal('Claim Account | ODK Central')));
 
   describe('after a successful response', () => {
     let app;

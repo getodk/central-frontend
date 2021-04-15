@@ -15,7 +15,7 @@ describe('AccountResetPassword', () => {
     mockRoute('/reset-password', { attachToDocument: true })
       .restoreSession(false)
       .afterResponse(() => {
-        document.title.should.equal('Reset password | ODK Central');
+        document.title.should.equal('Reset Password | ODK Central');
       }));
 
   it('implement some standard button things', () =>

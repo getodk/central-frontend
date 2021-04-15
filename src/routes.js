@@ -236,7 +236,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('action.resetPassword')] }
+      title: { parts: () => [i18n.t('title.resetPassword')] }
     }
   }),
   asyncRoute({
@@ -247,7 +247,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('action.claimAccount')] }
+      title: { parts: () => [i18n.t('title.claimAccount')] }
     }
   }),
 
@@ -620,7 +620,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('action.editProfile')] }
+      title: { parts: () => [i18n.t('title.editProfile')] }
     }
   }),
 
@@ -667,7 +667,7 @@ const routes = [
     loading: 'page',
     key: () => '/dl',
     meta: {
-      title: { parts: () => [i18n.t('action.download')] }
+      title: { parts: () => [i18n.t('title.download')] }
     }
   }),
 
@@ -678,7 +678,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: { parts: () => [i18n.t('util.pageNotFound')] }
+      title: { parts: () => [i18n.t('title.pageNotFound')] }
     }
   })
 ];
