@@ -2080,8 +2080,7 @@
     },
     "NotFound": {
       "body": {
-        "string": "The page you requested could not be found.",
-        "developer_comment": "This is a title shown above a section of the page."
+        "string": "The page you requested could not be found."
       }
     },
     "ProjectArchive": {

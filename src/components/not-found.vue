@@ -33,7 +33,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is a title shown above a section of the page.
     "body": "The page you requested could not be found."
   }
 }
