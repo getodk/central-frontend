@@ -83,8 +83,8 @@
         "string": "Public Access Link Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "session": {
-        "string": "Session Actions",
+      "config": {
+        "string": "Server Configuration Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
@@ -102,24 +102,34 @@
           "string": "Update Details",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
+        "session_end": {
+          "string": "Revoke",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
         "delete": {
           "string": "Delete",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
-      "assignment": {
-        "create": {
-          "string": "Assign Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
-        },
-        "delete": {
-          "string": "Revoke Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
-        }
-      },
       "backup": {
         "string": "Backup",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "config": {
+        "set": {
+          "string": "Set",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Server Configuration."
+        }
+      },
+      "field_key": {
+        "assignment_create": {
+          "string": "Give Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
+        },
+        "assignment_delete": {
+          "string": "Remove Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
+        }
       },
       "form": {
         "update_draft_set": {
@@ -139,6 +149,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
+      "public_link": {
+        "assignment_create": {
+          "string": "Give Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        },
+        "assignment_delete": {
+          "string": "Remove Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
       "upgrade": {
         "process_form": {
           "string": "Process Form",
@@ -150,6 +170,14 @@
         }
       },
       "user": {
+        "assignment_create": {
+          "string": "Assign Role",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        },
+        "assignment_delete": {
+          "string": "Revoke Role",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+        },
         "delete": {
           "string": "Retire",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
@@ -377,6 +405,10 @@
     },
     "appUsers": {
       "string": "App Users",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "config": {
+      "string": "Server Configuration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {

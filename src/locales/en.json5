@@ -43,7 +43,7 @@
       "form": "Form Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
-      "session": "Session Actions",
+      "config": "Server Configuration Actions",
       "upgrade": "Server Upgrade"
     },
     "action": {
@@ -52,18 +52,24 @@
       "default": {
         "create": "Create",
         "update": "Update Details",
+        "session_end": "Revoke",
         "delete": "Delete"
-      },
-      // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Web User.
-      "assignment": {
-        "create": "Assign Role",
-        "delete": "Revoke Role"
       },
       // This is shown in the log of actions performed on the server.
       "backup": "Backup",
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Server Configuration.
+      "config": {
+        "set": "Set",
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on an App User.
       "field_key": {
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "assignment_create": "Give Access",
+        "assignment_delete": "Remove Access",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Form.
@@ -83,11 +89,14 @@
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
       },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Public Access Link.
       "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
+        "create": "@:audit.action.default.create",
+        "assignment_create": "Give Access",
+        "assignment_delete": "Remove Access",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that the server performs when it is upgraded.
@@ -100,6 +109,8 @@
       "user": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
+        "assignment_create": "Assign Role",
+        "assignment_delete": "Revoke Role",
         "delete": "Retire"
       }
     }
@@ -179,6 +190,7 @@
   "resource": {
     "appUser": "App User",
     "appUsers": "App Users",
+    "config": "Server Configuration",
     "form": "Form",
     "project": "Project",
     "publicLink": "Public Access Link",

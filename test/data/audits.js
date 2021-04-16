@@ -7,12 +7,15 @@ import { fakePastDate, isBefore } from '../util/date-time';
 import { standardBackupsConfigs } from './backups-configs';
 import { toActor } from './actors';
 
-const defaultActor = (action) => {
-  if (action === 'submission.create' || action === 'submission.update' ||
-    action === 'submission.update.version')
-    return extendedUsers.first();
-  return null;
-};
+const actionsWithDefaultActor = new Set([
+  'config.set',
+  'submission.create',
+  'submission.update',
+  'submission.update.version'
+]);
+const defaultActor = (action) =>
+  (actionsWithDefaultActor.has(action) ? extendedUsers.first() : null);
+
 const defaultActee = (action) => {
   if (action === 'submission.create' || action === 'submission.update' ||
     action === 'submission.update.version')

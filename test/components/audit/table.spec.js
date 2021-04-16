@@ -1,14 +1,16 @@
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import Selectable from '../../../src/components/selectable.vue';
-import testData from '../../data';
+
 import { ago } from '../../../src/util/date-time';
+
+import testData from '../../data';
 import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-const testType = (app, type) => {
-  const td = app.first('.audit-row .type');
-  td.text().trim().iTrim().should.equal(type.join(' '));
+const testType = (component, type) => {
+  const td = component.first('.audit-row .type');
+  td.text().trim().should.equal(type.join('  '));
 
   const icons = td.find('.icon-angle-right');
   if (type.length === 1)
@@ -18,13 +20,13 @@ const testType = (app, type) => {
   else
     throw new Error('invalid type');
 };
-const testTarget = (app, text, href) => {
-  const td = app.first('.audit-row .target');
+const testTarget = (component, text, href = undefined) => {
+  const td = component.first('.audit-row .target');
   if (text === '') {
     td.text().should.equal('');
   } else if (href == null) {
     const span = td.first('span');
-    span.text().trim().should.equal(text);
+    span.text().should.equal(text);
     span.getAttribute('title').should.equal(text);
   } else {
     const a = td.first('a');
@@ -33,9 +35,9 @@ const testTarget = (app, text, href) => {
     a.getAttribute('href').should.equal(`#${href}`);
   }
 };
-const testTypeAndTarget = (type, target) => (app) => {
-  testType(app, type);
-  if (target != null) testTarget(app, target.text, target.href);
+const testTypeAndTarget = (type, target) => (component) => {
+  testType(component, type);
+  if (target != null) testTarget(component, target.text, target.href);
 };
 
 describe('AuditTable', () => {
@@ -66,8 +68,8 @@ describe('AuditTable', () => {
     const cases = [
       ['user.create', ['User', 'Create']],
       ['user.update', ['User', 'Update Details']],
-      ['assignment.create', ['User', 'Assign Role']],
-      ['assignment.delete', ['User', 'Revoke Role']],
+      ['user.assignment.create', ['User', 'Assign Role']],
+      ['user.assignment.delete', ['User', 'Revoke Role']],
       ['user.delete', ['User', 'Retire']]
     ];
 
@@ -179,43 +181,61 @@ describe('AuditTable', () => {
     });
   });
 
-  it('renders a public_link.create audit correctly', async () => {
-    testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
-      action: 'public_link.create',
-      actee: testData.toActor(testData.standardPublicLinks
-        .createPast(1, { displayName: 'My Public Link' })
-        .last())
-    });
-    const app = await load('/system/audits');
-    testType(app, ['Public Access Link', 'Create']);
-    testTarget(app, 'My Public Link', null);
+  describe('public link target', () => {
+    const cases = [
+      ['public_link.create', ['Public Access Link', 'Create']],
+      ['public_link.assignment.create', ['Public Access Link', 'Give Access']],
+      ['public_link.assignment.delete', ['Public Access Link', 'Remove Access']],
+      ['public_link.session.end', ['Public Access Link', 'Revoke']],
+      ['public_link.delete', ['Public Access Link', 'Delete']]
+    ];
+
+    for (const [action, type] of cases) {
+      it(`renders a ${action} audit correctly`, async () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.toActor(testData.standardPublicLinks
+            .createPast(1, { displayName: 'My Public Link' })
+            .last())
+        });
+        const component = await load('/system/audits', { root: false });
+        testType(component, type);
+        testTarget(component, 'My Public Link');
+      });
+    }
   });
 
-  it('renders a field_key.create audit correctly', async () => {
-    testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
-      action: 'field_key.create',
-      actee: testData.toActor(testData.extendedFieldKeys
-        .createPast(1, { displayName: 'My App User' })
-        .last())
-    });
-    const app = await load('/system/audits');
-    testType(app, ['App User', 'Create']);
-    testTarget(app, 'My App User', null);
+  describe('app user target', () => {
+    const cases = [
+      ['field_key.create', ['App User', 'Create']],
+      ['field_key.assignment.create', ['App User', 'Give Access']],
+      ['field_key.assignment.delete', ['App User', 'Remove Access']],
+      ['field_key.session.end', ['App User', 'Revoke']],
+      ['field_key.delete', ['App User', 'Delete']]
+    ];
+
+    for (const [action, type] of cases) {
+      it(`renders a ${action} audit correctly`, async () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.toActor(testData.extendedFieldKeys
+            .createPast(1, { displayName: 'My App User' })
+            .last())
+        });
+        const component = await load('/system/audits', { root: false });
+        testType(component, type);
+        testTarget(component, 'My App User');
+      });
+    }
   });
 
-  it('renders a session.end audit correctly', async () => {
-    testData.extendedAudits.createPast(1, {
-      actor: testData.extendedUsers.first(),
-      action: 'session.end',
-      actee: testData.toActor(testData.extendedFieldKeys
-        .createPast(1, { displayName: 'My App User' })
-        .last())
-    });
-    const app = await load('/system/audits');
-    testType(app, ['Session', 'Delete']);
-    testTarget(app, 'My App User', null);
+  it('renders a config.set audit correctly', async () => {
+    testData.extendedAudits.createPast(1, { action: 'config.set' });
+    const component = await load('/system/audits', { root: false });
+    testType(component, ['Server Configuration', 'Set']);
+    testTarget(component, '');
   });
 
   it('renders a backup audit correctly', () =>
@@ -271,7 +291,7 @@ describe('AuditTable', () => {
   });
 
   describe('initiator', () => {
-    it('renders correctly for an audit with an actor', () => {
+    it('renders correctly for an audit whose actor is a user', async () => {
       testData.extendedAudits.createPast(1, {
         actor: testData.extendedUsers.first(),
         action: 'user.create',
@@ -279,28 +299,34 @@ describe('AuditTable', () => {
           .createPast(1, { displayName: 'User 2' })
           .last())
       });
-      return load('/system/audits').then(app => {
-        const td = app.find('.audit-row td')[2];
-        td.hasClass('initiator').should.be.true();
-        const a = td.first('a');
-        a.text().trim().should.equal('User 1');
-        a.getAttribute('title').should.equal('User 1');
-        a.getAttribute('href').should.equal('#/users/1/edit');
-      });
+      const component = await load('/system/audits', { root: false });
+      const a = component.first('.audit-row .initiator a');
+      a.text().trim().should.equal('User 1');
+      a.getAttribute('title').should.equal('User 1');
+      a.getAttribute('href').should.equal('#/users/1/edit');
     });
 
-    it('renders correctly for an audit without an actor', () => {
+    it('renders correctly for an audit whose actor is not a user', async () => {
+      testData.extendedAudits.createPast(1, {
+        actor: { type: 'singleUse', displayName: 'Reset token for 1' },
+        action: 'user.update',
+        actee: testData.toActor(testData.extendedUsers.first())
+      });
+      const component = await load('/system/audits', { root: false });
+      const span = component.first('.audit-row .initiator span');
+      span.text().should.equal('Reset token for 1');
+      span.getAttribute('title').should.equal('Reset token for 1');
+    });
+
+    it('renders correctly for an audit without an actor', async () => {
       testData.extendedAudits.createPast(1, {
         action: 'upgrade.process.form',
         actee: testData.standardForms
           .createPast(1, { name: 'My Form' })
           .last()
       });
-      return load('/system/audits').then(app => {
-        const td = app.find('.audit-row td')[2];
-        td.text().trim().should.equal('');
-        td.find('a').length.should.equal(0);
-      });
+      const component = await load('/system/audits', { root: false });
+      component.first('.audit-row .initiator').text().should.equal('');
     });
   });
 

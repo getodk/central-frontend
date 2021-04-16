@@ -19,10 +19,13 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="initiator">
-      <router-link v-if="audit.actor != null" :to="userPath(audit.actor.id)"
-        :title="audit.actor.displayName">
-        {{ audit.actor.displayName }}
-      </router-link>
+      <template v-if="audit.actor != null">
+        <router-link v-if="audit.actor.type === 'user'"
+          :to="userPath(audit.actor.id)" :title="audit.actor.displayName">
+          {{ audit.actor.displayName }}
+        </router-link>
+        <span v-else :title="audit.actor.displayName">{{ audit.actor.displayName }}</span>
+      </template>
     </td>
     <td class="target">
       <template v-if="target != null">
@@ -47,11 +50,11 @@ import routes from '../../mixins/routes';
 const typeByCategory = {
   session: 'resource.session',
   user: 'resource.user',
-  assignment: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
   public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
+  config: 'resource.config',
   upgrade: 'audit.category.upgrade'
 };
 
