@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
         <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('title') }}</h1>
+          <h1 class="panel-title">{{ $t('title.resetPassword') }}</h1>
         </div>
         <div class="panel-body">
           <form @submit.prevent="submit">
@@ -76,8 +76,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is a title shown above a section of the page.
-    "title": "Reset Password",
     "alert": {
       "success": "An email has been sent to {email} with further instructions."
     }

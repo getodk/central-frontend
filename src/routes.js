@@ -247,7 +247,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.claimAccount')] }
+      title: { parts: () => [i18n.t('title.setPassword')] }
     }
   }),
 

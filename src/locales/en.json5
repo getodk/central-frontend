@@ -7,8 +7,9 @@
   // This is the text shown as the title of a page including in the browser tab.
   "title": {
     "resetPassword": "Reset Password",
-    "claimAccount": "Claim Account",
+    "setPassword": "Set Password",
     "editProfile": "Edit Profile",
+    "download": "Download",
     "pageNotFound": "Page Not Found"
   },
   "projectShow": {

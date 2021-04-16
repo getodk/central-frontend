@@ -4,12 +4,16 @@
       "string": "Reset Password",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
-    "claimAccount": {
-      "string": "Claim Account",
+    "setPassword": {
+      "string": "Set Password",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "editProfile": {
       "string": "Edit Profile",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "download": {
+      "string": "Download",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "pageNotFound": {
@@ -663,10 +667,6 @@
   },
   "component": {
     "AccountClaim": {
-      "title": {
-        "string": "Set Password",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "action": {
         "set": {
           "string": "Set password",
@@ -698,10 +698,6 @@
       }
     },
     "AccountResetPassword": {
-      "title": {
-        "string": "Reset Password",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
