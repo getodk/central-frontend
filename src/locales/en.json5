@@ -60,7 +60,7 @@
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Server Configuration.
       "config": {
-        "set": "Set",
+        "set": "Set"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
