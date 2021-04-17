@@ -12,6 +12,8 @@ except according to the terms contained in the LICENSE file.
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 import { routeProps } from './util/router';
+import i18n from './i18n';
+import { instanceNameOrId } from './util/odata';
 
 /*
 Lazy-Loading Routes
@@ -129,6 +131,46 @@ The following meta fields are supported for bottom-level routes:
     for each condition; the watcher will check the associated data as soon as it
     exists. The watcher will also continue watching the data, checking that it
     continues to meet the condition.
+
+Responsive Document Titles
+--------------------------
+
+  - title
+
+    The router updates the document title (text that appears in the browser tab
+    and history) after a route is changed. It looks at the current route and
+    calls that route's title.parts() function, which returns a list of strings to
+    combine to build the full document title.
+
+    The parts() function likely uses the i18n translations (specified in
+    `src/locales/en.json5`).
+
+    It may also use fields of a particular resource (e.g. `project.name``). This is
+    passed in as parts({ <object> }) where the object is destructured from the
+    Vuex storage: `store.state.request.data`` (which has data stored at various keys
+    described here: `src/store/modules/request/keys.js`).
+
+    The IMPORTANT thing to note is that most resources are loaded asyncrounously
+    after the page is loaded, so the Project, Form, User, etc. object may not have
+    information about it right away. This is where the `title.key` field is used
+    to tell the router to watch for changes to the Vuex store for a particular key.
+    If it sees those changes, it will update the document title with the new
+    information. (If the information about a resource is already loaded, from viewing
+    different pages about the same project or form for example, the router will be
+    able to build the proper title parts the first time.)
+
+    Here is an example value with
+    * delayed data referenced by storage key `project`
+    * i18n
+    * fetching information from an object that may be null
+
+    {
+      key: 'project',
+      parts: ({ project }) => [
+        i18n.t('title.project.appUsers'),
+        project != null ? project.name : null
+      ]
+    }
 */
 
 /*
@@ -181,22 +223,42 @@ const routes = [
     path: '/login',
     name: 'AccountLogin',
     component: AccountLogin,
-    meta: { requireLogin: false, requireAnonymity: true }
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: { parts: () => [i18n.t('action.logIn')] }
+    }
   },
   asyncRoute({
     path: '/reset-password',
     component: 'AccountResetPassword',
     loading: 'page',
-    meta: { requireLogin: false, requireAnonymity: true }
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: { parts: () => [i18n.t('title.resetPassword')] }
+    }
   }),
   asyncRoute({
     path: '/account/claim',
     component: 'AccountClaim',
     loading: 'page',
-    meta: { restoreSession: false, requireLogin: false, requireAnonymity: true }
+    meta: {
+      restoreSession: false,
+      requireLogin: false,
+      requireAnonymity: true,
+      title: { parts: () => [i18n.t('title.setPassword')] }
+    }
   }),
 
-  asyncRoute({ path: '/', component: 'ProjectList', loading: 'page' }),
+  asyncRoute({
+    path: '/',
+    component: 'ProjectList',
+    loading: 'page',
+    meta: {
+      title: { parts: () => [i18n.t('resource.projects')] } // Homepage
+    }
+  }),
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)',
     component: 'ProjectShow',
@@ -212,6 +274,10 @@ const routes = [
         meta: {
           validateData: {
             project: (project) => project.permits('form.list')
+          },
+          title: {
+            key: 'project',
+            parts: ({ project }) => [project != null ? project.name : null]
           }
         }
       }),
@@ -227,6 +293,13 @@ const routes = [
               'assignment.create',
               'assignment.delete'
             ])
+          },
+          title: {
+            key: 'project',
+            parts: ({ project }) => [
+              i18n.t('resource.projectRoles'),
+              project != null ? project.name : null
+            ]
           }
         }
       }),
@@ -242,6 +315,13 @@ const routes = [
               'field_key.create',
               'session.end'
             ])
+          },
+          title: {
+            key: 'project',
+            parts: ({ project }) => [
+              i18n.t('resource.appUsers'),
+              project != null ? project.name : null
+            ]
           }
         }
       }),
@@ -261,6 +341,13 @@ const routes = [
               'assignment.create',
               'assignment.delete'
             ])
+          },
+          title: {
+            key: 'project',
+            parts: ({ project }) => [
+              i18n.t('projectShow.tab.formAccess'),
+              project != null ? project.name : null
+            ]
           }
         }
       }),
@@ -271,6 +358,13 @@ const routes = [
         meta: {
           validateData: {
             project: (project) => project.permits(['project.update'])
+          },
+          title: {
+            key: 'project',
+            parts: ({ project }) => [
+              i18n.t('common.tab.settings'),
+              project != null ? project.name : null
+            ]
           }
         }
       })
@@ -299,6 +393,10 @@ const routes = [
               // Data Collectors.
               project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [form != null ? form.nameOrId() : null]
           }
         }
       }),
@@ -313,6 +411,13 @@ const routes = [
               // Including submission.list in order to exclude Data Collectors.
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('formHead.tab.versions'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -329,6 +434,13 @@ const routes = [
               'submission.read'
             ]),
             form: (form) => form.publishedAt != null
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('resource.submissions'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -346,6 +458,13 @@ const routes = [
               'session.end'
             ]),
             form: (form) => form.publishedAt != null
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('formHead.tab.publicAccess'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -358,6 +477,13 @@ const routes = [
             project: (project) =>
               project.permits(['form.read', 'form.update', 'form.delete']),
             form: (form) => form.publishedAt != null
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('common.tab.settings'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -371,6 +497,13 @@ const routes = [
             project: (project) =>
               project.permits(['form.read', 'form.update', 'form.delete']),
             formDraft: (formDraft) => formDraft.isDefined()
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('formHead.draftNav.tab.status'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -384,6 +517,13 @@ const routes = [
             attachments: (option) => option
               .map(attachments => attachments.length !== 0)
               .orElse(false)
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('formHead.draftNav.tab.attachments'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       }),
@@ -400,6 +540,13 @@ const routes = [
               'submission.read'
             ]),
             formDraft: (formDraft) => formDraft.isDefined()
+          },
+          title: {
+            key: 'form',
+            parts: ({ form }) => [
+              i18n.t('formHead.draftNav.tab.testing'),
+              form != null ? form.nameOrId() : null
+            ]
           }
         }
       })
@@ -413,6 +560,12 @@ const routes = [
     meta: {
       validateData: {
         project: (project) => project.permits('submission.read')
+      },
+      title: {
+        key: 'submission',
+        parts: ({ submission }) => [
+          submission != null ? instanceNameOrId(submission) : null
+        ]
       }
     }
   }),
@@ -438,7 +591,8 @@ const routes = [
               'user.password.invalidate',
               'user.delete'
             ])
-          }
+          },
+          title: { parts: () => [i18n.t('resource.webUsers')] }
         }
       })
     ]
@@ -452,13 +606,22 @@ const routes = [
       validateData: {
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
+      },
+      title: {
+        key: 'user',
+        parts: ({ user }) => [
+          user != null ? user.displayName : null
+        ]
       }
     }
   }),
   asyncRoute({
     path: '/account/edit',
     component: 'AccountEdit',
-    loading: 'page'
+    loading: 'page',
+    meta: {
+      title: { parts: () => [i18n.t('title.editProfile')] }
+    }
   }),
 
   asyncRoute({
@@ -480,7 +643,8 @@ const routes = [
               'backup.terminate',
               'audit.read'
             ])
-          }
+          },
+          title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
         }
       }),
       asyncRoute({
@@ -490,7 +654,8 @@ const routes = [
         meta: {
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
-          }
+          },
+          title: { parts: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')] }
         }
       })
     ]
@@ -500,14 +665,21 @@ const routes = [
     path: '/dl/*',
     component: 'Download',
     loading: 'page',
-    key: () => '/dl'
+    key: () => '/dl',
+    meta: {
+      title: { parts: () => [i18n.t('title.download')] }
+    }
   }),
 
   asyncRoute({
     path: '*',
     component: 'NotFound',
     loading: 'page',
-    meta: { restoreSession: false, requireLogin: false }
+    meta: {
+      restoreSession: false,
+      requireLogin: false,
+      title: { parts: () => [i18n.t('title.pageNotFound')] }
+    }
   })
 ];
 export default routes;
@@ -528,7 +700,10 @@ const routesByName = {};
     ...meta,
     validateData: meta != null && meta.validateData != null
       ? Object.entries(meta.validateData)
-      : []
+      : [],
+    title: meta != null && meta.title != null
+      ? meta.title
+      : { parts: () => [] }
   });
 
   const stack = [...routes];
@@ -628,3 +803,5 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
+
+

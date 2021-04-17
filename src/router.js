@@ -14,7 +14,7 @@ import { last } from 'ramda';
 
 import routes from './routes';
 import store from './store';
-import { canRoute, confirmUnsavedChanges, forceReplace, preservesData } from './util/router';
+import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
@@ -148,7 +148,7 @@ router.beforeEach((to, from, next) => {
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
-meta field changes.
+or title.key meta field changes.
 
 If a component sets up its own watchers on the response data, they should be run
 after the router's watchers. (That might not be the case if the component
@@ -161,10 +161,18 @@ of the `key` attribute.)
     while (unwatch.length !== 0)
       unwatch.pop()();
 
-    for (const [key, validator] of last(to.matched).meta.validateData) {
+    const { meta } = last(to.matched);
+    for (const [key, validator] of meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
         if (value != null && !validator(value))
           forceReplace(router, store, '/');
+      }));
+    }
+
+    if (meta.title.key != null) {
+      const { key } = meta.title;
+      unwatch.push(store.watch((state) => state.request.data[key], () => {
+        updateDocumentTitle(to, store);
       }));
     }
   });
@@ -201,4 +209,12 @@ router.afterEach(() => {
 
 router.afterEach(() => {
   if (store.state.alert.state) store.commit('hideAlert');
+});
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PAGE TITLES
+
+router.afterEach((to) => {
+  updateDocumentTitle(to, store);
 });

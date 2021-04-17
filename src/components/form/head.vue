@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="rendersFormTabs" :class="formTabClass('')"
                 :title="formTabTitle" role="presentation">
                 <router-link :to="tabPath('')">
-                  {{ $t('formNav.tab.overview') }}
+                  {{ $t('common.tab.overview') }}
                 </router-link>
               </li>
               <!-- No v-if, because anyone who can navigate to the form should
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
               <li :class="formTabClass('versions')" :title="formTabTitle"
                 role="presentation">
                 <router-link :to="tabPath('versions')">
-                  {{ $t('formNav.tab.versions') }}
+                  {{ $t('formHead.tab.versions') }}
                 </router-link>
               </li>
               <li :class="formTabClass('submissions')" :title="formTabTitle"
@@ -55,13 +55,13 @@ except according to the terms contained in the LICENSE file.
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
                 :title="formTabTitle" role="presentation">
                 <router-link :to="tabPath('public-links')">
-                  {{ $t('formNav.tab.publicLinks') }}
+                  {{ $t('formHead.tab.publicAccess') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
                 :title="formTabTitle" role="presentation">
                 <router-link :to="tabPath('settings')">
-                  {{ $t('formNav.tab.settings') }}
+                  {{ $t('common.tab.settings') }}
                 </router-link>
               </li>
             </ul>
@@ -78,13 +78,13 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
                 role="presentation">
                 <router-link :to="tabPath('draft')">
-                  {{ $t('draftNav.tab.status') }}
+                  {{ $t('formHead.draftNav.tab.status') }}
                 </router-link>
               </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"
                 :class="tabClass('draft/attachments')" role="presentation">
                 <router-link :to="tabPath('draft/attachments')">
-                  {{ $t('draftNav.tab.attachments') }}
+                  {{ $t('formHead.draftNav.tab.attachments') }}
                   <template v-if="attachments != null">
                     <span v-show="missingAttachmentCount !== 0" class="badge">
                       {{ $n(missingAttachmentCount, 'default') }}
@@ -95,7 +95,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft/testing'))"
                 :class="tabClass('draft/testing')" role="presentation">
                 <router-link :to="tabPath('draft/testing')">
-                  {{ $t('draftNav.tab.testing') }}
+                  {{ $t('formHead.draftNav.tab.testing') }}
                 </router-link>
               </li>
             </ul>
@@ -237,12 +237,6 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Overview",
-        "versions": "Versions",
-        "publicLinks": "Public Access",
-        "settings": "Settings"
-      },
       // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
@@ -252,11 +246,6 @@ $tab-li-margin-top: 5px;
       "action": {
         "create": "Create a new Draft"
       },
-      "tab": {
-        "status": "Status",
-        "attachments": "Media Files",
-        "testing": "Testing"
-      }
     }
   }
 }

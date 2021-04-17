@@ -81,3 +81,17 @@ export const canRoute = (to, from, store) => {
   }
   return true;
 };
+
+/*
+updateDocumentTitle(to, store) updates the document title based on the route's title info.
+
+  - to. A Route object for the current route.
+  - store. Gets destructured in title parts() to pick out the name of the
+    resource object (e.g. project or form).
+*/
+export const updateDocumentTitle = (to, store) => {
+  const titlePath = to.meta.title.parts(store.state.request.data);
+  // Append ODK Central to every title, filter out any null values (e.g.
+  // project name before the project object was loaded), join with separator.
+  document.title = titlePath.concat('ODK Central').filter(x => x).join(' | ');
+};

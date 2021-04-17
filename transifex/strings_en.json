@@ -1,4 +1,78 @@
 {
+  "title": {
+    "resetPassword": {
+      "string": "Reset Password",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "setPassword": {
+      "string": "Set Password",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "editProfile": {
+      "string": "Edit Profile",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "download": {
+      "string": "Download",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "pageNotFound": {
+      "string": "Page Not Found",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    }
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": {
+        "string": "Form Access",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": {
+        "string": "Versions",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "publicAccess": {
+        "string": "Public Access",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    },
+    "draftNav": {
+      "tab": {
+        "status": {
+          "string": "Status",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "attachments": {
+          "string": "Media Files",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "testing": {
+          "string": "Testing",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        }
+      }
+    }
+  },
+  "systemHome": {
+    "title": {
+      "string": "System Management",
+      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+    },
+    "tab": {
+      "backups": {
+        "string": "Backups",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "audits": {
+        "string": "Server Audit Logs",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    }
+  },
   "role": {
     "none": {
       "string": "None",
@@ -234,6 +308,10 @@
       "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "claimAccount": {
+      "string": "Claim account",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "save": {
       "string": "Save",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -387,6 +465,10 @@
       "string": "Project",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "projects": {
+      "string": "Projects",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "publicLink": {
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -399,12 +481,20 @@
       "string": "Web User",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "webUsers": {
+      "string": "Web Users",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "session": {
       "string": "Session",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
       "string": "Submissions",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "projectRoles": {
+      "string": "Project Roles",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -497,6 +587,16 @@
     },
     "yes": {
       "string": "Yes"
+    },
+    "tab": {
+      "settings": {
+        "string": "Settings",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "overview": {
+        "string": "Overview",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
     }
   },
   "mixin": {
@@ -567,10 +667,6 @@
   },
   "component": {
     "AccountClaim": {
-      "title": {
-        "string": "Set Password",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "action": {
         "set": {
           "string": "Set password",
@@ -590,10 +686,6 @@
       }
     },
     "AccountLogin": {
-      "title": {
-        "string": "Log in",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "alert": {
         "alreadyLoggedIn": {
           "string": "A user is already logged in. Please refresh the page to continue."
@@ -606,10 +698,6 @@
       }
     },
     "AccountResetPassword": {
-      "title": {
-        "string": "Reset Password",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
@@ -1647,24 +1735,6 @@
         }
       },
       "formNav": {
-        "tab": {
-          "overview": {
-            "string": "Overview",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "versions": {
-            "string": "Versions",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "publicLinks": {
-            "string": "Public Access",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "settings": {
-            "string": "Settings",
-            "developer_comment": "This is the text of a navigation tab."
-          }
-        },
         "tabTitle": {
           "string": "These functions will become available once you publish your Draft Form",
           "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
@@ -1679,20 +1749,6 @@
           "create": {
             "string": "Create a new Draft",
             "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        },
-        "tab": {
-          "status": {
-            "string": "Status",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "attachments": {
-            "string": "Media Files",
-            "developer_comment": "This is the text of a navigation tab."
-          },
-          "testing": {
-            "string": "Testing",
-            "developer_comment": "This is the text of a navigation tab."
           }
         }
       }
@@ -2029,10 +2085,6 @@
       }
     },
     "NotFound": {
-      "title": {
-        "string": "Page Not Found",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "body": {
         "string": "The page you requested could not be found."
       }
@@ -2509,26 +2561,6 @@
         }
       }
     },
-    "ProjectShow": {
-      "tab": {
-        "overview": {
-          "string": "Overview",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "users": {
-          "string": "Project Roles",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "formAccess": {
-          "string": "Form Access",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "settings": {
-          "string": "Settings",
-          "developer_comment": "This is the text of a navigation tab."
-        }
-      }
-    },
     "ProjectSubmissionOptions": {
       "title": {
         "string": "Submission Options",
@@ -2792,7 +2824,7 @@
       "tab": {
         "microsoft": {
           "string": "Excel/Power BI",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
           "string": "Other",
@@ -3111,22 +3143,6 @@
         }
       }
     },
-    "SystemHome": {
-      "title": {
-        "string": "System Management",
-        "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
-      },
-      "tab": {
-        "backups": {
-          "string": "Backups",
-          "developer_comment": "This is the text of a navigation tab."
-        },
-        "audits": {
-          "string": "Server Audit Logs",
-          "developer_comment": "This is the text of a navigation tab."
-        }
-      }
-    },
     "TimeAndUser": {
       "text": {
         "string": "{dateTime} by {displayName}",
@@ -3181,11 +3197,11 @@
       "tab": {
         "users": {
           "string": "Web Users",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "roles": {
           "string": "Role Settings",
-          "developer_comment": "This is the text of a navigation tab."
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         }
       },
       "comingSoon": {

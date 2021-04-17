@@ -46,6 +46,10 @@ describe('AccountClaim', () => {
         app.first('.Password__strength-meter--fill').getAttribute('data-score').should.equal('4');
       }));
 
+  it('shows proper page title', () =>
+    mockRoute(LOCATION)
+      .then(() => document.title.should.equal('Set Password | ODK Central')));
+
   describe('after a successful response', () => {
     let app;
     beforeEach(() => mockRoute(LOCATION)

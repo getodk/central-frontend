@@ -1,10 +1,43 @@
 // action: This is the text for an action, for example, the text of a button.
 // field: This is the text of a form field.
 // header: This is the text of a table column header.
-
-// tab: This is the text of a navigation tab.
+// tab: This is the text of a navigation tab, which may also be shown as the page title (browser tab).
 
 {
+  // This is the text shown as the title of a page including in the browser tab.
+  "title": {
+    "resetPassword": "Reset Password",
+    "setPassword": "Set Password",
+    "editProfile": "Edit Profile",
+    "download": "Download",
+    "pageNotFound": "Page Not Found"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Form Access",
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versions",
+      "publicAccess": "Public Access",
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Status",
+        "attachments": "Media Files",
+        "testing": "Testing"
+      }
+    }
+  },
+  "systemHome": {
+    // This is the title of the page for managing backups, audit logs, and other system-level functions.
+    "title": "System Management",
+    "tab": {
+      "backups": "Backups",
+      "audits": "Server Audit Logs"
+    }
+  },
   // This is the name of a user Role.
   "role": {
     // This is shown when a user does not have a Role.
@@ -127,6 +160,7 @@
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
     "resetPassword": "Reset password",
+    "claimAccount": "Claim account",
     "save": "Save",
     "update": "Update",
     "yesProceed": "Yes, proceed"
@@ -181,11 +215,14 @@
     "appUsers": "App Users",
     "form": "Form",
     "project": "Project",
+    "projects": "Projects",
     "publicLink": "Public Access Link",
     "user": "User",
     "webUser": "Web User",
+    "webUsers": "Web Users",
     "session": "Session",
-    "submissions": "Submissions"
+    "submissions": "Submissions",
+    "projectRoles": "Project Roles",
   },
   "moreInfo": {
     "clickHere": {
@@ -232,7 +269,11 @@
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     "success": "Success!",
-    "yes": "Yes"
+    "yes": "Yes",
+    "tab": {
+      "settings": "Settings",
+      "overview": "Overview"
+    }
   },
   "mixin": {
     "request": {

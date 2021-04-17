@@ -55,5 +55,14 @@ describe('NavbarLocaleDropdown', () => {
       selectLocale().then(() => {
         localStorage.getItem('locale').should.equal('es');
       }));
+
+    it('updates the page title based on the new locale', () =>
+      selectLocale()
+        // Wait for the locale to be loaded.
+        .then(() => wait(100))
+        .then(() => {
+          // Log in screen
+          document.title.should.equal('Ingresar | ODK Central');
+        }));
   });
 });
