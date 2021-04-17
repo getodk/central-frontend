@@ -41,8 +41,8 @@ export default {
         this.categoryOption('user'),
         this.actionOption('user.create'),
         this.actionOption('user.update'),
-        this.actionOption('assignment.create'),
-        this.actionOption('assignment.delete'),
+        this.actionOption('user.assignment.create'),
+        this.actionOption('user.assignment.delete'),
         this.actionOption('user.delete'),
         this.categoryOption('project'),
         this.actionOption('project.create'),
@@ -58,10 +58,18 @@ export default {
         this.actionOption('form.delete'),
         this.categoryOption('field_key'),
         this.actionOption('field_key.create'),
+        this.actionOption('field_key.assignment.create'),
+        this.actionOption('field_key.assignment.delete'),
+        this.actionOption('field_key.session.end'),
+        this.actionOption('field_key.delete'),
         this.categoryOption('public_link'),
         this.actionOption('public_link.create'),
-        this.categoryOption('session'),
-        this.actionOption('session.end')
+        this.actionOption('public_link.assignment.create'),
+        this.actionOption('public_link.assignment.delete'),
+        this.actionOption('public_link.session.end'),
+        this.actionOption('public_link.delete'),
+        this.categoryOption('config'),
+        this.actionOption('config.set')
       ];
     }
   },

@@ -13,6 +13,7 @@ import { presenterClass } from './base';
 
 const props = [
   'id',
+  'type',
   'displayName',
   'email',
   'createdAt',

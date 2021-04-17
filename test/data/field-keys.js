@@ -28,6 +28,7 @@ export const extendedFieldKeys = dataStore({
     return {
       id,
       projectId: project.id,
+      type: 'field_key',
       displayName,
       token,
       lastUsed: lastUsed !== undefined

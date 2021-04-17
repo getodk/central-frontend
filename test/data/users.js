@@ -25,6 +25,7 @@ export const extendedUsers = dataStore({
     verbs = verbsByRole(role)
   }) => ({
     id,
+    type: 'user',
     displayName,
     email,
     verbs,

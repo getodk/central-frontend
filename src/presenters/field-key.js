@@ -14,6 +14,7 @@ import { presenterClass } from './base';
 const props = [
   'id',
   'projectId',
+  'type',
   'displayName',
   'token',
   'createdAt',

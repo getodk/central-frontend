@@ -25,6 +25,7 @@ export const standardPublicLinks = dataStore({
 
     return {
       id,
+      type: 'public_link',
       displayName,
       once,
       token,

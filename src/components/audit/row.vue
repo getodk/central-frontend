@@ -19,10 +19,13 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="initiator">
-      <router-link v-if="audit.actor != null" :to="userPath(audit.actor.id)"
-        :title="audit.actor.displayName">
-        {{ audit.actor.displayName }}
-      </router-link>
+      <template v-if="audit.actor != null">
+        <router-link v-if="audit.actor.type === 'user'"
+          :to="userPath(audit.actor.id)" :title="audit.actor.displayName">
+          {{ audit.actor.displayName }}
+        </router-link>
+        <span v-else :title="audit.actor.displayName">{{ audit.actor.displayName }}</span>
+      </template>
     </td>
     <td class="target">
       <template v-if="target != null">
@@ -39,27 +42,24 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import Form from '../../presenters/form';
 import Selectable from '../selectable.vue';
+
+import Form from '../../presenters/form';
 import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
 
 const typeByCategory = {
-  session: 'resource.session',
   user: 'resource.user',
-  assignment: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
   public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
+  config: 'resource.config',
   upgrade: 'audit.category.upgrade'
 };
 
 const getDisplayName = ({ displayName }) => displayName;
 const acteeSpeciesByCategory = {
-  session: {
-    title: getDisplayName
-  },
   user: {
     title: getDisplayName,
     path: ({ id }, vm) => vm.userPath(id)
@@ -79,7 +79,6 @@ const acteeSpeciesByCategory = {
     title: getDisplayName
   }
 };
-acteeSpeciesByCategory.assignment = acteeSpeciesByCategory.user;
 // Presumably at some point, the actee of an upgrade audit might not be a form,
 // at which point we will have to update this component (perhaps we would use
 // the full action or a prefix instead of the category).
