@@ -186,6 +186,8 @@ export default {
   }
 
   .btn-group {
+    // Setting the background color in case the edit button is disabled.
+    background-color: $color-page-background;
     left: -1000px;
     position: absolute;
     top: 4px;
