@@ -119,7 +119,7 @@ describe('SubmissionMetadataRow', () => {
     });
 
     it('does not show the count if there has not been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: null });
+      testData.extendedSubmissions.createPast(1, { edits: 0 });
       mountComponent().find('.edits').length.should.equal(0);
     });
   });
@@ -135,16 +135,10 @@ describe('SubmissionMetadataRow', () => {
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
-    it('shows the correct text if there has been an edit', () => {
+    it('shows the correct text', () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
       const text = mountComponent().first('.btn-primary').text();
       text.should.equal('Edit (1,000)');
-    });
-
-    it('shows the correct text if there has not been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: null });
-      const text = mountComponent().first('.btn-primary').text();
-      text.should.equal('Edit (0)');
     });
 
     it('does not render the button if the canUpdate prop is false', () => {

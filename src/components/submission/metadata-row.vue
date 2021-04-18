@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <td><date-time :iso="submission.__system.submissionDate"/></td>
     <td v-if="!draft" class="state-and-actions">
       <span class="state"><span :class="stateIcon"></span>{{ stateText }}</span>
-      <span v-if="submission.__system.edits != null" class="edits">
+      <span v-if="submission.__system.edits !== 0" class="edits">
         <span class="icon-pencil"></span>
         <span>{{ $n(submission.__system.edits, 'default') }}</span>
       </span>
@@ -117,9 +117,8 @@ export default {
       );
     },
     editText() {
-      const { edits } = this.submission.__system;
       return this.$t('submission.action.edit', {
-        count: this.$n(edits != null ? edits : 0, 'default')
+        count: this.$n(this.submission.__system.edits, 'default')
       });
     }
   }
