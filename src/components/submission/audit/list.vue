@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <page-section id="submission-audit-list" condensed>
     <template #heading>
-      <span>{{ $t('title') }}</span>
+      <span>{{ $t('common.activity') }}</span>
       <template v-if="project != null && project.permits('submission.update')">
         <button id="submission-audit-list-update-review-state-button"
           type="button" class="btn btn-default"
           @click="$emit('update-review-state')">
-          <span class="icon-check"></span>{{ $t('action.updateReviewState') }}
+          <span class="icon-check"></span>{{ $t('action.review') }}
         </button>
         <template v-if="submission != null">
           <a v-if="submission.__system.status == null"
@@ -83,15 +83,3 @@ export default {
 <style lang="scss">
 #submission-audit-list-update-review-state-button { margin-right: 5px; }
 </style>
-
-<i18n lang="json5">
-{
-  "en": {
-    // This is a title shown above a section of the page.
-    "title": "Actions",
-    "action": {
-      "updateReviewState": "Update State"
-    }
-  }
-}
-</i18n>

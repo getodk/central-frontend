@@ -336,8 +336,8 @@
       "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "claimAccount": {
-      "string": "Claim account",
+    "review": {
+      "string": "Review",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -579,6 +579,10 @@
     }
   },
   "common": {
+    "activity": {
+      "string": "Activity",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
     "anybody": {
       "string": "(Anybody)",
       "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
@@ -2909,18 +2913,6 @@
             "string": "this article",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
           }
-        }
-      }
-    },
-    "SubmissionAuditList": {
-      "title": {
-        "string": "Actions",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "action": {
-        "updateReviewState": {
-          "string": "Update State",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

@@ -171,7 +171,7 @@
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
     "resetPassword": "Reset password",
-    "claimAccount": "Claim account",
+    "review": "Review",
     "save": "Save",
     "update": "Update",
     "yesProceed": "Yes, proceed"
@@ -261,6 +261,8 @@
     "encryptionMessage": "Data preview is not available due to encryption."
   },
   "common": {
+    // This is a title shown above a section of the page.
+    "activity": "Activity",
     // This is shown in a dropdown that allows the user to filter to only show
     // data for particular users.
     "anybody": "(Anybody)",
