@@ -36,6 +36,9 @@ h1, .h1 {
 p { max-width: $max-width-p; }
 
 dl div {
+  display: flex;
+  flex-direction: column-reverse;
+
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   padding-top: 10px;
@@ -47,6 +50,13 @@ dl div {
     padding-bottom: 0;
   }
 }
+
+dt {
+  color: #666;
+  font-weight: normal;
+}
+
+dd { font-size: 16px; }
 
 pre {
   background-color: $color-subpanel-background;

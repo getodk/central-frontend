@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <page-section id="submission-basic-details" condensed>
     <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
     <template #body>
-      <dl class="dl-horizontal">
+      <dl>
         <div>
           <dt>{{ $t('header.instanceId') }}</dt>
           <dd><span :title="submission.__id">{{ submission.__id }}</span></dd>

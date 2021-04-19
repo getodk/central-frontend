@@ -20,15 +20,15 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <div v-show="dataExists">
-        <div class="row">
-          <div class="col-xs-7">
-            <submission-basic-details v-if="submission != null"/>
-          </div>
+      <div v-show="dataExists" class="row">
+        <div class="col-xs-4">
+          <submission-basic-details v-if="submission != null"/>
         </div>
-        <submission-audit-list :project-id="projectId" :xml-form-id="xmlFormId"
-          :instance-id="instanceId"
-          @update-review-state="showModal('updateReviewState')"/>
+        <div class="col-xs-8">
+          <submission-audit-list :project-id="projectId"
+            :xml-form-id="xmlFormId" :instance-id="instanceId"
+            @update-review-state="showModal('updateReviewState')"/>
+        </div>
       </div>
     </page-body>
     <submission-update-review-state v-if="submission != null"
