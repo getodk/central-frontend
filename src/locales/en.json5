@@ -61,9 +61,9 @@
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
-    "approved": "Approved",
     "hasIssues": "Has issues",
-    "needsReview": "Needs review",
+    "edited": "Edited",
+    "approved": "Approved",
     "rejected": "Rejected"
   },
   "audit": {

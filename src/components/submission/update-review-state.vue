@@ -28,10 +28,6 @@ except according to the terms contained in the LICENSE file.
                 <span class="icon-comments"></span>{{ $t('reviewState.hasIssues') }}
               </label>
               <label>
-                <input v-model="reviewState" type="radio" value="needsReview">
-                <span class="icon-eye"></span>{{ $t('reviewState.needsReview') }}
-              </label>
-              <label>
                 <input v-model="reviewState" type="radio" value="rejected">
                 <span class="icon-times-circle"></span>{{ $t('reviewState.rejected') }}
               </label>
@@ -40,7 +36,7 @@ except according to the terms contained in the LICENSE file.
           <div class="col-xs-8">
             <label class="form-group">
               <textarea v-model.trim="notes" class="form-control"
-                :placeholder="$t('field.notes')" rows="4">
+                :placeholder="$t('field.notes')" rows="3">
               </textarea>
               <span class="form-label">{{ $t('field.notes') }}</span>
             </label>
@@ -93,7 +89,9 @@ export default {
     const { reviewState } = this.$store.state.request.data.submission.__system;
     return {
       awaitingResponse: false,
-      reviewState: reviewState != null ? reviewState : 'approved',
+      reviewState: reviewState == null || reviewState === 'edited'
+        ? 'approved'
+        : reviewState,
       notes: ''
     };
   },
@@ -104,7 +102,9 @@ export default {
     state(state) {
       if (!state) {
         const { reviewState } = this.submission.__system;
-        this.reviewState = reviewState != null ? reviewState : 'approved';
+        this.reviewState = reviewState == null || reviewState === 'edited'
+          ? 'approved'
+          : reviewState;
         this.notes = '';
       }
     }
@@ -141,7 +141,7 @@ export default {
   .radio { margin-top: 0; }
 
   $margin-left-icon: 2px;
-  .icon-comments, .icon-eye {
+  .icon-comments {
     margin-left: $margin-left-icon;
     margin-right: $margin-right-icon;
   }
@@ -150,8 +150,8 @@ export default {
     margin-right: #{$margin-right-icon + 1px};
   }
 
-  .icon-comments, .icon-eye { color: $color-warning; }
   .icon-check-circle { color: $color-success; }
+  .icon-comments { color: $color-warning; }
   .icon-times-circle { color: $color-danger; }
 }
 </style>

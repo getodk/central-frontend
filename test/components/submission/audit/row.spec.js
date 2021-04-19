@@ -60,14 +60,14 @@ describe('SubmissionAuditRow', () => {
         action.text().trim().should.equal('Has issues');
       });
 
-      it('renders correctly for needsReview', () => {
+      it('renders correctly for edited', () => {
         testData.extendedAudits.createPast(1, {
           action: 'submission.update',
-          details: { reviewState: 'needsReview' }
+          details: { reviewState: 'edited' }
         });
         const action = mountComponent().first('.action');
-        action.find('.icon-eye').length.should.equal(1);
-        action.text().trim().should.equal('Needs review');
+        action.find('.icon-pencil').length.should.equal(1);
+        action.text().trim().should.equal('Edited');
       });
 
       it('renders correctly for approved', () => {

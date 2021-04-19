@@ -55,7 +55,7 @@ import { apiPaths } from '../../util/request';
 
 const iconsByReviewState = {
   hasIssues: 'icon-comments',
-  needsReview: 'icon-eye',
+  edited: 'icon-pencil',
   approved: 'icon-check-circle',
   rejected: 'icon-times-circle'
 };
@@ -152,19 +152,18 @@ export default {
     // Ensure that there is space for the edit count and angle icon if the
     // column exceeds its min width.
     margin-right: #{$edits-and-angle-width + 15px};
-  }
 
-  .icon-comments, .icon-eye { margin-right: $margin-right-icon; }
-  .icon-circle-o, .icon-dot-circle-o, .icon-check-circle, .icon-times-circle {
-    margin-left: 1px;
-    margin-right: #{$margin-right-icon + 1px};
-  }
+    .icon-comments { margin-right: $margin-right-icon; }
+    .icon-circle-o, .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
+      margin-left: 1px;
+      margin-right: #{$margin-right-icon + 1px};
+    }
 
-  .icon-circle-o { color: $color-warning; }
-  .icon-dot-circle-o { color: #999; }
-  .icon-comments, .icon-eye { color: $color-warning; }
-  .icon-check-circle { color: $color-success; }
-  .icon-times-circle { color: $color-danger; }
+    .icon-circle-o, .icon-comments, .icon-pencil { color: $color-warning; }
+    .icon-dot-circle-o { color: #999; }
+    .icon-check-circle { color: $color-success; }
+    .icon-times-circle { color: $color-danger; }
+  }
 
   .edits {
     color: #777;
@@ -172,8 +171,9 @@ export default {
     // aligned across rows.
     left: calc(100% - #{$edits-and-angle-width + $padding-right-table-data});
     position: absolute;
+
+    .icon-pencil { margin-right: 5px; }
   }
-  .icon-pencil { margin-right: 5px; }
 
   .icon-angle-right {
     bottom: #{$padding-right-table-data + 1px};

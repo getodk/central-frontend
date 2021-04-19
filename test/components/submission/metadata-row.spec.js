@@ -66,13 +66,11 @@ describe('SubmissionMetadataRow', () => {
       state.text().should.equal('Has issues');
     });
 
-    it('renders correctly for a review state of needsReview', () => {
-      testData.extendedSubmissions.createPast(1, {
-        reviewState: 'needsReview'
-      });
+    it('renders correctly for a review state of edited', () => {
+      testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const state = mountComponent().first('.state');
-      state.find('.icon-eye').length.should.equal(1);
-      state.text().should.equal('Needs review');
+      state.find('.icon-pencil').length.should.equal(1);
+      state.text().should.equal('Edited');
     });
 
     it('renders correctly for a review state of approved', () => {

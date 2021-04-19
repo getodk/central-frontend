@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <span :class="reviewStateIcon"></span>{{ reviewStateText }}
       </template>
       <template v-else>
-        <span class="icon-pencil"></span>{{ $t('edited') }}
+        <span class="icon-pencil"></span>{{ $t('reviewState.edited') }}
       </template>
     </td>
     <td class="notes">{{ audit.notes }}</td>
@@ -37,7 +37,7 @@ import Audit from '../../../presenters/audit';
 
 const iconsByReviewState = {
   hasIssues: 'icon-comments',
-  needsReview: 'icon-eye',
+  edited: 'icon-pencil',
   approved: 'icon-check-circle',
   rejected: 'icon-times-circle'
 };
@@ -77,7 +77,7 @@ export default {
   .actor { @include text-overflow-ellipsis; }
 
   .action {
-    .icon-comments, .icon-eye { margin-right: $margin-right-icon; }
+    .icon-comments { margin-right: $margin-right-icon; }
     .icon-cloud-upload { margin-right: #{$margin-right-icon - 1px}; }
     .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
       margin-left: 1px;
@@ -85,7 +85,7 @@ export default {
     }
 
     .icon-cloud-upload, .icon-dot-circle-o { color: #999; }
-    .icon-comments, .icon-eye, .icon-pencil { color: $color-warning; }
+    .icon-comments, .icon-pencil { color: $color-warning; }
     .icon-check-circle { color: $color-success; }
     .icon-times-circle { color: $color-danger; }
   }
@@ -101,9 +101,7 @@ export default {
 {
   "en": {
     // This text indicates that a Submission was submitted.
-    "created": "Submitted",
-    // This text is shown for a Submission that was edited.
-    "edited": "Edited"
+    "created": "Submitted"
   }
 }
 </i18n>

@@ -52,6 +52,12 @@ describe('SubmissionUpdateReviewState', () => {
       const radio = mountComponent().first('input[value="approved"]');
       radio.element.checked.should.be.true();
     });
+
+    it('sets the selection to approved if current review state is edited', () => {
+      testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
+      const radio = mountComponent().first('input[value="approved"]');
+      radio.element.checked.should.be.true();
+    });
   });
 
   it('focuses the review state radio', () => {

@@ -114,16 +114,16 @@
       "string": "Received",
       "developer_comment": "This is a possible Review State for a Submission."
     },
-    "approved": {
-      "string": "Approved",
-      "developer_comment": "This is a possible Review State for a Submission."
-    },
     "hasIssues": {
       "string": "Has issues",
       "developer_comment": "This is a possible Review State for a Submission."
     },
-    "needsReview": {
-      "string": "Needs review",
+    "edited": {
+      "string": "Edited",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "approved": {
+      "string": "Approved",
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "rejected": {
@@ -2928,10 +2928,6 @@
       "created": {
         "string": "Submitted",
         "developer_comment": "This text indicates that a Submission was submitted."
-      },
-      "edited": {
-        "string": "Edited",
-        "developer_comment": "This text is shown for a Submission that was edited."
       }
     },
     "SubmissionAuditTable": {
