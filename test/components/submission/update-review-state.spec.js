@@ -157,14 +157,20 @@ describe('SubmissionUpdateReviewState', () => {
           });
           return testData.standardSubmissions.last();
         })
-        .respondWithData(() => testData.extendedAudits.sorted());
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedComments.sorted());
     };
 
-    it('sends the correct request for the audit log entries', () =>
-      submit().beforeEachResponse((_, { method, url, index }) => {
+    it('sends the correct requests for activity data', () =>
+      submit().beforeEachResponse((_, { method, url, headers }, index) => {
+        if (index === 0) return;
+        method.should.equal('GET');
         if (index === 1) {
-          method.should.equal('GET');
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
+          headers['X-Extended-Metadata'].should.equal('true');
+        } else if (index === 2) {
+          url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
+          headers['X-Extended-Metadata'].should.equal('true');
         }
       }));
 

@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <submission-audit-table/>
-      <loading :state="$store.getters.initiallyLoading(['audits'])"/>
+      <loading :state="initiallyLoading"/>
     </template>
   </page-section>
 </template>
@@ -69,6 +69,9 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['project', 'submission', 'audits']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['audits', 'comments']);
+    },
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,

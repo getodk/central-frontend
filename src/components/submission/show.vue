@@ -103,16 +103,27 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchAudits() {
-      this.$store.dispatch('get', [{
-        key: 'audits',
-        url: apiPaths.submissionAudits(
-          this.projectId,
-          this.xmlFormId,
-          this.instanceId
-        ),
-        extended: true
-      }]).catch(noop);
+    fetchActivityData() {
+      this.$store.dispatch('get', [
+        {
+          key: 'audits',
+          url: apiPaths.submissionAudits(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId
+          ),
+          extended: true
+        },
+        {
+          key: 'comments',
+          url: apiPaths.submissionComments(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId
+          ),
+          extended: true
+        }
+      ]).catch(noop);
     },
     fetchData() {
       // We do not reconcile project.lastSubmission and
@@ -133,10 +144,10 @@ export default {
           )
         }
       ]).catch(noop);
-      this.fetchAudits();
+      this.fetchActivityData();
     },
     afterUpdateReviewState(reviewState) {
-      this.fetchAudits();
+      this.fetchActivityData();
       this.hideModal('updateReviewState');
       this.$alert().success(this.$t('alert.updateReviewState'));
       this.$store.commit('setData', {

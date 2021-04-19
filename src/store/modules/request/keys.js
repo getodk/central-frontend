@@ -52,6 +52,7 @@ export const keys = [
   'submitters',
   'submission',
   'audits',
+  'comments',
   'publicLinks',
   'fieldKeys',
 

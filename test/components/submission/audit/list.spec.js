@@ -10,13 +10,14 @@ const mountComponent = () => {
   const form = testData.extendedForms.last();
   const submission = testData.submissionOData();
   const audits = testData.extendedAudits.sorted();
+  const comments = testData.extendedComments.sorted();
   return mount(SubmissionAuditList, {
     propsData: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
     },
-    requestData: { project, submission, audits },
+    requestData: { project, submission, audits, comments },
     router: true
   });
 };
@@ -40,10 +41,13 @@ describe('SubmissionAuditList', () => {
         } else if (index === 2) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits");
           headers['X-Extended-Metadata'].should.equal('true');
+        } else if (index === 3) {
+          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments");
+          headers['X-Extended-Metadata'].should.equal('true');
         }
       })
       .afterResponses(() => {
-        count.should.equal(3);
+        count.should.equal(4);
       });
   });
 
