@@ -1,5 +1,4 @@
 import DateTime from '../../../src/components/date-time.vue';
-import LinkIfCan from '../../../src/components/link-if-can.vue';
 import SubmissionBasicDetails from '../../../src/components/submission/basic-details.vue';
 
 import testData from '../../data';
@@ -27,10 +26,9 @@ describe('SubmissionBasicDetails', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedUsers.first()
     });
-    const link = mountComponent().first(LinkIfCan);
-    link.getProp('to').should.equal('/users/1/edit');
-    link.text().trim().should.equal('Alice');
-    link.getAttribute('title').should.equal('Alice');
+    const span = mountComponent().find('dd')[1].first('span');
+    span.text().should.equal('Alice');
+    span.getAttribute('title').should.equal('Alice');
   });
 
   it('shows the submission date', () => {

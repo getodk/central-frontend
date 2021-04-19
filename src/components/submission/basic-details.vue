@@ -21,10 +21,7 @@ except according to the terms contained in the LICENSE file.
         <div>
           <dt>{{ $t('header.submitterName') }}</dt>
           <dd>
-            <link-if-can :to="userPath(submission.__system.submitterId)"
-              :title="submission.__system.submitterName">
-              {{ submission.__system.submitterName }}
-            </link-if-can>
+            <span :title="submission.__system.submitterName">{{ submission.__system.submitterName }}</span>
           </dd>
         </div>
         <div>
@@ -54,16 +51,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import LinkIfCan from '../link-if-can.vue';
 import PageSection from '../page/section.vue';
 
-import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionBasicDetails',
-  components: { DateTime, LinkIfCan, PageSection },
-  mixins: [routes()],
+  components: { DateTime, PageSection },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
