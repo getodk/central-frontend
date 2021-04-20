@@ -168,7 +168,7 @@ describe('SubmissionUpdateReviewState', () => {
         if (index === 1) {
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
           headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 2) {
+        } else {
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
           headers['X-Extended-Metadata'].should.equal('true');
         }

@@ -272,6 +272,10 @@
       "string": "Close",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "comment": {
+      "string": "Comment",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -354,6 +358,10 @@
     }
   },
   "field": {
+    "comment": {
+      "string": "Leave a comment…",
+      "developer_comment": "This is the text of a form field."
+    },
     "dateRange": {
       "string": "Date range",
       "developer_comment": "This is the text of a form field."

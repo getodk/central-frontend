@@ -27,7 +27,8 @@ except according to the terms contained in the LICENSE file.
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
             :instance-id="instanceId"
-            @update-review-state="showModal('updateReviewState')"/>
+            @update-review-state="showModal('updateReviewState')"
+            @comment="fetchActivityData"/>
         </div>
       </div>
     </page-body>

@@ -19,3 +19,11 @@
 
   li { margin-bottom: 5px; }
 }
+
+@mixin clearfix {
+  &::after {
+    clear: both;
+    content: " ";
+    display: table;
+  }
+}

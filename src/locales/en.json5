@@ -152,6 +152,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",
+    "comment": "Comment",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
     // It is shown next to a heading whose text is "Submissions".
@@ -177,6 +178,7 @@
     "yesProceed": "Yes, proceed"
   },
   "field": {
+    "comment": "Leave a comment…",
     "dateRange": "Date range",
     "displayName": "Display name",
     "email": "Email address",
