@@ -25,8 +25,8 @@ except according to the terms contained in the LICENSE file.
           <submission-basic-details v-if="submission != null"/>
         </div>
         <div class="col-xs-8">
-          <submission-audit-list :project-id="projectId"
-            :xml-form-id="xmlFormId" :instance-id="instanceId"
+          <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
+            :instance-id="instanceId"
             @update-review-state="showModal('updateReviewState')"/>
         </div>
       </div>
@@ -43,7 +43,7 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import SubmissionAuditList from './audit/list.vue';
+import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
@@ -61,7 +61,7 @@ export default {
     PageBack,
     PageBody,
     PageHead,
-    SubmissionAuditList,
+    SubmissionActivity,
     SubmissionBasicDetails,
     SubmissionUpdateReviewState
   },

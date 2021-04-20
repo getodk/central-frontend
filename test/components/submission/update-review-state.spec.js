@@ -35,7 +35,7 @@ describe('SubmissionUpdateReviewState', () => {
     return load('/projects/1/forms/f/submissions/s', { root: false })
       .testModalToggles({
         modal: SubmissionUpdateReviewState,
-        show: '#submission-audit-list-update-review-state-button',
+        show: '#submission-activity-update-review-state-button',
         hide: '.btn-link'
       });
   });
@@ -144,7 +144,7 @@ describe('SubmissionUpdateReviewState', () => {
       return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
         .complete()
         .request(async (component) => {
-          await trigger.click(component, '#submission-audit-list-update-review-state-button');
+          await trigger.click(component, '#submission-activity-update-review-state-button');
           return trigger.submit(component, '#submission-update-review-state form', [
             ['input[value="hasIssues"]', true]
           ]);

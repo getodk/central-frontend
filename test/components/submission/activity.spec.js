@@ -1,9 +1,9 @@
-import SubmissionAuditList from '../../../../src/components/submission/audit/list.vue';
+import SubmissionActivity from '../../../src/components/submission/activity.vue';
 
-import testData from '../../../data';
-import { load } from '../../../util/http';
-import { mockLogin } from '../../../util/session';
-import { mount } from '../../../util/lifecycle';
+import testData from '../../data';
+import { load } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => {
   const project = testData.extendedProjects.last();
@@ -11,7 +11,7 @@ const mountComponent = () => {
   const submission = testData.submissionOData();
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
-  return mount(SubmissionAuditList, {
+  return mount(SubmissionActivity, {
     propsData: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
@@ -22,7 +22,7 @@ const mountComponent = () => {
   });
 };
 
-describe('SubmissionAuditList', () => {
+describe('SubmissionActivity', () => {
   it('sends the correct initial requests', () => {
     mockLogin();
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
@@ -51,13 +51,13 @@ describe('SubmissionAuditList', () => {
       });
   });
 
-  describe('"Update State" button', () => {
+  describe('review button', () => {
     it('renders the button if the user can submission.update', () => {
       mockLogin({ role: 'admin' });
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-audit-list-update-review-state-button').length.should.equal(1);
+      component.find('#submission-activity-update-review-state-button').length.should.equal(1);
     });
 
     it('does not render button if user cannot submission.update', () => {
@@ -66,7 +66,7 @@ describe('SubmissionAuditList', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-audit-list-update-review-state-button').length.should.equal(0);
+      component.find('#submission-activity-update-review-state-button').length.should.equal(0);
     });
   });
 
@@ -76,7 +76,7 @@ describe('SubmissionAuditList', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-audit-list-edit-button').length.should.equal(1);
+      component.find('#submission-activity-edit-button').length.should.equal(1);
     });
 
     it('does not render button if user cannot submission.update', () => {
@@ -85,7 +85,7 @@ describe('SubmissionAuditList', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-audit-list-edit-button').length.should.equal(0);
+      component.find('#submission-activity-edit-button').length.should.equal(0);
     });
 
     it('disables the button if the submission is encrypted', () => {
@@ -93,7 +93,7 @@ describe('SubmissionAuditList', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      const btn = component.first('#submission-audit-list-edit-button');
+      const btn = component.first('#submission-activity-edit-button');
       btn.hasAttribute('disabled').should.be.true();
       btn.getAttribute('title').should.equal('You cannot edit encrypted Submissions.');
     });
@@ -107,7 +107,7 @@ describe('SubmissionAuditList', () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      const btn = component.first('#submission-audit-list-edit-button');
+      const btn = component.first('#submission-activity-edit-button');
       const href = btn.getAttribute('href');
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });

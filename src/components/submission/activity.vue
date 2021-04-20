@@ -10,22 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="submission-audit-list" condensed>
+  <page-section id="submission-activity" condensed>
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
       <template v-if="project != null && project.permits('submission.update')">
-        <button id="submission-audit-list-update-review-state-button"
+        <button id="submission-activity-update-review-state-button"
           type="button" class="btn btn-default"
           @click="$emit('update-review-state')">
           <span class="icon-check"></span>{{ $t('action.review') }}
         </button>
         <template v-if="submission != null">
           <a v-if="submission.__system.status == null"
-            id="submission-audit-list-edit-button" class="btn btn-default"
+            id="submission-activity-edit-button" class="btn btn-default"
             :href="editPath" target="_blank">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </a>
-          <button v-else id="submission-audit-list-edit-button" type="button"
+          <button v-else id="submission-activity-edit-button" type="button"
             class="btn btn-default" disabled
             :title="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
@@ -41,15 +41,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Loading from '../../loading.vue';
-import PageSection from '../../page/section.vue';
-import SubmissionAuditTable from './table.vue';
+import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
+import SubmissionAuditTable from './audit/table.vue';
 
-import { apiPaths } from '../../../util/request';
-import { requestData } from '../../../store/modules/request';
+import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'SubmissionAuditList',
+  name: 'SubmissionActivity',
   components: { Loading, PageSection, SubmissionAuditTable },
   props: {
     projectId: {
@@ -84,5 +84,5 @@ export default {
 </script>
 
 <style lang="scss">
-#submission-audit-list-update-review-state-button { margin-right: 5px; }
+#submission-activity-update-review-state-button { margin-right: 5px; }
 </style>
