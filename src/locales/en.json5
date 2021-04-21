@@ -61,6 +61,7 @@
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
+    "null": "@:reviewState.received",
     "hasIssues": "Has issues",
     "edited": "Edited",
     "approved": "Approved",

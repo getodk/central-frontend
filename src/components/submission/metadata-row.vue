@@ -51,18 +51,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
+import reviewState from '../../mixins/review-state';
 import { apiPaths } from '../../util/request';
-
-const iconsByReviewState = {
-  hasIssues: 'icon-comments',
-  edited: 'icon-pencil',
-  approved: 'icon-check-circle',
-  rejected: 'icon-times-circle'
-};
 
 export default {
   name: 'SubmissionMetadataRow',
   components: { DateTime },
+  mixins: [reviewState()],
   props: {
     projectId: {
       type: String,
@@ -84,25 +79,20 @@ export default {
     canUpdate: Boolean
   },
   computed: {
+    missingMedia() {
+      const { __system } = this.submission;
+      return __system.reviewState == null &&
+        __system.attachmentsPresent !== __system.attachmentsExpected;
+    },
     stateIcon() {
-      const { reviewState } = this.submission.__system;
-      if (reviewState == null) {
-        const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
-        return attachmentsPresent !== attachmentsExpected
-          ? 'icon-circle-o'
-          : 'icon-dot-circle-o';
-      }
-      return iconsByReviewState[reviewState];
+      return this.missingMedia
+        ? 'icon-circle-o'
+        : this.reviewStateIcon(this.submission.__system.reviewState);
     },
     stateText() {
-      const { reviewState } = this.submission.__system;
-      if (reviewState == null) {
-        const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
-        return attachmentsPresent !== attachmentsExpected
-          ? this.$t('submission.missingMedia')
-          : this.$t('reviewState.received');
-      }
-      return this.$t(`reviewState.${reviewState}`);
+      return this.missingMedia
+        ? this.$t('submission.missingMedia')
+        : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
     submissionPath() {
       const encodedFormId = encodeURIComponent(this.xmlFormId);

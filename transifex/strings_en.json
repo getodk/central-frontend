@@ -2947,6 +2947,9 @@
       }
     },
     "SubmissionBasicDetails": {
+      "reviewState": {
+        "string": "Review State"
+      },
       "deviceId": {
         "string": "Device ID"
       },

@@ -19,17 +19,11 @@ except according to the terms contained in the LICENSE file.
         <div class="row">
           <div class="col-xs-4">
             <div class="radio">
-              <label>
-                <input v-model="reviewState" type="radio" value="approved">
-                <span class="icon-check-circle"></span>{{ $t('reviewState.approved') }}
-              </label>
-              <label>
-                <input v-model="reviewState" type="radio" value="hasIssues">
-                <span class="icon-comments"></span>{{ $t('reviewState.hasIssues') }}
-              </label>
-              <label>
-                <input v-model="reviewState" type="radio" value="rejected">
-                <span class="icon-times-circle"></span>{{ $t('reviewState.rejected') }}
+              <label v-for="reviewState of selectableStates" :key="reviewState">
+                <input v-model="selectedState" type="radio"
+                  :value="reviewState">
+                <span :class="reviewStateIcon(reviewState)"></span>
+                <span>{{ $t(`reviewState.${reviewState}`) }}</span>
               </label>
             </div>
           </div>
@@ -62,14 +56,17 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
+import reviewState from '../../mixins/review-state';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
+const selectableStates = ['approved', 'hasIssues', 'rejected'];
+
 export default {
   name: 'SubmissionUpdateReviewState',
   components: { Modal, Spinner },
-  mixins: [request()],
+  mixins: [request(), reviewState()],
   props: {
     state: Boolean,
     projectId: {
@@ -86,25 +83,31 @@ export default {
     }
   },
   data() {
-    const { reviewState } = this.$store.state.request.data.submission.__system;
+    const { submission } = this.$store.state.request.data;
+    const currentState = submission.__system.reviewState;
     return {
       awaitingResponse: false,
-      reviewState: reviewState == null || reviewState === 'edited'
-        ? 'approved'
-        : reviewState,
+      selectedState: selectableStates.includes(currentState)
+        ? currentState
+        : 'approved',
       notes: ''
     };
   },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['submission']),
+  computed: {
+    // The component assumes that this data will exist when the component is
+    // created.
+    ...requestData(['submission']),
+    selectableStates() {
+      return selectableStates;
+    }
+  },
   watch: {
     state(state) {
       if (!state) {
-        const { reviewState } = this.submission.__system;
-        this.reviewState = reviewState == null || reviewState === 'edited'
-          ? 'approved'
-          : reviewState;
+        const currentState = this.submission.__system.reviewState;
+        this.selectedState = selectableStates.includes(currentState)
+          ? currentState
+          : 'approved';
         this.notes = '';
       }
     }
@@ -121,11 +124,11 @@ export default {
           this.xmlFormId,
           this.instanceId
         ),
-        data: { reviewState: this.reviewState },
+        data: { reviewState: this.selectedState },
         headers
       })
         .then(() => {
-          this.$emit('success', this.reviewState);
+          this.$emit('success', this.selectedState);
         })
         .catch(noop);
     }

@@ -28,6 +28,13 @@ except according to the terms contained in the LICENSE file.
           <dt>{{ $t('header.submissionDate') }}</dt>
           <dd><date-time :iso="submission.__system.submissionDate"/></dd>
         </div>
+        <div>
+          <dt>{{ $t('reviewState') }}</dt>
+          <dd id="submission-basic-details-review-state">
+            <span :class="reviewStateIcon(submission.__system.reviewState)"></span>
+            <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
+          </dd>
+        </div>
         <div v-if="submission.__system.deviceId != null">
           <dt>{{ $t('deviceId') }}</dt>
           <dd>
@@ -53,11 +60,13 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 import PageSection from '../page/section.vue';
 
+import reviewState from '../../mixins/review-state';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionBasicDetails',
   components: { DateTime, PageSection },
+  mixins: [reviewState()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -91,11 +100,22 @@ export default {
     margin-right: $margin-right-icon;
   }
 }
+
+#submission-basic-details-review-state {
+  [class^="icon-"] { margin-right: $margin-right-icon; }
+
+  .icon-dot-circle-o { color: #999; }
+  .icon-comments { color: $color-warning; }
+  .icon-pencil { color: #666; }
+  .icon-check-circle { color: $color-success; }
+  .icon-times-circle { color: $color-danger; }
+}
 </style>
 
 <i18n lang="json5">
 {
   "en": {
+    "reviewState": "Review State",
     "deviceId": "Device ID",
     "attachments": "Media files",
     "present": "{count} file | {count} files",

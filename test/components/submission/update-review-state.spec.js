@@ -40,6 +40,24 @@ describe('SubmissionUpdateReviewState', () => {
       });
   });
 
+  it('renders the correct radio buttons for review state', () => {
+    testData.extendedSubmissions.createPast(1);
+    const radios = mountComponent().find('.radio label');
+    radios.length.should.equal(3);
+
+    radios[0].first('input').getAttribute('value').should.equal('approved');
+    radios[0].find('.icon-check-circle').length.should.equal(1);
+    radios[0].text().should.equal('Approved');
+
+    radios[1].first('input').getAttribute('value').should.equal('hasIssues');
+    radios[1].find('.icon-comments').length.should.equal(1);
+    radios[1].text().should.equal('Has issues');
+
+    radios[2].first('input').getAttribute('value').should.equal('rejected');
+    radios[2].find('.icon-times-circle').length.should.equal(1);
+    radios[2].text().should.equal('Rejected');
+  });
+
   describe('review state selection', () => {
     it('sets the selection to the current review state', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
