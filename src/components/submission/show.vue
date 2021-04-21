@@ -102,6 +102,10 @@ export default {
   },
   created() {
     this.fetchData();
+    document.body.classList.add('scroll');
+  },
+  beforeDestroy() {
+    document.body.classList.remove('scroll');
   },
   methods: {
     fetchActivityData() {
