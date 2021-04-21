@@ -85,7 +85,8 @@ export default {
     }
 
     .icon-cloud-upload, .icon-dot-circle-o { color: #999; }
-    .icon-comments, .icon-pencil { color: $color-warning; }
+    .icon-comments { color: $color-warning; }
+    .icon-pencil { color: #666; }
     .icon-check-circle { color: $color-success; }
     .icon-times-circle { color: $color-danger; }
   }

@@ -159,8 +159,9 @@ export default {
       margin-right: #{$margin-right-icon + 1px};
     }
 
-    .icon-circle-o, .icon-comments, .icon-pencil { color: $color-warning; }
+    .icon-circle-o, .icon-comments { color: $color-warning; }
     .icon-dot-circle-o { color: #999; }
+    .icon-pencil { color: #777; }
     .icon-check-circle { color: $color-success; }
     .icon-times-circle { color: $color-danger; }
   }
