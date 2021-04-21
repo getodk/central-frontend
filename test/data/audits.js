@@ -41,7 +41,6 @@ const auditsWithCreatedAt = dataStore({
 
     loggedAt = undefined
   }) => {
-    if (!inPast) throw new Error('inPast must be true');
     if (action == null) throw new Error('invalid action');
     const audit = { action };
     if (actor != null) {
@@ -53,7 +52,7 @@ const auditsWithCreatedAt = dataStore({
     audit.notes = notes;
     audit.loggedAt = loggedAt != null
       ? loggedAt
-      : fakePastDate([lastCreatedAt]);
+      : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString());
     audit.createdAt = audit.loggedAt;
     return audit;
   },

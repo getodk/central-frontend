@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <submission-comment :project-id="projectId" :xml-form-id="xmlFormId"
-        :instance-id="instanceId" @success="$emit('comment')"/>
+        :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
       <submission-audit-table/>
       <loading :state="initiallyLoading"/>
     </template>
@@ -43,6 +43,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { DateTime } from 'luxon';
+import { comparator } from 'ramda';
+
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SubmissionAuditTable from './audit/table.vue';
@@ -81,6 +84,12 @@ export default {
         this.xmlFormId,
         this.instanceId
       );
+    },
+    feed() {
+      if (this.audits == null || this.comments == null) return null;
+      const entries = [...this.audits, ...this.comments];
+      return entries.sort(comparator((entry1, entry2) =>
+        DateTime.fromISO(entry2.createdAt) < DateTime.fromISO(entry1.createdAt)));
     }
   }
 };

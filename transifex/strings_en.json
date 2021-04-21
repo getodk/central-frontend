@@ -2968,6 +2968,11 @@
         "developer_comment": "{present} shows the number of files that were submitted, and {expected} shows the number of files that were expected to be submitted. For example: \"2 files / 3 expected\""
       }
     },
+    "SubmissionComment": {
+      "editWithoutComment": {
+        "string": "You have made edits to this data. Please describe the changes you made."
+      }
+    },
     "SubmissionDataAccess": {
       "action": {
         "apiAccess": {

@@ -6,19 +6,99 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
-const mountOptions = () => ({
+const mountOptions = (propsData) => ({
   propsData: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
-    instanceId: testData.extendedSubmissions.last().instanceId
+    instanceId: testData.extendedSubmissions.last().instanceId,
+    feed: null,
+    ...propsData
   }
 });
-const mountComponent = () => mount(SubmissionComment, mountOptions());
-const mockHttpForComponent = () =>
-  mockHttp().mount(SubmissionComment, mountOptions());
+const mountComponent = (propsData = undefined) =>
+  mount(SubmissionComment, mountOptions(propsData));
+const mockHttpForComponent = (propsData = undefined) =>
+  mockHttp().mount(SubmissionComment, mountOptions(propsData));
 
 describe('SubmissionComment', () => {
   beforeEach(mockLogin);
+
+  describe('alert', () => {
+    beforeEach(() => {
+      testData.extendedSubmissions.createNew();
+    });
+
+    it('does not show the alert if the feed is loading', () => {
+      const component = mountComponent({ feed: null });
+      component.find('[role="alert"]').length.should.equal(0);
+    });
+
+    it('does not show the alert if the user did not make an edit', () => {
+      const user = testData.extendedUsers.createPast(1).last();
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedAudits.createNew({
+            actor: user,
+            action: 'submission.update.version'
+          })
+        ].reverse()
+      });
+      component.find('[role="alert"]').length.should.equal(0);
+    });
+
+    it('does not show the alert if the user commented after their edit', () => {
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedAudits.createNew({
+            action: 'submission.update.version'
+          }),
+          testData.extendedComments.createNew({ body: 'foo' })
+        ].reverse()
+      });
+      component.find('[role="alert"]').length.should.equal(0);
+    });
+
+    it('shows the alert if the user did not comment', () => {
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedAudits.createNew({
+            action: 'submission.update.version'
+          })
+        ].reverse()
+      });
+      component.find('[role="alert"]').length.should.equal(1);
+    });
+
+    it('shows the alert if the user commented before their edit', () => {
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedComments.createNew({ body: 'foo' }),
+          testData.extendedAudits.createNew({
+            action: 'submission.update.version'
+          })
+        ].reverse()
+      });
+      component.find('[role="alert"]').length.should.equal(1);
+    });
+
+    it('shows the alert if another user commented', () => {
+      const user = testData.extendedUsers.createPast(1).last();
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedAudits.createNew({
+            action: 'submission.update.version'
+          }),
+          testData.extendedComments.createNew({ body: 'foo', actor: user })
+        ].reverse()
+      });
+      component.find('[role="alert"]').length.should.equal(1);
+    });
+  });
 
   describe('button visibility', () => {
     it('shows the button if there is input', async () => {
@@ -42,6 +122,19 @@ describe('SubmissionComment', () => {
           component.first('.btn').should.be.visible();
         })
         .respondWithProblem();
+    });
+
+    it('shows the button if the user did not comment after editing', () => {
+      testData.extendedSubmissions.createNew();
+      const component = mountComponent({
+        feed: [
+          testData.extendedAudits.createNew({ action: 'submission.create' }),
+          testData.extendedAudits.createNew({
+            action: 'submission.update.version'
+          })
+        ].reverse()
+      });
+      component.first('.btn').should.be.visible();
     });
   });
 

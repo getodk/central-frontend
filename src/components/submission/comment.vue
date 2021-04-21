@@ -11,14 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form id="submission-comment" @submit.prevent="submit">
+    <div v-if="editWithoutComment" role="alert">
+      <span class="icon-pencil"></span>{{ $t('editWithoutComment') }}
+    </div>
     <div class="form-group">
       <textarea v-model.trim="body" class="form-control"
         :placeholder="$t('field.comment')" :aria-label="$t('field.comment')"
         required rows="2">
       </textarea>
     </div>
-    <button v-show="body !== '' || awaitingResponse" type="submit"
-      class="btn btn-primary" :disabled="awaitingResponse">
+    <button v-show="body !== '' || awaitingResponse || editWithoutComment"
+      type="submit" class="btn btn-primary" :disabled="awaitingResponse">
       {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
     </button>
   </form>
@@ -30,6 +33,7 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionComment',
@@ -47,13 +51,27 @@ export default {
     instanceId: {
       type: String,
       required: true
-    }
+    },
+    feed: Array
   },
   data() {
     return {
       awaitingResponse: false,
       body: ''
     };
+  },
+  computed: {
+    ...requestData(['currentUser']),
+    editWithoutComment() {
+      if (this.feed == null) return false;
+      for (const entry of this.feed) {
+        if (entry.actorId === this.currentUser.id) {
+          if (entry.body != null) return false;
+          if (entry.action === 'submission.update.version') return true;
+        }
+      }
+      return false;
+    }
   },
   methods: {
     submit() {
@@ -83,6 +101,15 @@ export default {
   @include clearfix;
   margin-bottom: 20px;
 
+  [role="alert"] {
+    background-color: $color-action-foreground;
+    color: #fff;
+    font-size: 18px;
+    padding: 15px;
+
+    .icon-pencil { margin-right: 10px; }
+  }
+
   .form-group {
     margin-bottom: 5px;
     padding-bottom: 0;
@@ -91,3 +118,11 @@ export default {
   .btn { float: right; }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "editWithoutComment": "You have made edits to this data. Please describe the changes you made."
+  }
+}
+</i18n>
