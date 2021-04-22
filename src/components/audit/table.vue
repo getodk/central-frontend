@@ -13,11 +13,11 @@ except according to the terms contained in the LICENSE file.
   <table id="audit-table" class="table">
     <thead>
       <tr>
-        <th>{{ $t('header.time') }}</th>
+        <th class="logged-at">{{ $t('header.time') }}</th>
         <th>{{ $t('header.type') }}</th>
         <th>{{ $t('header.initiator') }}</th>
         <th>{{ $t('header.target') }}</th>
-        <th class="details">{{ $t('header.details') }}</th>
+        <th>{{ $t('header.details') }}</th>
       </tr>
     </thead>
     <tbody v-if="audits != null">
@@ -41,6 +41,7 @@ export default {
 <style lang="scss">
 #audit-table {
   table-layout: fixed;
+  th.logged-at { width: 150px; }
 }
 </style>
 
