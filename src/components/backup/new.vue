@@ -15,6 +15,13 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <template v-if="step === 0">
+        <div class="modal-warnings">
+          <i18n tag="p" path="steps[0].warning.full">
+            <template #forum>
+              <a href="https://forum.getodk.org/" target="_blank">{{ $t('steps[0].warning.forum') }}</a>
+            </template>
+          </i18n>
+        </div>
         <p class="modal-introduction">
           {{ $t('steps[0].introduction[0]') }}
           <strong>{{ $t('steps[0].introduction[1]') }}</strong>
@@ -179,6 +186,10 @@ export default {
     "title": "Set up Backups",
     "steps": [
       {
+        "warning": {
+          "full": "This backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help.",
+          "forum": "the forum"
+        },
         "introduction": [
           "If you want, you may set up an encryption passphrase which must be used to unlock the backup.",
           "There is no way to recover the passphrase if you lose it!",
