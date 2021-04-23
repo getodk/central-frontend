@@ -1,9 +1,11 @@
 import SubmissionActivity from '../../../src/components/submission/activity.vue';
+import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
+import { wait } from '../../util/util';
 
 const mountComponent = () => {
   const project = testData.extendedProjects.last();
@@ -111,5 +113,23 @@ describe('SubmissionActivity', () => {
       const href = btn.getAttribute('href');
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
+  });
+
+  it('sorts the feed', async () => {
+    mockLogin();
+    testData.extendedSubmissions.createNew();
+    testData.extendedAudits.createNew({ action: 'submission.create' });
+    await wait(1);
+    testData.extendedComments.createNew({ body: 'Comment 1' });
+    await wait(1);
+    testData.extendedAudits.createNew({ action: 'submission.update.version' });
+    await wait(1);
+    testData.extendedComments.createNew({ body: 'Comment 2' });
+    const entries = mountComponent().find(SubmissionFeedEntry);
+    entries.length.should.equal(4);
+    entries[0].getProp('entry').body.should.equal('Comment 2');
+    entries[1].getProp('entry').action.should.equal('submission.update.version');
+    entries[2].getProp('entry').body.should.equal('Comment 1');
+    entries[3].getProp('entry').action.should.equal('submission.create');
   });
 });

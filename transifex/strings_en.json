@@ -2924,28 +2924,6 @@
         }
       }
     },
-    "SubmissionAuditRow": {
-      "created": {
-        "string": "Submitted",
-        "developer_comment": "This text indicates that a Submission was submitted."
-      }
-    },
-    "SubmissionAuditTable": {
-      "header": {
-        "takenBy": {
-          "string": "Taken by",
-          "developer_comment": "This is the text of a table column header."
-        },
-        "action": {
-          "string": "Action",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "note": {
-          "string": "Note",
-          "developer_comment": "This is the text of a table column header."
-        }
-      }
-    },
     "SubmissionBasicDetails": {
       "reviewState": {
         "string": "Review State"
@@ -3037,6 +3015,70 @@
             "string": "Primary data table (.csv)",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        }
+      }
+    },
+    "SubmissionFeedEntry": {
+      "title": {
+        "create": {
+          "string": "Submitted by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
+        },
+        "updateReviewState": {
+          "null": {
+            "full": {
+              "string": "{reviewState} per {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
+            },
+            "reviewState": {
+              "string": "Received",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "hasIssues": {
+            "full": {
+              "string": "{reviewState} per {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
+            },
+            "reviewState": {
+              "string": "Has Issues",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "edited": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
+            },
+            "reviewState": {
+              "string": "Edited",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "approved": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
+            },
+            "reviewState": {
+              "string": "Approved",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "rejected": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
+            },
+            "reviewState": {
+              "string": "Rejected",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          }
+        },
+        "comment": {
+          "string": "Comment by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
         }
       }
     },

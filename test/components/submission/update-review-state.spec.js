@@ -1,4 +1,4 @@
-import SubmissionAuditRow from '../../../src/components/submission/audit/row.vue';
+import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import testData from '../../data';
@@ -212,9 +212,9 @@ describe('SubmissionUpdateReviewState', () => {
       submission.__system.submitterId.should.equal('1');
     });
 
-    it('updates the number of rows in the table', async () => {
+    it('updates the number of entries in the feed', async () => {
       const component = await submit();
-      component.find(SubmissionAuditRow).length.should.equal(2);
+      component.find(SubmissionFeedEntry).length.should.equal(2);
     });
   });
 });

@@ -191,7 +191,5 @@ describe('SubmissionComment', () => {
       const { value } = component.first('#submission-comment textarea').element;
       value.should.equal('');
     });
-
-    it('updates the number of entries in the feed');
   });
 });

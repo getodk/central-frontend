@@ -36,8 +36,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <submission-comment :project-id="projectId" :xml-form-id="xmlFormId"
         :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
-      <submission-audit-table/>
       <loading :state="initiallyLoading"/>
+      <template v-if="feed != null">
+        <submission-feed-entry v-for="(entry, index) in feed" :key="index"
+          :entry="entry"/>
+      </template>
     </template>
   </page-section>
 </template>
@@ -48,15 +51,15 @@ import { descend } from 'ramda';
 
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
-import SubmissionAuditTable from './audit/table.vue';
 import SubmissionComment from './comment.vue';
+import SubmissionFeedEntry from './feed-entry.vue';
 
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionActivity',
-  components: { Loading, PageSection, SubmissionAuditTable, SubmissionComment },
+  components: { Loading, PageSection, SubmissionComment, SubmissionFeedEntry },
   props: {
     projectId: {
       type: String,
