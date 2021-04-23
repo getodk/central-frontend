@@ -23,7 +23,10 @@ body {
   color: $color-text;
   min-height: 100vh;
 
-  &.scroll { overflow-y: scroll; }
+  &.scroll {
+    overflow-y: scroll;
+    &.modal-open { overflow-y: hidden; }
+  }
 }
 
 h1, .h1 {
