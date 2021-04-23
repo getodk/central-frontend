@@ -102,7 +102,7 @@ export default {
 
 #submission-comment {
   @include clearfix;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
   [role="alert"] {
     background-color: $color-action-foreground;
@@ -114,12 +114,14 @@ export default {
   }
 
   .form-group {
-    margin-bottom: 5px;
+    margin-bottom: 0;
     padding-bottom: 0;
   }
 
   .btn { float: right; }
 }
+
+#submission-comment-actions { margin-top: 5px; }
 </style>
 
 <i18n lang="json5">
