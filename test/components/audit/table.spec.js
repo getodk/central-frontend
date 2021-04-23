@@ -1,3 +1,4 @@
+import ActorLink from '../../../src/components/actor-link.vue';
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import Selectable from '../../../src/components/selectable.vue';
@@ -291,7 +292,7 @@ describe('AuditTable', () => {
   });
 
   describe('initiator', () => {
-    it('renders correctly for an audit whose actor is a user', async () => {
+    it('renders correctly for an audit with an actor', async () => {
       testData.extendedAudits.createPast(1, {
         actor: testData.extendedUsers.first(),
         action: 'user.create',
@@ -300,22 +301,8 @@ describe('AuditTable', () => {
           .last())
       });
       const component = await load('/system/audits', { root: false });
-      const a = component.first('.audit-row .initiator a');
-      a.text().trim().should.equal('User 1');
-      a.getAttribute('title').should.equal('User 1');
-      a.getAttribute('href').should.equal('#/users/1/edit');
-    });
-
-    it('renders correctly for an audit whose actor is not a user', async () => {
-      testData.extendedAudits.createPast(1, {
-        actor: { type: 'singleUse', displayName: 'Reset token for 1' },
-        action: 'user.update',
-        actee: testData.toActor(testData.extendedUsers.first())
-      });
-      const component = await load('/system/audits', { root: false });
-      const span = component.first('.audit-row .initiator span');
-      span.text().should.equal('Reset token for 1');
-      span.getAttribute('title').should.equal('Reset token for 1');
+      const actorLink = component.first(AuditRow).first(ActorLink);
+      actorLink.getProp('actor').displayName.should.equal('User 1');
     });
 
     it('renders correctly for an audit without an actor', async () => {
