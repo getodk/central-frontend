@@ -33,8 +33,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </template>
         <template v-else>
-          <!-- TODO. Use the correct icon. -->
-          <span class="icon-clock-o"></span>
+          <span class="icon-comment"></span>
           <i18n :tag="false" path="title.comment">
             <template #name><actor-link :actor="entry.actor"/></template>
           </i18n>
@@ -102,14 +101,14 @@ export default {
     width: 70%;
   }
 
-  .icon-comments { margin-right: $margin-right-icon; }
+  .icon-comments, .icon-comment { margin-right: $margin-right-icon; }
   .icon-cloud-upload { margin-right: #{$margin-right-icon - 1px}; }
-  .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle, .icon-clock-o {
+  .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
     margin-left: 1px;
     margin-right: #{$margin-right-icon + 2px};
   }
 
-  .icon-cloud-upload, .icon-clock-o { color: #bbb; }
+  .icon-cloud-upload, .icon-comment { color: #bbb; }
   .review-state {
     color: #999;
     &.hasIssues { color: $color-warning; }

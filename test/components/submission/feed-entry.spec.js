@@ -136,7 +136,7 @@ describe('SubmissionFeedEntry', () => {
     it('renders correctly for a comment', () => {
       testData.extendedComments.createPast(1);
       const title = mountComponent().first('.title');
-      title.find('.icon-clock-o').length.should.equal(1);
+      title.find('.icon-comment').length.should.equal(1);
       title.text().should.equal('Comment by Alice');
     });
   });
