@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span :title="title">{{ text }}</span>
+  <time v-if="iso != null" :datetime="iso" :title="format(false)">{{ format(true) }}</time>
+  <span v-else>{{ blank }}</span>
 </template>
 
 <script>
@@ -21,7 +22,7 @@ import { formatDateTime } from '../util/date-time';
 export default {
   name: 'DateTime',
   props: {
-    iso: String, // eslint-disable-line vue/require-default-prop
+    iso: String,
     blank: {
       type: String,
       default: ''
@@ -30,14 +31,11 @@ export default {
   computed: {
     dateTime() {
       return DateTime.fromISO(this.iso, { locale: this.$i18n.locale });
-    },
-    title() {
-      return this.iso != null ? formatDateTime(this.dateTime) : null;
-    },
-    text() {
-      return this.iso != null
-        ? formatDateTime(this.dateTime, true)
-        : this.blank;
+    }
+  },
+  methods: {
+    format(relative) {
+      return formatDateTime(this.dateTime, relative);
     }
   }
 };
