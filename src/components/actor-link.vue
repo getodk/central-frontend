@@ -1,5 +1,5 @@
 <!--
-Copyright 2020 ODK Central Developers
+Copyright 2021 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -10,32 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <time v-if="iso != null" :datetime="iso" :title="format(false)">{{ format(true) }}</time>
-  <span v-else>{{ blank }}</span>
+  <link-if-can v-if="actor.type === 'user'" :to="to" class="actor-link" :title="actor.displayName">{{ actor.displayName }}</link-if-can>
+  <span v-else class="actor-link" :title="actor.displayName">{{ actor.displayName }}</span>
 </template>
 
 <script>
-import { DateTime } from 'luxon';
+import LinkIfCan from './link-if-can.vue';
 
-import { formatDateTime } from '../util/date-time';
+import routes from '../mixins/routes';
 
 export default {
-  name: 'DateTime',
+  name: 'ActorLink',
+  components: { LinkIfCan },
+  mixins: [routes()],
   props: {
-    iso: String,
-    blank: {
-      type: String,
-      default: ''
+    actor: {
+      type: Object,
+      required: true
     }
   },
   computed: {
-    dateTime() {
-      return DateTime.fromISO(this.iso, { locale: this.$i18n.locale });
-    }
-  },
-  methods: {
-    format(relative) {
-      return formatDateTime(this.dateTime, relative);
+    to() {
+      return this.userPath(this.actor.id);
     }
   }
 };

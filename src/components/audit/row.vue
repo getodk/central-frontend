@@ -19,13 +19,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="initiator">
-      <template v-if="audit.actor != null">
-        <router-link v-if="audit.actor.type === 'user'"
-          :to="userPath(audit.actor.id)" :title="audit.actor.displayName">
-          {{ audit.actor.displayName }}
-        </router-link>
-        <span v-else :title="audit.actor.displayName">{{ audit.actor.displayName }}</span>
-      </template>
+      <actor-link v-if="audit.actor != null" :actor="audit.actor"/>
     </td>
     <td class="target">
       <template v-if="target != null">
@@ -41,6 +35,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
@@ -86,7 +81,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { DateTime, Selectable },
+  components: { ActorLink, DateTime, Selectable },
   mixins: [audit(), routes()],
   props: {
     audit: {

@@ -113,6 +113,7 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
   },
   submissionAudits: submissionPath('/audits'),
+  submissionComments: submissionPath('/comments'),
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

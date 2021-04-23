@@ -262,6 +262,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
     });
 
+    it('submissionComments', () => {
+      const path = apiPaths.submissionComments(1, 'a b', 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
+    });
+
     it('publicLinks', () => {
       const path = apiPaths.publicLinks(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/public-links');

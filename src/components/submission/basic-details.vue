@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <page-section id="submission-basic-details" condensed>
     <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
     <template #body>
-      <dl class="dl-horizontal">
+      <dl>
         <div>
           <dt>{{ $t('header.instanceId') }}</dt>
           <dd><span :title="submission.__id">{{ submission.__id }}</span></dd>
@@ -21,15 +21,19 @@ except according to the terms contained in the LICENSE file.
         <div>
           <dt>{{ $t('header.submitterName') }}</dt>
           <dd>
-            <link-if-can :to="userPath(submission.__system.submitterId)"
-              :title="submission.__system.submitterName">
-              {{ submission.__system.submitterName }}
-            </link-if-can>
+            <span :title="submission.__system.submitterName">{{ submission.__system.submitterName }}</span>
           </dd>
         </div>
         <div>
           <dt>{{ $t('header.submissionDate') }}</dt>
           <dd><date-time :iso="submission.__system.submissionDate"/></dd>
+        </div>
+        <div>
+          <dt>{{ $t('reviewState') }}</dt>
+          <dd id="submission-basic-details-review-state">
+            <span :class="reviewStateIcon(submission.__system.reviewState)"></span>
+            <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
+          </dd>
         </div>
         <div v-if="submission.__system.deviceId != null">
           <dt>{{ $t('deviceId') }}</dt>
@@ -54,16 +58,15 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import LinkIfCan from '../link-if-can.vue';
 import PageSection from '../page/section.vue';
 
-import routes from '../../mixins/routes';
+import reviewState from '../../mixins/review-state';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionBasicDetails',
-  components: { DateTime, LinkIfCan, PageSection },
-  mixins: [routes()],
+  components: { DateTime, PageSection },
+  mixins: [reviewState()],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
@@ -97,11 +100,22 @@ export default {
     margin-right: $margin-right-icon;
   }
 }
+
+#submission-basic-details-review-state {
+  [class^="icon-"] { margin-right: $margin-right-icon; }
+
+  .icon-dot-circle-o { color: #999; }
+  .icon-comments { color: $color-warning; }
+  .icon-pencil { color: #666; }
+  .icon-check-circle { color: $color-success; }
+  .icon-times-circle { color: $color-danger; }
+}
 </style>
 
 <i18n lang="json5">
 {
   "en": {
+    "reviewState": "Review State",
     "deviceId": "Device ID",
     "attachments": "Media files",
     "present": "{count} file | {count} files",

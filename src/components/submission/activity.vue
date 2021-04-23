@@ -10,22 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="submission-audit-list" condensed>
+  <page-section id="submission-activity" condensed>
     <template #heading>
-      <span>{{ $t('title') }}</span>
+      <span>{{ $t('common.activity') }}</span>
       <template v-if="project != null && project.permits('submission.update')">
-        <button id="submission-audit-list-update-review-state-button"
+        <button id="submission-activity-update-review-state-button"
           type="button" class="btn btn-default"
           @click="$emit('update-review-state')">
-          <span class="icon-check"></span>{{ $t('action.updateReviewState') }}
+          <span class="icon-check"></span>{{ $t('action.review') }}
         </button>
         <template v-if="submission != null">
           <a v-if="submission.__system.status == null"
-            id="submission-audit-list-edit-button" class="btn btn-default"
+            id="submission-activity-edit-button" class="btn btn-default"
             :href="editPath" target="_blank">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </a>
-          <button v-else id="submission-audit-list-edit-button" type="button"
+          <button v-else id="submission-activity-edit-button" type="button"
             class="btn btn-default" disabled
             :title="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
@@ -34,23 +34,32 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <submission-audit-table/>
-      <loading :state="$store.getters.initiallyLoading(['audits'])"/>
+      <submission-comment :project-id="projectId" :xml-form-id="xmlFormId"
+        :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
+      <loading :state="initiallyLoading"/>
+      <template v-if="feed != null">
+        <submission-feed-entry v-for="(entry, index) in feed" :key="index"
+          :entry="entry"/>
+      </template>
     </template>
   </page-section>
 </template>
 
 <script>
-import Loading from '../../loading.vue';
-import PageSection from '../../page/section.vue';
-import SubmissionAuditTable from './table.vue';
+import { DateTime } from 'luxon';
+import { descend } from 'ramda';
 
-import { apiPaths } from '../../../util/request';
-import { requestData } from '../../../store/modules/request';
+import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
+import SubmissionComment from './comment.vue';
+import SubmissionFeedEntry from './feed-entry.vue';
+
+import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'SubmissionAuditList',
-  components: { Loading, PageSection, SubmissionAuditTable },
+  name: 'SubmissionActivity',
+  components: { Loading, PageSection, SubmissionComment, SubmissionFeedEntry },
   props: {
     projectId: {
       type: String,
@@ -68,12 +77,23 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'submission', 'audits']),
+    ...requestData(['project', 'submission', 'audits', 'comments']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['audits', 'comments']);
+    },
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,
         this.xmlFormId,
         this.instanceId
+      );
+    },
+    feed() {
+      if (this.audits == null || this.comments == null) return null;
+      return [...this.audits, ...this.comments].sort(
+        descend(entry => DateTime.fromISO(entry.loggedAt != null
+          ? entry.loggedAt
+          : entry.createdAt))
       );
     }
   }
@@ -81,17 +101,8 @@ export default {
 </script>
 
 <style lang="scss">
-#submission-audit-list-update-review-state-button { margin-right: 5px; }
-</style>
+@import '../../assets/scss/mixins';
 
-<i18n lang="json5">
-{
-  "en": {
-    // This is a title shown above a section of the page.
-    "title": "Actions",
-    "action": {
-      "updateReviewState": "Update State"
-    }
-  }
-}
-</i18n>
+#submission-activity { margin-bottom: $margin-bottom-page-section; }
+#submission-activity-update-review-state-button { margin-right: 5px; }
+</style>

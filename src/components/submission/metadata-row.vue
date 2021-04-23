@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <td><date-time :iso="submission.__system.submissionDate"/></td>
     <td v-if="!draft" class="state-and-actions">
       <span class="state"><span :class="stateIcon"></span>{{ stateText }}</span>
-      <span v-if="submission.__system.edits != null" class="edits">
+      <span v-if="submission.__system.edits !== 0" class="edits">
         <span class="icon-pencil"></span>
         <span>{{ $n(submission.__system.edits, 'default') }}</span>
       </span>
@@ -51,18 +51,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
+import reviewState from '../../mixins/review-state';
 import { apiPaths } from '../../util/request';
-
-const iconsByReviewState = {
-  hasIssues: 'icon-comments',
-  needsReview: 'icon-eye',
-  approved: 'icon-check-circle',
-  rejected: 'icon-times-circle'
-};
 
 export default {
   name: 'SubmissionMetadataRow',
   components: { DateTime },
+  mixins: [reviewState()],
   props: {
     projectId: {
       type: String,
@@ -84,25 +79,20 @@ export default {
     canUpdate: Boolean
   },
   computed: {
+    missingMedia() {
+      const { __system } = this.submission;
+      return __system.reviewState == null &&
+        __system.attachmentsPresent !== __system.attachmentsExpected;
+    },
     stateIcon() {
-      const { reviewState } = this.submission.__system;
-      if (reviewState == null) {
-        const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
-        return attachmentsPresent !== attachmentsExpected
-          ? 'icon-circle-o'
-          : 'icon-dot-circle-o';
-      }
-      return iconsByReviewState[reviewState];
+      return this.missingMedia
+        ? 'icon-circle-o'
+        : this.reviewStateIcon(this.submission.__system.reviewState);
     },
     stateText() {
-      const { reviewState } = this.submission.__system;
-      if (reviewState == null) {
-        const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
-        return attachmentsPresent !== attachmentsExpected
-          ? this.$t('submission.missingMedia')
-          : this.$t('reviewState.received');
-      }
-      return this.$t(`reviewState.${reviewState}`);
+      return this.missingMedia
+        ? this.$t('submission.missingMedia')
+        : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
     submissionPath() {
       const encodedFormId = encodeURIComponent(this.xmlFormId);
@@ -117,9 +107,8 @@ export default {
       );
     },
     editText() {
-      const { edits } = this.submission.__system;
       return this.$t('submission.action.edit', {
-        count: this.$n(edits != null ? edits : 0, 'default')
+        count: this.$n(this.submission.__system.edits, 'default')
       });
     }
   }
@@ -153,19 +142,19 @@ export default {
     // Ensure that there is space for the edit count and angle icon if the
     // column exceeds its min width.
     margin-right: #{$edits-and-angle-width + 15px};
-  }
 
-  .icon-comments, .icon-eye { margin-right: $margin-right-icon; }
-  .icon-circle-o, .icon-dot-circle-o, .icon-check-circle, .icon-times-circle {
-    margin-left: 1px;
-    margin-right: #{$margin-right-icon + 1px};
-  }
+    .icon-comments { margin-right: $margin-right-icon; }
+    .icon-circle-o, .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
+      margin-left: 1px;
+      margin-right: #{$margin-right-icon + 1px};
+    }
 
-  .icon-circle-o { color: $color-warning; }
-  .icon-dot-circle-o { color: #999; }
-  .icon-comments, .icon-eye { color: $color-warning; }
-  .icon-check-circle { color: $color-success; }
-  .icon-times-circle { color: $color-danger; }
+    .icon-circle-o, .icon-comments { color: $color-warning; }
+    .icon-dot-circle-o { color: #999; }
+    .icon-pencil { color: #777; }
+    .icon-check-circle { color: $color-success; }
+    .icon-times-circle { color: $color-danger; }
+  }
 
   .edits {
     color: #777;
@@ -173,8 +162,9 @@ export default {
     // aligned across rows.
     left: calc(100% - #{$edits-and-angle-width + $padding-right-table-data});
     position: absolute;
+
+    .icon-pencil { margin-right: 5px; }
   }
-  .icon-pencil { margin-right: 5px; }
 
   .icon-angle-right {
     bottom: #{$padding-right-table-data + 1px};
@@ -187,6 +177,8 @@ export default {
   }
 
   .btn-group {
+    // Setting the background color in case the edit button is disabled.
+    background-color: $color-page-background;
     left: -1000px;
     position: absolute;
     top: 4px;

@@ -20,15 +20,16 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <div v-show="dataExists">
-        <div class="row">
-          <div class="col-xs-7">
-            <submission-basic-details v-if="submission != null"/>
-          </div>
+      <div v-show="dataExists" class="row">
+        <div class="col-xs-4">
+          <submission-basic-details v-if="submission != null"/>
         </div>
-        <submission-audit-list :project-id="projectId" :xml-form-id="xmlFormId"
-          :instance-id="instanceId"
-          @update-review-state="showModal('updateReviewState')"/>
+        <div class="col-xs-8">
+          <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
+            :instance-id="instanceId"
+            @update-review-state="showModal('updateReviewState')"
+            @comment="fetchActivityData"/>
+        </div>
       </div>
     </page-body>
     <submission-update-review-state v-if="submission != null"
@@ -43,7 +44,7 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import SubmissionAuditList from './audit/list.vue';
+import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
@@ -61,7 +62,7 @@ export default {
     PageBack,
     PageBody,
     PageHead,
-    SubmissionAuditList,
+    SubmissionActivity,
     SubmissionBasicDetails,
     SubmissionUpdateReviewState
   },
@@ -101,18 +102,33 @@ export default {
   },
   created() {
     this.fetchData();
+    document.body.classList.add('scroll');
+  },
+  beforeDestroy() {
+    document.body.classList.remove('scroll');
   },
   methods: {
-    fetchAudits() {
-      this.$store.dispatch('get', [{
-        key: 'audits',
-        url: apiPaths.submissionAudits(
-          this.projectId,
-          this.xmlFormId,
-          this.instanceId
-        ),
-        extended: true
-      }]).catch(noop);
+    fetchActivityData() {
+      this.$store.dispatch('get', [
+        {
+          key: 'audits',
+          url: apiPaths.submissionAudits(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId
+          ),
+          extended: true
+        },
+        {
+          key: 'comments',
+          url: apiPaths.submissionComments(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId
+          ),
+          extended: true
+        }
+      ]).catch(noop);
     },
     fetchData() {
       // We do not reconcile project.lastSubmission and
@@ -133,10 +149,10 @@ export default {
           )
         }
       ]).catch(noop);
-      this.fetchAudits();
+      this.fetchActivityData();
     },
     afterUpdateReviewState(reviewState) {
-      this.fetchAudits();
+      this.fetchActivityData();
       this.hideModal('updateReviewState');
       this.$alert().success(this.$t('alert.updateReviewState'));
       this.$store.commit('setData', {

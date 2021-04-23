@@ -114,16 +114,16 @@
       "string": "Received",
       "developer_comment": "This is a possible Review State for a Submission."
     },
-    "approved": {
-      "string": "Approved",
-      "developer_comment": "This is a possible Review State for a Submission."
-    },
     "hasIssues": {
       "string": "Has issues",
       "developer_comment": "This is a possible Review State for a Submission."
     },
-    "needsReview": {
-      "string": "Needs review",
+    "edited": {
+      "string": "Edited",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "approved": {
+      "string": "Approved",
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "rejected": {
@@ -272,6 +272,10 @@
       "string": "Close",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "comment": {
+      "string": "Comment",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -336,8 +340,8 @@
       "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "claimAccount": {
-      "string": "Claim account",
+    "review": {
+      "string": "Review",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -354,6 +358,10 @@
     }
   },
   "field": {
+    "comment": {
+      "string": "Leave a comment…",
+      "developer_comment": "This is the text of a form field."
+    },
     "dateRange": {
       "string": "Date range",
       "developer_comment": "This is the text of a form field."
@@ -579,6 +587,10 @@
     }
   },
   "common": {
+    "activity": {
+      "string": "Activity",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
     "anybody": {
       "string": "(Anybody)",
       "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
@@ -2922,45 +2934,10 @@
         }
       }
     },
-    "SubmissionAuditList": {
-      "title": {
-        "string": "Actions",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "action": {
-        "updateReviewState": {
-          "string": "Update State",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
-    "SubmissionAuditRow": {
-      "created": {
-        "string": "Submitted",
-        "developer_comment": "This text indicates that a Submission was submitted."
-      },
-      "edited": {
-        "string": "Edited",
-        "developer_comment": "This text is shown for a Submission that was edited."
-      }
-    },
-    "SubmissionAuditTable": {
-      "header": {
-        "takenBy": {
-          "string": "Taken by",
-          "developer_comment": "This is the text of a table column header."
-        },
-        "action": {
-          "string": "Action",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "note": {
-          "string": "Note",
-          "developer_comment": "This is the text of a table column header."
-        }
-      }
-    },
     "SubmissionBasicDetails": {
+      "reviewState": {
+        "string": "Review State"
+      },
       "deviceId": {
         "string": "Device ID"
       },
@@ -2977,6 +2954,11 @@
       "attachmentSummary": {
         "string": "{present} / {expected}",
         "developer_comment": "{present} shows the number of files that were submitted, and {expected} shows the number of files that were expected to be submitted. For example: \"2 files / 3 expected\""
+      }
+    },
+    "SubmissionComment": {
+      "editWithoutComment": {
+        "string": "You have made edits to this data. Please describe the changes you made."
       }
     },
     "SubmissionDataAccess": {
@@ -3043,6 +3025,70 @@
             "string": "Primary data table (.csv)",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        }
+      }
+    },
+    "SubmissionFeedEntry": {
+      "title": {
+        "create": {
+          "string": "Submitted by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
+        },
+        "updateReviewState": {
+          "null": {
+            "full": {
+              "string": "{reviewState} per {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
+            },
+            "reviewState": {
+              "string": "Received",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "hasIssues": {
+            "full": {
+              "string": "{reviewState} per {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
+            },
+            "reviewState": {
+              "string": "Has Issues",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "edited": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
+            },
+            "reviewState": {
+              "string": "Edited",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "approved": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
+            },
+            "reviewState": {
+              "string": "Approved",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "rejected": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
+            },
+            "reviewState": {
+              "string": "Rejected",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          }
+        },
+        "comment": {
+          "string": "Comment by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
         }
       }
     },

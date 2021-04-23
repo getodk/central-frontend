@@ -23,7 +23,10 @@ body {
   color: $color-text;
   min-height: 100vh;
 
-  &.scroll { overflow-y: scroll; }
+  &.scroll {
+    overflow-y: scroll;
+    &.modal-open { overflow-y: hidden; }
+  }
 }
 
 h1, .h1 {
@@ -36,6 +39,9 @@ h1, .h1 {
 p { max-width: $max-width-p; }
 
 dl div {
+  display: flex;
+  flex-direction: column-reverse;
+
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   padding-top: 10px;
@@ -47,6 +53,13 @@ dl div {
     padding-bottom: 0;
   }
 }
+
+dt {
+  color: #666;
+  font-weight: normal;
+}
+
+dd { font-size: 16px; }
 
 pre {
   background-color: $color-subpanel-background;
@@ -514,7 +527,7 @@ becomes more complicated.
 }
 
 .panel-main {
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+  box-shadow: $box-shadow-panel-main;
   margin-top: 70px;
 
   .panel-body {

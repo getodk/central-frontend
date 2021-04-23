@@ -1,4 +1,4 @@
-import SubmissionAuditRow from '../../../src/components/submission/audit/row.vue';
+import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import testData from '../../data';
@@ -35,9 +35,27 @@ describe('SubmissionUpdateReviewState', () => {
     return load('/projects/1/forms/f/submissions/s', { root: false })
       .testModalToggles({
         modal: SubmissionUpdateReviewState,
-        show: '#submission-audit-list-update-review-state-button',
+        show: '#submission-activity-update-review-state-button',
         hide: '.btn-link'
       });
+  });
+
+  it('renders the correct radio buttons for review state', () => {
+    testData.extendedSubmissions.createPast(1);
+    const radios = mountComponent().find('.radio label');
+    radios.length.should.equal(3);
+
+    radios[0].first('input').getAttribute('value').should.equal('approved');
+    radios[0].find('.icon-check-circle').length.should.equal(1);
+    radios[0].text().should.equal('Approved');
+
+    radios[1].first('input').getAttribute('value').should.equal('hasIssues');
+    radios[1].find('.icon-comments').length.should.equal(1);
+    radios[1].text().should.equal('Has issues');
+
+    radios[2].first('input').getAttribute('value').should.equal('rejected');
+    radios[2].find('.icon-times-circle').length.should.equal(1);
+    radios[2].text().should.equal('Rejected');
   });
 
   describe('review state selection', () => {
@@ -49,6 +67,12 @@ describe('SubmissionUpdateReviewState', () => {
 
     it('sets the selection to approved if current review state is null', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
+      const radio = mountComponent().first('input[value="approved"]');
+      radio.element.checked.should.be.true();
+    });
+
+    it('sets the selection to approved if current review state is edited', () => {
+      testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const radio = mountComponent().first('input[value="approved"]');
       radio.element.checked.should.be.true();
     });
@@ -138,7 +162,7 @@ describe('SubmissionUpdateReviewState', () => {
       return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
         .complete()
         .request(async (component) => {
-          await trigger.click(component, '#submission-audit-list-update-review-state-button');
+          await trigger.click(component, '#submission-activity-update-review-state-button');
           return trigger.submit(component, '#submission-update-review-state form', [
             ['input[value="hasIssues"]', true]
           ]);
@@ -151,14 +175,20 @@ describe('SubmissionUpdateReviewState', () => {
           });
           return testData.standardSubmissions.last();
         })
-        .respondWithData(() => testData.extendedAudits.sorted());
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedComments.sorted());
     };
 
-    it('sends the correct request for the audit log entries', () =>
-      submit().beforeEachResponse((_, { method, url, index }) => {
+    it('sends the correct requests for activity data', () =>
+      submit().beforeEachResponse((_, { method, url, headers }, index) => {
+        if (index === 0) return;
+        method.should.equal('GET');
         if (index === 1) {
-          method.should.equal('GET');
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
+          headers['X-Extended-Metadata'].should.equal('true');
+        } else {
+          url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
+          headers['X-Extended-Metadata'].should.equal('true');
         }
       }));
 
@@ -182,9 +212,9 @@ describe('SubmissionUpdateReviewState', () => {
       submission.__system.submitterId.should.equal('1');
     });
 
-    it('updates the number of rows in the table', async () => {
+    it('updates the number of entries in the feed', async () => {
       const component = await submit();
-      component.find(SubmissionAuditRow).length.should.equal(2);
+      component.find(SubmissionFeedEntry).length.should.equal(2);
     });
   });
 });

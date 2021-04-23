@@ -145,7 +145,7 @@ export default {
         (this.formDraft.isDefined() || this.project.permits('form.update'));
     }
   },
-  mounted() {
+  created() {
     // If as the user navigates between the tabs, the scrollbar is visible for
     // only some tabs, then the position of the tabs will shift as the user
     // navigates. To prevent that, we always show the scrollbar.

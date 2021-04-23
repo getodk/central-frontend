@@ -61,9 +61,10 @@
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
-    "approved": "Approved",
+    "null": "@:reviewState.received",
     "hasIssues": "Has issues",
-    "needsReview": "Needs review",
+    "edited": "Edited",
+    "approved": "Approved",
     "rejected": "Rejected"
   },
   "audit": {
@@ -152,6 +153,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",
+    "comment": "Comment",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
     // It is shown next to a heading whose text is "Submissions".
@@ -171,12 +173,13 @@
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
     "resetPassword": "Reset password",
-    "claimAccount": "Claim account",
+    "review": "Review",
     "save": "Save",
     "update": "Update",
     "yesProceed": "Yes, proceed"
   },
   "field": {
+    "comment": "Leave a comment…",
     "dateRange": "Date range",
     "displayName": "Display name",
     "email": "Email address",
@@ -261,6 +264,8 @@
     "encryptionMessage": "Data preview is not available due to encryption."
   },
   "common": {
+    // This is a title shown above a section of the page.
+    "activity": "Activity",
     // This is shown in a dropdown that allows the user to filter to only show
     // data for particular users.
     "anybody": "(Anybody)",

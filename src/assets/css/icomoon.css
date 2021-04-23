@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?kps16g') format('truetype'),
-    url('/fonts/icomoon.woff?kps16g') format('woff'),
-    url('/fonts/icomoon.svg?kps16g#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?6bbdpm') format('truetype'),
+    url('/fonts/icomoon.woff?6bbdpm') format('woff'),
+    url('/fonts/icomoon.svg?6bbdpm#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -176,4 +176,7 @@
 }
 .icon-ban:before {
   content: "\f05e";
+}
+.icon-comment:before {
+  content: "\f075";
 }
