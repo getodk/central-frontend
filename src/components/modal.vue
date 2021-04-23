@@ -181,7 +181,7 @@ export default {
   .modal-content {
     border: none;
     border-radius: 0;
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+    box-shadow: $box-shadow-panel-main;
 
     .modal-header {
       background-color: $color-accent-primary;
