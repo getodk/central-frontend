@@ -101,5 +101,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
+#submission-activity { margin-bottom: $margin-bottom-page-section; }
 #submission-activity-update-review-state-button { margin-right: 5px; }
 </style>
