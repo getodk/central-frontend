@@ -100,31 +100,31 @@ describe('SubmissionComment', () => {
     });
   });
 
-  describe('button visibility', () => {
-    it('shows the button if there is input', async () => {
+  describe('visibility of actions', () => {
+    it('shows the actions if there is input', async () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent();
-      const btn = component.first('.btn');
-      btn.should.be.hidden();
+      const actions = component.first('#submission-comment-actions');
+      actions.should.be.hidden();
       const textarea = component.first('textarea');
       await trigger.input(textarea, 'foo');
-      btn.should.be.visible();
+      actions.should.be.visible();
       await trigger.input(textarea, '');
-      btn.should.be.hidden();
+      actions.should.be.hidden();
     });
 
-    it('shows the button during the request', () => {
+    it('shows the actions during the request', () => {
       testData.extendedSubmissions.createPast(1);
       return mockHttpForComponent()
         .request(trigger.submit('form', [['textarea', 'foo']]))
         .beforeAnyResponse(async (component) => {
           await trigger.input(component, 'textarea', '');
-          component.first('.btn').should.be.visible();
+          component.first('#submission-comment-actions').should.be.visible();
         })
         .respondWithProblem();
     });
 
-    it('shows the button if the user did not comment after editing', () => {
+    it('shows the actions if the user did not comment after editing', () => {
       testData.extendedSubmissions.createNew();
       const component = mountComponent({
         feed: [
@@ -134,7 +134,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       });
-      component.first('.btn').should.be.visible();
+      component.first('#submission-comment-actions').should.be.visible();
     });
   });
 

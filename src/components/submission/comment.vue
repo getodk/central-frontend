@@ -20,10 +20,13 @@ except according to the terms contained in the LICENSE file.
         required rows="2">
       </textarea>
     </div>
-    <button v-show="body !== '' || awaitingResponse || editWithoutComment"
-      type="submit" class="btn btn-primary" :disabled="awaitingResponse">
-      {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
-    </button>
+    <div v-show="body !== '' || awaitingResponse || editWithoutComment"
+      id="submission-comment-actions">
+      <button type="submit" class="btn btn-primary"
+        :disabled="awaitingResponse">
+        {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
+      </button>
+    </div>
   </form>
 </template>
 
