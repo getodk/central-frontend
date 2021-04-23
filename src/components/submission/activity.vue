@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { comparator } from 'ramda';
+import { descend } from 'ramda';
 
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -74,7 +74,7 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'submission', 'audits']),
+    ...requestData(['project', 'submission', 'audits', 'comments']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(['audits', 'comments']);
     },
@@ -87,9 +87,11 @@ export default {
     },
     feed() {
       if (this.audits == null || this.comments == null) return null;
-      const entries = [...this.audits, ...this.comments];
-      return entries.sort(comparator((entry1, entry2) =>
-        DateTime.fromISO(entry2.createdAt) < DateTime.fromISO(entry1.createdAt)));
+      return [...this.audits, ...this.comments].sort(
+        descend(entry => DateTime.fromISO(entry.loggedAt != null
+          ? entry.loggedAt
+          : entry.createdAt))
+      );
     }
   }
 };
