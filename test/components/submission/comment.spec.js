@@ -54,7 +54,7 @@ describe('SubmissionComment', () => {
           testData.extendedAudits.createNew({
             action: 'submission.update.version'
           }),
-          testData.extendedComments.createNew({ body: 'foo' })
+          testData.extendedComments.createNew()
         ].reverse()
       });
       component.find('[role="alert"]').length.should.equal(0);
@@ -76,7 +76,7 @@ describe('SubmissionComment', () => {
       const component = mountComponent({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
-          testData.extendedComments.createNew({ body: 'foo' }),
+          testData.extendedComments.createNew(),
           testData.extendedAudits.createNew({
             action: 'submission.update.version'
           })
@@ -93,7 +93,7 @@ describe('SubmissionComment', () => {
           testData.extendedAudits.createNew({
             action: 'submission.update.version'
           }),
-          testData.extendedComments.createNew({ body: 'foo', actor: user })
+          testData.extendedComments.createNew({ actor: user })
         ].reverse()
       });
       component.find('[role="alert"]').length.should.equal(1);

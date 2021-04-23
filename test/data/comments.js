@@ -1,3 +1,4 @@
+import faker from 'faker';
 import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -10,7 +11,7 @@ export const extendedComments = dataStore({
     inPast,
     lastCreatedAt,
 
-    body,
+    body = faker.lorem.sentence(),
     actor = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last()
