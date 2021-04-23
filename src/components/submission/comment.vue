@@ -101,7 +101,6 @@ export default {
 @import '../../assets/scss/mixins';
 
 #submission-comment {
-  @include clearfix;
   margin-bottom: 15px;
 
   [role="alert"] {
@@ -121,7 +120,10 @@ export default {
   .btn { float: right; }
 }
 
-#submission-comment-actions { margin-top: 5px; }
+#submission-comment-actions {
+  @include clearfix;
+  margin-top: 5px;
+}
 </style>
 
 <i18n lang="json5">
