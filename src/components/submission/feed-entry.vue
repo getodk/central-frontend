@@ -40,11 +40,14 @@ except according to the terms contained in the LICENSE file.
         </template>
       </div>
     </div>
-    <div v-if="comment != null" class="body">{{ comment }}</div>
+    <div v-if="comment != null" class="body" v-html="comment"></div>
   </div>
 </template>
 
 <script>
+import marked from 'marked';
+import DOMPurify from 'dompurify';
+
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 
@@ -71,7 +74,8 @@ export default {
         : 'edited';
     },
     comment() {
-      return this.entry.notes != null ? this.entry.notes : this.entry.body;
+      const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
+      return DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }));
     }
   },
   methods: {
@@ -130,7 +134,6 @@ export default {
 
   .body {
     overflow-wrap: break-word;
-    white-space: pre-line;
   }
 }
 </style>
