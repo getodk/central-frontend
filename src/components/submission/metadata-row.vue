@@ -28,11 +28,11 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-angle-right"></span>
       <div class="btn-group">
         <template v-if="canUpdate">
-          <a v-if="submission.__system.status == null" class="btn btn-primary"
+          <a v-if="submission.__system.status == null" class="btn btn-default"
             :href="editPath" target="_blank">
             <span class="icon-pencil"></span><span>{{ editText }}</span>
           </a>
-          <button v-else type="button" class="btn btn-primary" disabled
+          <button v-else type="button" class="btn btn-default" disabled
             :title="$t('submission.editDisabled')">
             <span class="icon-pencil"></span><span>{{ editText }}</span>
           </button>

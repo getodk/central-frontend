@@ -11,13 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="submission-data-access">
-    <a class="btn btn-primary"
+    <a class="btn btn-default"
       href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
       target="_blank" rel="noopener">
       <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
     </a>
     <button id="submission-data-access-analyze-button" type="button"
-      class="btn btn-primary" :disabled="analyzeDisabled"
+      class="btn btn-default" :disabled="analyzeDisabled"
       :title="analyzeDisabled ? $t('analyzeDisabled') : null"
       @click="$emit('analyze')">
       <span class="icon-bar-chart"></span>{{ $t('action.analyze') }}&hellip;
