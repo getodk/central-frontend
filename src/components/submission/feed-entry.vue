@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <date-time :iso="entry.loggedAt != null ? entry.loggedAt : entry.createdAt"/>
       <div class="title">
         <template v-if="entry.action === 'submission.create'">
-          <span class="icon-cloud-upload"></span>
+          <span class="icon-cloud-upload submission-feed-entry-icon"></span>
           <i18n :tag="false" path="title.create">
             <template #name><actor-link :actor="entry.actor"/></template>
           </i18n>
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
             :path="`title.updateReviewState.${reviewState}.full`">
             <template #reviewState>
               <span class="review-state" :class="reviewState">
-                <span :class="reviewStateIcon(reviewState)"></span>
+                <span :class="updateOrEditIcon(reviewState)"></span>
                 <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
               </span>
             </template>
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </template>
         <template v-else>
-          <span class="icon-comment"></span>
+          <span class="icon-comment submission-feed-entry-icon"></span>
           <i18n :tag="false" path="title.comment">
             <template #name><actor-link :actor="entry.actor"/></template>
           </i18n>
@@ -73,6 +73,11 @@ export default {
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
     }
+  },
+  methods: {
+    updateOrEditIcon(state) {
+      return `${this.reviewStateIcon(state)} submission-feed-entry-icon`;
+    }
   }
 };
 </script>
@@ -81,31 +86,35 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-feed-entry {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 
-  .heading, .body { padding: 10px; }
+  .heading, .body { padding: 10px 15px; }
   .heading { background-color: #fff; }
+  .body { background-color: #f9f9f9; }
 
   time {
     float: right;
-    font-size: 16px;
+    font-size: 13px;
     color: #666;
+    line-height: 25px;
   }
 
   .title {
     @include text-overflow-ellipsis;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     letter-spacing: -0.02em;
     width: 70%;
-  }
 
-  .icon-comments, .icon-comment { margin-right: $margin-right-icon; }
-  .icon-cloud-upload { margin-right: #{$margin-right-icon - 1px}; }
-  .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
-    margin-left: 1px;
-    margin-right: #{$margin-right-icon + 2px};
+    .submission-feed-entry-icon {
+      display: block;
+      float: left;
+      margin-right: 7px;
+      padding-top: 3px;
+      text-align: center;
+      width: 18px;
+    }
   }
 
   .icon-cloud-upload, .icon-comment { color: #bbb; }

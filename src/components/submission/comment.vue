@@ -114,7 +114,11 @@ export default {
 
   .form-group {
     margin-bottom: 0;
-    padding-bottom: 0;
+    padding-bottom: 5px;
+  }
+
+  textarea {
+    border-bottom-color: #aaa;
   }
 
   .btn { float: right; }
