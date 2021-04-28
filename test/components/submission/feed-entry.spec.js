@@ -155,5 +155,10 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedComments.createPast(1, { body: 'Some comment' });
       mountComponent().first('.body').text().should.equal('Some comment\n');
     });
+
+    it("shows a comment's body with rendered markdown", () => {
+      testData.extendedComments.createPast(1, { body: 'Some **bold** comment' });
+      mountComponent().first('.body').html().should.equal('<div class="body"><p>Some <strong>bold</strong> comment</p>\n</div>');
+    });
   });
 });
