@@ -94,10 +94,24 @@ describe('SubmissionFilters', () => {
         end.should.startWith('1970-01-02T23:59:59.999');
         DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
       })
-      .respondWithData(() => testData.submissionOData(0));
+      .respondWithData(testData.submissionOData);
   });
 
-  it('specifies both filters in the query parameter', () => {
+  it('sends a request after the review state filter is changed', () => {
+    testData.extendedForms.createPast(1);
+    return loadSubmissionList()
+      .complete()
+      .request(trigger.changeValue(
+        '#submission-filters-review-state select',
+        'null'
+      ))
+      .beforeEachResponse((_, { url }) => {
+        url.should.match(/&%24filter=__system%2FreviewState\+eq\+null(&|$)/);
+      })
+      .respondWithData(testData.submissionOData);
+  });
+
+  it('specifies all the filters in the query parameter', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 1 });
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
@@ -116,8 +130,14 @@ describe('SubmissionFilters', () => {
           DateTime.fromISO('1970-01-02').toJSDate()
         ]);
       })
+      .respondWithData(() => testData.submissionOData(0))
+      .complete()
+      .request(trigger.changeValue(
+        '#submission-filters-review-state select',
+        'null'
+      ))
       .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+(&|$)/);
+        url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+\+and\+__system%2FreviewState\+eq\+null(&|$)/);
       })
       .respondWithData(() => testData.submissionOData(0));
   });
