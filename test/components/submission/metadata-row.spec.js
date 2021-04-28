@@ -129,13 +129,13 @@ describe('SubmissionMetadataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-      const href = mountComponent().first('.btn-primary').getAttribute('href');
+      const href = mountComponent().first('.btn-group .btn').getAttribute('href');
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
     it('shows the correct text', () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const text = mountComponent().first('.btn-primary').text();
+      const text = mountComponent().first('.btn-group .btn').text();
       text.should.equal('Edit (1,000)');
     });
 
@@ -144,7 +144,7 @@ describe('SubmissionMetadataRow', () => {
       testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ canUpdate: false });
-      row.find('.btn-primary').length.should.equal(0);
+      row.find('.btn-group .btn').length.should.equal(1);
     });
 
     it('disables the button if the submission is encrypted', () => {
@@ -152,7 +152,7 @@ describe('SubmissionMetadataRow', () => {
         status: 'notDecrypted',
         edits: 1000
       });
-      const button = mountComponent().first('.btn-primary');
+      const button = mountComponent().first('.btn-group .btn');
       button.text().should.equal('Edit (1,000)');
       button.hasAttribute('disabled').should.be.true();
       const title = button.getAttribute('title');
@@ -163,7 +163,7 @@ describe('SubmissionMetadataRow', () => {
   it('renders the More button', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-    const href = mountComponent().first('.btn-default').getAttribute('href');
+    const href = mountComponent().find('.btn-group .btn')[1].getAttribute('href');
     href.should.equal('#/projects/1/forms/a%20b/submissions/c%20d');
   });
 
