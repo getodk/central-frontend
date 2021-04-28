@@ -38,13 +38,12 @@ export default {
 @import '../../assets/scss/variables';
 
 .page-section {
-  border-top: 1px solid #777;
   margin-bottom: 35px;
 }
 
 .page-section-heading {
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 30px;
+  margin-bottom: 10px;
   margin-top: 10px;
   position: relative;
 
@@ -52,7 +51,11 @@ export default {
     color: $color-accent-primary;
     font-weight: bold;
 
-    + .btn { margin-left: 12px; }
+    + .btn { margin-left: 24px; }
+    ~ .btn {
+      position: relative;
+      top: -2px;
+    }
   }
 }
 

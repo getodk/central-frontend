@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledTitle == null" class="enketo-preview btn btn-primary"
+  <a v-if="disabledTitle == null" class="enketo-preview btn btn-default"
     :href="href" target="_blank">
     <span class="icon-eye"></span>{{ $t('action.preview') }}
   </a>
-  <button v-else type="button" class="enketo-preview btn btn-primary" disabled
+  <button v-else type="button" class="enketo-preview btn btn-default" disabled
     :title="disabledTitle">
     <span class="icon-eye"></span>{{ $t('action.preview') }}
   </button>

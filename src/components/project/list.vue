@@ -207,9 +207,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #project-list-heading {
-  margin-bottom: 30px;
-  margin-top: 25px;
+  background: $color-subpanel-background;
+  border-bottom: 1px solid $color-subpanel-border;
+  letter-spacing: -0.03em;
+  margin: 0 -15px 15px;
+  padding: 20px 15px;
 
   span {
     &:first-child {

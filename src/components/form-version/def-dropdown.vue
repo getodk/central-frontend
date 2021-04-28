@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="form-version-def-dropdown btn-group">
-    <button :id="toggleId" type="button" class="btn btn-primary dropdown-toggle"
+    <button :id="toggleId" type="button" class="btn btn-default dropdown-toggle"
       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="icon-code"></span>
       <span>{{ $t('action.def') }}</span>

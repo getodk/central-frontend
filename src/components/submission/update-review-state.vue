@@ -142,6 +142,7 @@ export default {
 #submission-update-review-state {
   .radio, .form-group { margin-bottom: 0; }
   .radio { margin-top: 0; }
+  .radio > label { margin-bottom: 5px; }
 
   $margin-left-icon: 2px;
   .icon-comments {
