@@ -98,6 +98,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
 @import '../../assets/scss/mixins';
 
 #submission-comment {
@@ -126,7 +127,16 @@ export default {
 
 #submission-comment-actions {
   @include clearfix;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-name: expand;
+  animation-timing-function: $ease-extreme-out;
   margin-top: 5px;
+}
+
+@keyframes expand {
+  0% { margin-bottom: -12px; }
+  100% { margin-bottom: 0; }
 }
 </style>
 
