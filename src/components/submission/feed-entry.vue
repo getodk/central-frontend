@@ -75,7 +75,9 @@ export default {
     },
     comment() {
       const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
-      return DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }));
+      return comment != null
+        ? DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }))
+        : comment;
     }
   },
   methods: {
@@ -135,6 +137,8 @@ export default {
   .body {
     overflow-wrap: break-word;
   }
+
+  .body > p:last-child { margin: 0 0 0px; }
 }
 </style>
 

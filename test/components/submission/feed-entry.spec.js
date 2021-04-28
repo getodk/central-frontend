@@ -148,12 +148,12 @@ describe('SubmissionFeedEntry', () => {
         details: { reviewState: 'approved' },
         notes: 'Some notes'
       });
-      mountComponent().first('.body').text().should.equal('Some notes');
+      mountComponent().first('.body').text().should.equal('Some notes\n');
     });
 
     it("shows a comment's body", () => {
       testData.extendedComments.createPast(1, { body: 'Some comment' });
-      mountComponent().first('.body').text().should.equal('Some comment');
+      mountComponent().first('.body').text().should.equal('Some comment\n');
     });
   });
 });
