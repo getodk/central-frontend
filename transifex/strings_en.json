@@ -2959,6 +2959,10 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "You have made edits to this data. Please describe the changes you made."
+      },
+      "markdownSupported": {
+        "string": "Markdown supported",
+        "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
     "SubmissionDataAccess": {

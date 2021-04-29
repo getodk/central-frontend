@@ -22,6 +22,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div v-show="body !== '' || awaitingResponse || editWithoutComment"
       id="submission-comment-actions">
+      <a href="https://www.markdownguide.org/cheat-sheet/" class="externalHelpLink" target="_blank">{{ $t('markdownSupported') }} </a>
       <button type="submit" class="btn btn-primary"
         :disabled="awaitingResponse">
         {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
@@ -138,12 +139,23 @@ export default {
   0% { margin-bottom: -12px; }
   100% { margin-bottom: 0; }
 }
+
+.externalHelpLink {
+  color: #999;
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  padding: 10px;
+}
+
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "editWithoutComment": "You have made edits to this data. Please describe the changes you made."
+    "editWithoutComment": "You have made edits to this data. Please describe the changes you made.",
+    // This is a link to an external website with Markdown style guidelines
+    "markdownSupported": "Markdown supported"
   }
 }
 </i18n>
