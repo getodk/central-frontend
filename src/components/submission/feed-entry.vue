@@ -53,6 +53,13 @@ import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
 
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if ('target' in node) {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noreferrer noopener');
+  }
+});
+
 export default {
   name: 'SubmissionFeedEntry',
   components: { ActorLink, DateTime },
@@ -79,14 +86,6 @@ export default {
         ? DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }))
         : comment;
     }
-  },
-  created() {
-    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-      if ('target' in node) {
-        node.setAttribute('target', '_blank');
-        node.setAttribute('rel', 'noreferrer noopener');
-      }
-    });
   },
   methods: {
     updateOrEditIcon(state) {
