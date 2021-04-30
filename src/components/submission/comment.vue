@@ -144,7 +144,7 @@ export default {
   color: #999;
   font-size: 12px;
   text-decoration: underline;
-  text-decoration-style: dashed;
+  text-decoration-style: dotted;
   padding: 10px;
 }
 
