@@ -55,6 +55,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
 .project-row {
   .table tbody & td { vertical-align: middle; }
 
@@ -62,12 +64,8 @@ export default {
 
   .name {
     a {
+      @include text-link;
       font-size: 24px;
-
-      &, &:hover, &:focus {
-        color: inherit;
-        text-decoration: none;
-      }
     }
 
     .icon-angle-right {
@@ -79,6 +77,7 @@ export default {
       font-size: 20px;
       cursor: help;
       color: #999;
+      margin-right: 9px;
     }
   }
 }

@@ -98,30 +98,22 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 .form-row {
   .table tbody & td { vertical-align: middle; }
 
   .name {
-    .link-if-can { font-size: 30px; }
+    .link-if-can { font-size: 24px; }
+    a { @include text-link; }
 
-    a {
-      &, &:hover, &:focus {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .icon-angle-right {
-        font-size: 20px;
-        margin-left: 12px;
-        vertical-align: 2px;
-      }
+    .icon-angle-right {
+      font-size: 20px;
+      margin-left: 9px;
     }
 
     .form-icon {
       font-size: 20px;
-      vertical-align: 2px;
       margin-right: 9px;
       cursor: help;
     }
@@ -144,22 +136,14 @@ export default {
   }
 
   .form-id, .version {
+    @include text-overflow-ellipsis;
     font-family: $font-family-monospace;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .version { color: #888; }
 
   .submissions {
-    a {
-      &, &:hover, &:focus {
-        color: inherit;
-        text-decoration: none;
-      }
-    }
-
+    a { @include text-link; }
     .icon-angle-right { margin-left: 6px; }
   }
 }
