@@ -160,5 +160,20 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedComments.createPast(1, { body: 'Some **bold** comment' });
       mountComponent().first('.body').html().should.equal('<div class="body"><p>Some <strong>bold</strong> comment</p>\n</div>');
     });
+
+    it('shows a multi-line comment rendered on multiple lines', () => {
+      testData.extendedComments.createPast(1, { body: 'Line 1\nLine 2' });
+      mountComponent().first('.body').text().should.equal('Line 1\nLine 2\n');
+    });
+
+    it('augments links to add target=_blank and open in new tab', () => {
+      testData.extendedComments.createPast(1, { body: '[link](https://getodk.org)' });
+      mountComponent().first('.body').html().should.equal('<div class="body"><p><a href="https://getodk.org" target="_blank" rel="noreferrer noopener">link</a></p>\n</div>');
+    });
+
+    it('does not allow raw html in markdown', () => {
+      testData.extendedComments.createPast(1, { body: '<b>bold</b>' });
+      mountComponent().first('.body').html().should.equal('<div class="body"><p>&lt;b&gt;bold&lt;/b&gt;</p>\n</div>');
+    });
   });
 });

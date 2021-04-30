@@ -45,8 +45,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import marked from 'marked';
 import DOMPurify from 'dompurify';
+import MarkdownIt from 'markdown-it';
 
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
@@ -76,9 +76,19 @@ export default {
     comment() {
       const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
       return comment != null
-        ? DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }))
+        ? DOMPurify.sanitize(this.mdRenderer.render(comment))
         : comment;
     }
+  },
+  created() {
+    this.mdRenderer = new MarkdownIt({ breaks: true });
+
+    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+      if ('target' in node) {
+        node.setAttribute('target', '_blank');
+        node.setAttribute('rel', 'noreferrer noopener');
+      }
+    });
   },
   methods: {
     updateOrEditIcon(state) {
