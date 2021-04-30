@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div v-show="body !== '' || awaitingResponse || editWithoutComment"
       id="submission-comment-actions">
-      <a href="https://www.markdownguide.org/cheat-sheet/" class="externalHelpLink" target="_blank">{{ $t('markdownSupported') }} </a>
+      <a href="https://commonmark.org/help/" class="externalHelpLink" target="_blank">{{ $t('markdownSupported') }} </a>
       <button type="submit" class="btn btn-primary"
         :disabled="awaitingResponse">
         {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
