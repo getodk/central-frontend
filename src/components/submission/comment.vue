@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div v-show="body !== '' || awaitingResponse || editWithoutComment"
       id="submission-comment-actions">
-      <a href="https://commonmark.org/help/" class="externalHelpLink" target="_blank">{{ $t('markdownSupported') }} </a>
+      <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <button type="submit" class="btn btn-primary"
         :disabled="awaitingResponse">
         {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
@@ -140,7 +140,7 @@ export default {
   100% { margin-bottom: 0; }
 }
 
-.externalHelpLink {
+.external-help-link {
   color: #999;
   font-size: 12px;
   text-decoration: underline;
