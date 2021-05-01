@@ -40,15 +40,26 @@ except according to the terms contained in the LICENSE file.
         </template>
       </div>
     </div>
-    <div v-if="comment != null" class="body">{{ comment }}</div>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div v-if="comment != null" class="body" v-html="comment"></div>
   </div>
 </template>
 
 <script>
+import DOMPurify from 'dompurify';
+import marked from 'marked';
+
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
+
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if ('target' in node) {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noreferrer noopener');
+  }
+});
 
 export default {
   name: 'SubmissionFeedEntry',
@@ -71,7 +82,10 @@ export default {
         : 'edited';
     },
     comment() {
-      return this.entry.notes != null ? this.entry.notes : this.entry.body;
+      const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
+      return comment != null
+        ? DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }))
+        : comment;
     }
   },
   methods: {
@@ -130,8 +144,9 @@ export default {
 
   .body {
     overflow-wrap: break-word;
-    white-space: pre-line;
   }
+
+  .body > p:last-child { margin: 0 0 0px; }
 }
 </style>
 
