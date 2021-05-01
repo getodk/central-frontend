@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </div>
     </div>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
   </div>
 </template>
