@@ -27,7 +27,7 @@ session to be in use at a time. We use local storage to enforce this,
 coordinating login and logout across tabs:
 
   - If the user has the login page open in two tabs, logs in in one tab, then
-    tries to log in the other, the second login will fail, because the cookie
+    tries to log in in the other, the second login will fail, because the cookie
     will be sent without a CSRF token and without other auth. Because the cookie
     is HttpOnly, Frontend cannot check for the cookie directly. Instead, when
     the user logs in, Frontend stores the session expiration date in local
@@ -43,9 +43,15 @@ second tab to remove the cookie. But that becomes a problem if the user closes
 the second tab, then logs out in the first tab.
 
 In summary, there is a single session, it has an associated cookie, and its
-expiration date is also stored in local storage.
+expiration date is also stored in local storage. This approach is designed to:
 
-If the cookie is removed, then functionality that relies on it will stop
+  - Support cookie auth
+  - Ensure the user knows when they are logged out; prevent the user from seeing
+    403 messages after their session has been deleted
+  - Prevent one user from using another user's cookie
+  - Ensure that the cookie is removed when the user logs out
+
+If the user clears the cookie, then functionality that relies on it will stop
 working. Chrome allows the user to clear cookies and local storage separately.
 If the user clears local storage, it will trigger Frontend to log out in Chrome.
 However, it will not in Firefox or Safari. Yet Frontend will still be able to
@@ -212,8 +218,8 @@ export const logIn = (router, store, newSession) => {
   }])
     .catch(error => {
       // If there is a logout while the request for the current user is in
-      // progress, the request will be canceled. This callback will then be run,
-      // in which case we simply re-throw the error.
+      // progress, then the request will be canceled. This callback will then be
+      // run, in which case we simply re-throw the error.
       if (store.state.request.data.session == null) throw error;
 
       return logOut(router, store, false)

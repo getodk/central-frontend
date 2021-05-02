@@ -210,7 +210,7 @@ describe('util/session', () => {
           .respondWithProblem(403.1));
     });
 
-    describe('logout during login', () => {
+    describe('logout during the request for the current user', () => {
       describe('initial navigation', () => {
         beforeEach(() => {
           testData.extendedUsers.createPast(1);
