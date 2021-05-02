@@ -308,9 +308,10 @@ export default {
         const { cancelId } = requestsForKey;
 
         const baseConfig = { method: 'GET', url };
-        baseConfig.headers = extended
-          ? { ...headers, 'X-Extended-Metadata': 'true' }
-          : headers;
+        if (extended)
+          baseConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
+        else if (headers != null)
+          baseConfig.headers = headers;
         const { session } = data;
         const token = session != null ? session.token : null;
         const axiosConfig = configForPossibleBackendRequest(baseConfig, token);

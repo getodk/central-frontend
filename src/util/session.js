@@ -66,19 +66,28 @@ import { forceReplace } from './router';
 import { localStore } from './storage';
 import { noop } from './util';
 
-const timeouts = { alert: null, logout: null };
+const requestLogout = (store) => {
+  const { token } = store.state.request.data.session;
+  return Vue.prototype.$http.delete(apiPaths.session(token), {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .catch(error => {
+      // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
+      // log out a session that has already been logged out. Backend returns a
+      // 403.1 in that case, which we ignore.
+      if (error.response != null && isProblem(error.response.data) &&
+        error.response.data.code === 403.1) {
+        return;
+      }
 
-// Exported for use in testing
-export const cancelScheduledLogout = () => {
-  if (timeouts.alert != null) {
-    clearTimeout(timeouts.alert);
-    timeouts.alert = null;
-  }
-
-  if (timeouts.logout != null) {
-    clearTimeout(timeouts.logout);
-    timeouts.logout = null;
-  }
+      store.commit('setAlert', {
+        type: 'danger',
+        message: i18n.t('util.session.alert.logoutError', {
+          message: requestAlertMessage(error)
+        })
+      });
+      throw error;
+    });
 };
 
 export const logOut = (router, store, setNext) => {
@@ -96,27 +105,13 @@ export const logOut = (router, store, setNext) => {
   localStore.setItem('sessionExpires', '0');
   localStore.removeItem('sessionExpires');
 
-  const { token } = store.state.request.data.session;
-  const request = Vue.prototype.$http.delete(apiPaths.session(token), {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .catch(error => {
-      // scheduleLogout() and App may try to log out a session that has already
-      // been logged out. Backend returns a 403.1 in that case, which we ignore.
-      if (error.response != null && isProblem(error.response.data) &&
-        error.response.data.code === 403.1) {
-        return;
-      }
-
-      store.commit('setAlert', {
-        type: 'danger',
-        message: i18n.t('util.session.alert.logoutError', {
-          message: requestAlertMessage(error)
-        })
-      });
-      throw error;
-    });
-
+  const { expiresAt } = store.state.request.data.session;
+  // If the session has expired (for example, while the computer was asleep), we
+  // do not send a request, which would result in an error. (Using Date.parse()
+  // rather than DateTime.fromISO() in order to reduce the bundle.)
+  const promise = Date.parse(expiresAt) > Date.now()
+    ? requestLogout(store)
+    : Promise.resolve();
   store.commit('clearData');
 
   // We do not navigate to /login for a logout during login or during the
@@ -133,31 +128,20 @@ export const logOut = (router, store, setNext) => {
     forceReplace(router, store, location);
   }
 
-  cancelScheduledLogout();
-  return request;
+  return promise;
 };
 
-const scheduleLogout = (router, store, sessionExpires) => {
-  const millisUntilExpires = sessionExpires - Date.now();
-  const millisUntilLogout = millisUntilExpires - 60000;
-  // The alert also mentions this number.
-  const millisUntilAlert = millisUntilLogout - 120000;
-  // We do not show the alert if millisUntilAlert < 0, because its message would
-  // be incorrect.
-  if (millisUntilAlert >= 0) {
-    timeouts.alert = setTimeout(
-      () => {
-        store.commit('setAlert', {
-          type: 'info',
-          message: i18n.t('util.session.alert.expiresSoon')
-        });
-        timeouts.alert = null;
-      },
-      millisUntilAlert
-    );
-  }
-  timeouts.logout = setTimeout(
-    () => {
+// We check for upcoming session expiration on an interval. We take that
+// approach rather than using setTimeout() to schedule logout, because
+// setTimeout() does not seem to clock time while the computer is asleep.
+const logOutBeforeSessionExpires = (router, store) => {
+  let alerted;
+  return () => {
+    const { session } = store.state.request.data;
+    if (session == null) return;
+    const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
+    const millisUntilLogout = millisUntilExpires - 60000;
+    if (millisUntilLogout <= 0) {
       logOut(router, store, true)
         .then(() => {
           store.commit('setAlert', {
@@ -166,9 +150,38 @@ const scheduleLogout = (router, store, sessionExpires) => {
           });
         })
         .catch(noop);
-    },
-    Math.max(millisUntilLogout, 0)
-  );
+    } else if (alerted !== session.token) {
+      // The alert also mentions this number. The alert will be a little
+      // misleading if millisUntilAlert is markedly less than zero, but that
+      // case is unlikely.
+      const millisUntilAlert = millisUntilLogout - 120000;
+      if (millisUntilAlert <= 0) {
+        store.commit('setAlert', {
+          type: 'info',
+          message: i18n.t('util.session.alert.expiresSoon')
+        });
+        alerted = session.token;
+      }
+    }
+  };
+};
+
+const logOutAfterStorageChange = (router, store) => (event) => {
+  // event.key == null if the user clears local storage in Chrome.
+  if ((event.key == null || event.key === 'sessionExpires') &&
+    store.state.request.data.session != null) {
+    logOut(router, store, true).catch(noop);
+  }
+};
+
+export const useSessions = (router, store) => {
+  const id = setInterval(logOutBeforeSessionExpires(router, store), 1000);
+  const handler = logOutAfterStorageChange(router, store);
+  window.addEventListener('storage', handler);
+  return () => {
+    clearInterval(id);
+    window.removeEventListener('storage', handler);
+  };
 };
 
 /* The session must be set in the store before logIn() is called, meaning that
@@ -178,9 +191,6 @@ However, if there is a logout during the request to restore the session, then
 the request for the current user should result in an error. If there is a logout
 during a request to create a session, then the new session will be used. */
 export const logIn = (router, store, newSession) => {
-  // Using Date.parse() rather than DateTime.fromISO() in order to reduce the
-  // bundle.
-  const sessionExpires = Date.parse(store.state.request.data.session.expiresAt);
   if (newSession) {
     /* If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
@@ -189,20 +199,21 @@ export const logIn = (router, store, newSession) => {
     (very unlikely) case that the two sessions have the same expiration date,
     because sessionExpires is removed before it is set. */
     localStore.removeItem('sessionExpires');
-    localStore.setItem('sessionExpires', sessionExpires.toString());
+    const { expiresAt } = store.state.request.data.session;
+    localStore.setItem('sessionExpires', Date.parse(expiresAt).toString());
   }
 
   // If the route changed during this request, it would cancel the request. It
   // is the caller's responsibility to ensure that the route does not change.
-  const request = store.dispatch('get', [{
+  return store.dispatch('get', [{
     key: 'currentUser',
     url: '/v1/users/current',
     extended: true
   }])
     .catch(error => {
-      // If another tab logs out, that will trigger a logout in this tab. If the
-      // request for the current user is in progress, it will be canceled, and
-      // this callback will be run. In that case, we simply re-throw the error.
+      // If there is a logout while the request for the current user is in
+      // progress, the request will be canceled. This callback will then be run,
+      // in which case we simply re-throw the error.
       if (store.state.request.data.session == null) throw error;
 
       return logOut(router, store, false)
@@ -210,7 +221,4 @@ export const logIn = (router, store, newSession) => {
           throw error;
         });
     });
-
-  scheduleLogout(router, store, sessionExpires);
-  return request;
 };
