@@ -39,7 +39,6 @@ describe('FormShow', () => {
       form: () => testData.extendedForms.first()
     })
       .afterResponses(app => {
-        // eslint-disable-next-line prefer-destructuring
         vm = app.first(FormOverview).vm;
       })
       .load('/projects/1/forms/f2', {

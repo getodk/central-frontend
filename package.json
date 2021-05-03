@@ -14,7 +14,6 @@
   "dependencies": {
     "axios": "~0.21",
     "bootstrap": "~3",
-    "core-js": "~3.6",
     "dompurify": "~2.2",
     "flatpickr": "~4.6",
     "jquery": "~3",
@@ -34,17 +33,15 @@
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "~1",
-    "@vue/cli-plugin-babel": "~4.3",
-    "@vue/cli-plugin-eslint": "~4.3",
-    "@vue/cli-plugin-unit-mocha": "~4.3",
-    "@vue/cli-service": "~4.3",
-    "@vue/eslint-config-airbnb": "~4.0",
+    "@vue/cli-plugin-eslint": "~4.5",
+    "@vue/cli-plugin-unit-mocha": "~4.5",
+    "@vue/cli-service": "~4.5",
+    "@vue/eslint-config-airbnb": "~5",
     "avoriaz": "~6.3",
-    "babel-eslint": "~10.0",
     "comment-json": "~4.0",
-    "eslint": "~5.16",
-    "eslint-plugin-import": "~2.20",
-    "eslint-plugin-vue": "~5.2",
+    "eslint": "~6",
+    "eslint-plugin-import": "~2",
+    "eslint-plugin-vue": "~6",
     "faker": "~4.1",
     "json5-loader": "~4.0",
     "jsqr": "~1.0",
@@ -58,7 +55,7 @@
     "sass-loader": "~10",
     "should": "~13.2",
     "sinon": "~9.0",
-    "vue-cli-plugin-i18n": "~1.0",
+    "vue-cli-plugin-i18n": "~2.1",
     "vue-template-compiler": "~2.6"
   }
 }

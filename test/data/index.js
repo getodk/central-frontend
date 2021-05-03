@@ -17,7 +17,7 @@ import * as Users from './users';
 import seed from './seed';
 import { resetDataStores } from './data-store';
 
-const testData = Object.assign(
+const testData = Object.assign( // eslint-disable-line prefer-object-spread
   {},
   Actors,
   Assignments,
