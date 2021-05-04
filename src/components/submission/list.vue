@@ -13,21 +13,23 @@ except according to the terms contained in the LICENSE file.
   <div id="submission-list">
     <loading :state="$store.getters.initiallyLoading(['fields'])"/>
     <div v-show="fields != null">
-      <form class="form-inline" @submit.prevent>
-        <submission-filters v-if="!draft" v-bind.sync="filters"/>
-        <submission-field-dropdown
-          v-if="fields != null && selectableFields.length > 11"
-          v-model="selectedFields"/>
-        <button id="submission-list-refresh-button" type="button"
-          class="btn btn-default" :disabled="refreshing"
-          @click="fetchChunk(0, false)">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
+      <div id="submission-list-actions">
+        <form class="form-inline" @submit.prevent>
+          <submission-filters v-if="!draft" v-bind.sync="filters"/>
+          <submission-field-dropdown
+            v-if="fields != null && selectableFields.length > 11"
+            v-model="selectedFields"/>
+          <button id="submission-list-refresh-button" type="button"
+            class="btn btn-default" :disabled="refreshing"
+            @click="fetchChunk(0, false)">
+            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+            <spinner :state="refreshing"/>
+          </button>
+        </form>
         <submission-download-dropdown v-if="formVersion != null"
           :form-version="formVersion" :odata-filter="odataFilter"
           @decrypt="showDecrypt"/>
-      </form>
+      </div>
       <template v-if="submissions != null">
         <submission-table v-if="submissions.length !== 0"
           :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
@@ -97,7 +99,8 @@ export default {
     return {
       filters: {
         submitterId: '',
-        submissionDate: []
+        submissionDate: [],
+        reviewState: ''
       },
       selectedFields: null,
       refreshing: false,
@@ -136,6 +139,8 @@ export default {
         conditions.push(`__system/submissionDate ge ${start}`);
         conditions.push(`__system/submissionDate le ${end}`);
       }
+      if (this.filters.reviewState !== '')
+        conditions.push(`__system/reviewState eq ${this.filters.reviewState}`);
       return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
     loadingOData() {
@@ -177,6 +182,7 @@ export default {
   watch: {
     'filters.submitterId': 'filter',
     'filters.submissionDate': 'filter',
+    'filters.reviewState': 'filter',
     selectedFields(_, oldFields) {
       if (oldFields != null) this.fetchChunk(0, true);
     },
@@ -305,14 +311,25 @@ export default {
   min-height: 375px;
 }
 
-#submission-filters + #submission-field-dropdown { margin-left: 15px }
-#submission-filters + #submission-list-refresh-button { margin-left: 10px; }
-#submission-field-dropdown + #submission-list-refresh-button {
+#submission-list-actions {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+#submission-field-dropdown {
   margin-left: 15px;
+  margin-right: 5px;
+}
+#submission-list-refresh-button {
+  margin-left: 10px;
+  margin-right: 5px;
 }
 #submission-download-dropdown {
-  float: right;
-  top: 3px;
+  margin-bottom: 10px;
+  margin-left: auto;
+
+  // Needed to work with align-items above.
+  .btn { float: none; }
 }
 
 #submission-list-message {

@@ -189,6 +189,7 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
+    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {

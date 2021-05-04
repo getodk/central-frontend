@@ -398,6 +398,10 @@
       "string": "New password (confirm)",
       "developer_comment": "This is the text of a form field."
     },
+    "reviewState": {
+      "string": "Review State",
+      "developer_comment": "This is the text of a form field."
+    },
     "type": {
       "string": "Type",
       "developer_comment": "This is the text of a form field."
@@ -3137,6 +3141,12 @@
           "string": "Submitted at",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "(Any State)",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

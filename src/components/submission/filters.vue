@@ -19,16 +19,23 @@ except according to the terms contained in the LICENSE file.
     <date-range-picker :value="submissionDate"
       :placeholder="$t('field.submissionDate')"
       @input="$emit('update:submissionDate', $event)"/>
+    <submission-filters-review-state :value="reviewState"
+      @input="$emit('update:reviewState', $event)"/>
   </span>
 </template>
 
 <script>
 import DateRangePicker from '../date-range-picker.vue';
+import SubmissionFiltersReviewState from './filters/review-state.vue';
 import SubmissionFiltersSubmitter from './filters/submitter.vue';
 
 export default {
   name: 'SubmissionFilters',
-  components: { DateRangePicker, SubmissionFiltersSubmitter },
+  components: {
+    DateRangePicker,
+    SubmissionFiltersReviewState,
+    SubmissionFiltersSubmitter
+  },
   props: {
     submitterId: {
       type: String,
@@ -36,6 +43,10 @@ export default {
     },
     submissionDate: {
       type: Array,
+      required: true
+    },
+    reviewState: {
+      type: String,
       required: true
     }
   }
