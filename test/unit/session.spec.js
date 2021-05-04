@@ -323,7 +323,7 @@ describe('util/session', () => {
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
-          expiresAt: '1970-01-01T00:05:01Z'
+          expiresAt: '1970-01-01T00:05:00Z'
         })
       });
       return mockHttp()
@@ -331,7 +331,7 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
         .testNoRequest(() => {
-          clock.tick(240000);
+          clock.tick(239000);
         })
         .request(() => {
           clock.tick(1000);
@@ -454,14 +454,14 @@ describe('util/session', () => {
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
-          expiresAt: '1970-01-01T00:05:01Z'
+          expiresAt: '1970-01-01T00:05:00Z'
         })
       });
       return mockHttp()
         .request(() => logIn(router, store, true))
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
-          clock.tick(120000);
+          clock.tick(119000);
           const { alert } = store.state;
           alert.state.should.be.false();
           clock.tick(1000);

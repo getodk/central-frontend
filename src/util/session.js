@@ -181,7 +181,7 @@ const logOutAfterStorageChange = (router, store) => (event) => {
 };
 
 export const useSessions = (router, store) => {
-  const id = setInterval(logOutBeforeSessionExpires(router, store), 1000);
+  const id = setInterval(logOutBeforeSessionExpires(router, store), 15000);
   const handler = logOutAfterStorageChange(router, store);
   window.addEventListener('storage', handler);
   return () => {
