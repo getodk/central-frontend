@@ -431,7 +431,7 @@ $drop-zone-vpadding: 15px;
   },
   "fr": {
     "title": {
-      "create": "Créer un formualire",
+      "create": "Créer un formulaire",
       "update": "Téléverser une nouvelle définition de formulaire"
     },
     "introduction": [

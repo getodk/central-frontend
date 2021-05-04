@@ -151,31 +151,38 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Přihlásit se",
+    "alert": {
+      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
+    },
     "problem": {
       "401_2": "Nesprávná e-mailová adresa nebo heslo."
     }
   },
   "de": {
-    "title": "Einloggen",
+    "alert": {
+      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
+    },
     "problem": {
       "401_2": "Falsche E-Mail-Adresse und/oder Passwort."
     }
   },
   "es": {
-    "title": "Ingresar",
+    "alert": {
+      "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar."
+    },
     "problem": {
       "401_2": "Dirección de correo electrónico y/o contraseña incorrecta."
     }
   },
   "fr": {
-    "title": "Se connecter",
+    "alert": {
+      "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer."
+    },
     "problem": {
       "401_2": "Adresse de courriel et/ou mot de passe invalides."
     }
   },
   "id": {
-    "title": "Masuk",
     "problem": {
       "401_2": "Alamat email dan/atau kata sandi salah."
     }

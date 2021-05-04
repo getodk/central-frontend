@@ -11,6 +11,13 @@
     "closing": "Fermeture",
     "closed": "Fermé"
   },
+  "reviewState": {
+    "received": "Reçue",
+    "hasIssues": "Comporte des erreurs",
+    "approved": "Approuvée",
+    "rejected": "Rejetée",
+    "null": "@:reviewState.received"
+  },
   "audit": {
     "category": {
       "nonverbose": "(Toutes actions)",
@@ -19,7 +26,6 @@
       "form": "Actions de formulaire",
       "field_key": "Actions d'utilisateurs mobiles",
       "public_link": "Actions de liens d'accès public",
-      "session": "Actions de sessions",
       "upgrade": "Mise à jour du serveur"
     },
     "action": {
@@ -28,11 +34,11 @@
         "update": "Mettre à jour les détails",
         "delete": "Supprimer"
       },
-      "assignment": {
-        "create": "Attribuer un rôle",
-        "delete": "Révoquer un rôle"
-      },
       "backup": "Sauvegarder",
+      "field_key": {
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
       "form": {
         "update_draft_set": "Créer ou mettre à jour l'ébauche",
         "update_publish": "Publier l'ébauche",
@@ -40,6 +46,10 @@
         "attachment_update": "Mettre à jour les fichiers joints",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -51,24 +61,16 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
       },
-      "field_key": {
-        "create": "@:audit.action.default.create"
-      },
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
-      },
-      "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
       }
     }
   },
   "action": {
     "cancel": "Annuler",
+    "clear": "Effacer",
     "close": "Fermer",
     "create": "Créer",
     "createSubmission": "Nouveau",
@@ -77,11 +79,13 @@
     "editProfile": "Éditer le profil",
     "logIn": "Se connecter",
     "looksGood": "Ça a l'air bon, continuez",
+    "more": "Plus",
     "neverMind": "Peu importe, annuler",
     "next": "Suivant",
     "noCancel": "Non, abandonner",
     "ok": "OK",
     "proceed": "Continuer",
+    "refresh": "Rafraîchir",
     "resetPassword": "Réinitialiser le mot de passe",
     "save": "Enregistrer",
     "yesProceed": "Oui, procéder"
@@ -142,15 +146,30 @@
     },
     "learnMore": "En savoir plus."
   },
+  "submission": {
+    "missingMedia": "Média manquant",
+    "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
+    "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
+    "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
+  },
   "common": {
+    "anybody": "(n'importe qui)",
     "areYouSure": "Êtes vous sûr de vouloir procéder ?",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
+    "filter": "Filtrer",
     "no": "Non",
     "noResults": "Aucun résultat",
     "rightNow": "Présentement",
     "success": "Succès !",
     "yes": "Oui"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés."
+      }
+    }
   },
   "presenter": {
     "Form": {
@@ -168,7 +187,14 @@
     "request": {
       "noRequest": "Quelque-chose s'est mal passé : il n'y avait pas de requête.",
       "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
-      "errorNotProblem": "Quelque-chose s'est mal passé : le serveur a retourné une erreur invalide."
+      "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Votre session expirera dans 2minutes, et vous serez automatiquement déconnecté.",
+        "expired": "Votre session a expiré. Pour continuer à travailler, merci de vous connecter à nouveau.",
+        "logoutError": "Il y a eu un problème et vous n’avez pas été complètement déconnecté. Merci de rafraîchir la page et d'essayer à nouveau de vous déconnecter. {message}"
+      }
     }
   },
   "router": {

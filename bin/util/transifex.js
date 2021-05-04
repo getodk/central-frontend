@@ -697,6 +697,7 @@ const deletePartialTranslation = ({ translated, parent }) => {
 };
 
 const validateTranslation = (locale) => ({ source, translated, path }) => {
+  if (translated == null) return;
   // Our Transifex translation checks should prevent these possibilities.
   if (pluralFormCounts.get(locale) !== 1 &&
     (source.length !== 1) !== (translated.length !== 1))

@@ -174,25 +174,37 @@ export default {
     "lastSubmission": "(poslední {dateTime})",
     "action": {
       "fill": "Vyplnit formulář"
-    }
+    },
+    "formClosedTip": "Tento formulář je uzavřen. Nelze jej stáhnout a nepřijímá příspěvky.",
+    "formClosingTip": "Tento formulář se uzavírá. Nelze jej stáhnout, ale stále přijímá příspěvky.",
+    "formUnpublishedTip": "Tento formulář dosud nemá publikovanou verzi."
   },
   "de": {
     "lastSubmission": "(zuletzt {dateTime})",
     "action": {
       "fill": "Formular ausfüllen"
-    }
+    },
+    "formClosedTip": "Dieses Formular ist geschlossen. Es kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert.",
+    "formClosingTip": "Dieses Formular steht auf Schließen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
+    "formUnpublishedTip": "Es gibt bisher noch keine veröffentlichte Version dieses Formulars."
   },
   "es": {
     "lastSubmission": "(último {dateTime})",
     "action": {
       "fill": "Llenar formulario"
-    }
+    },
+    "formClosedTip": "Este Formulario está cerrado. No se puede descargar y no acepta envíos.",
+    "formClosingTip": "Este Formulario se está cerrando. No se puede descargar, pero aún acepta Envíos.",
+    "formUnpublishedTip": "Este Formulario aún no tiene una versión publicada."
   },
   "fr": {
     "lastSubmission": "(dernière {dateTime})",
     "action": {
       "fill": "Remplir le formulaire"
-    }
+    },
+    "formClosedTip": "Ce formulaire est fermé. Il n'est plus téléchargeable et n'accepte plus de soumissions.",
+    "formClosingTip": "Ce formulaire est en cours de fermeture. Il n'est plus téléchargeable mais peut toujours recevoir des soumissions.",
+    "formUnpublishedTip": "Ce formulaire ne dispose pas encore de version publiée."
   },
   "id": {
     "lastSubmission": "(terakhir {dateTime})",

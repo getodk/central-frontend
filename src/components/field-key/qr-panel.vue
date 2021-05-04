@@ -212,8 +212,8 @@ export default {
         }
       },
       {
-        "managed": "Collect bude přesně odpovídat dostupným formulářům na “{displayName}“, včetně automatického použití aktualizací. Uživatelé nebudou muset ručně získávat prázdné formuláře.",
-        "legacy": "Uživatelé budou muset ručně získat prázdné formuláře v zařízení a určit, které formuláře se mají aktualizovat."
+        "managed": "Collect bude přesně odpovídat dostupným formulářům na „{displayName}“, včetně automatického použití aktualizací. Uživatelé nebudou muset ručně získávat prázdné formuláře. Dokončené formuláře budou navíc automaticky odeslány, jakmile bude nalezeno spojení.",
+        "legacy": "Uživatelé budou muset ručně získat prázdné formuláře v zařízení a určit, které formuláře se mají aktualizovat. Budou také muset ručně odeslat konečné formuláře."
       },
       {
         "managed": {
@@ -228,6 +228,41 @@ export default {
         }
       },
       "Naskenováním tohoto QR kódu nakonfigurujete zařízení s účtem “{displayName}“."
+    ]
+  },
+  "de": {
+    "title": {
+      "managed": "Client Configuration Code",
+      "legacy": "Legacy Client Configuration Code"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Das ist ein {managedCode}.",
+          "managedCode": "Managed QR-Code"
+        },
+        "legacy": {
+          "full": "Das ist ein {legacyCode}.",
+          "legacyCode": "Legacy QR-Code"
+        }
+      },
+      {
+        "managed": "Collect wird die für \"{displayName}\" verfügbaren Formulare genau abgleichen und automatisch Updates anwenden. Benutzer müssen Leerformulare nicht manuell herunterladen. Außerdem werden abgeschlossene Formulare automatisch übermittelt sobald eine Verbindung vorhanden ist.",
+        "legacy": "Benutzer müssen manuell auf dem Gerät Leerformulare herunterladen und Formulare zum Updaten auswählen. Sie müssen außerdem manuell vollständige Formulare hochladen."
+      },
+      {
+        "managed": {
+          "full": "Für das alte Verhalten {switchToLegacy}.",
+          "switchToLegacy": "auf {legacyCode} umschalten",
+          "legacyCode": "Legacy QR-Code"
+        },
+        "legacy": {
+          "full": "Für einen kontrollierteren und idiotensicheren Prozess {switchToManaged}.",
+          "switchToManaged": "auf {managedCode} umschalten",
+          "managedCode": "Managed QR-Code"
+        }
+      },
+      "Scannen Sie diesen QR-Code, um ein Gerät mit dem Konto \"{displayName}\" zu konfigurieren."
     ]
   },
   "es": {
@@ -247,8 +282,8 @@ export default {
         }
       },
       {
-        "managed": "Collect coincidirá exactamente con los formularios disponibles para \"{displayName}\", incluida la aplicación automática de actualizaciones. Los usuarios no necesitarán obtener formularios en blanco manualmente.",
-        "legacy": "Los usuarios deberán obtener manualmente formularios en blanco en el dispositivo y determinar qué formularios actualizar."
+        "managed": "Collect coincidirá exactamente con los formularios disponibles para {displayName}, incluida la aplicación automática de actualizaciones. Los usuarios no necesitarán obtener formularios en blanco manualmente. Además, los formularios finalizados se enviarán automáticamente tan pronto como se encuentre una conexión.",
+        "legacy": "Los usuarios deberán obtener manualmente formularios en blanco en el dispositivo y determinar qué formularios actualizar. También necesitarán enviar formularios finalizados manualmente"
       },
       {
         "managed": {
@@ -263,6 +298,73 @@ export default {
         }
       },
       "Escanee este código QR para configurar un dispositivo con la cuenta \"{displayName}\""
+    ]
+  },
+  "fr": {
+    "title": {
+      "managed": "Code de configuration du client.",
+      "legacy": "Ancien code de configuration de client"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Ceci est un {managedCode}.",
+          "managedCode": "QR Code administré"
+        },
+        "legacy": {
+          "full": "Ceci est un {legacyCode}.",
+          "legacyCode": "Ancien QR Code"
+        }
+      },
+      {
+        "managed": "Collect reflétera exactement les formulaires disponibles sur “{displayName}” incluant leurs mises à jour automatiques. Les utilisateurs n'auront plus à télécharger les formulaires vierges. En outre, les formulaires finalisés seront envoyés automatiquement, dés qu'une connexion sera trouvée.",
+        "legacy": "Les utilisateurs devront manuellement télécharger les formulaires vierges sur le téléphone et choisir quels formulaires mettre à jour. Ils devront aussi envoyer les formulaires finalisés manuellement."
+      },
+      {
+        "managed": {
+          "full": "Pour l'ancien comportement, {switchToLegacy}.",
+          "switchToLegacy": "Changez pour un {legacyCode}",
+          "legacyCode": "ancien QR Code"
+        },
+        "legacy": {
+          "full": "Pour un processus plus contrôlé et infaillible, {switchToManaged}.",
+          "switchToManaged": "Changer pour un {managedCode}",
+          "managedCode": "QR Code administré"
+        }
+      },
+      "Scannez ce QR Code pour configurer un téléphone avec le compte “{displayName}”."
+    ]
+  },
+  "id": {
+    "title": {
+      "managed": "Kode Konfigurrasi Klien",
+      "legacy": "Kode Konfigurasi Klien Versi Lama"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Ini adalah {managedCode}.",
+          "managedCode": "Kode QR yang dikelola"
+        },
+        "legacy": {
+          "full": "Ini adalah {legacyCode}.",
+          "legacyCode": "kode QR Versi Lama"
+        }
+      },
+      {},
+      {
+        "managed": {
+          "full": "Untuk cara lama, {switchToLegacy}.",
+          "switchToLegacy": "beralih ke {legacyCode}",
+          "legacyCode": "Kode QR versi Lama"
+        },
+        "legacy": {
+          "full": "Untuk proses yang lebih terkontrol dan terpercaya, {switchToManaged}.",
+          "switchToManaged": "beralih ke {managedCode}",
+          "managedCode": "Kode QR yang Dikelola"
+        }
+      },
+      "Pindai kode QR ini untuk mengonfigurasi perangkat dengan akun tersebut “{displayName}”."
     ]
   }
 }

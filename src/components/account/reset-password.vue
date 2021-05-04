@@ -87,31 +87,26 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Obnovit heslo",
     "alert": {
       "success": "Byl odeslán e-mail na {email} s dalšími pokyny."
     }
   },
   "de": {
-    "title": "Passwort zurücksetzen",
     "alert": {
       "success": "Eine E-Mail mit weiteren Anweisungen wurde an {email} gesendet."
     }
   },
   "es": {
-    "title": "Restablecer contraseña",
     "alert": {
       "success": "Se ha enviado un correo electrónico {email} con más instrucciones"
     }
   },
   "fr": {
-    "title": "Réinitialiser le mot de passe",
     "alert": {
       "success": "Un courriel a été envoyé à {email} avec de plus amples instructions"
     }
   },
   "id": {
-    "title": "Atur Ulang Kata Sandi",
     "alert": {
       "success": "Email sudah dikirimkan ke {email} dengan instruksi lebih lanjut."
     }

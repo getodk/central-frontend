@@ -132,7 +132,7 @@ export default {
     "action": {
       "revoke": "Revocar"
     },
-    "revoked": "Revocar",
+    "revoked": "Revocado",
     "unavailable": {
       "text": "Todavía no disponible",
       "title": "El enlace de acceso público aún no está disponible. No se ha terminado de procesar. Por favor actualice más tarde y vuelva a intentarlo."

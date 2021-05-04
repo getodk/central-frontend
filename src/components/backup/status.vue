@@ -277,7 +277,11 @@ export default {
     ],
     "action": {
       "setUp": "Nastavit nyní",
+      "download": "Stáhnout zálohu hned",
       "terminate": "Ukončit"
+    },
+    "alert": {
+      "download": "Záloha nyní běží a bude šifrována a stažena do vašeho počítače. Může to chvíli trvat. Jakmile začne stahování, můžete tuto stránku opustit."
     }
   },
   "de": {
@@ -319,7 +323,11 @@ export default {
     ],
     "action": {
       "setUp": "Jetzt konfigurieren",
+      "download": "Backup jetzt herunterladen",
       "terminate": "Beenden"
+    },
+    "alert": {
+      "download": "Das Backup läuft jetzt und wird verschlüsselt und auf Ihren Computer geladen. Das wird eine Weile dauern. Sobald der Download begonnen hat, können Sie diese Seite verlassen."
     }
   },
   "es": {
@@ -361,7 +369,11 @@ export default {
     ],
     "action": {
       "setUp": "Configurar ahora",
+      "download": "Descargar copia de seguridad ahora",
       "terminate": "Terminar"
+    },
+    "alert": {
+      "download": "La copia de seguridad se está ejecutando ahora y se cifrará y descargará en su computadora. Esto puede tardar un rato. Una vez que comience la descarga, puede salir de esta página"
     }
   },
   "fr": {
@@ -403,7 +415,11 @@ export default {
     ],
     "action": {
       "setUp": "Paramétrer maintenant",
+      "download": "Télécharger la sauvegarde maintenant",
       "terminate": "Terminer"
+    },
+    "alert": {
+      "download": "La sauvegarde est en cours, elle sera chiffrée et téléchargée sur votre ordinateur. Cela peut prendre un peu de temps. Une fois démarré le téléchargement, vous pourrez quitter cette page."
     }
   },
   "id": {
@@ -445,7 +461,11 @@ export default {
     ],
     "action": {
       "setUp": "Atur sekarang",
+      "download": "Unduh cadangan sekarang",
       "terminate": "Putuskan"
+    },
+    "alert": {
+      "download": "Pencadangan sedang berlangsung dan akan dienkripsi selanjutnya diunduh ke komputermu. Perlu waktu beberapa saat. Saat pengunduhan dimulai, kamu bisa meninggalkan laman ini."
     }
   }
 }

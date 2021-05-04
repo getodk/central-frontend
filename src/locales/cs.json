@@ -1,4 +1,36 @@
 {
+  "title": {
+    "resetPassword": "Obnovit heslo",
+    "setPassword": "Nastavit heslo",
+    "editProfile": "Upravit profil",
+    "download": "Stáhnout",
+    "pageNotFound": "Stránka nenalezena"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Přístup k formulářům"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Verze",
+      "publicAccess": "Veřejný přístup"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Stav",
+        "attachments": "Mediální soubory",
+        "testing": "Testování"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Řízení systému",
+    "tab": {
+      "backups": "Zálohy",
+      "audits": "Protokoly auditu serveru"
+    }
+  },
   "role": {
     "none": "Žádná",
     "admin": "Administrátor",
@@ -11,6 +43,14 @@
     "closing": "Dokončení",
     "closed": "Dokončeno"
   },
+  "reviewState": {
+    "received": "Přijato",
+    "hasIssues": "Má problémy",
+    "edited": "Upraveno",
+    "approved": "Schváleno",
+    "rejected": "Odmítnuto",
+    "null": "@:reviewState.received"
+  },
   "audit": {
     "category": {
       "nonverbose": "(Všechny akce)",
@@ -19,20 +59,27 @@
       "form": "Akce formuláře",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
-      "session": "Akce relace",
+      "config": "Akce konfigurace serveru",
       "upgrade": "Upgrade serveru"
     },
     "action": {
       "default": {
         "create": "Vytvořit",
         "update": "Aktualizovat podrobnosti",
+        "session_end": "Zrušit",
         "delete": "Smazat"
       },
-      "assignment": {
-        "create": "Přiřadit roli",
-        "delete": "Odebrat roli"
-      },
       "backup": "Záloha",
+      "config": {
+        "set": "Nastavit"
+      },
+      "field_key": {
+        "assignment_create": "Dát přístup",
+        "assignment_delete": "Odebrat přístup",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
       "form": {
         "update_draft_set": "Vytvořit nebo aktualizovat koncept",
         "update_publish": "Zveřejnit koncept",
@@ -42,51 +89,59 @@
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
       },
+      "public_link": {
+        "assignment_create": "Dát přístup",
+        "assignment_delete": "Odebrat přístup",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
       "upgrade": {
         "process_form": "Zpracování formuláře",
         "process_form_draft": "Zpracování návrhu formuláře"
       },
       "user": {
+        "assignment_create": "Přiřadit roli",
+        "assignment_delete": "Odebrat roli",
         "delete": "Uspat",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
-      },
-      "field_key": {
-        "create": "@:audit.action.default.create"
       },
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
-      },
-      "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
       }
     }
   },
   "action": {
     "cancel": "Zrušit",
+    "clear": "Vymazat",
     "close": "Zavřít",
+    "comment": "Komentář",
     "create": "Vytvořit",
     "createSubmission": "Nový",
     "done": "Hotovo",
     "download": "Stáhnout",
+    "edit": "Upravit",
     "editProfile": "Upravit profil",
     "logIn": "Přihlásit se",
     "looksGood": "Vypadá to dobře, pokračujte",
+    "more": "Více",
     "neverMind": "Nevadí, zrušit",
     "next": "Další",
     "noCancel": "Ne, zrušit",
     "ok": "OK",
     "proceed": "Pokračovat",
+    "refresh": "Obnovit",
     "resetPassword": "Resetovat heslo",
+    "review": "Zkontrolovat",
     "save": "Uložit",
+    "update": "Aktualizovat",
     "yesProceed": "Ano, pokračovat"
   },
   "field": {
+    "comment": "Zanechat komentář…",
     "dateRange": "Časové období",
     "displayName": "Zobrazit název",
     "email": "E-mailová adresa",
@@ -104,8 +159,12 @@
     "createdBy": "Vytvořeno od",
     "displayName": "Zobrazit jméno",
     "email": "E-mailová adresa",
+    "instanceId": "Instance ID",
     "lastSubmission": "Poslední podání",
     "name": "Jméno",
+    "submitterName": "Odesláno od",
+    "submissionDate": "Odesláno v",
+    "time": "Čas",
     "type": "Typ"
   },
   "plural": {
@@ -123,13 +182,17 @@
   "resource": {
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
+    "config": "Konfigurace serveru",
     "form": "Formulář",
     "project": "Projekt",
+    "projects": "Projekty",
     "publicLink": "Veřejný odkaz",
     "user": "Uživatel",
     "webUser": "Webový uživatel",
+    "webUsers": "Uživatelé webu",
     "session": "Relace",
-    "submissions": "Příspěvky"
+    "submissions": "Příspěvky",
+    "projectRoles": "Role projektu"
   },
   "moreInfo": {
     "clickHere": {
@@ -142,15 +205,39 @@
     },
     "learnMore": "Další informace."
   },
+  "submission": {
+    "missingMedia": "Chybějící média",
+    "action": {
+      "edit": "Upravit ({count})"
+    },
+    "editDisabled": "Šifrované příspěvky nemůžete upravovat.",
+    "binaryLinkTitle": "Soubor byl odeslán. Kliknutím stáhnete.",
+    "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování."
+  },
   "common": {
+    "activity": "Aktivita",
+    "anybody": "(Kdokoli)",
     "areYouSure": "Opravdu chcete pokračovat?",
+    "basicInfo": "Základní informace",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
+    "filter": "Filtr",
     "no": "Ne",
     "noResults": "Žádné výsledky",
     "rightNow": "Právě teď",
     "success": "Úspěch!",
-    "yes": "Ano"
+    "yes": "Ano",
+    "tab": {
+      "settings": "Nastavení",
+      "overview": "Přehled"
+    }
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB."
+      }
+    }
   },
   "presenter": {
     "Form": {
@@ -168,7 +255,14 @@
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
       "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",
-      "errorNotProblem": "Něco se pokazilo: server vrátil neplatnou chybu."
+      "errorNotProblem": "Něco se pokazilo: chybový kód {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Vaše relace vyprší za 2 minuty a budete automaticky odhlášeni.",
+        "expired": "Vaše relace vypršela. Chcete-li pokračovat v práci, přihlaste se prosím znovu.",
+        "logoutError": "Došlo k problému a nebyli jste úplně odhlášeni. Obnovte stránku a zkuste se znovu odhlásit. {message}"
+      }
     }
   },
   "router": {

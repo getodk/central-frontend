@@ -11,6 +11,13 @@
     "closing": "Schließen",
     "closed": "Geschlossen"
   },
+  "reviewState": {
+    "received": "Empfangen",
+    "hasIssues": "Hat Probleme",
+    "approved": "Bestätigt",
+    "rejected": "Abgelehnt",
+    "null": "@:reviewState.received"
+  },
   "audit": {
     "category": {
       "nonverbose": "(Alle Aktionen)",
@@ -19,7 +26,6 @@
       "form": "Formular-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
-      "session": "Sitzungsaktionen",
       "upgrade": "Server-Aktualisierung"
     },
     "action": {
@@ -28,11 +34,11 @@
         "update": "Details aktualisieren",
         "delete": "Löschen"
       },
-      "assignment": {
-        "create": "Rolle zuweisen",
-        "delete": "Rolle entziehen"
-      },
       "backup": "Sicherheitskopie",
+      "field_key": {
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
       "form": {
         "update_draft_set": "Entwurf verfassen oder aktualisieren",
         "update_publish": "Entwurf veröffentlichen",
@@ -40,6 +46,10 @@
         "attachment_update": "Anhänge aktualisieren",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -51,39 +61,35 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
       },
-      "field_key": {
-        "create": "@:audit.action.default.create"
-      },
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
-      },
-      "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
       }
     }
   },
   "action": {
     "cancel": "Abbrechen",
+    "clear": "Löschen",
     "close": "Schließen",
     "create": "Anlegen",
     "createSubmission": "Neu",
     "done": "Fertig",
     "download": "Herunterladen",
+    "edit": "Bearbeiten",
     "editProfile": "Profil bearbeiten",
     "logIn": "Einloggen",
     "looksGood": "Sieht gut aus, weiter",
+    "more": "Mehr",
     "neverMind": "Nein danke, abbrechen",
     "next": "Weiter",
     "noCancel": "Nein, abbrechen",
     "ok": "Okay",
     "proceed": "Fortfahren",
+    "refresh": "Aktualisieren",
     "resetPassword": "Passwort zurücksetzen",
     "save": "Speichern",
+    "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren"
   },
   "field": {
@@ -104,8 +110,12 @@
     "createdBy": "Erstellt von",
     "displayName": "Anzeigename",
     "email": "E-Mail-Adresse",
+    "instanceId": "Instanz-ID",
     "lastSubmission": "Letzte Übermittlung",
     "name": "Name",
+    "submitterName": "Übermittelt von",
+    "submissionDate": "Übermittelt um",
+    "time": "Zeit",
     "type": "Typ"
   },
   "plural": {
@@ -142,15 +152,34 @@
     },
     "learnMore": "Erfahren Sie mehr."
   },
+  "submission": {
+    "missingMedia": "Fehlende Medien",
+    "action": {
+      "edit": "Bearbeiten ({count})"
+    },
+    "editDisabled": "Sie können verschlüsselte Übermittlungen nicht bearbeiten.",
+    "binaryLinkTitle": "Datei wurde übermittelt. Zum Downloaden klicken.",
+    "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar"
+  },
   "common": {
+    "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
+    "basicInfo": "Basis-Informationen",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
+    "filter": "Filter",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
     "success": "Das hat geklappt!",
     "yes": "Ja"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit."
+      }
+    }
   },
   "presenter": {
     "Form": {
@@ -168,7 +197,14 @@
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
-      "errorNotProblem": "Etwas ging schief: Der Server meldete eine ungültige Anfrage."
+      "errorNotProblem": "Etwas ging schief: Fehlercode {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Ihre Sitzung läuft in 2 Minuten ab und Sie werden automatisch ausgeloggt.",
+        "expired": "Ihre Sitzung ist abgelaufen. Um weiterzuarbeiten, bitte erneut einloggen.",
+        "logoutError": "Es gab ein Problem und Sie wurden nicht vollständig ausgeloggt. Bitte die Seite aktualisieren und versuchen sich erneut einzuloggen. {message}"
+      }
     }
   },
   "router": {

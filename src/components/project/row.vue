@@ -100,15 +100,18 @@ export default {
 {
   "cs": {
     "help": "Co jsou Projekty?",
-    "noSubmission": "(žádné)"
+    "noSubmission": "(žádné)",
+    "encryptionTip": "Tento projekt používá spravované šifrování."
   },
   "de": {
     "help": "Was sind Projekte?",
-    "noSubmission": "(keine)"
+    "noSubmission": "(keine)",
+    "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung."
   },
   "es": {
     "help": "¿Qué son los Proyectos?",
-    "noSubmission": "(ninguno)"
+    "noSubmission": "(ninguno)",
+    "encryptionTip": "Este proyecto utiliza cifrado administrado."
   },
   "fr": {
     "help": "Que sont les \"Projets\" ?",

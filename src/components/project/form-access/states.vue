@@ -134,7 +134,7 @@ export default {
       },
       {
         "full": "{closing} Formulare akzeptieren neue Übermittlungen, aber können {not} auf mobile Geräte heruntergeladen werden.",
-        "closing": "Wird geschlossen",
+        "closing": "Schließen",
         "not": "nicht"
       },
       {
