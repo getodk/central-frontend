@@ -3,6 +3,6 @@ module.exports = {
     mocha: true
   },
   globals: {
-    should: false
+    should: 'readonly'
   }
 };

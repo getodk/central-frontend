@@ -21,7 +21,6 @@ describe('ProjectShow', () => {
       project: () => testData.extendedProjects.first()
     })
       .afterResponses(app => {
-        // eslint-disable-next-line prefer-destructuring
         vm = app.first(ProjectOverview).vm;
       })
       .load('/projects/2', {

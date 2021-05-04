@@ -98,7 +98,7 @@ export default {
       const { dataset } = event.target.closest('tr');
       if (dataset.index !== index) {
         if (index != null) metadataRow.classList.remove('actions-shown');
-        index = dataset.index; // eslint-disable-line prefer-destructuring
+        index = dataset.index;
         metadataRow = metadataBody.querySelector(`tr:nth-child(${index})`);
         // The SubmissionMetadataRow element does not have a class binding, so I
         // think we can add this class without Vue removing it.
