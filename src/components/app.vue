@@ -27,35 +27,20 @@ import { mapState } from 'vuex';
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
-import { logOut } from '../util/session';
-import { noop } from '../util/util';
-import { requestData } from '../store/modules/request';
+import { useSessions } from '../util/session';
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  computed: {
-    ...requestData(['session']),
+  computed: mapState({
     // Vue seems to trigger the initial navigation before creating App. If the
     // initial navigation is synchronous, Vue seems to confirm the navigation
     // before creating App. However, if the initial navigation is asynchronous,
     // Vue seems to create App before confirming the navigation.
-    ...mapState({
-      anyNavigationConfirmed: (state) => state.router.anyNavigationConfirmed
-    })
-  },
+    anyNavigationConfirmed: (state) => state.router.anyNavigationConfirmed
+  }),
   created() {
-    window.addEventListener('storage', this.logOutAfterSessionChange);
-  },
-  beforeDestroy() {
-    window.removeEventListener('storage', this.logOutAfterSessionChange);
-  },
-  methods: {
-    logOutAfterSessionChange({ key }) {
-      // key == null if the user clears local storage in Chrome.
-      if ((key == null || key === 'sessionExpires') && this.session != null)
-        logOut(this.$router, this.$store, true).catch(noop);
-    }
+    this.$once('hook:beforeDestroy', useSessions(this.$router, this.$store));
   }
 };
 </script>

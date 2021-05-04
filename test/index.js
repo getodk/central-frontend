@@ -11,7 +11,6 @@ import 'should';
 import i18n from '../src/i18n';
 import router from '../src/router';
 import store from '../src/store';
-import { cancelScheduledLogout } from '../src/util/session';
 import { forceReplace } from '../src/util/router';
 import { noop } from '../src/util/util';
 
@@ -156,8 +155,6 @@ afterEach(() => {
 afterEach(() => {
   localStorage.clear();
 });
-
-afterEach(cancelScheduledLogout);
 
 
 
