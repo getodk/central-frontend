@@ -228,6 +228,11 @@ a {
 .dropdown-menu {
   font-size: $font-size-dropdown-menu;
   min-width: $min-width-dropdown-menu;
+
+  .divider {
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
 }
 
 
