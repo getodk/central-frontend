@@ -2142,6 +2142,12 @@
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
+    "NavbarLocaleDropdown": {
+      "helpTranslate": {
+        "string": "Help translate Central",
+        "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
+      }
+    },
     "NotFound": {
       "body": {
         "string": "The page you requested could not be found."

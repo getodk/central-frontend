@@ -20,6 +20,13 @@ except according to the terms contained in the LICENSE file.
         :class="{ disabled: loading }">
         <a href="#" @click.prevent="loadLocale(locale)">{{ name }}</a>
       </li>
+      <li class="divider" role="separator"></li>
+      <li>
+        <a href="https://docs.google.com/document/d/1C0MS_ytAEBHwbMkdR-QrtDrWAAh_EkJo2QRr4XyIOpk"
+          target="_blank" rel="noopener">
+          {{ $t('helpTranslate') }}
+        </a>
+      </li>
     </ul>
   </li>
 </template>
@@ -59,3 +66,13 @@ export default {
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown below the list of languages and links to the ODK Central
+    // translation guide.
+    "helpTranslate": "Help translate Central"
+  }
+}
+</i18n>
