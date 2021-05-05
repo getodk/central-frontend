@@ -116,7 +116,7 @@ export default {
     }
   },
   "de": {
-    "seeCode": "QR Code",
+    "seeCode": "QR-Code",
     "accessRevoked": "Zugriffsberechtigung zurückgezogen",
     "action": {
       "revokeAccess": "Zugriffsberechtigung entziehen"

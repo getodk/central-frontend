@@ -102,7 +102,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Nastavit heslo",
     "action": {
       "set": "Nastavit heslo"
     },
@@ -114,7 +113,6 @@ export default {
     }
   },
   "de": {
-    "title": "Passwort festlegen",
     "action": {
       "set": "Passwort festlegen"
     },
@@ -126,7 +124,6 @@ export default {
     }
   },
   "es": {
-    "title": "Establecer contraseña",
     "action": {
       "set": "Establecer contraseña"
     },
@@ -138,7 +135,6 @@ export default {
     }
   },
   "fr": {
-    "title": "Définir le mot de passe",
     "action": {
       "set": "Définir le mot de passe"
     },
@@ -150,7 +146,6 @@ export default {
     }
   },
   "id": {
-    "title": "Atur Kata Sandi",
     "action": {
       "set": "Atur kata sandi"
     },

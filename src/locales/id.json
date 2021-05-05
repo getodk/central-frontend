@@ -19,7 +19,6 @@
       "form": "Tindakan Formulir",
       "field_key": "Tindakan Pengguna Aplikasi",
       "public_link": "Tindakan Tautan Akses Publik",
-      "session": "Tindakan Sesi",
       "upgrade": "Peningkatan Server"
     },
     "action": {
@@ -28,11 +27,11 @@
         "update": "Pembaruan Rincian",
         "delete": "Hapus"
       },
-      "assignment": {
-        "create": "Tetapkan Peran",
-        "delete": "Cabut Peran"
-      },
       "backup": "Pembuatan data cadangan",
+      "field_key": {
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
       "form": {
         "update_draft_set": "Buat atau Perbarui Draf",
         "update_publish": "Terbitkan Draf",
@@ -40,6 +39,10 @@
         "attachment_update": "Perbarui Lampiran",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "create": "@:audit.action.default.create",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -51,24 +54,16 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
       },
-      "field_key": {
-        "create": "@:audit.action.default.create"
-      },
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
-      },
-      "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
       }
     }
   },
   "action": {
     "cancel": "Batal",
+    "clear": "Bersihkan",
     "close": "Tutup",
     "create": "Buat",
     "createSubmission": "Baru",
@@ -82,6 +77,7 @@
     "noCancel": "Tidak, batalkan",
     "ok": "OK",
     "proceed": "Lanjutkan",
+    "refresh": "Segarkan",
     "resetPassword": "Atur Ulang Kata Sandi",
     "save": "Simpan",
     "yesProceed": "Ya, lanjutkan"
@@ -142,10 +138,16 @@
     },
     "learnMore": "Pelajari lebih lanjut."
   },
+  "submission": {
+    "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
+    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
+  },
   "common": {
+    "anybody": "(Semua orang)",
     "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
     "currentDraft": "Draf Anda Saat Ini",
     "dangerZone": "Zona Bahaya",
+    "filter": "Filter",
     "no": "Tidak",
     "noResults": "Tidak ada hasil",
     "rightNow": "Sekarang Juga",
@@ -167,8 +169,7 @@
     },
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
-      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
-      "errorNotProblem": "Terjadi kesalahan: server mengembalikan eror yang tidak valid."
+      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"
     }
   },
   "router": {

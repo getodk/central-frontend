@@ -129,6 +129,14 @@ export default {
       "downloadXForm": "Télécharger le XML",
       "downloadXlsForm": "Télécharger le XLSForm"
     }
+  },
+  "id": {
+    "action": {
+      "def": "Definisi",
+      "viewXml": "Lihat XML di browser",
+      "downloadXForm": "Unduh sebagai XForm",
+      "downloadXlsForm": "Unduh sebagai XLSForm"
+    }
   }
 }
 </i18n>

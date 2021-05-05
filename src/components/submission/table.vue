@@ -162,37 +162,17 @@ export default {
 {
   "cs": {
     "header": {
-      "submitterName": "Odesláno od",
-      "submissionDate": "Odesláno na",
-      "instanceId": "Instance ID"
+      "stateAndActions": "Stav a akce"
     }
   },
   "de": {
     "header": {
-      "submitterName": "Übermittelt von",
-      "submissionDate": "Übermittelt um",
-      "instanceId": "Instanz-ID"
-    }
-  },
-  "es": {
-    "header": {
-      "submitterName": "Enviado por",
-      "submissionDate": "Enviado el",
-      "instanceId": "ID de la Instancia"
+      "stateAndActions": "Status und Aktionen"
     }
   },
   "fr": {
     "header": {
-      "submitterName": "Soumis par",
-      "submissionDate": "Soumis à",
-      "instanceId": "ID de l'instance"
-    }
-  },
-  "id": {
-    "header": {
-      "submitterName": "Dikirim oleh",
-      "submissionDate": "Dikirim pada",
-      "instanceId": "ID Instansi"
+      "stateAndActions": "État et actions"
     }
   }
 }

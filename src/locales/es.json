@@ -1,4 +1,36 @@
 {
+  "title": {
+    "resetPassword": "Restablecer contraseña",
+    "setPassword": "Establecer contraseña",
+    "editProfile": "Editar perfil",
+    "download": "Descargar",
+    "pageNotFound": "Página no encontrada"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Acceso a Formulario"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versiones",
+      "publicAccess": "Acceso público"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Estado",
+        "attachments": "Archivos multimedia",
+        "testing": "Pruebas"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Gestión del sistema",
+    "tab": {
+      "backups": "Copias de seguridad",
+      "audits": "Registro y auditoría de la actividad del servidor"
+    }
+  },
   "role": {
     "none": "Ninguno",
     "admin": "Administrador",
@@ -11,6 +43,13 @@
     "closing": "Cerrando",
     "closed": "Cerrado"
   },
+  "reviewState": {
+    "received": "Recibido",
+    "hasIssues": "Tiene problemas",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "null": "@:reviewState.received"
+  },
   "audit": {
     "category": {
       "nonverbose": "(Todas las acciones)",
@@ -19,20 +58,27 @@
       "form": "Acciones de formulario",
       "field_key": "Acciones de usuarios móviles",
       "public_link": "Acciones de enlace de acceso público",
-      "session": "Acciones de sesión",
+      "config": "Acciones de configuración del servidor",
       "upgrade": "Actualización de servidor"
     },
     "action": {
       "default": {
         "create": "Crear",
         "update": "Actualizar detalles",
+        "session_end": "Revocar",
         "delete": "Borrar"
       },
-      "assignment": {
-        "create": "Asignar rol",
-        "delete": "Revocar rol"
-      },
       "backup": "Copia de seguridad",
+      "config": {
+        "set": "Establecer"
+      },
+      "field_key": {
+        "assignment_create": "Dar acceso",
+        "assignment_delete": "Remover el acceso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
       "form": {
         "update_draft_set": "Crear o actualizar borrador",
         "update_publish": "Publicar borrador",
@@ -42,48 +88,53 @@
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
       },
+      "public_link": {
+        "assignment_create": "Dar acceso",
+        "assignment_delete": "Remover el acceso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
       "upgrade": {
         "process_form": "Procesar formulario",
         "process_form_draft": "Procesar borrador de formulario"
       },
       "user": {
+        "assignment_create": "Asignar rol",
+        "assignment_delete": "Revocar el rol",
         "delete": "Retirar",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
-      },
-      "field_key": {
-        "create": "@:audit.action.default.create"
       },
       "project": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
-      },
-      "public_link": {
-        "create": "@:audit.action.default.create"
-      },
-      "session": {
-        "end": "@:audit.action.default.delete"
       }
     }
   },
   "action": {
     "cancel": "Cancelar",
+    "clear": "Limpiar",
     "close": "Cerrar",
     "create": "Crear",
     "createSubmission": "Nuevo",
     "done": "Listo",
     "download": "Descargar",
+    "edit": "Editar",
     "editProfile": "Editar perfil",
     "logIn": "Ingresar",
     "looksGood": "Se ve bien, continuar",
+    "more": "Más",
     "neverMind": "No importa, cancelar",
     "next": "Siguiente",
     "noCancel": "No, cancelar",
     "ok": "De acuerdo",
     "proceed": "Continuar",
+    "refresh": "Actualizar",
     "resetPassword": "Restablecer contraseña",
     "save": "Guardar",
+    "update": "Actualizar",
     "yesProceed": "Si, continuar"
   },
   "field": {
@@ -104,8 +155,12 @@
     "createdBy": "Creado por",
     "displayName": "Nombre para mostrar",
     "email": "Correo electrónico",
+    "instanceId": "Instancia del ID",
     "lastSubmission": "Último envío",
     "name": "Nombre",
+    "submitterName": "Enviado por",
+    "submissionDate": "Enviado a",
+    "time": "Tiempo",
     "type": "Tipo"
   },
   "plural": {
@@ -123,13 +178,17 @@
   "resource": {
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
+    "config": "Configuración del servidor",
     "form": "Formulario",
     "project": "Proyecto",
+    "projects": "Proyectos",
     "publicLink": "Enlace de acceso público",
     "user": "Usuario",
     "webUser": "Usuario web",
+    "webUsers": "Usuarios web",
     "session": "Sesión",
-    "submissions": "Envíos"
+    "submissions": "Envíos",
+    "projectRoles": "Roles del proyecto"
   },
   "moreInfo": {
     "clickHere": {
@@ -142,15 +201,38 @@
     },
     "learnMore": "Conocer más."
   },
+  "submission": {
+    "missingMedia": "Medios faltantes",
+    "action": {
+      "edit": "Editar {count}"
+    },
+    "editDisabled": "No puede editar envíos encriptados.",
+    "binaryLinkTitle": "Se envió el archivo. Haga clic para descargar.",
+    "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado."
+  },
   "common": {
+    "anybody": "(Cualquiera)",
     "areYouSure": "¿Está seguro que desea continuar?",
+    "basicInfo": "Información básica",
     "currentDraft": "Su borrador actual",
     "dangerZone": "Zona de peligro",
+    "filter": "Filtrar",
     "no": "No",
     "noResults": "Sin resultados",
     "rightNow": "Ahora mismo",
     "success": "¡Éxito!",
-    "yes": "Sí"
+    "yes": "Sí",
+    "tab": {
+      "settings": "Ajustes",
+      "overview": "Descripción general"
+    }
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "El archivo “{name}” que está intentando cargar supera el límite de 100 MB."
+      }
+    }
   },
   "presenter": {
     "Form": {
@@ -168,7 +250,14 @@
     "request": {
       "noRequest": "Algo salió mal: no hubo solicitud.",
       "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
-      "errorNotProblem": "Algo salió mal: el servidor devolvió un error no válido."
+      "errorNotProblem": "Algo salió mal: error de código {status}"
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Su sesión caducará en 2 minutos y se cerrará automáticamente.",
+        "expired": "Su sesión ha caducado. Para seguir trabajando, por favor conectarse de nuevo.",
+        "logoutError": "Hubo un problema y no se desconectó por completo. Actualice la página e intente cerrar la sesión nuevamente. {message}"
+      }
     }
   },
   "router": {

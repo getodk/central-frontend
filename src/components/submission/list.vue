@@ -395,56 +395,109 @@ export default {
     "loading": {
       "withoutCount": "Načítání příspěvků…",
       "all": "Načítání {count} příspěvku ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ...",
+      "first": "Načítání prvního {top} z {count} příspěvku… | Načítání prvního {top} ze {count} příspěvků… | Načítání prvního {top} z {count} příspěvků… | Načítání prvního {top} z {count} příspěvků…",
+      "middle": "Načítání {top} z dalšího {count} zbývajícího příspěvku… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků…",
       "last": {
         "multiple": "Načítání posledního {count} příspěvku… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků…",
         "one": "Načítání posledního příspěvku…"
+      },
+      "filtered": {
+        "withoutCount": "Načítání odpovídajících příspěvků…",
+        "middle": "Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top}z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…",
+        "last": {
+          "multiple": "Načítání posledního {count} odpovídajícího příspěvku… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count}odpovídajících příspěvků…",
+          "one": "Načítání posledního odpovídajícího příspěvku…"
+        }
       }
     },
-    "emptyTable": "Zatím neexistují žádné příspěvky."
+    "emptyTable": "Zatím neexistují žádné příspěvky.",
+    "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
     "loading": {
       "withoutCount": "Übermittlungen laden...",
       "all": "{count} Übermittlung laden... | {count} Übermittlungen laden...",
+      "first": "Lade die ersten {top} von {count} Übermittlung... | Lade die ersten {top} von {count} Übermittlungen...",
+      "middle": "Lade weitere {top} von {count} übrigen Übermittlung... | Lade weitere {top} von {count} übrigen Übermittlungen...",
       "last": {
         "multiple": "Die letzte {count} Übermittlung laden... | Die letzten {count} Übermittlungen laden...",
         "one": "Letzte Übermittlung laden..."
+      },
+      "filtered": {
+        "withoutCount": "Lade passende Übermittlungen...",
+        "middle": "Lade weitere {top} von {count} übrigen passenden Übermittlung... | Lade weitere {top} von {count} übrigen passenden Übermittlungen...",
+        "last": {
+          "multiple": "Lade die letzte {count} passenden Übermittlung... | Lade die letzten {count} passenden Übermittlungen...",
+          "one": "Lade die letzten passenden Übermittlungen..."
+        }
       }
     },
-    "emptyTable": "Es gibt noch keine Übermittlungen."
+    "emptyTable": "Es gibt noch keine Übermittlungen.",
+    "noMatching": "Es gibt keine passenden Übermittlungen."
   },
   "es": {
     "loading": {
       "withoutCount": "Cargando los envíos...",
       "all": "Cargando {count} envío... | Cargando {count} envíos...",
+      "first": "Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios...",
+      "middle": "Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes...",
       "last": {
         "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos...",
         "one": "Cargando el último envío..."
+      },
+      "filtered": {
+        "withoutCount": "Cargando envíos coincidentes…",
+        "middle": "Cargando {top}más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
+        "last": {
+          "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
+          "one": "Cargando el último envío coincidente…"
+        }
       }
     },
-    "emptyTable": "No hay envíos todavía."
+    "emptyTable": "No hay envíos todavía.",
+    "noMatching": "No hay envíos coincidentes."
   },
   "fr": {
     "loading": {
       "withoutCount": "Chargement des soumissions...",
       "all": "Chargement de {count} soumission... | Chargement de {count} soumissions...",
+      "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
+      "middle": "Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
       "last": {
         "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
         "one": "Chargement la dernière soumission..."
+      },
+      "filtered": {
+        "withoutCount": "Chargement des soumissions correspondantes...",
+        "last": {
+          "one": "Chargement de la dernière soumission correspondante..."
+        }
       }
     },
-    "emptyTable": "Il n'y a pas encore de soumissions."
+    "emptyTable": "Il n'y a pas encore de soumissions.",
+    "noMatching": "Il n'y a pas de soumission correspondante."
   },
   "id": {
     "loading": {
       "withoutCount": "Memuat kiriman data...",
       "all": "Memuat {count} kiriman data...",
+      "first": "Memuat yang pertama {top} dari {count} Pengiriman…",
+      "middle": "Memuat {top} dari {count} sisa Pengiriman…",
       "last": {
         "multiple": "Memuat {count} kiriman data terakhir...",
         "one": "Memuat kiriman data terakhir..."
+      },
+      "filtered": {
+        "withoutCount": "Memuat Pengiriman yang cocok...",
+        "middle": "Memuat {top} dari {count} sisa Pengiriman yang cocok…",
+        "last": {
+          "multiple": "Memuat sisa {count} Pengiriman yang cocok…",
+          "one": "Memuat Pengiriman terakhir yang cocok"
+        }
       }
     },
-    "emptyTable": "Belum ada kiriman data."
+    "emptyTable": "Belum ada kiriman data.",
+    "noMatching": "Tidak ada Pengiriman yang cocok."
   }
 }
 </i18n>

@@ -261,23 +261,12 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Přehled",
-        "versions": "Verze",
-        "publicLinks": "Veřejný přístup",
-        "settings": "Nastavení"
-      },
       "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
     },
     "draftNav": {
       "title": "Koncept",
       "action": {
         "create": "Vytvořit nový koncept"
-      },
-      "tab": {
-        "status": "Stav",
-        "attachments": "Mediální soubory",
-        "testing": "Testování"
       }
     }
   },
@@ -288,23 +277,12 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Übersicht",
-        "versions": "Versionen",
-        "publicLinks": "Öffentlicher Zugriff",
-        "settings": "Einstellungen"
-      },
       "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
     },
     "draftNav": {
       "title": "Entwurf",
       "action": {
         "create": "Neuen Entwurf erstellen"
-      },
-      "tab": {
-        "status": "Status",
-        "attachments": "Mediendateien",
-        "testing": "Testen"
       }
     }
   },
@@ -315,23 +293,12 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Descripción general",
-        "versions": "Versiones",
-        "publicLinks": "Acceso público",
-        "settings": "Ajustes"
-      },
       "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
     },
     "draftNav": {
       "title": "Borrador",
       "action": {
         "create": "Crear un nuevo borrador"
-      },
-      "tab": {
-        "status": "Estado",
-        "attachments": "Archivos multimedia",
-        "testing": "Pruebas"
       }
     }
   },
@@ -342,23 +309,12 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Aperçu",
-        "versions": "Versions",
-        "publicLinks": "Accès public",
-        "settings": "Réglages"
-      },
       "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
     },
     "draftNav": {
       "title": "Ébauche",
       "action": {
         "create": "Créer une nouvelle ébauche"
-      },
-      "tab": {
-        "status": "Status",
-        "attachments": "Fichiers médias",
-        "testing": "Test"
       }
     }
   },
@@ -369,23 +325,12 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tab": {
-        "overview": "Gambaran",
-        "versions": "Versi",
-        "publicLinks": "Akses Publik",
-        "settings": "Pengaturan"
-      },
       "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
     },
     "draftNav": {
       "title": "Draf",
       "action": {
         "create": "Buat draf baru"
-      },
-      "tab": {
-        "status": "Status",
-        "attachments": "File Media",
-        "testing": "Uji Coba"
       }
     }
   }

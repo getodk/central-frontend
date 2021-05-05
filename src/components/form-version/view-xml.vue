@@ -104,6 +104,9 @@ export default {
   },
   "fr": {
     "title": "Afficher le XML"
+  },
+  "id": {
+    "title": "Lihat XML"
   }
 }
 </i18n>

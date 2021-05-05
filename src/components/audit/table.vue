@@ -62,7 +62,6 @@ export default {
 {
   "cs": {
     "header": {
-      "time": "Čas",
       "initiator": "Iniciátor",
       "target": "Cíl",
       "details": "Detaily"
@@ -70,7 +69,6 @@ export default {
   },
   "de": {
     "header": {
-      "time": "Zeit",
       "initiator": "Initiator",
       "target": "Ziel",
       "details": "Details"
@@ -78,7 +76,6 @@ export default {
   },
   "es": {
     "header": {
-      "time": "Hora",
       "initiator": "Iniciador",
       "target": "Objetivo",
       "details": "Detalles"
@@ -86,7 +83,6 @@ export default {
   },
   "fr": {
     "header": {
-      "time": "Heure",
       "initiator": "Initiateur",
       "target": "Cible",
       "details": "Détails"
@@ -94,7 +90,6 @@ export default {
   },
   "id": {
     "header": {
-      "time": "Waktu",
       "initiator": "Pemrakarsa",
       "target": "Target",
       "details": "Rincian"

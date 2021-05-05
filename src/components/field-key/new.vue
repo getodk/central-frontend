@@ -222,6 +222,14 @@ export default {
     "introduction": [
       "Der Benutzer hat zunächst keinen Zugriff auf Formulare. Sie können seinen Zugriff auf Formulare später erstellen."
     ],
+    "success": [
+      "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
+      "Sie können jetzt ein mobiles Gerät für \"{displayName}\" konfigurieren oder Sie können es später in der App-Benutzer-Tabelle durch Klick auf \"Code anzeigen.\"",
+      {
+        "full": "Sie können dem Benutzer jetzt auf der Seite {formAccessSettings} Zugriff zu den Formularen geben.",
+        "formAccessSettings": "Einstellungen Formular-Zugriff"
+      }
+    ],
     "action": {
       "createAnother": "Noch einen erstellen"
     }
@@ -248,6 +256,14 @@ export default {
     "introduction": [
       "Cet utilisateur n'aura accès à aucun formulaire dans un premier temps. Vous pourrez lui en assigner quand il aura été créé."
     ],
+    "success": [
+      "L'utilisateur mobile “{displayName}” a été créé.",
+      "Vous pouvez configurer un appareil mobile pour “{displayName}” dés maintenant, ou vous pouvez le faire plus tard depuis le tableau des \"Utilisateurs mobiles\" en cliquant sur \"Voir le code\".",
+      {
+        "full": "Vous pourriez vouloir visiter les {formAccessSettings} de ce projet pour donner accès aux formulaires à cet utilisateur.",
+        "formAccessSettings": "Paramètres d'accès aux formulaires"
+      }
+    ],
     "action": {
       "createAnother": "En créer un autre"
     }
@@ -256,6 +272,14 @@ export default {
     "title": "Buat Pengguna Aplikasi",
     "introduction": [
       "Pengguna ini belum bisa mengakses formulir apapun. Anda bisa membagikan formulir setelah akun Pengguna dibuat."
+    ],
+    "success": [
+      "Pengguna Aplikasi \"{displayName}\" telah dibuat.",
+      "Kamu bisa mengkonfigurasi peranti seluler untuk “{displayName}” saat ini juga, atau bisa lain waktu melalui tabel Pengguna Apl dengan mengklik “Lihat kode.”",
+      {
+        "full": "Anda mungkin ingin mengunjungi {formAccessSettings} proyek ini untuk memberikan Pengguna ini akses formulir.",
+        "formAccessSettings": "pengaturan Akses Formulir"
+      }
     ],
     "action": {
       "createAnother": "Buat baru"

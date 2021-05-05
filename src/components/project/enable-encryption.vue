@@ -323,7 +323,8 @@ export default {
               "Chcete-li použít automatický proces centrálního šifrování na těchto formulářích, odeberte konfiguraci {base64RsaPublicKey}."
             ],
             "Již nebudete mít možnost zobrazit online náhled odeslaných údajů.",
-            "Již se nebudete moci připojit k datům přes OData."
+            "Již se nebudete moci připojit k datům přes OData.",
+            "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky."
           ],
           [
             "Kromě toho platí pro tuto verzi ODK Central následující:",
@@ -375,7 +376,8 @@ export default {
               "Um den automatischen Central-Verschlüsselungsprozess für diese Formulare zu nutzen, entfernen Sie die {base64RsaPublicKey} Konfiguration."
             ],
             "Sie werden zukünftig Übermittlungsdaten nicht mehr online als Vorschau sehen können.",
-            "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können."
+            "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können.",
+            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten."
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
@@ -427,7 +429,8 @@ export default {
               "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}."
             ],
             "Ya no podrá obtener una vista previa de los datos de la presentación en línea",
-            "Ya no podrá conectarse a los datos a través de Odata."
+            "Ya no podrá conectarse a los datos a través de Odata.",
+            "Ya no podrá editar envíos en su navegador web."
           ],
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
@@ -479,7 +482,8 @@ export default {
               "Pour utiliser le chiffrement automatique de Central pour ce formulaire, supprimez la configuration {base64RsaPublicKey}."
             ],
             "Vous ne pourrez plus prévisualiser les données de soumission en ligne.",
-            "Vous ne pourrez plus vous connecter aux données via OData."
+            "Vous ne pourrez plus vous connecter aux données via OData.",
+            "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur."
           ],
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
@@ -522,17 +526,7 @@ export default {
     "steps": [
       {
         "introduction": [
-          [
-            "Apabila Anda mengizinkan enkripsi, hal-hal berikut akan terjadi:",
-            "Kiriman data yang sudah difinalisasi akan dienkripsi di perangkat seluler.",
-            "Kiriman data lain akan dienkripsi di server Central.",
-            [
-              "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
-              "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}."
-            ],
-            "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
-            "Anda tidak akan bisa menghubungkan data lewat OData."
-          ],
+          [],
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
             [

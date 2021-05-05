@@ -234,6 +234,10 @@ export default {
     "title": "Nastavení záloh",
     "steps": [
       {
+        "warning": {
+          "full": "Tato záloha aktuálně neobsahuje odkazy na webové formuláře. Pokud sdílíte veřejné přístupové odkazy nebo externě odkazujete přímo na webové formuláře za účelem vytváření nových příspěvků, důrazně doporučujeme provést také úplnou zálohu systému, dokud nebude tento problém vyřešen. Pokud musíte obnovit ze zálohy a skončit s nefunkčními odkazy na náhled, pošlete příspěvek na {forum} a požádejte o pomoc.",
+          "forum": "fórum"
+        },
         "introduction": [
           "Pokud chcete, můžete nastavit šifrovací přístupové heslo, které musí být použito k odemknutí zálohy.",
           "Pokud heslo ztratíte, není možné jej obnovit.",
