@@ -19,6 +19,10 @@
     "pageNotFound": {
       "string": "Page Not Found",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "details": {
+      "string": "Details",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
   "projectShow": {

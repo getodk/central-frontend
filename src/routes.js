@@ -563,9 +563,10 @@ const routes = [
       },
       title: {
         key: 'submission',
-        parts: ({ submission }) => [
-          submission != null ? instanceNameOrId(submission) : null
-        ]
+        parts: ({ submission }) => {
+          const submissionId = submission != null ? instanceNameOrId(submission) : null;
+          return [`${i18n.t('title.details')}: ${submissionId}`];
+        }
       }
     }
   }),
