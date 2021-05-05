@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         <template v-if="submission != null">
           <a v-if="submission.__system.status == null"
             id="submission-activity-edit-button" class="btn btn-default"
-            :href="editPath" target="_blank">
+            :href="editPath">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </a>
           <button v-else id="submission-activity-edit-button" type="button"
