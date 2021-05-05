@@ -176,9 +176,14 @@ describe('SubmissionFeedEntry', () => {
       mountComponent().first('.body').html().should.equal('<div class="body"><p><b>bold</b></p>\n</div>');
     });
 
-    it('removes script tags and sanitizes html', () => {
-      testData.extendedComments.createPast(1, { body: '<script>foo</script>' });
+    it('removes script and svg tags and sanitizes html', () => {
+      testData.extendedComments.createPast(1, { body: '<script>foo</script><svg>bar</svg>' });
       mountComponent().first('.body').html().should.equal('<div class="body"></div>');
+    });
+
+    it('removes style and class attributes', () => {
+      testData.extendedComments.createPast(1, { body: '<b style="color: red;" class="c">foo</b>' });
+      mountComponent().first('.body').html().should.equal('<div class="body"><p><b>foo</b></p>\n</div>');
     });
   });
 });

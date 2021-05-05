@@ -83,9 +83,19 @@ export default {
     },
     comment() {
       const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
-      return comment != null
-        ? DOMPurify.sanitize(marked(comment, { gfm: true, breaks: true }))
-        : comment;
+      if (comment != null) {
+        const md = marked(comment, { gfm: true, breaks: true });
+        const santized = DOMPurify.sanitize(md, {
+          FORBID_ATTR: ['style', 'class', 'id', 'data'],
+          ALLOWED_TAGS: ['a', 'b', 'br', 'code', 'em',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'hr', 'i', 'img', 'li', 'ol', 'p',
+            'pre', 's', 'small', 'sub', 'sup', 'strong', 'u', 'ul'],
+          ALLOW_DATA_ATTR: false
+        });
+        return santized;
+      }
+      return null;
     }
   },
   methods: {
