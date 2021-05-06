@@ -971,7 +971,7 @@ describe('router', () => {
     it('shows submission uuid', async () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 's' });
       await load('/projects/1/forms/f1/submissions/s');
-      document.title.should.equal('s | ODK Central');
+      document.title.should.equal('Details: s | ODK Central');
     });
 
     // User routes

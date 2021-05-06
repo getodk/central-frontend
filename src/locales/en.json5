@@ -10,7 +10,8 @@
     "setPassword": "Set Password",
     "editProfile": "Edit Profile",
     "download": "Download",
-    "pageNotFound": "Page Not Found"
+    "pageNotFound": "Page Not Found",
+    "details": "Details"
   },
   "projectShow": {
     "tab": {
