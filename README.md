@@ -59,7 +59,62 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 
 - To upload an XLSForm, run [pyxform-http](https://github.com/getodk/pyxform-http). ODK Central Frontend communicates with pyxform-http through ODK Central Backend.
 - You can use ODK Collect to scan an app user QR code, download a form, and submit data. One option to do so is to use [`ngrok`](https://ngrok.com/download). ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Within ODK Central Backend, you will also need to set the `default.env.domain` property in [`config/default.json`](https://github.com/getodk/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart ODK Central Backend if it is already running.
-- Enketo is a web form engine used to show form previews and allow for web-based data entry. The development `nginx.conf` is not configured to work with Enketo.
+- Enketo is a web form engine used to show form previews and allow for web-based data entry. The following section describes how to set up an Enketo server for use by ODK Central Frontend and ODK Central Backend.
+
+## (Optional) Running Enketo for development
+
+Enketo provides a web-based form submission UI, which is used in ODK Central for previewing forms, collecting new Submissions through Public Access Links, and editing Submissions. The following configuration is only required if you need this functionality in development. Enketo is automatically installed as part of the production ODK Central stack (via the [`central`](https://github.com/getodk/central) repository).
+
+Enketo runs as a Node.js server and caches intermediate representations of forms in Redis. ODK Central Backend stores information for managing and launching Enketo forms from ODK Central Frontend, so all three must be configured together.
+
+- Clone [enketo-express](https://github.com/enketo/enketo-express) and read the [Manual Installation Instructions](https://github.com/enketo/enketo-express). Specifically:
+	* Install Redis. (Node.js will already be installed to run ODK Central Frontend and Backend.) Enketo will expect Redis on the default port of `6379`.
+	* Install dependencies with `npm install`.
+- Configure Enketo. A minimal `config/config.json` for Enketo looks like:
+
+```
+{
+    "port": "8005",
+    "linked form and data server": {
+        "server url": "localhost:8989",
+        "api key": "enketorules",
+        "authentication": {
+            "allow insecure transport": "true"
+        }
+    },
+    "base path": "-",
+    "redis": {
+        "cache": {
+            "port": "6379"
+        }
+    }
+}
+```
+
+- Configure ODK Central Backend. Add the following to `config/default.json`.
+
+```
+    "enketo": {
+      "url": "http://localhost:8005/-",
+      "apiKey": "enketorules"
+    },
+```
+
+- Configure Nginx in ODK Central Frontend. Add the following to `nginx.conf` inside `server`, before or after `location /v1/`. This will create a reverse proxy for the Enketo server in the same way there is a reverse proxy to the ODK Central Backend server. You will need to restart Nginx after this.
+
+```
+    location /- {
+      proxy_pass http://localhost:8005/-;
+      proxy_redirect off;
+      proxy_set_header Host $host;
+    }
+```
+* Run ODK Central Frontend (via Nginx) on port `8989`, run ODK Central Backend on port `8383`, and run the Enketo server on port `8005`.
+
+### Notes on error messages
+
+* Upon editing a Form Submission, especially if it is a form that existed before you set up Enketo, you may see this error `{"message":"The form you tried to access is not ready for web use yet. Please wait some time and try again.","code":409.11}` . This happens when the form has not yet been configured by the backend to work with Enketo and does not yet have an `enketoId` . One way to force Central Backend to create an `enketoId` is to create a Draft From the existing Form Definition and republish the Form.
+
 
 ## Deploying to production
 
