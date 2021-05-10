@@ -34,7 +34,6 @@
   "devDependencies": {
     "@intlify/vue-i18n-loader": "~1",
     "@vue/cli-plugin-eslint": "~4.5",
-    "@vue/cli-plugin-unit-mocha": "~4.5",
     "@vue/cli-service": "~4.5",
     "@vue/eslint-config-airbnb": "~5",
     "avoriaz": "~6.3",
@@ -51,6 +50,7 @@
     "karma-sourcemap-loader": "~0.3",
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "4.0.0-rc.6",
+    "mocha": "~8",
     "sass": "~1",
     "sass-loader": "~10",
     "should": "~13.2",
