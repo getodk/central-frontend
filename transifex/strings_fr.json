@@ -812,7 +812,7 @@
         "0": {
           "warning": {
             "full": {
-              "string": "Cette sauvegarde n'inclue pas présentement les liens de formulaires Web. Si vous partagés des liens d'accès public ou partagés des liens directs à vos formulaires Web, nous recommandons fortement que vous fassiez également une sauvegarde complete du système jusqu'à ce que ceci soit adressé. Si vous devez restaurez vos données d'une sauvegarde et vous retrouvez avec des liens d'aperçu qui ne fonctionnent pas, veuillez écrire un message sur {forum} pour recevoir de l'aide.",
+              "string": "Cette sauvegarde n'inclue pas les liens de formulaires Web. Si vous partagez des liens d'accès public ou partagez des liens directs à vos formulaires Web, nous recommandons fortement que vous fassiez également une sauvegarde complete du système jusqu'à ce que ceci soit adressé. Si vous devez restaurer vos données d'une sauvegarde et vous retrouvez avec des liens d'aperçu qui ne fonctionnent pas, veuillez écrire un message sur {forum} pour recevoir de l'aide.",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
             },
             "forum": {
@@ -3181,7 +3181,7 @@
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "{count, plural, one {Chargement de {top} autres des {count} soumissions restantes...} other {Chargement de {top} autres des {count} soumissions restantes...}}",
+          "string": "{count, plural, one {Chargement de {top} autres de {count} soumission restante...} other {Chargement de {top} autres des {count} soumissions restantes...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
@@ -3198,7 +3198,7 @@
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, one {Chargement de {top} autres de la {count} soumission correspondante restante...} other {Chargement de {top} autres des {count} soumissions correspondantes restantes...}}",
+            "string": "{count, plural, one {Chargement de {top} autres des {count} soumissions correspondantes restantes...} other {Chargement de {top} autres des {count} soumissions correspondantes restantes...}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {

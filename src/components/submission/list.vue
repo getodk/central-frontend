@@ -462,14 +462,14 @@ export default {
       "withoutCount": "Chargement des soumissions...",
       "all": "Chargement de {count} soumission... | Chargement de {count} soumissions...",
       "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
+      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes...",
       "last": {
         "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
         "one": "Chargement la dernière soumission..."
       },
       "filtered": {
         "withoutCount": "Chargement des soumissions correspondantes...",
-        "middle": "Chargement de {top} autres de la {count} soumission correspondante restante... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
+        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
         "last": {
           "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes...",
           "one": "Chargement de la dernière soumission correspondante..."
