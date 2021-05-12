@@ -131,6 +131,15 @@ export default {
   .page-section-heading > span:first-child {
     color: $color-accent-secondary;
   }
+
+  .btn-default {
+    background-color: #ccc;
+
+    &:hover, &:focus, &:active:focus {
+      background-color: #bbb;
+      &[disabled] { background-color: #ccc; }
+    }
+  }
 }
 </style>
 
