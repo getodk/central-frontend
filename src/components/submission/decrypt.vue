@@ -225,7 +225,7 @@ export default {
   "es": {
     "title": "Descifrar y descargar",
     "introduction": [
-      "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada , al finalizar el proceso el servidor la olvidará."
+      "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
     ],
     "hint": "Pista: {hint}",
     "alert": {

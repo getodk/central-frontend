@@ -115,7 +115,8 @@ export default {
   },
   "fr": {
     "help": "Que sont les \"Projets\" ?",
-    "noSubmission": "(aucune)"
+    "noSubmission": "(aucune)",
+    "encryptionTip": "Ce projet est chiffré"
   },
   "id": {
     "help": "Apa itu Proyek?",

@@ -1,4 +1,37 @@
 {
+  "title": {
+    "resetPassword": "Réinitialiser le mot de passe",
+    "setPassword": "Définir le mot de passe",
+    "editProfile": "Éditer le profil",
+    "download": "Télécharger",
+    "pageNotFound": "Page non trouvée",
+    "details": "Détails"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Accès aux formulaires"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versions",
+      "publicAccess": "Accès public"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Status",
+        "attachments": "Fichiers média",
+        "testing": "Test"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Gestion du système",
+    "tab": {
+      "backups": "Sauvegardes",
+      "audits": "Journal d'audit"
+    }
+  },
   "role": {
     "none": "Aucun",
     "admin": "Administrateur",
@@ -14,6 +47,7 @@
   "reviewState": {
     "received": "Reçue",
     "hasIssues": "Comporte des erreurs",
+    "edited": "Édité",
     "approved": "Approuvée",
     "rejected": "Rejetée",
     "null": "@:reviewState.received"
@@ -26,17 +60,25 @@
       "form": "Actions de formulaire",
       "field_key": "Actions d'utilisateurs mobiles",
       "public_link": "Actions de liens d'accès public",
+      "config": "Actions de configuration du serveur",
       "upgrade": "Mise à jour du serveur"
     },
     "action": {
       "default": {
         "create": "Créer",
         "update": "Mettre à jour les détails",
+        "session_end": "Révoquer",
         "delete": "Supprimer"
       },
       "backup": "Sauvegarder",
+      "config": {
+        "set": "Spécifier"
+      },
       "field_key": {
+        "assignment_create": "Donner accès",
+        "assignment_delete": "Retirer accès",
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "form": {
@@ -49,7 +91,10 @@
         "delete": "@:audit.action.default.delete"
       },
       "public_link": {
+        "assignment_create": "Donner accès",
+        "assignment_delete": "Retirer accès",
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -57,6 +102,8 @@
         "process_form_draft": "Traiter l'ébauche du formulaire"
       },
       "user": {
+        "assignment_create": "Attribuer un rôle",
+        "assignment_delete": "Révoquer un rôle",
         "delete": "Supprimer",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
@@ -72,10 +119,12 @@
     "cancel": "Annuler",
     "clear": "Effacer",
     "close": "Fermer",
+    "comment": "Ajouter commentaire",
     "create": "Créer",
     "createSubmission": "Nouveau",
     "done": "Fait",
     "download": "Télécharger",
+    "edit": "Éditer",
     "editProfile": "Éditer le profil",
     "logIn": "Se connecter",
     "looksGood": "Ça a l'air bon, continuez",
@@ -87,10 +136,13 @@
     "proceed": "Continuer",
     "refresh": "Rafraîchir",
     "resetPassword": "Réinitialiser le mot de passe",
+    "review": "Réviser",
     "save": "Enregistrer",
+    "update": "Actualizer",
     "yesProceed": "Oui, procéder"
   },
   "field": {
+    "comment": "Ajouter un commentaire...",
     "dateRange": "Intervalle de date",
     "displayName": "Nom affiché",
     "email": "Adresse de courriel",
@@ -100,6 +152,7 @@
     "passphrase": "Phrase de passe",
     "password": "Mot de passe",
     "passwordConfirm": "Nouveau mot de passe (confirmez)",
+    "reviewState": "État",
     "type": "Type"
   },
   "header": {
@@ -108,8 +161,12 @@
     "createdBy": "Créé par",
     "displayName": "Nom affiché",
     "email": "Adresse de courriel",
+    "instanceId": "ID de l'instance",
     "lastSubmission": "Dernière soumission",
     "name": "Nom",
+    "submitterName": "Soumis par",
+    "submissionDate": "Soumis à",
+    "time": "Heure",
     "type": "Type"
   },
   "plural": {
@@ -127,13 +184,17 @@
   "resource": {
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
+    "config": "Configuration du serveur",
     "form": "Formulaire",
     "project": "Projet",
+    "projects": "Projets",
     "publicLink": "Lien d'accès public",
     "user": "Utilisateur",
     "webUser": "Utilisateur web",
+    "webUsers": "Utilisateurs web",
     "session": "Session",
-    "submissions": "Soumissions"
+    "submissions": "Soumissions",
+    "projectRoles": "Rôles du projet"
   },
   "moreInfo": {
     "clickHere": {
@@ -148,13 +209,18 @@
   },
   "submission": {
     "missingMedia": "Média manquant",
+    "action": {
+      "edit": "Éditer ({count})"
+    },
     "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
   },
   "common": {
+    "activity": "Activitée",
     "anybody": "(n'importe qui)",
     "areYouSure": "Êtes vous sûr de vouloir procéder ?",
+    "basicInfo": "Information de base",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
     "filter": "Filtrer",
@@ -162,7 +228,11 @@
     "noResults": "Aucun résultat",
     "rightNow": "Présentement",
     "success": "Succès !",
-    "yes": "Oui"
+    "yes": "Oui",
+    "tab": {
+      "settings": "Paramètres",
+      "overview": "Aperçu"
+    }
   },
   "mixin": {
     "request": {

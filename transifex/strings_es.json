@@ -19,6 +19,10 @@
     "pageNotFound": {
       "string": "Página no encontrada",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "details": {
+      "string": "Detalles",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
   "projectShow": {
@@ -119,7 +123,7 @@
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "edited": {
-      "string": "",
+      "string": "Editado",
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "approved": {
@@ -2142,6 +2146,12 @@
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
+    "NavbarLocaleDropdown": {
+      "helpTranslate": {
+        "string": "",
+        "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
+      }
+    },
     "NotFound": {
       "body": {
         "string": "La página que está solicitando no pudo ser encontrada."
@@ -2991,7 +3001,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada , al finalizar el proceso el servidor la olvidará."
+          "string": "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
         }
       },
       "hint": {
@@ -3039,7 +3049,7 @@
     "SubmissionFeedEntry": {
       "title": {
         "create": {
-          "string": "",
+          "string": "Enviado por {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
         },
         "updateReviewState": {
@@ -3188,7 +3198,7 @@
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, one {Cargando {top}más de {count} envíos restantes coincidentes...} other {Cargando {top} más de {count} envíos restantes coincidentes...}}",
+            "string": "{count, plural, one {Cargando {top} más de {count} envíos restantes coincidentes...} other {Cargando {top} más de {count} envíos restantes coincidentes...}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {

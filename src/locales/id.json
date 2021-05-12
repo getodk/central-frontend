@@ -1,4 +1,37 @@
 {
+  "title": {
+    "resetPassword": "Atur Ulang Kata Sandi",
+    "setPassword": "Atur Kata Sandi",
+    "editProfile": "Sunting Profil",
+    "download": "Unduh",
+    "pageNotFound": "Laman tidak ditemui",
+    "details": "Rincian"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Akses Formulir"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versi",
+      "publicAccess": "Akses Publik"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Status",
+        "attachments": "File Media",
+        "testing": "Uji Coba"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Manajemen Sistem",
+    "tab": {
+      "backups": "Data Cadangan",
+      "audits": "Catatan Server Audit"
+    }
+  },
   "role": {
     "none": "Tidak Ada",
     "admin": "Administrator",
@@ -25,11 +58,13 @@
       "default": {
         "create": "Buat",
         "update": "Pembaruan Rincian",
+        "session_end": "Cabut",
         "delete": "Hapus"
       },
       "backup": "Pembuatan data cadangan",
       "field_key": {
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "form": {
@@ -43,6 +78,7 @@
       },
       "public_link": {
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -50,6 +86,8 @@
         "process_form_draft": "Draf Formulir Proses"
       },
       "user": {
+        "assignment_create": "Tetapkan Peran",
+        "assignment_delete": "Cabut Peran",
         "delete": "Mengundurkan Diri",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
@@ -100,8 +138,12 @@
     "createdBy": "Dibuat oleh",
     "displayName": "Nama tampilan",
     "email": "Alamat Email",
+    "instanceId": "ID Instansi",
     "lastSubmission": "Kiriman Terakhir",
     "name": "Nama",
+    "submitterName": "Terkirim oleh",
+    "submissionDate": "Terkirim pada",
+    "time": "Waktu",
     "type": "Tipe"
   },
   "plural": {
@@ -121,11 +163,14 @@
     "appUsers": "Pengguna Aplikasi",
     "form": "Formulir",
     "project": "Proyek",
+    "projects": "Proyek",
     "publicLink": "Tautan Akses Publik",
     "user": "Pengguna",
     "webUser": "Pengguna Web",
+    "webUsers": "Pengguna Web",
     "session": "Sesi",
-    "submissions": "Kiriman"
+    "submissions": "Kiriman",
+    "projectRoles": "Peran Proyek"
   },
   "moreInfo": {
     "clickHere": {
@@ -152,7 +197,11 @@
     "noResults": "Tidak ada hasil",
     "rightNow": "Sekarang Juga",
     "success": "Sukses!",
-    "yes": "Iya"
+    "yes": "Iya",
+    "tab": {
+      "settings": "Pengaturan",
+      "overview": "Gambaran"
+    }
   },
   "presenter": {
     "Form": {

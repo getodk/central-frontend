@@ -352,6 +352,10 @@ export default {
     "title": "Configurer des sauvegardes",
     "steps": [
       {
+        "warning": {
+          "full": "Cette sauvegarde n'inclue pas présentement les liens de formulaires Web. Si vous partagés des liens d'accès public ou partagés des liens directs à vos formulaires Web, nous recommandons fortement que vous fassiez également une sauvegarde complete du système jusqu'à ce que ceci soit adressé. Si vous devez restaurez vos données d'une sauvegarde et vous retrouvez avec des liens d'aperçu qui ne fonctionnent pas, veuillez écrire un message sur {forum} pour recevoir de l'aide.",
+          "forum": "le forum"
+        },
         "introduction": [
           "Si vous le désirez, vous pouvez définir une phrase de passe de cryptage pour déverrouiller la sauvegarde.",
           "Il n'y a aucun moyen de retrouver la phrase de passe si vous la perdez !",

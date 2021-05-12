@@ -259,7 +259,7 @@ export default {
     "warnings": {
       "attachments": {
         "full": "Vous n'avez pas fourni tous les {mediaFiles} requis par votre formulaire. Vous pouvez ignorer cette notification, mais vous devrez créer une nouvelle ébauche pour ajouter ces fichiers plus tard.",
-        "mediaFiles": "Fichiers médias"
+        "mediaFiles": "fichiers média"
       },
       "testing": {
         "full": "Vous n'avez pas encore {tested} sur un appareil mobile et téléchargé une soumission de test. Vous n'êtes pas obligé de le faire, mais c'est fortement recommandé.",

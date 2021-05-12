@@ -202,6 +202,15 @@ export default {
     "alert": {
       "updateReviewState": "Überprüfungsstatus gespeichert!"
     }
+  },
+  "fr": {
+    "back": {
+      "title": "Détails de la soumission",
+      "back": "Retour au tableau de soumissions"
+    },
+    "alert": {
+      "updateReviewState": "État sauvegardé!"
+    }
   }
 }
 </i18n>

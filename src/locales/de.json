@@ -1,4 +1,36 @@
 {
+  "title": {
+    "resetPassword": "Passwort zurücksetzen",
+    "setPassword": "Passwort festlegen",
+    "editProfile": "Profil bearbeiten",
+    "download": "Herunterladen",
+    "pageNotFound": "Seite nicht gefunden"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Formular-Zugriff"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versionen",
+      "publicAccess": "Öffentlicher Zugriff"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Status",
+        "attachments": "Mediendateien",
+        "testing": "Testen"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "System-Management",
+    "tab": {
+      "backups": "Sicherheitskopien",
+      "audits": "Server Audit Logs"
+    }
+  },
   "role": {
     "none": "Keine",
     "admin": "Administrator",
@@ -14,6 +46,7 @@
   "reviewState": {
     "received": "Empfangen",
     "hasIssues": "Hat Probleme",
+    "edited": "Bearbeitet",
     "approved": "Bestätigt",
     "rejected": "Abgelehnt",
     "null": "@:reviewState.received"
@@ -135,11 +168,14 @@
     "appUsers": "App-Benutzer",
     "form": "Formular",
     "project": "Projekt",
+    "projects": "Projekte",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
     "webUser": "Web-Benutzer",
+    "webUsers": "Web-Benutzer",
     "session": "Sitzung",
-    "submissions": "Übermittlungen"
+    "submissions": "Übermittlungen",
+    "projectRoles": "Projektrollen"
   },
   "moreInfo": {
     "clickHere": {
@@ -172,7 +208,11 @@
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
     "success": "Das hat geklappt!",
-    "yes": "Ja"
+    "yes": "Ja",
+    "tab": {
+      "settings": "Einstellungen",
+      "overview": "Übersicht"
+    }
   },
   "mixin": {
     "request": {
