@@ -165,6 +165,10 @@ export default {
 {
   "cs": {
     "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
+  },
+  "fr": {
+    "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements.",
+    "markdownSupported": "Markdown disponible"
   }
 }
 </i18n>

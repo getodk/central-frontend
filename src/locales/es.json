@@ -4,7 +4,8 @@
     "setPassword": "Establecer contraseña",
     "editProfile": "Editar perfil",
     "download": "Descargar",
-    "pageNotFound": "Página no encontrada"
+    "pageNotFound": "Página no encontrada",
+    "details": "Detalles"
   },
   "projectShow": {
     "tab": {
@@ -46,6 +47,7 @@
   "reviewState": {
     "received": "Recibido",
     "hasIssues": "Tiene problemas",
+    "edited": "Editado",
     "approved": "Aprobado",
     "rejected": "Rechazado",
     "null": "@:reviewState.received"

@@ -153,6 +153,18 @@ export default {
     "present": "{count} file | {count} files",
     "expected": "{count} expected | {count} esperado",
     "attachmentSummary": "{present} / {expected}"
+  },
+  "fr": {
+    "reviewState": "État",
+    "deviceId": "ID d'appareil",
+    "attachments": "Fichiers média",
+    "present": "{count} fichier | {count} fichiers",
+    "expected": "{count} attendu | {count} attendus",
+    "attachmentSummary": "{present} / {expected}"
+  },
+  "id": {
+    "attachments": "File Media",
+    "present": "{count} berkas"
   }
 }
 </i18n>

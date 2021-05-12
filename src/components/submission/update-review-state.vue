@@ -186,6 +186,12 @@ export default {
     "field": {
       "notes": "Notizen und Kommentare (optional)"
     }
+  },
+  "fr": {
+    "title": "Changer l'état de la soumission",
+    "field": {
+      "notes": "Notes et commentaires (facultatif)"
+    }
   }
 }
 </i18n>

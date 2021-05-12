@@ -19,6 +19,10 @@
     "pageNotFound": {
       "string": "Stránka nenalezena",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "details": {
+      "string": "",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
   "projectShow": {
@@ -2142,6 +2146,12 @@
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
+    "NavbarLocaleDropdown": {
+      "helpTranslate": {
+        "string": "",
+        "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
+      }
+    },
     "NotFound": {
       "body": {
         "string": "Požadovanou stránku nelze najít."
@@ -3188,12 +3198,12 @@
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, one {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…} few {Načítání {top}z dalších {count} zbývajících odpovídajících příspěvků…} many {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…} other {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…}}",
+            "string": "{count, plural, one {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…} few {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…} many {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…} other {Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {
             "multiple": {
-              "string": "{count, plural, one {Načítání posledního {count} odpovídajícího příspěvku…} few {Načítání posledních {count} odpovídajících příspěvků…} many {Načítání posledních {count} odpovídajících příspěvků…} other {Načítání posledních {count}odpovídajících příspěvků…}}"
+              "string": "{count, plural, one {Načítání posledního {count} odpovídajícího příspěvku…} few {Načítání posledních {count} odpovídajících příspěvků…} many {Načítání posledních {count} odpovídajících příspěvků…} other {Načítání posledních {count} odpovídajících příspěvků…}}"
             },
             "one": {
               "string": "Načítání posledního odpovídajícího příspěvku…"

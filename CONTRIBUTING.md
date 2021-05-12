@@ -190,8 +190,8 @@ node bin/transifex/restructure.js
   "hello": "Hello, world!",
   // This comment will be added for each of the messages within "fruit".
   fruit: {
-  	"apple": "Apple",
-  	"banana": "Banana"
+    "apple": "Apple",
+    "banana": "Banana"
   }
 }
 </i18n>

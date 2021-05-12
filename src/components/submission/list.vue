@@ -403,9 +403,9 @@ export default {
       },
       "filtered": {
         "withoutCount": "Načítání odpovídajících příspěvků…",
-        "middle": "Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top}z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…",
+        "middle": "Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…",
         "last": {
-          "multiple": "Načítání posledního {count} odpovídajícího příspěvku… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count}odpovídajících příspěvků…",
+          "multiple": "Načítání posledního {count} odpovídajícího příspěvku… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků…",
           "one": "Načítání posledního odpovídajícího příspěvku…"
         }
       }
@@ -447,7 +447,7 @@ export default {
       },
       "filtered": {
         "withoutCount": "Cargando envíos coincidentes…",
-        "middle": "Cargando {top}más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
+        "middle": "Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
         "last": {
           "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
           "one": "Cargando el último envío coincidente…"
@@ -462,14 +462,16 @@ export default {
       "withoutCount": "Chargement des soumissions...",
       "all": "Chargement de {count} soumission... | Chargement de {count} soumissions...",
       "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
+      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes...",
       "last": {
         "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
         "one": "Chargement la dernière soumission..."
       },
       "filtered": {
         "withoutCount": "Chargement des soumissions correspondantes...",
+        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
         "last": {
+          "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes...",
           "one": "Chargement de la dernière soumission correspondante..."
         }
       }
