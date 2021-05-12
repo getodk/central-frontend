@@ -233,7 +233,7 @@ export default {
       if (clear) this.clearSubmissions();
       this.refreshing = !clear && skip === 0;
       const top = this.top(skip);
-      const query = { $top: top, $skip: skip, $count: true };
+      const query = { $top: top, $skip: skip, $count: true, $wkt: true };
       if (this.odataFilter != null) query.$filter = this.odataFilter;
       return this.$store.dispatch('get', [{
         key: 'odataChunk',

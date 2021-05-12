@@ -241,31 +241,13 @@ describe('SubmissionDataRow', () => {
     }
   });
 
-  describe('geopoint values', () => {
-    const geopoint = (...coordinates) => ({ type: 'Point', coordinates });
-    // Each test case is an array with the following structure:
-    // [raw value, expected formatted value]
-    const cases = [
-      [geopoint(0.1234567, 0.1234567), '0.1234567 0.1234567'],
-      [geopoint(0.123456, 0.123456), '0.1234560 0.1234560'],
-      [geopoint(0.12345678, 0.12345678), '0.1234568 0.1234568'],
-      [geopoint(0.1234567, 0.1234567, 0.1), '0.1234567 0.1234567 0.1'],
-      [geopoint(0.1234567, 0.1234567, 0), '0.1234567 0.1234567 0.0'],
-      [geopoint(0.1234567, 0.1234567, 0.15), '0.1234567 0.1234567 0.2']
-    ];
-
-    for (const [rawValue, formattedValue] of cases) {
-      it(`correctly formats ${rawValue.coordinates.join(' ')}`, () => {
-        testData.extendedForms.createPast(1, {
-          fields: [testData.fields.geopoint('/g')],
-          submissions: 1
-        });
-        testData.extendedSubmissions.createPast(1, { g: rawValue });
-        const td = mountComponent().first('td');
-        td.text().should.equal(formattedValue);
-        td.getAttribute('title').should.equal(formattedValue);
-      });
-    }
+  it('adds the geopoint-field class for a geopoint value', () => {
+    testData.extendedForms.createPast(1, {
+      fields: [testData.fields.geopoint('/g')],
+      submissions: 1
+    });
+    testData.extendedSubmissions.createPast(1);
+    mountComponent().first('td').hasClass('geopoint-field').should.be.true();
   });
 
   describe('binary field', () => {
