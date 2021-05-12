@@ -201,6 +201,14 @@ describe('util/session', () => {
             alert.message.should.endWith('logOut() problem.');
           }));
 
+      it('returns a fulfilled promise for a 401.2 Problem', () =>
+        mockHttp()
+          .request(() => logIn(router, store, true))
+          .respondWithData(() => testData.extendedUsers.first())
+          .complete()
+          .request(() => logOut(router, store, false).should.be.fulfilled())
+          .respondWithProblem(401.2));
+
       it('returns a fulfilled promise for a 403.1 Problem', () =>
         mockHttp()
           .request(() => logIn(router, store, true))
@@ -224,7 +232,7 @@ describe('util/session', () => {
             })
             .respondWithData(() => testData.sessions.createNew())
             .respondWithData(() => testData.extendedUsers.first())
-            .respondWithProblem(403.1)
+            .respondWithProblem(401.2)
             .afterResponses(app => {
               const { state } = app.vm.$store.state.request.requests.currentUser.last;
               state.should.equal('canceled');
@@ -240,7 +248,7 @@ describe('util/session', () => {
             })
             .respondWithData(() => testData.sessions.createNew())
             .respondWithData(() => testData.extendedUsers.first())
-            .respondWithProblem(403.1)
+            .respondWithProblem(401.2)
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/reset-password');
               replace.called.should.be.false();
@@ -267,7 +275,7 @@ describe('util/session', () => {
             })
             .respondWithData(() => testData.sessions.createNew())
             .respondWithData(() => testData.extendedUsers.first())
-            .respondWithProblem(403.1)
+            .respondWithProblem(401.2)
             .afterResponses(app => {
               const { state } = app.vm.$store.state.request.requests.currentUser.last;
               state.should.equal('canceled');
@@ -287,7 +295,7 @@ describe('util/session', () => {
             })
             .respondWithData(() => testData.sessions.createNew())
             .respondWithData(() => testData.extendedUsers.first())
-            .respondWithProblem(403.1)
+            .respondWithProblem(401.2)
             .afterResponses(app => {
               app.vm.$route.fullPath.should.equal('/login?next=%2Fusers');
             }));
@@ -550,7 +558,7 @@ describe('util/session', () => {
             url: window.location.href
           }));
         })
-        .respondWithProblem(403.1)
+        .respondWithProblem(401.2)
         .afterResponse(() => {
           should.not.exist(store.state.request.data.session);
         })
@@ -588,7 +596,7 @@ describe('util/session', () => {
             url: window.location.href
           }));
         })
-        .respondWithProblem(403.1)
+        .respondWithProblem(401.2)
         .afterResponse(app => {
           app.vm.$route.query.next.should.equal('/users');
         });

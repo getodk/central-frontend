@@ -47,7 +47,7 @@ expiration date is also stored in local storage. This approach is designed to:
 
   - Support cookie auth
   - Ensure the user knows when they are logged out; prevent the user from seeing
-    403 messages after their session has been deleted
+    401 messages after their session has been deleted
   - Prevent one user from using another user's cookie
   - Ensure that the cookie is removed when the user logs out
 
@@ -79,10 +79,11 @@ const requestLogout = (store) => {
   })
     .catch(error => {
       // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
-      // log out a session that has already been logged out. Backend returns a
-      // 403.1 in that case, which we ignore.
-      if (error.response != null && isProblem(error.response.data) &&
-        error.response.data.code === 403.1) {
+      // log out a session that has already been logged out. That will result in
+      // a 401.2 or a 403.1, which we ignore.
+      const { response } = error;
+      if (response != null && isProblem(response.data) &&
+        (response.data.code === 401.2 || response.data.code === 403.1)) {
         return;
       }
 
