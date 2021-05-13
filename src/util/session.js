@@ -72,6 +72,22 @@ import { forceReplace } from './router';
 import { localStore } from './storage';
 import { noop } from './util';
 
+const removeSessionFromStorage = () => {
+  /*
+  If the user clears local storage, that will trigger a storage event in Chrome.
+  However, it will not in Firefox or Safari. Yet even in that case, we want to
+  ensure that logging out in one tab will trigger other tabs to log out. To do
+  so, we set sessionExpires before removing it, ensuring a storage event (and
+  actually probably two).
+
+  Another tab may have already removed sessionExpires by logging out. In that
+  case, setting and removing sessionExpires here will trigger a storage event in
+  the other tab, though that should have no effect.
+  */
+  localStore.setItem('sessionExpires', '0');
+  localStore.removeItem('sessionExpires');
+};
+
 const requestLogout = (store) => {
   const { token } = store.state.request.data.session;
   return Vue.prototype.$http.delete(apiPaths.session(token), {
@@ -98,20 +114,7 @@ const requestLogout = (store) => {
 };
 
 export const logOut = (router, store, setNext) => {
-  /*
-  If the user clears local storage, that will trigger a storage event in Chrome.
-  However, it will not in Firefox or Safari. Yet even in that case, we want to
-  ensure that logging out in one tab will trigger other tabs to log out. To do
-  so, we set sessionExpires before removing it, ensuring a storage event (and
-  actually probably two).
-
-  Another tab may have already removed sessionExpires by logging out. In that
-  case, setting and removing sessionExpires here will trigger a storage event in
-  the other tab, though that should have no effect.
-  */
-  localStore.setItem('sessionExpires', '0');
-  localStore.removeItem('sessionExpires');
-
+  removeSessionFromStorage();
   const { expiresAt } = store.state.request.data.session;
   // If the session has expired (for example, while the computer was asleep), we
   // do not send a request, which would result in an error. (Using Date.parse()
@@ -189,6 +192,34 @@ export const useSessions = (router, store) => {
     clearInterval(id);
     window.removeEventListener('storage', handler);
   };
+};
+
+export const restoreSession = (store) => {
+  const sessionExpires = localStore.getItem('sessionExpires');
+  // We send a request if sessionExpires == null, partly in case there was a
+  // logout error.
+  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
+    return Promise.reject();
+  return store.dispatch('get', [{
+    key: 'session',
+    url: '/v1/sessions/restore',
+    alert: false
+  }])
+    .catch(error => {
+      // The user's session may be removed without the user logging out, for
+      // example, if a backup is restored. In that case, the request will result
+      // in a 404. sessionExpires may need to be removed from local storage in
+      // order for the user to log in again.
+      if (sessionExpires != null) {
+        const { response } = error;
+        if (response != null && isProblem(response.data) &&
+          response.data.code === 404.1) {
+          removeSessionFromStorage();
+        }
+      }
+
+      throw error;
+    });
 };
 
 /* The session must be set in the store before logIn() is called, meaning that

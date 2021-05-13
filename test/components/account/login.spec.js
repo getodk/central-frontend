@@ -72,17 +72,18 @@ describe('AccountLogin', () => {
       });
   });
 
-  it('shows an alert if there is an existing session', () => {
-    localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-    return load('/login')
+  it('shows an alert if there is an existing session', () =>
+    load('/login')
       .restoreSession(false)
-      .afterResponses(submit)
+      .afterResponses(app => {
+        localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+        return submit(app);
+      })
       .then(app => {
         app.should.alert('info', (message) => {
           message.should.startWith('A user is already logged in.');
         });
-      });
-  });
+      }));
 
   it('shows a danger alert for incorrect credentials', () =>
     load('/login')

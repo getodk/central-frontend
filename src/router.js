@@ -19,7 +19,7 @@ import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
-import { logIn } from './util/session';
+import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
 const router = new VueRouter({ routes });
@@ -69,19 +69,11 @@ const initialLocale = () => {
 };
 
 // Implements the restoreSession meta field.
-const restoreSession = async (to) => {
-  if (!last(to.matched).meta.restoreSession) return;
-  const sessionExpires = localStore.getItem('sessionExpires');
-  // We send a request if sessionExpires == null, partly in case there was a
-  // logout error.
-  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
-    return;
-  await store.dispatch('get', [{
-    key: 'session',
-    url: '/v1/sessions/restore',
-    alert: false
-  }]);
-  await logIn(router, store, false);
+const restoreSessionIfShould = async (to) => {
+  if (last(to.matched).meta.restoreSession) {
+    await restoreSession(store);
+    await logIn(router, store, false);
+  }
 };
 
 router.beforeEach((to, from, next) => {
@@ -90,7 +82,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  Promise.allSettled([loadLocale(initialLocale()), restoreSession(to)])
+  Promise.allSettled([loadLocale(initialLocale()), restoreSessionIfShould(to)])
     .then(() => {
       store.commit('setSendInitialRequests', false);
       next();
