@@ -86,6 +86,7 @@ export default {
       if (field.binary === true) return 'binary-field';
       if (field.type === 'int') return 'int-field';
       if (field.type === 'decimal') return 'decimal-field';
+      if (field.type === 'geopoint') return 'geopoint-field';
       return null;
     },
     rawValue(submission, field) {
@@ -157,22 +158,6 @@ export default {
         case 'dateTime':
           return formatDateTime(DateTime.fromISO(rawValue));
 
-        case 'geopoint': {
-          const { coordinates } = rawValue;
-          // Limiting the number of decimal places helps ensure that the
-          // formatted value fits within the column width. For longitude and
-          // latitude, 7 fraction digits provide precision of 0.011m at the
-          // equator.
-          const lon = this.$n(coordinates[0], 'fractionDigits7');
-          const lat = this.$n(coordinates[1], 'fractionDigits7');
-          const altitude = coordinates.length > 2
-            ? this.$n(coordinates[2], 'fractionDigits1')
-            : null;
-          return altitude != null
-            ? `${lon} ${lat} ${altitude}`
-            : `${lon} ${lat}`;
-        }
-
         default:
           return rawValue;
       }
@@ -186,6 +171,7 @@ export default {
 
 #submission-table-data {
   .int-field, .decimal-field { text-align: right; }
+  .geopoint-field { max-width: 500px; }
 
   .binary-field { text-align: center; }
   .binary-link {

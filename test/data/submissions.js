@@ -29,9 +29,8 @@ const odataValue = (field, instanceId) => {
       const paragraphs = faker.random.number({ min: 1, max: 3 });
       return faker.lorem.paragraphs(paragraphs);
     }
-    case 'date': {
+    case 'date':
       return fakeDateTime().toFormat('yyyy-MM-dd');
-    }
     case 'time': {
       const formatted = fakeDateTime().toFormat('HH:mm:ss');
       return faker.random.boolean() ? formatted : `${formatted}+01:00`;
@@ -40,15 +39,8 @@ const odataValue = (field, instanceId) => {
       const formatted = fakeDateTime().toISO({ includeOffset: false });
       return faker.random.boolean() ? formatted : `${formatted}+01:00`;
     }
-    case 'geopoint': {
-      // [longitude, latitude], not [latitude, longitude]
-      const coordinates = [
-        faker.random.number({ min: -180, max: 180, precision: 0.0000000001 }),
-        faker.random.number({ min: -85, max: 85, precision: 0.0000000001 })
-      ];
-      if (faker.random.boolean()) coordinates.push(faker.random.number());
-      return { type: 'Point', coordinates };
-    }
+    case 'geopoint':
+      return 'POINT (0 90)';
     case 'binary':
       return faker.system.commonFileName('jpg');
     case null:
