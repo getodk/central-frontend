@@ -141,6 +141,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "de": {
+    "reviewState": "Überprüfungsstatus",
     "deviceId": "Geräte-ID",
     "attachments": "Mediendateien",
     "present": "{count} Datei | {count} Dateien",

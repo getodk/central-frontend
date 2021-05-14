@@ -166,6 +166,10 @@ export default {
   "cs": {
     "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
   },
+  "de": {
+    "editWithoutComment": "Sie haben die Daten geändert. Bitte beschreiben Sie die Änderungen, die Sie gemacht haben.",
+    "markdownSupported": "unterstützt durch Markdown"
+  },
   "fr": {
     "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements.",
     "markdownSupported": "Markdown disponible"

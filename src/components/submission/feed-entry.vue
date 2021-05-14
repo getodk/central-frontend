@@ -273,6 +273,34 @@ Comment • {name} */
       "comment": "Komentář od {name}"
     }
   },
+  "de": {
+    "title": {
+      "create": "Übermittelt von {name}",
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} • {name}",
+          "reviewState": "Empfangen"
+        },
+        "hasIssues": {
+          "full": "{reviewState} • {name}",
+          "reviewState": "Hat Probleme"
+        },
+        "edited": {
+          "full": "{reviewState} • {name}",
+          "reviewState": "Bearbeitet"
+        },
+        "approved": {
+          "full": "{reviewState} • {name}",
+          "reviewState": "Bestätigt"
+        },
+        "rejected": {
+          "full": "{reviewState} • {name}",
+          "reviewState": "Abgelehnt"
+        }
+      },
+      "comment": "Kommentiert von {name}"
+    }
+  },
   "es": {
     "title": {
       "create": "Enviado por {name}"
