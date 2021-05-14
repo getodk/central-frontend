@@ -200,6 +200,10 @@ export const restoreSession = (store) => {
   // logout error.
   if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
     return Promise.reject();
+  // There is a chance that the user's session will be restored almost
+  // immediately before the session expires, such that the session expires
+  // before logOutBeforeSessionExpires() logs out the user. However, that case
+  // is unlikely, and the worst case should be that the user sees 401 messages.
   return store.dispatch('get', [{
     key: 'session',
     url: '/v1/sessions/restore',
