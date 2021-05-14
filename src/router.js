@@ -69,7 +69,7 @@ const initialLocale = () => {
 };
 
 // Implements the restoreSession meta field.
-const restoreSessionIfShould = async (to) => {
+const restoreSessionForRoute = async (to) => {
   if (last(to.matched).meta.restoreSession) {
     await restoreSession(store);
     await logIn(router, store, false);
@@ -82,7 +82,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  Promise.allSettled([loadLocale(initialLocale()), restoreSessionIfShould(to)])
+  Promise.allSettled([loadLocale(initialLocale()), restoreSessionForRoute(to)])
     .then(() => {
       store.commit('setSendInitialRequests', false);
       next();
