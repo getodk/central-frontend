@@ -276,6 +276,10 @@ export default {
     "title": "Sicherheitskopien einrichten",
     "steps": [
       {
+        "warning": {
+          "full": "Dieses Backup enthält aktuell keine Web-Formular-Links. Wenn Sie öffentliche Zugangslinks teilen oder extern auf Web-Formular-Links verlinken, um neue Übermittlungen zu machen, empfehlen wir, dass Sie auch ein vollständiges System-Backup durchführen, bis dies gelöst ist. Wenn Sie aus einem Backup wiederherstellen müssen und defekte Vorschau-Links erhalten, erstellen Sie einen Eintrag im {forum}, um Hilfe zu erhalten.",
+          "forum": "das Forum"
+        },
         "introduction": [
           "Sie können das Backup optional mit einer Passphrase sichern. Das Backup kann dann nur mit dieser Passphrase entschlüsselt werden.",
           "Eine verlorene Passphrase kann nicht wiederhergestellt werden!",

@@ -4,7 +4,8 @@
     "setPassword": "Passwort festlegen",
     "editProfile": "Profil bearbeiten",
     "download": "Herunterladen",
-    "pageNotFound": "Seite nicht gefunden"
+    "pageNotFound": "Seite nicht gefunden",
+    "details": "Details"
   },
   "projectShow": {
     "tab": {
@@ -59,17 +60,25 @@
       "form": "Formular-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
+      "config": "Server-Konfigurationsaktionen",
       "upgrade": "Server-Aktualisierung"
     },
     "action": {
       "default": {
         "create": "Erstellen",
         "update": "Details aktualisieren",
+        "session_end": "Widerrufen",
         "delete": "Löschen"
       },
       "backup": "Sicherheitskopie",
+      "config": {
+        "set": "Setzen"
+      },
       "field_key": {
+        "assignment_create": "Zugriff erteilen",
+        "assignment_delete": "Zugriff entziehen",
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "form": {
@@ -82,7 +91,10 @@
         "delete": "@:audit.action.default.delete"
       },
       "public_link": {
+        "assignment_create": "Zugriff erteilen",
+        "assignment_delete": "Zugriff entziehen",
         "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
@@ -90,6 +102,8 @@
         "process_form_draft": "Formularentwurf verarbeiten"
       },
       "user": {
+        "assignment_create": "Rolle zuweisen",
+        "assignment_delete": "Rolle entziehen",
         "delete": "Abschalten",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update"
@@ -105,6 +119,7 @@
     "cancel": "Abbrechen",
     "clear": "Löschen",
     "close": "Schließen",
+    "comment": "Kommentieren",
     "create": "Anlegen",
     "createSubmission": "Neu",
     "done": "Fertig",
@@ -121,11 +136,13 @@
     "proceed": "Fortfahren",
     "refresh": "Aktualisieren",
     "resetPassword": "Passwort zurücksetzen",
+    "review": "Überprüfen",
     "save": "Speichern",
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren"
   },
   "field": {
+    "comment": "Kommentieren...",
     "dateRange": "Zeitraum",
     "displayName": "Anzeigename",
     "email": "E-Mail-Adresse",
@@ -135,6 +152,7 @@
     "passphrase": "Passphrase",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
+    "reviewState": "Überprüfungsstatus",
     "type": "Typ"
   },
   "header": {
@@ -166,6 +184,7 @@
   "resource": {
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
+    "config": "Server-Konfiguration",
     "form": "Formular",
     "project": "Projekt",
     "projects": "Projekte",
@@ -198,6 +217,7 @@
     "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar"
   },
   "common": {
+    "activity": "Aktivität",
     "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
     "basicInfo": "Basis-Informationen",

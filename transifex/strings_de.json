@@ -21,7 +21,7 @@
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "details": {
-      "string": "",
+      "string": "Details",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
@@ -162,7 +162,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "config": {
-        "string": "",
+        "string": "Server-Konfigurationsaktionen",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
@@ -181,7 +181,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "session_end": {
-          "string": "",
+          "string": "Widerrufen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "delete": {
@@ -195,17 +195,17 @@
       },
       "config": {
         "set": {
-          "string": "",
+          "string": "Setzen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Server Configuration."
         }
       },
       "field_key": {
         "assignment_create": {
-          "string": "",
+          "string": "Zugriff erteilen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
         },
         "assignment_delete": {
-          "string": "",
+          "string": "Zugriff entziehen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
         }
       },
@@ -229,11 +229,11 @@
       },
       "public_link": {
         "assignment_create": {
-          "string": "",
+          "string": "Zugriff erteilen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         },
         "assignment_delete": {
-          "string": "",
+          "string": "Zugriff entziehen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         }
       },
@@ -249,11 +249,11 @@
       },
       "user": {
         "assignment_create": {
-          "string": "",
+          "string": "Rolle zuweisen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         },
         "assignment_delete": {
-          "string": "",
+          "string": "Rolle entziehen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         },
         "delete": {
@@ -277,7 +277,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "comment": {
-      "string": "",
+      "string": "Kommentieren",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -345,7 +345,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "review": {
-      "string": "",
+      "string": "Überprüfen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -363,7 +363,7 @@
   },
   "field": {
     "comment": {
-      "string": "",
+      "string": "Kommentieren...",
       "developer_comment": "This is the text of a form field."
     },
     "dateRange": {
@@ -403,7 +403,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "reviewState": {
-      "string": "",
+      "string": "Überprüfungsstatus",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -502,7 +502,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
-      "string": "",
+      "string": "Server-Konfiguration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -596,7 +596,7 @@
   },
   "common": {
     "activity": {
-      "string": "",
+      "string": "Aktivität",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "anybody": {
@@ -812,11 +812,11 @@
         "0": {
           "warning": {
             "full": {
-              "string": "",
+              "string": "Dieses Backup enthält aktuell keine Web-Formular-Links. Wenn Sie öffentliche Zugangslinks teilen oder extern auf Web-Formular-Links verlinken, um neue Übermittlungen zu machen, empfehlen wir, dass Sie auch ein vollständiges System-Backup durchführen, bis dies gelöst ist. Wenn Sie aus einem Backup wiederherstellen müssen und defekte Vorschau-Links erhalten, erstellen Sie einen Eintrag im {forum}, um Hilfe zu erhalten.",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
             },
             "forum": {
-              "string": "",
+              "string": "das Forum",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
             }
           },
@@ -2148,7 +2148,7 @@
     },
     "NavbarLocaleDropdown": {
       "helpTranslate": {
-        "string": "",
+        "string": "Hilf Central zu übersetzen",
         "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
       }
     },
@@ -2950,7 +2950,7 @@
     },
     "SubmissionBasicDetails": {
       "reviewState": {
-        "string": ""
+        "string": "Überprüfungsstatus"
       },
       "deviceId": {
         "string": "Geräte-ID"
@@ -2972,10 +2972,10 @@
     },
     "SubmissionComment": {
       "editWithoutComment": {
-        "string": ""
+        "string": "Sie haben die Daten geändert. Bitte beschreiben Sie die Änderungen, die Sie gemacht haben."
       },
       "markdownSupported": {
-        "string": "",
+        "string": "unterstützt durch Markdown",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
@@ -3049,13 +3049,13 @@
     "SubmissionFeedEntry": {
       "title": {
         "create": {
-          "string": "",
+          "string": "Übermittelt von {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
         },
         "updateReviewState": {
           "null": {
             "full": {
-              "string": "",
+              "string": "{reviewState} • {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
             },
             "reviewState": {
@@ -3065,47 +3065,47 @@
           },
           "hasIssues": {
             "full": {
-              "string": "",
+              "string": "{reviewState} • {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
             },
             "reviewState": {
-              "string": "",
+              "string": "Hat Probleme",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
           "edited": {
             "full": {
-              "string": "",
+              "string": "{reviewState} • {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
             },
             "reviewState": {
-              "string": "",
+              "string": "Bearbeitet",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
           "approved": {
             "full": {
-              "string": "",
+              "string": "{reviewState} • {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
             },
             "reviewState": {
-              "string": "",
+              "string": "Bestätigt",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
           "rejected": {
             "full": {
-              "string": "",
+              "string": "{reviewState} • {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
             },
             "reviewState": {
-              "string": "",
+              "string": "Abgelehnt",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           }
         },
         "comment": {
-          "string": "",
+          "string": "Kommentiert von {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
         }
       }
@@ -3155,7 +3155,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(Beliebiger Status)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
