@@ -99,13 +99,19 @@ describe('router', () => {
         testData.extendedUsers.createPast(1);
       });
 
-      it('sends the correct request', () =>
+      it('sends the correct requests', () =>
         load('/users', {}, false)
-          .beforeEachResponse((_, { method, url }) => {
-            method.should.equal('GET');
-            url.should.equal('/v1/sessions/restore');
+          .beforeEachResponse((_, { method, url }, index) => {
+            if (index === 0) {
+              method.should.equal('GET');
+              url.should.equal('/v1/sessions/restore');
+            } else if (index === 1) {
+              method.should.equal('GET');
+              url.should.equal('/v1/users/current');
+            }
           })
-          .restoreSession(false));
+          .restoreSession(true)
+          .respondFor('/users'));
 
       it('does not redirect the user from a location that requires login', () =>
         load('/users', {}, false)
@@ -114,22 +120,6 @@ describe('router', () => {
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/users');
           }));
-
-      it('does not set sessionExpires', () => {
-        const setItem = sinon.fake();
-        sinon.replace(Storage.prototype, 'setItem', setItem);
-        return load('/users', {}, false)
-          .restoreSession(true)
-          .respondFor('/users')
-          .afterResponses(() => {
-            setItem.called.should.be.false();
-          });
-      });
-
-      it('does not send a request if the session has expired', () => {
-        localStorage.setItem('sessionExpires', '0');
-        return load('/users', {}, false).testNoRequest();
-      });
     });
   });
 
