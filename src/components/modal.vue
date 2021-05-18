@@ -237,7 +237,7 @@ export default {
 }
 
 .modal-warnings {
-  background-color: $color-warning;
+  background-color: $color-warning-light;
   margin-bottom: 15px;
   padding: 15px;
 
