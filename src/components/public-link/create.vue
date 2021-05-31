@@ -22,10 +22,11 @@ except according to the terms contained in the LICENSE file.
           <label>
             <input v-model="once" type="checkbox"
               aria-describedby="public-link-create-once-help">
-              {{ $t('field.once') }}
+            {{ $t('field.once') }}
           </label>
           <p id="public-link-create-once-help" class="help-block">
-            {{ $t('onceHelp') }}
+            <span>{{ $t('onceHelp') }}</span>
+            <sentence-separator/>
             <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.learnMore') }}</doc-link>
           </p>
         </div>
@@ -48,7 +49,9 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -56,7 +59,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'PublicLinkCreate',
-  components: { DocLink, FormGroup, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {

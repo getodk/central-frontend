@@ -26,8 +26,10 @@ definition for an existing form -->
           <li v-for="warning of warnings">{{ warning.trim() }}</li>
         </ul>
         <p>
-          {{ $t('warningsText[1]') }}
-          {{ formDraft == null ? $t('warningsText[2].create') : $t('warningsText[2].update') }}
+          <span>{{ $t('warningsText[1]') }}</span>
+          <sentence-separator/>
+          <template v-if="formDraft == null">{{ $t('warningsText[2].create') }}</template>
+          <template v-else>{{ $t('warningsText[2].update') }}</template>
         </p>
         <p>
           <button type="button" class="btn btn-primary"
@@ -38,7 +40,9 @@ definition for an existing form -->
       </div>
       <div class="modal-introduction">
         <p>
-          {{ formDraft == null ? $t('introduction[0].create') : $t('introduction[0].update') }}
+          <template v-if="formDraft == null">{{ $t('introduction[0].create') }}</template>
+          <template v-else>{{ $t('introduction[0].update') }}</template>
+          <sentence-separator/>
           <i18n :tag="false" path="introduction[1].full">
             <template #tools>
               <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
@@ -80,7 +84,9 @@ definition for an existing form -->
 import DocLink from '../doc-link.vue';
 import Form from '../../presenters/form';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 import { apiPaths, isProblem } from '../../util/request';
@@ -88,7 +94,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormNew',
-  components: { DocLink, Modal, Spinner },
+  components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
   props: {
     state: {

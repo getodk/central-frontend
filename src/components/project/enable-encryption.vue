@@ -114,7 +114,8 @@ except according to the terms contained in the LICENSE file.
         </p>
         <p class="modal-introduction">
           <strong>{{ $t('common.success') }}</strong>
-          {{ $t('steps[2].introduction[0]') }}
+          <sentence-separator/>
+          <span>{{ $t('steps[2].introduction[0]') }}</span>
         </p>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary"
@@ -131,7 +132,9 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -139,7 +142,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, FormGroup, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {

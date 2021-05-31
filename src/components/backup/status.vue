@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('neverRun[2].terminate') }}</strong>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <i18n :tag="false" path="getHelp.full">
           <template #forum>
             <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('somethingWentWrong[2].terminate') }}</strong>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <i18n :tag="false" path="getHelp.full">
           <template #forum>
             <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
@@ -98,6 +98,7 @@ import { DateTime } from 'luxon';
 import { mapGetters } from 'vuex';
 
 import DateTimeComponent from '../date-time.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import { ago } from '../../util/date-time';
@@ -105,7 +106,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'BackupStatus',
-  components: { DateTime: DateTimeComponent, Spinner },
+  components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
   data() {
     return {
       downloading: false

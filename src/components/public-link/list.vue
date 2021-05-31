@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <i18n :tag="false" path="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
@@ -58,6 +58,8 @@ import Loading from '../loading.vue';
 import PublicLinkCreate from './create.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -73,7 +75,8 @@ export default {
     ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions'),
     PublicLinkCreate,
     PublicLinkRevoke,
-    PublicLinkTable
+    PublicLinkTable,
+    SentenceSeparator
   },
   mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
   props: {

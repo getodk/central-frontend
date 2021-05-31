@@ -36,7 +36,8 @@ except according to the terms contained in the LICENSE file.
           <p>
             <span class="icon-check-circle"></span>
             <strong>{{ $t('common.success') }}</strong>
-            {{ $t('success[0]', created) }}
+            <sentence-separator/>
+            <span>{{ $t('success[0]', created) }}</span>
           </p>
           <field-key-qr-panel :field-key="created" :managed="managed"/>
           <p>{{ $t('success[1]', created) }}</p>
@@ -67,6 +68,7 @@ import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import Modal from '../modal.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
@@ -77,7 +79,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
-  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel },
+  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
   mixins: [request(), routes()],
   props: {
     state: {

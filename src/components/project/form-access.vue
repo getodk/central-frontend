@@ -20,7 +20,8 @@ except according to the terms contained in the LICENSE file.
         <spinner :state="awaitingResponse"/>
       </button>
       <p>
-        {{ $t('heading[0]') }}
+        <span>{{ $t('heading[0]') }}</span>
+        <sentence-separator/>
         <i18n :tag="false" path="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
@@ -52,7 +53,9 @@ import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
 import ProjectFormAccessTable from './form-access/table.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
@@ -68,6 +71,7 @@ export default {
     Loading,
     ProjectFormAccessStates,
     ProjectFormAccessTable,
+    SentenceSeparator,
     Spinner
   },
   mixins: [modal(), request()],

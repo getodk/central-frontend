@@ -23,7 +23,8 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <p>{{ $t('body[0]') }}</p>
             <p>
-              {{ $t('body[1]') }}
+              <span>{{ $t('body[1]') }}</span>
+              <sentence-separator/>
               <i18n :tag="false" path="moreInfo.helpArticle.full">
                 <template #helpArticle>
                   <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
@@ -56,6 +57,7 @@ import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
 import Option from '../../util/option';
@@ -73,6 +75,7 @@ export default {
     DocLink,
     EnketoFill,
     Loading,
+    SentenceSeparator,
     SubmissionList
   },
   props: {

@@ -15,19 +15,18 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[0].title') }}</template>
       <p>
         <strong>{{ $t('steps[0].body[0]') }}</strong>
-        {{ $t('steps[0].body[1]') }}
+        <sentence-separator/>
+        <span>{{ $t('steps[0].body[1]') }}</span>
+        <sentence-separator/>
         <doc-link to="central-forms/#updating-forms-to-a-new-version">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(1)">
       <template #title>{{ $t('steps[1].title') }}</template>
       <p>
-        <template v-if="form.submissions === 0">
-          {{ $t('steps[1].body[0].none') }}
-        </template>
-        <template v-else>
-          {{ $tcn('steps[1].body[0].any', form.submissions) }}
-        </template>
+        <template v-if="form.submissions === 0">{{ $t('steps[1].body[0].none') }}</template>
+        <template v-else>{{ $tcn('steps[1].body[0].any', form.submissions) }}</template>
+        <sentence-separator/>
         <i18n :tag="false" path="steps[1].body[1].full">
           <template #clickHere>
             <a href="#" @click.prevent="$emit('show-submission-options')">{{ $t('steps[1].body[1].clickHere') }}</a>
@@ -38,18 +37,15 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(2)">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        <template v-if="form.submissions === 0">
-          {{ $t('steps[2].body[0].none') }}
-        </template>
-        <template v-else>
-          {{ $tcn('steps[2].body[0].any', form.submissions) }}
-        </template>
+        <template v-if="form.submissions === 0">{{ $t('steps[2].body[0].none') }}</template>
+        <template v-else>{{ $tcn('steps[2].body[0].any', form.submissions) }}</template>
+        <sentence-separator/>
         <i18n :tag="false" path="steps[2].body[1].full">
           <template #submissionsTab>
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <doc-link to="central-submissions/">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
@@ -61,7 +57,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <doc-link to="central-forms/#managing-form-lifecycle">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
@@ -71,6 +67,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
@@ -80,7 +78,7 @@ const requestKeys = ['project', 'form'];
 
 export default {
   name: 'FormChecklist',
-  components: { ChecklistStep, DocLink },
+  components: { ChecklistStep, DocLink, SentenceSeparator },
   mixins: [routes()],
   computed: {
     ...requestData(requestKeys),

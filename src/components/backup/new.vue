@@ -23,9 +23,11 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </div>
         <p class="modal-introduction">
-          {{ $t('steps[0].introduction[0]') }}
+          <span>{{ $t('steps[0].introduction[0]') }}</span>
+          <sentence-separator/>
           <strong>{{ $t('steps[0].introduction[1]') }}</strong>
-          {{ $t('steps[0].introduction[2]') }}
+          <sentence-separator/>
+          <span>{{ $t('steps[0].introduction[2]') }}</span>
         </p>
         <form @submit.prevent="initiate">
           <form-group ref="passphrase" v-model="passphrase"
@@ -96,7 +98,9 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
@@ -104,7 +108,7 @@ const GOOGLE_BREAKPOINT = 601;
 
 export default {
   name: 'BackupNew',
-  components: { FormGroup, Modal, Spinner },
+  components: { FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {
