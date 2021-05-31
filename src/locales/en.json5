@@ -205,6 +205,8 @@
     "lastSubmission": "Latest Submission",
     "name": "Name",
     "submitterName": "Submitted by",
+    // This is the text of a table column header. The column indicates when each
+    // Submission was submitted.
     "submissionDate": "Submitted at",
     // This is the text of a table column header for a column that shows dates
     // and times.

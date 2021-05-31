@@ -18,8 +18,8 @@ except according to the terms contained in the LICENSE file.
         @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
       </button>
-      <div>{{ $t('heading[0]') }}</div>
-      <div>{{ $t('heading[1]') }}</div>
+      <p>{{ $t('heading[0]') }}</p>
+      <p>{{ $t('heading[1]') }}</p>
     </div>
     <table id="form-attachment-list-table" class="table">
       <thead>

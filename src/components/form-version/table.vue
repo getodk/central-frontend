@@ -43,7 +43,7 @@ export default {
   table-layout: fixed;
 
   th:nth-child(3) {
-    width: 210px;
+    width: 245px;
   }
 }
 </style>

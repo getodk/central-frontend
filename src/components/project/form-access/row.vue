@@ -113,7 +113,7 @@ export default {
     padding-bottom: 0;
   }
 
-  .form-control { width: 150px; }
+  .form-control { width: 160px; }
 
   .checkbox {
     margin-bottom: 0;

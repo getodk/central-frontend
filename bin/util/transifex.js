@@ -5,7 +5,40 @@ const { parse } = require('comment-json');
 
 const { logThenThrow } = require('./util');
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LOCALES
+
+const locales = {
+  en: {},
+  cs: {
+    pluralForms: 4
+  },
+  de: {},
+  es: {},
+  fr: {},
+  id: {
+    pluralForms: 1
+  },
+  ja: {
+    pluralForms: 1,
+    warnVariableSeparator: false
+  }
+};
+
 const sourceLocale = 'en';
+
+// Normalize `locales`.
+{
+  const normalizeLocale = (options) => ({
+    pluralForms: 2,
+    warnVariableSeparator: true,
+    ...options
+  });
+  for (const [locale, options] of Object.entries(locales))
+    locales[locale] = normalizeLocale(options);
+}
 
 
 
@@ -30,10 +63,6 @@ const parseVars = (pluralForm) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // PLURALS
-
-const pluralFormCounts = new Map()
-  .set('cs', 4)
-  .set('id', 1);
 
 // PluralForms is an array-like object with an element for each plural form of a
 // message. It provides methods to convert to or from an Vue I18n message or a
@@ -80,11 +109,8 @@ class PluralForms {
         begin = end;
       }
 
-      const expectedCount = pluralFormCounts.has(locale)
-        ? pluralFormCounts.get(locale)
-        : 2;
-      if (forms.length !== expectedCount)
-        logThenThrow(string, `Expected ${expectedCount} plural forms, but found ${forms.length}. Did you download the translations "to translate"?`);
+      if (forms.length !== locales[locale].pluralForms)
+        logThenThrow(string, `Expected ${locales[locale].pluralForms} plural forms, but found ${forms.length}. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
@@ -699,7 +725,7 @@ const deletePartialTranslation = ({ translated, parent }) => {
 const validateTranslation = (locale) => ({ source, translated, path }) => {
   if (translated == null) return;
   // Our Transifex translation checks should prevent these possibilities.
-  if (pluralFormCounts.get(locale) !== 1 &&
+  if (locales[locale].pluralForms !== 1 &&
     (source.length !== 1) !== (translated.length !== 1))
     logThenThrow({ source, translated }, 'pluralization mismatch');
   if (!translated.isEmpty() &&
@@ -712,10 +738,12 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
     if (translated[i].includes('@:') && translated[i] !== source[i])
       logThenThrow({ source, translated }, 'unexpected linked locale message');
 
-    const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
-    if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
-      // eslint-disable-next-line no-console
-      console.warn(`warning: ${path.join('.')}: variable without separator.`);
+    if (locales[locale].warnVariableSeparator) {
+      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
+      if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
+        // eslint-disable-next-line no-console
+        console.warn(`warning: ${path.join('.')}: variable without separator.`);
+      }
     }
   }
 };

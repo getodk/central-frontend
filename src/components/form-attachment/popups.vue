@@ -82,8 +82,7 @@ some point. -->
         <template v-else-if="shownDuringUpload">
           <p>{{ $tcn('duringUpload.total', uploadStatus.total) }}</p>
           <p id="form-attachment-popups-current">
-            <strong>{{ $t('duringUpload.current', { filename: uploadStatus.current }) }}</strong>
-            <span v-if="hasProgress">&nbsp;({{ percentLoaded }})</span>
+            <strong>{{ $t('duringUpload.current', { filename: uploadStatus.current, percentUploaded }) }}</strong>
           </p>
           <p v-if="uploadStatus.total !== 1">
             <template v-if="uploadStatus.remaining > 1">
@@ -145,13 +144,12 @@ export default {
       return this.shownDuringDragover || this.shownAfterSelection ||
         this.shownDuringUpload;
     },
-    hasProgress() {
+    percentUploaded() {
       const { progress } = this.uploadStatus;
-      return progress != null && progress.lengthComputable;
-    },
-    percentLoaded() {
-      const { loaded, total } = this.uploadStatus.progress;
-      return this.$n(loaded / total, 'percent');
+      const fraction = progress != null && progress.lengthComputable
+        ? progress.loaded / progress.total
+        : 0;
+      return this.$n(fraction, 'percent');
     }
   },
   updated() {
@@ -299,7 +297,7 @@ $popup-width: 300px;
     "duringUpload": {
       "total": "Please wait, uploading your {count} file: | Please wait, uploading your {count} files:",
       // Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form.
-      "current": "Sending {filename}",
+      "current": "Sending {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "{count} file remains. | {count} files remain.",
         "last": "This is the last file."

@@ -450,7 +450,7 @@
     },
     "submissionDate": {
       "string": "Submitted at",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
     },
     "time": {
       "string": "Time",
@@ -1351,7 +1351,7 @@
           "string": "{count, plural, one {Please wait, uploading your {count} file:} other {Please wait, uploading your {count} files:}}"
         },
         "current": {
-          "string": "Sending {filename}",
+          "string": "Sending {filename} ({percentUploaded})",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -2057,12 +2057,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "Download as XForm",
+          "string": "Download as XForm (.xml)",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
-          "string": "Download as XLSForm",
-          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
+          "string": "Download as XLSForm ({extension})",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
       }
     },

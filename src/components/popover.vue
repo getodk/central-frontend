@@ -122,6 +122,7 @@ export default {
 .popover {
   border: none;
   box-shadow: $box-shadow-popover;
+  font-family: inherit;
   max-width: none;
   padding: 0;
 

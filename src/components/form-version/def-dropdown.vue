@@ -22,14 +22,13 @@ except according to the terms contained in the LICENSE file.
         <a href="#" @click.prevent="viewXml">{{ $t('action.viewXml') }}</a>
       </li>
       <li>
-        <!-- '(.xml)' may be an issue for an RTL locale. -->
         <a :href="defPath('.xml')" :download="`${version.xmlFormId}.xml`">
-          {{ $t('action.downloadXForm') }} (.xml)
+          {{ $t('action.downloadXForm') }}
         </a>
       </li>
       <li v-if="version.excelContentType != null">
         <a :href="defPath(excelExtension)">
-          {{ $t('action.downloadXlsForm') }} ({{ excelExtension }})
+          {{ $t('action.downloadXlsForm', { extension: excelExtension }) }}
         </a>
       </li>
     </ul>
@@ -86,10 +85,10 @@ export default {
       "viewXml": "View XML in browser",
       // This is the text of a link to download a Form definition. The word
       // "XForm" should not be translated.
-      "downloadXForm": "Download as XForm",
-      // This is the text of a link to download a Form definition. The word
-      // "XLSForm" should not be translated.
-      "downloadXlsForm": "Download as XLSForm"
+      "downloadXForm": "Download as XForm (.xml)",
+      // This is the text of a link to download a Form definition. {extension}
+      // is either .xls or .xlsx. The word "XLSForm" should not be translated.
+      "downloadXlsForm": "Download as XLSForm ({extension})"
     }
   }
 }
