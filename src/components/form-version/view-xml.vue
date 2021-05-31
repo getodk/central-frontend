@@ -107,6 +107,9 @@ export default {
   },
   "id": {
     "title": "Lihat XML"
+  },
+  "ja": {
+    "title": "XMLの閲覧"
   }
 }
 </i18n>

@@ -169,6 +169,16 @@ export default {
       "once": "Kiriman data tunggal"
     },
     "onceHelp": "Izinkan hanya satu kiriman data dari setiap browser."
+  },
+  "ja": {
+    "title": "一般公開リンクの作成",
+    "introduction": [
+      "このリンクを持っている人は、Webブラウザでこのフォームを記入することができます。表示名を使うことで、リンクをどこに投稿したのか、誰と共有したのか、いつから有効化するかなどの詳細を思い出せます。"
+    ],
+    "field": {
+      "once": "単一のサブミッション"
+    },
+    "onceHelp": "各プラウザから一度しかサブミッションを受け付けない"
   }
 }
 </i18n>

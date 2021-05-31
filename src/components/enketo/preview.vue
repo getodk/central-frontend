@@ -112,6 +112,15 @@ export default {
       "processing": "Pratinjau untuk formulir ini masih dalam proses pengerjaan. Silakan muat ulang dan coba lagi nanti.",
       "notOpen": "Pada versi ODK Central ini, pratinjau hanya tersedia untuk formulir dalam kondisi terbuka."
     }
+  },
+  "ja": {
+    "action": {
+      "preview": "プレビュー"
+    },
+    "disabled": {
+      "processing": "このフォームのプレビュー処理が終了していません。後で更新して、もう一度試して下さい。",
+      "notOpen": "このバージョンのODK Centralでは、プレビューは公開状態でのみ利用可能です。"
+    }
   }
 }
 </i18n>

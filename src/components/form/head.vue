@@ -333,6 +333,22 @@ $tab-li-margin-top: 5px;
         "create": "Buat draf baru"
       }
     }
+  },
+  "ja": {
+    "projectNav": {
+      "action": {
+        "back": "プロジェクトの概要に戻る"
+      }
+    },
+    "formNav": {
+      "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
+    },
+    "draftNav": {
+      "title": "下書き",
+      "action": {
+        "create": "新規下書きの作成"
+      }
+    }
   }
 }
 </i18n>

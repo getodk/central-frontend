@@ -118,6 +118,13 @@ export default {
       "Apakah Anda yakin ingin memutus data cadangan otomatis?",
       "Anda harus mengonfigurasi ulang dari awal untuk mengaktifkannya kembali, dan tindakan ini tidak bisa dibatalkan/dikembalikan."
     ]
+  },
+  "ja": {
+    "title": "自動バックアップの中止",
+    "introduction": [
+      "本当に自動バックアップを中止しますか？",
+      "再開するにはまた最初から設定し直さなければならず、この操作は元に戻すことができません。"
+    ]
   }
 }
 </i18n>

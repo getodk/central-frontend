@@ -90,6 +90,12 @@ export default {
     "introduction": [
       "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek yang aksesnya sudah diberikan kepada mereka."
     ]
+  },
+  "ja": {
+    "title": "プロジェクトとは？",
+    "introduction": [
+      "プロジェクトでは、関連するフォームやユーザーをグループ化することができます。Webユーザーには役割が与えられ、ブラウザを使ってフォームを入力するなど、プロジェクト内で特定のアクションを実行できます。プロジェクトのアプリユーザーは、自分がアクセス権を持つプロジェクト内のフォームのみを閲覧できます。"
+    ]
   }
 }
 </i18n>

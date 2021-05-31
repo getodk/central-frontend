@@ -73,6 +73,9 @@ export default {
   },
   "fr": {
     "body": "Le téléchargement du fichier {filename} va bientôt commencer. Une fois qu'il aura démarré, vous pourrez quitter la page."
+  },
+  "ja": {
+    "body": "{filename}はすぐにダウンロードされます。ダウンロードが始めると、このページから移動しても構いません。"
   }
 }
 </i18n>

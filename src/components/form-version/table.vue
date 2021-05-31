@@ -95,6 +95,12 @@ export default {
       "published": "Diterbitkan",
       "definition": "Definisi"
     }
+  },
+  "ja": {
+    "header": {
+      "published": "公開済み",
+      "definition": "定義"
+    }
   }
 }
 </i18n>

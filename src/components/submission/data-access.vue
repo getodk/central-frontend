@@ -105,6 +105,13 @@ export default {
       "analyze": "Analisa lewat OData"
     },
     "analyzeDisabled": "Akses OData tidak tersedia karena enkripsi Formulir"
+  },
+  "ja": {
+    "action": {
+      "apiAccess": "APIアクセス",
+      "analyze": "ODataで解析"
+    },
+    "analyzeDisabled": "フォームの暗号化のため、ODataによるアクセスは利用できません"
   }
 }
 </i18n>

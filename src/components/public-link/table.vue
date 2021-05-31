@@ -98,6 +98,12 @@ export default {
       "once": "Kiriman Data Tunggal",
       "accessLink": "Tautan Akses"
     }
+  },
+  "ja": {
+    "header": {
+      "once": "単一のサブミッション",
+      "accessLink": "アクセスリンク"
+    }
   }
 }
 </i18n>

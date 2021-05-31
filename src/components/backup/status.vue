@@ -468,6 +468,52 @@ export default {
     "alert": {
       "download": "Pencadangan sedang berlangsung dan akan dienkripsi selanjutnya diunduh ke komputermu. Perlu waktu beberapa saat. Saat pengunduhan dimulai, kamu bisa meninggalkan laman ini."
     }
+  },
+  "ja": {
+    "getHelp": {
+      "full": "うまくいかない場合は、{forum}を試して下さい。",
+      "forum": "コミュニティーフォーラム"
+    },
+    "notConfigured": [
+      "バックアップは設定されていません",
+      "データサーバは自動バックアップ設定をされていません。",
+      {
+        "full": "他の方法でデータをバックアップしている場合を除き、今すぐバックアップすることを{recommended}。確信が持てない場合は、念のためにやっておいた方がいいでしょう。",
+        "recommended": "強く推奨します"
+      },
+      "自動データバックアップは本システム経由で毎日行われます。全てのデータは、あなたが設定したパスワードで暗号化されバックアップされますので、あなたによって復号化は可能です。"
+    ],
+    "neverRun": [
+      "設定されたバックアップは未実行です。",
+      "ここ2、3日の間にバックアップを設定していれば、これは正常です。そうでない場合は、何か問題が発生しています。",
+      {
+        "full": "このような場合、最も可能性の高い対処法は、接続を{terminate}して再度設定することです。または、サービスを再起動することです。",
+        "terminate": "終了"
+      }
+    ],
+    "somethingWentWrong": [
+      "何かが間違えています！",
+      {
+        "full": "最終バックアップは、{moreThanThreeDaysAgo}に正常に完了しています",
+        "moreThanThreeDaysAgo": "3日以上前"
+      },
+      {
+        "full": "最も可能性の高い対処法は、接続を{terminate}して再度設定することです。または、サービスを再起動することです。",
+        "terminate": "終了"
+      }
+    ],
+    "success": [
+      "バックアップ中",
+      "{dateTime}に最新のバックアップは成功しています。"
+    ],
+    "action": {
+      "setUp": "今すぐ設定",
+      "download": "今すぐバックアップをダウンロード",
+      "terminate": "終了"
+    },
+    "alert": {
+      "download": "バックアップは現在実行中で、暗号化されてあなたのコンピュータにダウンロードされます。これにはしばらく時間がかかります。ダウンロードが始まると、このページから移動しても構いません。"
+    }
   }
 }
 </i18n>

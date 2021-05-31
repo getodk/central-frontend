@@ -183,6 +183,13 @@ export default {
       "state": "Status",
       "appUserAccess": "Akses Pengguna Aplikasi"
     }
+  },
+  "ja": {
+    "draftTitle": "このフォームにはまだ公開バージョンがありません。下書きが公開されるまで、デバイス上には表示されません。フォームを公開すると、ここで示される設定が適応されます。",
+    "field": {
+      "state": "状態",
+      "appUserAccess": "アプリユーザーのアクセス"
+    }
   }
 }
 </i18n>

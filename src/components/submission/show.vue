@@ -211,6 +211,15 @@ export default {
     "alert": {
       "updateReviewState": "État sauvegardé!"
     }
+  },
+  "ja": {
+    "back": {
+      "title": "サブミッションの詳細",
+      "back": "サブミッション・テーブルに戻る"
+    },
+    "alert": {
+      "updateReviewState": "レビュー・ステータス保存完了！"
+    }
   }
 }
 </i18n>

@@ -193,6 +193,12 @@ export default {
     "field": {
       "projectRole": "Peran Proyek"
     }
+  },
+  "ja": {
+    "cannotAssignRole": "自分自身のプロジェクトの役割を変更することはできません。",
+    "field": {
+      "projectRole": "プロジェクトでの役割"
+    }
   }
 }
 </i18n>

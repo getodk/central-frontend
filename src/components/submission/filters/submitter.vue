@@ -87,6 +87,11 @@ export default {
     "field": {
       "submitter": "Terkirim oleh"
     }
+  },
+  "ja": {
+    "field": {
+      "submitter": "フォーム送信者"
+    }
   }
 }
 </i18n>

@@ -166,6 +166,14 @@ export default {
   "id": {
     "attachments": "File Media",
     "present": "{count} berkas"
+  },
+  "ja": {
+    "reviewState": "レビュー・ステータス",
+    "deviceId": "デバイスID",
+    "attachments": "メディアファイル",
+    "present": "ファイル数：{count}",
+    "expected": "推定{count}件のサブミッション",
+    "attachmentSummary": "{present} / {expected}"
   }
 }
 </i18n>

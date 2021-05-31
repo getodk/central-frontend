@@ -115,6 +115,12 @@ export default {
     "users": "Pengguna",
     "system": "Sistem",
     "current": "Sekarang ini"
+  },
+  "ja": {
+    "projects": "プロジェクト",
+    "users": "ユーザー",
+    "system": "システム",
+    "current": "現在"
   }
 }
 </i18n>

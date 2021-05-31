@@ -125,6 +125,13 @@ export default {
       "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?",
       "Tindakan ini tidak dapat dibatalkan/dikembalikan."
     ]
+  },
+  "ja": {
+    "title": "フォームの削除",
+    "introduction": [
+      "フォーム{name}および、そのアップロードデータが削除されます。 本当に削除してもよろしいですか？",
+      "この操作は取り消しできません。"
+    ]
   }
 }
 </i18n>

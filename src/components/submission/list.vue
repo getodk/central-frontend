@@ -500,6 +500,28 @@ export default {
     },
     "emptyTable": "Belum ada kiriman data.",
     "noMatching": "Tidak ada Pengiriman yang cocok."
+  },
+  "ja": {
+    "loading": {
+      "withoutCount": "サブミッションの読み込み中...",
+      "all": "{count}のサブミッションを読み込み中...",
+      "first": "{count}件のサブミッションの内、最初の{top}を読み込み中...",
+      "middle": "残りのサブミッション{count}件の内、さらに{top}件を読み込み中...",
+      "last": {
+        "multiple": "最後の{count}件のサブミッションを読み込み中...",
+        "one": "最後のサブミッションを読み込み中..."
+      },
+      "filtered": {
+        "withoutCount": "一致するサブミッションの読み込み中...",
+        "middle": "一致する残りのサブミッション{count}件の内、さらに{top}件を読み込み中...",
+        "last": {
+          "multiple": "一致する最後の{count}件のサブミッションを読み込み中...",
+          "one": "最後の一致するサブミッションを読み込み中..."
+        }
+      }
+    },
+    "emptyTable": "表示できるサブミッションはありません",
+    "noMatching": "一致するサブミッションはありません。"
   }
 }
 </i18n>

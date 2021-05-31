@@ -115,6 +115,14 @@ export default {
       "roles": "Pengaturan Peran"
     },
     "comingSoon": "(akan datang)"
+  },
+  "ja": {
+    "title": "ユーザー管理",
+    "tab": {
+      "users": "Webユーザー",
+      "roles": "役割設定"
+    },
+    "comingSoon": "（近日公開）"
   }
 }
 </i18n>

@@ -150,6 +150,16 @@ export default {
         "noUndo": "Tindakan ini tidak bisa dibatalkan/dikembalikan"
       }
     ]
+  },
+  "ja": {
+    "title": "プロジェクトのアーカイブ",
+    "introduction": [
+      "プロジェクト \"{name}\"をアーカイブしようとしています。現在と同様に機能しますが、Centralホームページのプロジェクトリストの一番下に表示されます。",
+      {
+        "full": "{noUndo}が、プロジェクトを非アーカイブ化する機能は将来的にリリースされる予定です。",
+        "noUndo": "この操作は取り消しできません。"
+      }
+    ]
   }
 }
 </i18n>

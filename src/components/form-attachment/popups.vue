@@ -491,6 +491,40 @@ $popup-width: 300px;
         "last": "Ini adalah dokumen terakhir."
       }
     }
+  },
+  "ja": {
+    "title": "ファイルのアップロード",
+    "duringDragover": {
+      "dropToUpload": "{attachmentName}をこのファイルとしてアップロードする。",
+      "dragover": "置き換えたいファイルエントリにドラッグ&ドロップすると、アップロードされます。",
+      "dropToPrepare": {
+        "full": "このフォームにアップロードする{countOfFiles}のファイルを準備し、今すぐドロップしてください。",
+        "countOfFiles": "ファイル数：{count}"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": [
+          "{countOfFiles}はアップロードできます。"
+        ],
+        "countOfFiles": "ファイル数：{count}"
+      },
+      "someUnmatched": {
+        "full": [
+          "{countOfFiles}は認識できない名前のため無視されます。それらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。"
+        ],
+        "countOfFiles": "ファイル数：{count}"
+      },
+      "noneMatched": "アップロードしようとしているファイルが認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。"
+    },
+    "duringUpload": {
+      "total": "お待ちください。{count}をアップロードしています。",
+      "current": "{filename}を送信中",
+      "remaining": {
+        "beforeLast": "{count}ファイルが残っています",
+        "last": "最後ファイル"
+      }
+    }
   }
 }
 </i18n>

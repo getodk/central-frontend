@@ -150,6 +150,16 @@ export default {
       "Apakah Anda yakin ingin mengunggah {filename} dengan nama {attachmentName}?",
       "Kami sedang mengecek ulang karena nama dokumen tidak cocok."
     ]
+  },
+  "ja": {
+    "title": {
+      "upload": "ファイルのアップロード",
+      "replace": "ファイルの置換"
+    },
+    "introduction": [
+      "{filename}を{attachmentName}としてアップロードしますか？",
+      "ファイル名が一致しないため、ダブルチェックしています。"
+    ]
   }
 }
 </i18n>

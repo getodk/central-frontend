@@ -186,6 +186,21 @@ export default {
     "alert": {
       "delete": "Formulir {name} telah dihapus."
     }
+  },
+  "ja": {
+    "state": {
+      "title": "フォームの状態",
+      "body": {
+        "full": "フォームの状態を設定するには、各プロジェクトのページ{formAccessSettings}を訪問して下さい。",
+        "formAccessSettings": "フォームアクセスの設定"
+      }
+    },
+    "action": {
+      "delete": "このフォームを削除"
+    },
+    "alert": {
+      "delete": "フォーム\"{name}\"は削除されました。"
+    }
   }
 }
 </i18n>

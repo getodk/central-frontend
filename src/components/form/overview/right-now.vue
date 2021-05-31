@@ -224,6 +224,23 @@ export default {
       ],
       "submissions": "Kiriman data"
     }
+  },
+  "ja": {
+    "version": {
+      "full": "このフォームの{publishedVersion}",
+      "publishedVersion": "公開されたバージョン"
+    },
+    "stateCaption": {
+      "open": "このフォームはダウンロード可能で、サブミッションを受け付けています。",
+      "closing": "このフォームはダウンロードできませんが、サブミッションは受け付けています。",
+      "closed": "このフォームはダウンロードできませんし、サブミッションも受け付けていません。"
+    },
+    "submissions": {
+      "full": [
+        "このフォームの{submissions}は保存されました。"
+      ],
+      "submissions": "サブミッション"
+    }
   }
 }
 </i18n>

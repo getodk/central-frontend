@@ -133,6 +133,15 @@ export default {
     "alert": {
       "logOut": "Anda sudah berhasil keluar."
     }
+  },
+  "ja": {
+    "notLoggedIn": "未ログイン状態",
+    "action": {
+      "logOut": "ログアウト"
+    },
+    "alert": {
+      "logOut": "ログアウト成功"
+    }
   }
 }
 </i18n>

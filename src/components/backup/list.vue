@@ -164,6 +164,13 @@ export default {
       "create": "Berhasil! Data cadangan otomatis telah dikonfigurasi.",
       "terminate": "Data cadangan otomatis Anda telah berakhir. Anda direkomendasikan untuk menyetel cadangan otomatis baru secepatnya."
     }
+  },
+  "ja": {
+    "auditsTitle": "最新バックアップ",
+    "alert": {
+      "create": "成功！自動バックアップは設定されました。",
+      "terminate": "あなたの自動バックアップは中止されました。なるべく早急に新たなバックアップの設定を推奨します。"
+    }
   }
 }
 </i18n>

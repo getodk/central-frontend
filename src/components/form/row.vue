@@ -211,6 +211,15 @@ export default {
     "action": {
       "fill": "Isi Formulir"
     }
+  },
+  "ja": {
+    "lastSubmission": "（最終{dateTime}）",
+    "action": {
+      "fill": "フォームを記入"
+    },
+    "formClosedTip": "このフォームは終了しています。ダウンロードやサブミッションは出来ません。",
+    "formClosingTip": "このフォームはクロージング状態です。ダウンロードは出来ませんが、サブミッションは受け付けています。",
+    "formUnpublishedTip": "このフォームは公開バージョンがまだありません"
   }
 }
 </i18n>

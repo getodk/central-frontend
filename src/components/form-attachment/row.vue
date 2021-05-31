@@ -230,6 +230,19 @@ export default {
       "text": "Belum terunggah",
       "title": "Untuk menunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman ini"
     }
+  },
+  "ja": {
+    "type": {
+      "image": "画像",
+      "audio": "音声",
+      "video": "ビデオ",
+      "file": "データファイル"
+    },
+    "replace": "置換",
+    "notUploaded": {
+      "text": "アップロード未完了",
+      "title": "1つ以上のファイルをドラッグ＆ドロップしてアップロードする"
+    }
   }
 }
 </i18n>

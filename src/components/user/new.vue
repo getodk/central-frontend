@@ -127,6 +127,12 @@ export default {
     "introduction": [
       "Setelah Anda membuat akun, instruksi untuk mengatur kata sandi dan tahap selanjutnya akan dikirimkan ke alamat email yang Anda sediakan."
     ]
+  },
+  "ja": {
+    "title": "Webユーザーの作成",
+    "introduction": [
+      "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送られます。"
+    ]
   }
 }
 </i18n>

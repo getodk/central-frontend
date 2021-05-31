@@ -331,6 +331,38 @@ export default {
     "alert": {
       "archive": "Proyek \"{name}\" telah diarsipkan."
     }
+  },
+  "ja": {
+    "encryption": {
+      "title": "暗号化",
+      "body": {
+        "unencrypted": [
+          "このプロジェクトでは、サブミットデータの暗号化は有効化されていません。"
+        ],
+        "encrypted": [
+          {
+            "full": "このプロジェクトのサブミッションの暗号化は、{enabled}",
+            "enabled": "有効化"
+          },
+          "このバージョンのODK Centralでは、一度有効化された暗号化は無効化できません。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "暗号化を有効にする"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "このプロジェクトをアーカイブする"
+      },
+      "archived": [
+        "このプロジェクトはアーカイブされました",
+        "このバージョンのODK Centralでは、プロジェクトを非アーカイブすることはできません。しかし、プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
+      ]
+    },
+    "alert": {
+      "archive": "プロジェクト\"{name}\"はアーカイブされました"
+    }
   }
 }
 </i18n>

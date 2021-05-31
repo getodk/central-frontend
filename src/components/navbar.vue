@@ -232,6 +232,11 @@ $shadow-color: #dedede;
     "action": {
       "toggle": "Navigasi Toggle"
     }
+  },
+  "ja": {
+    "action": {
+      "toggle": "ナビゲーションを有効化"
+    }
   }
 }
 </i18n>

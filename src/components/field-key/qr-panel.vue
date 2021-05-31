@@ -369,6 +369,41 @@ export default {
       },
       "Pindai kode QR ini untuk mengonfigurasi perangkat dengan akun tersebut “{displayName}”."
     ]
+  },
+  "ja": {
+    "title": {
+      "managed": "クライアントの設定コード",
+      "legacy": "Legacyクライアントの設定コード"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "これは{managedCode}です",
+          "managedCode": "Managed QRコード"
+        },
+        "legacy": {
+          "full": "これは{legacyCode}です",
+          "legacyCode": "Legacy QRコード"
+        }
+      },
+      {
+        "managed": "ODK Collectは、「{displayName}」で利用可能なフォームと完全に一致し、アップデートも自動的に適用されます。ユーザーが手動で空フォームを取得する必要はありません。さらに、インターネット接続が見つかった時点で、確定済のフォームが自動的に送信されます。",
+        "legacy": "ユーザーは、手動でデバイスにに空フォームを取得し、更新するフォームを決定する必要があります。また、確定フォームを手動で送信する必要があります。"
+      },
+      {
+        "managed": {
+          "full": "以前のバージョン、{switchToLegacy}",
+          "switchToLegacy": "{legacyCode}に切り替える",
+          "legacyCode": "Legacy QRコード"
+        },
+        "legacy": {
+          "full": "よりコントロールされた、確実なプロセスのためには、{switchToManaged}。",
+          "switchToManaged": "{managedCode}に切り替える",
+          "managedCode": "Managed QRコード"
+        }
+      },
+      "このQRコードをスキャンして、アカウント名\"{displayName}\"のデバイスを設定する"
+    ]
   }
 }
 </i18n>

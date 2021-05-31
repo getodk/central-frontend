@@ -197,6 +197,13 @@ export default {
       "Anda bisa menggunakan kode konfigurasi di sebelah kanan untuk mengatur perangkat seluler untuk mengunduh draf ini. Anda juga bisa mengklik tombol \"Baru\" untuk membuat kiriman data baru lewat web browser Anda.",
       "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
     ]
+  },
+  "ja": {
+    "title": "下書きのテスト",
+    "body": [
+      "右の設定コードを使って、モバイルデバイスでこの下書きフォームをダウンロードする設定ができます。また、上の「新規作成」ボタンをクリックすると、Webブラウザから新しいサブミッションを作成することができます。",
+      "下書きフォームへのサブミッションは、以下のテスト表に入り、データのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト送信されたサブミッションは永久に削除されます。"
+    ]
   }
 }
 </i18n>

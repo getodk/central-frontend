@@ -100,6 +100,11 @@ export default {
     "header": {
       "idAndVersion": "ID dan Versi"
     }
+  },
+  "ja": {
+    "header": {
+      "idAndVersion": "フォームIDとバージョン"
+    }
   }
 }
 </i18n>

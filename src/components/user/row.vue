@@ -227,6 +227,16 @@ export default {
     "action": {
       "retire": "Pengguna Berhenti"
     }
+  },
+  "ja": {
+    "cannotAssignRole": "あなたは自分自身のサーバーでの役割を編集できません。",
+    "field": {
+      "sitewideRole": "サーバーでの役割"
+    },
+    "cannotRetire": "自分自身を除外させることはできません。",
+    "action": {
+      "retire": "ユーザーの除外"
+    }
   }
 }
 </i18n>

@@ -157,6 +157,16 @@ export default {
       "text": "Belum tersedia",
       "title": "Tautan Akses Publik belum tersedia. Tautan belum selesai diproses. Silakan muat ulang dan coba lagi nanti."
     }
+  },
+  "ja": {
+    "action": {
+      "revoke": "無効化する"
+    },
+    "revoked": "無効済",
+    "unavailable": {
+      "text": "まだ利用できません",
+      "title": "一般公開リンクはまだ利用できません。処理が終了していません。後で更新して、もう一度試して下さい。"
+    }
   }
 }
 </i18n>

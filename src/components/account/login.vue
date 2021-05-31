@@ -186,6 +186,14 @@ export default {
     "problem": {
       "401_2": "Alamat email dan/atau kata sandi salah."
     }
+  },
+  "ja": {
+    "alert": {
+      "alreadyLoggedIn": "ユーザーがすでにログインしています。続けるにはページを更新してください。"
+    },
+    "problem": {
+      "401_2": "メールアドレスとパスワードの一方、または両方が違います。"
+    }
   }
 }
 </i18n>

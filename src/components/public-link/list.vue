@@ -271,6 +271,26 @@ export default {
       "create": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar.",
       "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
     }
+  },
+  "ja": {
+    "action": {
+      "create": "一般公開リンクの作成"
+    },
+    "heading": [
+      {
+        "full": "一般公開リンクを持っている人は誰でも、Webブラウザでこのフォームに記入できます。複数のリンクを作成し、フォームの異なる配布状況を追跡したり、特定のグループの人々がフォームにアクセスできる時間を制限することが可能です。これらのリンクは、フォームが公開中の{state}の場合にのみ機能します。",
+        "state": "ステータス"
+      },
+      {
+        "full": "一般公開リンクは、自己申告を目的としています。同じフォームを何度も送信する必要があるデータ収集者がいる場合は、{clickHere}して他の方法をご確認ください。",
+        "clickHere": "ここをクリック"
+      }
+    ],
+    "emptyTable": "このフォームに一般公開リンクはありません。",
+    "alert": {
+      "create": "成功！一般公開リンクが作成され、利用可能です。 以下をコピーして配布できます。",
+      "revoke": "一般公開リンク\"{displayName}\"の無効化に成功しました。これ以降、このリンクでのサブミッションは受付られません。"
+    }
   }
 }
 </i18n>

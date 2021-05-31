@@ -386,6 +386,39 @@ export default {
         "article": "artikel ini"
       }
     }
+  },
+  "ja": {
+    "title": "ODataを利用",
+    "introduction": [
+      "ODataは、ツールとサービス間での新しいデータ転送の標準です。マイクロソフト社のエクセルのような無料で強力な解析ツール、{powerBi}や{r}はODataを介してデータを取り込み、解析することが可能です。",
+      "ODataには多くの利点がありますが、重要なのは、数字や地理データのような複雑なタイプの転送を完全にサポートしていることです。また、それを使用しているどのツールとも簡単に最新版のデータを同期させることができることです。",
+      "ODdataの利用を始めるにあたり、利用するツールを選び、そのツールにリンクをコピーしてください。"
+    ],
+    "tab": {
+      "microsoft": "Excel/Power BI",
+      "other": "その他"
+    },
+    "help": {
+      "microsoft": {
+        "full": "エクセルでODataを使うには、{pageForExcel}を参照下さい。またPower BIを使う場合、{pageForPowerBi}を参照下さい。",
+        "pageForExcel": "このページ",
+        "pageForPowerBi": "このページ"
+      },
+      "r": [
+        {
+          "full": "{r}からCentralのデータにアクセスするには、{ruODK}を使うことを推奨しています。ruODKのvignettesにある{oData}と{restful}APIの両方の利用例を参照して下さい。",
+          "restful": "RESTful"
+        },
+        {
+          "full": "ODKと同様に、ruODKもまたコミュニティーメンバーによって開発・維持されています。もし開発に参加したければ、詳細情報は{here}です。",
+          "here": "こちら"
+        }
+      ],
+      "other": {
+        "full": "ODataのサポートの全詳細に関しては、{article}をご覧ください。",
+        "article": "この記事"
+      }
+    }
   }
 }
 </i18n>

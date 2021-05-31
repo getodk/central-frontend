@@ -94,6 +94,13 @@ export default {
       "target": "Target",
       "details": "Rincian"
     }
+  },
+  "ja": {
+    "header": {
+      "initiator": "イニシエーター",
+      "target": "ターゲット",
+      "details": "詳細"
+    }
   }
 }
 </i18n>

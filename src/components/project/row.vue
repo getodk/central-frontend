@@ -121,6 +121,11 @@ export default {
   "id": {
     "help": "Apa itu Proyek?",
     "noSubmission": "(tidak ada)"
+  },
+  "ja": {
+    "help": "プロジェクトとは？",
+    "noSubmission": "（なし）",
+    "encryptionTip": "このプロジェクトは管理された暗号化を使用しています。"
   }
 }
 </i18n>

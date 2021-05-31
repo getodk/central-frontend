@@ -174,6 +174,11 @@ export default {
     "header": {
       "stateAndActions": "État et actions"
     }
+  },
+  "ja": {
+    "header": {
+      "stateAndActions": "ステータスとアクション"
+    }
   }
 }
 </i18n>

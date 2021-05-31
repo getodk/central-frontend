@@ -201,6 +201,20 @@ export default {
         "primaryDataTable": "Tabel data primer (.csv)"
       }
     }
+  },
+  "ja": {
+    "action": {
+      "download": {
+        "unfiltered": "{count}レコードのダウンロード",
+        "filtered": {
+          "withoutCount": "該当レコードのダウンロード",
+          "withCount": "{count}件の該当レコードのダウンロード"
+        },
+        "withMedia": "全データとメディアファイルの保存（.zip形式）",
+        "withoutMedia": "メディアファイルを除く、全データの保存（.zip形式）",
+        "primaryDataTable": "データテーブル（.csv形式）"
+      }
+    }
   }
 }
 </i18n>

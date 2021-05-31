@@ -136,6 +136,14 @@ export default {
       "downloadXForm": "Unduh sebagai XForm",
       "downloadXlsForm": "Unduh sebagai XLSForm"
     }
+  },
+  "ja": {
+    "action": {
+      "def": "定義",
+      "viewXml": "XMLをブラウザで表示する",
+      "downloadXForm": "XFormとしてダウンロード",
+      "downloadXlsForm": "XLSFormとしてダウンロード"
+    }
   }
 }
 </i18n>

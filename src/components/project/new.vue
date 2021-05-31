@@ -125,6 +125,12 @@ export default {
     "introduction": [
       "Proyek mengelompokkan Formulir dan Pengguna Aplikasi untuk mempermudah pengorganisiran dan pengaturan, baik melalui website ini maupun perangkat koleksi data Anda."
     ]
+  },
+  "ja": {
+    "title": "プロジェクトの作成",
+    "introduction": [
+      "プロジェクトでは、フォームやアプリユーザーをグループ化して、このWebサイトとデータ収集デバイスの両方で、整理と管理を簡易化します。"
+    ]
   }
 }
 </i18n>

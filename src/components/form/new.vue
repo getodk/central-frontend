@@ -516,6 +516,47 @@ $drop-zone-vpadding: 15px;
         "update": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
       }
     ]
+  },
+  "ja": {
+    "title": {
+      "create": "フォームの作成",
+      "update": "新規の定義フォームのアップロード"
+    },
+    "introduction": [
+      {
+        "create": "フォームを作成するため、XForms XMLファイル、またはXLSForm Excelファイルをアップロードして下さい。",
+        "update": "下書きをアップデートするため、XForms XMLファイル、またはXLSForm Excelファイルをアップロードして下さい。"
+      },
+      {
+        "full": "もしまだ持っていない場合、フォームのデザインをサポートする{tools}。",
+        "tools": "ツールは利用可能です"
+      },
+      "もしメディアファイルがある場合、フォームを作成後、次のページでアップロードできます。"
+    ],
+    "dropZone": {
+      "full": "アップロードするには、ここにファイルをドロップする、または{chooseOne}",
+      "chooseOne": "１つ選択"
+    },
+    "action": {
+      "upload": "アップロード",
+      "uploadAnyway": "ひとまず、アップロードする"
+    },
+    "alert": {
+      "fileRequired": "ファイルを選択"
+    },
+    "problem": {
+      "400_8": "アップロードされた定義フォームは、このフォームのものではないようです。formIdが間違っています(\"{expected}\"であるべきですが、\"{actual}\"となっています)。",
+      "400_15": "XLSFormは変換できませんでした：{error}",
+      "409_3": "このプロジェクトには、フォームID\"{xmlFormId}\"のフォームがすでに存在しています。"
+    },
+    "warningsText": [
+      "このXLSFormファイルは利用できますが、以下の問題が起こる可能性があります（変換時の警告）：",
+      "問題点を修正して再度試して下さい。",
+      {
+        "create": "これらの問題が無視できると判断した場合は、ボタンをクリックしてフォームを作成してください。",
+        "update": "もしこれら問題が無視できると判断した場合、ボタンをクリックして下書きを更新してください。"
+      }
+    ]
   }
 }
 </i18n>
