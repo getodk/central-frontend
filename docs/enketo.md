@@ -37,7 +37,16 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
     },
 ```
 
-- Configure Nginx in ODK Central Frontend. The following lines have already been added to `nginx.conf`. They create a reverse proxy for the Enketo server in the same way as the reverse proxy to the ODK Central Backend server. 
+- Run the Enketo server via `npm start` (from the [Enketo Documentation](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-run)).
+
+- There will be three services running:
+	* ODK Central Frontend (via Nginx) on port `8989`
+	* ODK Central Backend on port `8383`
+	* Enketo server on port `8005`
+
+
+### Notes on existing Central Frontend configuration
+- The following lines have already been added to [`nginx.conf`](../nginx.conf). They create a reverse proxy for the Enketo server in the same way as the reverse proxy to the ODK Central Backend server.
 
 ```
     location /- {
@@ -47,12 +56,6 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
     }
 ```
 
-- Run the Enketo server via `npm start` (from the [Enketo Documentation](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-run)).
-
-- There will be three services running:
-	* ODK Central Frontend (via Nginx) on port `8989`
-	* ODK Central Backend on port `8383`
-	* Enketo server on port `8005`
 
 ### Notes on error messages
 
