@@ -11,11 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="submission-update-review-state" :state="state"
-    :hideable="!awaitingResponse" backdrop @hide="$emit('hide')"
-    @shown="$refs.form.querySelector('input:checked').focus()">
+    :hideable="!awaitingResponse" backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <form ref="form" @submit.prevent="submit">
+      <form @submit.prevent="submit">
         <div class="row">
           <div class="col-xs-4">
             <div class="radio">
@@ -59,7 +58,6 @@ import request from '../../mixins/request';
 import reviewState from '../../mixins/review-state';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 const selectableStates = ['approved', 'hasIssues', 'rejected'];
 
@@ -77,37 +75,31 @@ export default {
       type: String,
       required: true
     },
-    instanceId: {
-      type: String,
-      required: true
-    }
+    submission: Object
   },
   data() {
-    const { submission } = this.$store.state.request.data;
-    const currentState = submission.__system.reviewState;
     return {
       awaitingResponse: false,
-      selectedState: selectableStates.includes(currentState)
-        ? currentState
-        : 'approved',
+      selectedState: 'approved',
       notes: ''
     };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['submission']),
     selectableStates() {
       return selectableStates;
     }
   },
   watch: {
     state(state) {
-      if (!state) {
+      if (state) {
         const currentState = this.submission.__system.reviewState;
         this.selectedState = selectableStates.includes(currentState)
           ? currentState
           : 'approved';
+        this.$nextTick(() => {
+          this.$el.querySelector('input:checked').focus();
+        });
+      } else {
         this.notes = '';
       }
     }
@@ -122,13 +114,15 @@ export default {
         url: apiPaths.submission(
           this.projectId,
           this.xmlFormId,
-          this.instanceId
+          this.submission.__id
         ),
         data: { reviewState: this.selectedState },
         headers
       })
         .then(() => {
-          this.$emit('success', this.selectedState);
+          // It is the responsibility of the parent component to update the
+          // submission.
+          this.$emit('success', this.submission, this.selectedState);
         })
         .catch(noop);
     }

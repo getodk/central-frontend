@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
         <submission-table v-if="submissions.length !== 0"
           :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
           :submissions="submissions" :fields="selectedFields"
-          :original-count="originalCount"/>
+          :original-count="originalCount" @review="showReview"/>
         <p v-else class="empty-table-message">
           {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
         </p>
@@ -46,7 +46,12 @@ except according to the terms contained in the LICENSE file.
         <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
       </div>
     </div>
+
     <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
+    <submission-update-review-state :state="review.state"
+      :project-id="projectId" :xml-form-id="xmlFormId"
+      :submission="review.submission" @hide="hideReview"
+      @success="afterReview"/>
   </div>
 </template>
 
@@ -61,6 +66,7 @@ import SubmissionDownloadDropdown from './download-dropdown.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
+import SubmissionUpdateReviewState from './update-review-state.vue';
 
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
@@ -76,7 +82,8 @@ export default {
     SubmissionDownloadDropdown,
     SubmissionFieldDropdown,
     SubmissionFilters,
-    SubmissionTable
+    SubmissionTable,
+    SubmissionUpdateReviewState
   },
   mixins: [modal()],
   props: {
@@ -116,6 +123,10 @@ export default {
       decrypt: {
         state: false,
         formAction: null
+      },
+      review: {
+        state: false,
+        submission: null
       }
     };
   },
@@ -297,6 +308,29 @@ export default {
     showDecrypt(formAction) {
       this.decrypt.formAction = formAction;
       this.showModal('decrypt');
+    },
+    showReview(submission) {
+      this.review.submission = submission;
+      this.review.state = true;
+    },
+    hideReview() {
+      this.review.state = false;
+      this.review.submission = null;
+    },
+    // This method accounts for the unlikely case that the user clicked the
+    // refresh button before reviewing the submission. In that case, the
+    // submission may have been edited or may no longer be shown.
+    afterReview(originalSubmission, reviewState) {
+      this.hideReview();
+      const index = this.submissions.findIndex(submission =>
+        submission.__id === originalSubmission.__id);
+      if (index !== -1) {
+        const submission = this.submissions[index];
+        this.$set(this.submissions, index, {
+          ...submission,
+          __system: { ...submission.__system, reviewState }
+        });
+      }
     }
   }
 };

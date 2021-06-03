@@ -122,8 +122,8 @@ class. */
 .btn {
   border: none;
   border-radius: 2px;
-  font-size: $font-size-button;
-  padding: 6px 10px 5px;
+  font-size: $font-size-btn;
+  padding: 6px $hpadding-btn 5px;
 
   // I think we set these for the Spinner component.
   overflow: hidden;

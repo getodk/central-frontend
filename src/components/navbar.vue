@@ -84,7 +84,7 @@ $shadow-color: #dedede;
   min-height: auto;
 
   .navbar-brand {
-    font-size: $font-size-button;
+    font-size: $font-size-btn;
     font-weight: bold;
     height: auto;
     letter-spacing: -0.02em;
@@ -96,7 +96,7 @@ $shadow-color: #dedede;
   }
 
   .navbar-nav {
-    font-size: $font-size-button;
+    font-size: $font-size-btn;
 
     > li > a {
       &, &:hover, &:focus {

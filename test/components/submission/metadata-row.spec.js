@@ -1,9 +1,12 @@
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
+import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import testData from '../../data';
+import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
+import { trigger } from '../../util/event';
 
 const mountComponent = (propsData = undefined) => mount(SubmissionMetadataRow, {
   propsData: {
@@ -122,6 +125,57 @@ describe('SubmissionMetadataRow', () => {
     });
   });
 
+  describe('review button', () => {
+    beforeEach(mockLogin);
+
+    it('toggles the modal', () => {
+      testData.extendedSubmissions.createPast(1);
+      return loadSubmissionList().testModalToggles({
+        modal: SubmissionUpdateReviewState,
+        show: '.submission-metadata-row .review-button',
+        hide: '.btn-link'
+      });
+    });
+
+    describe('after a successful response', () => {
+      const submit = () => {
+        testData.extendedSubmissions.createPast(1, {
+          instanceId: 's',
+          reviewState: null
+        });
+        return loadSubmissionList()
+          .complete()
+          .request(async (component) => {
+            await trigger.click(component, '.submission-metadata-row .review-button');
+            return trigger.submit(component, '#submission-update-review-state form', [
+              ['input[value="hasIssues"]', true]
+            ]);
+          })
+          .respondWithData(() => {
+            testData.extendedSubmissions.update(-1, {
+              reviewState: 'hasIssues'
+            });
+            return testData.standardSubmissions.last();
+          });
+      };
+
+      it('hides the modal', async () => {
+        const component = await submit();
+        const modal = component.first(SubmissionUpdateReviewState);
+        modal.getProp('state').should.be.false();
+      });
+
+      it('updates the submission', async () => {
+        const component = await submit();
+        const submission = component.data().submissions[0];
+        submission.__system.reviewState.should.equal('hasIssues');
+        // Check that other properties were copied correctly.
+        submission.__id.should.equal('s');
+        submission.__system.submitterId.should.equal('1');
+      });
+    });
+  });
+
   describe('edit button', () => {
     it('sets the correct href attribute', () => {
       testData.extendedForms.createPast(1, {
@@ -129,42 +183,38 @@ describe('SubmissionMetadataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-      const href = mountComponent().first('.btn-group .btn').getAttribute('href');
+      const href = mountComponent().find('.btn')[1].getAttribute('href');
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
-    it('shows the correct text', () => {
+    it('sets the correct title attribute', () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const text = mountComponent().first('.btn-group .btn').text();
-      text.should.equal('Edit (1,000)');
-    });
-
-    it('does not render the button if the canUpdate prop is false', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent({ canUpdate: false });
-      row.find('.btn-group .btn').length.should.equal(1);
+      const title = mountComponent().find('.btn')[1].getAttribute('title');
+      title.should.equal('Edit (1,000)');
     });
 
     it('disables the button if the submission is encrypted', () => {
-      testData.extendedSubmissions.createPast(1, {
-        status: 'notDecrypted',
-        edits: 1000
-      });
-      const button = mountComponent().first('.btn-group .btn');
-      button.text().should.equal('Edit (1,000)');
+      testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+      const button = mountComponent().find('.btn')[1];
       button.hasAttribute('disabled').should.be.true();
       const title = button.getAttribute('title');
       title.should.equal('You cannot edit encrypted Submissions.');
     });
   });
 
-  it('renders the More button', () => {
+  it('sets the correct href attribute for the More button', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-    const href = mountComponent().find('.btn-group .btn')[1].getAttribute('href');
+    const href = mountComponent().find('.btn')[2].getAttribute('href');
     href.should.equal('#/projects/1/forms/a%20b/submissions/c%20d');
+  });
+
+  it('renders only the More button if the canUpdate prop is false', () => {
+    mockLogin({ role: 'none' });
+    testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
+    testData.extendedSubmissions.createPast(1);
+    const row = mountComponent({ canUpdate: false });
+    row.find('.btn').length.should.equal(1);
   });
 
   it('does not render the "State and actions" column for a form draft', () => {

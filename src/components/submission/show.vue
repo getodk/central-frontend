@@ -32,9 +32,8 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </page-body>
-    <submission-update-review-state v-if="submission != null"
-      :state="updateReviewState.state" :project-id="projectId"
-      :xml-form-id="xmlFormId" :instance-id="instanceId"
+    <submission-update-review-state :state="updateReviewState.state"
+      :project-id="projectId" :xml-form-id="xmlFormId" :submission="submission"
       @hide="hideModal('updateReviewState')" @success="afterUpdateReviewState"/>
   </div>
 </template>
@@ -151,15 +150,15 @@ export default {
       ]).catch(noop);
       this.fetchActivityData();
     },
-    afterUpdateReviewState(reviewState) {
+    afterUpdateReviewState(submission, reviewState) {
       this.fetchActivityData();
       this.hideModal('updateReviewState');
       this.$alert().success(this.$t('alert.updateReviewState'));
       this.$store.commit('setData', {
         key: 'submission',
         value: {
-          ...this.submission,
-          __system: { ...this.submission.__system, reviewState }
+          ...submission,
+          __system: { ...submission.__system, reviewState }
         }
       });
     }

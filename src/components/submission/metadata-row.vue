@@ -28,19 +28,23 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-angle-right"></span>
       <div class="btn-group">
         <template v-if="canUpdate">
+          <button type="button" class="review-button btn btn-default"
+            :title="$t('action.review')">
+            <span class="icon-check"></span>
+          </button>
           <a v-if="submission.__system.status == null" class="btn btn-default"
-            :href="editPath" target="_blank">
-            <span class="icon-pencil"></span><span>{{ editText }}</span>
+            :href="editPath" target="_blank" :title="editTitle">
+            <span class="icon-pencil"></span>
           </a>
           <button v-else type="button" class="btn btn-default" disabled
             :title="$t('submission.editDisabled')">
-            <span class="icon-pencil"></span><span>{{ editText }}</span>
+            <span class="icon-pencil"></span>
           </button>
         </template>
         <router-link v-slot="{ href }" :to="submissionPath" custom>
-          <a class="btn btn-default" :href="href" target="_blank">
+          <a class="btn btn-default" :href="href" target="_blank"
+            :title="$t('action.more')">
             <span class="icon-chevron-right"></span>
-            <span>{{ $t('action.more') }}</span>
           </a>
         </router-link>
       </div>
@@ -94,11 +98,6 @@ export default {
         ? this.$t('submission.missingMedia')
         : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
-    submissionPath() {
-      const encodedFormId = encodeURIComponent(this.xmlFormId);
-      const encodedInstanceId = encodeURIComponent(this.submission.__id);
-      return `/projects/${this.projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
-    },
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,
@@ -106,10 +105,15 @@ export default {
         this.submission.__id
       );
     },
-    editText() {
+    editTitle() {
       return this.$t('submission.action.edit', {
         count: this.$n(this.submission.__system.edits, 'default')
       });
+    },
+    submissionPath() {
+      const encodedFormId = encodeURIComponent(this.xmlFormId);
+      const encodedInstanceId = encodeURIComponent(this.submission.__id);
+      return `/projects/${this.projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
     }
   }
 };
@@ -167,7 +171,7 @@ export default {
   }
 
   .icon-angle-right {
-    bottom: #{$padding-right-table-data + 1px};
+    bottom: #{$padding-bottom-table-data + 1px};
     color: $color-accent-primary;
     font-size: 20px;
     // Using `position: absolute` rather than `float: right` so that the icon
@@ -182,6 +186,14 @@ export default {
     left: -1000px;
     position: absolute;
     top: 4px;
+  }
+
+  .btn {
+    // The icons are slightly different widths. .icon-check is the widest, at
+    // 12px.
+    min-width: #{2 * $hpadding-btn + 12px};
+
+    [class^="icon-"] { margin-right: 0; }
   }
 }
 

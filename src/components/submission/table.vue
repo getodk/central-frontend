@@ -23,11 +23,12 @@ except according to the terms contained in the LICENSE file.
       <tbody ref="metadataBody"
         :class="`submission-table-actions-trigger-${actions.trigger}`"
         @mousemove="setActionsTrigger('hover')"
-        @focusin="setActionsTrigger('focus')">
+        @focusin="setActionsTrigger('focus')" @click="review">
         <submission-metadata-row v-for="(submission, index) in submissions"
           :key="submission.__id" :project-id="projectId"
           :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-          :row-number="originalCount - index" :can-update="canUpdate"/>
+          :row-number="originalCount - index" :can-update="canUpdate"
+          :data-index="index"/>
       </tbody>
     </table>
     <div class="table-container">
@@ -142,6 +143,12 @@ export default {
         tr.classList.remove('data-hover');
         this.actions.dataHover = null;
       }
+    },
+    review(event) {
+      if (!this.canUpdate) return;
+      const tr = event.target.closest('tr');
+      if (tr.querySelector('.review-button').contains(event.target))
+        this.$emit('review', this.submissions[tr.dataset.index]);
     }
   }
 };
