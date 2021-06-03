@@ -183,9 +183,12 @@ export default {
     position: absolute;
     top: 4px;
   }
-  &:hover .btn-group, .btn-group:focus-within, &.actions-shown .btn-group {
-    left: auto;
-    right: $padding-right-table-data;
-  }
+}
+
+.submission-table-actions-trigger-hover tr:hover .btn-group,
+.submission-table-actions-trigger-hover .data-hover .btn-group,
+.submission-table-actions-trigger-focus .btn-group:focus-within {
+  left: auto;
+  right: $padding-right-table-data;
 }
 </style>

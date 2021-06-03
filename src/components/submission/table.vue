@@ -20,7 +20,10 @@ except according to the terms contained in the LICENSE file.
           <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
         </tr>
       </thead>
-      <tbody ref="metadataBody">
+      <tbody ref="metadataBody"
+        :class="`submission-table-actions-trigger-${actions.trigger}`"
+        @mousemove="setActionsTrigger('hover')"
+        @focusin="setActionsTrigger('focus')">
         <submission-metadata-row v-for="(submission, index) in submissions"
           :key="submission.__id" :project-id="projectId"
           :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
@@ -40,12 +43,13 @@ except according to the terms contained in the LICENSE file.
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
-        <tbody ref="dataBody">
+        <tbody @mousemove="setActionsTrigger('hover')"
+          @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
           <template v-if="fields != null">
             <submission-data-row v-for="(submission, index) in submissions"
               :key="submission.__id" :project-id="projectId"
               :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-              :fields="fields" :data-index="index + 1"/>
+              :fields="fields" :data-index="index"/>
           </template>
         </tbody>
       </table>
@@ -82,6 +86,31 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      actions: {
+        /*
+        Actions are shown for a row if the cursor is over the row or if one of
+        the actions is focused. However, it is possible for the cursor to be
+        over one row while an action is focused in a different row. In that
+        case, we show the actions for one of the two rows depending on the type
+        of the most recent event.
+
+        I tried other approaches before landing on this one. However, sequences
+        of events like the following were a challenge:
+
+          - Click the More button for a row.
+          - Next, press tab to focus the Review button in the next row.
+          - Actions are shown for the next row and are no longer shown beneath
+            the cursor. However, that will trigger a mouseover event, which
+            depending on the approach may cause actions to be shown beneath the
+            cursor again.
+        */
+        trigger: 'hover',
+        dataHover: null
+      }
+    };
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -90,34 +119,30 @@ export default {
       return this.project != null && this.project.permits('submission.update');
     }
   },
-  mounted() {
-    let index;
-    let metadataRow;
-    const { metadataBody, dataBody } = this.$refs;
-    const mouseover = (event) => {
-      const { dataset } = event.target.closest('tr');
-      if (dataset.index !== index) {
-        if (index != null) metadataRow.classList.remove('actions-shown');
-        index = dataset.index;
-        metadataRow = metadataBody.querySelector(`tr:nth-child(${index})`);
-        // The SubmissionMetadataRow element does not have a class binding, so I
-        // think we can add this class without Vue removing it.
-        metadataRow.classList.add('actions-shown');
+  methods: {
+    setActionsTrigger(trigger) {
+      this.actions.trigger = trigger;
+    },
+    toggleHoverClass(event) {
+      const dataRow = event.target.closest('tr');
+      const index = Number.parseInt(dataRow.dataset.index, 10);
+      if (index === this.actions.dataHover) return;
+      const { metadataBody } = this.$refs;
+      if (this.actions.dataHover != null)
+        metadataBody.querySelector('.data-hover').classList.remove('data-hover');
+      const metadataRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+      // The SubmissionMetadataRow element does not have a class binding, so I
+      // think we can add this class without Vue removing it.
+      metadataRow.classList.add('data-hover');
+      this.actions.dataHover = index;
+    },
+    removeHoverClass() {
+      if (this.actions.dataHover != null) {
+        const tr = this.$refs.metadataBody.querySelector('.data-hover');
+        tr.classList.remove('data-hover');
+        this.actions.dataHover = null;
       }
-    };
-    const mouseleave = () => {
-      if (index != null) {
-        metadataRow.classList.remove('actions-shown');
-        index = null;
-        metadataRow = null;
-      }
-    };
-    dataBody.addEventListener('mouseover', mouseover);
-    dataBody.addEventListener('mouseleave', mouseleave);
-    this.$once('hook:beforeDestroy', () => {
-      dataBody.removeEventListener('mouseover', mouseover);
-      dataBody.removeEventListener('mouseleave', mouseleave);
-    });
+    }
   }
 };
 </script>
