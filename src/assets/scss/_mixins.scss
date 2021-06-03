@@ -13,9 +13,16 @@
   }
 }
 
+@mixin text-block {
+  // 15-17 words per line in English
+  max-width: 77ch;
+  // 35 characters per line in Hiragino Kaku Gothic ProN
+  &:lang(ja) { max-width: 54ch; }
+}
+
 // A list that shows descriptive text
 @mixin text-list {
-  max-width: $max-width-p;
+  @include text-block;
 
   li { margin-bottom: 5px; }
 }

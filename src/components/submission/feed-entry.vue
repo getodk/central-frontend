@@ -333,6 +333,34 @@ Comment • {name} */
       },
       "comment": "Commentaire de {name}"
     }
+  },
+  "ja": {
+    "title": {
+      "create": "{name}によるサブミッション",
+      "updateReviewState": {
+        "null": {
+          "full": "{name}の{reviewState}",
+          "reviewState": "受信済"
+        },
+        "hasIssues": {
+          "full": "{name}の{reviewState}",
+          "reviewState": "問題有"
+        },
+        "edited": {
+          "full": "{name}による{reviewState}",
+          "reviewState": "編集済み"
+        },
+        "approved": {
+          "full": "{name}による{reviewState}",
+          "reviewState": "承認済"
+        },
+        "rejected": {
+          "full": "{name}による{reviewState}",
+          "reviewState": "リジェクト済"
+        }
+      },
+      "comment": "{name}によるコメント"
+    }
   }
 }
 </i18n>

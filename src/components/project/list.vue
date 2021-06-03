@@ -543,6 +543,51 @@ export default {
     "alert": {
       "create": "Proyek baru Anda telah sukses dibuat."
     }
+  },
+  "ja": {
+    "heading": [
+      "Centralへようこそ",
+      "何かをやり遂げましょう"
+    ],
+    "gettingStarted": {
+      "title": "はじめに",
+      "body": [
+        {
+          "full": "何から手をつければいいのかわからない方のために、{docsWebsite}にはスタートアップガイドやユーザードキュメントが用意されています。",
+          "docsWebsite": "ODK DocsのWebサイト"
+        },
+        {
+          "full": "また、{forum}では、過去の質問を検索したり、自分の質問をしたりして、いつでも他の人の助けを得ることができます。",
+          "forum": "ODKコミュニティーフォーラム"
+        }
+      ]
+    },
+    "news": "ニュース",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers}は、このWebサイトでプロジェクトの管理ができます。"
+        ],
+        "webUsers": "Webユーザー"
+      },
+      "projects": {
+        "full": [
+          "{projects}はデバイスに対してフォームとアプリユーザーの管理を行えます。"
+        ],
+        "projects": "プロジェクト"
+      }
+    },
+    "projectsTitle": "プロジェクト",
+    "action": {
+      "create": "新規"
+    },
+    "header": {
+      "forms": "フォーム"
+    },
+    "emptyTable": "あなたが閲覧できるプロジェクトはありません",
+    "alert": {
+      "create": "あなたの新規プロジェクトは正しく作成されました"
+    }
   }
 }
 </i18n>

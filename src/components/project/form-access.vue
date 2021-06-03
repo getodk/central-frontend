@@ -20,7 +20,8 @@ except according to the terms contained in the LICENSE file.
         <spinner :state="awaitingResponse"/>
       </button>
       <p>
-        {{ $t('heading[0]') }}
+        <span>{{ $t('heading[0]') }}</span>
+        <sentence-separator/>
         <i18n :tag="false" path="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
@@ -52,7 +53,9 @@ import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
 import ProjectFormAccessTable from './form-access/table.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
@@ -68,6 +71,7 @@ export default {
     Loading,
     ProjectFormAccessStates,
     ProjectFormAccessTable,
+    SentenceSeparator,
     Spinner
   },
   mixins: [modal(), request()],
@@ -310,6 +314,15 @@ export default {
     "emptyTable": "Tidak ada formulir untuk ditampilkan.",
     "alert": {
       "success": "Perubahan telah disimpan!"
+    }
+  },
+  "ja": {
+    "heading": [
+      "アプリユーザーは、以下の表で明示的にアクセス権を与えられたフォームのみを閲覧・記入できます。プロジェクト・マネージャーやデータ収集者は、Webブラウザを使って、公開中のステータスのプロジェクト内のフォームに記入できます。"
+    ],
+    "emptyTable": "表示できるフォームはありません",
+    "alert": {
+      "success": "変更が保存されました。"
     }
   }
 }

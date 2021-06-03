@@ -36,7 +36,8 @@ except according to the terms contained in the LICENSE file.
           <p>
             <span class="icon-check-circle"></span>
             <strong>{{ $t('common.success') }}</strong>
-            {{ $t('success[0]', created) }}
+            <sentence-separator/>
+            <span>{{ $t('success[0]', created) }}</span>
           </p>
           <field-key-qr-panel :field-key="created" :managed="managed"/>
           <p>{{ $t('success[1]', created) }}</p>
@@ -67,6 +68,7 @@ import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import Modal from '../modal.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
@@ -77,7 +79,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyNew',
-  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel },
+  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
   mixins: [request(), routes()],
   props: {
     state: {
@@ -283,6 +285,23 @@ export default {
     ],
     "action": {
       "createAnother": "Buat baru"
+    }
+  },
+  "ja": {
+    "title": "アプリユーザーの作成",
+    "introduction": [
+      "このユーザーは、初期状態ではいずれのフォームにもアクセスできません。ユーザーが作成された後に、フォームを割り当てることができます。"
+    ],
+    "success": [
+      "アプリユーザー\"{displayName}\"は作成されました",
+      "\"{displayName}\"に対するモバイルデバイスを今すぐ設定できます。または、アプリユーザーの表示画面から\"コードを見る\"をクリックすることで後ほど設定可能です。",
+      {
+        "full": "このプロジェクトの\"{formAccessSettings}\"を訪れ、フォームに対するユーザーアクセス権限を与えることが出来ます。",
+        "formAccessSettings": "フォームアクセスの設定"
+      }
+    ],
+    "action": {
+      "createAnother": "別のものを作成"
     }
   }
 }

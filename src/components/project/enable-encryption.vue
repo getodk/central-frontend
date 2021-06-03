@@ -114,7 +114,8 @@ except according to the terms contained in the LICENSE file.
         </p>
         <p class="modal-introduction">
           <strong>{{ $t('common.success') }}</strong>
-          {{ $t('steps[2].introduction[0]') }}
+          <sentence-separator/>
+          <span>{{ $t('steps[2].introduction[0]') }}</span>
         </p>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary"
@@ -131,7 +132,9 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -139,7 +142,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, FormGroup, Modal, Spinner },
+  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -561,6 +564,59 @@ export default {
     ],
     "field": {
       "hint": "Petunjuk frasa sandi (opsional)"
+    }
+  },
+  "ja": {
+    "title": "暗号化を有効にする",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "暗号化を有効にすると以下のようになります。",
+            "確定済のフォームは、モバイル機器の内部で暗号化されます。",
+            "サブミットデータはCentralサーバーで暗号化されます",
+            [
+              "手動で{submission}キーを設定したフォームでは、そのキーが引き続き使用されるため、手動で復号化する必要があります。",
+              "これらのフォームでCentralの自動暗号化処理を使用するには、{base64RsaPublicKey}の設定を削除してください。"
+            ],
+            "オンラインでサブミッションデータをプレビューすることができなくなります。",
+            "OData経由でデータに接続できなくなります",
+            "Webブラウザでサブミッションデータを編集することができなくなります。"
+          ],
+          [
+            "また、本バージョンのODK Centralでは以下のようになっています。",
+            [
+              "既存のサブミッションは暗号化されずに残ります。",
+              "将来のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
+            ],
+            [
+              "一度有効にした暗号化を無効にすることはできません。",
+              "将来のバージョンでは、暗号化を無効にするとデータが復号化されます。これは、現時点で暗号化を有効にしていても同様です。"
+            ]
+          ],
+          {
+            "full": "暗号化についての詳細は{here}にあります。この内容でよろしければ、「Next」を押して次に進みます。",
+            "here": "こちら"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたのサブミットデータを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている人だけがあなたのサブミットデータを復号化することができます。",
+          {
+            "full": "パスフレーズの長さや文字に関して、制限はありません。もしパスフレーズを忘れた場合、パスフレーズまたはデータの復元方法はあり{no}。",
+            "no": "ません"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "このプロジェクトでは、暗号化が設定されています。モバイルデバイスでは、暗号化を行うために、最新のフォームを取得または再取得する必要があります。"
+        ]
+      }
+    ],
+    "field": {
+      "hint": "パスフレーズのヒント（任意）"
     }
   }
 }

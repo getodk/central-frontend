@@ -140,6 +140,15 @@ export default {
     "alert": {
       "success": "Rincian pengguna tersimpan!"
     }
+  },
+  "ja": {
+    "title": "基本詳細",
+    "action": {
+      "update": "詳細の更新"
+    },
+    "alert": {
+      "success": "ユーザー詳細の保存完了！"
+    }
   }
 }
 </i18n>

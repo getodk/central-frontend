@@ -43,7 +43,6 @@ export default {
   // margin of #page-head-title. As a result, there will always be exactly 15px
   // between #page-head-tabs and the previous visible element.
   margin-bottom: 15px;
-  max-width: 650px;
 }
 
 #page-head-tabs {

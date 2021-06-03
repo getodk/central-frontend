@@ -379,6 +379,33 @@ export default {
       "abandon": "Versi draf dari formulir ini telah sukses dihapus.",
       "delete": "Formulir {name} sudah dihapus."
     }
+  },
+  "ja": {
+    "draftChecklist": {
+      "title": "下書きのチェックリスト"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "バージョン：{draftVersion}",
+        "draftVersion": "下書きバージョン"
+      },
+      "action": {
+        "upload": "新規定義のアップロード"
+      }
+    },
+    "actions": {
+      "title": "操作",
+      "action": {
+        "publish": "下書きの公開",
+        "abandon": "下書きの削除"
+      }
+    },
+    "alert": {
+      "upload": "成功！新しい定義フォームが下書きとして保存されました。",
+      "publish": "あなたの下書きが公開されました。このプロジェクトのフォームを使用している全てのデバイスは、新しい定義フォームとメディアファイルが表示されます。",
+      "abandon": "このフォームの下書きバージョンは正常に削除されました。",
+      "delete": "フォーム\"{name}\"は削除されました。"
+    }
   }
 }
 </i18n>

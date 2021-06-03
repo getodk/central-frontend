@@ -248,6 +248,12 @@ export default {
       "form": "Formulir",
       "state": "Status"
     }
+  },
+  "ja": {
+    "header": {
+      "form": "フォーム",
+      "state": "状態"
+    }
   }
 }
 </i18n>

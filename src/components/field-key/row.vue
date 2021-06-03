@@ -142,6 +142,13 @@ export default {
     "action": {
       "revokeAccess": "Cabut akses"
     }
+  },
+  "ja": {
+    "seeCode": "コードを表示",
+    "accessRevoked": "アクセス権の取り消し",
+    "action": {
+      "revokeAccess": "アクセス権の取消"
+    }
   }
 }
 </i18n>

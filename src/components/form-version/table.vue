@@ -43,7 +43,7 @@ export default {
   table-layout: fixed;
 
   th:nth-child(3) {
-    width: 210px;
+    width: 245px;
   }
 }
 </style>
@@ -94,6 +94,12 @@ export default {
     "header": {
       "published": "Diterbitkan",
       "definition": "Definisi"
+    }
+  },
+  "ja": {
+    "header": {
+      "published": "公開済み",
+      "definition": "定義"
     }
   }
 }

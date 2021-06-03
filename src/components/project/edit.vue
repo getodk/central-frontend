@@ -148,6 +148,18 @@ export default {
     "alert": {
       "success": "Pengaturan proyek tersimpan!"
     }
+  },
+  "ja": {
+    "title": "基本詳細",
+    "field": {
+      "name": "プロジェクト名"
+    },
+    "action": {
+      "update": "設定の保存"
+    },
+    "alert": {
+      "success": "プロジェクト設定の保存完了！"
+    }
   }
 }
 </i18n>

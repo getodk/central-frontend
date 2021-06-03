@@ -32,9 +32,10 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('body[0].legacy.legacyCode') }}</strong>
           </template>
         </i18n>
-
-        {{ managed ? $t('body[1].managed', fieldKey) : $t('body[1].legacy') }}
-
+        <sentence-separator/>
+        <template v-if="managed">{{ $t('body[1].managed', fieldKey) }}</template>
+        <template v-else>{{ $t('body[1].legacy') }}</template>
+        <sentence-separator/>
         <i18n v-if="managed" :tag="false" path="body[2].managed.full">
           <template #switchToLegacy>
             <i18n tag="a" path="body[2].managed.switchToLegacy"
@@ -57,7 +58,8 @@ except according to the terms contained in the LICENSE file.
         </i18n>
       </p>
       <p>
-        {{ $t('body[3]', fieldKey) }}
+        <span>{{ $t('body[3]', fieldKey) }}</span>
+        <sentence-separator/>
         <doc-link to="collect-import-export/">{{ $t('moreInfo.learnMore') }}</doc-link>
       </p>
     </div>
@@ -67,13 +69,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import FieldKey from '../../presenters/field-key';
 import { apiPaths } from '../../util/request';
 
 export default {
   name: 'FieldKeyQrPanel',
-  components: { CollectQr, DocLink },
+  components: { CollectQr, DocLink, SentenceSeparator },
   props: {
     fieldKey: FieldKey, // eslint-disable-line vue/require-default-prop
     managed: {
@@ -365,6 +368,41 @@ export default {
         }
       },
       "Pindai kode QR ini untuk mengonfigurasi perangkat dengan akun tersebut “{displayName}”."
+    ]
+  },
+  "ja": {
+    "title": {
+      "managed": "クライアントの設定コード",
+      "legacy": "Legacyクライアントの設定コード"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "これは{managedCode}です",
+          "managedCode": "Managed QRコード"
+        },
+        "legacy": {
+          "full": "これは{legacyCode}です",
+          "legacyCode": "Legacy QRコード"
+        }
+      },
+      {
+        "managed": "ODK Collectは、「{displayName}」で利用可能なフォームと完全に一致し、アップデートも自動的に適用されます。ユーザーが手動で空フォームを取得する必要はありません。さらに、インターネット接続が見つかった時点で、確定済のフォームが自動的に送信されます。",
+        "legacy": "ユーザーは、手動でデバイスにに空フォームを取得し、更新するフォームを決定する必要があります。また、確定フォームを手動で送信する必要があります。"
+      },
+      {
+        "managed": {
+          "full": "以前のバージョン、{switchToLegacy}",
+          "switchToLegacy": "{legacyCode}に切り替える",
+          "legacyCode": "Legacy QRコード"
+        },
+        "legacy": {
+          "full": "よりコントロールされた、確実なプロセスのためには、{switchToManaged}。",
+          "switchToManaged": "{managedCode}に切り替える",
+          "managedCode": "Managed QRコード"
+        }
+      },
+      "このQRコードをスキャンして、アカウント名\"{displayName}\"のデバイスを設定する"
     ]
   }
 }

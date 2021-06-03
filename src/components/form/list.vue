@@ -145,6 +145,16 @@ export default {
     "alert": {
       "create": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
     }
+  },
+  "ja": {
+    "title": "フォーム",
+    "action": {
+      "create": "新規"
+    },
+    "emptyTable": "表示できるフォームはありません",
+    "alert": {
+      "create": "あなたの新しいフォーム\"{name}\"が下書きフォームとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用することができます。"
+    }
   }
 }
 </i18n>

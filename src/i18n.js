@@ -21,7 +21,8 @@ export const locales = new Map()
   .set('de', 'Deutsch')
   .set('es', 'Español')
   .set('fr', 'Français')
-  .set('id', 'Bahasa Indonesia');
+  .set('id', 'Bahasa Indonesia')
+  .set('ja', '日本語');
 
 const fallbackLocale = 'en';
 
@@ -30,6 +31,7 @@ const fallbackLocale = 'en';
 ////////////////////////////////////////////////////////////////////////////////
 // PLURALIZATION RULES
 
+const noPlural = () => 0;
 const pluralizationRules = {
   // Czech has four plual forms on Transifex: 1, "few", "many", and "other".
   // However, we never use the fourth form, which seems to be used with
@@ -49,7 +51,8 @@ const pluralizationRules = {
     */
     return 2;
   },
-  id: () => 0
+  id: noPlural,
+  ja: noPlural
 };
 
 

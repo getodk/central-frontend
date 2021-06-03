@@ -168,6 +168,17 @@ export default {
       "mismatch": "Harap periksa kesamaan kata sandi baru Anda.",
       "success": "Berhasil! Kata sandi telah diperbarui."
     }
+  },
+  "ja": {
+    "title": "パスワードの変更",
+    "action": {
+      "change": "パスワードの変更"
+    },
+    "cannotChange": "アカウントオーナーのみが自身のパスワードを設定できます。",
+    "alert": {
+      "mismatch": "新しいパスワードが一致することを確認して下さい。",
+      "success": "成功！パスワードが更新されました。"
+    }
   }
 }
 </i18n>

@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <i18n :tag="false" path="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
@@ -58,6 +58,8 @@ import Loading from '../loading.vue';
 import PublicLinkCreate from './create.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -73,7 +75,8 @@ export default {
     ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions'),
     PublicLinkCreate,
     PublicLinkRevoke,
-    PublicLinkTable
+    PublicLinkTable,
+    SentenceSeparator
   },
   mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
   props: {
@@ -267,6 +270,26 @@ export default {
     "alert": {
       "create": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar.",
       "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
+    }
+  },
+  "ja": {
+    "action": {
+      "create": "一般公開リンクの作成"
+    },
+    "heading": [
+      {
+        "full": "一般公開リンクを持っている人は誰でも、Webブラウザでこのフォームに記入できます。複数のリンクを作成し、フォームの異なる配布状況を追跡したり、特定のグループの人々がフォームにアクセスできる時間を制限することが可能です。これらのリンクは、フォームが公開中の{state}の場合にのみ機能します。",
+        "state": "ステータス"
+      },
+      {
+        "full": "一般公開リンクは、自己申告を目的としています。同じフォームを何度も送信する必要があるデータ収集者がいる場合は、{clickHere}して他の方法をご確認ください。",
+        "clickHere": "ここをクリック"
+      }
+    ],
+    "emptyTable": "このフォームに一般公開リンクはありません。",
+    "alert": {
+      "create": "成功！一般公開リンクが作成され、利用可能です。 以下をコピーして配布できます。",
+      "revoke": "一般公開リンク\"{displayName}\"の無効化に成功しました。これ以降、このリンクでのサブミッションは受付られません。"
     }
   }
 }

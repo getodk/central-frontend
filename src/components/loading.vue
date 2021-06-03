@@ -58,6 +58,9 @@ export default {
   },
   "id": {
     "text": "Memuat..."
+  },
+  "ja": {
+    "text": "読み込み中..."
   }
 }
 </i18n>

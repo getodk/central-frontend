@@ -155,6 +155,17 @@ export default {
     "alert": {
       "success": "Kata sandi berhasil diatur ulang."
     }
+  },
+  "ja": {
+    "action": {
+      "set": "パスワードの設定"
+    },
+    "problem": {
+      "401_2": "{message} メールに記載されているリンクの有効期限が切れている可能性があり、新たにメールを送信しなければならない場合があります。"
+    },
+    "alert": {
+      "success": "パスワードが正常にリセットされました。"
+    }
   }
 }
 </i18n>

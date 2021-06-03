@@ -132,6 +132,14 @@ export default {
       "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data.",
       "Tindakan ini tidak bisa dibatalkan/dikembalikan."
     ]
+  },
+  "ja": {
+    "title": "ユーザーアクセス権の剥奪",
+    "introduction": [
+      "本当にアプリユーザー\"{displayName}\"のアクセス権を取り消しますか？",
+      "このユーザーからの既存のサブミッションは残りますが、このユーザー傘下の全員は、フォームのダウンロードやサブミッションのアップロードを継続するためには、新しいユーザーを作成する必要があります。",
+      "この操作は取り消しできません。"
+    ]
   }
 }
 </i18n>

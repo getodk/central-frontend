@@ -149,6 +149,11 @@ export default {
     "alert": {
       "loadError": "Laman yang kamu minta tidak dapat dimuat. Coba periksa kondisi daring dan coba lagi."
     }
+  },
+  "ja": {
+    "alert": {
+      "loadError": "リクエストされたページを読み込むことができませんでした。オンラインであることを確認して、もう一度お試しください。"
+    }
   }
 }
 </i18n>

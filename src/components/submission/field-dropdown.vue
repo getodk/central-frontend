@@ -389,6 +389,21 @@ export default {
         "none": "Jangan Semua"
       }
     }
+  },
+  "ja": {
+    "placeholder": "{total}の内{selected}",
+    "field": {
+      "columns": "表示された列",
+      "search": "列を検索"
+    },
+    "disabled": "100以上の列は選択できません",
+    "action": {
+      "select": {
+        "full": "選択状況 {all}/{none}",
+        "all": "全て",
+        "none": "なし"
+      }
+    }
   }
 }
 </i18n>

@@ -92,6 +92,11 @@ export default {
     "field": {
       "submissionDate": "Terkirim pada"
     }
+  },
+  "ja": {
+    "field": {
+      "submissionDate": "フォームの送信日"
+    }
   }
 }
 </i18n>

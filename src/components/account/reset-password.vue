@@ -110,6 +110,11 @@ export default {
     "alert": {
       "success": "Email sudah dikirimkan ke {email} dengan instruksi lebih lanjut."
     }
+  },
+  "ja": {
+    "alert": {
+      "success": "{email}に詳細の対応についての情報が記されたメールが送信されました。"
+    }
   }
 }
 </i18n>

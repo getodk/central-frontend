@@ -574,7 +574,7 @@ describe('FormAttachmentList', () => {
               app = component;
               return trigger.dragenter(
                 app,
-                '#form-attachment-list .heading-with-button div',
+                '#form-attachment-list .heading-with-button p',
                 blankFiles(['a', 'b'])
               );
             });
@@ -803,7 +803,7 @@ describe('FormAttachmentList', () => {
               app = component;
               return trigger.dragenter(
                 app,
-                '#form-attachment-list .heading-with-button div',
+                '#form-attachment-list .heading-with-button p',
                 blankFiles(['a'])
               );
             });

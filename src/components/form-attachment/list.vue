@@ -18,8 +18,8 @@ except according to the terms contained in the LICENSE file.
         @click="showModal('uploadFilesModal')">
         <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
       </button>
-      <div>{{ $t('heading[0]') }}</div>
-      <div>{{ $t('heading[1]') }}</div>
+      <p>{{ $t('heading[0]') }}</p>
+      <p>{{ $t('heading[1]') }}</p>
     </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
@@ -522,6 +522,26 @@ export default {
     "alert": {
       "readError": "Terjadi kesalahan saat membaca \"{filename}\".",
       "success": "{count} dokumen berhasil diunggah."
+    }
+  },
+  "ja": {
+    "action": {
+      "upload": "ファイルのアップロード"
+    },
+    "heading": [
+      "あなたがアップロードしたフォームによると、以下のファイルが必要です。どのファイルがアップロードされ、どのファイルが不足してるのかが分かります。",
+      "1つ以上のファイルをドラッグ＆ドロップしてアップロードする"
+    ],
+    "header": {
+      "uploaded": "アップロード済"
+    },
+    "problem": {
+      "noneUploaded": "{message} アップロードに成功したファイルはありません。",
+      "someUploaded": "{message} {total}件のファイルの内、{uploaded}件のみがアップロードに成功しました。"
+    },
+    "alert": {
+      "readError": "ファイル\"{filename}\"を読み込み中に不具合が発生しました",
+      "success": "{count}のファイルのアップロードに成功"
     }
   }
 }

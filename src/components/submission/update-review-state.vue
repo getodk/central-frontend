@@ -192,6 +192,12 @@ export default {
     "field": {
       "notes": "Notes et commentaires (facultatif)"
     }
+  },
+  "ja": {
+    "title": "レビュー・ステータスの更新",
+    "field": {
+      "notes": "メモとコメント（任意）"
+    }
   }
 }
 </i18n>

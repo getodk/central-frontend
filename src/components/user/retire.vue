@@ -141,6 +141,16 @@ export default {
         "noUndo": "Tindakan ini tidak bisa dibatalkan/dikembalikan"
       }
     ]
+  },
+  "ja": {
+    "title": "引退したユーザー",
+    "introduction": [
+      "ユーザーアカウント\"{displayName}\"\u003c{email}>を除外させようとしています。このユーザーは、即座にいかなるアクションも実行できなくなり、ログアウトされます。",
+      {
+        "full": "{noUndo}が、新しいアカウントは同じメールアドレスでいつでも再作成することができます。",
+        "noUndo": "この操作は取り消しできません。"
+      }
+    ]
   }
 }
 </i18n>

@@ -214,6 +214,25 @@ export default {
         "dataCollector": "Pengumpul Data"
       }
     ]
+  },
+  "ja": {
+    "title": "サブミッションのオプション",
+    "introduction": [
+      "ODK Centralにデータをサブミットするにはいくつかのオプションがあります。",
+      {
+        "full": "{appUsers}を作成し、{collect}のAndroidアプリを使用します。この方法は、データ収集者が複数のフォームにアクセスする必要がある場合や、オフラインである場合、複雑なフォームを持っている場合などに最適です",
+        "appUsers": "アプリユーザー"
+      },
+      {
+        "full": "1つ以上の{publicLinks}を作成し、回答者に対して、回答内容を共有する。",
+        "publicLinks": "一般公開リンク"
+      },
+      {
+        "full": "データを収集する各個人に、{dataCollector}の役割を持つ{webUser}を作成します。これらのユーザーはCentralにログインし、Webブラウザでこのフォームを入力します。プロジェクトマネージャーもブラウザからサブミッションを作成することができます。",
+        "webUser": "Webユーザー",
+        "dataCollector": "データ収集者"
+      }
+    ]
   }
 }
 </i18n>

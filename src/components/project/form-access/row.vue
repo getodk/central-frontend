@@ -113,7 +113,7 @@ export default {
     padding-bottom: 0;
   }
 
-  .form-control { width: 150px; }
+  .form-control { width: 160px; }
 
   .checkbox {
     margin-bottom: 0;
@@ -182,6 +182,13 @@ export default {
     "field": {
       "state": "Status",
       "appUserAccess": "Akses Pengguna Aplikasi"
+    }
+  },
+  "ja": {
+    "draftTitle": "このフォームにはまだ公開バージョンがありません。下書きが公開されるまで、デバイス上には表示されません。フォームを公開すると、ここで示される設定が適応されます。",
+    "field": {
+      "state": "状態",
+      "appUserAccess": "アプリユーザーのアクセス"
     }
   }
 }

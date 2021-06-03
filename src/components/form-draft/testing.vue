@@ -23,7 +23,8 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <p>{{ $t('body[0]') }}</p>
             <p>
-              {{ $t('body[1]') }}
+              <span>{{ $t('body[1]') }}</span>
+              <sentence-separator/>
               <i18n :tag="false" path="moreInfo.helpArticle.full">
                 <template #helpArticle>
                   <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
@@ -56,6 +57,7 @@ import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
 import Option from '../../util/option';
@@ -73,6 +75,7 @@ export default {
     DocLink,
     EnketoFill,
     Loading,
+    SentenceSeparator,
     SubmissionList
   },
   props: {
@@ -193,6 +196,13 @@ export default {
     "body": [
       "Anda bisa menggunakan kode konfigurasi di sebelah kanan untuk mengatur perangkat seluler untuk mengunduh draf ini. Anda juga bisa mengklik tombol \"Baru\" untuk membuat kiriman data baru lewat web browser Anda.",
       "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
+    ]
+  },
+  "ja": {
+    "title": "下書きのテスト",
+    "body": [
+      "右の設定コードを使って、モバイルデバイスでこの下書きフォームをダウンロードする設定ができます。また、上の「新規作成」ボタンをクリックすると、Webブラウザから新しいサブミッションを作成することができます。",
+      "下書きフォームへのサブミッションは、以下のテスト表に入り、データのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト送信されたサブミッションは永久に削除されます。"
     ]
   }
 }

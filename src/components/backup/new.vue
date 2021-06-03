@@ -23,9 +23,11 @@ except according to the terms contained in the LICENSE file.
           </i18n>
         </div>
         <p class="modal-introduction">
-          {{ $t('steps[0].introduction[0]') }}
+          <span>{{ $t('steps[0].introduction[0]') }}</span>
+          <sentence-separator/>
           <strong>{{ $t('steps[0].introduction[1]') }}</strong>
-          {{ $t('steps[0].introduction[2]') }}
+          <sentence-separator/>
+          <span>{{ $t('steps[0].introduction[2]') }}</span>
         </p>
         <form @submit.prevent="initiate">
           <form-group ref="passphrase" v-model="passphrase"
@@ -96,7 +98,9 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
@@ -104,7 +108,7 @@ const GOOGLE_BREAKPOINT = 601;
 
 export default {
   name: 'BackupNew',
-  components: { FormGroup, Modal, Spinner },
+  components: { FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -430,6 +434,48 @@ export default {
     },
     "problem": {
       "verify": "Mohon coba lagi, dan kunjungi forum komunitas jika terjadi masalah berkelanjutan."
+    }
+  },
+  "ja": {
+    "title": "バックアップの設定",
+    "steps": [
+      {
+        "warning": {
+          "full": "このバックアップには現在、Webフォームのリンクは含まれていません。一般公開リンクを共有している場合や、新規サブミッションのために外部からWebフォームに直接リンクしている場合、この問題が解決するまで、システムのフルバックアップを行うことを強く推奨します。もしバックアップから復元する場合にプレビューリンクが壊れたままの場合、{forum}に状況を投稿し、サポートを受けてください。",
+          "forum": "フォーラム"
+        },
+        "introduction": [
+          "ご希望であれば、暗号化パスフレーズを設定できます。暗号化パスフレーズはバックアップの復号時に不可欠です。",
+          "パスフレーズを忘れた場合、リカバーする方法はありません！",
+          "覚えやすいものを選ぶか、安全な場所に書き留めて下さい。"
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "保管のために、サーバーはデータをGoogle Driveに送信します。{here}で無料のアカウントを登録することができます 。",
+            "here": "ここ"
+          },
+          "次へを押すと、Googleは、サーバーがあなたのアカウントにアクセス許可することを確認します。サーバーがアクセスができるのは、作成したバックアップファイルのみです。",
+          "これを確認すると、いくつかのテキストをここにコピー＆ペーストするよう求められます。"
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "おかえりなさい！コピー＆ペースト用のテキストは出てきましたか？見つからない場合は、{here}をクリックしてもう一度試してください。",
+            "here": "ここ"
+          },
+          "または、これをペーストして終わりです！"
+        ]
+      }
+    ],
+    "field": {
+      "passphrase": "パスフレーズ（任意）",
+      "confirmationText": "確認用テキスト"
+    },
+    "problem": {
+      "verify": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認してください。"
     }
   }
 }

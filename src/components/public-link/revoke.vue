@@ -114,6 +114,12 @@ export default {
     "introduction": [
       "Anda hendak mencabut Tautan Akses Publik. Ini berarti semua usaha untuk mengirim data melalui tautan ini akan ditolak, termasuk catatan yang sudah dimulai."
     ]
+  },
+  "ja": {
+    "title": "一般公開リンクの無効化",
+    "introduction": [
+      "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータ受信が拒否され、これには現在すでに入力を開始しているフォームのデータ受信も含まれます。"
+    ]
   }
 }
 </i18n>

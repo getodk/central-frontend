@@ -15,7 +15,8 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[0].title') }}</template>
       <p>
         <strong>{{ $t('steps[0].body[0]') }}</strong>
-        {{ $t('steps[0].body[1]') }}
+        <sentence-separator/>
+        <span>{{ $t('steps[0].body[1]') }}</span>
       </p>
     </checklist-step>
     <checklist-step stage="current">
@@ -38,7 +39,7 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <doc-link to="central-forms/#forms-with-attachments">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
@@ -51,22 +52,20 @@ except according to the terms contained in the LICENSE file.
             <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].test') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
     <checklist-step stage="current">
       <template #title>{{ $t('steps[4].title') }}</template>
       <p>
-        <template v-if="status">
-          {{ $t('steps[4].body[0].status') }}
-        </template>
+        <template v-if="status">{{ $t('steps[4].body[0].status') }}</template>
         <i18n v-else :tag="false" path="steps[4].body[0].link.full">
           <template #publish>
             <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
           </template>
         </i18n>
-        &nbsp;
+        <sentence-separator/>
         <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
     </checklist-step>
@@ -78,12 +77,14 @@ import { mapGetters } from 'vuex';
 
 import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftChecklist',
-  components: { ChecklistStep, DocLink },
+  components: { ChecklistStep, DocLink, SentenceSeparator },
   mixins: [routes()],
   props: {
     // Indicates whether the current route path is .../draft.
@@ -449,6 +450,60 @@ export default {
             "link": {
               "full": "Ketika Anda yakin Draf sudah siap, Anda bisa {publish} menggunakan tombol yang ada di sebelah kanan.",
               "publish": "menerbitkannya"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "ja": {
+    "clickForInfo": "ここをクリックして、さらに詳細を表示",
+    "steps": [
+      {
+        "title": "初回の定義フォームのアップロード",
+        "body": [
+          "素晴らしい仕事！",
+          "フォームが正常に読み込まれました。"
+        ]
+      },
+      {
+        "title": "改定した定義フォームをアップロード（任意）",
+        "body": [
+          {
+            "status": "質問文や理論式など、フォームに変更を加えた場合は、右のボタンを使って新しいXMLまたはXLSFormをアップロードして下さい。",
+            "link": {
+              "full": "質問文や理論式など、フォームに変更を加えた場合は、新しいXMLまたはXLSFormを{upload}するのは、今がチャンスです。",
+              "upload": "アップロード"
+            }
+          }
+        ]
+      },
+      {
+        "title": "フォームのメディアファイルのアップロード",
+        "body": [
+          {
+            "full": "あなたのフォームには、参照ファイルが必要です。これらのファイルの新規または更新されたコピーのアップロードは、{mediaFiles}タブで設定できます。",
+            "mediaFiles": "メディアファイル"
+          }
+        ]
+      },
+      {
+        "title": "このフォームをモバイルデバイスでテストする",
+        "body": [
+          {
+            "full": "フォームが期待通りに動作するかどうかを{test}することができます。テストサブミッションは、最終的なデータには含まれません。",
+            "test": "テスト"
+          }
+        ]
+      },
+      {
+        "title": "下書きの公開",
+        "body": [
+          {
+            "status": "下書きフォームの準備が整い、フィールドで利用するデバイスで用いたい場合、右のボタンを使って下書きを公開することができます。",
+            "link": {
+              "full": "下書きフォームの準備が整い、フィールド調査のデバイスで使用したい場合、下書きフォームを{publish}できます。",
+              "publish": "公開"
             }
           }
         ]

@@ -139,7 +139,7 @@ export default {
 
   .form-control {
     display: inline-block;
-    width: 200px;
+    width: 215px;
   }
 
   .spinner-container {
@@ -192,6 +192,12 @@ export default {
     "cannotAssignRole": "Anda tidak dapat menyunting Peran Proyek Anda sendiri.",
     "field": {
       "projectRole": "Peran Proyek"
+    }
+  },
+  "ja": {
+    "cannotAssignRole": "自分自身のプロジェクトの役割を変更することはできません。",
+    "field": {
+      "projectRole": "プロジェクトでの役割"
     }
   }
 }

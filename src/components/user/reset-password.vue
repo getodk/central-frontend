@@ -121,6 +121,13 @@ export default {
       "full": "Setelah Anda mengklik {resetPassword} di bawah, kata sandi untuk Pengguna \"{displayName}\" \u003c{email}> tidak akan berlaku lagi. Sebuah email tentang instruksi selanjutnya akan dikirim ke {email}.",
       "resetPassword": "Atur Ulang Kata Sandi"
     }
+  },
+  "ja": {
+    "title": "パスワードのリセット",
+    "introduction": {
+      "full": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"\u003c{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送られます。",
+      "resetPassword": "パスワードのリセット"
+    }
   }
 }
 </i18n>

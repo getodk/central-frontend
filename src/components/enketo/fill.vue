@@ -92,6 +92,12 @@ export default {
       "processing": "Formulir Web belum tersedia. Silakan muat ulang dan coba lagi nanti.",
       "notOpen": "Formulir ini sedang tidak menerima kiriman data baru sekarang."
     }
+  },
+  "ja": {
+    "disabled": {
+      "processing": "Webフォームはまだ利用できません。現在、処理中です。後で更新して、もう一度試して下さい。",
+      "notOpen": "このフォームは現在、新規のサブミッションを受け付けていません"
+    }
   }
 }
 </i18n>
