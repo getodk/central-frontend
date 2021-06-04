@@ -59,7 +59,8 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 
 - To upload an XLSForm, run [pyxform-http](https://github.com/getodk/pyxform-http). ODK Central Frontend communicates with pyxform-http through ODK Central Backend.
 - You can use ODK Collect to scan an app user QR code, download a form, and submit data. One option to do so is to use [`ngrok`](https://ngrok.com/download). ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Within ODK Central Backend, you will also need to set the `default.env.domain` property in [`config/default.json`](https://github.com/getodk/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart ODK Central Backend if it is already running.
-- Enketo is a web form engine used to show form previews and allow for web-based data entry. The development `nginx.conf` is not configured to work with Enketo.
+- Enketo is a web form engine used to show form previews and allow for web-based data entry. Please see our [instructions](docs/enketo.md) for optionally setting up an Enketo server for use in _development_ (it is already included in the production ODK Central stack).
+
 
 ## Deploying to production
 
