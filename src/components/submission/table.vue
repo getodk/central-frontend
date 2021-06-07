@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody ref="metadataBody"
-        :class="`submission-table-actions-trigger-${actions.trigger}`"
+        :class="`submission-table-actions-trigger-${actionsTrigger}`"
         @mousemove="setActionsTrigger('hover')"
         @focusin="setActionsTrigger('focus')" @click="review">
         <template v-if="submissions != null">
@@ -84,32 +84,29 @@ export default {
     draft: Boolean,
     submissions: Array,
     fields: Array,
-    originalCount: Number,
-    updated: Number
+    originalCount: Number
   },
   data() {
     return {
-      actions: {
-        /*
-        Actions are shown for a row if the cursor is over the row or if one of
-        the actions is focused. However, it is possible for the cursor to be
-        over one row while an action is focused in a different row. In that
-        case, we show the actions for one of the two rows depending on the type
-        of the most recent event.
+      /*
+      Actions are shown for a row if the cursor is over the row or if one of the
+      actions is focused. However, it is possible for the cursor to be over one
+      row while an action is focused in a different row. In that case, we show
+      the actions for one of the two rows depending on the type of the most
+      recent event.
 
-        I tried other approaches before landing on this one. However, sequences
-        of events like the following were a challenge:
+      I tried other approaches before landing on this one. However, sequences of
+      events like the following were a challenge:
 
-          - Click the More button for a row.
-          - Next, press tab to focus the Review button in the next row.
-          - Actions are shown for the next row and are no longer shown beneath
-            the cursor. However, that will trigger a mouseover event, which
-            depending on the approach may cause actions to be shown beneath the
-            cursor again.
-        */
-        trigger: 'hover',
-        dataHover: null
-      }
+        - Click the More button for a row.
+        - Next, press tab to focus the Review button in the next row.
+        - Actions are shown for the next row and are no longer shown beneath the
+          cursor. However, that will trigger a mouseover event, which depending
+          on the approach may cause actions to be shown beneath the cursor
+          again.
+      */
+      actionsTrigger: 'hover',
+      dataHover: null
     };
   },
   computed: {
@@ -121,40 +118,44 @@ export default {
     }
   },
   watch: {
-    submissions: 'removeHoverClass',
-    updated(index) {
-      const { metadataBody } = this.$refs;
-      const oldRow = metadataBody.querySelector('.updated');
-      if (oldRow != null) oldRow.classList.remove('updated');
+    /*
+    We remove the data-hover class after the submissions are refreshed, with the
+    following cases in mind:
 
-      if (index != null) {
-        const newRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
-        // The SubmissionMetadataRow element does not have a class binding, so I
-        // think we can add this class without Vue removing it.
-        newRow.classList.add('updated');
-      }
-    }
+      - There may be fewer submissions after the refresh than before. In that
+        case, it is possible that this.submissions.length <= this.dataHover.
+      - A submission may be in a different row after the refresh. For example,
+        if the user hovers over the first row, and after the refresh, that
+        submission is in the second row, then the second row will incorrectly
+        have the data-hover class.
+
+    In some cases, it would be ideal not to remove the class or to add the class
+    to the row for a different submission. That logic is not in place right now.
+    */
+    submissions: 'removeHoverClass'
   },
   methods: {
     setActionsTrigger(trigger) {
-      this.actions.trigger = trigger;
+      this.actionsTrigger = trigger;
     },
     toggleHoverClass(event) {
       const dataRow = event.target.closest('tr');
       const index = Number.parseInt(dataRow.dataset.index, 10);
-      if (index === this.actions.dataHover) return;
+      if (index === this.dataHover) return;
       const { metadataBody } = this.$refs;
-      if (this.actions.dataHover != null)
+      if (this.dataHover != null)
         metadataBody.querySelector('.data-hover').classList.remove('data-hover');
       const metadataRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+      // The SubmissionMetadataRow element does not have a class binding, so I
+      // think we can add this class without Vue removing it.
       metadataRow.classList.add('data-hover');
-      this.actions.dataHover = index;
+      this.dataHover = index;
     },
     removeHoverClass() {
-      if (this.actions.dataHover != null) {
+      if (this.dataHover != null) {
         const tr = this.$refs.metadataBody.querySelector('.data-hover');
         tr.classList.remove('data-hover');
-        this.actions.dataHover = null;
+        this.dataHover = null;
       }
     },
     review(event) {
@@ -162,6 +163,16 @@ export default {
       const tr = event.target.closest('tr');
       if (tr.querySelector('.review-button').contains(event.target))
         this.$emit('review', this.submissions[tr.dataset.index]);
+    },
+    // Using a method instead of a prop in case the same submission is updated
+    // twice in a row.
+    afterReview(index) {
+      const { metadataBody } = this.$refs;
+      const tr = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+      tr.classList.add('updated');
+      this.$nextTick(() => {
+        tr.classList.remove('updated');
+      });
     }
   }
 };

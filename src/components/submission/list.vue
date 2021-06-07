@@ -31,10 +31,9 @@ except according to the terms contained in the LICENSE file.
           @decrypt="showDecrypt"/>
       </div>
       <submission-table v-show="submissions != null && submissions.length !== 0"
-        :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
-        :submissions="submissions" :fields="selectedFields"
-        :original-count="originalCount" :updated="updated"
-        @review="showReview"/>
+        ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
+        :draft="draft" :submissions="submissions" :fields="selectedFields"
+        :original-count="originalCount" @review="showReview"/>
       <p v-show="submissions != null && submissions.length === 0"
         class="empty-table-message">
         {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
@@ -120,9 +119,6 @@ export default {
       // equal submissions.length unless a submission has been created since the
       // initial fetch or last refresh.
       skip: 0,
-      // The index of the submission whose review state was updated most
-      // recently
-      updated: null,
       decrypt: {
         state: false,
         formAction: null
@@ -221,7 +217,6 @@ export default {
       this.instanceIds.clear();
       this.originalCount = null;
       this.skip = 0;
-      this.updated = null;
     },
     replaceSubmissions() {
       this.submissions = this.odataChunk.value;
@@ -229,7 +224,6 @@ export default {
       for (const submission of this.submissions)
         this.instanceIds.add(submission.__id);
       this.originalCount = this.odataChunk['@odata.count'];
-      this.updated = null;
     },
     pushSubmissions() {
       const lastSubmissionDate = last(this.submissions).__system.submissionDate;
@@ -336,9 +330,7 @@ export default {
           ...submission,
           __system: { ...submission.__system, reviewState }
         });
-        this.updated = index;
-      } else {
-        this.updated = null;
+        this.$refs.table.afterReview(index);
       }
     }
   }

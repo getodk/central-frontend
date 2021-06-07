@@ -123,7 +123,12 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-metadata-row {
-  &.updated { background-color: #faf1cd; }
+  transition: background-color 0.6s 6s;
+
+  &.updated {
+    background-color: #faf1cd;
+    transition: none;
+  }
 
   .row-number {
     color: #999;
