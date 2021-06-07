@@ -173,9 +173,6 @@ export default {
     "back": {
       "title": "Submission Detail",
       "back": "Back to Submissions Table"
-    },
-    "alert": {
-      "updateReviewState": "Review State saved!"
     }
   }
 }

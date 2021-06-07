@@ -30,15 +30,15 @@ except according to the terms contained in the LICENSE file.
           :form-version="formVersion" :odata-filter="odataFilter"
           @decrypt="showDecrypt"/>
       </div>
-      <template v-if="submissions != null">
-        <submission-table v-if="submissions.length !== 0"
-          :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
-          :submissions="submissions" :fields="selectedFields"
-          :original-count="originalCount" @review="showReview"/>
-        <p v-else class="empty-table-message">
-          {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
-        </p>
-      </template>
+      <submission-table v-show="submissions != null && submissions.length !== 0"
+        :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
+        :submissions="submissions" :fields="selectedFields"
+        :original-count="originalCount" :updated="updated"
+        @review="showReview"/>
+      <p v-show="submissions != null && submissions.length === 0"
+        class="empty-table-message">
+        {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
+      </p>
       <div v-show="odataLoadingMessage != null" id="submission-list-message">
         <div id="submission-list-spinner-container">
           <spinner :state="odataLoadingMessage != null"/>
@@ -120,6 +120,9 @@ export default {
       // equal submissions.length unless a submission has been created since the
       // initial fetch or last refresh.
       skip: 0,
+      // The index of the submission whose review state was updated most
+      // recently
+      updated: null,
       decrypt: {
         state: false,
         formAction: null
@@ -218,6 +221,7 @@ export default {
       this.instanceIds.clear();
       this.originalCount = null;
       this.skip = 0;
+      this.updated = null;
     },
     replaceSubmissions() {
       this.submissions = this.odataChunk.value;
@@ -225,6 +229,7 @@ export default {
       for (const submission of this.submissions)
         this.instanceIds.add(submission.__id);
       this.originalCount = this.odataChunk['@odata.count'];
+      this.updated = null;
     },
     pushSubmissions() {
       const lastSubmissionDate = last(this.submissions).__system.submissionDate;
@@ -311,10 +316,10 @@ export default {
     },
     showReview(submission) {
       this.review.submission = submission;
-      this.review.state = true;
+      this.showModal('review');
     },
     hideReview() {
-      this.review.state = false;
+      this.hideModal('review');
       this.review.submission = null;
     },
     // This method accounts for the unlikely case that the user clicked the
@@ -322,6 +327,7 @@ export default {
     // submission may have been edited or may no longer be shown.
     afterReview(originalSubmission, reviewState) {
       this.hideReview();
+      this.$alert().success(this.$t('alert.updateReviewState'));
       const index = this.submissions.findIndex(submission =>
         submission.__id === originalSubmission.__id);
       if (index !== -1) {
@@ -330,6 +336,9 @@ export default {
           ...submission,
           __system: { ...submission.__system, reviewState }
         });
+        this.updated = index;
+      } else {
+        this.updated = null;
       }
     }
   }

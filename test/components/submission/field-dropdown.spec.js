@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 
+import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionFieldDropdown from '../../../src/components/submission/field-dropdown.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
 
@@ -419,11 +420,12 @@ describe('SubmissionFieldDropdown', () => {
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse(component => {
-          component.find(SubmissionTable).length.should.equal(0);
+          component.find(SubmissionDataRow).length.should.equal(0);
         })
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
           const table = component.first(SubmissionTable);
+          table.find(SubmissionDataRow).length.should.equal(1);
           table.getProp('fields').length.should.equal(9);
         }));
   });

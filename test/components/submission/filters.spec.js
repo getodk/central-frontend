@@ -4,7 +4,6 @@ import sinon from 'sinon';
 
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
-import SubmissionTable from '../../../src/components/submission/table.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -64,7 +63,7 @@ describe('SubmissionFilters', () => {
         fieldKey.id.toString()
       ))
       .beforeEachResponse(component => {
-        component.find(SubmissionTable).length.should.equal(0);
+        component.find(SubmissionMetadataRow).length.should.equal(0);
       })
       .respondWithData(() => testData.submissionOData(2, 0))
       .afterResponse(component => {

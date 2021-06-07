@@ -139,10 +139,9 @@ describe('SubmissionMetadataRow', () => {
 
     describe('after a successful response', () => {
       const submit = () => {
-        testData.extendedSubmissions.createPast(1, {
-          instanceId: 's',
-          reviewState: null
-        });
+        testData.extendedSubmissions
+          .createPast(1, { instanceId: 'foo', reviewState: null })
+          .createPast(1, { instanceId: 'bar', reviewState: null });
         return loadSubmissionList()
           .complete()
           .request(async (component) => {
@@ -165,13 +164,62 @@ describe('SubmissionMetadataRow', () => {
         modal.getProp('state').should.be.false();
       });
 
+      it('shows a success alert', async () => {
+        const component = await submit();
+        component.should.alert('success');
+      });
+
       it('updates the submission', async () => {
         const component = await submit();
         const submission = component.data().submissions[0];
         submission.__system.reviewState.should.equal('hasIssues');
         // Check that other properties were copied correctly.
-        submission.__id.should.equal('s');
+        submission.__id.should.equal('bar');
         submission.__system.submitterId.should.equal('1');
+      });
+
+      describe('highlight', () => {
+        it('highlights the row', async () => {
+          const component = await submit();
+          const row = component.first(SubmissionMetadataRow);
+          row.hasClass('updated').should.be.true();
+        });
+
+        it('toggles the highlight if another row is updated', () =>
+          submit()
+            .complete()
+            .request(async (component) => {
+              const row = component.find(SubmissionMetadataRow)[1];
+              await trigger.click(row, '.review-button');
+              return trigger.submit(component, '#submission-update-review-state form', [
+                ['input[value="hasIssues"]', true]
+              ]);
+            })
+            .respondWithData(() => {
+              testData.extendedSubmissions.update(0, {
+                reviewState: 'hasIssues'
+              });
+              return testData.standardSubmissions.first();
+            })
+            .afterResponse(component => {
+              const rows = component.find(SubmissionMetadataRow);
+              rows[0].hasClass('updated').should.be.false();
+              rows[1].hasClass('updated').should.be.true();
+            }));
+
+        it('removes the highlight after the submissions are refreshed', () =>
+          submit()
+            .complete()
+            .request(trigger.click('#submission-list-refresh-button'))
+            .beforeEachResponse(component => {
+              const row = component.first(SubmissionMetadataRow);
+              row.hasClass('updated').should.be.true();
+            })
+            .respondWithData(testData.submissionOData)
+            .afterResponse(component => {
+              const row = component.first(SubmissionMetadataRow);
+              row.hasClass('updated').should.be.false();
+            }));
       });
     });
   });

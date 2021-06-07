@@ -42,9 +42,9 @@ except according to the terms contained in the LICENSE file.
           </button>
         </template>
         <router-link v-slot="{ href }" :to="submissionPath" custom>
-          <a class="btn btn-default" :href="href" target="_blank"
-            :title="$t('action.more')">
-            <span class="icon-chevron-right"></span>
+          <a class="more-button btn btn-default" :href="href" target="_blank">
+            <span>{{ $t('action.more') }}</span>
+            <span class="icon-angle-right"></span>
           </a>
         </router-link>
       </div>
@@ -123,6 +123,8 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-metadata-row {
+  &.updated { background-color: #faf1cd; }
+
   .row-number {
     color: #999;
     font-size: 11px;
@@ -139,6 +141,16 @@ export default {
   .state-and-actions {
     min-width: 205px;
     position: relative;
+
+    > .icon-angle-right {
+      bottom: #{$padding-bottom-table-data + 1px};
+      color: $color-accent-primary;
+      font-size: 20px;
+      // Using `position: absolute` rather than `float: right` so that the icon
+      // does not increase the row's height.
+      position: absolute;
+      right: $padding-right-table-data;
+    }
   }
 
   $edits-and-angle-width: 48px;
@@ -170,16 +182,6 @@ export default {
     .icon-pencil { margin-right: 5px; }
   }
 
-  .icon-angle-right {
-    bottom: #{$padding-bottom-table-data + 1px};
-    color: $color-accent-primary;
-    font-size: 20px;
-    // Using `position: absolute` rather than `float: right` so that the icon
-    // does not increase the row's height.
-    position: absolute;
-    right: $padding-right-table-data;
-  }
-
   .btn-group {
     // Setting the background color in case the edit button is disabled.
     background-color: $color-page-background;
@@ -189,11 +191,23 @@ export default {
   }
 
   .btn {
-    // The icons are slightly different widths. .icon-check is the widest, at
-    // 12px.
-    min-width: #{2 * $hpadding-btn + 12px};
+    .icon-check { margin-right: -1px; }
 
-    [class^="icon-"] { margin-right: 0; }
+    .icon-pencil {
+      margin-left: 1px;
+      margin-right: 0;
+    }
+  }
+
+  .more-button {
+    span:first-child { margin-right: 13px; }
+
+    .icon-angle-right {
+      font-size: 18px;
+      position: absolute;
+      right: $hpadding-btn;
+      top: #{$padding-top-btn - 2px};
+    }
   }
 }
 

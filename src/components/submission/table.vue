@@ -24,11 +24,13 @@ except according to the terms contained in the LICENSE file.
         :class="`submission-table-actions-trigger-${actions.trigger}`"
         @mousemove="setActionsTrigger('hover')"
         @focusin="setActionsTrigger('focus')" @click="review">
-        <submission-metadata-row v-for="(submission, index) in submissions"
-          :key="submission.__id" :project-id="projectId"
-          :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-          :row-number="originalCount - index" :can-update="canUpdate"
-          :data-index="index"/>
+        <template v-if="submissions != null">
+          <submission-metadata-row v-for="(submission, index) in submissions"
+            :key="submission.__id" :project-id="projectId"
+            :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
+            :row-number="originalCount - index" :can-update="canUpdate"
+            :data-index="index"/>
+        </template>
       </tbody>
     </table>
     <div class="table-container">
@@ -46,7 +48,7 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody @mousemove="setActionsTrigger('hover')"
           @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
-          <template v-if="fields != null">
+          <template v-if="submissions != null && fields != null">
             <submission-data-row v-for="(submission, index) in submissions"
               :key="submission.__id" :project-id="projectId"
               :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
@@ -64,6 +66,9 @@ import SubmissionMetadataRow from './metadata-row.vue';
 
 import { requestData } from '../../store/modules/request';
 
+// We may render many rows, so this component makes use of event delegation and
+// other optimizations.
+
 export default {
   name: 'SubmissionTable',
   components: { SubmissionDataRow, SubmissionMetadataRow },
@@ -77,15 +82,10 @@ export default {
       required: true
     },
     draft: Boolean,
-    submissions: {
-      type: Array,
-      required: true
-    },
+    submissions: Array,
     fields: Array,
-    originalCount: {
-      type: Number,
-      required: true
-    }
+    originalCount: Number,
+    updated: Number
   },
   data() {
     return {
@@ -120,6 +120,21 @@ export default {
       return this.project != null && this.project.permits('submission.update');
     }
   },
+  watch: {
+    submissions: 'removeHoverClass',
+    updated(index) {
+      const { metadataBody } = this.$refs;
+      const oldRow = metadataBody.querySelector('.updated');
+      if (oldRow != null) oldRow.classList.remove('updated');
+
+      if (index != null) {
+        const newRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+        // The SubmissionMetadataRow element does not have a class binding, so I
+        // think we can add this class without Vue removing it.
+        newRow.classList.add('updated');
+      }
+    }
+  },
   methods: {
     setActionsTrigger(trigger) {
       this.actions.trigger = trigger;
@@ -132,8 +147,6 @@ export default {
       if (this.actions.dataHover != null)
         metadataBody.querySelector('.data-hover').classList.remove('data-hover');
       const metadataRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
-      // The SubmissionMetadataRow element does not have a class binding, so I
-      // think we can add this class without Vue removing it.
       metadataRow.classList.add('data-hover');
       this.actions.dataHover = index;
     },
