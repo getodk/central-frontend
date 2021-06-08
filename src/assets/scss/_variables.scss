@@ -45,10 +45,13 @@ $color-input: #555;
 $color-input-inactive: #777;
 $color-input-background: #eee;
 $color-panel-input-background: #f7f7f7;
-$font-size-button: 12px;
+$font-size-btn: 12px;
+$hpadding-btn: 10px;
+$padding-bottom-btn: 5px;
+$padding-top-btn: 6px;
 
 // Dropdowns
-$font-size-dropdown-menu: $font-size-button;
+$font-size-dropdown-menu: $font-size-btn;
 $min-width-dropdown-menu: 150px;
 
 // Tables

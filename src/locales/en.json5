@@ -243,6 +243,9 @@
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
   },
+  "alert": {
+    "updateReviewState": "Review State saved!"
+  },
   "moreInfo": {
     "clickHere": {
       "full": "For more information, {clickHere}.",

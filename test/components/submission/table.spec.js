@@ -9,7 +9,8 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { trigger } from '../../util/event';
 
-const mountComponent = (propsData = undefined) => mount(SubmissionTable, {
+const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
+  ...mountOptions,
   propsData: {
     projectId: '1',
     xmlFormId: 'f',
@@ -18,7 +19,7 @@ const mountComponent = (propsData = undefined) => mount(SubmissionTable, {
     fields: testData.extendedForms.last()._fields
       .map(field => new Field(field)),
     originalCount: testData.extendedSubmissions.size,
-    ...propsData
+    ...mountOptions.propsData
   },
   requestData: { project: testData.extendedProjects.last() },
   router: true
@@ -30,7 +31,9 @@ describe('SubmissionTable', () => {
   describe('metadata headers', () => {
     it('renders the correct headers for a form', () => {
       testData.extendedSubmissions.createPast(1);
-      const component = mountComponent({ draft: false });
+      const component = mountComponent({
+        propsData: { draft: false }
+      });
       const table = component.first('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
     });
@@ -38,7 +41,9 @@ describe('SubmissionTable', () => {
     it('renders the correct headers for a form draft', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
-      const component = mountComponent({ draft: true });
+      const component = mountComponent({
+        propsData: { draft: true }
+      });
       const table = component.first('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted at']);
     });
@@ -62,7 +67,9 @@ describe('SubmissionTable', () => {
       ];
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
-      const component = mountComponent({ fields: [new Field(fields[1])] });
+      const component = mountComponent({
+        propsData: { fields: [new Field(fields[1])] }
+      });
       const table = component.first('#submission-table-data');
       headers(table).should.eql(['g-s', 'Instance ID']);
     });
@@ -82,7 +89,7 @@ describe('SubmissionTable', () => {
     testData.extendedForms.createPast(1, { submissions: 10 });
     testData.extendedSubmissions.createPast(10);
     const component = mountComponent({
-      submissions: testData.submissionOData(2).value
+      propsData: { submissions: testData.submissionOData(2).value }
     });
     const rows = component.find(SubmissionMetadataRow);
     rows.length.should.equal(2);
@@ -114,8 +121,8 @@ describe('SubmissionTable', () => {
       const component = mountComponent();
       await trigger.mouseover(component, SubmissionDataRow);
       const metadataRows = component.find(SubmissionMetadataRow);
-      metadataRows[0].hasClass('actions-shown').should.be.true();
-      metadataRows[1].hasClass('actions-shown').should.be.false();
+      metadataRows[0].hasClass('data-hover').should.be.true();
+      metadataRows[1].hasClass('data-hover').should.be.false();
     });
 
     it('toggles actions if user hovers over a new SubmissionDataRow', async () => {
@@ -126,18 +133,33 @@ describe('SubmissionTable', () => {
       await trigger.mouseover(dataRows[0]);
       await trigger.mouseover(dataRows[1]);
       const metadataRows = component.find(SubmissionMetadataRow);
-      metadataRows[0].hasClass('actions-shown').should.be.false();
-      metadataRows[1].hasClass('actions-shown').should.be.true();
+      metadataRows[0].hasClass('data-hover').should.be.false();
+      metadataRows[1].hasClass('data-hover').should.be.true();
     });
 
-    it('hides the actions after the mouse leaves the table', async () => {
+    it('hides the actions if the cursor leaves the table', async () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
       testData.extendedSubmissions.createPast(2);
       const component = mountComponent();
       await trigger.mouseover(component, SubmissionDataRow);
       await trigger.mouseleave(component, '#submission-table-data tbody');
       const metadataRow = component.first(SubmissionMetadataRow);
-      metadataRow.hasClass('actions-shown').should.be.false();
+      metadataRow.hasClass('data-hover').should.be.false();
+    });
+
+    it('adds a class for the actions trigger', async () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = mountComponent({ attachToDocument: true });
+      const tbody = component.first('#submission-table-metadata tbody');
+      tbody.hasClass('submission-table-actions-trigger-hover').should.be.true();
+      const btn = tbody.find('.btn');
+      await trigger.focus(btn[0]);
+      tbody.hasClass('submission-table-actions-trigger-focus').should.be.true();
+      await trigger.mousemove(component, SubmissionMetadataRow);
+      tbody.hasClass('submission-table-actions-trigger-hover').should.be.true();
+      await trigger.focus(btn[1]);
+      await trigger.mousemove(component, SubmissionDataRow);
+      tbody.hasClass('submission-table-actions-trigger-hover').should.be.true();
     });
   });
 });

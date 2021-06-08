@@ -28,19 +28,23 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-angle-right"></span>
       <div class="btn-group">
         <template v-if="canUpdate">
+          <button type="button" class="review-button btn btn-default"
+            :title="$t('action.review')">
+            <span class="icon-check"></span>
+          </button>
           <a v-if="submission.__system.status == null" class="btn btn-default"
-            :href="editPath" target="_blank">
-            <span class="icon-pencil"></span><span>{{ editText }}</span>
+            :href="editPath" target="_blank" :title="editTitle">
+            <span class="icon-pencil"></span>
           </a>
           <button v-else type="button" class="btn btn-default" disabled
             :title="$t('submission.editDisabled')">
-            <span class="icon-pencil"></span><span>{{ editText }}</span>
+            <span class="icon-pencil"></span>
           </button>
         </template>
         <router-link v-slot="{ href }" :to="submissionPath" custom>
-          <a class="btn btn-default" :href="href" target="_blank">
-            <span class="icon-chevron-right"></span>
+          <a class="more-button btn btn-default" :href="href" target="_blank">
             <span>{{ $t('action.more') }}</span>
+            <span class="icon-angle-right"></span>
           </a>
         </router-link>
       </div>
@@ -94,11 +98,6 @@ export default {
         ? this.$t('submission.missingMedia')
         : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
-    submissionPath() {
-      const encodedFormId = encodeURIComponent(this.xmlFormId);
-      const encodedInstanceId = encodeURIComponent(this.submission.__id);
-      return `/projects/${this.projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
-    },
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,
@@ -106,10 +105,15 @@ export default {
         this.submission.__id
       );
     },
-    editText() {
+    editTitle() {
       return this.$t('submission.action.edit', {
         count: this.$n(this.submission.__system.edits, 'default')
       });
+    },
+    submissionPath() {
+      const encodedFormId = encodeURIComponent(this.xmlFormId);
+      const encodedInstanceId = encodeURIComponent(this.submission.__id);
+      return `/projects/${this.projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
     }
   }
 };
@@ -119,6 +123,13 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-metadata-row {
+  transition: background-color 0.6s 6s;
+
+  &.updated {
+    background-color: #faf1cd;
+    transition: none;
+  }
+
   .row-number {
     color: #999;
     font-size: 11px;
@@ -135,6 +146,16 @@ export default {
   .state-and-actions {
     min-width: 205px;
     position: relative;
+
+    > .icon-angle-right {
+      bottom: #{$padding-bottom-table-data + 1px};
+      color: $color-accent-primary;
+      font-size: 20px;
+      // Using `position: absolute` rather than `float: right` so that the icon
+      // does not increase the row's height.
+      position: absolute;
+      right: $padding-right-table-data;
+    }
   }
 
   $edits-and-angle-width: 48px;
@@ -166,16 +187,6 @@ export default {
     .icon-pencil { margin-right: 5px; }
   }
 
-  .icon-angle-right {
-    bottom: #{$padding-right-table-data + 1px};
-    color: $color-accent-primary;
-    font-size: 20px;
-    // Using `position: absolute` rather than `float: right` so that the icon
-    // does not increase the row's height.
-    position: absolute;
-    right: $padding-right-table-data;
-  }
-
   .btn-group {
     // Setting the background color in case the edit button is disabled.
     background-color: $color-page-background;
@@ -183,9 +194,32 @@ export default {
     position: absolute;
     top: 4px;
   }
-  &:hover .btn-group, .btn-group:focus-within, &.actions-shown .btn-group {
-    left: auto;
-    right: $padding-right-table-data;
+
+  .btn {
+    .icon-check { margin-right: -1px; }
+
+    .icon-pencil {
+      margin-left: 1px;
+      margin-right: 0;
+    }
   }
+
+  .more-button {
+    span:first-child { margin-right: 13px; }
+
+    .icon-angle-right {
+      font-size: 18px;
+      position: absolute;
+      right: $hpadding-btn;
+      top: #{$padding-top-btn - 2px};
+    }
+  }
+}
+
+.submission-table-actions-trigger-hover tr:hover .btn-group,
+.submission-table-actions-trigger-hover .data-hover .btn-group,
+.submission-table-actions-trigger-focus .btn-group:focus-within {
+  left: auto;
+  right: $padding-right-table-data;
 }
 </style>

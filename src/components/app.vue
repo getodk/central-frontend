@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-show="anyNavigationConfirmed"/>
     <alert id="app-alert"/>
-    <div class="container-fluid">
+    <div class="container-fluid" @click="hideAlertAfterClick">
       <router-view/>
     </div>
   </div>
@@ -41,6 +41,15 @@ export default {
   }),
   created() {
     this.$once('hook:beforeDestroy', useSessions(this.$router, this.$store));
+  },
+  methods: {
+    hideAlertAfterClick(event) {
+      const alert = this.$alert();
+      if (alert.state && event.target.closest('a[target="_blank"]') != null &&
+        !event.defaultPrevented) {
+        alert.blank();
+      }
+    }
   }
 };
 </script>

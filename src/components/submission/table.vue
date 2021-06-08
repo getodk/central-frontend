@@ -20,11 +20,17 @@ except according to the terms contained in the LICENSE file.
           <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
         </tr>
       </thead>
-      <tbody ref="metadataBody">
-        <submission-metadata-row v-for="(submission, index) in submissions"
-          :key="submission.__id" :project-id="projectId"
-          :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-          :row-number="originalCount - index" :can-update="canUpdate"/>
+      <tbody ref="metadataBody"
+        :class="`submission-table-actions-trigger-${actionsTrigger}`"
+        @mousemove="setActionsTrigger('hover')"
+        @focusin="setActionsTrigger('focus')" @click="review">
+        <template v-if="submissions != null">
+          <submission-metadata-row v-for="(submission, index) in submissions"
+            :key="submission.__id" :project-id="projectId"
+            :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
+            :row-number="originalCount - index" :can-update="canUpdate"
+            :data-index="index"/>
+        </template>
       </tbody>
     </table>
     <div class="table-container">
@@ -40,12 +46,13 @@ except according to the terms contained in the LICENSE file.
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
-        <tbody ref="dataBody">
-          <template v-if="fields != null">
+        <tbody @mousemove="setActionsTrigger('hover')"
+          @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
+          <template v-if="submissions != null && fields != null">
             <submission-data-row v-for="(submission, index) in submissions"
               :key="submission.__id" :project-id="projectId"
               :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-              :fields="fields" :data-index="index + 1"/>
+              :fields="fields" :data-index="index"/>
           </template>
         </tbody>
       </table>
@@ -58,6 +65,9 @@ import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 
 import { requestData } from '../../store/modules/request';
+
+// We may render many rows, so this component makes use of event delegation and
+// other optimizations.
 
 export default {
   name: 'SubmissionTable',
@@ -72,15 +82,32 @@ export default {
       required: true
     },
     draft: Boolean,
-    submissions: {
-      type: Array,
-      required: true
-    },
+    submissions: Array,
     fields: Array,
-    originalCount: {
-      type: Number,
-      required: true
-    }
+    originalCount: Number
+  },
+  data() {
+    return {
+      /*
+      Actions are shown for a row if the cursor is over the row or if one of the
+      actions is focused. However, it is possible for the cursor to be over one
+      row while an action is focused in a different row. In that case, we show
+      the actions for one of the two rows depending on the type of the most
+      recent event.
+
+      I tried other approaches before landing on this one. However, sequences of
+      events like the following were a challenge:
+
+        - Click the More button for a row.
+        - Next, press tab to focus the Review button in the next row.
+        - Actions are shown for the next row and are no longer shown beneath the
+          cursor. However, that will trigger a mouseover event, which depending
+          on the approach may cause actions to be shown beneath the cursor
+          again.
+      */
+      actionsTrigger: 'hover',
+      dataHover: null
+    };
   },
   computed: {
     // The component does not assume that this data will exist when the
@@ -90,34 +117,63 @@ export default {
       return this.project != null && this.project.permits('submission.update');
     }
   },
-  mounted() {
-    let index;
-    let metadataRow;
-    const { metadataBody, dataBody } = this.$refs;
-    const mouseover = (event) => {
-      const { dataset } = event.target.closest('tr');
-      if (dataset.index !== index) {
-        if (index != null) metadataRow.classList.remove('actions-shown');
-        index = dataset.index;
-        metadataRow = metadataBody.querySelector(`tr:nth-child(${index})`);
-        // The SubmissionMetadataRow element does not have a class binding, so I
-        // think we can add this class without Vue removing it.
-        metadataRow.classList.add('actions-shown');
+  watch: {
+    /*
+    We remove the data-hover class after the submissions are refreshed, with the
+    following cases in mind:
+
+      - There may be fewer submissions after the refresh than before. In that
+        case, it is possible that this.submissions.length <= this.dataHover.
+      - A submission may be in a different row after the refresh. For example,
+        if the user hovers over the first row, and after the refresh, that
+        submission is in the second row, then the second row will incorrectly
+        have the data-hover class.
+
+    In some cases, it would be ideal not to remove the class or to add the class
+    to the row for a different submission. That logic is not in place right now.
+    */
+    submissions: 'removeHoverClass'
+  },
+  methods: {
+    setActionsTrigger(trigger) {
+      this.actionsTrigger = trigger;
+    },
+    toggleHoverClass(event) {
+      const dataRow = event.target.closest('tr');
+      const index = Number.parseInt(dataRow.dataset.index, 10);
+      if (index === this.dataHover) return;
+      const { metadataBody } = this.$refs;
+      if (this.dataHover != null)
+        metadataBody.querySelector('.data-hover').classList.remove('data-hover');
+      const metadataRow = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+      // The SubmissionMetadataRow element does not have a class binding, so I
+      // think we can add this class without Vue removing it.
+      metadataRow.classList.add('data-hover');
+      this.dataHover = index;
+    },
+    removeHoverClass() {
+      if (this.dataHover != null) {
+        const tr = this.$refs.metadataBody.querySelector('.data-hover');
+        tr.classList.remove('data-hover');
+        this.dataHover = null;
       }
-    };
-    const mouseleave = () => {
-      if (index != null) {
-        metadataRow.classList.remove('actions-shown');
-        index = null;
-        metadataRow = null;
-      }
-    };
-    dataBody.addEventListener('mouseover', mouseover);
-    dataBody.addEventListener('mouseleave', mouseleave);
-    this.$once('hook:beforeDestroy', () => {
-      dataBody.removeEventListener('mouseover', mouseover);
-      dataBody.removeEventListener('mouseleave', mouseleave);
-    });
+    },
+    review(event) {
+      if (!this.canUpdate) return;
+      const tr = event.target.closest('tr');
+      if (tr.querySelector('.review-button').contains(event.target))
+        this.$emit('review', this.submissions[tr.dataset.index]);
+    },
+    // Using a method instead of a prop in case the same submission is updated
+    // twice in a row.
+    afterReview(index) {
+      const { metadataBody } = this.$refs;
+      const tr = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
+      tr.classList.add('updated');
+      setTimeout(() => {
+        tr.classList.remove('updated');
+      });
+    }
   }
 };
 </script>

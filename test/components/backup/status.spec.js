@@ -182,41 +182,47 @@ describe('BackupStatus', () => {
     });
 
     describe('after the link is clicked', () => {
+      let defaultPrevented;
+      const handler = (event) => {
+        defaultPrevented = event.defaultPrevented;
+        event.preventDefault();
+      };
+      before(() => {
+        document.addEventListener('click', handler);
+      });
+      after(() => {
+        document.removeEventListener('click', handler);
+      });
+
       it('shows a success alert', async () => {
-        const app = await load('/system/backups');
-        const a = app.first('#backup-status [href="/v1/backup"]');
-        // Needed for Karma.
-        a.element.setAttribute('target', '_blank');
-        await trigger.click(a);
+        const app = await load('/system/backups', { attachToDocument: true });
+        await trigger.click(app, '#backup-status [href="/v1/backup"]');
         app.should.alert('success');
       });
 
       it('disables the link', async () => {
-        const a = mountComponent().first('[href="/v1/backup"]');
-        a.element.setAttribute('target', '_blank');
+        const app = await load('/system/backups', { attachToDocument: true });
+        const a = app.first('#backup-status [href="/v1/backup"]');
         await trigger.click(a);
         a.hasClass('disabled').should.be.true();
       });
 
-      it('prevents default if it is clicked again', () => {
-        const a = mountComponent().first('[href="/v1/backup"]');
-        a.element.setAttribute('target', '_blank');
-        const click = () => a.element.dispatchEvent(new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true
-        }));
-        click().should.be.true();
-        click().should.be.false();
+      it('prevents default if it is clicked again', async () => {
+        const app = await load('/system/backups', { attachToDocument: true });
+        const a = app.first('#backup-status [href="/v1/backup"]');
+        await trigger.click(a);
+        defaultPrevented.should.be.false();
+        trigger.click(a);
+        defaultPrevented.should.be.true();
       });
 
       it('shows a spinner', async () => {
-        const component = mountComponent();
+        const app = await load('/system/backups', { attachToDocument: true });
+        const component = app.first(BackupStatus);
         const spinners = component.find(Spinner);
         spinners.length.should.equal(1);
         spinners[0].getProp('state').should.be.false();
-        const a = component.first('[href="/v1/backup"]');
-        a.element.setAttribute('target', '_blank');
-        await trigger.click(a);
+        await trigger.click(component, '[href="/v1/backup"]');
         spinners[0].getProp('state').should.be.true();
       });
     });

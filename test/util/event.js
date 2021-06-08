@@ -46,6 +46,19 @@ const triggerFunction = (f) => {
   };
 };
 
+trigger.focus = triggerFunction(target => {
+  if (document.activeElement === target.element)
+    throw new Error('already focused');
+  target.element.focus();
+});
+
+trigger.mousemove = triggerFunction(target => {
+  target.element.dispatchEvent(new MouseEvent('mousemove', {
+    bubbles: true,
+    cancelable: true
+  }));
+});
+
 trigger.mouseover = triggerFunction(target => {
   target.element.dispatchEvent(new MouseEvent('mouseover', {
     bubbles: true,

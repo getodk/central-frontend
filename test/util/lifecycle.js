@@ -98,3 +98,13 @@ export const mount = (component, options = {}) => {
 
 // Deprecated
 export const mountAndMark = mount;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UPDATE
+
+export const setProps = (wrapper, props) => {
+  wrapper.setProps(props);
+  return wrapper.vm.$nextTick();
+};
