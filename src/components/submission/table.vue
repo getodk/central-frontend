@@ -170,7 +170,7 @@ export default {
       const { metadataBody } = this.$refs;
       const tr = metadataBody.querySelector(`tr:nth-child(${index + 1})`);
       tr.classList.add('updated');
-      this.$nextTick(() => {
+      setTimeout(() => {
         tr.classList.remove('updated');
       });
     }
