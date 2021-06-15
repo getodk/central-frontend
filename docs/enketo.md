@@ -5,8 +5,8 @@ Enketo provides a web-based form submission UI, which is used in ODK Central for
 Enketo runs as a Node.js server and caches intermediate representations of forms in Redis. ODK Central Backend stores information for managing and launching Enketo forms from ODK Central Frontend, so all three must be configured together.
 
 - Clone [enketo-express](https://github.com/enketo/enketo-express) and read the [Manual Installation Instructions](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#manually). Specifically:
-	* Install Redis. (Node.js will already be installed to run ODK Central Frontend and Backend.) Enketo will expect Redis on the default port of `6379`.
-	* Install dependencies with `npm install`.
+    * Install Redis. (Node.js will already be installed to run ODK Central Frontend and Backend.) Enketo will expect Redis on the default port of `6379`.
+    * Install dependencies with `npm install`.
 - Configure Enketo. A minimal `config/config.json` for Enketo looks like:
 
 ```
@@ -20,6 +20,7 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
         }
     },
     "base path": "-",
+    "query parameter to pass to submission": "st",
     "redis": {
         "cache": {
             "port": "6379"
@@ -40,9 +41,9 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
 - Run the Enketo server via `npm start` (from the [Enketo Documentation](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-run)).
 
 - There will be three services running:
-	* ODK Central Frontend (via Nginx) on port `8989`
-	* ODK Central Backend on port `8383`
-	* Enketo server on port `8005`
+    * ODK Central Frontend (via Nginx) on port `8989`
+    * ODK Central Backend on port `8383`
+    * Enketo server on port `8005`
 
 
 ### Notes on existing Central Frontend configuration
