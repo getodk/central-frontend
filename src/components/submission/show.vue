@@ -126,6 +126,15 @@ export default {
             this.instanceId
           ),
           extended: true
+        },
+        {
+          key: 'diffs',
+          url: apiPaths.submissionDiffs(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId
+          ),
+          extended: true
         }
       ]).catch(noop);
     },

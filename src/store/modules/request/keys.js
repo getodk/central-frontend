@@ -53,6 +53,7 @@ export const keys = [
   'submission',
   'audits',
   'comments',
+  'diffs',
   'publicLinks',
   'fieldKeys',
 

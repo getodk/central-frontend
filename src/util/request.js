@@ -114,6 +114,7 @@ export const apiPaths = {
   },
   submissionAudits: submissionPath('/audits'),
   submissionComments: submissionPath('/comments'),
+  submissionDiffs: submissionPath('/diffs'),
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

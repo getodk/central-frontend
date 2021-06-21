@@ -16,13 +16,14 @@ const mountComponent = () => {
   const submission = testData.submissionOData();
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
+  const diffs = Object.create(null); // TODO: make this real extended data
   return mount(SubmissionActivity, {
     propsData: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
     },
-    requestData: { project, submission, audits, comments },
+    requestData: { project, submission, audits, comments, diffs },
     stubs: { RouterLink: RouterLinkStub },
     mocks: { $route: '/projects/1/submissions/s' }
   });
@@ -50,10 +51,13 @@ describe('SubmissionActivity', () => {
         } else if (index === 3) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments");
           headers['X-Extended-Metadata'].should.equal('true');
+        } else if (index === 4) {
+          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs");
+          headers['X-Extended-Metadata'].should.equal('true');
         }
       })
       .afterResponses(() => {
-        count.should.equal(4);
+        count.should.equal(5);
       });
   });
 
@@ -106,7 +110,8 @@ describe('SubmissionActivity', () => {
             return testData.standardSubmissions.last();
           })
           .respondWithData(() => testData.extendedAudits.sorted())
-          .respondWithData(() => testData.extendedComments.sorted());
+          .respondWithData(() => testData.extendedComments.sorted())
+          .respondWithData(() => Object.create(null)); // TODO: replace with extendedDiffs
       };
 
       it('sends the correct requests for activity data', () =>
@@ -116,8 +121,11 @@ describe('SubmissionActivity', () => {
           if (index === 1) {
             url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
             headers['X-Extended-Metadata'].should.equal('true');
-          } else {
+          } else if (index === 2) {
             url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
+            headers['X-Extended-Metadata'].should.equal('true');
+          } else if (index === 3) {
+            url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/diffs');
             headers['X-Extended-Metadata'].should.equal('true');
           }
         }));

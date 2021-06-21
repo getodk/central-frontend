@@ -3019,6 +3019,22 @@
         }
       }
     },
+    "SubmissionDiffRow": {
+      "editCaption": {
+        "added": {
+          "string": "added",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        },
+        "deleted": {
+          "string": "deleted",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        },
+        "changed": {
+          "string": "changed",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        }
+      }
+    },
     "SubmissionDownloadDropdown": {
       "action": {
         "download": {
