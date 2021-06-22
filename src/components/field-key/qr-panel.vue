@@ -70,26 +70,31 @@ import DocLink from '../doc-link.vue';
 
 import FieldKey from '../../presenters/field-key';
 import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyQrPanel',
   components: { CollectQr, DocLink },
   props: {
-    fieldKey: FieldKey, // eslint-disable-line vue/require-default-prop
-    managed: {
-      type: Boolean,
-      default: false
-    }
+    fieldKey: FieldKey,
+    managed: Boolean
   },
   computed: {
+    ...requestData(['project']),
     settings() {
-      const { token, projectId } = this.fieldKey;
+      const url = apiPaths.serverUrlForFieldKey(
+        this.fieldKey.token,
+        this.project.id
+      );
       const settings = {
-        server_url: apiPaths.serverUrlForFieldKey(token, projectId)
+        general: { server_url: `${window.location.origin}${url}` },
+        project: { name: this.project.name },
+        // Collect requires the settings to have an `admin` property.
+        admin: {}
       };
       if (this.managed) {
-        settings.form_update_mode = 'match_exactly';
-        settings.autosend = 'wifi_and_cellular';
+        settings.general.form_update_mode = 'match_exactly';
+        settings.general.autosend = 'wifi_and_cellular';
       }
       return settings;
     }

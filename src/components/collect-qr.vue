@@ -21,7 +21,6 @@ import pako from 'pako/lib/deflate';
 export default {
   name: 'CollectQr',
   props: {
-    // General settings only (not admin settings)
     settings: {
       type: Object,
       required: true
@@ -36,19 +35,9 @@ export default {
     }
   },
   computed: {
-    fullSettings() {
-      return {
-        general: {
-          ...this.settings,
-          server_url: `${window.location.origin}${this.settings.server_url}`
-        },
-        // Collect requires the settings to have an `admin` property.
-        admin: {}
-      };
-    },
     imgHtml() {
       const code = qrcode(0, this.errorCorrectionLevel);
-      const json = JSON.stringify(this.fullSettings);
+      const json = JSON.stringify(this.settings);
       code.addData(btoa(pako.deflate(json, { to: 'string' })));
       code.make();
       return code.createImgTag(this.cellSize, 0);
