@@ -26,7 +26,9 @@ describe('FormDraftTesting', () => {
     const { draftToken } = testData.extendedFormDrafts.last();
     component.first(CollectQr).getProp('settings').should.eql({
       general: {
-        server_url: `http://localhost:9876/v1/test/${draftToken}/projects/1/forms/f/draft`
+        server_url: `http://localhost:9876/v1/test/${draftToken}/projects/1/forms/f/draft`,
+        form_update_mode: 'match_exactly',
+        autosend: 'wifi_and_cellular'
       },
       project: { name: '[Draft] My Form', icon: '📝' },
       admin: {}

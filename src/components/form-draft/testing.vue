@@ -96,7 +96,11 @@ export default {
         this.xmlFormId
       );
       return {
-        general: { server_url: `${window.location.origin}${url}` },
+        general: {
+          server_url: `${window.location.origin}${url}`,
+          form_update_mode: 'match_exactly',
+          autosend: 'wifi_and_cellular'
+        },
         project: {
           name: this.$t('collectProjectName', this.formDraft),
           icon: '📝'
