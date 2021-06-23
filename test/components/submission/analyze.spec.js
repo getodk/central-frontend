@@ -1,80 +1,70 @@
+import Selectable from '../../../src/components/selectable.vue';
 import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const mountComponent = () => mount(SubmissionAnalyze, {
   propsData: { state: true },
   requestData: { form: testData.extendedForms.last() }
 });
-const clickTab = (wrapper, tabText) => {
-  for (const a of wrapper.find('#submission-analyze .nav-tabs a')) {
-    if (a.text().trim() === tabText)
-      return trigger.click(a).then(() => wrapper);
-  }
-  throw new Error('tab not found');
+const clickTab = (component, tabText) => {
+  const a = component.findAll('#submission-analyze .nav-tabs a');
+  const forTab = a.wrappers.find(wrapper => wrapper.text() === tabText);
+  should.exist(forTab);
+  return forTab.trigger('click');
 };
 
 describe('SubmissionAnalyze', () => {
-  beforeEach(mockLogin);
-
-  it('toggles the modal', () => {
+  beforeEach(() => {
+    mockLogin();
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f/submissions', { root: false })
-      .testModalToggles({
-        modal: SubmissionAnalyze,
-        show: '#submission-data-access-analyze-button',
-        hide: '.btn-primary'
-      });
   });
 
-  describe('tool info', () => {
-    beforeEach(() => {
-      testData.extendedForms.createPast(1);
-    });
+  it('toggles the modal', () =>
+    load('/projects/1/forms/f/submissions', { root: false }).testModalToggles({
+      modal: SubmissionAnalyze,
+      show: '#submission-data-access-analyze-button',
+      hide: '.btn-primary'
+    }));
 
-    const assertContent = (modal, tabText, urlSuffix, helpSubstring) => {
-      // Test the text of the active tab.
-      const activeTab = modal.first('.nav-tabs li.active');
-      activeTab.first('a').text().trim().should.equal(tabText);
-      // Test the OData URL.
-      const actualURL = modal.first('#submission-analyze-odata-url .selectable').text();
-      const baseURL = `${window.location.origin}/v1/projects/1/forms/f.svc`;
-      actualURL.should.equal(`${baseURL}${urlSuffix}`);
-      // Test the help text.
-      const help = modal.first('#submission-analyze-tool-help');
+  describe('tool help', () => {
+    const assertContent = (modal, tabText, helpSubstring) => {
+      modal.get('.nav-tabs li.active a').text().should.equal(tabText);
+
+      const help = modal.get('#submission-analyze-tool-help');
       help.text().should.containEql(helpSubstring);
     };
 
     it('defaults to the Excel/Power BI tab', () => {
       const modal = mountComponent();
-      assertContent(modal, 'Excel/Power BI', '', 'For help using OData with Excel,');
+      assertContent(modal, 'Excel/Power BI', 'For help using OData with Excel,');
     });
 
-    it('renders the Excel/Power BI tab correctly', () => {
+    it('renders the Excel/Power BI tab correctly', async () => {
       const modal = mountComponent();
-      return clickTab(modal, 'R')
-        .then(() => clickTab(modal, 'Excel/Power BI'))
-        .then(() => {
-          assertContent(modal, 'Excel/Power BI', '', 'For help using OData with Excel,');
-        });
+      await clickTab(modal, 'R');
+      await clickTab(modal, 'Excel/Power BI');
+      assertContent(modal, 'Excel/Power BI', 'For help using OData with Excel,');
     });
 
-    it('renders the R tab correctly', () => {
+    it('renders the R tab correctly', async () => {
       const modal = mountComponent();
-      return clickTab(modal, 'R').then(() => {
-        assertContent(modal, 'R', '', 'from R,');
-      });
+      await clickTab(modal, 'R');
+      assertContent(modal, 'R', 'from R,');
     });
 
-    it('renders the Other tab correctly', () => {
+    it('renders the Other tab correctly', async () => {
       const modal = mountComponent();
-      return clickTab(modal, 'Other').then(() => {
-        assertContent(modal, 'Other', '', 'For a full description of our OData support,');
-      });
+      await clickTab(modal, 'Other');
+      assertContent(modal, 'Other', 'For a full description of our OData support,');
     });
+  });
+
+  it('shows the correct URL', () => {
+    const text = mountComponent().getComponent(Selectable).text();
+    text.should.equal(`${window.location.origin}/v1/projects/1/forms/f.svc`);
   });
 });

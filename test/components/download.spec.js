@@ -4,40 +4,46 @@ import Download from '../../src/components/download.vue';
 
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
+import { mount } from '../util/lifecycle';
 
 describe('Download', () => {
   beforeEach(mockLogin);
 
   it('sets the correct href attribute', async () => {
-    const app = await load('/dl/a/b.txt?c=d#e');
-    const href = app.first(Download).first('a').getAttribute('href');
-    href.should.equal('/v1/a/b.txt?c=d#e');
+    const component = mount(Download, {
+      mocks: { $route: '/dl/a/b.txt?c=d#e' }
+    });
+    component.get('a').attributes().href.should.equal('/v1/a/b.txt?c=d#e');
   });
 
-  it('shows the filename', async () => {
-    const app = await load('/dl/a/b.txt?c=d#e');
-    app.first(Download).first('p').text().should.startWith('b.txt will begin');
+  it('shows the filename', () => {
+    const component = mount(Download, {
+      mocks: { $route: '/dl/a/b.txt?c=d#e' }
+    });
+    component.get('p').text().should.startWith('b.txt will begin');
   });
 
   it('clicks the download link', () => {
     const handler = sinon.fake();
     document.addEventListener('click', handler);
-    return load('/dl/a.txt', { attachToDocument: true }, {})
-      .then(app => {
-        handler.called.should.be.true();
-        const a = app.first(Download).first('a');
-        handler.getCall(0).args[0].target.should.equal(a.element);
-      })
-      .finally(() => {
-        document.removeEventListener('click', handler);
-      });
+    const component = mount(Download, {
+      mocks: { $route: '/dl/a.txt' },
+      attachTo: document.body
+    });
+    try {
+      handler.called.should.be.true();
+      const { target } = handler.getCall(0).args[0];
+      target.should.equal(component.get('a').element);
+    } finally {
+      document.removeEventListener('click', handler);
+    }
   });
 
   it('clicks the download link after a route update', () => {
     const handler = sinon.fake();
     return load('/dl/a.txt')
       .afterResponses(app => {
-        const a = app.first(Download).first('a');
+        const a = app.getComponent(Download).get('a');
         a.element.addEventListener('click', handler);
       })
       .route('/dl/b.txt')

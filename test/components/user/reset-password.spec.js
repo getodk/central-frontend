@@ -1,66 +1,57 @@
 import UserResetPassword from '../../../src/components/user/reset-password.vue';
+
+import User from '../../../src/presenters/user';
+
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
 describe('UserResetPassword', () => {
-  beforeEach(mockLogin);
-
-  describe('modal', () => {
-    it('does not show the modal initially', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          app.first(UserResetPassword).getProp('state').should.be.false();
-        }));
-
-    it('shows the modal after the reset password action is clicked', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app =>
-          trigger.click(app, '#user-list-table .reset-password'))
-        .then(app => {
-          app.first(UserResetPassword).getProp('state').should.be.true();
-        }));
+  beforeEach(() => {
+    mockLogin({ email: 'alice@getodk.org', displayName: 'Alice' });
   });
 
-  it('standard button thinking things', () =>
+  it('toggles the modal', () =>
+    load('/users', { root: false }).testModalToggles({
+      modal: UserResetPassword,
+      show: '.user-row .reset-password',
+      hide: '.btn-link'
+    }));
+
+  it('implements some standard button things', () =>
     mockHttp()
       .mount(UserResetPassword, {
-        propsData: { user: testData.standardUsers.first() }
+        propsData: {
+          state: true,
+          user: new User(testData.standardUsers.first())
+        }
       })
-      .request(component =>
-        trigger.click(component, '#user-reset-password-button'))
-      .standardButton('#user-reset-password-button'));
+      .testStandardButton({
+        button: '#user-reset-password-button',
+        disabled: ['.btn-link'],
+        modal: true
+      }));
 
-  describe('after successful response', () => {
-    let app;
-    beforeEach(() => mockRoute('/users')
-      .respondWithData(() => testData.standardUsers.sorted())
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor))
-      .afterResponse(component => {
-        app = component;
+  describe('after a successful response', () => {
+    const submit = () => load('/users', { root: false })
+      .complete()
+      .request(async (component) => {
+        await component.get('.user-row .reset-password').trigger('click');
+        return component.get('#user-reset-password-button').trigger('click');
       })
-      .request(() => trigger.click(app, '#user-list-table .reset-password')
-        .then(() => trigger.click(app, '#user-reset-password-button')))
-      .respondWithSuccess());
+      .respondWithSuccess();
 
-    it('modal hides', () => {
-      app.first(UserResetPassword).getProp('state').should.be.false();
+    it('hides the modal', async () => {
+      const component = await submit();
+      component.getComponent(UserResetPassword).props().state.should.be.false();
     });
 
-    it('success message is shown', () => {
-      app.should.alert('success');
-      const message = app.first('#app-alert .alert-message').text();
-      const user = testData.extendedUsers.last();
-      message.should.containEql(user.displayName);
-      message.should.containEql(user.email);
+    it('shows a success message', async () => {
+      const component = await submit();
+      component.should.alert('success', (message) => {
+        message.should.containEql('Alice');
+        message.should.containEql('alice@getodk.org');
+      });
     });
   });
 });

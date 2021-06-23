@@ -1,15 +1,16 @@
 /*
 This config is based on:
 
-  - https://github.com/Nikku/karma-browserify
+  - https://vue-test-utils.vuejs.org/installation/#using-other-test-runners
   - https://github.com/eddyerburgh/vue-test-utils-karma-example
   - https://github.com/eddyerburgh/avoriaz-karma-mocha-example
+  - https://github.com/Nikku/karma-browserify
 */
 
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
-const { entry, ...configForTests } = webpackConfig;
-configForTests.devtool = 'inline-source-map';
+const { entry, ...webpackConfigForKarma } = webpackConfig;
+webpackConfigForKarma.devtool = 'inline-source-map';
 
 module.exports = function(config) {
   config.set({
@@ -29,7 +30,7 @@ module.exports = function(config) {
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
     },
-    webpack: configForTests,
+    webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],
     reporters: ['spec'],
     singleRun: true

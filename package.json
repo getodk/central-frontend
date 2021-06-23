@@ -6,7 +6,7 @@
     "dev": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/",
-    "test": "karma start"
+    "test": "NODE_ENV=test karma start"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
@@ -36,7 +36,7 @@
     "@vue/cli-plugin-eslint": "~4.5",
     "@vue/cli-service": "~4.5",
     "@vue/eslint-config-airbnb": "~5",
-    "avoriaz": "~6.3",
+    "@vue/test-utils": "~1",
     "comment-json": "~4.0",
     "eslint": "~6",
     "eslint-plugin-import": "~2",

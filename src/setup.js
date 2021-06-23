@@ -10,30 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-import Vue from 'vue';
-import './plugins';
+// This file completes setup common to production/development and testing. The
+// order in which it is imported is important. It can only be imported after
+// plugins have been installed. It should also be imported before other files,
+// because this file has side effects.
 
-// ./jquery must be imported before ./bootstrap, as Bootstrap's JavaScript
-// requires jQuery.
+import Vue from 'vue';
+import axios from 'axios';
+
+// ./jquery must be imported before any of Bootstrap's JavaScript plugins,
+// because the plugins require jQuery.
 import './jquery';
 import './bootstrap';
 
-// Import global styles.
+// Import global styles. These must be imported before any component so that
+// they precede components' styles.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
 import './assets/scss/app.scss';
 
-import axios from 'axios';
-
 import { StoreAlert } from './util/alert';
 import { $tcPath, $tcn } from './util/i18n';
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// VUE CONFIG
-
-Vue.config.productionTip = false;
 
 
 

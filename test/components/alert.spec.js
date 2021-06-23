@@ -3,7 +3,6 @@ import Alert from '../../src/components/alert.vue';
 import store from '../../src/store';
 
 import { mount } from '../util/lifecycle';
-import { trigger } from '../util/event';
 
 describe('Alert', () => {
   beforeEach(() => {
@@ -11,17 +10,17 @@ describe('Alert', () => {
   });
 
   it('shows the message', () => {
-    const text = mount(Alert).first('.alert-message').text();
+    const text = mount(Alert).get('.alert-message').text();
     text.should.equal('Something happened!');
   });
 
   it('adds a contextual class', () => {
-    mount(Alert).hasClass('alert-info').should.be.true();
+    mount(Alert).classes('alert-info').should.be.true();
   });
 
   it('clicking the .close button hides the alert', async () => {
     const alert = mount(Alert);
-    await trigger.click(alert, '.close');
+    await alert.get('.close').trigger('click');
     alert.should.be.hidden();
   });
 });

@@ -2,7 +2,6 @@
 
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
-import { trigger } from '../event';
 
 // Tests that no request is sent.
 export function testNoRequest(callback = undefined) {
@@ -12,49 +11,40 @@ export function testNoRequest(callback = undefined) {
 }
 
 // Tests buttons that toggle a modal.
-export function testModalToggles(...args) {
-  if (args.length > 1) {
-    return this.testModalToggles({
-      modal: args[0],
-      show: args[1],
-      hide: args[2]
-    });
-  }
-  const {
-    // Modal component
-    modal,
-    // Selector for a button within the series' component that shows the modal
-    show,
-    // Selector for a button within the modal that hides the modal
-    hide,
-    // Function that responds to any requests that are sent when the modal is
-    // shown
-    respond = (series) => series
-  } = args[0];
-
+export function testModalToggles({
+  // Modal component
+  modal,
+  // Selector for a button within the series' component that shows the modal
+  show,
+  // Selector for a button within the modal that hides the modal
+  hide,
+  // Function that responds to any requests that are sent when the modal is
+  // shown
+  respond = (series) => series
+}) {
   return this
     // First, test that the show button actually shows the modal.
     .afterResponses(component => {
-      component.first(modal).getProp('state').should.be.false();
+      component.getComponent(modal).props().state.should.be.false();
     })
-    .request(trigger.click(show))
+    .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.first(modal);
-      m.getProp('state').should.be.true();
+      const m = component.getComponent(modal);
+      m.props().state.should.be.true();
 
       // Next, test that `modal` listens for `hide` events from Modal.
-      await trigger.click(m, '.close');
-      m.getProp('state').should.be.false();
+      await m.get('.close').trigger('click');
+      m.props().state.should.be.false();
     })
     // Finally, test that the hide button actually hides the modal.
-    .request(trigger.click(show))
+    .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.first(modal);
-      m.getProp('state').should.be.true();
-      await trigger.click(m, hide);
-      m.getProp('state').should.be.false();
+      const m = component.getComponent(modal);
+      m.props().state.should.be.true();
+      await m.get(hide).trigger('click');
+      m.props().state.should.be.false();
     });
 }
 
@@ -71,20 +61,20 @@ const assertStandardButton = (
   awaitingResponse,
   showsAlert
 ) => {
-  const button = component.first(buttonSelector);
+  const button = component.get(buttonSelector);
   button.element.disabled.should.equal(awaitingResponse);
 
-  const spinners = component.find(Spinner)
-    .filter(spinner => $.contains(button.element, spinner.vm.$el));
+  const spinners = component.findAllComponents(Spinner).filter(spinner =>
+    button.element.contains(spinner.element));
   spinners.length.should.equal(1);
-  spinners[0].getProp('state').should.equal(awaitingResponse);
+  spinners.at(0).props().state.should.equal(awaitingResponse);
 
   for (const selector of disabledSelectors)
-    component.first(selector).element.disabled.should.equal(awaitingResponse);
+    component.get(selector).element.disabled.should.equal(awaitingResponse);
 
   if (modal != null) {
-    const parent = (modal === true ? component : component.first(modal));
-    parent.first(Modal).getProp('hideable').should.equal(!awaitingResponse);
+    const parent = (modal === true ? component : component.getComponent(modal));
+    parent.getComponent(Modal).props().hideable.should.equal(!awaitingResponse);
   }
 
   if (showsAlert)
@@ -98,7 +88,7 @@ const assertStandardButton = (
 export function testStandardButton({
   // Selector for the button
   button,
-  request = trigger.click(button),
+  request = (component) => component.get(button).trigger('click'),
   // Selectors for additional buttons that should be disabled during the request
   disabled = [],
   // Specifies a modal that should not be hideable during the request. If the
@@ -119,9 +109,4 @@ export function testStandardButton({
     .beforeAnyResponse(assert(true, false))
     .respondWithProblem()
     .afterResponse(assert(false, true));
-}
-
-// Deprecated
-export function standardButton(button = 'button[type="submit"]') {
-  return this.testStandardButton({ button, request: null });
 }

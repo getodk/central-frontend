@@ -32,9 +32,6 @@ event as a jQuery event.
   - ondragleave()
   - ondrop()
 
-This mixin uses jQuery event handlers rather than Vue ones in order to
-facilitate testing: it is possible to mock a jQuery event but not a Vue event.
-
 The component using this mixin may also optionally define the following
 property:
 

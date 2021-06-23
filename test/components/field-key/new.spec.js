@@ -1,10 +1,16 @@
-import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 import FieldKeyNew from '../../../src/components/field-key/new.vue';
+import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
+import { mount } from '../../util/lifecycle';
+
+const mountOptions = (options) => ({
+  propsData: { state: true, managed: true },
+  requestData: { project: testData.extendedProjects.last() },
+  ...options
+});
 
 describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
@@ -12,33 +18,33 @@ describe('FieldKeyNew', () => {
   it('toggles the modal', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1);
-    return load('/projects/1/app-users').testModalToggles(
-      FieldKeyNew,
-      '#field-key-list-create-button',
-      '.btn-link'
-    );
+    return load('/projects/1/app-users').testModalToggles({
+      modal: FieldKeyNew,
+      show: '#field-key-list-create-button',
+      hide: '.btn-link'
+    });
   });
 
   it('focuses the input', () => {
-    testData.extendedProjects.createPast(1, { appUsers: 1 });
-    testData.extendedFieldKeys.createPast(1);
-    return load('/projects/1/app-users', { attachToDocument: true }, {})
-      .then(trigger.click('#field-key-list-create-button'))
-      .then(app => {
-        app.first('#field-key-new input').should.be.focused();
-      });
+    testData.extendedProjects.createPast(1);
+    const modal = mount(FieldKeyNew, mountOptions({ attachTo: document.body }));
+    modal.get('input').should.be.focused();
   });
 
-  it('implements some standard button things', () =>
-    mockHttp()
-      .mount(FieldKeyNew, {
-        propsData: { projectId: '1', state: false },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      })
-      .request(trigger.submit('form', [
-        ['input', testData.extendedFieldKeys.createNew().displayName]
-      ]))
-      .standardButton());
+  it('implements some standard button things', () => {
+    testData.extendedProjects.createPast(1);
+    return mockHttp()
+      .mount(FieldKeyNew, mountOptions())
+      .testStandardButton({
+        button: '.btn-primary',
+        request: async (modal) => {
+          await modal.get('input').setValue('My Field Key');
+          return modal.get('form').trigger('submit');
+        },
+        disabled: ['.btn-link'],
+        modal: true
+      });
+  });
 
   describe('after a successful response', () => {
     beforeEach(() => {
@@ -48,10 +54,10 @@ describe('FieldKeyNew', () => {
 
     const create = (series) => series
       .request(async (app) => {
-        await trigger.click(app, '.heading-with-button button');
-        await trigger.submit(app, '#field-key-new form', [
-          ['input', 'My App User']
-        ]);
+        await app.get('.heading-with-button button').trigger('click');
+        const modal = app.getComponent(FieldKeyNew);
+        await modal.get('input').setValue('input', 'My App User');
+        return modal.get('form').trigger('submit');
       })
       .respondWithData(() => testData.standardFieldKeys.createNew({
         displayName: 'My App User'
@@ -62,7 +68,7 @@ describe('FieldKeyNew', () => {
         .complete()
         .modify(create)
         .afterResponses(app => {
-          const p = app.first('#field-key-new .modal-introduction p');
+          const p = app.get('#field-key-new .modal-introduction p');
           p.text().should.containEql('My App User');
         }));
 
@@ -72,9 +78,9 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .afterResponses(app => {
-            const panel = app.first(FieldKeyNew).first(FieldKeyQrPanel);
+            const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
             const { id } = testData.extendedFieldKeys.last();
-            panel.getProp('fieldKey').id.should.equal(id);
+            panel.props().fieldKey.id.should.equal(id);
           }));
 
       it('defaults to a managed QR code', () =>
@@ -82,61 +88,61 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .afterResponses(app => {
-            const panel = app.first(FieldKeyNew).first(FieldKeyQrPanel);
-            panel.getProp('managed').should.be.true();
+            const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
+            panel.props().managed.should.be.true();
           }));
 
       describe('after user clicks link to switch to a legacy QR code', () => {
         it('shows a legacy QR code in the modal', () =>
-          load('/projects/1/app-users', { attachToDocument: true }, {})
+          load('/projects/1/app-users', { attachTo: document.body })
             .complete()
             .modify(create)
             .afterResponses(async (app) => {
-              const panel = app.first(FieldKeyNew).first(FieldKeyQrPanel);
-              await trigger.click(panel, '.switch-code');
-              panel.getProp('managed').should.be.false();
+              const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
+              await panel.get('.switch-code').trigger('click');
+              panel.props().managed.should.be.false();
             }));
 
         it('shows a legacy QR code in the next popover', () =>
-          load('/projects/1/app-users', { attachToDocument: true }, {})
+          load('/projects/1/app-users', { attachTo: document.body })
             .complete()
             .modify(create)
             .complete()
             .request(async (app) => {
-              await trigger.click(app, '#field-key-new .switch-code');
-              await trigger.click(app, '#field-key-new .btn-primary');
+              await app.get('#field-key-new .switch-code').trigger('click');
+              await app.get('#field-key-new .btn-primary').trigger('click');
             })
             .respondWithData(() => testData.extendedFieldKeys.sorted())
             .afterResponse(async (app) => {
-              await trigger.click(app, '.field-key-row-popover-link');
+              await app.get('.field-key-row-popover-link').trigger('click');
               await app.vm.$nextTick();
               const panel = document.querySelector('.popover .field-key-qr-panel');
               panel.classList.contains('legacy').should.be.true();
             }));
 
         it('allows the user to switch back to a managed QR code', () =>
-          load('/projects/1/app-users', { attachToDocument: true }, {})
+          load('/projects/1/app-users', { attachTo: document.body })
             .complete()
             .modify(create)
             .afterResponses(async (app) => {
-              const panel = app.first(FieldKeyNew).first(FieldKeyQrPanel);
-              await trigger.click(panel, '.switch-code');
-              await trigger.click(panel, '.switch-code');
-              panel.getProp('managed').should.be.true();
+              const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
+              await panel.get('.switch-code').trigger('click');
+              await panel.get('.switch-code').trigger('click');
+              panel.props().managed.should.be.true();
             }));
       });
 
       it('shows a legacy QR code in modal after user switches in popover', () =>
-        load('/projects/1/app-users', { attachToDocument: true }, {})
+        load('/projects/1/app-users', { attachTo: document.body })
           .afterResponses(async (app) => {
-            await trigger.click(app, '.field-key-row-popover-link');
+            await app.get('.field-key-row-popover-link').trigger('click');
             await app.vm.$nextTick();
             document.querySelector('.popover .switch-code').click();
           })
           .modify(create)
           .afterResponses(app => {
-            const panel = app.first(FieldKeyNew).first(FieldKeyQrPanel);
-            panel.getProp('managed').should.be.false();
+            const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
+            panel.props().managed.should.be.false();
           }));
     });
 
@@ -146,10 +152,10 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(trigger.click('#field-key-new .btn-primary'))
+          .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.first(FieldKeyNew).getProp('state').should.be.false();
+            app.getComponent(FieldKeyNew).props().state.should.be.false();
           }));
 
       it('updates the number of rows in the table', () =>
@@ -157,10 +163,10 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(trigger.click('#field-key-new .btn-primary'))
+          .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.find('#field-key-list-table tbody tr').length.should.equal(2);
+            app.findAll('#field-key-list-table tbody tr').length.should.equal(2);
           }));
 
       it('shows a success alert', () =>
@@ -168,7 +174,7 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(trigger.click('#field-key-new .btn-primary'))
+          .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
             app.should.alert('success');
@@ -180,27 +186,27 @@ describe('FieldKeyNew', () => {
         load('/projects/1/app-users')
           .complete()
           .modify(create)
-          .then(trigger.click('#field-key-new .btn-link'))
-          .then(app => {
-            app.first(FieldKeyNew).getProp('state').should.be.true();
+          .afterResponses(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            app.getComponent(FieldKeyNew).props().state.should.be.true();
           }));
 
       it('shows a blank input', () =>
         load('/projects/1/app-users')
           .complete()
           .modify(create)
-          .then(trigger.click('#field-key-new .btn-link'))
-          .then(app => {
-            app.first('#field-key-new input').element.value.should.equal('');
+          .afterResponses(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            app.get('#field-key-new input').element.value.should.equal('');
           }));
 
       it('focuses the input', () =>
-        load('/projects/1/app-users', { attachToDocument: true }, {})
+        load('/projects/1/app-users', { attachTo: document.body })
           .complete()
           .modify(create)
-          .then(trigger.click('#field-key-new .btn-link'))
-          .then(app => {
-            app.first('#field-key-new input').should.be.focused();
+          .afterResponses(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            app.get('#field-key-new input').should.be.focused();
           }));
     });
 
@@ -210,11 +216,13 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(app => trigger.click(app, '#field-key-new .btn-link')
-            .then(() => trigger.click(app, '#field-key-new .btn-link')))
+          .request(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            return app.get('#field-key-new .btn-link').trigger('click');
+          })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.first(FieldKeyNew).getProp('state').should.be.false();
+            app.getComponent(FieldKeyNew).props().state.should.be.false();
           }));
 
       it('updates the number of rows in the table', () =>
@@ -222,11 +230,13 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(app => trigger.click(app, '#field-key-new .btn-link')
-            .then(() => trigger.click(app, '#field-key-new .btn-link')))
+          .request(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            return app.get('#field-key-new .btn-link').trigger('click');
+          })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.find('#field-key-list-table tbody tr').length.should.equal(2);
+            app.findAll('#field-key-list-table tbody tr').length.should.equal(2);
           }));
 
       it('shows a success alert', () =>
@@ -234,8 +244,10 @@ describe('FieldKeyNew', () => {
           .complete()
           .modify(create)
           .complete()
-          .request(app => trigger.click(app, '#field-key-new .btn-link')
-            .then(() => trigger.click(app, '#field-key-new .btn-link')))
+          .request(async (app) => {
+            await app.get('#field-key-new .btn-link').trigger('click');
+            return app.get('#field-key-new .btn-link').trigger('click');
+          })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
             app.should.alert('success');
@@ -247,7 +259,10 @@ describe('FieldKeyNew', () => {
         .complete()
         .modify(create)
         .complete()
-        .request(trigger.click('#field-key-new a[href="#/projects/1/form-access"]'))
+        .request(app => {
+          const a = app.get('#field-key-new a[href$="/projects/1/form-access"]');
+          return a.trigger('click');
+        })
         .beforeEachResponse((_, { url }, index) => {
           if (index === 1) url.should.equal('/v1/projects/1/app-users');
         })

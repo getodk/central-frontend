@@ -10,18 +10,20 @@ describe('FormSubmissions', () => {
     it('shows the button to an administrator', async () => {
       mockLogin({ role: 'admin' });
       testData.extendedForms.createPast(1);
-      const path = '/projects/1/forms/f/submissions';
-      const component = await load(path, { root: false });
-      component.first(EnketoFill).should.be.visible();
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+      component.getComponent(EnketoFill).should.be.visible();
     });
 
     it('does not render the button for a project viewer', async () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1);
-      const path = '/projects/1/forms/f/submissions';
-      const component = await load(path, { root: false });
-      component.find(EnketoFill).length.should.equal(0);
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+      component.findComponent(EnketoFill).exists().should.be.false();
     });
   });
 
@@ -38,8 +40,8 @@ describe('FormSubmissions', () => {
       const component = await load('/projects/1/forms/f/submissions', {
         root: false
       });
-      const dropdown = component.first(SubmissionDownloadDropdown);
-      dropdown.first('button').text().should.equal('Download 1 record');
+      const dropdown = component.getComponent(SubmissionDownloadDropdown);
+      dropdown.get('button').text().should.equal('Download 1 record');
     });
 
     it('updates the form checklist if the count changes', () => {
@@ -47,9 +49,10 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
-          p.text().should.containEql('10 ');
-          p.text().should.not.containEql('11 ');
+          const step = app.findAll('#form-checklist .checklist-step').at(1);
+          const text = step.findAll('p').at(1).text();
+          text.should.containEql('10 ');
+          text.should.not.containEql('11 ');
         })
         .load('/projects/1/forms/f/submissions', {
           project: false, form: false, formDraft: false, attachments: false
@@ -57,9 +60,10 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const p = app.find('#form-checklist .checklist-step')[1].find('p')[1];
-          p.text().should.containEql('11 ');
-          p.text().should.not.containEql('10 ');
+          const step = app.findAll('#form-checklist .checklist-step').at(1);
+          const text = step.findAll('p').at(1).text();
+          text.should.containEql('11 ');
+          text.should.not.containEql('10 ');
         });
     });
   });

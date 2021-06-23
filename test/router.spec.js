@@ -79,7 +79,7 @@ describe('router', () => {
   describe('restoreSession', () => {
     describe('restoreSession is false for the first route', () => {
       const paths = [
-        `/account/claim?${'a'.repeat(64)}`,
+        `/account/claim?token=${'a'.repeat(64)}`,
         '/not-found'
       ];
       for (const path of paths) {
@@ -88,7 +88,7 @@ describe('router', () => {
       }
 
       it('does not restore the session in a later navigation', () =>
-        load(`/account/claim?${'a'.repeat(64)}`)
+        load(`/account/claim?token=${'a'.repeat(64)}`)
           .complete()
           .route('/login')
           .testNoRequest());
@@ -149,7 +149,6 @@ describe('router', () => {
       '/system/audits',
       '/dl/foo.txt'
     ];
-
     for (const path of paths) {
       it(`redirects an anonymous user navigating to ${path}`, () =>
         load(path, {}, false)
@@ -168,7 +167,6 @@ describe('router', () => {
       '/reset-password',
       `/account/claim?token=${'a'.repeat(64)}`
     ];
-
     for (const path of paths) {
       it(`redirects a logged in user navigating to ${path}`, () => {
         mockLogin();
@@ -388,33 +386,25 @@ describe('router', () => {
         app.vm.$route.path.should.equal('/account/edit');
       });
 
-      it('redirects the user from /users/:id/edit', () =>
-        load('/users/2/edit', {}, false)
-          .respondFor('/', { users: false })
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
+      const paths = [
+        '/users',
+        '/users/2/edit',
+        '/system/backups',
+        '/system/audits'
+      ];
+      for (const path of paths) {
+        it(`redirects the user from ${path}`, () =>
+          load(path, {}, false)
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            }));
+      }
 
-      it('redirects a user navigating from /account/edit to /users/:id/edit', () => {
-        testData.extendedProjects.createPast(1);
-        return load('/account/edit')
+      it('redirects a user navigating from /account/edit to /users/:id/edit', () =>
+        load('/account/edit')
           .complete()
           .route('/users/1/edit')
-          .respondFor('/', { users: false })
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-
-      it('redirects the user from /system/backups', () =>
-        load('/system/backups', {}, false)
-          .respondFor('/', { users: false })
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects the user from /system/audits', () =>
-        load('/system/audits', {}, false)
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');

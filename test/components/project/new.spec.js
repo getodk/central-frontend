@@ -1,90 +1,81 @@
 import ProjectNew from '../../../src/components/project/new.vue';
+
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { submitForm, trigger } from '../../util/event';
+import { mount } from '../../util/lifecycle';
 
 describe('ProjectNew', () => {
-  it('does not show New button if user does not have a grant to project.create', () => {
-    mockLogin({ role: 'none' });
-    return mockRoute('/')
-      .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-      .afterResponse(app => {
-        app.find('#project-list-new-button').should.be.empty();
-      });
-  });
-
-  describe('after login as an administrator', () => {
-    beforeEach(mockLogin);
-
-    describe('modal', () => {
-      it('does not show the modal initially', () =>
-        mockRoute('/')
-          .respondWithData(() =>
-            testData.extendedProjects.createPast(1).sorted())
-          .respondWithData(() => testData.standardUsers.sorted())
-          .afterResponses(app => {
-            app.first(ProjectNew).getProp('state').should.be.false();
-          }));
-
-      describe('after button click', () => {
-        it('shows the modal', () =>
-          mockRoute('/')
-            .respondWithData(() =>
-              testData.extendedProjects.createPast(1).sorted())
-            .respondWithData(() => testData.standardUsers.sorted())
-            .afterResponses(app =>
-              trigger.click(app, '#project-list-new-button'))
-            .then(app => {
-              app.first(ProjectNew).getProp('state').should.be.true();
-            }));
-
-        it('focuses the input', () =>
-          mockRoute('/', { attachToDocument: true })
-            .respondWithData(() =>
-              testData.extendedProjects.createPast(1).sorted())
-            .respondWithData(() => testData.standardUsers.sorted())
-            .afterResponses(app =>
-              trigger.click(app, '#project-list-new-button'))
-            .then(app => {
-              app.first('#project-new input').should.be.focused();
-            }));
+  describe('New button', () => {
+    it('toggles the modal', () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+      return load('/', { root: false }).testModalToggles({
+        modal: ProjectNew,
+        show: '#project-list-new-button',
+        hide: '.btn-link'
       });
     });
 
-    it('implements some standard button things', () =>
-      mockHttp()
-        .mount(ProjectNew, {
-          propsData: {
-            state: true
-          }
-        })
-        .request(modal => submitForm(modal, 'form', [['input', 'My Project']]))
-        .standardButton());
+    it('does not render button if user cannot project.create', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1);
+      const component = await load('/', { root: false }, { users: false });
+      component.find('#project-list-new-button').exists().should.be.false();
+    });
+  });
 
-    describe('after the user submits the form successfully', () => {
-      let app;
-      beforeEach(() => mockRoute('/')
-        .respondWithData(() => testData.extendedProjects.createPast(1).sorted())
-        .respondWithData(() => testData.standardUsers.sorted())
-        .afterResponses(component => {
-          app = component;
-        })
-        .request(() => trigger.click(app, '#project-list-new-button')
-          .then(() => submitForm(app, '#project-new form', [
-            ['input', testData.extendedProjects.createNew().name]
-          ])))
-        .respondWithData(() => testData.standardProjects.last()) // ProjectNew
-        .respondWithData(() => testData.extendedProjects.last()) // ProjectHome
-        .respondWithData(() => testData.extendedForms.sorted()));
+  it('focuses the input', () => {
+    mockLogin();
+    const modal = mount(ProjectNew, {
+      propsData: { state: true },
+      attachTo: document.body
+    });
+    modal.get('input').should.be.focused();
+  });
 
-      it('redirects to the project overview', () => {
-        app.vm.$route.path.should.equal('/projects/2');
+  it('implements some standard button things', () => {
+    mockLogin();
+    return mockHttp()
+      .mount(ProjectNew, {
+        propsData: { state: true }
+      })
+      .testStandardButton({
+        button: '.btn-primary',
+        request: async (modal) => {
+          await modal.get('input').setValue('My Project');
+          return modal.get('form').trigger('submit');
+        },
+        disabled: ['.btn-link'],
+        modal: true
       });
+  });
 
-      it('shows a success alert', () => {
-        app.should.alert('success');
-      });
+  describe('after a successful response', () => {
+    const submit = () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+      return load('/')
+        .complete()
+        .request(async (app) => {
+          await app.get('#project-list-new-button').trigger('click');
+          const modal = app.getComponent(ProjectNew);
+          await modal.get('input').setValue('My Project');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithData(() =>
+          testData.standardProjects.createNew({ name: 'My Project' }))
+        .respondFor('/projects/2');
+    };
+
+    it('redirects to the project overview', async () => {
+      const app = await submit();
+      app.vm.$route.path.should.equal('/projects/2');
+    });
+
+    it('shows a success alert', async () => {
+      const app = await submit();
+      app.should.alert('success');
     });
   });
 });

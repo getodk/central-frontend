@@ -14,7 +14,7 @@ describe('FormDraftTesting', () => {
     testData.extendedForms.createPast(1, { draft: true });
     const path = '/projects/1/forms/f/draft/testing';
     const component = await load(path, { root: false });
-    component.first(EnketoFill).should.be.visible();
+    component.getComponent(EnketoFill).should.be.visible();
   });
 
   it('shows a QR code that encodes the correct settings', async () => {
@@ -24,7 +24,7 @@ describe('FormDraftTesting', () => {
       root: false
     });
     const { draftToken } = testData.extendedFormDrafts.last();
-    component.first(CollectQr).getProp('settings').should.eql({
+    component.getComponent(CollectQr).props().settings.should.eql({
       server_url: `/v1/test/${draftToken}/projects/1/forms/f/draft`
     });
   });
@@ -41,8 +41,8 @@ describe('FormDraftTesting', () => {
       const component = await load('/projects/1/forms/f/draft/testing', {
         root: false
       });
-      const dropdown = component.first(SubmissionDownloadDropdown);
-      dropdown.first('button').text().should.equal('Download 2 records');
+      const dropdown = component.getComponent(SubmissionDownloadDropdown);
+      dropdown.get('button').text().should.equal('Download 2 records');
     });
 
     it('updates the draft checklist if the count changes', () => {
@@ -53,8 +53,10 @@ describe('FormDraftTesting', () => {
       testData.extendedSubmissions.createPast(1, { form: draft });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const step = app.first(FormDraftStatus).find(ChecklistStep)[1];
-          step.getProp('stage').should.equal('current');
+          const step = app.getComponent(FormDraftStatus)
+            .findAllComponents(ChecklistStep)
+            .at(1);
+          step.props().stage.should.equal('current');
         })
         .load('/projects/1/forms/f/draft/testing', {
           project: false, form: false, formDraft: false, attachments: false
@@ -62,8 +64,10 @@ describe('FormDraftTesting', () => {
         .complete()
         .route('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const step = app.first(FormDraftStatus).find(ChecklistStep)[1];
-          step.getProp('stage').should.equal('complete');
+          const step = app.getComponent(FormDraftStatus)
+            .findAllComponents(ChecklistStep)
+            .at(1);
+          step.props().stage.should.equal('complete');
         });
     });
   });

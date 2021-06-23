@@ -7,7 +7,6 @@ import { confirmUnsavedChanges, forceReplace, routeProps } from '../../src/util/
 import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
-import { trigger } from '../util/event';
 
 describe('util/router', () => {
   describe('routeProps()', () => {
@@ -60,10 +59,8 @@ describe('util/router', () => {
       const fake = sinon.fake();
       sinon.replace(window, 'confirm', fake);
       return load('/projects/1/form-access')
-        .afterResponses(trigger.changeValue(
-          '#project-form-access-table select',
-          'closed'
-        ))
+        .afterResponses(app =>
+          app.get('#project-form-access-table select').setValue('closed'))
         .request(app => forceReplace(app.vm.$router, app.vm.$store, '/'))
         .respondFor('/')
         .afterResponses(app => {

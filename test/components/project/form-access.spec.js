@@ -1,23 +1,18 @@
 import testData from '../../data';
-import { load, mockRoute } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
-// Loads ProjectFormAccess, rendering one row for the table.
-const loadFormAccess = () => mockRoute('/projects/1/form-access')
-  .respondWithData(() => testData.extendedProjects
-    .createPast(1, { name: 'My Project', archived: false })
-    .last())
-  .respondWithData(() => testData.extendedForms
-    .createPast(1, { xmlFormId: 'f', name: 'My Form', state: 'closing' })
-    .sorted())
-  .respondWithData(() => testData.extendedFieldKeys
+const createData = () => {
+  testData.extendedProjects.createPast(1, {
+    name: 'My Project',
+    archived: false
+  });
+  testData.extendedForms.createPast(1, { name: 'My Form', state: 'closing' });
+  testData.extendedFieldKeys
     .createPast(1, { displayName: 'App User 1' })
     .createPast(1, { displayName: 'App User 2' })
-    .createPast(1, { displayName: 'App User 3', token: null })
-    .sorted())
-  .respondWithData(() => testData.standardRoles.sorted())
-  .respondWithData(() => testData.standardFormSummaryAssignments
+    .createPast(1, { displayName: 'App User 3', token: null });
+  testData.standardFormSummaryAssignments
     // Create an assignment for "App User 2", which will be the first field key
     // shown in the table.
     .createPast(1, {
@@ -30,8 +25,8 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
       role: 'app-user',
       xmlFormId: 'f'
     })
-    // Frontend should effectively ignore the following two assignments.
-    // This assignment has a valid actorId but an invalid xmlFormId.
+    // Frontend should effectively ignore the following two assignments. This
+    // assignment has a valid actorId but an invalid xmlFormId.
     .createPast(1, {
       actorId: testData.extendedFieldKeys.get(1).id,
       role: 'app-user',
@@ -42,175 +37,161 @@ const loadFormAccess = () => mockRoute('/projects/1/form-access')
       actorId: 1000,
       role: 'app-user',
       xmlFormId: 'f'
-    })
-    .sorted());
+    });
+};
 
 describe('ProjectFormAccess', () => {
   beforeEach(mockLogin);
 
   describe('after login', () => {
-    it('initially disables the Save button', () =>
-      loadFormAccess().afterResponses(app => {
-        app.first('#project-form-access-save-button').should.be.disabled();
-      }));
+    it('initially disables the Save button', async () => {
+      createData();
+      const app = await load('/projects/1/form-access');
+      app.get('#project-form-access-save-button').element.disabled.should.be.true();
+    });
 
-    it('correctly renders the column headers of the table', () =>
-      loadFormAccess().afterResponses(app => {
-        const th = app.first('#project-form-access-table').find('th');
-        th.map(wrapper => wrapper.text().trim().iTrim()).should.eql([
-          'Form',
-          'State',
-          'App Users',
-          'App User 2',
-          'App User 1',
-          ''
-          // There is no column for "App User 3".
-        ]);
-        th[3].getAttribute('title').should.equal('App User 2');
-        th[4].getAttribute('title').should.equal('App User 1');
-      }));
+    it('correctly renders the column headers of the table', async () => {
+      createData();
+      const app = await load('/projects/1/form-access');
+      const th = app.findAll('#project-form-access-table th');
+      th.wrappers.map(wrapper => wrapper.text()).should.eql([
+        'Form',
+        'State',
+        'App Users',
+        'App User 2',
+        'App User 1',
+        ''
+        // There is no column for "App User 3".
+      ]);
+      th.at(3).attributes().title.should.equal('App User 2');
+      th.at(4).attributes().title.should.equal('App User 1');
+    });
 
     it('shows a message if there are no forms', async () => {
       testData.extendedProjects.createPast(1);
       const component = await load('/projects/1/form-access');
-      component.first('.empty-table-message').should.be.visible();
+      component.get('.empty-table-message').should.be.visible();
     });
 
     describe("changing a form's state", () => {
-      it('highlights the select', () =>
-        loadFormAccess()
-          .afterResponses(app => {
-            const select = app.first('#project-form-access-table select');
-            return trigger.changeValue(select, 'open');
-          })
-          .then(select => {
-            select.hasClass('uncommitted-change').should.be.true();
-          }));
+      beforeEach(createData);
 
-      it('updates the Save button', () =>
-        loadFormAccess()
-          .afterResponses(app => trigger
-            .changeValue(app, '#project-form-access-table select', 'open'))
-          .then(app => {
-            const button = app.first('#project-form-access-save-button');
-            button.hasClass('uncommitted-change').should.be.true();
-            button.should.not.be.disabled();
-          }));
+      it('highlights the select', async () => {
+        const app = await load('/projects/1/form-access');
+        const select = app.get('#project-form-access-table select');
+        await select.setValue('open');
+        select.classes('uncommitted-change').should.be.true();
+      });
 
-      it("undoes these if the form's state is changed back", () =>
-        loadFormAccess()
-          .afterResponses(app => trigger
-            .changeValue(app, '#project-form-access-table select', 'open'))
-          .then(app => trigger
-            .changeValue(app, '#project-form-access-table select', 'closing'))
-          .then(app => {
-            // Select
-            const select = app.first('#project-form-access-table select');
-            select.hasClass('uncommitted-change').should.be.false();
+      it('updates the Save button', async () => {
+        const app = await load('/projects/1/form-access');
+        await app.get('#project-form-access-table select').setValue('open');
+        const button = app.get('#project-form-access-save-button');
+        button.classes('uncommitted-change').should.be.true();
+        button.element.disabled.should.be.false();
+      });
 
-            // Save button
-            const button = app.first('#project-form-access-save-button');
-            button.hasClass('uncommitted-change').should.be.false();
-            button.should.be.disabled();
-          }));
+      it("undoes these if the form's state is changed back", async () => {
+        const app = await load('/projects/1/form-access');
+        const select = app.get('#project-form-access-table select');
+        await select.setValue('open');
+        await select.setValue('closing');
+
+        // Select
+        select.classes('uncommitted-change').should.be.false();
+
+        // Save button
+        const button = app.get('#project-form-access-save-button');
+        button.classes('uncommitted-change').should.be.false();
+        button.element.disabled.should.be.true();
+      });
 
       it('sets unsavedChanges to true', async () => {
-        const app = await loadFormAccess();
-        await trigger.changeValue(app, '#project-form-access-table select', 'open');
+        const app = await load('/projects/1/form-access');
+        await app.get('#project-form-access-table select').setValue('open');
         app.vm.$store.state.router.unsavedChanges.should.be.true();
       });
     });
 
     describe('unchecking an App User Access checkbox', () => {
-      it('highlights the checkbox', () =>
-        loadFormAccess()
-          .afterResponses(app => {
-            const table = app.first('#project-form-access-table');
-            const input = table.first('input[type="checkbox"]');
-            return trigger.uncheck(input);
-          })
-          .then(input => {
-            input.hasClass('uncommitted-change').should.be.true();
-          }));
+      beforeEach(createData);
 
-      it('updates the Save button', () =>
-        loadFormAccess()
-          .afterResponses(app => trigger
-            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
-          .then(app => {
-            const button = app.first('#project-form-access-save-button');
-            button.hasClass('uncommitted-change').should.be.true();
-            button.should.not.be.disabled();
-          }));
+      it('highlights the checkbox', async () => {
+        const app = await load('/projects/1/form-access');
+        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
+        await checkbox.setChecked(false);
+        checkbox.classes('uncommitted-change').should.be.true();
+      });
 
-      it('undoes these if the checkbox is checked again', () =>
-        loadFormAccess()
-          .afterResponses(app => trigger
-            .uncheck(app, '#project-form-access-table input[type="checkbox"]'))
-          .then(app => trigger
-            .check(app, '#project-form-access-table input[type="checkbox"]'))
-          .then(app => {
-            // Input
-            const table = app.first('#project-form-access-table');
-            const input = table.first('input[type="checkbox"]');
-            input.hasClass('uncommitted-change').should.be.false();
+      it('updates the Save button', async () => {
+        const app = await load('/projects/1/form-access');
+        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
+        await checkbox.setChecked(false);
+        const button = app.get('#project-form-access-save-button');
+        button.classes('uncommitted-change').should.be.true();
+        button.element.disabled.should.be.false();
+      });
 
-            // Save button
-            const button = app.first('#project-form-access-save-button');
-            button.hasClass('uncommitted-change').should.be.false();
-            button.should.be.disabled();
-          }));
+      it('undoes these if the checkbox is checked again', async () => {
+        const app = await load('/projects/1/form-access');
+        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
+        await checkbox.setChecked(false);
+        await checkbox.setChecked();
+
+        // Checkbox
+        checkbox.classes('uncommitted-change').should.be.false();
+
+        // Save button
+        const button = app.get('#project-form-access-save-button');
+        button.classes('uncommitted-change').should.be.false();
+        button.element.disabled.should.be.true();
+      });
 
       it('sets unsavedChanges to true', async () => {
-        const app = await loadFormAccess();
-        await trigger.uncheck(app, '#project-form-access-table input[type="checkbox"]');
+        const app = await load('/projects/1/form-access');
+        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
+        await checkbox.setChecked(false);
         app.vm.$store.state.router.unsavedChanges.should.be.true();
       });
     });
 
     describe('checking an App User Access checkbox', () => {
-      it('highlights the checkbox', () =>
-        loadFormAccess()
-          .afterResponses(app => {
-            const table = app.first('#project-form-access-table');
-            const inputs = table.find('input[type="checkbox"]');
-            inputs.length.should.equal(2);
-            return trigger.check(inputs[1]);
-          })
-          .then(input => {
-            input.hasClass('uncommitted-change').should.be.true();
-          }));
+      beforeEach(createData);
 
-      it('updates the Save button', () =>
-        loadFormAccess()
-          .afterResponses(app => {
-            const table = app.first('#project-form-access-table');
-            const inputs = table.find('input[type="checkbox"]');
-            return trigger.check(inputs[1])
-              .then(() => {
-                const button = app.first('#project-form-access-save-button');
-                button.hasClass('uncommitted-change').should.be.true();
-                button.should.not.be.disabled();
-              });
-          }));
+      it('highlights the checkbox', async () => {
+        const app = await load('/projects/1/form-access');
+        const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
+        checkboxes.length.should.equal(2);
+        await checkboxes.at(1).setChecked();
+        checkboxes.at(1).classes('uncommitted-change').should.be.true();
+      });
+
+      it('updates the Save button', async () => {
+        const app = await load('/projects/1/form-access');
+        const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
+        await checkboxes.at(1).setChecked();
+        const button = app.get('#project-form-access-save-button');
+        button.classes('uncommitted-change').should.be.true();
+        button.element.disabled.should.be.false();
+      });
     });
 
     describe('saving changes', () => {
-      // Makes changes, then clicks the Save button.
-      const save = () => loadFormAccess()
+      beforeEach(createData);
+
+      const change = async (app) => {
+        const table = app.get('#project-form-access-table');
+        await table.get('select').setValue('open');
+        const checkboxes = table.findAll('input[type="checkbox"]');
+        await checkboxes.at(0).setChecked(false);
+        return checkboxes.at(1).setChecked();
+      };
+      const saveWithSuccess = () => load('/projects/1/form-access')
         .complete()
-        .request(app => {
-          const button = app.first('#project-form-access-save-button');
-          const table = app.first('#project-form-access-table');
-          const select = table.first('select');
-          const inputs = table.find('input[type="checkbox"]');
-          return trigger.changeValue(select, 'open')
-            .then(() => trigger.uncheck(inputs[0]))
-            .then(() => trigger.check(inputs[1]))
-            .then(() => trigger.click(button));
-        });
-      // Same as save(), but also responds with data.
-      const saveWithSuccess = () => save()
+        .request(async (app) => {
+          await change(app);
+          return app.get('#project-form-access-save-button').trigger('click');
+        })
         .respondWithData(() => testData.standardProjects.last())
         .respondWithData(() => {
           testData.extendedForms.update(-1, { state: 'open' });
@@ -229,15 +210,19 @@ describe('ProjectFormAccess', () => {
         });
 
       it('implements some standard button things', () =>
-        save().standardButton('#project-form-access-save-button'));
+        load('/projects/1/form-access')
+          .afterResponses(change)
+          .testStandardButton({
+            button: '#project-form-access-save-button'
+          }));
 
       it('sends the correct data', () =>
-        saveWithSuccess().beforeEachResponse((app, config, index) => {
+        saveWithSuccess().beforeEachResponse((_, { data }, index) => {
           if (index !== 0) return;
           const roleId = testData.standardRoles.sorted()
             .find(role => role.system === 'app-user')
             .id;
-          config.data.should.eql({
+          data.should.eql({
             name: 'My Project',
             archived: false,
             forms: [
@@ -259,30 +244,30 @@ describe('ProjectFormAccess', () => {
 
       it('no longer highlights Save button, select, or checkboxes', () =>
         saveWithSuccess().afterResponses(app => {
-          app.find('.uncommitted-change').length.should.equal(0);
+          app.find('.uncommitted-change').exists().should.be.false();
         }));
 
       it('disables the Save button', () =>
         saveWithSuccess().afterResponses(app => {
-          app.first('#project-form-access-save-button').should.be.disabled();
+          app.get('#project-form-access-save-button').element.disabled.should.be.true();
         }));
 
       it('updates the table', () =>
         saveWithSuccess().afterResponses(app => {
-          const table = app.first('#project-form-access-table');
-          const th = table.find('th');
+          const table = app.get('#project-form-access-table');
+          const th = table.findAll('th');
           th.length.should.equal(6);
-          const td = table.find('td');
+          const td = table.findAll('td');
           td.length.should.equal(th.length);
 
           // State column
-          td[1].first('select').element.value.should.equal('open');
+          td.at(1).get('select').element.value.should.equal('open');
 
           // App User Access columns
-          th[3].text().should.equal('App User 2');
-          td[3].first('input').element.checked.should.be.false();
-          th[4].text().should.equal('App User 1');
-          td[4].first('input').element.checked.should.be.true();
+          th.at(3).text().should.equal('App User 2');
+          td.at(3).get('input').element.checked.should.be.false();
+          th.at(4).text().should.equal('App User 1');
+          td.at(4).get('input').element.checked.should.be.true();
         }));
 
       it('sets unsavedChanges to false', async () => {

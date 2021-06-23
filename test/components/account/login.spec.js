@@ -1,29 +1,45 @@
 import sinon from 'sinon';
+import { RouterLinkStub } from '@vue/test-utils';
 
 import AccountLogin from '../../../src/components/account/login.vue';
 
 import testData from '../../data';
-import { load } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
+import { mount } from '../../util/lifecycle';
 
-const submit = trigger.submit('#account-login form', [
-  ['input[type="email"]', 'test@email.com'],
-  ['input[type="password"]', 'foo']
-]);
+const submit = async (component) => {
+  const form = component.get('#account-login form');
+  await form.get('input[type="email"]').setValue('test@email.com');
+  await form.get('input[type="password"]').setValue('foo');
+  return form.trigger('submit');
+};
 
 describe('AccountLogin', () => {
-  it('focuses the first input', () =>
-    load('/login', { attachToDocument: true }, {})
-      .restoreSession(false)
-      .afterResponses(app => {
-        app.first('#account-login input[type="email"]').should.be.focused();
-      }));
+  it('focuses the first input', () => {
+    const component = mount(AccountLogin, {
+      stubs: { RouterLink: RouterLinkStub },
+      attachTo: document.body
+    });
+    component.get('input[type="email"]').should.be.focused();
+  });
+
+  it('shows an alert if there is an existing session', async () => {
+    const component = mount(AccountLogin, {
+      stubs: { RouterLink: RouterLinkStub }
+    });
+    localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+    await submit(component);
+    component.should.alert('info', (message) => {
+      message.should.startWith('A user is already logged in.');
+    });
+  });
 
   it('sends the correct request', () =>
-    load('/login')
-      .restoreSession(false)
-      .complete()
+    mockHttp()
+      .mount(AccountLogin, {
+        stubs: { RouterLink: RouterLinkStub }
+      })
       .request(submit)
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('POST');
@@ -33,13 +49,25 @@ describe('AccountLogin', () => {
       .respondWithProblem());
 
   it('implements some standard button things', () =>
+    // Using load() because of the <router-link> scoped slot
     load('/login')
       .restoreSession(false)
       .complete()
       .testStandardButton({
-        button: '#account-login .btn-primary',
+        button: '.btn-primary',
         request: submit,
-        disabled: ['#account-login .btn-link']
+        disabled: ['.btn-link']
+      }));
+
+  it('shows a danger alert for incorrect credentials', () =>
+    mockHttp()
+      .mount(AccountLogin, {
+        stubs: { RouterLink: RouterLinkStub }
+      })
+      .request(submit)
+      .respondWithProblem(401.2)
+      .afterResponse(component => {
+        component.should.alert('danger', 'Incorrect email address and/or password.');
       }));
 
   it('logs in', () => {
@@ -57,43 +85,6 @@ describe('AccountLogin', () => {
         should.exist(data.currentUser);
       });
   });
-
-  it('sets local storage', () => {
-    testData.extendedUsers.createPast(1, { email: 'test@email.com' });
-    return load('/login')
-      .restoreSession(false)
-      .complete()
-      .request(submit)
-      .respondWithData(() => testData.sessions.createNew())
-      .respondWithData(() => testData.extendedUsers.first())
-      .respondFor('/')
-      .afterResponses(() => {
-        should.exist(localStorage.getItem('sessionExpires'));
-      });
-  });
-
-  it('shows an alert if there is an existing session', () =>
-    load('/login')
-      .restoreSession(false)
-      .afterResponses(app => {
-        localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-        return submit(app);
-      })
-      .then(app => {
-        app.should.alert('info', (message) => {
-          message.should.startWith('A user is already logged in.');
-        });
-      }));
-
-  it('shows a danger alert for incorrect credentials', () =>
-    load('/login')
-      .restoreSession(false)
-      .complete()
-      .request(submit)
-      .respondWithProblem(401.2)
-      .afterResponse(app => {
-        app.should.alert('danger', 'Incorrect email address and/or password.');
-      }));
 
   describe('next query param', () => {
     const navigateToNext = (next) => {
@@ -208,7 +199,7 @@ describe('AccountLogin', () => {
         .complete()
         .request(app => {
           sinon.replace(
-            app.first(AccountLogin).vm,
+            app.getComponent(AccountLogin).vm,
             'navigateToNext',
             sinon.fake()
           );
@@ -217,10 +208,10 @@ describe('AccountLogin', () => {
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponses(app => {
-          app.find('#navbar-links').length.should.equal(0);
-          app.first('#navbar-actions a').text().trim().should.equal('Not logged in');
-          app.first('#account-login .btn-primary').should.be.disabled();
-          app.first('#account-login .btn-link').should.be.disabled();
+          app.find('#navbar-links').exists().should.be.false();
+          app.get('#navbar-actions a').text().should.equal('Not logged in');
+          app.get('#account-login .btn-primary').element.disabled.should.be.true();
+          app.get('#account-login .btn-link').element.disabled.should.be.true();
         });
     });
   });

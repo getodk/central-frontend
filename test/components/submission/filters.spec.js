@@ -9,7 +9,6 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
 describe('SubmissionFilters', () => {
   beforeEach(mockLogin);
@@ -29,10 +28,10 @@ describe('SubmissionFilters', () => {
     testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
     return loadSubmissionList()
       .complete()
-      .request(trigger.changeValue(
-        '#submission-filters-submitter select',
-        fieldKey.id.toString()
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-submitter select');
+        return select.setValue(fieldKey.id.toString());
+      })
       .beforeEachResponse((_, { url }) => {
         const match = url.match(/&%24filter=__system%2FsubmitterId\+eq\+(\d+)(&|$)/);
         should.exist(match);
@@ -56,18 +55,18 @@ describe('SubmissionFilters', () => {
       })
       .respondWithData(() => testData.submissionOData(2, 2))
       .afterResponse(component => {
-        component.find(SubmissionMetadataRow).length.should.equal(3);
+        component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
       })
-      .request(trigger.changeValue(
-        '#submission-filters-submitter select',
-        fieldKey.id.toString()
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-submitter select');
+        return select.setValue(fieldKey.id.toString());
+      })
       .beforeEachResponse(component => {
-        component.find(SubmissionMetadataRow).length.should.equal(0);
+        component.findComponent(SubmissionMetadataRow).exists().should.be.false();
       })
       .respondWithData(() => testData.submissionOData(2, 0))
       .afterResponse(component => {
-        component.find(SubmissionMetadataRow).length.should.equal(2);
+        component.findAllComponents(SubmissionMetadataRow).length.should.equal(2);
       });
   });
 
@@ -76,7 +75,7 @@ describe('SubmissionFilters', () => {
     return loadSubmissionList()
       .complete()
       .request(component => {
-        component.first(DateRangePicker).vm.close([
+        component.getComponent(DateRangePicker).vm.close([
           DateTime.fromISO('1970-01-01').toJSDate(),
           DateTime.fromISO('1970-01-02').toJSDate()
         ]);
@@ -100,10 +99,10 @@ describe('SubmissionFilters', () => {
     testData.extendedForms.createPast(1);
     return loadSubmissionList()
       .complete()
-      .request(trigger.changeValue(
-        '#submission-filters-review-state select',
-        'null'
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-review-state select');
+        return select.setValue('null');
+      })
       .beforeEachResponse((_, { url }) => {
         url.should.match(/&%24filter=__system%2FreviewState\+eq\+null(&|$)/);
       })
@@ -117,24 +116,24 @@ describe('SubmissionFilters', () => {
     testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
     return loadSubmissionList()
       .complete()
-      .request(trigger.changeValue(
-        '#submission-filters-submitter select',
-        fieldKey.id.toString()
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-submitter select');
+        return select.setValue(fieldKey.id.toString());
+      })
       .respondWithData(testData.submissionOData)
       .complete()
       .request(component => {
-        component.first(DateRangePicker).vm.close([
+        component.getComponent(DateRangePicker).vm.close([
           DateTime.fromISO('1970-01-01').toJSDate(),
           DateTime.fromISO('1970-01-02').toJSDate()
         ]);
       })
       .respondWithData(() => testData.submissionOData(0))
       .complete()
-      .request(trigger.changeValue(
-        '#submission-filters-review-state select',
-        'null'
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-review-state select');
+        return select.setValue('null');
+      })
       .beforeEachResponse((_, { url }) => {
         url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+\+and\+__system%2FreviewState\+eq\+null(&|$)/);
       })
@@ -152,16 +151,16 @@ describe('SubmissionFilters', () => {
     });
     return loadSubmissionList()
       .complete()
-      .request(trigger.changeValue(
-        '#submission-filters-submitter select',
-        testData.extendedFieldKeys.last().id.toString()
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-submitter select');
+        return select.setValue(testData.extendedFieldKeys.last().id.toString());
+      })
       .respondWithData(() => ({
         value: [testData.extendedSubmissions.last()._odata],
         '@odata.count': 1
       }))
       .afterResponse(component => {
-        component.first(SubmissionMetadataRow).getProp('rowNumber').should.equal(1);
+        component.getComponent(SubmissionMetadataRow).props().rowNumber.should.equal(1);
       });
   });
 
@@ -178,10 +177,10 @@ describe('SubmissionFilters', () => {
       .afterResponses(component => {
         component.vm.$store.state.request.data.form.submissions.should.equal(2);
       })
-      .request(trigger.changeValue(
-        '#submission-filters-submitter select',
-        testData.extendedFieldKeys.last().id.toString()
-      ))
+      .request(component => {
+        const select = component.get('#submission-filters-submitter select');
+        return select.setValue(testData.extendedFieldKeys.last().id.toString());
+      })
       .respondWithData(() => ({
         value: [testData.extendedSubmissions.last()._odata],
         '@odata.count': 1
@@ -201,12 +200,12 @@ describe('SubmissionFilters', () => {
         propsData: { top: () => 2 }
       })
         .complete()
-        .request(trigger.changeValue(
-          '#submission-filters-submitter select',
-          fieldKey.id.toString()
-        ))
+        .request(component => {
+          const select = component.get('#submission-filters-submitter select');
+          return select.setValue(fieldKey.id.toString());
+        })
         .beforeEachResponse(component => {
-          const text = component.first('#submission-list-message-text').text();
+          const text = component.get('#submission-list-message-text').text();
           text.trim().should.equal('Loading matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 0));
@@ -221,10 +220,10 @@ describe('SubmissionFilters', () => {
         propsData: { top: () => 2 }
       })
         .complete()
-        .request(trigger.changeValue(
-          '#submission-filters-submitter select',
-          fieldKey.id.toString()
-        ))
+        .request(component => {
+          const select = component.get('#submission-filters-submitter select');
+          return select.setValue(fieldKey.id.toString());
+        })
         .respondWithData(() => testData.submissionOData(2, 0))
         .complete()
         .request(component => {
@@ -232,7 +231,7 @@ describe('SubmissionFilters', () => {
           document.dispatchEvent(new Event('scroll'));
         })
         .beforeEachResponse(component => {
-          const text = component.first('#submission-list-message-text').text();
+          const text = component.get('#submission-list-message-text').text();
           text.trim().should.equal('Loading 2 more of 3 remaining matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 2));
@@ -248,10 +247,10 @@ describe('SubmissionFilters', () => {
           propsData: { top: () => 2 }
         })
           .complete()
-          .request(trigger.changeValue(
-            '#submission-filters-submitter select',
-            fieldKey.id.toString()
-          ))
+          .request(component => {
+            const select = component.get('#submission-filters-submitter select');
+            return select.setValue(fieldKey.id.toString());
+          })
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
           .request(component => {
@@ -259,7 +258,7 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.first('#submission-list-message-text').text();
+            const text = component.get('#submission-list-message-text').text();
             text.trim().should.equal('Loading the last matching Submission…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));
@@ -274,10 +273,10 @@ describe('SubmissionFilters', () => {
           propsData: { top: () => 2 }
         })
           .complete()
-          .request(trigger.changeValue(
-            '#submission-filters-submitter select',
-            fieldKey.id.toString()
-          ))
+          .request(component => {
+            const select = component.get('#submission-filters-submitter select');
+            return select.setValue(fieldKey.id.toString());
+          })
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
           .request(component => {
@@ -285,7 +284,7 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.first('#submission-list-message-text').text();
+            const text = component.get('#submission-list-message-text').text();
             text.trim().should.equal('Loading the last 2 matching Submissions…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));

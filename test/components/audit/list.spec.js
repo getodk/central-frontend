@@ -15,6 +15,6 @@ describe('AuditList', () => {
 
   it('shows a message if there are no audit log entries', () =>
     load('/system/audits', { root: false }).then(component => {
-      component.first('.empty-table-message').should.be.visible();
+      component.get('.empty-table-message').should.be.visible();
     }));
 });

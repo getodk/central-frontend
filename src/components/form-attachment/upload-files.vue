@@ -22,7 +22,8 @@ except according to the terms contained in the LICENSE file.
         </i18n>
         <i18n tag="p" path="introduction[1].full">
           <template #clickHere>
-            <input v-show="false" ref="input" type="file" multiple>
+            <input v-show="false" ref="input" type="file" multiple
+              @change="afterChange">
             <a ref="link" href="#" role="button"
               @click.prevent="$refs.input.click()">
               <span class="icon-folder-open"></span>
@@ -52,16 +53,11 @@ export default {
       default: false
     }
   },
-  mounted() {
-    // Using a jQuery event handler rather than a Vue one in order to facilitate
-    // testing: it is possible to mock a jQuery event but not a Vue event.
-    $(this.$refs.input).on('change.form-attachment-upload-files', (event) => {
+  methods: {
+    afterChange(event) {
       this.$emit('select', event.target.files);
       this.$refs.input.value = '';
-    });
-  },
-  beforeDestroy() {
-    $(this.$refs.input).off('.form-attachment-upload-files');
+    }
   }
 };
 </script>

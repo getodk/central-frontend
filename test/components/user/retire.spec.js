@@ -1,107 +1,87 @@
 import UserRetire from '../../../src/components/user/retire.vue';
+import UserRow from '../../../src/components/user/row.vue';
+
+import User from '../../../src/presenters/user';
+
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
 describe('UserRetire', () => {
   beforeEach(() => {
     mockLogin({ email: 'b@email.com', displayName: 'Person B' });
   });
 
-  it('shows the modal after the retire user action is clicked', () =>
-    mockRoute('/users')
-      .respondWithData(() =>
-        testData.standardUsers.createPast(1, { email: 'a@email.com' }).sorted())
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor))
-      .afterResponses(app => {
-        app.first(UserRetire).getProp('state').should.be.false();
-        return app;
-      })
-      .then(app => trigger.click(app, '#user-list-table .retire-user'))
-      .then(app => {
-        app.first(UserRetire).getProp('state').should.be.true();
-      }));
+  describe('retire user action', () => {
+    it('toggles the modal', () => {
+      testData.extendedUsers.createPast(1, { email: 'a@email.com' });
+      return load('/users', { root: false }).testModalToggles({
+        modal: UserRetire,
+        show: '.user-row .retire-user',
+        hide: '.btn-link'
+      });
+    });
 
-  describe('current user', () => {
-    it('disables the menu item for the retire user action', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          const action = app.first('#user-list-table .retire-user');
-          action.element.parentNode.should.be.disabled();
-        }));
-
-    it('adds a title to the menu item for the retire user action', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app => {
-          const action = app.first('#user-list-table .retire-user');
-          action.element.parentNode.title.should.be.ok();
-        }));
-
-    it('does not show the modal after the retire user action is clicked', () =>
-      mockRoute('/users')
-        .respondWithData(() => testData.standardUsers.sorted())
-        .respondWithData(() =>
-          testData.standardUsers.sorted().map(testData.toActor))
-        .afterResponses(app =>
-          trigger.click(app, '#user-list-table .retire-user'))
-        .then(app => {
-          app.first(UserRetire).getProp('state').should.be.false();
-        }));
+    it('is disabled for the current user', async () => {
+      const component = await load('/users', { root: false });
+      const a = component.get('.user-row .retire-user');
+      const li = a.element.parentNode;
+      li.classList.contains('disabled').should.be.true();
+      li.getAttribute('title').should.equal('You may not retire yourself.');
+      await a.trigger('click');
+      component.getComponent(UserRetire).props().state.should.be.false();
+    });
   });
 
-  it('implements some standard button things', () =>
-    mockHttp()
+  it('implements some standard button things', () => {
+    const user = testData.standardUsers
+      .createPast(1, { email: 'a@email.com' })
+      .last();
+    return mockHttp()
       .mount(UserRetire, {
-        propsData: {
-          user: testData.standardUsers
-            .createPast(1, { email: 'a@email.com' })
-            .last()
-        }
+        propsData: { state: true, user: new User(user) }
       })
-      .request(modal => trigger.click(modal, '.btn-danger'))
-      .standardButton('.btn-danger'));
+      .testStandardButton({
+        button: '.btn-danger',
+        disabled: ['.btn-link'],
+        modal: true
+      });
+  });
 
   describe('after a successful response', () => {
-    const retire = () => mockRoute('/users')
-      .respondWithData(() => testData.standardUsers
-        .createPast(1, { email: 'a@email.com', displayName: 'Person A' })
-        .sorted())
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor))
-      .complete()
-      .request(app => trigger.click(app, '#user-list-table .retire-user')
-        .then(() => trigger.click(app, '#user-retire .btn-danger')))
-      .respondWithSuccess()
-      .respondWithData(() => {
-        testData.extendedUsers.splice(1, 1);
-        return testData.standardUsers.sorted();
-      })
-      .respondWithData(() =>
-        testData.standardUsers.sorted().map(testData.toActor));
+    const retire = () => {
+      testData.extendedUsers.createPast(1, {
+        email: 'a@email.com',
+        displayName: 'Person A'
+      });
+      return load('/users', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('.user-row .retire-user').trigger('click');
+          return component.get('#user-retire .btn-danger').trigger('click');
+        })
+        .respondWithData(() => {
+          testData.extendedUsers.splice(1, 1);
+          return { success: true };
+        })
+        .respondFor('/users');
+    };
 
-    it('hides the modal', () =>
-      retire().afterResponses(app => {
-        app.first(UserRetire).getProp('state').should.be.false();
-      }));
+    it('hides the modal', async () => {
+      const component = await retire();
+      component.getComponent(UserRetire).props().state.should.be.false();
+    });
 
-    it('shows a success alert', () =>
-      retire().afterResponses(app => {
-        app.should.alert('success');
-        const message = app.first('#app-alert .alert-message').text();
+    it('shows a success alert', async () => {
+      const component = await retire();
+      component.should.alert('success', (message) => {
         message.should.containEql('Person A');
-      }));
+      });
+    });
 
-    it('renders the correct number of rows', () =>
-      retire().afterResponses(app => {
-        app.find('#user-list-table tbody tr').length.should.equal(1);
-      }));
+    it('renders the correct number of rows', async () => {
+      const component = await retire();
+      component.findAllComponents(UserRow).length.should.equal(1);
+    });
   });
 });

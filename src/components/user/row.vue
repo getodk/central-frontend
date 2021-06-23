@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="{ success: user.id === highlighted }">
-    <td class="user-display-name">
+  <tr class="user-row" :class="{ success: user.id === highlighted }">
+    <td class="display-name">
       <router-link :to="userPath(user.id)" :title="user.displayName">{{ user.displayName }}</router-link>
     </td>
-    <td class="user-row-email" :title="user.email">{{ user.email }}</td>
+    <td class="email" :title="user.email">{{ user.email }}</td>
     <td class="user-role">
       <form>
         <div class="form-group">
@@ -133,7 +133,7 @@ export default {
 #user-list-table td {
   vertical-align: middle;
 
-  &.user-display-name, &.user-row-email {
+  &.display-name, &.email {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

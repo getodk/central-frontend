@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionFieldDropdown from '../../../src/components/submission/field-dropdown.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
@@ -10,7 +8,6 @@ import store from '../../../src/store';
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const { repeat, group, string } = testData.fields;
 const strings = (min, max) => {
@@ -35,10 +32,10 @@ describe('SubmissionFieldDropdown', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
       propsData: { value: [] }
     });
-    const labels = dropdown.find('.checkbox span');
+    const labels = dropdown.findAll('.checkbox span');
     labels.length.should.equal(2);
-    labels[0].text().should.equal('s2');
-    labels[1].text().should.equal('s3');
+    labels.at(0).text().should.equal('s2');
+    labels.at(1).text().should.equal('s3');
   });
 
   it('adds a title attribute for checkbox that includes group name', () => {
@@ -46,9 +43,9 @@ describe('SubmissionFieldDropdown', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
       propsData: { value: [] }
     });
-    const span = dropdown.first('.checkbox span');
+    const span = dropdown.get('.checkbox span');
     span.text().should.equal('s1');
-    span.getAttribute('title').should.equal('g-s1');
+    span.attributes().title.should.equal('g-s1');
   });
 
   describe('checked boxes', () => {
@@ -58,9 +55,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [fields[0]] }
       });
-      const checkboxes = dropdown.find('input[type="checkbox"]');
-      checkboxes[0].element.checked.should.be.true();
-      checkboxes[1].element.checked.should.be.false();
+      const checkboxes = dropdown.findAll('input[type="checkbox"]');
+      checkboxes.at(0).element.checked.should.be.true();
+      checkboxes.at(1).element.checked.should.be.false();
     });
 
     it('updates the checkboxes after the value prop changes', async () => {
@@ -69,13 +66,12 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [fields[0]] }
       });
-      const checkboxes = dropdown.find('input[type="checkbox"]');
-      checkboxes[0].element.checked.should.be.true();
-      checkboxes[1].element.checked.should.be.false();
-      dropdown.setProps({ value: [fields[1]] });
-      await dropdown.vm.$nextTick();
-      checkboxes[0].element.checked.should.be.false();
-      checkboxes[1].element.checked.should.be.true();
+      const checkboxes = dropdown.findAll('input[type="checkbox"]');
+      checkboxes.at(0).element.checked.should.be.true();
+      checkboxes.at(1).element.checked.should.be.false();
+      await dropdown.setProps({ value: [fields[1]] });
+      checkboxes.at(0).element.checked.should.be.false();
+      checkboxes.at(1).element.checked.should.be.true();
     });
   });
 
@@ -84,15 +80,12 @@ describe('SubmissionFieldDropdown', () => {
       commitFields([string('/s1')]);
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] },
-        attachToDocument: true
+        attachTo: document.body
       });
-      const $emit = sinon.fake();
-      sinon.replace(dropdown.vm, '$emit', $emit);
-      await trigger.click(dropdown, 'select');
-      await trigger.check(dropdown, 'input[type="checkbox"]');
-      await trigger.click(dropdown, 'select');
-      $emit.calledWith('input').should.be.true();
-      const value = $emit.getCall(0).args[1];
+      await dropdown.get('select').trigger('click');
+      await dropdown.get('input[type="checkbox"]').setChecked();
+      await dropdown.get('select').trigger('click');
+      const value = dropdown.emitted().input[0][0];
       value.length.should.equal(1);
       value[0].path.should.equal('/s1');
     });
@@ -101,15 +94,13 @@ describe('SubmissionFieldDropdown', () => {
       commitFields([string('/s1')]);
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] },
-        attachToDocument: true
+        attachTo: document.body
       });
-      const $emit = sinon.fake();
-      sinon.replace(dropdown.vm, '$emit', $emit);
-      await trigger.click(dropdown, 'select');
-      await trigger.check(dropdown, 'input[type="checkbox"]');
-      await trigger.uncheck(dropdown, 'input[type="checkbox"]');
-      await trigger.click(dropdown, 'select');
-      $emit.called.should.be.false();
+      await dropdown.get('select').trigger('click');
+      await dropdown.get('input[type="checkbox"]').setChecked();
+      await dropdown.get('input[type="checkbox"]').setChecked(false);
+      await dropdown.get('select').trigger('click');
+      should(dropdown.emitted()).be.empty();
     });
   });
 
@@ -119,14 +110,14 @@ describe('SubmissionFieldDropdown', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
       propsData: { value: fields.slice(0, 100) }
     });
-    const disabled = dropdown.find('.checkbox.disabled');
+    const disabled = dropdown.findAll('.checkbox.disabled');
     disabled.length.should.equal(1);
-    const span = disabled[0].first('span');
+    const span = disabled.at(0).get('span');
     span.text().should.equal('s101');
-    disabled[0].first('input').hasAttribute('disabled').should.be.true();
-    const label = disabled[0].first('label');
-    label.getAttribute('title').should.equal('Cannot select more than 100 columns.');
-    span.hasAttribute('title').should.be.false();
+    disabled.at(0).get('input').element.disabled.should.be.true();
+    const label = disabled.at(0).get('label');
+    label.attributes().title.should.equal('Cannot select more than 100 columns.');
+    should.not.exist(span.attributes().title);
   });
 
   describe('placeholder', () => {
@@ -135,7 +126,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      dropdown.first('option').text().should.endWith(' of 1');
+      dropdown.get('option').text().should.endWith(' of 1');
     });
 
     it('shows the number of selected fields', () => {
@@ -144,7 +135,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [fields[0]] }
       });
-      dropdown.first('option').text().should.equal('1 of 2');
+      dropdown.get('option').text().should.equal('1 of 2');
     });
 
     it('does not update after a checkbox is checked', async () => {
@@ -152,8 +143,8 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.check(dropdown, 'input[type="checkbox"]');
-      dropdown.first('option').text().should.equal('0 of 1');
+      await dropdown.get('input[type="checkbox"]').setChecked();
+      dropdown.get('option').text().should.equal('0 of 1');
     });
 
     it('updates after the value prop changes', async () => {
@@ -162,9 +153,8 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      dropdown.setProps({ value: fields });
-      await dropdown.vm.$nextTick();
-      dropdown.first('option').text().should.equal('1 of 1');
+      await dropdown.setProps({ value: fields });
+      dropdown.get('option').text().should.equal('1 of 1');
     });
   });
 
@@ -174,11 +164,11 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      dropdown.find('.search-match').length.should.equal(2);
-      await trigger.input(dropdown, '.search input', '1');
-      const matches = dropdown.find('.search-match');
+      dropdown.findAll('.search-match').length.should.equal(2);
+      await dropdown.get('.search input').setValue('1');
+      const matches = dropdown.findAll('.search-match');
       matches.length.should.equal(1);
-      matches[0].first('span').text().should.equal('s1');
+      matches.at(0).get('span').text().should.equal('s1');
     });
 
     it('searches the group name', async () => {
@@ -186,10 +176,10 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.input(dropdown, '.search input', 'g');
-      const matches = dropdown.find('.search-match');
+      await dropdown.get('.search input').setValue('g');
+      const matches = dropdown.findAll('.search-match');
       matches.length.should.equal(1);
-      matches[0].first('span').text().should.equal('s1');
+      matches.at(0).get('span').text().should.equal('s1');
     });
 
     it('completes a case-insensitive search', async () => {
@@ -197,38 +187,38 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.input(dropdown, '.search input', 's');
-      dropdown.find('.search-match').length.should.equal(2);
-      await trigger.input(dropdown, '.search input', 'S');
-      dropdown.find('.search-match').length.should.equal(2);
+      await dropdown.get('.search input').setValue('s');
+      dropdown.findAll('.search-match').length.should.equal(2);
+      await dropdown.get('.search input').setValue('S');
+      dropdown.findAll('.search-match').length.should.equal(2);
     });
 
     it('shows a message if there are no matches', async () => {
       commitFields([string('/s1')]);
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] },
-        attachToDocument: true
+        attachTo: document.body
       });
-      await trigger.click(dropdown, 'select');
-      const li = dropdown.find('.dropdown-menu ul li');
+      await dropdown.get('select').trigger('click');
+      const li = dropdown.findAll('.dropdown-menu ul li');
       li.length.should.equal(2);
-      li[0].should.be.visible(true);
-      li[1].should.be.hidden(true);
-      await trigger.input(dropdown, '.search input', 'foo');
-      li[0].should.be.hidden(true);
-      li[1].should.be.visible(true);
+      li.at(0).should.be.visible(true);
+      li.at(1).should.be.hidden(true);
+      await dropdown.get('.search input').setValue('foo');
+      li.at(0).should.be.hidden(true);
+      li.at(1).should.be.visible(true);
     });
 
     it('resets after the dropdown is hidden', async () => {
       commitFields([string('/s1')]);
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] },
-        attachToDocument: true
+        attachTo: document.body
       });
-      await trigger.click(dropdown, 'select');
-      await trigger.input(dropdown, '.search input', '1');
-      await trigger.click(dropdown, 'select');
-      dropdown.first('.search input').element.value.should.equal('');
+      await dropdown.get('select').trigger('click');
+      await dropdown.get('.search input').setValue('1');
+      await dropdown.get('select').trigger('click');
+      dropdown.get('.search input').element.value.should.equal('');
     });
 
     describe('.close button', async () => {
@@ -237,9 +227,9 @@ describe('SubmissionFieldDropdown', () => {
         const dropdown = mount(SubmissionFieldDropdown, {
           propsData: { value: [] }
         });
-        const button = dropdown.first('.close');
+        const button = dropdown.get('.close');
         button.should.be.hidden();
-        await trigger.input(dropdown, '.search input', '1');
+        await dropdown.get('.search input').setValue('1');
         button.should.be.visible();
       });
 
@@ -249,21 +239,21 @@ describe('SubmissionFieldDropdown', () => {
           const dropdown = mount(SubmissionFieldDropdown, {
             propsData: { value: [] }
           });
-          await trigger.input(dropdown, '.search input', '1');
-          await trigger.click(dropdown, '.close');
-          dropdown.first('.search input').element.value.should.equal('');
+          await dropdown.get('.search input').setValue('1');
+          await dropdown.get('.close').trigger('click');
+          dropdown.get('.search input').element.value.should.equal('');
         });
 
         it('focuses the input', async () => {
           commitFields([string('/s1')]);
           const dropdown = mount(SubmissionFieldDropdown, {
             propsData: { value: [] },
-            attachToDocument: true
+            attachTo: document.body
           });
-          await trigger.click(dropdown, 'select');
-          await trigger.input(dropdown, '.search input', '1');
-          await trigger.click(dropdown, '.close');
-          dropdown.first('.search input').should.be.focused();
+          await dropdown.get('select').trigger('click');
+          await dropdown.get('.search input').setValue('1');
+          await dropdown.get('.close').trigger('click');
+          dropdown.get('.search input').should.be.focused();
         });
       });
     });
@@ -275,8 +265,8 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.click(dropdown, '.toggle-all a');
-      for (const checkbox of dropdown.find('input[type="checkbox"]'))
+      await dropdown.get('.toggle-all a').trigger('click');
+      for (const checkbox of dropdown.findAll('input[type="checkbox"]').wrappers)
         checkbox.element.checked.should.be.true();
     });
 
@@ -285,11 +275,11 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.input(dropdown, '.search input', '1');
-      await trigger.click(dropdown, '.toggle-all a');
-      const checkboxes = dropdown.find('input[type="checkbox"]');
-      checkboxes[0].element.checked.should.be.true();
-      checkboxes[1].element.checked.should.be.false();
+      await dropdown.get('.search input').setValue('1');
+      await dropdown.get('.toggle-all a').trigger('click');
+      const checkboxes = dropdown.findAll('input[type="checkbox"]');
+      checkboxes.at(0).element.checked.should.be.true();
+      checkboxes.at(1).element.checked.should.be.false();
     });
 
     it('disables an unchecked box if 100 checkboxes become checked', async () => {
@@ -297,9 +287,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: [] }
       });
-      await trigger.input(dropdown, '.search input', 's');
-      await trigger.click(dropdown, '.toggle-all a');
-      dropdown.find('.checkbox')[100].hasClass('disabled').should.be.true();
+      await dropdown.get('.search input').setValue('s');
+      await dropdown.get('.toggle-all a').trigger('click');
+      dropdown.findAll('.checkbox').at(100).classes('disabled').should.be.true();
     });
 
     it('is disabled if 100 checkboxes are checked', () => {
@@ -309,7 +299,7 @@ describe('SubmissionFieldDropdown', () => {
         propsData: { value: fields.slice(0, 100) },
         requestData: { fields }
       });
-      dropdown.first('.toggle-all a').hasClass('disabled').should.be.true();
+      dropdown.get('.toggle-all a').classes('disabled').should.be.true();
     });
 
     it('is disabled if selecting all would check more than 100 checkboxes', async () => {
@@ -318,11 +308,11 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: fields.slice(0, 99) }
       });
-      const checkboxes = dropdown.find('input[type="checkbox"]');
-      await trigger.uncheck(checkboxes[9]);
-      await trigger.check(checkboxes[100]);
-      await trigger.input(dropdown, '.search input', '10');
-      dropdown.first('.toggle-all a').hasClass('disabled').should.be.true();
+      const checkboxes = dropdown.findAll('input[type="checkbox"]');
+      await checkboxes.at(9).setChecked(false);
+      await checkboxes.at(100).setChecked();
+      await dropdown.get('.search input').setValue('10');
+      dropdown.get('.toggle-all a').classes('disabled').should.be.true();
     });
   });
 
@@ -333,8 +323,8 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: fields }
       });
-      await trigger.click(dropdown.find('.toggle-all a')[1]);
-      for (const checkbox of dropdown.find('input[type="checkbox"]'))
+      await dropdown.findAll('.toggle-all a').at(1).trigger('click');
+      for (const checkbox of dropdown.findAll('input[type="checkbox"]').wrappers)
         checkbox.element.checked.should.be.false();
     });
 
@@ -344,11 +334,11 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: fields }
       });
-      await trigger.input(dropdown, '.search input', '1');
-      await trigger.click(dropdown.find('.toggle-all a')[1]);
-      const checkboxes = dropdown.find('input[type="checkbox"]');
-      checkboxes[0].element.checked.should.be.false();
-      checkboxes[1].element.checked.should.be.true();
+      await dropdown.get('.search input').setValue('1');
+      await dropdown.findAll('.toggle-all a').at(1).trigger('click');
+      const checkboxes = dropdown.findAll('input[type="checkbox"]');
+      checkboxes.at(0).element.checked.should.be.false();
+      checkboxes.at(1).element.checked.should.be.true();
     });
 
     it('re-enables a disabled checkbox', async () => {
@@ -357,10 +347,10 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: fields.slice(0, 100) }
       });
-      const last = dropdown.find('.checkbox')[100];
-      last.hasClass('disabled').should.be.true();
-      await trigger.click(dropdown.find('.toggle-all a')[1]);
-      last.hasClass('disabled').should.be.false();
+      const last = dropdown.findAll('.checkbox').at(100);
+      last.classes('disabled').should.be.true();
+      await dropdown.findAll('.toggle-all a').at(1).trigger('click');
+      last.classes('disabled').should.be.false();
     });
   });
 
@@ -371,8 +361,8 @@ describe('SubmissionFieldDropdown', () => {
     });
     testData.extendedSubmissions.createPast(1);
     const component = await loadSubmissionList();
-    component.find(SubmissionFieldDropdown).length.should.equal(0);
-    component.first(SubmissionTable).getProp('fields').length.should.equal(11);
+    component.findComponent(SubmissionFieldDropdown).exists().should.be.false();
+    component.getComponent(SubmissionTable).props().fields.length.should.equal(11);
   });
 
   it('initially selects first 10 if there are 12 selectable fields', async () => {
@@ -382,12 +372,12 @@ describe('SubmissionFieldDropdown', () => {
     });
     testData.extendedSubmissions.createPast(1);
     const component = await loadSubmissionList();
-    const selected = component.first(SubmissionFieldDropdown).getProp('value');
+    const selected = component.getComponent(SubmissionFieldDropdown).props().value;
     selected.map(field => field.path).should.eql([
       '/s2', '/s3', '/s4', '/s5', '/s6',
       '/s7', '/s8', '/s9', '/s10', '/s11'
     ]);
-    component.first(SubmissionTable).getProp('fields').should.equal(selected);
+    component.getComponent(SubmissionTable).props().fields.should.equal(selected);
   });
 
   describe('after the selection changes', () => {
@@ -400,14 +390,14 @@ describe('SubmissionFieldDropdown', () => {
     });
 
     const uncheckFirst = async (component) => {
-      const dropdown = component.first(SubmissionFieldDropdown);
-      await trigger.click(dropdown, 'select');
-      await trigger.uncheck(dropdown, 'input[type="checkbox"]');
-      await trigger.click(dropdown, 'select');
+      const dropdown = component.getComponent(SubmissionFieldDropdown);
+      await dropdown.get('select').trigger('click');
+      await dropdown.get('input[type="checkbox"]').setChecked(false);
+      return dropdown.get('select').trigger('click');
     };
 
     it('sends a request for submissions', () =>
-      loadSubmissionList({ attachToDocument: true })
+      loadSubmissionList({ attachTo: document.body })
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse((_, { url }) => {
@@ -416,17 +406,17 @@ describe('SubmissionFieldDropdown', () => {
         .respondWithData(testData.submissionOData));
 
     it('re-renders the table with the selected fields', () =>
-      loadSubmissionList({ attachToDocument: true })
+      loadSubmissionList({ attachTo: document.body })
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse(component => {
-          component.find(SubmissionDataRow).length.should.equal(0);
+          component.findComponent(SubmissionDataRow).exists().should.be.false();
         })
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
-          const table = component.first(SubmissionTable);
-          table.find(SubmissionDataRow).length.should.equal(1);
-          table.getProp('fields').length.should.equal(9);
+          const table = component.getComponent(SubmissionTable);
+          table.findComponent(SubmissionDataRow).exists().should.be.true();
+          table.props().fields.length.should.equal(9);
         }));
   });
 });

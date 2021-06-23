@@ -9,7 +9,6 @@ import testData from '../data';
 import { load, mockHttp } from '../util/http';
 import { mockLogin } from '../util/session';
 import { setData } from '../util/store';
-import { trigger } from '../util/event';
 
 describe('util/session', () => {
   describe('session restore', () => {
@@ -342,10 +341,12 @@ describe('util/session', () => {
           load('/login')
             .restoreSession(false)
             .complete()
-            .request(trigger.submit('#account-login form', [
-              ['input[type="email"]', 'alice@getodk.org'],
-              ['input[type="password"]', 'foo']
-            ]))
+            .request(async (app) => {
+              const form = app.get('#account-login form');
+              await form.get('input[type="email"]').setValue('alice@getodk.org');
+              await form.get('input[type="password"]').setValue('foo');
+              return form.trigger('submit');
+            })
             .beforeEachResponse((app, { url }) => {
               if (url === '/v1/users/current')
                 logOut(app.vm.$router, app.vm.$store, false).catch(noop);
@@ -362,10 +363,12 @@ describe('util/session', () => {
           load('/login?next=%2Fusers')
             .restoreSession(false)
             .complete()
-            .request(trigger.submit('#account-login form', [
-              ['input[type="email"]', 'alice@getodk.org'],
-              ['input[type="password"]', 'foo']
-            ]))
+            .request(async (app) => {
+              const form = app.get('#account-login form');
+              await form.get('input[type="email"]').setValue('alice@getodk.org');
+              await form.get('input[type="password"]').setValue('foo');
+              return form.trigger('submit');
+            })
             .beforeEachResponse((app, { url }) => {
               if (url === '/v1/users/current')
                 logOut(app.vm.$router, app.vm.$store, false).catch(noop);

@@ -2,21 +2,21 @@ import FormOverview from '../../../src/components/form/overview.vue';
 import FormShow from '../../../src/components/form/show.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
+
 import testData from '../../data';
 import { ago } from '../../../src/util/date-time';
 import { fakeSetTimeout } from '../../util/util';
-import { load, mockRoute } from '../../util/http';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('FormShow', () => {
   beforeEach(mockLogin);
 
   describe('route params', () => {
-    it('requires projectId param to be integer', () =>
-      mockRoute('/projects/p/forms/f')
-        .then(app => {
-          app.find(NotFound).length.should.equal(1);
-        }));
+    it('requires the projectId param to be integer', async () => {
+      const app = await load('/projects/p/forms/f');
+      app.findComponent(NotFound).exists().should.be.true();
+    });
 
     it('handles an encoded xmlFormId correctly', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'i ı' });
@@ -24,8 +24,8 @@ describe('FormShow', () => {
         .beforeEachResponse((_, { url }, index) => {
           if (index === 1) url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
         })
-        .afterResponses(app => {
-          app.vm.$route.params.xmlFormId.should.equal('i ı');
+        .afterResponses(component => {
+          component.vm.$route.params.xmlFormId.should.equal('i ı');
         });
     });
   });
@@ -39,14 +39,14 @@ describe('FormShow', () => {
       form: () => testData.extendedForms.first()
     })
       .afterResponses(app => {
-        vm = app.first(FormOverview).vm;
+        vm = app.getComponent(FormOverview).vm;
       })
       .load('/projects/1/forms/f2', {
         project: false,
         form: () => testData.extendedForms.last()
       })
       .afterResponses(app => {
-        app.first(FormOverview).vm.should.not.equal(vm);
+        app.getComponent(FormOverview).vm.should.not.equal(vm);
       });
   });
 
@@ -56,14 +56,14 @@ describe('FormShow', () => {
     testData.standardFormAttachments.createPast(1);
     return load('/projects/1/forms/f/draft/attachments')
       .beforeEachResponse(app => {
-        const loading = app.find(Loading);
+        const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading[0].getProp('state').should.eql(true);
+        loading.at(0).props().state.should.eql(true);
       })
       .afterResponses(app => {
-        const loading = app.find(Loading);
+        const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading[0].getProp('state').should.eql(false);
+        loading.at(0).props().state.should.eql(false);
       });
   });
 
@@ -134,7 +134,7 @@ describe('FormShow', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(app => {
-          app.first(FormShow).vm.fetchDraft();
+          app.getComponent(FormShow).vm.fetchDraft();
           runAll();
         })
         // There should be only two responses, not three.
@@ -272,7 +272,7 @@ describe('FormShow', () => {
       return load('/projects/1/forms/f')
         .complete()
         .request(app => {
-          app.first(FormShow).vm.fetchForm();
+          app.getComponent(FormShow).vm.fetchForm();
           runAll();
         })
         // There should be only one response, not two.

@@ -1,3 +1,5 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import ActorLink from '../../src/components/actor-link.vue';
 import LinkIfCan from '../../src/components/link-if-can.vue';
 
@@ -13,12 +15,13 @@ describe('ActorLink', () => {
   it('renders a LinkIfCan component if the actor is a user', () => {
     const component = mount(ActorLink, {
       propsData: { actor: testData.extendedUsers.first() },
-      router: true
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/system/audits' }
     });
-    const linkIfCan = component.first(LinkIfCan);
-    linkIfCan.getProp('to').should.equal('/users/1/edit');
+    const linkIfCan = component.getComponent(LinkIfCan);
+    linkIfCan.props().to.should.equal('/users/1/edit');
     linkIfCan.text().should.equal('Alice');
-    linkIfCan.getAttribute('title').should.equal('Alice');
+    linkIfCan.attributes().title.should.equal('Alice');
   });
 
   it('renders a span if the actor is not a user', () => {
@@ -26,11 +29,13 @@ describe('ActorLink', () => {
       .createPast(1, { displayName: 'My App User' })
       .last();
     const component = mount(ActorLink, {
-      propsData: { actor }
+      propsData: { actor },
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/system/audits' }
     });
-    component.find(LinkIfCan).length.should.equal(0);
-    const span = component.first('span');
-    span.text().should.equal('My App User');
-    span.getAttribute('title').should.equal('My App User');
+    component.findComponent(LinkIfCan).exists().should.be.false();
+    component.element.tagName.should.equal('SPAN');
+    component.text().should.equal('My App User');
+    component.attributes().title.should.equal('My App User');
   });
 });

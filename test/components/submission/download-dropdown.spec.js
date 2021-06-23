@@ -1,12 +1,9 @@
-import sinon from 'sinon';
-
 import SubmissionDownloadDropdown from '../../../src/components/submission/download-dropdown.vue';
 
 import Form from '../../../src/presenters/form';
 
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const mountComponent = (options = {}) => {
   const form = testData.extendedForms.last();
@@ -24,7 +21,7 @@ describe('SubmissionDownloadDropdown', () => {
   describe('button text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      const text = mountComponent().first('button').text().trim();
+      const text = mountComponent().get('button').text();
       text.should.equal('Download 2 records');
     });
 
@@ -34,7 +31,7 @@ describe('SubmissionDownloadDropdown', () => {
         const dropdown = mountComponent({
           propsData: { odataFilter: '__system/submitterId eq 1' }
         });
-        const text = dropdown.first('button').text().trim();
+        const text = dropdown.get('button').text();
         text.should.equal('Download matching records');
       });
 
@@ -48,7 +45,7 @@ describe('SubmissionDownloadDropdown', () => {
           value: { '@odata.count': 1 }
         });
         await dropdown.vm.$nextTick();
-        const text = dropdown.first('button').text().trim();
+        const text = dropdown.get('button').text();
         text.should.equal('Download 1 matching record');
       });
     });
@@ -61,7 +58,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the correct href attributes for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      mountComponent().find('a').map(a => a.getAttribute('href')).should.eql([
+      mountComponent().findAll('a').wrappers.map(a => a.attributes().href).should.eql([
         '/v1/projects/1/forms/a%20b/submissions.csv.zip',
         '/v1/projects/1/forms/a%20b/submissions.csv.zip?attachments=false',
         '/v1/projects/1/forms/a%20b/submissions.csv'
@@ -70,7 +67,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the correct href attributes for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      mountComponent().find('a').map(a => a.getAttribute('href')).should.eql([
+      mountComponent().findAll('a').wrappers.map(a => a.attributes().href).should.eql([
         '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip',
         '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip?attachments=false',
         '/v1/projects/1/forms/a%20b/draft/submissions.csv'
@@ -79,8 +76,8 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the target attribute to _blank', () => {
       testData.extendedForms.createPast(1);
-      mountComponent().find('a').should.matchEach(a =>
-        a.getAttribute('target') === '_blank');
+      mountComponent().findAll('a').wrappers.should.matchEach(a =>
+        a.attributes().target === '_blank');
     });
 
     describe('form does not have a binary field', () => {
@@ -91,11 +88,11 @@ describe('SubmissionDownloadDropdown', () => {
       });
 
       it('disables the "with media" link', () => {
-        mountComponent().first('li').hasClass('disabled').should.be.true();
+        mountComponent().get('li').classes('disabled').should.be.true();
       });
 
       it('prevents default', () => {
-        const a = mountComponent().first('a');
+        const a = mountComponent().get('a');
         const event = new MouseEvent('click', {
           bubbles: true,
           cancelable: true
@@ -116,42 +113,33 @@ describe('SubmissionDownloadDropdown', () => {
         fields: [{ path: '/b', type: 'binary', binary: true }]
       });
       const dropdown = mountComponent();
-      const $emit = sinon.fake();
-      sinon.replace(dropdown.vm, '$emit', $emit);
-      trigger.click(dropdown, 'a');
-      $emit.getCall(0).args.should.eql([
-        'decrypt',
-        '/v1/projects/1/forms/f/submissions.csv.zip'
+      dropdown.get('a').trigger('click');
+      dropdown.emitted().decrypt.should.eql([
+        ['/v1/projects/1/forms/f/submissions.csv.zip']
       ]);
     });
 
     it('emits a decrypt event for the "without media" link', () => {
       testData.extendedForms.createPast(1);
       const dropdown = mountComponent();
-      const $emit = sinon.fake();
-      sinon.replace(dropdown.vm, '$emit', $emit);
-      trigger.click(dropdown.find('a')[1]);
-      $emit.getCall(0).args.should.eql([
-        'decrypt',
-        '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false'
+      dropdown.findAll('a').at(1).trigger('click');
+      dropdown.emitted().decrypt.should.eql([
+        ['/v1/projects/1/forms/f/submissions.csv.zip?attachments=false']
       ]);
     });
 
     it('emits a decrypt event for the "primary data table" link', () => {
       testData.extendedForms.createPast(1);
       const dropdown = mountComponent();
-      const $emit = sinon.fake();
-      sinon.replace(dropdown.vm, '$emit', $emit);
-      trigger.click(dropdown.find('a')[2]);
-      $emit.getCall(0).args.should.eql([
-        'decrypt',
-        '/v1/projects/1/forms/f/submissions.csv'
+      dropdown.findAll('a').at(2).trigger('click');
+      dropdown.emitted().decrypt.should.eql([
+        ['/v1/projects/1/forms/f/submissions.csv']
       ]);
     });
 
     it('prevents default', () => {
       testData.extendedForms.createPast(1);
-      const a = mountComponent().find('a')[1];
+      const a = mountComponent().findAll('a').at(1);
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
@@ -161,8 +149,8 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('does not set the target attribute', () => {
       testData.extendedForms.createPast(1);
-      mountComponent().find('a').should.matchEach(a =>
-        !a.hasAttribute('target'));
+      for (const a of mountComponent().findAll('a').wrappers)
+        should.not.exist(a.attributes().target);
     });
 
     describe('form does not have a binary field', () => {
@@ -173,15 +161,13 @@ describe('SubmissionDownloadDropdown', () => {
       });
 
       it('disables the "with media" link', () => {
-        mountComponent().first('li').hasClass('disabled').should.be.true();
+        mountComponent().get('li').classes('disabled').should.be.true();
       });
 
       it('does not emit a decrypt event', () => {
         const dropdown = mountComponent();
-        const $emit = sinon.fake();
-        sinon.replace(dropdown.vm, '$emit', $emit);
-        trigger.click(dropdown, 'a');
-        $emit.called.should.be.false();
+        dropdown.get('a').trigger('click');
+        should(dropdown.emitted()).be.empty();
       });
     });
   });
@@ -192,7 +178,7 @@ describe('SubmissionDownloadDropdown', () => {
     const dropdown = mountComponent({
       propsData: { odataFilter: '__system/submitterId eq 1' }
     });
-    dropdown.find('a').map(a => a.getAttribute('href')).should.eql([
+    dropdown.findAll('a').wrappers.map(a => a.attributes().href).should.eql([
       '/v1/projects/1/forms/f/submissions.csv.zip?%24filter=__system%2FsubmitterId+eq+1',
       '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false&%24filter=__system%2FsubmitterId+eq+1',
       '/v1/projects/1/forms/f/submissions.csv?%24filter=__system%2FsubmitterId+eq+1'

@@ -73,10 +73,10 @@ import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
+import ProjectSubmissionOptions from '../project/submission-options.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { loadAsync } from '../../util/async-components';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -89,9 +89,9 @@ export default {
     FieldKeyRow,
     FieldKeyNew,
     FieldKeyRevoke,
-    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions')
+    ProjectSubmissionOptions
   },
-  mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
+  mixins: [modal(), routes()],
   props: {
     projectId: {
       type: String,

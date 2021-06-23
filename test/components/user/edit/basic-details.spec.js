@@ -1,75 +1,85 @@
+import UserEditBasicDetails from '../../../../src/components/user/edit/basic-details.vue';
+
 import testData from '../../../data';
-import { fillForm, submitForm } from '../../../util/event';
-import { load, mockRoute } from '../../../util/http';
+import { load, mockHttp } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
+import { mount } from '../../../util/lifecycle';
+
+const mountOptions = () => ({
+  requestData: { user: testData.standardUsers.first() }
+});
 
 describe('UserEditBasicDetails', () => {
   beforeEach(() => {
     mockLogin({ displayName: 'Old Name', email: 'old@email.com' });
   });
 
-  it('updates after a route update', () =>
-    mockRoute('/users/1/edit')
-      .respondWithData(() => testData.standardUsers.last())
-      .afterResponse(app => {
-        const form = app.first('#user-edit-basic-details form');
-        const emailInput = form.first('input[type="email"]');
-        emailInput.element.value.should.equal('old@email.com');
-        const displayNameInput = form.first('input[type="text"]');
-        displayNameInput.element.value.should.equal('Old Name');
-        return fillForm(form, [
-          ['input[type="email"]', 'new@email.com'],
-          ['input[type="text"]', 'New Name']
-        ]);
+  it('sets the value of the email input to the current email', () => {
+    const component = mount(UserEditBasicDetails, mountOptions());
+    const { value } = component.get('input[type="email"]').element;
+    value.should.equal('old@email.com');
+  });
+
+  it('sets value of display name input to current display name', () => {
+    const component = mount(UserEditBasicDetails, mountOptions());
+    component.get('input[type="text"]').element.value.should.equal('Old Name');
+  });
+
+  it('resets the form if the route changes', () => {
+    testData.extendedUsers.createPast(1, {
+      email: 'another@email.com',
+      displayName: 'Another Name'
+    });
+    return load('/users/1/edit', {}, {
+      user: () => testData.standardUsers.first()
+    })
+      .afterResponses(async (app) => {
+        const component = app.getComponent(UserEditBasicDetails);
+        await component.get('input[type="email"]').setValue('new@email.com');
+        return component.get('input[type="text"]').setValue('New Name');
       })
-      .route('/users/2/edit')
-      .respondWithData(() => testData.standardUsers
-        .createPast(1, { email: 'another@email.com', displayName: 'Another Name' })
-        .last())
-      .afterResponse(app => {
-        const form = app.first('#user-edit-basic-details form');
-        const emailInput = form.first('input[type="email"]');
-        emailInput.element.value.should.equal('another@email.com');
-        const displayNameInput = form.first('input[type="text"]');
-        displayNameInput.element.value.should.equal('Another Name');
+      .load('/users/2/edit')
+      .afterResponses(app => {
+        const component = app.getComponent(UserEditBasicDetails);
+        const email = component.get('input[type="email"]');
+        email.element.value.should.equal('another@email.com');
+        component.get('input[type="text"]').element.value.should.equal('Another Name');
+      });
+  });
+
+  it('implements some standard button things', () =>
+    mockHttp()
+      .mount(UserEditBasicDetails, mountOptions())
+      .testStandardButton({
+        button: 'button',
+        request: async (component) => {
+          await component.get('input[type="email"]').setValue('new@email.com');
+          return component.get('form').trigger('submit');
+        }
       }));
 
-  it('standard button thinking things', () =>
-    mockRoute('/account/edit')
-      .respondWithData(() => testData.standardUsers.last())
+  describe('after a successful response', () => {
+    const submit = () => load('/account/edit')
       .complete()
-      .request(app => submitForm(app, '#user-edit-basic-details form', [
-        ['input[type="email"]', 'new@email.com']
-      ]))
-      .standardButton('#user-edit-basic-details button'));
-
-  it('shows a success alert after a successful submit', () =>
-    mockRoute('/account/edit')
-      .respondWithData(() => testData.standardUsers.last())
-      .complete()
-      .request(app => submitForm(app, '#user-edit-basic-details form', [
-        ['input[type="email"]', 'new@email.com']
-      ]))
-      .respondWithData(() => {
-        testData.extendedUsers.update(-1, { email: 'new@email.com' });
-        return testData.standardUsers.last();
+      .request(async (app) => {
+        const component = app.getComponent(UserEditBasicDetails);
+        await component.get('input[type="text"]').setValue('New Name');
+        return component.get('form').trigger('submit');
       })
-      .afterResponse(app => {
-        app.should.alert('success');
-      }));
-
-  it("updates the user's display name after a successful submit", () =>
-    load('/account/edit')
-      .complete()
-      .request(app => submitForm(app, '#user-edit-basic-details form', [
-        ['input[type="text"]', 'New Name']
-      ]))
       .respondWithData(() => {
         testData.extendedUsers.update(-1, { displayName: 'New Name' });
         return testData.standardUsers.last();
-      })
-      .afterResponse(app => {
-        app.first('#navbar-actions > a').text().trim().should.equal('New Name');
-        app.first('#page-head-title').text().trim().should.equal('New Name');
-      }));
+      });
+
+    it('shows a success alert', async () => {
+      const app = await submit();
+      app.should.alert('success');
+    });
+
+    it("updates the user's display name", async () => {
+      const app = await submit();
+      app.get('#navbar-actions a').text().should.equal('New Name');
+      app.get('#page-head-title').text().should.equal('New Name');
+    });
+  });
 });

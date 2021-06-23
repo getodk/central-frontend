@@ -1,6 +1,6 @@
 import TestUtilSelectable from '../util/components/selectable.vue';
+
 import { mount } from '../util/lifecycle';
-import { trigger } from '../util/event';
 
 describe('Selectable', () => {
   it('uses the default slot', () => {
@@ -13,11 +13,11 @@ describe('Selectable', () => {
   it('selects the text after it is clicked', async () => {
     const component = mount(TestUtilSelectable, {
       propsData: { text: 'Some text' },
-      attachToDocument: true
+      attachTo: document.body
     });
-    await trigger.click(component);
+    await component.trigger('click');
     const selection = window.getSelection();
-    selection.anchorNode.should.equal(component.vm.$el);
-    selection.focusNode.should.equal(component.vm.$el);
+    selection.anchorNode.should.equal(component.element);
+    selection.focusNode.should.equal(component.element);
   });
 });

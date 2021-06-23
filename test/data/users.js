@@ -39,6 +39,3 @@ export const extendedUsers = dataStore({
 });
 
 export const standardUsers = view(extendedUsers, omit(['verbs']));
-
-// Deprecated.
-export const administrators = standardUsers;

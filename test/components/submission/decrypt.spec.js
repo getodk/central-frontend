@@ -3,14 +3,12 @@ import sinon from 'sinon';
 import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 
 import testData from '../../data';
-import { fillForm, submitForm, trigger } from '../../util/event';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
 const createData = () => {
-  // Create test data.
   if (testData.standardKeys.size === 0)
     testData.standardKeys.createPast(1, { managed: true });
   const key = testData.standardKeys.last();
@@ -22,17 +20,11 @@ const createData = () => {
     fields: [testData.fields.binary('/b')]
   });
 };
-const submitDecryptForm = (formAction) => {
-  const keys = testData.standardKeys.createPast(1, { managed: true }).sorted();
-  const modal = mount(SubmissionDecrypt, {
-    propsData: { state: true, formAction, delayBetweenChecks: 1 },
-    requestData: { keys },
-    attachToDocument: true
-  });
-  // Wait for the iframe to load.
-  return wait(200)
-    .then(() => submitForm(modal, 'form', [['input', 'passphrase']]));
-};
+const mountComponent = (options = {}) => mount(SubmissionDecrypt, {
+  ...options,
+  propsData: { state: true, ...options.propsData },
+  requestData: { keys: testData.standardKeys.sorted() }
+});
 
 describe('SubmissionDecrypt', () => {
   beforeEach(mockLogin);
@@ -49,44 +41,38 @@ describe('SubmissionDecrypt', () => {
   it('receives the form action from SubmissionDownloadDropdown', async () => {
     createData();
     const component = await loadSubmissionList();
-    const modal = component.first(SubmissionDecrypt);
-    should.not.exist(modal.getProp('formAction'));
-    await trigger.click(component, '#submission-download-dropdown a');
-    modal.getProp('formAction').should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
+    const modal = component.getComponent(SubmissionDecrypt);
+    should.not.exist(modal.props().formAction);
+    await component.get('#submission-download-dropdown a').trigger('click');
+    modal.props().formAction.should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
   });
 
   it('focuses the passphrase input', async () => {
     createData();
-    const component = await loadSubmissionList({ attachToDocument: true });
-    await trigger.click(component, '#submission-download-dropdown a');
-    component.first(SubmissionDecrypt).first('input').should.be.focused();
+    const component = await loadSubmissionList({ attachTo: document.body });
+    await component.get('#submission-download-dropdown a').trigger('click');
+    component.getComponent(SubmissionDecrypt).get('input').should.be.focused();
   });
 
   it('shows a hint if there is one', () => {
-    const keys = testData.standardKeys
-      .createPast(1, { managed: true, hint: 'some hint' })
-      .sorted();
-    const modal = mount(SubmissionDecrypt, {
-      propsData: {
-        state: true,
-        formAction: '/v1/projects/1/forms/f/submissions.csv.zip'
-      },
-      requestData: { keys }
+    testData.standardKeys.createPast(1, { managed: true, hint: 'some hint' });
+    const modal = mountComponent({
+      propsData: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' }
     });
-    const introductions = modal.find('.modal-introduction');
+    const introductions = modal.findAll('.modal-introduction');
     introductions.length.should.equal(2);
-    introductions[1].text().trim().should.equal('Hint: some hint');
+    introductions.at(1).text().should.equal('Hint: some hint');
   });
 
   it('resets the form after the modal is hidden', async () => {
     createData();
     const component = await loadSubmissionList();
-    await trigger.click(component, '#submission-download-dropdown a');
-    const modal = component.first(SubmissionDecrypt);
-    await trigger.input(modal, 'input', 'passphrase');
-    await trigger.click(modal, '.btn-link');
-    await trigger.click(component, '#submission-download-dropdown a');
-    modal.first('input').element.value.should.equal('');
+    await component.get('#submission-download-dropdown a').trigger('click');
+    const modal = component.getComponent(SubmissionDecrypt);
+    await modal.get('input').setValue('passphrase');
+    await modal.get('.btn-link').trigger('click');
+    await component.get('#submission-download-dropdown a').trigger('click');
+    modal.get('input').element.value.should.equal('');
   });
 
   /*
@@ -105,20 +91,14 @@ describe('SubmissionDecrypt', () => {
   replaceIframeBody() method, then test the result.
   */
   it('appends a form to the iframe body and fills it', () => {
-    const keys = testData.standardKeys
-      .createPast(1, { managed: true })
-      .sorted();
-    const modal = mount(SubmissionDecrypt, {
-      propsData: {
-        state: true,
-        formAction: '/v1/projects/1/forms/f/submissions.csv.zip'
-      },
-      requestData: { keys },
-      attachToDocument: true
+    const key = testData.standardKeys.createPast(1, { managed: true }).last();
+    const modal = mountComponent({
+      propsData: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' },
+      attachTo: document.body
     });
     // Wait for the iframe to load.
     return wait(200)
-      .then(() => fillForm(modal, [['input', 'secret passphrase']]))
+      .then(() => modal.get('input').setValue('secret passphrase'))
       .then(() => {
         modal.vm.replaceIframeBody();
 
@@ -128,67 +108,76 @@ describe('SubmissionDecrypt', () => {
 
         const inputs = form.querySelectorAll('input');
         inputs.length.should.equal(2);
-        inputs[0].getAttribute('name').should.equal(keys[0].id.toString());
+        inputs[0].getAttribute('name').should.equal(key.id.toString());
         inputs[0].value.should.equal('secret passphrase');
         inputs[1].value.should.equal(modal.vm.session.csrf);
       });
   });
 
   describe('after the iframe form is submitted', () => {
-    it('shows a danger alert if a Problem is returned', () =>
-      submitDecryptForm('/test/files/problem.html')
-        // Wait for a Problem check.
-        .then(modal => wait(200)
-          .then(() => {
-            modal.should.alert(
-              'danger',
-              'An unknown internal problem has occurred. Please try again later.'
-            );
-          })));
+    beforeEach(() => {
+      testData.standardKeys.createPast(1, { managed: true });
+    });
+
+    const submit = async (modal) => {
+      // Wait for the iframe to load.
+      await wait(200);
+      await modal.get('input').setValue('passphrase');
+      return modal.get('form').trigger('submit');
+    };
+
+    it('shows a danger alert if a Problem is returned', async () => {
+      const modal = mountComponent({
+        propsData: {
+          formAction: '/test/files/problem.html',
+          delayBetweenChecks: 1
+        },
+        attachTo: document.body
+      });
+      await submit(modal);
+      // Wait for a Problem check.
+      await wait(200);
+      modal.should.alert(
+        'danger',
+        'An unknown internal problem has occurred. Please try again later.'
+      );
+    });
 
     // We do not actually submit the iframe form here, because that would cause
     // the iframe to change pages. Instead, we simply create and fill the form,
     // then call the scheduleProblemCheck() method.
-    it('continually checks for a Problem even if form submission is successful', () => {
-      const keys = testData.standardKeys
-        .createPast(1, { managed: true })
-        .sorted();
-      const modal = mount(SubmissionDecrypt, {
+    it('continually checks for a Problem even if form submission is successful', async () => {
+      const modal = mountComponent({
         propsData: {
-          state: true,
           formAction: '/v1/projects/1/forms/f/submissions.csv.zip',
           delayBetweenChecks: 1
         },
-        requestData: { keys },
-        attachToDocument: true
+        attachTo: document.body
       });
       // Wait for the iframe to load.
-      return wait(200)
-        .then(() => {
-          modal.vm.replaceIframeBody();
-          const spy = sinon.spy(modal.vm, 'checkForProblem');
-          modal.vm.scheduleProblemCheck();
-          // Wait for a Problem check.
-          return wait(200)
-            .then(() => {
-              spy.called.should.be.true();
-              const checks = spy.callCount;
-              // Wait for another Problem check.
-              return wait(200).then(() => {
-                spy.callCount.should.be.above(checks);
-                modal.vm.cancelCalls();
-              });
-            });
-        });
+      await wait(200);
+      modal.vm.replaceIframeBody();
+      const spy = sinon.spy(modal.vm, 'checkForProblem');
+      modal.vm.scheduleProblemCheck();
+      // Wait for a Problem check.
+      await wait(200);
+      spy.called.should.be.true();
+      const checks = spy.callCount;
+      // Wait for another Problem check.
+      await wait(200);
+      spy.callCount.should.be.above(checks);
     });
 
     // Here we actually submit the iframe form, which causes the iframe to
     // change pages. To detect the info alert, we return /blank.html instead of
     // a Problem.
-    it('shows an info alert', () =>
-      submitDecryptForm('/blank.html').then(modal => {
-        modal.should.alert('info');
-        modal.vm.cancelCalls();
-      }));
+    it('shows an info alert', async () => {
+      const modal = mountComponent({
+        propsData: { formAction: '/blank.html' },
+        attachTo: document.body
+      });
+      await submit(modal);
+      modal.should.alert('info');
+    });
   });
 });

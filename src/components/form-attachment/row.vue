@@ -85,7 +85,7 @@ export default {
       return {
         'form-attachment-row': true,
         info: highlightedAsInfo,
-        'form-attachment-row-targeted': this.targeted,
+        targeted: this.targeted,
         success: highlightedAsSuccess
       };
     },
@@ -111,7 +111,7 @@ export default {
 
 #form-attachment-list-table {
   > tbody > tr {
-    &.form-attachment-row-targeted {
+    &.targeted {
       > td {
         box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
 

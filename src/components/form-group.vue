@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { loadAsync } from '../util/async-components';
+
 export default {
   name: 'FormGroup',
-  components: {
-    Password: () => import('vue-password-strength-meter')
-  },
+  components: { Password: loadAsync('Password') },
   inheritAttrs: false,
   props: {
     value: {

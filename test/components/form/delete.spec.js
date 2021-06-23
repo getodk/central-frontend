@@ -1,63 +1,57 @@
 import FormDelete from '../../../src/components/form/delete.vue';
+
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
 describe('FormDelete', () => {
   beforeEach(mockLogin);
 
-  it('shows the modal after the button is clicked', () =>
-    mockRoute('/projects/1/forms/f/settings')
-      .respondWithData(() => testData.extendedProjects.createPast(1).last())
-      .respondWithData(() =>
-        testData.extendedForms.createPast(1, { xmlFormId: 'f' }).last())
-      .respondWithProblem(404.1) // formDraft
-      .respondWithProblem(404.1) // attachments
-      .afterResponses(app => {
-        app.first(FormDelete).getProp('state').should.be.false();
-        return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
-      })
-      .then(app => {
-        app.first(FormDelete).getProp('state').should.be.true();
-      }));
+  it('toggles the modal', () => {
+    testData.extendedForms.createPast(1);
+    return load('/projects/1/forms/f/settings', { root: false })
+      .testModalToggles({
+        modal: FormDelete,
+        show: '#form-settings .panel-simple-danger .btn-danger',
+        hide: '.btn-link'
+      });
+  });
 
   it('implements some standard button things', () =>
     mockHttp()
       .mount(FormDelete, {
+        propsData: { state: true },
         requestData: { form: testData.extendedForms.createPast(1).last() }
       })
-      .request(modal => trigger.click(modal, '#form-delete .btn-danger'))
-      .standardButton('.btn-danger'));
+      .testStandardButton({
+        button: '.btn-danger',
+        disabled: ['.btn-link'],
+        modal: true
+      }));
 
   describe('after a successful response', () => {
-    let app;
-    beforeEach(() => {
-      testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(2);
-      const { xmlFormId } = testData.extendedForms.first();
-      return mockRoute(`/projects/1/forms/${encodeURIComponent(xmlFormId)}/settings`)
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.extendedForms.first())
-        .respondWithProblem(404.1) // formDraft
-        .respondWithProblem(404.1) // attachments
-        .afterResponses(component => {
-          app = component;
-          return trigger.click(app, '#form-settings .panel-simple-danger .btn-danger');
+    const del = () => {
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/settings')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-settings .panel-simple-danger .btn-danger').trigger('click');
+          return app.get('#form-delete .btn-danger').trigger('click');
         })
-        .request(() => {
+        .respondWithData(() => {
           testData.extendedForms.splice(0, 1);
-          return trigger.click(app, '#form-delete .btn-danger');
+          return { success: true };
         })
-        .respondWithSuccess()
         .respondWithData(() => testData.extendedForms.sorted());
-    });
+    };
 
-    it('navigates to the project overview', () => {
+    it('navigates to the project overview', async () => {
+      const app = await del();
       app.vm.$route.path.should.equal('/projects/1');
     });
 
-    it('shows a success message', () => {
+    it('shows a success message', async () => {
+      const app = await del();
       app.should.alert('success');
     });
   });

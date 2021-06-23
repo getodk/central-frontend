@@ -21,7 +21,7 @@ describe('FieldKeyQrPanel', () => {
     it('shows a managed QR code with the correct data', () => {
       const panel = mountComponent({ managed: true });
       const { token } = testData.extendedFieldKeys.last();
-      panel.first(CollectQr).getProp('settings').should.eql({
+      panel.getComponent(CollectQr).props().settings.should.eql({
         server_url: `/v1/key/${token}/projects/1`,
         form_update_mode: 'match_exactly',
         autosend: 'wifi_and_cellular'
@@ -31,7 +31,7 @@ describe('FieldKeyQrPanel', () => {
     it('shows a legacy QR code with the correct data', () => {
       const panel = mountComponent({ managed: false });
       const { token } = testData.extendedFieldKeys.last();
-      panel.first(CollectQr).getProp('settings').should.eql({
+      panel.getComponent(CollectQr).props().settings.should.eql({
         server_url: `/v1/key/${token}/projects/1`
       });
     });
@@ -40,9 +40,9 @@ describe('FieldKeyQrPanel', () => {
   describe('text', () => {
     it('shows the correct text for a managed QR code', () => {
       const panel = mountComponent({ managed: true });
-      const title = panel.first('.panel-title').text().trim();
+      const title = panel.get('.panel-title').text();
       title.should.equal('Client Configuration Code');
-      const body = panel.first('p').text().trim();
+      const body = panel.get('p').text();
       body.should.startWith('This is a Managed QR Code.');
       body.should.containEql('Collect will exactly match the Forms available to “My App User”');
       body.should.containEql('For the old behavior,');
@@ -50,9 +50,9 @@ describe('FieldKeyQrPanel', () => {
 
     it('shows the correct text for a legacy QR code', () => {
       const panel = mountComponent({ managed: false });
-      const title = panel.first('.panel-title').text().trim();
+      const title = panel.get('.panel-title').text();
       title.should.equal('Legacy Client Configuration Code');
-      const body = panel.first('p').text().trim();
+      const body = panel.get('p').text();
       body.should.startWith('This is a Legacy QR Code.');
       body.should.containEql('Users will have to manually Get Blank Forms');
       body.should.containEql('For a more controlled and foolproof process,');
@@ -60,6 +60,6 @@ describe('FieldKeyQrPanel', () => {
   });
 
   it('adds a class for a legacy QR code', () => {
-    mountComponent({ managed: false }).hasClass('legacy').should.be.true();
+    mountComponent({ managed: false }).classes('legacy').should.be.true();
   });
 });

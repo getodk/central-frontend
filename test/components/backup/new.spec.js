@@ -1,108 +1,131 @@
-import faker from 'faker';
-
-import App from '../../../src/components/app.vue';
-import BackupList from '../../../src/components/backup/list.vue';
 import BackupNew from '../../../src/components/backup/new.vue';
-import testData from '../../data';
-import { load, mockHttp, mockRoute } from '../../util/http';
-import { mockLogin } from '../../util/session';
-import { submitForm, trigger } from '../../util/event';
 
-const moveToStep1 = (component) => {
-  if (![App, BackupList, BackupNew].includes(component))
-    throw new Error('invalid component');
-  if (component === BackupNew) return mockHttp().mount(BackupNew);
-  const series = component === App
-    ? mockRoute('/system/backups', { attachToDocument: true })
-    : mockHttp().mount(BackupList);
-  return series
-    .respondWithProblem(404.1)
-    .respondWithData(() => testData.standardAudits.sorted())
-    .afterResponses(wrapper => trigger.click(wrapper, '#backup-status button'));
-};
-// For step 1, submits the form.
-const next1 = trigger.submit('#backup-new form');
-// For step 2, clicks the Next button.
-const next2 = (wrapper) =>
-  trigger.click(wrapper.first('#backup-new .btn-primary'))
-    .then(() => wrapper);
-const moveToStep3 = (component) => moveToStep1(component)
-  .request(next1)
-  .respondWithData(() => ({
-    url: 'http://localhost',
-    token: faker.random.alphaNumeric(64)
-  }))
-  .afterResponse(next2);
-// For step 3, fills the form and clicks the Next button.
-const next3 = (wrapper) => submitForm(wrapper, '#backup-new form', [
-  ['input', faker.random.alphaNumeric(57)]
-]);
-const completeSetup = (component) => {
-  if (component !== App && component !== BackupList)
-    throw new Error('invalid component');
-  return moveToStep3(component)
-    .request(next3)
-    .respondWithSuccess()
-    .respondWithData(() => testData.standardBackupsConfigs.createNew())
-    .respondWithData(() => testData.standardAudits.sorted());
-};
+import testData from '../../data';
+import { load, mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
 
 describe('BackupNew', () => {
   beforeEach(mockLogin);
 
   it('toggles the modal', () =>
-    load('/system/backups', { root: false }).testModalToggles(
-      BackupNew,
-      '#backup-status button',
-      '.btn-link'
-    ));
+    load('/system/backups', { root: false }).testModalToggles({
+      modal: BackupNew,
+      show: '#backup-status button',
+      hide: '.btn-link'
+    }));
 
   describe('step 1', () => {
-    it('field is focused', () =>
-      moveToStep1(App)
-        .then(app => app.first('#backup-new input').should.be.focused()));
+    it('focuses the input', () => {
+      const modal = mount(BackupNew, {
+        propsData: { state: true },
+        attachTo: document.body
+      });
+      modal.get('input').should.be.focused();
+    });
 
-    it('standard button thinking things', () =>
-      moveToStep1(BackupNew)
-        .request(next1)
-        .standardButton());
+    it('implements some standard button things', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true }
+        })
+        .testStandardButton({
+          button: '.btn-primary',
+          request: (modal) => modal.get('form').trigger('submit'),
+          disabled: ['.btn-link'],
+          modal: true
+        }));
   });
 
   describe('step 3', () => {
-    it('field is focused', () =>
-      moveToStep3(App)
-        .then(app => app.first('#backup-new input').should.be.focused()));
+    it('focuses the input', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true },
+          attachTo: document.body
+        })
+        .request(modal => modal.get('form').trigger('submit'))
+        .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
+        .afterResponse(async (modal) => {
+          await modal.get('.btn-primary').trigger('click');
+          modal.get('input').should.be.focused();
+        }));
 
-    it('standard button thinking things', () =>
-      moveToStep3(BackupNew)
-        .request(next3)
-        .standardButton());
+    it('implements some standard button things', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true }
+        })
+        .request(modal => modal.get('form').trigger('submit'))
+        .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
+        .afterResponse(modal => modal.get('.btn-primary').trigger('click'))
+        .testStandardButton({
+          button: '.btn-primary',
+          request: async (modal) => {
+            await modal.get('input').setValue('bar');
+            return modal.get('form').trigger('submit');
+          },
+          disabled: ['.btn-link'],
+          modal: true
+        }));
+
+    it('shows a custom alert message', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true }
+        })
+        .request(modal => modal.get('form').trigger('submit'))
+        .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
+        .afterResponse(modal => modal.get('.btn-primary').trigger('click'))
+        .request(async (modal) => {
+          await modal.get('input').setValue('bar');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithProblem({ code: 500.1, message: 'Failed: BackupNew.' })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            'Failed: BackupNew. Please try again, and go to the community forum if the problem continues.'
+          );
+        }));
   });
 
   describe('after setup is successful', () => {
-    it('hides the modal', () =>
-      completeSetup(BackupList).then(page => {
-        page.first(BackupNew).getProp('state').should.be.false();
-      }));
+    const setup = () => load('/system/backups', { root: false })
+      .complete()
+      .request(async (component) => {
+        await component.get('#backup-status button').trigger('click');
+        return component.get('#backup-new form').trigger('submit');
+      })
+      .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
+      .afterResponse(component =>
+        component.get('#backup-new .btn-primary').trigger('click'))
+      .request(async (component) => {
+        const modal = component.getComponent(BackupNew);
+        await modal.get('input').setValue('bar');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithData(() => {
+        testData.standardBackupsConfigs.createNew();
+        return { success: true };
+      })
+      .respondWithData(() => testData.standardBackupsConfigs.last())
+      .respondWithData(() => testData.standardAudits.sorted());
 
-    it('updates the backups status', () =>
-      completeSetup(BackupList).then(page => {
-        const { backupsConfig } = page.vm.$store.state.request.data;
-        backupsConfig.isDefined().should.be.true();
-      }));
+    it('hides the modal', async () => {
+      const component = await setup();
+      component.getComponent(BackupNew).props().state.should.be.false();
+    });
 
-    it('shows a success alert', () =>
-      completeSetup(App).then(app => app.should.alert('success')));
+    it('updates the backups status', async () => {
+      const component = await setup();
+      const { backupsConfig } = component.vm.$store.state.request.data;
+      backupsConfig.isDefined().should.be.true();
+    });
+
+    it('shows a success alert', async () => {
+      const component = await setup();
+      component.should.alert('success');
+    });
   });
-
-  it('shows a custom alert message', () =>
-    moveToStep3(BackupNew)
-      .request(next3)
-      .respondWithProblem({ code: 500.1, message: 'Failed: BackupNew.' })
-      .afterResponse(modal => {
-        modal.should.alert(
-          'danger',
-          'Failed: BackupNew. Please try again, and go to the community forum if the problem continues.'
-        );
-      }));
 });
