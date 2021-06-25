@@ -19,13 +19,19 @@ describe('FormDraftTesting', () => {
 
   it('shows a QR code that encodes the correct settings', async () => {
     mockLogin();
-    testData.extendedForms.createPast(1, { draft: true });
+    testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
     const component = await load('/projects/1/forms/f/draft/testing', {
       root: false
     });
     const { draftToken } = testData.extendedFormDrafts.last();
     component.first(CollectQr).getProp('settings').should.eql({
-      server_url: `/v1/test/${draftToken}/projects/1/forms/f/draft`
+      general: {
+        server_url: `http://localhost:9876/v1/test/${draftToken}/projects/1/forms/f/draft`,
+        form_update_mode: 'match_exactly',
+        autosend: 'wifi_and_cellular'
+      },
+      project: { name: '[Draft] My Form', icon: '📝' },
+      admin: {}
     });
   });
 

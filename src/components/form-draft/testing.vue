@@ -93,16 +93,24 @@ export default {
     // component is created.
     ...requestData([{ key: 'formDraft', getOption: true }, 'keys']),
     qrSettings() {
+      const url = apiPaths.serverUrlForFormDraft(
+        this.formDraft.draftToken,
+        this.projectId,
+        this.xmlFormId
+      );
       return {
-        server_url: apiPaths.serverUrlForFormDraft(
-          this.formDraft.draftToken,
-          this.projectId,
-          this.xmlFormId
-        )
+        general: {
+          server_url: `${window.location.origin}${url}`,
+          form_update_mode: 'match_exactly',
+          autosend: 'wifi_and_cellular'
+        },
+        project: {
+          name: this.$t('collectProjectName', this.formDraft),
+          icon: '📝'
+        },
+        // Collect requires the settings to have an `admin` property.
+        admin: {}
       };
-    },
-    baseUrl() {
-      return apiPaths.formDraft(this.projectId, this.xmlFormId);
     }
   },
   created() {
@@ -155,7 +163,10 @@ export default {
     "body": [
       "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser.",
       "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
-    ]
+    ],
+    // This text will be shown in ODK Collect when testing a Draft Form. {name}
+    // is the title of the Draft Form.
+    "collectProjectName": "[Draft] {name}"
   }
 }
 </i18n>
