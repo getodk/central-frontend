@@ -450,7 +450,7 @@
     },
     "submissionDate": {
       "string": "Soumis à",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
     },
     "time": {
       "string": "Heure",
@@ -544,6 +544,11 @@
     "projectRoles": {
       "string": "Rôles du projet",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
+  "alert": {
+    "updateReviewState": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -1351,7 +1356,7 @@
           "string": "{count, plural, one {Merci de patienter, téléversement de votre {count} fichier en cours :} other {Merci de patienter, téléversement de vos {count} fichiers en cours :}}"
         },
         "current": {
-          "string": "Envoi en cours de {filename}",
+          "string": "",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -1785,6 +1790,10 @@
         "1": {
           "string": "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
         }
+      },
+      "collectProjectName": {
+        "string": "",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -2057,12 +2066,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "Télécharger le XML",
+          "string": "",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
-          "string": "Télécharger le XLSForm",
-          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
+          "string": "",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -3227,11 +3236,6 @@
         "back": {
           "string": "Retour au tableau de soumissions",
           "developer_comment": "This is shown at the top of the page."
-        }
-      },
-      "alert": {
-        "updateReviewState": {
-          "string": "État sauvegardé!"
         }
       }
     },

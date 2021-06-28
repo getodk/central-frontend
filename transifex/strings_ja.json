@@ -17,7 +17,7 @@
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "pageNotFound": {
-      "string": "ページが見つかりません",
+      "string": "ページが見つかりません。",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "details": {
@@ -142,27 +142,27 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
-        "string": "Webユーザーの操作",
+        "string": "Webユーザーに対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "project": {
-        "string": "プロジェクトの操作",
+        "string": "プロジェクトに対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "form": {
-        "string": "フォームの操作",
+        "string": "フォームに対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
-        "string": "アプリユーザーの操作",
+        "string": "アプリユーザーに対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "public_link": {
-        "string": "一般公開リンクの操作",
+        "string": "一般公開リンクに対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "config": {
-        "string": "サーバー設定の操作",
+        "string": "サーバー設定に対する操作",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
@@ -181,7 +181,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "session_end": {
-          "string": "廃止",
+          "string": "無効化",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "delete": {
@@ -205,7 +205,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
         },
         "assignment_delete": {
-          "string": "アクセス権の剥奪",
+          "string": "アクセス権の取消",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
         }
       },
@@ -223,7 +223,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "attachment_update": {
-          "string": "アタッチメントの更新",
+          "string": "メディアファイルの更新",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
@@ -239,17 +239,17 @@
       },
       "upgrade": {
         "process_form": {
-          "string": "フォームをプロセスする",
+          "string": "フォームの処理",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "process_form_draft": {
-          "string": "下書きフォームをプロセスする",
+          "string": "下書きフォームの処理",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
       "user": {
         "assignment_create": {
-          "string": "役割の割り当て",
+          "string": "役割の指定",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
         },
         "assignment_delete": {
@@ -269,7 +269,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "clear": {
-      "string": "クリア",
+      "string": "クリアする",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "close": {
@@ -285,7 +285,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "新規",
+      "string": "新規作成",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
     },
     "done": {
@@ -309,15 +309,15 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "looksGood": {
-      "string": "進んで問題ありません",
+      "string": "進んで問題ありません。",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "more": {
-      "string": "さらに",
+      "string": "詳細",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "neverMind": {
-      "string": "キャンセルに問題ありません",
+      "string": "大丈夫です、キャンセルします。",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "next": {
@@ -325,7 +325,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "noCancel": {
-      "string": "いいえ、キャンセル",
+      "string": "いいえ、キャンセルします。",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "ok": {
@@ -333,7 +333,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "proceed": {
-      "string": "進む",
+      "string": "次へ進む",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "refresh": {
@@ -353,21 +353,21 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
-      "string": "アップデート",
+      "string": "更新",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "yesProceed": {
-      "string": "はい、進みます",
+      "string": "はい、続けます。",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
     "comment": {
-      "string": "コメントを残す",
+      "string": "コメントを残す...",
       "developer_comment": "This is the text of a form field."
     },
     "dateRange": {
-      "string": "日付範囲",
+      "string": "期間",
       "developer_comment": "This is the text of a form field."
     },
     "displayName": {
@@ -437,7 +437,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "lastSubmission": {
-      "string": "最終サブミッション",
+      "string": "最新のフォーム提出日時",
       "developer_comment": "This is the text of a table column header."
     },
     "name": {
@@ -445,12 +445,12 @@
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
-      "string": "フォームの送信者",
+      "string": "フォーム提出者",
       "developer_comment": "This is the text of a table column header."
     },
     "submissionDate": {
-      "string": "フォームの送信日時",
-      "developer_comment": "This is the text of a table column header."
+      "string": "フォームの提出日時",
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
     },
     "time": {
       "string": "時刻",
@@ -472,7 +472,7 @@
       "string": "{count, plural, other {プロジェクト}}"
     },
     "submission": {
-      "string": "{count, plural, other {サブミッション}}"
+      "string": "{count, plural, other {提出済フォーム}}"
     },
     "webUser": {
       "string": "{count, plural, other {Webユーザー}}"
@@ -480,15 +480,15 @@
   },
   "count": {
     "appUser": {
-      "string": "{count, plural, other {アプリユーザー数：{count}}}",
+      "string": "{count, plural, other {{count}名のアプリユーザー}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
-      "string": "{count, plural, other {フォーム数：{count}}}",
+      "string": "{count, plural, other {{count}件のフォーム}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "submission": {
-      "string": "{count, plural, other {サブミッション数：{count}}}",
+      "string": "{count, plural, other {{count}件の提出済フォーム}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
@@ -538,7 +538,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
-      "string": "サブミッション",
+      "string": "提出済フォーム",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "projectRoles": {
@@ -546,14 +546,19 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
+  "alert": {
+    "updateReviewState": {
+      "string": "レビュー・ステータス保存完了！"
+    }
+  },
   "moreInfo": {
     "clickHere": {
       "full": {
-        "string": "さらに詳細を表示するには、{clickHere}。",
+        "string": "さらに詳細を表示するには、{clickHere}して下さい。",
         "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
       },
       "clickHere": {
-        "string": "ここをクリック",
+        "string": "こちらをクリック",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
       }
     },
@@ -563,35 +568,35 @@
         "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
       },
       "helpArticle": {
-        "string": "ヘルプ",
+        "string": "こちらのヘルプ",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
       }
     },
     "learnMore": {
-      "string": "さらに詳しく",
+      "string": "さらに詳しく知る。",
       "developer_comment": "This is a link to more information."
     }
   },
   "submission": {
     "missingMedia": {
-      "string": "メディアが見つかりません",
+      "string": "メディアファイルが見つかりません",
       "developer_comment": "This is a possible state for a Submission."
     },
     "action": {
       "edit": {
-        "string": "編集数（{count}）",
+        "string": "編集回数（{count}）",
         "developer_comment": "{count} is the number of previous edits."
       }
     },
     "editDisabled": {
-      "string": "暗号化されたサブミッションは編集できません",
+      "string": "暗号化され、提出済フォームは編集できません。",
       "developer_comment": "This is shown when the Edit button is disabled."
     },
     "binaryLinkTitle": {
-      "string": "ファイルがサブミットされました。クリックしてダウンロード"
+      "string": "ファイルが提出されました。クリックしてダウンロードします。"
     },
     "encryptionMessage": {
-      "string": "暗号化のためにデータプレビューは利用できません"
+      "string": "暗号化されているのため、データプレビューは利用できません。"
     }
   },
   "common": {
@@ -604,7 +609,7 @@
       "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
     },
     "areYouSure": {
-      "string": "本当に進んで問題ないですか？",
+      "string": "本当に続けて問題ないですか？",
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
     },
     "basicInfo": {
@@ -635,7 +640,7 @@
       "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
     "success": {
-      "string": "成功！"
+      "string": "成功です！"
     },
     "yes": {
       "string": "はい"
@@ -655,7 +660,7 @@
     "request": {
       "alert": {
         "fileSize": {
-          "string": "ファイル\"{name}\"は、100MB制限を超過しています。"
+          "string": "アップロードを試みているファイル\"{name}\"は、100MB制限を超過しています。"
         }
       }
     }
@@ -687,26 +692,26 @@
     },
     "request": {
       "noRequest": {
-        "string": "不具合発生：リクエストがありません"
+        "string": "問題発生：リクエストがありません。"
       },
       "noResponse": {
-        "string": "不具合発生：リクエストに対する応答がありません"
+        "string": "問題発生：リクエストへの応答がありません。"
       },
       "errorNotProblem": {
-        "string": "不具合発生：エラーコード{status}",
+        "string": "問題発生：エラーコード{status}",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
       }
     },
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "あなたのセッションが2分後に有効期限がきれ、自動的にログアウトされます。"
+          "string": "あと2分でセッションの有効期限が切れ、自動的にログアウトされます。"
         },
         "expired": {
-          "string": "セッションの有効期限が切れています。\n作業を続けるには、再度ログインして下さい。"
+          "string": "セッションの有効期限が切れています。\n\n作業を続けるには、再度ログインして下さい。"
         },
         "logoutError": {
-          "string": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みてください。{message}",
+          "string": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みて下さい。{message}",
           "developer_comment": "{message} is a more detailed error message."
         }
       }
@@ -714,7 +719,7 @@
   },
   "router": {
     "unsavedChanges": {
-      "string": "このページを終了してもよろしいですか？あなたの変更は保存されないかもしれません。"
+      "string": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
     }
   },
   "component": {
@@ -727,7 +732,7 @@
       },
       "problem": {
         "401_2": {
-          "string": "{message}　メールに記載されているリンクの有効期限が切れている可能性があり、新たにメールを送信しなければならない場合があります。",
+          "string": "{message}　メールに記載されているリンクの有効期限が切れている可能性があり、新たにメールを送信する必要があるようです。",
           "developer_comment": "{message} is an error message from the server."
         }
       },
@@ -740,7 +745,7 @@
     "AccountLogin": {
       "alert": {
         "alreadyLoggedIn": {
-          "string": "ユーザーがすでにログインしています。続けるにはページを更新してください。"
+          "string": "すでにユーザーでログインされています。\n続けるにはページを更新してください。"
         }
       },
       "problem": {
@@ -759,28 +764,28 @@
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": "リクエストされたページを読み込むことができませんでした。オンラインであることを確認して、もう一度お試しください。"
+          "string": "リクエストされたページを読み込むことができませんでした。オンラインであることを確認して、もう一度試みて下さい。"
         }
       }
     },
     "AuditList": {
       "heading": {
         "0": {
-          "string": "ここでは、このサーバーで行われた重要なアクションのログを見ることができます。ユーザー、プロジェクト、またはフォームの設定に加えられた変更は、ここで確認できます。"
+          "string": "ここでは、このサーバーで行われた重要な操作履歴を閲覧できます。ユーザーやプロジェクト、フォーム設定への変更は、ここで確認できます。"
         }
       },
       "emptyTable": {
-        "string": "一致する監査ログのエントリがありません。"
+        "string": "照合できる監査ログの記録がありません。"
       }
     },
     "AuditTable": {
       "header": {
         "initiator": {
-          "string": "イニシエーター",
+          "string": "操作者",
           "developer_comment": "This is the text of a table column header."
         },
         "target": {
-          "string": "ターゲット",
+          "string": "操作の対象",
           "developer_comment": "This is the text of a table column header."
         },
         "details": {
@@ -791,15 +796,15 @@
     },
     "BackupList": {
       "auditsTitle": {
-        "string": "最新バックアップ",
+        "string": "最新のバックアップ",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
         "create": {
-          "string": "成功！自動バックアップは設定されました。"
+          "string": "成功です！自動バックアップは設定されました。"
         },
         "terminate": {
-          "string": "あなたの自動バックアップは中止されました。なるべく早急に新たなバックアップの設定を推奨します。"
+          "string": "自動バックアップを停止しました。\nなるべく早急に新たなバックアップ設定を行うことを推奨します。"
         }
       }
     },
@@ -812,7 +817,7 @@
         "0": {
           "warning": {
             "full": {
-              "string": "このバックアップには現在、Webフォームのリンクは含まれていません。一般公開リンクを共有している場合や、新規サブミッションのために外部からWebフォームに直接リンクしている場合、この問題が解決するまで、システムのフルバックアップを行うことを強く推奨します。もしバックアップから復元する場合にプレビューリンクが壊れたままの場合、{forum}に状況を投稿し、サポートを受けてください。",
+              "string": "このバックアップには、現在、Webフォームのリンクは含まれていません。一般公開リンクを共有している場合や、新規のフォーム提出のためにWebフォームに外部から直接リンクしている場合、この問題が解決するまでシステムのフルバックアップを行うことを強く推奨します。もしバックアップから復元する場合にプレビューリンクが壊れたままの場合、{forum}に状況を投稿し、サポートを受けて下さい。",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
             },
             "forum": {
@@ -822,10 +827,10 @@
           },
           "introduction": {
             "0": {
-              "string": "ご希望であれば、暗号化パスフレーズを設定できます。暗号化パスフレーズはバックアップの復号時に不可欠です。"
+              "string": "暗号化パスフレーズを設定できますが、暗号化パスフレーズはバックアップの復号時に必ず必要です。"
             },
             "1": {
-              "string": "パスフレーズを忘れた場合、リカバーする方法はありません！"
+              "string": "パスフレーズを忘れた場合、復元する方法はありません！"
             },
             "2": {
               "string": "覚えやすいものを選ぶか、安全な場所に書き留めて下さい。"
@@ -836,19 +841,19 @@
           "introduction": {
             "0": {
               "full": {
-                "string": "保管のために、サーバーはデータをGoogle Driveに送信します。{here}で無料のアカウントを登録することができます 。",
+                "string": "保管のために、サーバーはデータをGoogle Driveに送信します。{here}で無料のアカウントを登録できます 。",
                 "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
               },
               "here": {
-                "string": "ここ",
+                "string": "こちら",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
               }
             },
             "1": {
-              "string": "次へを押すと、Googleは、サーバーがあなたのアカウントにアクセス許可することを確認します。サーバーがアクセスができるのは、作成したバックアップファイルのみです。"
+              "string": "「次へ」を押すと、Googleによって、このサーバーがあなたのGoogleアカウントにアクセス許可を与えるか、が確認されます。サーバーに許されるのは、サーバーが作成したバックアップファイルへのアクセスのみです。"
             },
             "2": {
-              "string": "これを確認すると、いくつかのテキストをここにコピー＆ペーストするよう求められます。"
+              "string": "承認後、確認用の文字列をここにコピー＆ペーストすることを要求されます。"
             }
           }
         },
@@ -856,16 +861,16 @@
           "introduction": {
             "0": {
               "full": {
-                "string": "おかえりなさい！コピー＆ペースト用のテキストは出てきましたか？見つからない場合は、{here}をクリックしてもう一度試してください。",
+                "string": "おかえりなさい！コピー＆ペースト用のテキストは出てきましたか？見つからない場合は、{here}をクリックしてもう一度試して下さい。",
                 "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
               },
               "here": {
-                "string": "ここ",
+                "string": "こちら",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
               }
             },
             "1": {
-              "string": "または、これをペーストして終わりです！"
+              "string": "問題なければ、これをペーストして終わりです！"
             }
           }
         }
@@ -876,20 +881,20 @@
           "developer_comment": "This is the text of a form field."
         },
         "confirmationText": {
-          "string": "確認用テキスト",
+          "string": "確認用の文字列",
           "developer_comment": "This is the text of a form field."
         }
       },
       "problem": {
         "verify": {
-          "string": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認してください。"
+          "string": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認して下さい。"
         }
       }
     },
     "BackupStatus": {
       "getHelp": {
         "full": {
-          "string": "うまくいかない場合は、{forum}を試して下さい。",
+          "string": "問題がある場合、{forum}を確認して下さい。",
           "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
         },
         "forum": {
@@ -899,14 +904,14 @@
       },
       "notConfigured": {
         "0": {
-          "string": "バックアップは設定されていません"
+          "string": "バックアップは設定されていません。"
         },
         "1": {
-          "string": "データサーバは自動バックアップ設定をされていません。"
+          "string": "データサーバは自動バックアップの設定をされていません。"
         },
         "2": {
           "full": {
-            "string": "他の方法でデータをバックアップしている場合を除き、今すぐバックアップすることを{recommended}。確信が持てない場合は、念のためにやっておいた方がいいでしょう。",
+            "string": "他の方法でデータをバックアップしている場合を除き、今すぐバックアップすることを{recommended}。確信が持てない場合は、安全のために設定することが望ましいです。",
             "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
           },
           "recommended": {
@@ -915,7 +920,7 @@
           }
         },
         "3": {
-          "string": "自動データバックアップは本システム経由で毎日行われます。全てのデータは、あなたが設定したパスワードで暗号化されバックアップされますので、あなたによって復号化は可能です。"
+          "string": "自動バックアップは本システム経由で毎日行われます。全てのデータは、あなたが設定したパスワードで暗号化されバックアップされ、あなたによって復号が可能です。"
         }
       },
       "neverRun": {
@@ -923,26 +928,26 @@
           "string": "設定されたバックアップは未実行です。"
         },
         "1": {
-          "string": "ここ2、3日の間にバックアップを設定していれば、これは正常です。そうでない場合は、何か問題が発生しています。"
+          "string": "ここ数日の間にバックアップの設定をしたのならば、これは正常です。そうでない場合は、何か問題が起きています。"
         },
         "2": {
           "full": {
-            "string": "このような場合、最も可能性の高い対処法は、接続を{terminate}して再度設定することです。または、サービスを再起動することです。",
+            "string": "その場合、最も可能性の高い対処法は、Googleとの連携を{terminate}し、再設定することです。もしくは、サービスを再起動することです。",
             "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
           },
           "terminate": {
-            "string": "終了",
+            "string": "切断",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
           }
         }
       },
       "somethingWentWrong": {
         "0": {
-          "string": "何かが間違えています！"
+          "string": "何か問題があります！"
         },
         "1": {
           "full": {
-            "string": "最終バックアップは、{moreThanThreeDaysAgo}に正常に完了しています",
+            "string": "最終のバックアップは、{moreThanThreeDaysAgo}に正常に完了しています。",
             "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
           },
           "moreThanThreeDaysAgo": {
@@ -952,18 +957,18 @@
         },
         "2": {
           "full": {
-            "string": "最も可能性の高い対処法は、接続を{terminate}して再度設定することです。または、サービスを再起動することです。",
+            "string": "最も可能性の高い対処法は、Googleとの連携を{terminate}して再度設定することです。または、サービスを再起動することです。",
             "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
           },
           "terminate": {
-            "string": "終了",
+            "string": "切断",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
           }
         }
       },
       "success": {
         "0": {
-          "string": "バックアップ中",
+          "string": "バックアップしています。",
           "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
         },
         "1": {
@@ -981,27 +986,27 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "terminate": {
-          "string": "終了",
+          "string": "停止",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
         "download": {
-          "string": "バックアップは現在実行中で、暗号化されてあなたのコンピュータにダウンロードされます。これにはしばらく時間がかかります。ダウンロードが始まると、このページから移動しても構いません。"
+          "string": "現在、バックアップが実行中です。バックアップデータは暗号化され、あなたのコンピュータにダウンロードされます。処理にしばらく時間がかかります。ダウンロードが始まると、このページを閉じても構いません。"
         }
       }
     },
     "BackupTerminate": {
       "title": {
-        "string": "自動バックアップの中止",
+        "string": "自動バックアップの停止",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "本当に自動バックアップを中止しますか？"
+          "string": "自動バックアップを本当に停止しますか？"
         },
         "1": {
-          "string": "再開するにはまた最初から設定し直さなければならず、この操作は元に戻すことができません。"
+          "string": "バックアップを再開するには、また初めから設定し直す必要があります。なお、この操作は取り消しできません。"
         }
       }
     },
@@ -1013,10 +1018,10 @@
     "EnketoFill": {
       "disabled": {
         "processing": {
-          "string": "Webフォームはまだ利用できません。現在、処理中です。後で更新して、もう一度試して下さい。"
+          "string": "Webフォームはまだ利用できません。現在、処理中です。後ほどページを更新し、もう一度試して下さい。"
         },
         "notOpen": {
-          "string": "このフォームは現在、新規のサブミッションを受け付けていません"
+          "string": "このフォームは現在、新規のフォーム提出を受け付けていません。"
         }
       }
     },
@@ -1029,10 +1034,10 @@
       },
       "disabled": {
         "processing": {
-          "string": "このフォームのプレビュー処理が終了していません。後で更新して、もう一度試して下さい。"
+          "string": "このフォームのプレビュー処理が終了していません。後ほどページを更新し、もう一度試して下さい。"
         },
         "notOpen": {
-          "string": "このバージョンのODK Centralでは、プレビューは公開状態でのみ利用可能です。"
+          "string": "このバージョンのODK Centralでは、プレビューは、公開状態のフォームでのみ利用可能です。"
         }
       }
     },
@@ -1046,7 +1051,7 @@
       "heading": {
         "0": {
           "full": {
-            "string": "アプリユーザーは、{collect} などのアプリケーションからデータを収集するために使用されます。アプリユーザーは通常、\"ワクチン接種者 \"のような共有の役割を表しますが、個人を表すこともあります。このプロジェクトのアプリユーザーは、このプロジェクト内でのみフォームをダウンロードして使用することができます。新規のアプリユーザーを作成しても、最初はどのフォームにもアクセスできません。各アプリユーザーがアクセスできるフォームを設定するには、{formAccess}タブを使用します。",
+            "string": "アプリユーザーは、{collect} などのアプリケーションによる収集データに使用します。通常、アプリユーザーは「ワクチン接種従事者」のような共有の役割を示しますが、個人を示すこともあります。このプロジェクトのアプリユーザーは、このプロジェクトのフォームのみをダウンロードして使用できます。新規のアプリユーザーを作成しても、初期状態ではどのフォームにもアクセスできません。各アプリユーザーがアクセスできるフォームを設定するには、{formAccess}タブを使用します。",
             "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
           },
           "formAccess": {
@@ -1056,18 +1061,18 @@
         },
         "1": {
           "full": {
-            "string": "アプリユーザーは、データ収集者が複数のフォームにアクセスする必要がある場合やオフラインの場合、または複雑なフォームを使用している場合に最適です。回答者に自己申告してもらう必要がある場合や、オンラインのみのフォームの場合は、{clickHere}して他のオプションを見て下さい。",
+            "string": "アプリユーザーは、データ収集者が複数のフォームにアクセスする必要がある場合やオフラインの場合、または複雑なフォームを使用している場合に最適です。回答者に自己申告してもらう必要がある場合や、オンラインのみのフォームの場合は、{clickHere}して他の選択肢を見て下さい。",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
-            "string": "ここをクリック",
+            "string": "こちらをクリック",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
           }
         }
       },
       "header": {
         "lastUsed": {
-          "string": "最終利用",
+          "string": "最終利用日時",
           "developer_comment": "This is the text of a table column header."
         },
         "configureClient": {
@@ -1076,14 +1081,14 @@
         }
       },
       "emptyTable": {
-        "string": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードとサブミットを行うには、アプリユーザーを作成しなくてはいけません。"
+        "string": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードと提出を行うには、アプリユーザーを作成する必要があります。"
       },
       "alert": {
         "create": {
-          "string": "アプリユーザー\"{displayName}\"は正常に作成されました"
+          "string": "アプリユーザー\"{displayName}\"は正常に作成されました。"
         },
         "revoke": {
-          "string": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました"
+          "string": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
         }
       }
     },
@@ -1094,20 +1099,20 @@
       },
       "introduction": {
         "0": {
-          "string": "このユーザーは、初期状態ではいずれのフォームにもアクセスできません。ユーザーが作成された後に、フォームを割り当てることができます。"
+          "string": "作成されるユーザーは、初期状態ではいずれのフォームにもアクセスできません。ユーザー作成後に、フォームを割り当てることができます。"
         }
       },
       "success": {
         "0": {
-          "string": "アプリユーザー\"{displayName}\"は作成されました"
+          "string": "アプリユーザー\"{displayName}\"が、作成されました。"
         },
         "1": {
-          "string": "\"{displayName}\"に対するモバイルデバイスを今すぐ設定できます。または、アプリユーザーの表示画面から\"コードを見る\"をクリックすることで後ほど設定可能です。",
+          "string": "「{displayName}」に対するモバイル端末を今すぐ設定できます。もしくは、アプリユーザーの一覧から「QRコードを表示」をクリックすることで後で設定も可能です。",
           "developer_comment": "Clicking \"See code\" displays a QR code."
         },
         "2": {
           "full": {
-            "string": "このプロジェクトの\"{formAccessSettings}\"を訪れ、フォームに対するユーザーアクセス権限を与えることが出来ます。",
+            "string": "このプロジェクトの\"{formAccessSettings}\"にて、フォームに対するユーザーのアクセス権限を付与できます。",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
@@ -1130,7 +1135,7 @@
           "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
         },
         "legacy": {
-          "string": "Legacyクライアントの設定コード",
+          "string": "従来のクライアント設定コード",
           "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
         }
       },
@@ -1138,21 +1143,21 @@
         "0": {
           "managed": {
             "full": {
-              "string": "これは{managedCode}です",
+              "string": "これは{managedCode}です。",
               "developer_comment": "{managedCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nManaged QR Code"
             },
             "managedCode": {
-              "string": "Managed QRコード",
+              "string": "管理型のQRコード",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nThis is a {managedCode}."
             }
           },
           "legacy": {
             "full": {
-              "string": "これは{legacyCode}です",
+              "string": "これは{legacyCode}です。",
               "developer_comment": "{legacyCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nLegacy QR Code"
             },
             "legacyCode": {
-              "string": "Legacy QRコード",
+              "string": "従来型のQRコード",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nThis is a {legacyCode}."
             }
           }
@@ -1163,57 +1168,57 @@
             "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
           },
           "legacy": {
-            "string": "ユーザーは、手動でデバイスにに空フォームを取得し、更新するフォームを決定する必要があります。また、確定フォームを手動で送信する必要があります。",
+            "string": "ユーザーは、手動で端末に空フォームを取得し、更新するフォームを決定する必要があります。また、確定済フォームを手動で提出する必要があります。",
             "developer_comment": "\"Get Blank Form\" and \"Send Finalized Form\" are the text of buttons in ODK Collect."
           }
         },
         "2": {
           "managed": {
             "full": {
-              "string": "以前のバージョン、{switchToLegacy}",
+              "string": "従来通りの操作のためには、{switchToLegacy}",
               "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToLegacy} has the text: switch to a {legacyCode}\n- {legacyCode} has the text: Legacy QR Code"
             },
             "switchToLegacy": {
-              "string": "{legacyCode}に切り替える",
+              "string": "{legacyCode}に切り替える。",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToLegacy} is in the following text:\n\nFor the old behavior, {switchToLegacy}.\n\nNote that {legacyCode} is a separate string that will be translated below. Its text is:\n\nLegacy QR Code"
             },
             "legacyCode": {
-              "string": "Legacy QRコード",
+              "string": "従来型のQRコード",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nFor the old behavior, switch to a {legacyCode}."
             }
           },
           "legacy": {
             "full": {
-              "string": "よりコントロールされた、確実なプロセスのためには、{switchToManaged}。",
+              "string": "より管理された確実な処理のために、{switchToManaged}",
               "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToManaged} has the text: switch to a {managedCode}\n- {managedCode} has the text: Managed QR Code"
             },
             "switchToManaged": {
-              "string": "{managedCode}に切り替える",
+              "string": "{managedCode}に切り替える。",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToManaged} is in the following text:\n\nFor a more controlled and foolproof process, {switchToManaged}.\n\nNote that {managedCode} is a separate string that will be translated below. Its text is:\n\nManaged QR Code"
             },
             "managedCode": {
-              "string": "Managed QRコード",
+              "string": "管理型のQRコード",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nFor a more controlled and foolproof process, switch to a {managedCode}."
             }
           }
         },
         "3": {
-          "string": "このQRコードをスキャンして、アカウント名\"{displayName}\"のデバイスを設定する"
+          "string": "このQRコードをスキャンして、アカウント名\"{displayName}\"の端末を設定する。"
         }
       }
     },
     "FieldKeyRevoke": {
       "title": {
-        "string": "ユーザーアクセス権の剥奪",
+        "string": "アプリユーザーのアクセス権の取消",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "本当にアプリユーザー\"{displayName}\"のアクセス権を取り消しますか？",
+          "string": "アプリユーザー\"{displayName}\"のアクセス権を本当に取り消しますか？",
           "developer_comment": "{displayName} is formatted in bold."
         },
         "1": {
-          "string": "このユーザーからの既存のサブミッションは残りますが、このユーザー傘下の全員は、フォームのダウンロードやサブミッションのアップロードを継続するためには、新しいユーザーを作成する必要があります。"
+          "string": "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。"
         },
         "2": {
           "string": "この操作は取り消しできません。"
@@ -1222,11 +1227,11 @@
     },
     "FieldKeyRow": {
       "seeCode": {
-        "string": "コードを表示",
+        "string": "QRコードを表示",
         "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
       },
       "accessRevoked": {
-        "string": "アクセス権の取り消し",
+        "string": "アクセス権の取消済み",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
@@ -1245,10 +1250,10 @@
       },
       "heading": {
         "0": {
-          "string": "あなたがアップロードしたフォームによると、以下のファイルが必要です。どのファイルがアップロードされ、どのファイルが不足してるのかが分かります。"
+          "string": "あなたがアップロードしたフォームには、以下のファイルが必要です。どのファイルがアップロードされ、どのファイルが不足してるのかがわかります。"
         },
         "1": {
-          "string": "1つ以上のファイルをドラッグ＆ドロップしてアップロードする"
+          "string": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
         }
       },
       "header": {
@@ -1269,7 +1274,7 @@
       },
       "alert": {
         "readError": {
-          "string": "ファイル\"{filename}\"を読み込み中に不具合が発生しました"
+          "string": "ファイル\"{filename}\"を読み込み中に問題が発生しました。"
         },
         "success": {
           "string": "{count, plural, other {{count}のファイルのアップロードに成功}}"
@@ -1304,19 +1309,19 @@
       },
       "duringDragover": {
         "dropToUpload": {
-          "string": "{attachmentName}をこのファイルとしてアップロードする。",
+          "string": "このファイルを{attachmentName}としてアップロードする。",
           "developer_comment": "{attachmentName} is formatted in bold."
         },
         "dragover": {
-          "string": "置き換えたいファイルエントリにドラッグ&ドロップすると、アップロードされます。"
+          "string": "置換したいファイル対象に、ファイルをドラッグ&ドロップするとアップロードされます。"
         },
         "dropToPrepare": {
           "full": {
-            "string": "このフォームにアップロードする{countOfFiles}のファイルを準備し、今すぐドロップしてください。",
+            "string": "このフォームにアップロードする{countOfFiles}を準備し、今すぐドロップしてください。",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, other {ファイル数：{count}}}",
+            "string": "{count, plural, other {{count}件のファイル}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
           }
         }
@@ -1328,22 +1333,22 @@
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, other {ファイル数：{count}}}",
+            "string": "{count, plural, other {{count}件のファイル}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
           }
         },
         "someUnmatched": {
           "full": {
-            "string": "{count, plural, other {{countOfFiles}は認識できない名前のため無視されます。それらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。}}",
+            "string": "{count, plural, other {{countOfFiles}は認識できない名前のため無視されます。これらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。}}",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, other {ファイル数：{count}}}",
+            "string": "{count, plural, other {{count}件のファイル}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
           }
         },
         "noneMatched": {
-          "string": "{count, plural, other {アップロードしようとしているファイルが認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。}}"
+          "string": "{count, plural, other {アップロードを試みているファイルが何れも認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。}}"
         }
       },
       "duringUpload": {
@@ -1351,15 +1356,15 @@
           "string": "{count, plural, other {お待ちください。{count}をアップロードしています。}}"
         },
         "current": {
-          "string": "{filename}を送信中",
+          "string": "{filename}を送信中（{percentUploaded}）",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
           "beforeLast": {
-            "string": "{count, plural, other {{count}ファイルが残っています}}"
+            "string": "{count, plural, other {{count}件のファイルが残っています。}}"
           },
           "last": {
-            "string": "最後ファイル"
+            "string": "末尾のデータ"
           }
         }
       }
@@ -1393,7 +1398,7 @@
           "developer_comment": "This is shown for a Media File that has not been uploaded."
         },
         "title": {
-          "string": "1つ以上のファイルをドラッグ＆ドロップしてアップロードする"
+          "string": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
         }
       }
     },
@@ -1405,7 +1410,7 @@
       "introduction": {
         "0": {
           "full": {
-            "string": "ファイルをアップロードは、1つまたは複数のファイルをこのページの表に{dragAndDrop}することで可能です。",
+            "string": "ファイルのアップロードは、１つまたは複数のファイルをこのページの表に{dragAndDrop}することで可能です。",
             "developer_comment": "{dragAndDrop} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndrag and drop"
           },
           "dragAndDrop": {
@@ -1415,11 +1420,11 @@
         },
         "1": {
           "full": {
-            "string": "プロンプトからファイルを選択したい場合は、ファイル名が表に示されるものと一致していることを確認してから、{clickHere}。",
+            "string": "プロンプトからファイルを選択したい場合は、表にあるものとファイル名が一致していることを確認してから、{clickHere}。",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
           },
           "clickHere": {
-            "string": "ここをクリックして選択する",
+            "string": "こちらをクリックして選択する",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
         }
@@ -1427,40 +1432,40 @@
     },
     "FormChecklist": {
       "clickForInfo": {
-        "string": "ここをクリックして、さらに詳細を表示"
+        "string": "さらに詳細を知るには、こちらをクリックして下さい。"
       },
       "steps": {
         "0": {
           "title": {
-            "string": "最初の下書きバージョンを公開する",
+            "string": "最初の下書きバージョンを公開",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
-              "string": "素晴らしい仕事！"
+              "string": "お疲れ様でした！"
             },
             "1": {
-              "string": "あなたのフォームは公開されました。サブミッションを受け付け準備が整いました。もしフォームやそのメディアファイルに変更を行いたい場合、新しい下書きフォームを作成できます。"
+              "string": "フォームは公開されました。フォームの提出を受付ける準備が整いました。このフォームや関連するメディアファイルに変更を行いたい場合、新しい下書きフォームを作成することができます。"
             }
           }
         },
         "1": {
           "title": {
-            "string": "調査クライアントへのフォームのダウンロードとサブミッションデータの送信",
+            "string": "調査クライアントへのフォームのダウンロードとフォームの提出",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "none": {
-                "string": "まだ誰もこのフォームにデータをサブミットしていません。"
+                "string": "このフォームには、どなたもまだデータを提出していません。"
               },
               "any": {
-                "string": "{count, plural, other {合計{count}件のサブミットが完了しました}}"
+                "string": "{count, plural, other {合計{count}件のフォームの提出が完了しました。}}"
               }
             },
             "1": {
               "full": {
-                "string": "{clickHere}して、異なるデータのサブミッション方法を知る。",
+                "string": "{clickHere}して、様々なフォーム提出の方法を知る。",
                 "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
               },
               "clickHere": {
@@ -1472,25 +1477,25 @@
         },
         "2": {
           "title": {
-            "string": "サブミットデータの評価と分析",
+            "string": "提出されたデータの評価と解析",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "none": {
-                "string": "このフォームのデータがあれば、それをエクスポートしたり同期したりして、データの質や結果を監視・分析することができます。"
+                "string": "このフォームのデータがあれば、それをエクスポートまたは同期して、その品質と結果を、監視および解析することができます。"
               },
               "any": {
-                "string": "{count, plural, other {このフォームの{count}件のサブミッションをエクスポートまたは同期して、その品質と結果を、監視および分析することができます。}}"
+                "string": "{count, plural, other {このフォームの{count}件の提出済フォームをエクスポートまたは同期して、その品質と結果を、監視および解析することができます。}}"
               }
             },
             "1": {
               "full": {
-                "string": "{submissionsTab}の「ダウンロード」と「分析」ボタンで行うことができます。",
+                "string": "{submissionsTab}の「ダウンロード」と「解析」ボタンで行うことができます。",
                 "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
               },
               "submissionsTab": {
-                "string": "サブミットタブ",
+                "string": "提出済フォームのタブ",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
               }
             }
@@ -1498,13 +1503,13 @@
         },
         "3": {
           "title": {
-            "string": "フォームの引退者を管理する",
+            "string": "フォームへのアクセス除外者を管理",
             "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
           },
           "body": {
             "0": {
               "full": {
-                "string": "あなたはデータ収集を終えたならば、{formAccessTab}のフォームのステータスコントロールを使い、例えば、アプリユーザーがこのフォームに対して新しいサブミッションを閲覧したり、作成できるかを設定できます。",
+                "string": "あなたはデータ収集を終えましたので、{formAccessTab}にあるフォームの状態のコントロールを使って、これから先、例えば、アプリユーザーがこのフォームを閲覧できるか、新しい提出フォームを作成できるかを設定できます。",
                 "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
               },
               "formAccessTab": {
@@ -1523,7 +1528,7 @@
       },
       "introduction": {
         "0": {
-          "string": "フォーム{name}および、そのアップロードデータが削除されます。\n本当に削除してもよろしいですか？"
+          "string": "フォーム{name}および、その提出済フォームが削除されます。\n本当に削除してもよろしいですか？"
         },
         "1": {
           "string": "この操作は取り消しできません。"
@@ -1544,15 +1549,15 @@
       "introduction": {
         "abandon": {
           "0": {
-            "string": "このフォームの下書きバージョンを永久に削除しようとしています。これは、下書きの定義フォームおよびアップロードした下書きバージョンのメディアファイル、テスト送信された全てのサブミッションが削除されることを意味します。"
+            "string": "このフォームの下書きバージョンを永久に削除しようとしています。これは、この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームが全て削除されることを意味します。"
           },
           "1": {
-            "string": "あなたの公開した定義フォームやメディアファイル、サブミッションは影響を受けません"
+            "string": "あなたの公開した定義フォームやメディアファイル、提出済フォームは影響を受けません。"
           }
         },
         "deleteForm": {
           "0": {
-            "string": "この定義フォームの下書きおよび下書きのメディアファイル、テスト送信された全てのサブミッションは永久に削除されます。なぜなら、まだこのフォームを公開していないので、完全に削除されます。"
+            "string": "この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームの全てのを永久に削除しようとしています。このフォームはまだ公開されていないので、フォームが完全に削除されます。"
           }
         }
       },
@@ -1565,17 +1570,17 @@
     },
     "FormDraftChecklist": {
       "clickForInfo": {
-        "string": "ここをクリックして、さらに詳細を表示"
+        "string": "さらに詳細を知るには、こちらをクリックして下さい。"
       },
       "steps": {
         "0": {
           "title": {
-            "string": "初回の定義フォームのアップロード",
+            "string": "初期バージョンの定義フォームのアップロード",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
-              "string": "素晴らしい仕事！"
+              "string": "お疲れ様でした！"
             },
             "1": {
               "string": "フォームが正常に読み込まれました。"
@@ -1584,18 +1589,18 @@
         },
         "1": {
           "title": {
-            "string": "改定した定義フォームをアップロード（任意）",
+            "string": "修正した定義フォームをアップロード（任意）",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "status": {
-                "string": "質問文や理論式など、フォームに変更を加えた場合は、右のボタンを使って新しいXMLまたはXLSFormをアップロードして下さい。",
+                "string": "フォームに質問文や理論式などの変更を加えた場合、右のボタンを使って更新したXMLまたはXLSFormをアップロードして下さい。",
                 "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
               },
               "link": {
                 "full": {
-                  "string": "質問文や理論式など、フォームに変更を加えた場合は、新しいXMLまたはXLSFormを{upload}するのは、今がチャンスです。",
+                  "string": "フォームに質問文や理論式などの変更を加えた場合、更新したXMLまたはXLSFormを{upload}するには、今がチャンスです。",
                   "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
@@ -1614,7 +1619,7 @@
           "body": {
             "0": {
               "full": {
-                "string": "あなたのフォームには、参照ファイルが必要です。これらのファイルの新規または更新されたコピーのアップロードは、{mediaFiles}タブで設定できます。",
+                "string": "あなたのフォームには、メディアファイルが必要です。これらのファイルの新規または更新されたコピーのアップロードは、{mediaFiles}タブで設定できます。",
                 "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
               },
               "mediaFiles": {
@@ -1626,13 +1631,13 @@
         },
         "3": {
           "title": {
-            "string": "このフォームをモバイルデバイスでテストする",
+            "string": "フォームをモバイル端末でテスト",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "full": {
-                "string": "フォームが期待通りに動作するかどうかを{test}することができます。テストサブミッションは、最終的なデータには含まれません。",
+                "string": "フォームが期待通りに動作するかを{test}できます。テストの目的で提出されたフォームは、最終的なデータには含まれません。",
                 "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
               },
               "test": {
@@ -1650,11 +1655,11 @@
           "body": {
             "0": {
               "status": {
-                "string": "下書きフォームの準備が整い、フィールドで利用するデバイスで用いたい場合、右のボタンを使って下書きを公開することができます。"
+                "string": "下書きの準備が整い、フィールドで用いる端末で運用開始したい場合、右のボタンを使って下書きを公開できます。"
               },
               "link": {
                 "full": {
-                  "string": "下書きフォームの準備が整い、フィールド調査のデバイスで使用したい場合、下書きフォームを{publish}できます。",
+                  "string": "下書きの準備が整い、フィールドで用いる端末で運用開始したい場合、下書きを{publish}できます。",
                   "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
                 },
                 "publish": {
@@ -1685,7 +1690,7 @@
         },
         "testing": {
           "full": {
-            "string": "あなたはまだモバイルデバイスで{tested}し、テストサブミッションを送信していません。これは必須ではありませんが、強く推奨します。",
+            "string": "まだモバイル端末で{tested}し、フォームのテスト提出がされていません。これは必須ではありませんが、強く推奨します。",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
@@ -1696,13 +1701,13 @@
       },
       "introduction": {
         "0": {
-          "string": "この下書きフォームを、公開バージョンにしようとしています。これにより、定義フォームや添付されたメディアファイルに加えた変更が確定します。"
+          "string": "この下書きを、公開バージョンにしようとしています。これにより、定義フォームやそれに関連するメディアファイルに加えた変更が確定します。"
         },
         "1": {
-          "string": "既存のサブミッションされたフォームは影響を受けませんが、すべての下書きに対するテストサブミッションは削除されます。"
+          "string": "既存の提出済フォームは影響を受けませんが、全ての下書きへのテスト提出済フォームは削除されます。"
         },
         "2": {
-          "string": "フォームの各バージョンには、ユニークなバージョン名が必要です。現在、あなたの下書きフォームには、以前に公開されたバージョンと同じバージョン名が付けられています。新しいバージョン名を設定するには、希望するバージョン名の定義フォームをアップロードするか、以下に新しいバージョン名を入力することで、サーバーが変更を行います。"
+          "string": "フォームの各バージョンには、それぞれ独自のバージョン名が必要です。現在、あなたの下書きフォームには、以前に公開されたバージョンと同じ名前が付けられています。新しいバージョン名を設定するには、希望する名前を付けた定義フォームをアップロードするか、もしくは、以下に新しい名前を入力すれば、サーバーのほうで変更を行います。"
         }
       },
       "field": {
@@ -1713,7 +1718,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "指定されたバージョン名は、このフォームの過去のバージョンと競合しています。新しいものに変更して再度お試しください。"
+          "string": "指定されたバージョン名は、このフォームの過去のバージョンと競合しています。新しいものに変更して再度試して下さい。"
         }
       }
     },
@@ -1727,17 +1732,17 @@
       "currentDraft": {
         "versionCaption": {
           "full": {
-            "string": "バージョン：{draftVersion}",
+            "string": "このフォームの{draftVersion}",
             "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
           },
           "draftVersion": {
-            "string": "下書きバージョン",
+            "string": "下書きバージョン名",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
           }
         },
         "action": {
           "upload": {
-            "string": "新規定義のアップロード",
+            "string": "新規定義フォームのアップロード",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -1760,13 +1765,13 @@
       },
       "alert": {
         "upload": {
-          "string": "成功！新しい定義フォームが下書きとして保存されました。"
+          "string": "成功です！新しい定義フォームが下書きとして保存されました。"
         },
         "publish": {
-          "string": "あなたの下書きが公開されました。このプロジェクトのフォームを使用している全てのデバイスは、新しい定義フォームとメディアファイルが表示されます。"
+          "string": "あなたの下書きが公開されました。このプロジェクトのフォームを使用している全てのデバイスには、更新された定義フォームとメディアファイルが表示されます。"
         },
         "abandon": {
-          "string": "このフォームの下書きバージョンは正常に削除されました。"
+          "string": "このフォームの下書きは正常に削除されました。"
         },
         "delete": {
           "string": "フォーム\"{name}\"は削除されました。"
@@ -1780,11 +1785,15 @@
       },
       "body": {
         "0": {
-          "string": "右の設定コードを使って、モバイルデバイスでこの下書きフォームをダウンロードする設定ができます。また、上の「新規作成」ボタンをクリックすると、Webブラウザから新しいサブミッションを作成することができます。"
+          "string": "右の設定コードを利用してモバイル端末に、この下書きフォームをダウンロードする設定ができます。また上の「新規作成」ボタンをクリックすると、Webブラウザからフォームの作成と提出が可能です。"
         },
         "1": {
-          "string": "下書きフォームへのサブミッションは、以下のテスト表に入り、データのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト送信されたサブミッションは永久に削除されます。"
+          "string": "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
         }
+      },
+      "collectProjectName": {
+        "string": "",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -1822,16 +1831,16 @@
       },
       "action": {
         "create": {
-          "string": "新規",
+          "string": "新規作成",
           "developer_comment": "This is the text of a button that is used to create a new Form."
         }
       },
       "emptyTable": {
-        "string": "表示できるフォームはありません"
+        "string": "表示できるフォームはありません。"
       },
       "alert": {
         "create": {
-          "string": "あなたの新しいフォーム\"{name}\"が下書きフォームとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用することができます。"
+          "string": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
         }
       }
     },
@@ -1849,31 +1858,31 @@
       "introduction": {
         "0": {
           "create": {
-            "string": "フォームを作成するため、XForms XMLファイル、またはXLSForm Excelファイルをアップロードして下さい。",
+            "string": "フォーム作成のため、XForms（XMLファイル）、またはXLSForm（Excelファイル）をアップロードして下さい。",
             "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           },
           "update": {
-            "string": "下書きをアップデートするため、XForms XMLファイル、またはXLSForm Excelファイルをアップロードして下さい。",
+            "string": "下書きの更新のため、XForms（XMLファイル）、またはXLSForm（Excelファイル）をアップロードして下さい。",
             "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
           }
         },
         "1": {
           "full": {
-            "string": "もしまだ持っていない場合、フォームのデザインをサポートする{tools}。",
+            "string": "もしまだフォームをお持ちでない場合、フォームデザインを支援する{tools}。",
             "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
           },
           "tools": {
-            "string": "ツールは利用可能です",
+            "string": "ツールを利用できます",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
           }
         },
         "2": {
-          "string": "もしメディアファイルがある場合、フォームを作成後、次のページでアップロードできます。"
+          "string": "メディアファイルはフォームを作成後、次のページでアップロードできます。"
         }
       },
       "dropZone": {
         "full": {
-          "string": "アップロードするには、ここにファイルをドロップする、または{chooseOne}",
+          "string": "アップロードするには、ここにファイルをドロップする、または、こちらからファイルを{chooseOne}",
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
@@ -1887,7 +1896,7 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "uploadAnyway": {
-          "string": "ひとまず、アップロードする",
+          "string": "ひとまず、アップロード",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -1898,10 +1907,10 @@
       },
       "problem": {
         "400_8": {
-          "string": "アップロードされた定義フォームは、このフォームのものではないようです。formIdが間違っています(\"{expected}\"であるべきですが、\"{actual}\"となっています)。"
+          "string": "アップロードされた定義フォームは、このフォームのものとは異なるようです。formIdが間違っています（\"{expected}\"であるべきですが、\"{actual}\"となっています）。"
         },
         "400_15": {
-          "string": "XLSFormは変換できませんでした：{error}",
+          "string": "XLSFormを変換できませんでした：{error}",
           "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "409_3": {
@@ -1910,18 +1919,18 @@
       },
       "warningsText": {
         "0": {
-          "string": "このXLSFormファイルは利用できますが、以下の問題が起こる可能性があります（変換時の警告）：",
+          "string": "このXLSFormファイルは利用できますが、次の問題が起こる可能性があります（変換時の警告）：",
           "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "1": {
-          "string": "問題点を修正して再度試して下さい。"
+          "string": "問題を修正して再度試して下さい。"
         },
         "2": {
           "create": {
-            "string": "これらの問題が無視できると判断した場合は、ボタンをクリックしてフォームを作成してください。"
+            "string": "これらの問題が無視できると判断した場合は、以下のボタンをクリックしてフォームを作成して下さい。"
           },
           "update": {
-            "string": "もしこれら問題が無視できると判断した場合、ボタンをクリックして下書きを更新してください。"
+            "string": "これら問題が無視できると判断した場合、ボタンをクリックして下書きを更新して下さい。"
           }
         }
       }
@@ -1944,7 +1953,7 @@
         "any": {
           "versionCaption": {
             "full": {
-              "string": "このフォームのバージョン：{draftVersion}",
+              "string": "このフォームの{draftVersion}",
               "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
             },
             "draftVersion": {
@@ -1958,55 +1967,55 @@
     "FormOverviewRightNow": {
       "version": {
         "full": {
-          "string": "このフォームの{publishedVersion}",
+          "string": "フォームの{publishedVersion}",
           "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
         },
         "publishedVersion": {
-          "string": "公開されたバージョン",
+          "string": "公開バージョン",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
         }
       },
       "stateCaption": {
         "open": {
-          "string": "このフォームはダウンロード可能で、サブミッションを受け付けています。"
+          "string": "このフォームはダウンロードでき、フォームの提出も受け付けています。"
         },
         "closing": {
-          "string": "このフォームはダウンロードできませんが、サブミッションは受け付けています。"
+          "string": "このフォームはダウンロードできませんが、フォームの提出は受け付けています。"
         },
         "closed": {
-          "string": "このフォームはダウンロードできませんし、サブミッションも受け付けていません。"
+          "string": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
         }
       },
       "submissions": {
         "full": {
-          "string": "{count, plural, other {このフォームの{submissions}は保存されました。}}",
+          "string": "{count, plural, other {このフォームへの{submissions}は保存されました。}}",
           "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
         },
         "submissions": {
-          "string": "{count, plural, other {サブミッション}}",
+          "string": "{count, plural, other {提出}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
       }
     },
     "FormRow": {
       "lastSubmission": {
-        "string": "（最終{dateTime}）",
+        "string": "（最終提出日時　{dateTime}）",
         "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       },
       "action": {
         "fill": {
-          "string": "フォームを記入",
+          "string": "フォームに記入",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "formClosedTip": {
-        "string": "このフォームは終了しています。ダウンロードやサブミッションは出来ません。"
+        "string": "このフォームは終了しています。ダウンロードやフォームの提出は出来ません。"
       },
       "formClosingTip": {
-        "string": "このフォームはクロージング状態です。ダウンロードは出来ませんが、サブミッションは受け付けています。"
+        "string": "このフォームはクロージング状態です。ダウンロードは出来ませんが、フォームの提出は受け付けています。"
       },
       "formUnpublishedTip": {
-        "string": "このフォームは公開バージョンがまだありません"
+        "string": "このフォームは公開バージョンがまだありません。"
       }
     },
     "FormSettings": {
@@ -2017,7 +2026,7 @@
         },
         "body": {
           "full": {
-            "string": "フォームの状態を設定するには、各プロジェクトのページ{formAccessSettings}を訪問して下さい。",
+            "string": "このフォームの状態を設定するには、各プロジェクトの{formAccessSettings}を確認して下さい。",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
@@ -2028,7 +2037,7 @@
       },
       "action": {
         "delete": {
-          "string": "このフォームを削除",
+          "string": "フォームを削除",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2049,7 +2058,7 @@
     "FormVersionDefDropdown": {
       "action": {
         "def": {
-          "string": "定義",
+          "string": "定義フォーム",
           "developer_comment": "This is the text of a button. \"Definition\" refers to a Form definition."
         },
         "viewXml": {
@@ -2057,12 +2066,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "XFormとしてダウンロード",
+          "string": "XFormとしてダウンロード（.xml形式）",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
-          "string": "XLSFormとしてダウンロード",
-          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
+          "string": "XLSFormとしてダウンロード（{extension}形式）",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -2073,7 +2082,7 @@
           "developer_comment": "This is the text of a table column header. The column shows who published the version of the Form, as well as when they did so."
         },
         "definition": {
-          "string": "定義",
+          "string": "定義フォーム",
           "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
         }
       }
@@ -2099,7 +2108,7 @@
     },
     "NavbarActions": {
       "notLoggedIn": {
-        "string": "未ログイン状態",
+        "string": "ログイン",
         "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
       },
       "action": {
@@ -2110,7 +2119,7 @@
       },
       "alert": {
         "logOut": {
-          "string": "ログアウト成功"
+          "string": "ログアウトに成功しました。"
         }
       }
     },
@@ -2154,7 +2163,7 @@
     },
     "NotFound": {
       "body": {
-        "string": "リクエストされたページは見つかりません"
+        "string": "リクエストされたページは見つかりません。"
       }
     },
     "ProjectArchive": {
@@ -2164,11 +2173,11 @@
       },
       "introduction": {
         "0": {
-          "string": "プロジェクト \"{name}\"をアーカイブしようとしています。現在と同様に機能しますが、Centralホームページのプロジェクトリストの一番下に表示されます。"
+          "string": "プロジェクト \"{name}\"をアーカイブしようとしています。現在と同様に機能しますが、Centralのトップページのプロジェクトリストの一番下に表示されます。"
         },
         "1": {
           "full": {
-            "string": "{noUndo}が、プロジェクトを非アーカイブ化する機能は将来的にリリースされる予定です。",
+            "string": "{noUndo}プロジェクトの非アーカイブ化機能は将来的にリリースされる予定です。",
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
@@ -2211,13 +2220,13 @@
           "introduction": {
             "0": {
               "0": {
-                "string": "暗号化を有効にすると以下のようになります。"
+                "string": "暗号化を有効にすると、次のようになります。"
               },
               "1": {
-                "string": "確定済のフォームは、モバイル機器の内部で暗号化されます。"
+                "string": "確定済フォームは、モバイル端末の内部で暗号化されます。"
               },
               "2": {
-                "string": "サブミットデータはCentralサーバーで暗号化されます"
+                "string": "提出済フォームはCentralサーバーで暗号化されます。"
               },
               "3": {
                 "0": {
@@ -2225,44 +2234,44 @@
                   "developer_comment": "{submission} will have the text \"<submission>\", which is XML and will not be translated."
                 },
                 "1": {
-                  "string": "これらのフォームでCentralの自動暗号化処理を使用するには、{base64RsaPublicKey}の設定を削除してください。",
+                  "string": "これらのフォームでCentralの自動暗号化処理を使用するには、{base64RsaPublicKey}の設定を削除して下さい。",
                   "developer_comment": "{base64RsaPublicKey} will have the text \"base64RsaPublicKey\", which is code and will not be translated."
                 }
               },
               "4": {
-                "string": "オンラインでサブミッションデータをプレビューすることができなくなります。"
+                "string": "オンラインで提出済フォームのデータをプレビューできなくなります。"
               },
               "5": {
-                "string": "OData経由でデータに接続できなくなります"
+                "string": "OData経由でデータに接続できなくなります。"
               },
               "6": {
-                "string": "Webブラウザでサブミッションデータを編集することができなくなります。"
+                "string": "提出されたデータをWebブラウザで編集できなくなります。"
               }
             },
             "1": {
               "0": {
-                "string": "また、本バージョンのODK Centralでは以下のようになっています。"
+                "string": "また、このバージョンのODK Centralでは以下のようになっています。"
               },
               "1": {
                 "0": {
-                  "string": "既存のサブミッションは暗号化されずに残ります。"
+                  "string": "既存の提出されたフォームは暗号化されずに残ります。"
                 },
                 "1": {
-                  "string": "将来のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
+                  "string": "今後のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
                 }
               },
               "2": {
                 "0": {
-                  "string": "一度有効にした暗号化を無効にすることはできません。"
+                  "string": "一度有効にされた暗号化を無効にすることはできません。"
                 },
                 "1": {
-                  "string": "将来のバージョンでは、暗号化を無効にするとデータが復号化されます。これは、現時点で暗号化を有効にしていても同様です。"
+                  "string": "今後のバージョンでは、暗号化を無効にするとデータが復号化されます。これは現時点で暗号化を有効にしていても同様です。"
                 }
               }
             },
             "2": {
               "full": {
-                "string": "暗号化についての詳細は{here}にあります。この内容でよろしければ、「Next」を押して次に進みます。",
+                "string": "暗号化についての詳細は{here}にあります。この内容でよろしければ、「次へ」をクリックして次に進みます。",
                 "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
               },
               "here": {
@@ -2275,7 +2284,7 @@
         "1": {
           "introduction": {
             "0": {
-              "string": "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたのサブミットデータを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている人だけがあなたのサブミットデータを復号化することができます。"
+              "string": "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたの提出済フォームを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている者のみがあなたの提出済フォームデータを復号できます。"
             },
             "1": {
               "full": {
@@ -2292,7 +2301,7 @@
         "2": {
           "introduction": {
             "0": {
-              "string": "このプロジェクトでは、暗号化が設定されています。モバイルデバイスでは、暗号化を行うために、最新のフォームを取得または再取得する必要があります。"
+              "string": "このプロジェクトでは、暗号化が設定されています。モバイル端末で暗号化を行うためには、最新のフォームを取得または再取得する必要があります。"
             }
           }
         }
@@ -2307,11 +2316,11 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "アプリユーザーは、以下の表で明示的にアクセス権を与えられたフォームのみを閲覧・記入できます。プロジェクト・マネージャーやデータ収集者は、Webブラウザを使って、公開中のステータスのプロジェクト内のフォームに記入できます。"
+          "string": "アプリユーザーは、以下の表で明示的にアクセス権限を与えられたフォームに対してのみ、閲覧・記入ができます。プロジェクト・マネージャーとデータ収集者は、Webブラウザを使って、公開状態のプロジェクト内のどのフォームにも、記入できます。"
         }
       },
       "emptyTable": {
-        "string": "表示できるフォームはありません"
+        "string": "表示できるフォームはありません。"
       },
       "alert": {
         "success": {
@@ -2321,7 +2330,7 @@
     },
     "ProjectFormAccessRow": {
       "draftTitle": {
-        "string": "このフォームにはまだ公開バージョンがありません。下書きが公開されるまで、デバイス上には表示されません。フォームを公開すると、ここで示される設定が適応されます。"
+        "string": "このフォームには公開バージョンがまだありません。下書きが公開されるまで、端末上には表示されません。フォームを公開すると、ここで示される設定が適応されます。"
       },
       "field": {
         "state": {
@@ -2341,11 +2350,11 @@
       },
       "introduction": {
         "0": {
-          "string": "「フォームの状態」では、各フォームのライフサイクルにおける状態を制御します。例外もありますが、通常、フォームは「公開」から始まり、「クロージング状態」を経て、不要になったら「終了」となります。"
+          "string": "フォームの状態では、各フォームのライフサイクルにおける状態を制御します。例外もありますが、通常、フォームは「公開」から始まり、「クロージング状態」を経て、不要になったら「終了」となります。"
         },
         "1": {
           "full": {
-            "string": "{open}のフォームはモバイルデバイスにダウンロードでき、新しいサブミッションも受け付けます。",
+            "string": "{open}のフォームはモバイル端末にダウンロードでき、新規のフォームの提出も受け付けます。",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
@@ -2355,7 +2364,7 @@
         },
         "2": {
           "full": {
-            "string": "{closing}のフォームは新しいサブミッションを受け付けますが、モバイルデバイスにダウンロードはでき{not}。",
+            "string": "{closing}のフォームは新規のフォームの提出を受け付けますが、モバイル端末にダウンロードはでき{not}。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
@@ -2369,7 +2378,7 @@
         },
         "3": {
           "full": {
-            "string": "{closed}フォームはモバイルデバイスにダウンロードでき{not1}。また新しいサブミッションも受け付け{not2}。",
+            "string": "{closed}したフォームはモバイル端末にダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
@@ -2406,7 +2415,7 @@
       },
       "introduction": {
         "0": {
-          "string": "プロジェクトでは、関連するフォームやユーザーをグループ化することができます。Webユーザーには役割が与えられ、ブラウザを使ってフォームを入力するなど、プロジェクト内で特定のアクションを実行できます。プロジェクトのアプリユーザーは、自分がアクセス権を持つプロジェクト内のフォームのみを閲覧できます。"
+          "string": "プロジェクトでは、関連のあるフォームやユーザーをグループ化できます。Webユーザーには役割が与えられ、ブラウザでのフォーム入力など、プロジェクト内で特定の操作が可能です。プロジェクトのアプリユーザーは、自分がアクセス権のあるプロジェクト内のフォームのみ閲覧できます。"
         }
       }
     },
@@ -2416,7 +2425,7 @@
           "string": "Centralへようこそ"
         },
         "1": {
-          "string": "何かをやり遂げましょう",
+          "string": "頑張って成し遂げましょう！",
           "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
         }
       },
@@ -2438,7 +2447,7 @@
           },
           "1": {
             "full": {
-              "string": "また、{forum}では、過去の質問を検索したり、自分の質問をしたりして、いつでも他の人の助けを得ることができます。",
+              "string": "また、{forum}では、過去の質問を検索、または自分で質問をすることで、いつでもコミュニティメンバーの助けを得られます。",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
             },
             "forum": {
@@ -2455,7 +2464,7 @@
       "rightNow": {
         "users": {
           "full": {
-            "string": "{count, plural, other {{webUsers}は、このWebサイトでプロジェクトの管理ができます。}}",
+            "string": "{count, plural, other {{webUsers}は、プロジェクトの管理ができます。}}",
             "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
           },
           "webUsers": {
@@ -2465,7 +2474,7 @@
         },
         "projects": {
           "full": {
-            "string": "{count, plural, other {{projects}はデバイスに対してフォームとアプリユーザーの管理を行えます。}}",
+            "string": "{count, plural, other {{projects}はデバイスに対してフォームとアプリユーザーの管理ができます。}}",
             "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
           },
           "projects": {
@@ -2480,7 +2489,7 @@
       },
       "action": {
         "create": {
-          "string": "新規",
+          "string": "新規作成",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -2491,11 +2500,11 @@
         }
       },
       "emptyTable": {
-        "string": "あなたが閲覧できるプロジェクトはありません"
+        "string": "あなたが閲覧できるプロジェクトはありません。"
       },
       "alert": {
         "create": {
-          "string": "あなたの新規プロジェクトは正しく作成されました"
+          "string": "新規プロジェクトは正しく作成されました。"
         }
       }
     },
@@ -2518,7 +2527,7 @@
       "body": {
         "0": {
           "full": {
-            "string": "プロジェクトでは、関連するフォームやユーザーをグループ化することができます。Webユーザーには役割が与えられ、ブラウザを使ってフォームを入力するなど、プロジェクト内で特定のアクションを実行できます。プロジェクトのアプリユーザーは、自分が{accessTo}を持つプロジェクト内のフォームのみを閲覧できます。",
+            "string": "プロジェクトでは、関連するフォームやユーザーをグループ化できます。Webユーザーには役割が与えられ、ブラウザを使ってフォームを入力するなど、プロジェクト内で特定の操作を実行できます。プロジェクトのアプリユーザーは、自分が{accessTo}を持つプロジェクト内のフォームのみを閲覧できます。",
             "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
           },
           "accessTo": {
@@ -2528,11 +2537,11 @@
         },
         "1": {
           "full": {
-            "string": "ご意見があれば、{forumThread}を訪問して下さい",
+            "string": "ご意見があれば、{forumThread}を確認して下さい。",
             "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
           },
           "forumThread": {
-            "string": "このフォーラムのスレッド",
+            "string": "フォーラムのスレッド",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
           }
         }
@@ -2541,7 +2550,7 @@
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
-          "string": "{count, plural, other {{appUsers}は、データ収集クライアントを使い、このプロジェクトのフォームのダウンロードと送信することが可能です。}}",
+          "string": "{count, plural, other {{appUsers}は、データ収集クライアントを用い、このプロジェクトのフォームのダウンロードと提出が可能です。}}",
           "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
         },
         "appUsers": {
@@ -2551,7 +2560,7 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, other {{forms}は、モバイルデバイスにダウンロードし、調査をすることができます。}}",
+          "string": "{count, plural, other {{forms}は、モバイル端末にダウンロードし、調査が可能です。}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
@@ -2581,22 +2590,22 @@
         "body": {
           "unencrypted": {
             "0": {
-              "string": "このプロジェクトでは、サブミットデータの暗号化は有効化されていません。"
+              "string": "このプロジェクトでは、提出フォームの暗号化は有効化されていません。"
             }
           },
           "encrypted": {
             "0": {
               "full": {
-                "string": "このプロジェクトのサブミッションの暗号化は、{enabled}",
+                "string": "このプロジェクトの提出されたフォームの暗号化は、{enabled}",
                 "developer_comment": "{enabled} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nenabled"
               },
               "enabled": {
-                "string": "有効化",
+                "string": "有効にされています。",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {enabled} is in the following text:\n\nSubmission data encryption is {enabled} for this Project."
               }
             },
             "1": {
-              "string": "このバージョンのODK Centralでは、一度有効化された暗号化は無効化できません。"
+              "string": "このバージョンのODK Centralでは、一度有効にされた暗号化は無効にできません。"
             }
           }
         },
@@ -2616,32 +2625,32 @@
         },
         "archived": {
           "0": {
-            "string": "このプロジェクトはアーカイブされました"
+            "string": "このプロジェクトはアーカイブされました。"
           },
           "1": {
-            "string": "このバージョンのODK Centralでは、プロジェクトを非アーカイブすることはできません。しかし、プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
+            "string": "このバージョンのODK Centralでは、プロジェクトの非アーカイブ化はできません。プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
           }
         }
       },
       "alert": {
         "archive": {
-          "string": "プロジェクト\"{name}\"はアーカイブされました"
+          "string": "プロジェクト\"{name}\"はアーカイブされました。"
         }
       }
     },
     "ProjectSubmissionOptions": {
       "title": {
-        "string": "サブミッションのオプション",
+        "string": "フォーム提出方法の選択肢",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "ODK Centralにデータをサブミットするにはいくつかのオプションがあります。",
+          "string": "ODK Centralへのデータ提出方法にはいくつかの選択肢があります。",
           "developer_comment": "This text is shown above a list of options for submitting data."
         },
         "1": {
           "full": {
-            "string": "{appUsers}を作成し、{collect}のAndroidアプリを使用します。この方法は、データ収集者が複数のフォームにアクセスする必要がある場合や、オフラインである場合、複雑なフォームを持っている場合などに最適です",
+            "string": "{appUsers}を作成し、Androidアプリの{collect}を使用して下さい。この方法は、データ収集者が複数のフォームにアクセスする必要がある場合や、オフラインである場合、複雑なフォームを持っている場合などに最適です",
             "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
           },
           "appUsers": {
@@ -2651,7 +2660,7 @@
         },
         "2": {
           "full": {
-            "string": "1つ以上の{publicLinks}を作成し、回答者に対して、回答内容を共有する。",
+            "string": "１つ以上の{publicLinks}を作成し、回答者と共有する。回答者は自身でフォームに入力し、提出する。",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
           },
           "publicLinks": {
@@ -2661,7 +2670,7 @@
         },
         "3": {
           "full": {
-            "string": "データを収集する各個人に、{dataCollector}の役割を持つ{webUser}を作成します。これらのユーザーはCentralにログインし、Webブラウザでこのフォームを入力します。プロジェクトマネージャーもブラウザからサブミッションを作成することができます。",
+            "string": "データを収集する各個人に、{dataCollector}の役割を持つ{webUser}を作成します。これらのユーザーはCentralにログインし、Webブラウザでこのフォームに入力します。プロジェクトマネージャーもブラウザ経由でフォームが提出できます。",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
           },
           "webUser": {
@@ -2683,7 +2692,7 @@
         },
         "1": {
           "full": {
-            "string": "{projectManagers}は、このプロジェクトに関連するあらゆる管理作業を行うことができ、Webブラウザでフォームを入力することができます。",
+            "string": "{projectManagers}は、このプロジェクトに関連するあらゆる管理作業を行うことができ、Webブラウザでフォームを入力できます。",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
           },
           "projectManagers": {
@@ -2693,7 +2702,7 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers}は、このプロジェクトのすべてのフォームデータにアクセスし、ダウンロードすることができますが、設定やデータの変更はできません。",
+            "string": "{projectViewers}は、このプロジェクトの全てのフォームにアクセスし、ダウンロードできますが、設定やデータの変更はできません。",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -2703,7 +2712,7 @@
         },
         "3": {
           "full": {
-            "string": "{dataCollectors}は、Webブラウザでフォームを入力することはできますが、データや設定を閲覧・変更することはできません。",
+            "string": "{dataCollectors}は、Webブラウザでフォームを入力できますが、データや設定を閲覧・変更はできません。",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
@@ -2714,7 +2723,7 @@
       },
       "action": {
         "clearSearch": {
-          "string": "サーチ条件の解除",
+          "string": "検索条件の解除",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2725,7 +2734,7 @@
             "developer_comment": "This is the text of a form field."
           },
           "cannotList": {
-            "string": "正確なユーザーのメールアドレスを入力する",
+            "string": "正確なユーザーのメールアドレスを入力する。",
             "developer_comment": "This is the text of a form field."
           }
         }
@@ -2741,17 +2750,17 @@
         }
       },
       "emptyTable": {
-        "string": "このプロジェクトに割り当てられたユーザーはまだいません。ユーザーを追加するには、上記でユーザーを検索してください。"
+        "string": "このプロジェクトに割り当てられたユーザーはまだいません。ユーザーを追加するには、上の検索ボックスでユーザーを検索してください。"
       },
       "alert": {
         "unassignWithoutReassign": {
-          "string": "不具合が発生しました 。\"{displayName}\"はプロジェクトから除外されました。"
+          "string": "問題が発生しました 。\"{displayName}\"はプロジェクトから除外されました。"
         },
         "assignRole": {
-          "string": "成功！\"{displayName}\"は、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
+          "string": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
         },
         "unassignRole": {
-          "string": "成功！\"{displayName}\"はこのプロジェクトから除外されました。"
+          "string": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
         }
       }
     },
@@ -2773,17 +2782,17 @@
       },
       "introduction": {
         "0": {
-          "string": "このリンクを持っている人は、Webブラウザでこのフォームを記入することができます。表示名を使うことで、リンクをどこに投稿したのか、誰と共有したのか、いつから有効化するかなどの詳細を思い出せます。"
+          "string": "このリンクを持っている人は誰でも、ウェブブラウザからこのフォームに記入することができます。リンクをどこに投稿したのか、誰と共有したのか、いつから有効化するかなどの詳細を思い出すには、表示名を使ってください。"
         }
       },
       "field": {
         "once": {
-          "string": "単一のサブミッション",
+          "string": "一回限りのデータ提出機能",
           "developer_comment": "This is the text of a form field."
         }
       },
       "onceHelp": {
-        "string": "各プラウザから一度しかサブミッションを受け付けない",
+        "string": "各プラウザから一回しかフォームの提出を受け付けない。",
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
@@ -2807,11 +2816,11 @@
         },
         "1": {
           "full": {
-            "string": "一般公開リンクは、自己申告を目的としています。同じフォームを何度も送信する必要があるデータ収集者がいる場合は、{clickHere}して他の方法をご確認ください。",
+            "string": "一般公開リンクは、自己申告を目的としています。同じフォームを何度も送信する必要があるデータ収集者がいる場合は、{clickHere}して他の方法を確認して下さい。",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {
-            "string": "ここをクリック",
+            "string": "こちらをクリック",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
           }
         }
@@ -2821,10 +2830,10 @@
       },
       "alert": {
         "create": {
-          "string": "成功！一般公開リンクが作成され、利用可能です。\n以下をコピーして配布できます。"
+          "string": "成功です！一般公開リンクが作成され、利用可能です。\n以下をコピーして配布できます。"
         },
         "revoke": {
-          "string": "一般公開リンク\"{displayName}\"の無効化に成功しました。これ以降、このリンクでのサブミッションは受付られません。"
+          "string": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
         }
       }
     },
@@ -2835,7 +2844,7 @@
       },
       "introduction": {
         "0": {
-          "string": "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータ受信が拒否され、これには現在すでに入力を開始しているフォームのデータ受信も含まれます。"
+          "string": "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータの提出が出来なくなります。これには現在すでに入力が開始されたフォームの提出も含まれます。"
         }
       }
     },
@@ -2847,23 +2856,23 @@
         }
       },
       "revoked": {
-        "string": "無効済",
+        "string": "無効",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
       },
       "unavailable": {
         "text": {
-          "string": "まだ利用できません",
+          "string": "まだ利用できません。",
           "developer_comment": "This text is shown for a Public Access Link that is not available yet."
         },
         "title": {
-          "string": "一般公開リンクはまだ利用できません。処理が終了していません。後で更新して、もう一度試して下さい。"
+          "string": "一般公開リンクはまだ利用できません。処理が終了していません。後ほどページを更新し、もう一度試して下さい。"
         }
       }
     },
     "PublicLinkTable": {
       "header": {
         "once": {
-          "string": "単一のサブミッション",
+          "string": "一回限りのデータ提出機能",
           "developer_comment": "This is the text of a table column header."
         },
         "accessLink": {
@@ -2874,19 +2883,19 @@
     },
     "SubmissionAnalyze": {
       "title": {
-        "string": "ODataを利用",
+        "string": "ODataの利用",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "ODataは、ツールとサービス間での新しいデータ転送の標準です。マイクロソフト社のエクセルのような無料で強力な解析ツール、{powerBi}や{r}はODataを介してデータを取り込み、解析することが可能です。",
+          "string": "ODataは、ツールとサービス間でのデータ転送の新標準です。マイクロソフト社のエクセルのような強力な無料解析ツール、{powerBi}や{r}はODataを介してデータを取り込み、解析できます。",
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
         },
         "1": {
-          "string": "ODataには多くの利点がありますが、重要なのは、数字や地理データのような複雑なタイプの転送を完全にサポートしていることです。また、それを使用しているどのツールとも簡単に最新版のデータを同期させることができることです。"
+          "string": "ODataには多くの利点があります。重要なのは、数字や地理データのような複雑なタイプの転送を完全にサポートしている点、また最新データをODataを使用する全てのツールに対して簡単に同期できる点です。"
         },
         "2": {
-          "string": "ODdataの利用を始めるにあたり、利用するツールを選び、そのツールにリンクをコピーしてください。"
+          "string": "ODdataの利用を始めるには、利用するツールを選び、そのツールに以下のリンクをコピーして下さい。"
         }
       },
       "tab": {
@@ -2902,7 +2911,7 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "エクセルでODataを使うには、{pageForExcel}を参照下さい。またPower BIを使う場合、{pageForPowerBi}を参照下さい。",
+            "string": "エクセルでODataを使う場合、{pageForExcel}を参照して下さい。またPower BIを使う場合、{pageForPowerBi}を参照して下さい。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
@@ -2917,7 +2926,7 @@
         "r": {
           "0": {
             "full": {
-              "string": "{r}からCentralのデータにアクセスするには、{ruODK}を使うことを推奨しています。ruODKのvignettesにある{oData}と{restful}APIの両方の利用例を参照して下さい。",
+              "string": "{r}からCentralのデータにアクセスするには、{ruODK}の利用を推奨しています。ruODKのマニュアルにある{oData}と{restful}APIの両方の利用例を参照して下さい。",
               "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
             },
             "restful": {
@@ -2938,11 +2947,11 @@
         },
         "other": {
           "full": {
-            "string": "ODataのサポートの全詳細に関しては、{article}をご覧ください。",
+            "string": "ODataに関するサポートの詳細は、{article}を参照して下さい。",
             "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
           },
           "article": {
-            "string": "この記事",
+            "string": "こちら",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
           }
         }
@@ -2959,10 +2968,10 @@
         "string": "メディアファイル"
       },
       "present": {
-        "string": "{count, plural, other {ファイル数：{count}}}"
+        "string": "{count, plural, other {{count}件の提出済メディアファイル}}"
       },
       "expected": {
-        "string": "{count, plural, other {推定{count}件のサブミッション}}",
+        "string": "{count, plural, other {{count}件の期待されるメディアファイル数}}",
         "developer_comment": "This shows the number of files that were expected to be submitted."
       },
       "attachmentSummary": {
@@ -2972,10 +2981,10 @@
     },
     "SubmissionComment": {
       "editWithoutComment": {
-        "string": "データが編集されました。あなたが行った変更について説明してください。"
+        "string": "データが編集されました。あなたが実施した変更について説明して下さい。"
       },
       "markdownSupported": {
-        "string": "Markdown形式をサポート",
+        "string": "Markdown形式をサポートしています。",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
@@ -2986,7 +2995,7 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "analyze": {
-          "string": "ODataで解析",
+          "string": "OData経由で解析",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -3001,7 +3010,7 @@
       },
       "introduction": {
         "0": {
-          "string": "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号化にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
+          "string": "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号時にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
         }
       },
       "hint": {
@@ -3010,7 +3019,7 @@
       },
       "alert": {
         "submit": {
-          "string": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。いつまでも開始されない場合は、もう一度試して下さい。"
+          "string": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
         }
       }
     },
@@ -3018,12 +3027,12 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {{count}レコードのダウンロード}}",
+            "string": "{count, plural, other {{count}件のレコードのダウンロード}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "該当レコードのダウンロード",
+              "string": "照合されたレコードのダウンロード",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
             },
             "withCount": {
@@ -3049,27 +3058,27 @@
     "SubmissionFeedEntry": {
       "title": {
         "create": {
-          "string": "{name}によるサブミッション",
+          "string": "{name}による提出済フォーム",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
         },
         "updateReviewState": {
           "null": {
             "full": {
-              "string": "{name}の{reviewState}",
+              "string": "{name}による{reviewState}報告",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
             },
             "reviewState": {
-              "string": "受信済",
+              "string": "受信済み",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
           "hasIssues": {
             "full": {
-              "string": "{name}の{reviewState}",
+              "string": "{name}による{reviewState}報告",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
             },
             "reviewState": {
-              "string": "問題有",
+              "string": "問題有り",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
@@ -3089,7 +3098,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
             },
             "reviewState": {
-              "string": "承認済",
+              "string": "承認済み",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
@@ -3099,7 +3108,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
             },
             "reviewState": {
-              "string": "リジェクト済",
+              "string": "リジェクト済み",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           }
@@ -3112,7 +3121,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{total}の内{selected}",
+        "string": "{total}列の内{selected}列",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -3126,12 +3135,12 @@
         }
       },
       "disabled": {
-        "string": "100以上の列は選択できません"
+        "string": "100以上の列は選択できません。"
       },
       "action": {
         "select": {
           "full": {
-            "string": "選択状況　{all}/{none}",
+            "string": "選択設定　{all}/{none}",
             "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
           },
           "all": {
@@ -3170,75 +3179,70 @@
     "SubmissionList": {
       "loading": {
         "withoutCount": {
-          "string": "サブミッションの読み込み中...",
+          "string": "提出済フォームの読み込み中...",
           "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
-          "string": "{count, plural, other {{count}のサブミッションを読み込み中...}}"
+          "string": "{count, plural, other {{count}の提出済フォームを読み込み中...}}"
         },
         "first": {
-          "string": "{count, plural, other {{count}件のサブミッションの内、最初の{top}を読み込み中...}}",
+          "string": "{count, plural, other {{count}件の提出済フォームの内、最初の{top}を読み込み中...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "{count, plural, other {残りのサブミッション{count}件の内、さらに{top}件を読み込み中...}}",
+          "string": "{count, plural, other {残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
-            "string": "{count, plural, other {最後の{count}件のサブミッションを読み込み中...}}"
+            "string": "{count, plural, other {最後の{count}件の提出済フォームを読み込み中...}}"
           },
           "one": {
-            "string": "最後のサブミッションを読み込み中..."
+            "string": "最後の提出済フォームを読み込み中..."
           }
         },
         "filtered": {
           "withoutCount": {
-            "string": "一致するサブミッションの読み込み中...",
+            "string": "照合できる提出済フォームの読み込み中...",
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, other {一致する残りのサブミッション{count}件の内、さらに{top}件を読み込み中...}}",
+            "string": "{count, plural, other {一致する残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {
             "multiple": {
-              "string": "{count, plural, other {一致する最後の{count}件のサブミッションを読み込み中...}}"
+              "string": "{count, plural, other {一致する最後の{count}件の提出済フォームを読み込み中...}}"
             },
             "one": {
-              "string": "最後の一致するサブミッションを読み込み中..."
+              "string": "最後の照合できる提出済フォームを読み込み中..."
             }
           }
         }
       },
       "emptyTable": {
-        "string": "表示できるサブミッションはありません"
+        "string": "表示できる提出済フォームはありません。"
       },
       "noMatching": {
-        "string": "一致するサブミッションはありません。"
+        "string": "照合できる提出済フォームはありません。"
       }
     },
     "SubmissionShow": {
       "back": {
         "title": {
-          "string": "サブミッションの詳細",
+          "string": "提出フォームの詳細",
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
-          "string": "サブミッション・テーブルに戻る",
+          "string": "提出フォームの一覧に戻る",
           "developer_comment": "This is shown at the top of the page."
-        }
-      },
-      "alert": {
-        "updateReviewState": {
-          "string": "レビュー・ステータス保存完了！"
         }
       }
     },
     "SubmissionTable": {
       "header": {
         "stateAndActions": {
-          "string": "ステータスとアクション",
+          "string": "レビュー・ステータスと操作",
           "developer_comment": "This is the text of a table column header."
         }
       }
@@ -3257,7 +3261,7 @@
     },
     "TimeAndUser": {
       "text": {
-        "string": "{displayName}が実施　{dateTime}",
+        "string": "{displayName}が{dateTime}の時点で実施",
         "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       }
     },
@@ -3290,14 +3294,14 @@
         }
       },
       "cannotChange": {
-        "string": "アカウントオーナーのみが自身のパスワードを設定できます。"
+        "string": "アカウントオーナーのみがパスワードを設定できます。"
       },
       "alert": {
         "mismatch": {
           "string": "新しいパスワードが一致することを確認して下さい。"
         },
         "success": {
-          "string": "成功！パスワードが更新されました。"
+          "string": "成功です！パスワードが更新されました。"
         }
       }
     },
@@ -3330,7 +3334,7 @@
       },
       "heading": {
         "0": {
-          "string": "このウェブサイトのWebユーザーは、このサーバー上のプロジェクトを監督・管理するアカウントを保有します。管理者は、サイト内の全てを管理できます。プロジェクトの設定から「サーバーでの役割」が無いユーザーに対して、任意のプロジェクトの役割を付与できます。サーバー管理者と一部のプロジェクトでの役割を持つ者は、Webブラウザーを使ってフォームを入力できます。{collect}などのアプリでデータを送信する場合は、プロジェクトごとにアプリユーザーを作成して下さい。",
+          "string": "Webユーザーは、このサーバー上のプロジェクトを監督・管理するアカウントを保有します。管理者は、サイト内の全てを管理できます。プロジェクトの設定から「サーバーでの役割」が無いユーザーに対して、任意のプロジェクトの役割を付与できます。サーバーの管理者と一部のプロジェクトでの役割を持つ者は、Webブラウザーを使ってフォームを入力できます。{collect}などのアプリでデータを送信する場合は、プロジェクトごとにアプリユーザーを作成して下さい。",
           "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
         }
       },
@@ -3342,16 +3346,16 @@
       },
       "alert": {
         "create": {
-          "string": "\"{displayName}\"のユーザーの作成に成功しました。"
+          "string": "ユーザー\"{displayName}\"の作成に成功しました。"
         },
         "assignRole": {
-          "string": "成功！\"{displayName}\"はサーバーでの役割\"{roleName}\"を与えられました。"
+          "string": "成功です！\"{displayName}\"はサーバーでの役割\"{roleName}\"を与えられました。"
         },
         "resetPassword": {
-          "string": "\"{displayName}\"のパスワードが無効です。{email}宛に、今後の対応についての手続き方法を記載したメールが送られました。"
+          "string": "\"{displayName}\"のパスワードが無効です。{email}宛に、今後の対応についての手続き方法を記載したメールが送信されました。"
         },
         "retire": {
-          "string": "ユーザー\"{displayName}\"は引退しました。"
+          "string": "ユーザー\"{displayName}\"を除外しました。"
         }
       }
     },
@@ -3362,7 +3366,7 @@
       },
       "introduction": {
         "0": {
-          "string": "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送られます。"
+          "string": "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送信されます。"
         }
       }
     },
@@ -3373,7 +3377,7 @@
       },
       "introduction": {
         "full": {
-          "string": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"<{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送られます。\n",
+          "string": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"<{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送信されます。",
           "developer_comment": "{resetPassword} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReset password"
         },
         "resetPassword": {
@@ -3384,12 +3388,12 @@
     },
     "UserRetire": {
       "title": {
-        "string": "引退したユーザー",
+        "string": "除外されたユーザー",
         "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
       },
       "introduction": {
         "0": {
-          "string": "ユーザーアカウント\"{displayName}\"<{email}>を除外させようとしています。このユーザーは、即座にいかなるアクションも実行できなくなり、ログアウトされます。"
+          "string": "ユーザーアカウント\"{displayName}\"<{email}>を除外しようとしています。このユーザーは、即座にいかなるアクションも実行できなくなり、ログアウトされます。"
         },
         "1": {
           "full": {
@@ -3397,7 +3401,7 @@
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
-            "string": "この操作は取り消しできません。",
+            "string": "この操作は取り消しできません",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but a new account can always be created for that person with the same email address."
           }
         }
@@ -3405,7 +3409,7 @@
     },
     "UserRow": {
       "cannotAssignRole": {
-        "string": "あなたは自分自身のサーバーでの役割を編集できません。"
+        "string": "自分自身のサーバーでの役割を編集できません。"
       },
       "field": {
         "sitewideRole": {

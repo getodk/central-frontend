@@ -101,48 +101,42 @@ export default {
     "action": {
       "def": "Definice",
       "viewXml": "Zobrazit XML v prohlížeči",
-      "downloadXForm": "Stáhnout jako XForm",
-      "downloadXlsForm": "Stáhnout jako XLSForm"
+      "downloadXForm": "Stáhnout jako XForm (.xml)",
+      "downloadXlsForm": "Stáhnout jako XLSForm ({extension})"
     }
   },
   "de": {
     "action": {
       "def": "Definition",
-      "viewXml": "XML im Browser ansehen",
-      "downloadXForm": "Als XForm herunterladen",
-      "downloadXlsForm": "Als XLSForm herunterladen"
+      "viewXml": "XML im Browser ansehen"
     }
   },
   "es": {
     "action": {
       "def": "Definición",
       "viewXml": "Ver el XML en el navegador",
-      "downloadXForm": "Descargar como XForm",
-      "downloadXlsForm": "Descargar como XLSForm"
+      "downloadXForm": "Descarga como Xform (.xml)",
+      "downloadXlsForm": "Descarga como XLSForm ({extension})"
     }
   },
   "fr": {
     "action": {
       "def": "Définition",
-      "viewXml": "Aperçu XML",
-      "downloadXForm": "Télécharger le XML",
-      "downloadXlsForm": "Télécharger le XLSForm"
+      "viewXml": "Aperçu XML"
     }
   },
   "id": {
     "action": {
       "def": "Definisi",
-      "viewXml": "Lihat XML di browser",
-      "downloadXForm": "Unduh sebagai XForm",
-      "downloadXlsForm": "Unduh sebagai XLSForm"
+      "viewXml": "Lihat XML di browser"
     }
   },
   "ja": {
     "action": {
-      "def": "定義",
+      "def": "定義フォーム",
       "viewXml": "XMLをブラウザで表示する",
-      "downloadXForm": "XFormとしてダウンロード",
-      "downloadXlsForm": "XLSFormとしてダウンロード"
+      "downloadXForm": "XFormとしてダウンロード（.xml形式）",
+      "downloadXlsForm": "XLSFormとしてダウンロード（{extension}形式）"
     }
   }
 }

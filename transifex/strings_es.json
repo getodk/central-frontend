@@ -277,7 +277,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "comment": {
-      "string": "",
+      "string": "Comentario",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -345,7 +345,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "review": {
-      "string": "",
+      "string": "Revisar",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -363,7 +363,7 @@
   },
   "field": {
     "comment": {
-      "string": "",
+      "string": "Deja un comentario…",
       "developer_comment": "This is the text of a form field."
     },
     "dateRange": {
@@ -403,7 +403,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "reviewState": {
-      "string": "",
+      "string": "Estado de revisión",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -450,7 +450,7 @@
     },
     "submissionDate": {
       "string": "Enviado a",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
     },
     "time": {
       "string": "Tiempo",
@@ -546,6 +546,11 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
+  "alert": {
+    "updateReviewState": {
+      "string": "Estado de revisión guardado!"
+    }
+  },
   "moreInfo": {
     "clickHere": {
       "full": {
@@ -596,7 +601,7 @@
   },
   "common": {
     "activity": {
-      "string": "",
+      "string": "Actividad",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "anybody": {
@@ -812,11 +817,11 @@
         "0": {
           "warning": {
             "full": {
-              "string": "",
+              "string": "Actualmente, esta copia de seguridad no incluye enlaces a formularios web. Si comparte enlaces de acceso público o un enlace externo directamente a formularios web para realizar nuevos envíos, le recomendamos encarecidamente que también haga una copia de seguridad completa del sistema hasta que se solucione este problema. Si tiene que restaurar desde la copia de seguridad y termina con enlaces de vista previa rotos, publique en el {forum} para obtener ayuda.",
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
             },
             "forum": {
-              "string": "",
+              "string": "el foro",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
             }
           },
@@ -1351,7 +1356,7 @@
           "string": "{count, plural, one {Por favor espere, cargando su {count} archivo:} other {Por favor espere, cargando sus {count} archivos:}}"
         },
         "current": {
-          "string": "Enviando {filename}",
+          "string": "Enviando {filename} ({percentUploaded})",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -1785,6 +1790,10 @@
         "1": {
           "string": "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
         }
+      },
+      "collectProjectName": {
+        "string": "",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -2057,12 +2066,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "Descargar como XForm",
+          "string": "Descarga como Xform (.xml)",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
-          "string": "Descargar como XLSForm",
-          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
+          "string": "Descarga como XLSForm ({extension})",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -2148,7 +2157,7 @@
     },
     "NavbarLocaleDropdown": {
       "helpTranslate": {
-        "string": "",
+        "string": "Ayuda a traducir Central",
         "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
       }
     },
@@ -2950,7 +2959,7 @@
     },
     "SubmissionBasicDetails": {
       "reviewState": {
-        "string": ""
+        "string": "Estado de revisión"
       },
       "deviceId": {
         "string": "ID del dispositivo"
@@ -2972,10 +2981,10 @@
     },
     "SubmissionComment": {
       "editWithoutComment": {
-        "string": ""
+        "string": "Ha realizado modificaciones en estos datos. Describe los cambios que hiciste."
       },
       "markdownSupported": {
-        "string": "",
+        "string": "soporte Markdown",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
@@ -3055,57 +3064,57 @@
         "updateReviewState": {
           "null": {
             "full": {
-              "string": "",
+              "string": "{reviewState} por {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
             },
             "reviewState": {
-              "string": "",
+              "string": "Recibido",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
           "hasIssues": {
             "full": {
-              "string": "",
+              "string": "{reviewState} por {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
             },
             "reviewState": {
-              "string": "",
+              "string": "Tiene problemas",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
           "edited": {
             "full": {
-              "string": "",
+              "string": "{reviewState} por {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
             },
             "reviewState": {
-              "string": "",
+              "string": "Editado",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
           "approved": {
             "full": {
-              "string": "",
+              "string": "{reviewState} por {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
             },
             "reviewState": {
-              "string": "",
+              "string": "Aprobado",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
           "rejected": {
             "full": {
-              "string": "",
+              "string": "{reviewState} por {name}",
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
             },
             "reviewState": {
-              "string": "",
+              "string": "Rechazado",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           }
         },
         "comment": {
-          "string": "",
+          "string": "Comentario por {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
         }
       }
@@ -3155,7 +3164,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(Cualquier estado)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
@@ -3221,36 +3230,31 @@
     "SubmissionShow": {
       "back": {
         "title": {
-          "string": "",
+          "string": "Detalle de envío",
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
-          "string": "",
+          "string": "Volver a la tabla de envíos",
           "developer_comment": "This is shown at the top of the page."
-        }
-      },
-      "alert": {
-        "updateReviewState": {
-          "string": ""
         }
       }
     },
     "SubmissionTable": {
       "header": {
         "stateAndActions": {
-          "string": "",
+          "string": "Estado y acciones",
           "developer_comment": "This is the text of a table column header."
         }
       }
     },
     "SubmissionUpdateReviewState": {
       "title": {
-        "string": "",
+        "string": "Actualizar estado de revisión",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "field": {
         "notes": {
-          "string": "",
+          "string": "Notas y comentarios (opcional)",
           "developer_comment": "This is the text of a form field."
         }
       }

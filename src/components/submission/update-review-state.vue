@@ -181,6 +181,12 @@ export default {
       "notes": "Notizen und Kommentare (optional)"
     }
   },
+  "es": {
+    "title": "Actualizar estado de revisión",
+    "field": {
+      "notes": "Notas y comentarios (opcional)"
+    }
+  },
   "fr": {
     "title": "Changer l'état de la soumission",
     "field": {

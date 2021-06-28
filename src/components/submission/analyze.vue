@@ -388,11 +388,11 @@ export default {
     }
   },
   "ja": {
-    "title": "ODataを利用",
+    "title": "ODataの利用",
     "introduction": [
-      "ODataは、ツールとサービス間での新しいデータ転送の標準です。マイクロソフト社のエクセルのような無料で強力な解析ツール、{powerBi}や{r}はODataを介してデータを取り込み、解析することが可能です。",
-      "ODataには多くの利点がありますが、重要なのは、数字や地理データのような複雑なタイプの転送を完全にサポートしていることです。また、それを使用しているどのツールとも簡単に最新版のデータを同期させることができることです。",
-      "ODdataの利用を始めるにあたり、利用するツールを選び、そのツールにリンクをコピーしてください。"
+      "ODataは、ツールとサービス間でのデータ転送の新標準です。マイクロソフト社のエクセルのような強力な無料解析ツール、{powerBi}や{r}はODataを介してデータを取り込み、解析できます。",
+      "ODataには多くの利点があります。重要なのは、数字や地理データのような複雑なタイプの転送を完全にサポートしている点、また最新データをODataを使用する全てのツールに対して簡単に同期できる点です。",
+      "ODdataの利用を始めるには、利用するツールを選び、そのツールに以下のリンクをコピーして下さい。"
     ],
     "tab": {
       "microsoft": "Excel/Power BI",
@@ -400,13 +400,13 @@ export default {
     },
     "help": {
       "microsoft": {
-        "full": "エクセルでODataを使うには、{pageForExcel}を参照下さい。またPower BIを使う場合、{pageForPowerBi}を参照下さい。",
+        "full": "エクセルでODataを使う場合、{pageForExcel}を参照して下さい。またPower BIを使う場合、{pageForPowerBi}を参照して下さい。",
         "pageForExcel": "このページ",
         "pageForPowerBi": "このページ"
       },
       "r": [
         {
-          "full": "{r}からCentralのデータにアクセスするには、{ruODK}を使うことを推奨しています。ruODKのvignettesにある{oData}と{restful}APIの両方の利用例を参照して下さい。",
+          "full": "{r}からCentralのデータにアクセスするには、{ruODK}の利用を推奨しています。ruODKのマニュアルにある{oData}と{restful}APIの両方の利用例を参照して下さい。",
           "restful": "RESTful"
         },
         {
@@ -415,8 +415,8 @@ export default {
         }
       ],
       "other": {
-        "full": "ODataのサポートの全詳細に関しては、{article}をご覧ください。",
-        "article": "この記事"
+        "full": "ODataに関するサポートの詳細は、{article}を参照して下さい。",
+        "article": "こちら"
       }
     }
   }

@@ -149,6 +149,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "es": {
+    "reviewState": "Estado de revisión",
     "deviceId": "ID del dispositivo",
     "attachments": "Archivos multimedia",
     "present": "{count} file | {count} files",
@@ -171,8 +172,8 @@ export default {
     "reviewState": "レビュー・ステータス",
     "deviceId": "デバイスID",
     "attachments": "メディアファイル",
-    "present": "ファイル数：{count}",
-    "expected": "推定{count}件のサブミッション",
+    "present": "{count}件の提出済メディアファイル",
+    "expected": "{count}件の期待されるメディアファイル数",
     "attachmentSummary": "{present} / {expected}"
   }
 }

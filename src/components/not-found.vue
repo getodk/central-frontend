@@ -57,7 +57,7 @@ export default {
     "body": "Laman yang Anda minta tidak ditemui."
   },
   "ja": {
-    "body": "リクエストされたページは見つかりません"
+    "body": "リクエストされたページは見つかりません。"
   }
 }
 </i18n>
