@@ -99,7 +99,7 @@ export default {
   "ja": {
     "header": {
       "published": "公開済み",
-      "definition": "定義"
+      "definition": "定義フォーム"
     }
   }
 }

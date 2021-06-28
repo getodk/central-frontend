@@ -164,19 +164,24 @@ export default {
 <i18n>
 {
   "cs": {
-    "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
+    "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny.",
+    "markdownSupported": "Podporován formát Markdown"
   },
   "de": {
     "editWithoutComment": "Sie haben die Daten geändert. Bitte beschreiben Sie die Änderungen, die Sie gemacht haben.",
     "markdownSupported": "unterstützt durch Markdown"
+  },
+  "es": {
+    "editWithoutComment": "Ha realizado modificaciones en estos datos. Describe los cambios que hiciste.",
+    "markdownSupported": "soporte Markdown"
   },
   "fr": {
     "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements.",
     "markdownSupported": "Markdown disponible"
   },
   "ja": {
-    "editWithoutComment": "データが編集されました。あなたが行った変更について説明してください。",
-    "markdownSupported": "Markdown形式をサポート"
+    "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。",
+    "markdownSupported": "Markdown形式をサポートしています。"
   }
 }
 </i18n>

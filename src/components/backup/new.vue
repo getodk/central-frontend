@@ -322,6 +322,10 @@ export default {
     "title": "Configurar copias de seguridad.",
     "steps": [
       {
+        "warning": {
+          "full": "Actualmente, esta copia de seguridad no incluye enlaces a formularios web. Si comparte enlaces de acceso público o un enlace externo directamente a formularios web para realizar nuevos envíos, le recomendamos encarecidamente que también haga una copia de seguridad completa del sistema hasta que se solucione este problema. Si tiene que restaurar desde la copia de seguridad y termina con enlaces de vista previa rotos, publique en el {forum} para obtener ayuda.",
+          "forum": "el foro"
+        },
         "introduction": [
           "Si usted quiere, puede configurar una frase de contraseña de cifrado que debe usarse para desbloquear la copia de seguridad.",
           "¡No hay forma de recuperar la frase de contraseña si la pierde!",
@@ -441,41 +445,41 @@ export default {
     "steps": [
       {
         "warning": {
-          "full": "このバックアップには現在、Webフォームのリンクは含まれていません。一般公開リンクを共有している場合や、新規サブミッションのために外部からWebフォームに直接リンクしている場合、この問題が解決するまで、システムのフルバックアップを行うことを強く推奨します。もしバックアップから復元する場合にプレビューリンクが壊れたままの場合、{forum}に状況を投稿し、サポートを受けてください。",
+          "full": "このバックアップには、現在、Webフォームのリンクは含まれていません。一般公開リンクを共有している場合や、新規のフォーム提出のためにWebフォームに外部から直接リンクしている場合、この問題が解決するまでシステムのフルバックアップを行うことを強く推奨します。もしバックアップから復元する場合にプレビューリンクが壊れたままの場合、{forum}に状況を投稿し、サポートを受けて下さい。",
           "forum": "フォーラム"
         },
         "introduction": [
-          "ご希望であれば、暗号化パスフレーズを設定できます。暗号化パスフレーズはバックアップの復号時に不可欠です。",
-          "パスフレーズを忘れた場合、リカバーする方法はありません！",
+          "暗号化パスフレーズを設定できますが、暗号化パスフレーズはバックアップの復号時に必ず必要です。",
+          "パスフレーズを忘れた場合、復元する方法はありません！",
           "覚えやすいものを選ぶか、安全な場所に書き留めて下さい。"
         ]
       },
       {
         "introduction": [
           {
-            "full": "保管のために、サーバーはデータをGoogle Driveに送信します。{here}で無料のアカウントを登録することができます 。",
-            "here": "ここ"
+            "full": "保管のために、サーバーはデータをGoogle Driveに送信します。{here}で無料のアカウントを登録できます 。",
+            "here": "こちら"
           },
-          "次へを押すと、Googleは、サーバーがあなたのアカウントにアクセス許可することを確認します。サーバーがアクセスができるのは、作成したバックアップファイルのみです。",
-          "これを確認すると、いくつかのテキストをここにコピー＆ペーストするよう求められます。"
+          "「次へ」を押すと、Googleによって、このサーバーがあなたのGoogleアカウントにアクセス許可を与えるか、が確認されます。サーバーに許されるのは、サーバーが作成したバックアップファイルへのアクセスのみです。",
+          "承認後、確認用の文字列をここにコピー＆ペーストすることを要求されます。"
         ]
       },
       {
         "introduction": [
           {
-            "full": "おかえりなさい！コピー＆ペースト用のテキストは出てきましたか？見つからない場合は、{here}をクリックしてもう一度試してください。",
-            "here": "ここ"
+            "full": "おかえりなさい！コピー＆ペースト用のテキストは出てきましたか？見つからない場合は、{here}をクリックしてもう一度試して下さい。",
+            "here": "こちら"
           },
-          "または、これをペーストして終わりです！"
+          "問題なければ、これをペーストして終わりです！"
         ]
       }
     ],
     "field": {
       "passphrase": "パスフレーズ（任意）",
-      "confirmationText": "確認用テキスト"
+      "confirmationText": "確認用の文字列"
     },
     "problem": {
-      "verify": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認してください。"
+      "verify": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認して下さい。"
     }
   }
 }

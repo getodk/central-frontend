@@ -191,12 +191,12 @@ export default {
     "state": {
       "title": "フォームの状態",
       "body": {
-        "full": "フォームの状態を設定するには、各プロジェクトのページ{formAccessSettings}を訪問して下さい。",
+        "full": "このフォームの状態を設定するには、各プロジェクトの{formAccessSettings}を確認して下さい。",
         "formAccessSettings": "フォームアクセスの設定"
       }
     },
     "action": {
-      "delete": "このフォームを削除"
+      "delete": "フォームを削除"
     },
     "alert": {
       "delete": "フォーム\"{name}\"は削除されました。"

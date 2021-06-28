@@ -97,8 +97,8 @@ export default {
   },
   "ja": {
     "header": {
-      "initiator": "イニシエーター",
-      "target": "ターゲット",
+      "initiator": "操作者",
+      "target": "操作の対象",
       "details": "詳細"
     }
   }

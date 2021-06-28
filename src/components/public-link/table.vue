@@ -101,7 +101,7 @@ export default {
   },
   "ja": {
     "header": {
-      "once": "単一のサブミッション",
+      "once": "一回限りのデータ提出機能",
       "accessLink": "アクセスリンク"
     }
   }

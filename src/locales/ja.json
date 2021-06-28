@@ -4,7 +4,7 @@
     "setPassword": "パスワードの設定",
     "editProfile": "プロフィールを編集",
     "download": "ダウンロード",
-    "pageNotFound": "ページが見つかりません",
+    "pageNotFound": "ページが見つかりません。",
     "details": "詳細"
   },
   "projectShow": {
@@ -55,19 +55,19 @@
   "audit": {
     "category": {
       "nonverbose": "（すべての操作）",
-      "user": "Webユーザーの操作",
-      "project": "プロジェクトの操作",
-      "form": "フォームの操作",
-      "field_key": "アプリユーザーの操作",
-      "public_link": "一般公開リンクの操作",
-      "config": "サーバー設定の操作",
+      "user": "Webユーザーに対する操作",
+      "project": "プロジェクトに対する操作",
+      "form": "フォームに対する操作",
+      "field_key": "アプリユーザーに対する操作",
+      "public_link": "一般公開リンクに対する操作",
+      "config": "サーバー設定に対する操作",
       "upgrade": "サーバーの更新"
     },
     "action": {
       "default": {
         "create": "作成",
         "update": "詳細の更新",
-        "session_end": "廃止",
+        "session_end": "無効化",
         "delete": "削除"
       },
       "backup": "バックアップ",
@@ -76,7 +76,7 @@
       },
       "field_key": {
         "assignment_create": "アクセス権の付与",
-        "assignment_delete": "アクセス権の剥奪",
+        "assignment_delete": "アクセス権の取消",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
@@ -85,7 +85,7 @@
         "update_draft_set": "下書きの作成・更新",
         "update_publish": "下書きの公開",
         "update_draft_delete": "下書きの削除",
-        "attachment_update": "アタッチメントの更新",
+        "attachment_update": "メディアファイルの更新",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -98,11 +98,11 @@
         "delete": "@:audit.action.default.delete"
       },
       "upgrade": {
-        "process_form": "フォームをプロセスする",
-        "process_form_draft": "下書きフォームをプロセスする"
+        "process_form": "フォームの処理",
+        "process_form_draft": "下書きフォームの処理"
       },
       "user": {
-        "assignment_create": "役割の割り当て",
+        "assignment_create": "役割の指定",
         "assignment_delete": "役割の取消",
         "delete": "除外",
         "create": "@:audit.action.default.create",
@@ -117,33 +117,33 @@
   },
   "action": {
     "cancel": "キャンセル",
-    "clear": "クリア",
+    "clear": "クリアする",
     "close": "閉じる",
     "comment": "コメント",
     "create": "作成",
-    "createSubmission": "新規",
+    "createSubmission": "新規作成",
     "done": "完了",
     "download": "ダウンロード",
     "edit": "編集",
     "editProfile": "プロフィールを編集",
     "logIn": "ログイン",
-    "looksGood": "進んで問題ありません",
-    "more": "さらに",
-    "neverMind": "キャンセルに問題ありません",
+    "looksGood": "進んで問題ありません。",
+    "more": "詳細",
+    "neverMind": "大丈夫です、キャンセルします。",
     "next": "次へ",
-    "noCancel": "いいえ、キャンセル",
+    "noCancel": "いいえ、キャンセルします。",
     "ok": "OK",
-    "proceed": "進む",
+    "proceed": "次へ進む",
     "refresh": "更新",
     "resetPassword": "パスワードのリセット",
     "review": "レビュー",
     "save": "保存",
-    "update": "アップデート",
-    "yesProceed": "はい、進みます"
+    "update": "更新",
+    "yesProceed": "はい、続けます。"
   },
   "field": {
-    "comment": "コメントを残す",
-    "dateRange": "日付範囲",
+    "comment": "コメントを残す...",
+    "dateRange": "期間",
     "displayName": "表示名",
     "email": "メールアドレス",
     "name": "名前",
@@ -162,10 +162,10 @@
     "displayName": "表示名",
     "email": "メールアドレス",
     "instanceId": "インスタンスID",
-    "lastSubmission": "最終サブミッション",
+    "lastSubmission": "最新のフォーム提出日時",
     "name": "名前",
-    "submitterName": "フォームの送信者",
-    "submissionDate": "フォームの送信日時",
+    "submitterName": "フォーム提出者",
+    "submissionDate": "フォームの提出日時",
     "time": "時刻",
     "type": "タイプ"
   },
@@ -173,13 +173,13 @@
     "appUser": "アプリユーザー",
     "form": "フォーム",
     "project": "プロジェクト",
-    "submission": "サブミッション",
+    "submission": "提出済フォーム",
     "webUser": "Webユーザー"
   },
   "count": {
-    "appUser": "アプリユーザー数：{count}",
-    "form": "フォーム数：{count}",
-    "submission": "サブミッション数：{count}"
+    "appUser": "{count}名のアプリユーザー",
+    "form": "{count}件のフォーム",
+    "submission": "{count}件の提出済フォーム"
   },
   "resource": {
     "appUser": "アプリユーザー",
@@ -193,33 +193,36 @@
     "webUser": "Webユーザー",
     "webUsers": "Webユーザー",
     "session": "セッション",
-    "submissions": "サブミッション",
+    "submissions": "提出済フォーム",
     "projectRoles": "プロジェクトでの役割"
+  },
+  "alert": {
+    "updateReviewState": "レビュー・ステータス保存完了！"
   },
   "moreInfo": {
     "clickHere": {
-      "full": "さらに詳細を表示するには、{clickHere}。",
-      "clickHere": "ここをクリック"
+      "full": "さらに詳細を表示するには、{clickHere}して下さい。",
+      "clickHere": "こちらをクリック"
     },
     "helpArticle": {
       "full": "さらに詳細を表示するには、{helpArticle}を参照して下さい。",
-      "helpArticle": "ヘルプ"
+      "helpArticle": "こちらのヘルプ"
     },
-    "learnMore": "さらに詳しく"
+    "learnMore": "さらに詳しく知る。"
   },
   "submission": {
-    "missingMedia": "メディアが見つかりません",
+    "missingMedia": "メディアファイルが見つかりません",
     "action": {
-      "edit": "編集数（{count}）"
+      "edit": "編集回数（{count}）"
     },
-    "editDisabled": "暗号化されたサブミッションは編集できません",
-    "binaryLinkTitle": "ファイルがサブミットされました。クリックしてダウンロード",
-    "encryptionMessage": "暗号化のためにデータプレビューは利用できません"
+    "editDisabled": "暗号化され、提出済フォームは編集できません。",
+    "binaryLinkTitle": "ファイルが提出されました。クリックしてダウンロードします。",
+    "encryptionMessage": "暗号化されているのため、データプレビューは利用できません。"
   },
   "common": {
     "activity": "アクティビティ",
     "anybody": "（全員）",
-    "areYouSure": "本当に進んで問題ないですか？",
+    "areYouSure": "本当に続けて問題ないですか？",
     "basicInfo": "基本情報",
     "currentDraft": "現在の下書き",
     "dangerZone": "危険エリア",
@@ -227,7 +230,7 @@
     "no": "いいえ",
     "noResults": "該当なし",
     "rightNow": "現在の状況",
-    "success": "成功！",
+    "success": "成功です！",
     "yes": "はい",
     "tab": {
       "settings": "設定",
@@ -237,7 +240,7 @@
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "ファイル\"{name}\"は、100MB制限を超過しています。"
+        "fileSize": "アップロードを試みているファイル\"{name}\"は、100MB制限を超過しています。"
       }
     }
   },
@@ -255,19 +258,19 @@
       "yesterday": "昨日"
     },
     "request": {
-      "noRequest": "不具合発生：リクエストがありません",
-      "noResponse": "不具合発生：リクエストに対する応答がありません",
-      "errorNotProblem": "不具合発生：エラーコード{status}"
+      "noRequest": "問題発生：リクエストがありません。",
+      "noResponse": "問題発生：リクエストへの応答がありません。",
+      "errorNotProblem": "問題発生：エラーコード{status}"
     },
     "session": {
       "alert": {
-        "expiresSoon": "あなたのセッションが2分後に有効期限がきれ、自動的にログアウトされます。",
+        "expiresSoon": "あと2分でセッションの有効期限が切れ、自動的にログアウトされます。",
         "expired": "セッションの有効期限が切れています。 作業を続けるには、再度ログインして下さい。",
-        "logoutError": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みてください。{message}"
+        "logoutError": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みて下さい。{message}"
       }
     }
   },
   "router": {
-    "unsavedChanges": "このページを終了してもよろしいですか？あなたの変更は保存されないかもしれません。"
+    "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
   }
 }

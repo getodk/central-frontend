@@ -205,9 +205,9 @@ export default {
   "ja": {
     "action": {
       "download": {
-        "unfiltered": "{count}レコードのダウンロード",
+        "unfiltered": "{count}件のレコードのダウンロード",
         "filtered": {
-          "withoutCount": "該当レコードのダウンロード",
+          "withoutCount": "照合されたレコードのダウンロード",
           "withCount": "{count}件の該当レコードのダウンロード"
         },
         "withMedia": "全データとメディアファイルの保存（.zip形式）",

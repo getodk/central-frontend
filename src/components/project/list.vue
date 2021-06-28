@@ -547,7 +547,7 @@ export default {
   "ja": {
     "heading": [
       "Centralへようこそ",
-      "何かをやり遂げましょう"
+      "頑張って成し遂げましょう！"
     ],
     "gettingStarted": {
       "title": "はじめに",
@@ -557,7 +557,7 @@ export default {
           "docsWebsite": "ODK DocsのWebサイト"
         },
         {
-          "full": "また、{forum}では、過去の質問を検索したり、自分の質問をしたりして、いつでも他の人の助けを得ることができます。",
+          "full": "また、{forum}では、過去の質問を検索、または自分で質問をすることで、いつでもコミュニティメンバーの助けを得られます。",
           "forum": "ODKコミュニティーフォーラム"
         }
       ]
@@ -566,27 +566,27 @@ export default {
     "rightNow": {
       "users": {
         "full": [
-          "{webUsers}は、このWebサイトでプロジェクトの管理ができます。"
+          "{webUsers}は、プロジェクトの管理ができます。"
         ],
         "webUsers": "Webユーザー"
       },
       "projects": {
         "full": [
-          "{projects}はデバイスに対してフォームとアプリユーザーの管理を行えます。"
+          "{projects}はデバイスに対してフォームとアプリユーザーの管理ができます。"
         ],
         "projects": "プロジェクト"
       }
     },
     "projectsTitle": "プロジェクト",
     "action": {
-      "create": "新規"
+      "create": "新規作成"
     },
     "header": {
       "forms": "フォーム"
     },
-    "emptyTable": "あなたが閲覧できるプロジェクトはありません",
+    "emptyTable": "あなたが閲覧できるプロジェクトはありません。",
     "alert": {
-      "create": "あなたの新規プロジェクトは正しく作成されました"
+      "create": "新規プロジェクトは正しく作成されました。"
     }
   }
 }

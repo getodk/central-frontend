@@ -21,7 +21,7 @@
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "details": {
-      "string": "",
+      "string": "Detaily",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
@@ -403,7 +403,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "reviewState": {
-      "string": "",
+      "string": "Přezkoumání stavu",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -450,7 +450,7 @@
     },
     "submissionDate": {
       "string": "Odesláno v",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
     },
     "time": {
       "string": "Čas",
@@ -544,6 +544,11 @@
     "projectRoles": {
       "string": "Role projektu",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
+  "alert": {
+    "updateReviewState": {
+      "string": "Stav kontroly uložen!"
     }
   },
   "moreInfo": {
@@ -1351,7 +1356,7 @@
           "string": "{count, plural, one {Čekejte prosím, nahráváme {count} soubor:} few {Čekejte prosím, nahráváme {count} soubory:} many {Čekejte prosím, nahráváme {count} souborů:} other {Čekejte prosím, nahráváme {count} souborů:}}"
         },
         "current": {
-          "string": "Odesílání {filename}",
+          "string": "Odesílání {filename} ({percentUploaded})",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -1785,6 +1790,10 @@
         "1": {
           "string": "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
         }
+      },
+      "collectProjectName": {
+        "string": "[Návrh] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -2057,12 +2066,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "Stáhnout jako XForm",
+          "string": "Stáhnout jako XForm (.xml)",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
-          "string": "Stáhnout jako XLSForm",
-          "developer_comment": "This is the text of a link to download a Form definition. The word \"XLSForm\" should not be translated."
+          "string": "Stáhnout jako XLSForm ({extension})",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
       }
     },
@@ -2148,7 +2157,7 @@
     },
     "NavbarLocaleDropdown": {
       "helpTranslate": {
-        "string": "",
+        "string": "Nápověda k překladu Central",
         "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
       }
     },
@@ -2975,7 +2984,7 @@
         "string": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
       },
       "markdownSupported": {
-        "string": "",
+        "string": "Podporován formát Markdown",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
@@ -3155,7 +3164,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(jakýkoliv stav)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
@@ -3227,11 +3236,6 @@
         "back": {
           "string": "Zpět k tabulce odeslání",
           "developer_comment": "This is shown at the top of the page."
-        }
-      },
-      "alert": {
-        "updateReviewState": {
-          "string": "Stav kontroly uložen!"
         }
       }
     },

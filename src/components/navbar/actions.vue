@@ -135,12 +135,12 @@ export default {
     }
   },
   "ja": {
-    "notLoggedIn": "未ログイン状態",
+    "notLoggedIn": "ログイン",
     "action": {
       "logOut": "ログアウト"
     },
     "alert": {
-      "logOut": "ログアウト成功"
+      "logOut": "ログアウトに成功しました。"
     }
   }
 }

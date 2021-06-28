@@ -227,19 +227,19 @@ export default {
   },
   "ja": {
     "version": {
-      "full": "このフォームの{publishedVersion}",
-      "publishedVersion": "公開されたバージョン"
+      "full": "フォームの{publishedVersion}",
+      "publishedVersion": "公開バージョン"
     },
     "stateCaption": {
-      "open": "このフォームはダウンロード可能で、サブミッションを受け付けています。",
-      "closing": "このフォームはダウンロードできませんが、サブミッションは受け付けています。",
-      "closed": "このフォームはダウンロードできませんし、サブミッションも受け付けていません。"
+      "open": "このフォームはダウンロードでき、フォームの提出も受け付けています。",
+      "closing": "このフォームはダウンロードできませんが、フォームの提出は受け付けています。",
+      "closed": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
     },
     "submissions": {
       "full": [
-        "このフォームの{submissions}は保存されました。"
+        "このフォームへの{submissions}は保存されました。"
       ],
-      "submissions": "サブミッション"
+      "submissions": "提出"
     }
   }
 }

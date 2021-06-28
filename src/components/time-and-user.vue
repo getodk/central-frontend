@@ -83,7 +83,7 @@ export default {
     "text": "{dateTime} oleh {displayName}"
   },
   "ja": {
-    "text": "{displayName}が実施 {dateTime}"
+    "text": "{displayName}が{dateTime}の時点で実施"
   }
 }
 </i18n>

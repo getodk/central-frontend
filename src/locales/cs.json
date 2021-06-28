@@ -4,7 +4,8 @@
     "setPassword": "Nastavit heslo",
     "editProfile": "Upravit profil",
     "download": "Stáhnout",
-    "pageNotFound": "Stránka nenalezena"
+    "pageNotFound": "Stránka nenalezena",
+    "details": "Detaily"
   },
   "projectShow": {
     "tab": {
@@ -151,6 +152,7 @@
     "passphrase": "Přístupová fráze",
     "password": "Heslo",
     "passwordConfirm": "Nové heslo (potvrzení)",
+    "reviewState": "Přezkoumání stavu",
     "type": "Typ"
   },
   "header": {
@@ -193,6 +195,9 @@
     "session": "Relace",
     "submissions": "Příspěvky",
     "projectRoles": "Role projektu"
+  },
+  "alert": {
+    "updateReviewState": "Stav kontroly uložen!"
   },
   "moreInfo": {
     "clickHere": {

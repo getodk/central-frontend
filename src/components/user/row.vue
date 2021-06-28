@@ -229,7 +229,7 @@ export default {
     }
   },
   "ja": {
-    "cannotAssignRole": "あなたは自分自身のサーバーでの役割を編集できません。",
+    "cannotAssignRole": "自分自身のサーバーでの役割を編集できません。",
     "field": {
       "sitewideRole": "サーバーでの役割"
     },

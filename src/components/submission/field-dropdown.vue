@@ -391,15 +391,15 @@ export default {
     }
   },
   "ja": {
-    "placeholder": "{total}の内{selected}",
+    "placeholder": "{total}列の内{selected}列",
     "field": {
       "columns": "表示された列",
       "search": "列を検索"
     },
-    "disabled": "100以上の列は選択できません",
+    "disabled": "100以上の列は選択できません。",
     "action": {
       "select": {
-        "full": "選択状況 {all}/{none}",
+        "full": "選択設定 {all}/{none}",
         "all": "全て",
         "none": "なし"
       }

@@ -185,36 +185,30 @@ export default {
     "back": {
       "title": "Detail odeslání",
       "back": "Zpět k tabulce odeslání"
-    },
-    "alert": {
-      "updateReviewState": "Stav kontroly uložen!"
     }
   },
   "de": {
     "back": {
       "title": "Übermittlungsdetail",
       "back": "Zurück zur Übermittlungstabelle"
-    },
-    "alert": {
-      "updateReviewState": "Überprüfungsstatus gespeichert!"
+    }
+  },
+  "es": {
+    "back": {
+      "title": "Detalle de envío",
+      "back": "Volver a la tabla de envíos"
     }
   },
   "fr": {
     "back": {
       "title": "Détails de la soumission",
       "back": "Retour au tableau de soumissions"
-    },
-    "alert": {
-      "updateReviewState": "État sauvegardé!"
     }
   },
   "ja": {
     "back": {
-      "title": "サブミッションの詳細",
-      "back": "サブミッション・テーブルに戻る"
-    },
-    "alert": {
-      "updateReviewState": "レビュー・ステータス保存完了！"
+      "title": "提出フォームの詳細",
+      "back": "提出フォームの一覧に戻る"
     }
   }
 }
