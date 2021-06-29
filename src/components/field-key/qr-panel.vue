@@ -73,26 +73,31 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import FieldKey from '../../presenters/field-key';
 import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FieldKeyQrPanel',
   components: { CollectQr, DocLink, SentenceSeparator },
   props: {
-    fieldKey: FieldKey, // eslint-disable-line vue/require-default-prop
-    managed: {
-      type: Boolean,
-      default: false
-    }
+    fieldKey: FieldKey,
+    managed: Boolean
   },
   computed: {
+    ...requestData(['project']),
     settings() {
-      const { token, projectId } = this.fieldKey;
+      const url = apiPaths.serverUrlForFieldKey(
+        this.fieldKey.token,
+        this.project.id
+      );
       const settings = {
-        server_url: apiPaths.serverUrlForFieldKey(token, projectId)
+        general: { server_url: `${window.location.origin}${url}` },
+        project: { name: this.project.name },
+        // Collect requires the settings to have an `admin` property.
+        admin: {}
       };
       if (this.managed) {
-        settings.form_update_mode = 'match_exactly';
-        settings.autosend = 'wifi_and_cellular';
+        settings.general.form_update_mode = 'match_exactly';
+        settings.general.autosend = 'wifi_and_cellular';
       }
       return settings;
     }
@@ -373,36 +378,36 @@ export default {
   "ja": {
     "title": {
       "managed": "クライアントの設定コード",
-      "legacy": "Legacyクライアントの設定コード"
+      "legacy": "従来のクライアント設定コード"
     },
     "body": [
       {
         "managed": {
-          "full": "これは{managedCode}です",
-          "managedCode": "Managed QRコード"
+          "full": "これは{managedCode}です。",
+          "managedCode": "管理型のQRコード"
         },
         "legacy": {
-          "full": "これは{legacyCode}です",
-          "legacyCode": "Legacy QRコード"
+          "full": "これは{legacyCode}です。",
+          "legacyCode": "従来型のQRコード"
         }
       },
       {
         "managed": "ODK Collectは、「{displayName}」で利用可能なフォームと完全に一致し、アップデートも自動的に適用されます。ユーザーが手動で空フォームを取得する必要はありません。さらに、インターネット接続が見つかった時点で、確定済のフォームが自動的に送信されます。",
-        "legacy": "ユーザーは、手動でデバイスにに空フォームを取得し、更新するフォームを決定する必要があります。また、確定フォームを手動で送信する必要があります。"
+        "legacy": "ユーザーは、手動で端末に空フォームを取得し、更新するフォームを決定する必要があります。また、確定済フォームを手動で提出する必要があります。"
       },
       {
         "managed": {
-          "full": "以前のバージョン、{switchToLegacy}",
-          "switchToLegacy": "{legacyCode}に切り替える",
-          "legacyCode": "Legacy QRコード"
+          "full": "従来通りの操作のためには、{switchToLegacy}",
+          "switchToLegacy": "{legacyCode}に切り替える。",
+          "legacyCode": "従来型のQRコード"
         },
         "legacy": {
-          "full": "よりコントロールされた、確実なプロセスのためには、{switchToManaged}。",
-          "switchToManaged": "{managedCode}に切り替える",
-          "managedCode": "Managed QRコード"
+          "full": "より管理された確実な処理のために、{switchToManaged}",
+          "switchToManaged": "{managedCode}に切り替える。",
+          "managedCode": "管理型のQRコード"
         }
       },
-      "このQRコードをスキャンして、アカウント名\"{displayName}\"のデバイスを設定する"
+      "このQRコードをスキャンして、アカウント名\"{displayName}\"の端末を設定する。"
     ]
   }
 }

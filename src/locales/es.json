@@ -119,6 +119,7 @@
     "cancel": "Cancelar",
     "clear": "Limpiar",
     "close": "Cerrar",
+    "comment": "Comentario",
     "create": "Crear",
     "createSubmission": "Nuevo",
     "done": "Listo",
@@ -135,11 +136,13 @@
     "proceed": "Continuar",
     "refresh": "Actualizar",
     "resetPassword": "Restablecer contraseña",
+    "review": "Revisar",
     "save": "Guardar",
     "update": "Actualizar",
     "yesProceed": "Si, continuar"
   },
   "field": {
+    "comment": "Deja un comentario…",
     "dateRange": "Rango de fecha",
     "displayName": "Nombre para mostrar",
     "email": "Correo electrónico",
@@ -149,6 +152,7 @@
     "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
+    "reviewState": "Estado de revisión",
     "type": "Tipo"
   },
   "header": {
@@ -192,6 +196,9 @@
     "submissions": "Envíos",
     "projectRoles": "Roles del proyecto"
   },
+  "alert": {
+    "updateReviewState": "Estado de revisión guardado!"
+  },
   "moreInfo": {
     "clickHere": {
       "full": "Para más información, {clickHere}.",
@@ -213,6 +220,7 @@
     "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado."
   },
   "common": {
+    "activity": "Actividad",
     "anybody": "(Cualquiera)",
     "areYouSure": "¿Está seguro que desea continuar?",
     "basicInfo": "Información básica",

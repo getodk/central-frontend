@@ -44,6 +44,14 @@
     "closing": "Menutup",
     "closed": "Tutup"
   },
+  "reviewState": {
+    "received": "Diterima",
+    "hasIssues": "Memiliki isu",
+    "edited": "Diedit",
+    "approved": "Disetujui",
+    "rejected": "Ditolak",
+    "null": "@:reviewState.received"
+  },
   "audit": {
     "category": {
       "nonverbose": "(Semua Tindakan)",
@@ -52,6 +60,7 @@
       "form": "Tindakan Formulir",
       "field_key": "Tindakan Pengguna Aplikasi",
       "public_link": "Tindakan Tautan Akses Publik",
+      "config": "Aksi Konfigurasi Peladen",
       "upgrade": "Peningkatan Server"
     },
     "action": {
@@ -62,7 +71,12 @@
         "delete": "Hapus"
       },
       "backup": "Pembuatan data cadangan",
+      "config": {
+        "set": "Set"
+      },
       "field_key": {
+        "assignment_create": "Memberi Akses",
+        "assignment_delete": "Menghapus Akses",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
@@ -77,6 +91,7 @@
         "delete": "@:audit.action.default.delete"
       },
       "public_link": {
+        "assignment_create": "Beri Akses",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"

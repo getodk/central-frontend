@@ -125,7 +125,7 @@ export default {
   "ja": {
     "title": "パスワードのリセット",
     "introduction": {
-      "full": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"\u003c{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送られます。",
+      "full": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"\u003c{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送信されます。",
       "resetPassword": "パスワードのリセット"
     }
   }

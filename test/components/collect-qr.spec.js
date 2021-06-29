@@ -8,7 +8,10 @@ import { wait } from '../util/util';
 
 const mountComponent = (propsData) => mount(CollectQr, {
   propsData: {
-    settings: { server_url: '/path' },
+    settings: {
+      general: { server_url: 'http://localhost:9876/path' },
+      admin: {}
+    },
     errorCorrectionLevel: 'L',
     cellSize: 1,
     ...propsData
@@ -36,28 +39,20 @@ describe('CollectQr', () => {
     childNodes[0].tagName.should.equal('IMG');
   });
 
-  describe('settings', () => {
-    it('prepends the origin to server_url', async () => {
-      const component = mountComponent({
-        settings: { server_url: '/path' }
-      });
-      // I think we need to wait for the image to render?
-      await wait();
-      qrData(component).should.eql({
+  it('encodes the settings', async () => {
+    const component = mountComponent({
+      settings: {
         general: { server_url: 'http://localhost:9876/path' },
+        project: { name: 'My Project' },
         admin: {}
-      });
+      }
     });
-
-    it('encodes other settings', async () => {
-      const component = mountComponent({
-        settings: { server_url: '/path', x: 'y' }
-      });
-      await wait();
-      qrData(component).should.eql({
-        general: { server_url: 'http://localhost:9876/path', x: 'y' },
-        admin: {}
-      });
+    // I think we need to wait for the image to render?
+    await wait();
+    qrData(component).should.eql({
+      general: { server_url: 'http://localhost:9876/path' },
+      project: { name: 'My Project' },
+      admin: {}
     });
   });
 

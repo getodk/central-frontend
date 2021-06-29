@@ -109,7 +109,7 @@ export default {
   "ja": {
     "action": {
       "apiAccess": "APIアクセス",
-      "analyze": "ODataで解析"
+      "analyze": "OData経由で解析"
     },
     "analyzeDisabled": "フォームの暗号化のため、ODataによるアクセスは利用できません"
   }

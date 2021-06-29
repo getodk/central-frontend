@@ -144,8 +144,8 @@ export default {
     }
   },
   "ja": {
-    "seeCode": "コードを表示",
-    "accessRevoked": "アクセス権の取り消し",
+    "seeCode": "QRコードを表示",
+    "accessRevoked": "アクセス権の取消済み",
     "action": {
       "revokeAccess": "アクセス権の取消"
     }

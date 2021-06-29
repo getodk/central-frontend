@@ -213,13 +213,13 @@ export default {
     }
   },
   "ja": {
-    "lastSubmission": "（最終{dateTime}）",
+    "lastSubmission": "（最終提出日時 {dateTime}）",
     "action": {
-      "fill": "フォームを記入"
+      "fill": "フォームに記入"
     },
-    "formClosedTip": "このフォームは終了しています。ダウンロードやサブミッションは出来ません。",
-    "formClosingTip": "このフォームはクロージング状態です。ダウンロードは出来ませんが、サブミッションは受け付けています。",
-    "formUnpublishedTip": "このフォームは公開バージョンがまだありません"
+    "formClosedTip": "このフォームは終了しています。ダウンロードやフォームの提出は出来ません。",
+    "formClosingTip": "このフォームはクロージング状態です。ダウンロードは出来ませんが、フォームの提出は受け付けています。",
+    "formUnpublishedTip": "このフォームは公開バージョンがまだありません。"
   }
 }
 </i18n>

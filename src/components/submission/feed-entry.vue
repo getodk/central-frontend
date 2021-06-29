@@ -303,7 +303,30 @@ Comment • {name} */
   },
   "es": {
     "title": {
-      "create": "Enviado por {name}"
+      "create": "Enviado por {name}",
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Recibido"
+        },
+        "hasIssues": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Tiene problemas"
+        },
+        "edited": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Editado"
+        },
+        "approved": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Aprobado"
+        },
+        "rejected": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Rechazado"
+        }
+      },
+      "comment": "Comentario por {name}"
     }
   },
   "fr": {
@@ -336,15 +359,15 @@ Comment • {name} */
   },
   "ja": {
     "title": {
-      "create": "{name}によるサブミッション",
+      "create": "{name}による提出済フォーム",
       "updateReviewState": {
         "null": {
-          "full": "{name}の{reviewState}",
-          "reviewState": "受信済"
+          "full": "{name}による{reviewState}報告",
+          "reviewState": "受信済み"
         },
         "hasIssues": {
-          "full": "{name}の{reviewState}",
-          "reviewState": "問題有"
+          "full": "{name}による{reviewState}報告",
+          "reviewState": "問題有り"
         },
         "edited": {
           "full": "{name}による{reviewState}",
@@ -352,11 +375,11 @@ Comment • {name} */
         },
         "approved": {
           "full": "{name}による{reviewState}",
-          "reviewState": "承認済"
+          "reviewState": "承認済み"
         },
         "rejected": {
           "full": "{name}による{reviewState}",
-          "reviewState": "リジェクト済"
+          "reviewState": "リジェクト済み"
         }
       },
       "comment": "{name}によるコメント"

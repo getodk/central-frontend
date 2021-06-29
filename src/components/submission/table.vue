@@ -226,6 +226,11 @@ export default {
       "stateAndActions": "Status und Aktionen"
     }
   },
+  "es": {
+    "header": {
+      "stateAndActions": "Estado y acciones"
+    }
+  },
   "fr": {
     "header": {
       "stateAndActions": "État et actions"
@@ -233,7 +238,7 @@ export default {
   },
   "ja": {
     "header": {
-      "stateAndActions": "ステータスとアクション"
+      "stateAndActions": "レビュー・ステータスと操作"
     }
   }
 }

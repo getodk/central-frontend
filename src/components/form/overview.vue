@@ -249,7 +249,7 @@ export default {
       },
       "any": {
         "versionCaption": {
-          "full": "このフォームのバージョン：{draftVersion}",
+          "full": "このフォームの{draftVersion}",
           "draftVersion": "下書きバージョン"
         }
       }
