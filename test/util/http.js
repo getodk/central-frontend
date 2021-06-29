@@ -13,7 +13,7 @@ import testData from '../data';
 import * as commonTests from './http/common';
 import { loadAsyncCache } from './async-components';
 import { mockAxiosResponse } from './axios';
-import { mount as m } from './lifecycle';
+import { mount as lifecycleMount } from './lifecycle';
 import { wait, waitUntil } from './util';
 
 
@@ -295,7 +295,8 @@ component. Here are some guidelines to help decide:
       with a scoped slot.
   - If you don't need to mount the root component, and the component will not
     send a request during the test, then you should probably use mount(). This
-    is the simplest and most explicit way to test a component in isolation.
+    is the simplest and most explicit way to test a component in isolation and
+    is also fastest.
     - If the component uses <router-link>, use Vue Test Utils to stub it. If it
       uses $route, use Vue Test Utils to mock it. If you mock $route, then
       mount() will also pass a minimal mock of $router with read-only
@@ -383,7 +384,7 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    return this._with({ mount: () => m(component, options) });
+    return this._with({ mount: () => lifecycleMount(component, options) });
   }
 
   // The callback may return a Promise or a non-Promise value.
@@ -833,7 +834,7 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
     // A component may emit an event in order to ask its parent component to
     // send a request. However, loadBottomComponent() doesn't support that
     // approach.
-    throwIfEmit: `${bottomComponent.name} emitted an event, but it is not expected to do so. You may need to mount the root component.`
+    throwIfEmit: `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`
   };
 
   const bottomRouteRecord = last(route.matched);

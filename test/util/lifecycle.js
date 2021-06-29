@@ -1,4 +1,4 @@
-import { mount as m } from '@vue/test-utils';
+import { mount as vtuMount } from '@vue/test-utils';
 
 import i18n from '../../src/i18n';
 import router from '../../src/router';
@@ -78,7 +78,7 @@ export const mount = (component, options = {}) => {
     }
   }
 
-  const wrapper = m(component, mountOptions);
+  const wrapper = vtuMount(component, mountOptions);
   componentsToDestroy.push(wrapper);
 
   if (throwIfEmit != null) {
