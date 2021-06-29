@@ -26,9 +26,9 @@ describe('SubmissionDataRow', () => {
       submissions: 1
     });
     testData.extendedSubmissions.createPast(1, { s: null });
-    const td = mountComponent().first('td');
+    const td = mountComponent().get('td');
     td.text().should.equal('');
-    td.hasAttribute('title').should.be.false();
+    should.not.exist(td.attributes().title);
   });
 
   it('correctly formats a string value', () => {
@@ -37,10 +37,10 @@ describe('SubmissionDataRow', () => {
       submissions: 1
     });
     testData.extendedSubmissions.createPast(1, { s: 'foo' });
-    const td = mountComponent().first('td');
+    const td = mountComponent().get('td');
     td.text().should.equal('foo');
-    td.getAttribute('title').should.equal('foo');
-    td.hasAttribute('class').should.be.false();
+    td.attributes().title.should.equal('foo');
+    td.classes().length.should.equal(0);
   });
 
   describe('int values', () => {
@@ -50,7 +50,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { i: 1000 });
-      mountComponent().first('td').hasClass('int-field').should.be.true();
+      mountComponent().get('td').classes('int-field').should.be.true();
     });
 
     it('correct formats the value', () => {
@@ -59,9 +59,9 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { i: 1000 });
-      const td = mountComponent().first('td');
+      const td = mountComponent().get('td');
       td.text().should.equal('1,000');
-      td.getAttribute('title').should.equal('1,000');
+      td.attributes().title.should.equal('1,000');
     });
   });
 
@@ -72,7 +72,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      mountComponent().first('td').hasClass('decimal-field').should.be.true();
+      mountComponent().get('td').classes('decimal-field').should.be.true();
     });
 
     // Array of test cases, where each case is an array with the following
@@ -105,9 +105,9 @@ describe('SubmissionDataRow', () => {
           submissions: 1
         });
         testData.extendedSubmissions.createPast(1, { d: rawValue });
-        const td = mountComponent().first('td');
+        const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.getAttribute('title').should.equal(formattedValue);
+        td.attributes().title.should.equal(formattedValue);
       });
     }
   });
@@ -132,9 +132,9 @@ describe('SubmissionDataRow', () => {
           submissions: 1
         });
         testData.extendedSubmissions.createPast(1, { d: rawValue });
-        const td = mountComponent().first('td');
+        const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.getAttribute('title').should.equal(formattedValue);
+        td.attributes().title.should.equal(formattedValue);
       });
     }
   });
@@ -183,9 +183,9 @@ describe('SubmissionDataRow', () => {
         setLuxon({ defaultZoneName });
         if (now != null) setLuxon({ now });
 
-        const td = mountComponent().first('td');
+        const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.getAttribute('title').should.equal(formattedValue);
+        td.attributes().title.should.equal(formattedValue);
       });
     }
   });
@@ -234,9 +234,9 @@ describe('SubmissionDataRow', () => {
         setLuxon({ defaultZoneName });
         if (now != null) setLuxon({ now });
 
-        const td = mountComponent().first('td');
+        const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.getAttribute('title').should.equal(formattedValue);
+        td.attributes().title.should.equal(formattedValue);
       });
     }
   });
@@ -247,7 +247,7 @@ describe('SubmissionDataRow', () => {
       submissions: 1
     });
     testData.extendedSubmissions.createPast(1);
-    mountComponent().first('td').hasClass('geopoint-field').should.be.true();
+    mountComponent().get('td').classes('geopoint-field').should.be.true();
   });
 
   describe('binary field', () => {
@@ -260,14 +260,14 @@ describe('SubmissionDataRow', () => {
         instanceId: 'a b',
         b: 'c d.jpg'
       });
-      const td = mountComponent().first('td');
-      td.hasClass('binary-field').should.be.true();
-      td.hasAttribute('title').should.be.false();
-      const a = td.first('a');
-      const href = a.getAttribute('href');
+      const td = mountComponent().get('td');
+      td.classes('binary-field').should.be.true();
+      should.not.exist(td.attributes().title);
+      const a = td.get('a');
+      const { href } = a.attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/a%20b/attachments/c%20d.jpg');
-      a.find('.icon-check').length.should.equal(1);
-      a.find('.icon-download').length.should.equal(1);
+      a.find('.icon-check').exists().should.be.true();
+      a.find('.icon-download').exists().should.be.true();
     });
 
     it('correctly renders a binary field of unknown type', () => {
@@ -281,9 +281,9 @@ describe('SubmissionDataRow', () => {
         instanceId: 'foo',
         b: 'bar.jpg'
       });
-      const td = mountComponent().first('td');
-      td.hasClass('binary-field').should.be.true();
-      const href = td.first('a').getAttribute('href');
+      const td = mountComponent().get('td');
+      td.classes('binary-field').should.be.true();
+      const { href } = td.get('a').attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/foo/attachments/bar.jpg');
     });
 
@@ -293,8 +293,8 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { b: null });
-      const td = mountComponent().first('td');
-      td.find('a').length.should.equal(0);
+      const td = mountComponent().get('td');
+      td.find('a').exists().should.be.false();
       td.text().should.equal('');
     });
   });
@@ -305,10 +305,10 @@ describe('SubmissionDataRow', () => {
       submissions: 1
     });
     testData.extendedSubmissions.createPast(1, { instanceId: 'foo' });
-    const td = mountComponent().find('td');
+    const td = mountComponent().findAll('td');
     td.length.should.equal(2);
-    td[1].text().should.equal('foo');
-    td[1].getAttribute('title').should.equal('foo');
+    td.at(1).text().should.equal('foo');
+    td.at(1).attributes().title.should.equal('foo');
   });
 
   it('renders a cell for each field', () => {
@@ -321,9 +321,10 @@ describe('SubmissionDataRow', () => {
       s1: 'bar',
       s2: 'baz'
     });
-    const td = mountComponent().find('td');
+    const td = mountComponent().findAll('td');
     td.length.should.equal(3);
-    td.map(wrapper => wrapper.text()).should.eql(['bar', 'baz', 'foo']);
+    const text = td.wrappers.map(wrapper => wrapper.text());
+    text.should.eql(['bar', 'baz', 'foo']);
   });
 
   describe('encrypted submission', () => {
@@ -338,9 +339,9 @@ describe('SubmissionDataRow', () => {
       });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent();
-      row.hasClass('encrypted-submission').should.be.true();
-      row.find('td').length.should.equal(2);
-      row.first('td').getAttribute('colspan').should.equal('2');
+      row.classes('encrypted-submission').should.be.true();
+      row.findAll('td').length.should.equal(2);
+      row.get('td').attributes().colspan.should.equal('2');
     });
 
     it('does not show the encryption message if no fields are selected', () => {
@@ -350,9 +351,9 @@ describe('SubmissionDataRow', () => {
       });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent({ fields: [] });
-      const td = row.find('td');
+      const td = row.findAll('td');
       td.length.should.equal(1);
-      td[0].hasAttribute('colspan').should.be.false();
+      should.not.exist(td.at(0).attributes().colspan);
     });
   });
 });

@@ -1,73 +1,79 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import LinkIfCan from '../../../src/components/link-if-can.vue';
 import ProjectSubmissionOptions from '../../../src/components/project/submission-options.vue';
-import testData from '../../data';
-import { load } from '../../util/http';
-import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
-const showModal = async (path) => {
-  const app = await load(path);
-  if (path === '/projects/1/app-users' ||
-    path === '/projects/1/forms/f/public-links')
-    await trigger.click(app, '.heading-with-button a[href="#"]');
-  else if (path === '/projects/1/forms/f')
-    await trigger.click(app, '#form-checklist a[href="#"]');
-  else
-    throw new Error('invalid path');
-  return app.first(ProjectSubmissionOptions);
-};
+import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
+
+const mountComponent = (options) => mount(ProjectSubmissionOptions, {
+  propsData: { state: true },
+  stubs: { RouterLink: RouterLinkStub },
+  ...options
+});
 
 describe('ProjectSubmissionOptions', () => {
-  beforeEach(() => {
-    mockLogin();
-    testData.extendedForms.createPast(1);
-  });
+  beforeEach(mockLogin);
 
   describe('link to .../app-users', () => {
-    it('links to .../app-users', async () => {
-      const modal = await showModal('/projects/1/forms/f/public-links');
-      const a = modal.first('li').first('a');
-      a.getAttribute('href').should.equal('#/projects/1/app-users');
-      a.text().should.equal('App Users');
+    it('links to .../app-users', () => {
+      const modal = mountComponent({
+        mocks: { $route: '/projects/1/forms/f' }
+      });
+      const link = modal.getComponent(RouterLinkStub);
+      modal.get('li').element.contains(link.element).should.be.true();
+      link.props().to.should.equal('/projects/1/app-users');
+      link.text().should.equal('App Users');
     });
 
     it('hides modal if user has already navigated to .../app-users', async () => {
-      const modal = await showModal('/projects/1/app-users');
-      const a = modal.first('li').first('a');
-      a.getAttribute('href').should.equal('#');
+      const modal = mountComponent({
+        mocks: { $route: '/projects/1/app-users' }
+      });
+      const a = modal.get('li').get('a');
+      a.attributes().href.should.equal('#');
       a.text().should.equal('App Users');
-      await trigger.click(a);
-      modal.getProp('state').should.be.false();
+      await a.trigger('click');
+      modal.emitted().hide.should.eql([[]]);
     });
   });
 
   describe('link to .../public-links', () => {
-    it('links to .../public-links', async () => {
-      const modal = await showModal('/projects/1/forms/f');
-      const a = modal.find('li')[1].first('a');
-      a.getAttribute('href').should.equal('#/projects/1/forms/f/public-links');
-      a.text().should.equal('Public Access Links');
+    it('links to .../public-links', () => {
+      const modal = mountComponent({
+        mocks: { $route: '/projects/1/forms/f' }
+      });
+      const link = modal.findAllComponents(RouterLinkStub).at(1);
+      modal.findAll('li').at(1).element.contains(link.element).should.be.true();
+      link.props().to.should.equal('/projects/1/forms/f/public-links');
+      link.text().should.equal('Public Access Links');
     });
 
     it('hides modal if user has already navigated to .../public-links', async () => {
-      const modal = await showModal('/projects/1/forms/f/public-links');
-      const a = modal.find('li')[1].first('a');
-      a.getAttribute('href').should.equal('#');
+      const modal = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/public-links' }
+      });
+      const a = modal.findAll('li').at(1).get('a');
+      a.attributes().href.should.equal('#');
       a.text().should.equal('Public Access Links');
-      await trigger.click(a);
-      modal.getProp('state').should.be.false();
+      await a.trigger('click');
+      modal.emitted().hide.should.eql([[]]);
     });
 
-    it('does not render a link if user has navigated to a project route', async () => {
-      const modal = await showModal('/projects/1/app-users');
-      const li = modal.find('li')[1];
-      li.find('a').length.should.equal(0);
-      li.first('strong').text().should.equal('Public Access Links');
+    it('does not render a link if user has navigated to a project route', () => {
+      const modal = mountComponent({
+        mocks: { $route: '/projects/1/app-users' }
+      });
+      const li = modal.findAll('li').at(1);
+      li.find('a').exists().should.be.false();
+      li.get('strong').text().should.equal('Public Access Links');
     });
   });
 
-  it('renders a LinkIfCan component to /users', async () => {
-    const modal = await showModal('/projects/1/app-users');
-    modal.first(LinkIfCan).getProp('to').should.equal('/users');
+  it('renders a LinkIfCan component to /users', () => {
+    const modal = mountComponent({
+      mocks: { $route: '/projects/1/app-users' }
+    });
+    modal.getComponent(LinkIfCan).props().to.should.equal('/users');
   });
 });

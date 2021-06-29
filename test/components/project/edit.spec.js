@@ -1,75 +1,90 @@
-import ProjectSettings from '../../../src/components/project/settings.vue';
+import ProjectEdit from '../../../src/components/project/edit.vue';
+
 import testData from '../../data';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRoute } from '../../util/http';
-import { mountAndMark } from '../../util/lifecycle';
-import { submitForm } from '../../util/event';
+import { mount } from '../../util/lifecycle';
+
+const mountOptions = () => ({
+  requestData: { project: testData.extendedProjects.last() }
+});
 
 describe('ProjectEdit', () => {
   beforeEach(mockLogin);
 
-  describe('name input', () => {
-    it("shows the project's name", () => {
-      const component = mountAndMark(ProjectSettings, {
-        requestData: {
-          project: testData.extendedProjects
-            .createPast(1, { name: 'My Project' })
-            .last()
-        }
-      });
-      component.first('input').element.value.should.equal('My Project');
-    });
-
-    it("updates project's name if user navigates to a different project", () =>
-      mockRoute('/projects/1/settings')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { name: 'Project 1' }).last())
-        .complete()
-        .route('/projects/2/settings')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { name: 'Project 2' }).last())
-        .afterResponse(app => {
-          const input = app.first('#project-edit input');
-          input.element.value.should.equal('Project 2');
-        }));
+  it('sets the value of the input to the current name', () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
+    const { value } = mount(ProjectEdit, mountOptions()).get('input').element;
+    value.should.equal('My Project');
   });
 
-  it('implements some standard button things', () =>
-    mockRoute('/projects/1/settings')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { name: 'Old Name' }).last())
+  it('resets the form if the route changes', () => {
+    testData.extendedProjects
+      .createPast(1, { name: 'Project 1' })
+      .createPast(1, { name: 'Project 2' });
+    return load('/projects/1/settings', {}, {
+      project: () => testData.extendedProjects.first()
+    })
       .complete()
-      .request(component =>
-        submitForm(component, 'form', [['input', 'New Name']]))
-      .standardButton());
+      .load('/projects/2/settings')
+      .afterResponses(app => {
+        app.get('#project-edit input').element.value.should.equal('Project 2');
+      });
+  });
 
-  describe('after a successful submit', () => {
-    it('shows a success alert', () =>
-      mockRoute('/projects/1/settings')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { name: 'Old Name' }).last())
-        .complete()
-        .request(app => submitForm(app, '#project-edit form', [
-          ['input', 'New Name']
-        ]))
-        .respondWithData(() =>
-          testData.extendedProjects.update(-1, { name: 'New Name' }))
-        .afterResponse(app => {
-          app.should.alert('success');
-        }));
+  it('sends the correct request', () => {
+    testData.extendedProjects.createPast(1, { name: 'Old Name' });
+    return mockHttp()
+      .mount(ProjectEdit, mountOptions())
+      .request(async (component) => {
+        component.get('input').setValue('New Name');
+        return component.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { method, url, data }) => {
+        method.should.equal('PATCH');
+        url.should.equal('/v1/projects/1');
+        data.should.eql({ name: 'New Name' });
+      })
+      .respondWithProblem();
+  });
 
-    it("updates the project's name", () =>
-      mockRoute('/projects/1/settings')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { name: 'Old Name' }).last())
+  it('implements some standard button things', () => {
+    testData.extendedProjects.createPast(1, { name: 'Old Name' });
+    return mockHttp()
+      .mount(ProjectEdit, mountOptions())
+      .testStandardButton({
+        button: '.btn-primary',
+        request: async (component) => {
+          component.get('input').setValue('New Name');
+          return component.get('form').trigger('submit');
+        }
+      });
+  });
+
+  describe('after a successful response', () => {
+    const submit = () => {
+      testData.extendedProjects.createPast(1, { name: 'Old Name' });
+      return load('/projects/1/settings')
         .complete()
-        .request(app => submitForm(app, '#project-edit form', [
-          ['input', 'New Name']
-        ]))
-        .respondWithData(() =>
-          testData.extendedProjects.update(-1, { name: 'New Name' }))
-        .afterResponse(app => {
-          app.first('#page-head-title').text().trim().should.equal('New Name');
-        }));
+        .request(async (app) => {
+          const component = app.getComponent(ProjectEdit);
+          component.get('input').setValue('New Name');
+          return component.get('form').trigger('submit');
+        })
+        .respondWithData(() => {
+          testData.extendedProjects.update(-1, { name: 'New Name' });
+          return testData.standardProjects.last();
+        });
+    };
+
+    it('shows a success alert', async () => {
+      const app = await submit();
+      app.should.alert('success');
+    });
+
+    it("updates the project's name", async () => {
+      const app = await submit();
+      app.get('#page-head-title').text().should.equal('New Name');
+    });
   });
 });

@@ -7,6 +7,6 @@ describe('FormVersionViewXml', () => {
       propsData: { state: true },
       requestData: { formVersionXml: '<x><y/></x>' }
     });
-    modal.first('code').text().should.equal('<x>\r\n    <y/>\r\n</x>');
+    modal.get('code').text().should.equal('<x>\r\n    <y/>\r\n</x>');
   });
 });

@@ -1,3 +1,5 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import SubmissionList from '../../src/components/submission/list.vue';
 
 import testData from '../data';
@@ -30,7 +32,12 @@ export const loadSubmissionList = (mountOptions = {}) => {
         keys: testData.standardKeys.sorted(),
         ...mountOptions.requestData
       },
-      router: true
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: {
+        $route: form.publishedAt != null
+          ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
+          : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`
+      }
     })
     .respondWithData(() => form._fields)
     .respondWithData(() => testData.submissionOData(top(0)))

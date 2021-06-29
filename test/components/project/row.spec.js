@@ -1,79 +1,57 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import DateTime from '../../../src/components/date-time.vue';
 import ProjectRow from '../../../src/components/project/row.vue';
+
+import Project from '../../../src/presenters/project';
+
 import testData from '../../data';
-import { load } from '../../util/http';
-import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
+
+const mountComponent = () => mount(ProjectRow, {
+  propsData: {
+    project: new Project(testData.extendedProjects.last()),
+    introduction: false
+  },
+  stubs: { RouterLink: RouterLinkStub }
+});
 
 describe('ProjectRow', () => {
-  beforeEach(mockLogin);
-
   it('renders the project name correctly', () => {
     testData.extendedProjects.createPast(1, { name: 'My Project' });
-    return load('/').then(app => {
-      const a = app.first(ProjectRow).first('.name a');
-      a.text().trim().should.equal('My Project');
-      a.getAttribute('href').should.equal('#/projects/1');
-    });
+    const link = mountComponent().getComponent(RouterLinkStub);
+    link.text().should.equal('My Project');
+    link.props().to.should.equal('/projects/1');
   });
 
   it('shows a lock icon for a project with managed encryption', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     testData.extendedProjects.createPast(1, { key });
-    return load('/').then(app => {
-      const item = app.first(ProjectRow).first('.name a');
-      item.find('.icon-lock').length.should.equal(1);
-      item.first('.project-icon').getAttribute('title').should.equal('This Project uses managed encryption.');
-    });
-  });
-
-  describe('link to show projects introduction', () => {
-    it('shows the link in a fresh install', async () => {
-      testData.extendedProjects.createPast(1, { name: 'Default Project' });
-      const app = await load('/');
-      app.first('.project-row td').first('a[href="#"]').should.be.visible();
-    });
-
-    it('does not render the link if there are multiple projects', async () => {
-      testData.extendedProjects
-        .createPast(1, { name: 'Default Project' })
-        .createPast(1, { name: 'Second Project' });
-      const app = await load('/');
-      app.first('.project-row td').find('a[href="#"]').length.should.equal(0);
-    });
+    mountComponent().find('.icon-lock').exists().should.be.true();
   });
 
   it('shows the form count', () => {
     testData.extendedProjects.createPast(1, { forms: 2 });
-    return load('/').then(app => {
-      const text = app.first(ProjectRow).find('td')[1].text().trim();
-      text.should.equal('2 Forms');
-    });
+    mountComponent().findAll('td').at(1).text().should.equal('2 Forms');
   });
 
   describe('last submission date', () => {
     it('shows the date', () => {
       const now = new Date().toISOString();
       testData.extendedProjects.createPast(1, { lastSubmission: now });
-      return load('/').then(app => {
-        app.first(ProjectRow).first(DateTime).getProp('iso').should.equal(now);
-      });
+      mountComponent().getComponent(DateTime).props().iso.should.equal(now);
     });
 
     it('shows (none) if there has been no submission', () => {
       testData.extendedProjects.createPast(1, { lastSubmission: null });
-      return load('/').then(app => {
-        const text = app.first(ProjectRow).find('td')[2].text().trim();
-        text.should.equal('(none)');
-      });
+      mountComponent().findAll('td').at(2).text().should.equal('(none)');
     });
   });
 
   describe('archived project', () => {
     it('adds an HTML class to the row', () => {
       testData.extendedProjects.createPast(1, { archived: true });
-      return load('/').then(app => {
-        app.first(ProjectRow).hasClass('archived').should.be.true();
-      });
+      mountComponent().classes('archived').should.be.true();
     });
 
     it("appends (archived) to the project's name", () => {
@@ -81,10 +59,8 @@ describe('ProjectRow', () => {
         name: 'My Project',
         archived: true
       });
-      return load('/').then(app => {
-        const text = app.first('.project-row .name a').text().trim();
-        text.should.equal('My Project (archived)');
-      });
+      const text = mountComponent().getComponent(RouterLinkStub).text();
+      text.should.equal('My Project (archived)');
     });
   });
 });

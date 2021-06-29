@@ -1,35 +1,25 @@
 import ProjectArchive from '../../../src/components/project/archive.vue';
-import ProjectSettings from '../../../src/components/project/settings.vue';
+
 import testData from '../../data';
-import { mockHttp, mockRoute } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mountAndMark } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 describe('ProjectArchive', () => {
   beforeEach(mockLogin);
 
-  it('does not show the button for an archived project', () => {
-    const component = mountAndMark(ProjectSettings, {
-      requestData: {
-        project: testData.extendedProjects
-          .createPast(1, { archived: true })
-          .last()
-      }
-    });
-    component.find('#project-settings-archive-button').length.should.equal(0);
+  it('does not render the button for an archived project', async () => {
+    testData.extendedProjects.createPast(1, { archived: true });
+    const component = await load('/projects/1/settings', { root: false });
+    component.find('#project-settings-archive-button').exists().should.be.false();
   });
 
-  it('shows the modal after the button is clicked', () => {
-    const component = mountAndMark(ProjectSettings, {
-      requestData: { project: testData.extendedProjects.createPast(1).last() }
+  it('toggles the modal', () => {
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/settings', { root: false }).testModalToggles({
+      modal: ProjectArchive,
+      show: '#project-settings-archive-button',
+      hide: '.btn-link'
     });
-    const modal = component.first(ProjectArchive);
-    modal.getProp('state').should.be.false();
-    return trigger.click(component, '#project-settings-archive-button')
-      .then(() => {
-        modal.getProp('state').should.be.true();
-      });
   });
 
   it('implements some standard button things', () =>
@@ -38,33 +28,38 @@ describe('ProjectArchive', () => {
         propsData: { state: true },
         requestData: { project: testData.extendedProjects.createPast(1).last() }
       })
-      .request(modal => trigger.click(modal, '.btn-danger'))
-      .standardButton('.btn-danger'));
+      .testStandardButton({
+        button: '.btn-danger',
+        disabled: ['.btn-link'],
+        modal: true
+      }));
 
   describe('after a successful response', () => {
-    let app;
-    beforeEach(() => mockRoute('/projects/1/settings')
-      .respondWithData(() =>
-        testData.extendedProjects.createPast(1, { name: 'My Project' }).last())
-      .afterResponse(component => {
-        app = component;
-      })
-      .request(() => trigger.click(app, '#project-settings-archive-button')
-        .then(() => trigger.click(app, '#project-archive .btn-danger')))
-      .respondWithData(() =>
-        testData.extendedProjects.update(-1, { archived: true }))
-      .respondWithData(() => testData.extendedForms.sorted()));
+    const submit = () => {
+      testData.extendedProjects.createPast(1, { name: 'My Project' });
+      return load('/projects/1/settings')
+        .complete()
+        .request(async (app) => {
+          await app.get('#project-settings-archive-button').trigger('click');
+          return app.get('#project-archive .btn-danger').trigger('click');
+        })
+        .respondWithData(() =>
+          testData.extendedProjects.update(-1, { archived: true }))
+        .respondWithData(() => testData.extendedForms.sorted());
+    };
 
-    it('redirects the user to the project overview', () => {
+    it('redirects the user to the project overview', async () => {
+      const app = await submit();
       app.vm.$route.path.should.equal('/projects/1');
     });
 
-    it("appends (archived) to project's name in project overview", () => {
-      const title = app.first('#page-head-title').text().trim();
-      title.should.equal('My Project (archived)');
+    it("appends (archived) to project's name in project overview", async () => {
+      const app = await submit();
+      app.get('#page-head-title').text().should.equal('My Project (archived)');
     });
 
-    it('shows a success alert', () => {
+    it('shows a success alert', async () => {
+      const app = await submit();
       app.should.alert('success');
     });
   });

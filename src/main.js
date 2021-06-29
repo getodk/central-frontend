@@ -9,18 +9,19 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
-// Importing setup.js first, because the import statements below may import some
-// of the same modules as setup.js, and in some cases, the order in which
-// setup.js imports modules matters.
-import './setup';
-
 import Vue from 'vue';
 
+// These files must be imported before the rest.
+import './plugins';
+import './setup';
+
 import App from './components/app.vue';
+
 import i18n from './i18n';
 import router from './router';
 import store from './store';
+
+Vue.config.productionTip = false;
 
 new Vue({ // eslint-disable-line no-new
   el: '#app',

@@ -1,7 +1,9 @@
 import Vue from 'vue';
+import { RouterLinkStub } from '@vue/test-utils';
 import { last } from 'ramda';
 
 import App from '../../src/components/app.vue';
+
 import router from '../../src/router';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
@@ -63,9 +65,10 @@ component:
     // Mounting AccountResetPassword does not send a request.
     .mount(AccountResetPassword)
     // Sends a POST request.
-    .request(trigger.submit('form', [
-      ['input[type="email"]', 'example@getodk.org']
-    ]))
+    .request(async (component) => {
+      await component.get('input').setValue('example@getodk.org');
+      return component.get('form').trigger('submit');
+    });
 
 After specifying the request, specify the response as a callback:
 
@@ -97,7 +100,7 @@ component once the responses have been processed:
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.find(ProjectRow).length.should.equal(3);
+      component.findAllComponents(ProjectRow).length.should.equal(3);
     });
 
 It is not until afterResponses() that the component is actually mounted and the
@@ -123,7 +126,7 @@ Mocha. You can call then(), catch(), or finally() on the thenable:
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.find(ProjectRow).length.should.equal(3);
+      component.findAllComponents(ProjectRow).length.should.equal(3);
     })
     .then(() => {
       console.log('table has 3 rows');
@@ -138,19 +141,20 @@ cycles: series can be chained. For example:
   mockLogin();
   testData.extendedAudits.createPast(1, {
     actor: testData.extendedUsers.first(),
-    action: 'user.create',
+    action: 'user.update',
     actee: testData.toActor(testData.extendedUsers.first())
   });
   mockHttp()
     .mount(AuditList)
     .respondWithData(() => testData.extendedAudits.sorted())
     .afterResponses(component => {
-      component.find(AuditRow).length.should.equal(1);
+      component.findComponent(AuditRow).exists().should.be.true();
     })
-    .request(trigger.changeValue('#audit-filters-action select', 'user.delete'))
+    .request(component =>
+      component.get('#audit-filters-action select').setValue('user.delete'))
     .respondWithData(() => [])
     .afterResponses(component => {
-      component.find(AuditRow).length.should.equal(0);
+      component.findComponent(AuditRow).exists().should.be.false();
     });
 
 Notice how the mounted component is passed to each request() and
@@ -161,11 +165,24 @@ not need to assert something in each series. In that case, use complete(), which
 is a shortcut for afterResponses(component => component). Because it calls
 afterResponses(), complete() will also execute the series.
 
-Using the router
-----------------
+The router
+----------
 
-If a test uses the router, for example, if a component uses <router-link>,
-specify the initial location, then pass the router to mount():
+If the component uses <router-link>, you can use Vue Test Utils to stub it. If
+it uses $route, you can use Vue Test Utils to mock it. For example:
+
+  mockLogin();
+  testData.extendedProjects.createPast(3);
+  mockHttp()
+    .mount(ProjectList, {
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/' }
+    })
+    .respondWithData(() => testData.extendedProjects.sorted())
+    .respondWithData(() => testData.standardUsers.sorted());
+
+Alternatively, you can inject the actual router. To do so, specify the initial
+location, then pass the router to mount():
 
   mockLogin();
   testData.extendedProjects.createPast(3);
@@ -175,9 +192,9 @@ specify the initial location, then pass the router to mount():
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted());
 
-If a test will change the route, mount the App component. After the initial
-navigation, you can navigate to a new location. If doing so will send requests,
-also specify the responses. For example:
+If a test will change the route, mount the root component (App) and inject the
+router. After the initial navigation, you can navigate to a new location. If
+doing so will send requests, also specify the responses. For example:
 
   mockLogin();
   testData.extendedProjects.createPast(3);
@@ -191,8 +208,8 @@ also specify the responses. For example:
     .respondWithData(() => testData.extendedAudits.sorted());
 
 If navigating to the new location will not send a request, you can specify both
-route() and request(). In that case, the request() callback will be run after a
-navigation is confirmed.
+route() and request(). In that case, the request() callback will be run after
+the navigation is confirmed.
 
 A shortcut for specifying responses
 -----------------------------------
@@ -214,31 +231,31 @@ you can call:
 You can also call load() to change the route and specify the responses for the
 new route:
 
-  mockLogin();
-  testData.extendedProjects.createPast(3);
   load('/')
     .complete()
     .load('/system/audits')
 
-/test/util/http/data.js maps each route to its responses.
+test/util/http/data.js maps each route to its responses.
 
 Common load() options
 ---------------------
 
-By default, load() mounts App and specifies responses. However, you can also
-choose not to mount App or not to specify responses.
+By default, load() mounts the root component, injecting the router, then
+specifies responses. However, you can also choose not to mount the root
+component or not to specify responses.
 
-If a test will change the route, then it should mount App. However, if a test
-won't change the route and doesn't otherwise need to mount App, then it can
-simply mount the component associated with the route. For example,
+Instead of mounting the root component and injecting the router, you can mount
+the route component, stubbing <router-link> and mocking $route. For example,
 
   load('/', { root: false })
 
 is equivalent to:
 
   mockHttp()
-    .route('/')
-    .mount(ProjectList, { router })
+    .mount(ProjectList, {
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/' }
+    })
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
 
@@ -253,9 +270,49 @@ is equivalent to:
     .route('/')
     .mount(App, { router })
 
-A component may send a request but not be associated with a route, for example,
-many modals. To test a component like that, use mockHttp(), or use load() to
-mount the component's parent component.
+Which of these approaches should I take?
+----------------------------------------
+
+Every test of a component will need to mount the component. There are a few ways
+to do so:
+
+  1. mount()
+  2. mockHttp()
+  3. load()
+  4. load(), specifying `root` as `false`
+
+However, it might not be clear which approach to take for a particular
+component. Here are some guidelines to help decide:
+
+  - If you need to mount the root component (App), use load(). You should mount
+    App if:
+    - The test uses both the route component and another child component of App,
+      for example, Navbar
+    - The test uses the component for a parent route
+    - The test will change the route
+    - You are testing a navigation guard
+    - (Uncommon) You may need to mount App if the component uses a <router-link>
+      with a scoped slot.
+  - If you don't need to mount the root component, and the component will not
+    send a request during the test, then you should probably use mount(). This
+    is the simplest and most explicit way to test a component in isolation and
+    is also fastest.
+    - If the component uses <router-link>, use Vue Test Utils to stub it. If it
+      uses $route, use Vue Test Utils to mock it. If you mock $route, then
+      mount() will also pass a minimal mock of $router with read-only
+      functionality.
+  - If you don't need to mount the root component, but the component will send
+    a request during the test, then you should use either mockHttp() or load().
+    - If you are testing the behavior of a route component, use load(),
+      specifying `root` as `false`.
+    - If you are testing the behavior of another component -- for example, a
+      modal or another child component of a route component -- you should use
+      mockHttp().
+      - As with mount(), you can use Vue Test Utils to stub <router-link> or
+        mock $route.
+
+The goal should be to write a test that is as isolated as possible while also
+avoiding repetitive code.
 
 Additional options
 ------------------
@@ -770,7 +827,15 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   const components = routeComponents(route);
   const bottomComponent = last(components);
 
-  const fullMountOptions = { ...mountOptions, router };
+  const fullMountOptions = {
+    ...mountOptions,
+    stubs: { RouterLink: RouterLinkStub },
+    mocks: { $route: route },
+    // A component may emit an event in order to ask its parent component to
+    // send a request. However, loadBottomComponent() doesn't support that
+    // approach.
+    throwIfEmit: `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`
+  };
 
   const bottomRouteRecord = last(route.matched);
   const props = routeProps(route, bottomRouteRecord.props.default);
@@ -794,7 +859,6 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   }
 
   return mockHttp()
-    .route(location)
     .mount(bottomComponent, fullMountOptions)
     .modify(series => (respondForOptions !== false
       ? series.respondForComponent(bottomComponent, respondForOptions)
@@ -828,7 +892,3 @@ export const load = (
       ? series.respondFor(location, respondForOptions)
       : series));
 };
-
-// Deprecated
-export const mockRoute = (location, mountOptions = undefined) =>
-  load(location, mountOptions, false);

@@ -1,10 +1,9 @@
 import should from 'should';
+import { Wrapper } from '@vue/test-utils';
 
-// Returns an element that may be wrapped in an avoriaz wrapper.
-const unwrapElement = (elementOrWrapper) =>
-  (elementOrWrapper instanceof HTMLElement
-    ? elementOrWrapper
-    : elementOrWrapper.element);
+const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof Wrapper
+  ? elementOrWrapper.element
+  : elementOrWrapper);
 
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to
@@ -27,16 +26,6 @@ should.Assertion.add('hidden', function hidden(computed = false) {
   const element = unwrapElement(this.obj);
   const { display } = computed ? getComputedStyle(element) : element.style;
   display.should.equal('none');
-});
-
-// Deprecated. Make an explicit assertion about either the `disabled` attribute
-// or the HTML class.
-should.Assertion.add('disabled', function assertDisabled() {
-  this.params = { operator: 'to be disabled' };
-  const element = unwrapElement(this.obj);
-  const disabled = element.disabled === true ||
-    element.classList.contains('disabled');
-  disabled.should.be.true();
 });
 
 // If a test does not attach the component to the document, then uses this

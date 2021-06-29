@@ -27,6 +27,7 @@ module.exports = {
     }],
     'max-classes-per-file': 'off',
     'max-len': 'off',
+    'newline-per-chained-call': 'off',
     'no-console': 'error',
     'no-debugger': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],

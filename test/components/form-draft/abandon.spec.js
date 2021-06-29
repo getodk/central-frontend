@@ -1,10 +1,10 @@
 import FormDraftAbandon from '../../../src/components/form-draft/abandon.vue';
 import FormRow from '../../../src/components/form/row.vue';
+
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const mountComponent = () => mount(FormDraftAbandon, {
   propsData: { state: true },
@@ -20,24 +20,24 @@ describe('FormDraftAbandon', () => {
 
   it('toggles the modal', () => {
     testData.extendedForms.createPast(1, { draft: true });
-    return load('/projects/1/forms/f/draft').testModalToggles(
-      FormDraftAbandon,
-      '#form-draft-status-abandon-button',
-      '.btn-link'
-    );
+    return load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
+      modal: FormDraftAbandon,
+      show: '#form-draft-status-abandon-button',
+      hide: '.btn-link'
+    });
   });
 
   describe('modal title', () => {
     it('shows the correct title for a form with a published version', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
-      const text = mountComponent().first('.modal-title').text().trim();
+      const text = mountComponent().get('.modal-title').text();
       text.should.equal('Abandon Draft');
     });
 
     it('shows the correct title for a form without a published version', () => {
       testData.extendedForms.createPast(1, { draft: true });
-      const text = mountComponent().first('.modal-title').text().trim();
+      const text = mountComponent().get('.modal-title').text();
       text.should.equal('Abandon Draft and Delete Form');
     });
   });
@@ -50,13 +50,12 @@ describe('FormDraftAbandon', () => {
       });
 
       it('shows the correct text for the first paragraph', () => {
-        const p = mountComponent().first('.modal-introduction p');
-        const text = p.text().trim().iTrim();
+        const text = mountComponent().get('.modal-introduction p').text();
         text.should.endWith('all test Submissions will be removed.');
       });
 
       it('renders an additional paragraph', () => {
-        mountComponent().find('.modal-introduction p').length.should.equal(3);
+        mountComponent().findAll('.modal-introduction p').length.should.equal(3);
       });
     });
 
@@ -66,13 +65,12 @@ describe('FormDraftAbandon', () => {
       });
 
       it('shows the correct text for the first paragraph', () => {
-        const p = mountComponent().first('.modal-introduction p');
-        const text = p.text().trim().iTrim();
+        const text = mountComponent().get('.modal-introduction p').text();
         text.should.endWith('this Form will be entirely deleted.');
       });
 
       it('does not render an additional paragraph', () => {
-        mountComponent().find('.modal-introduction p').length.should.equal(2);
+        mountComponent().findAll('.modal-introduction p').length.should.equal(2);
       });
     });
   });
@@ -82,8 +80,8 @@ describe('FormDraftAbandon', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       return mockHttpForComponent()
-        .request(trigger.click('.btn-danger'))
-        .beforeEachResponse((modal, { method, url }) => {
+        .request(modal => modal.get('.btn-danger').trigger('click'))
+        .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
           url.should.equal('/v1/projects/1/forms/f/draft');
         })
@@ -93,8 +91,8 @@ describe('FormDraftAbandon', () => {
     it('sends correct request for a form without a published version', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return mockHttpForComponent()
-        .request(trigger.click('.btn-danger'))
-        .beforeEachResponse((modal, { method, url }) => {
+        .request(modal => modal.get('.btn-danger').trigger('click'))
+        .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
           url.should.equal('/v1/projects/1/forms/f');
         })
@@ -118,8 +116,10 @@ describe('FormDraftAbandon', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
         .complete()
-        .request(app => trigger.click(app, '#form-draft-status-abandon-button')
-          .then(trigger.click('#form-draft-abandon .btn-danger')))
+        .request(async (app) => {
+          await app.get('#form-draft-status-abandon-button').trigger('click');
+          return app.get('#form-draft-abandon .btn-danger').trigger('click');
+        })
         .respondWithSuccess();
     };
 
@@ -135,7 +135,7 @@ describe('FormDraftAbandon', () => {
 
     it('shows the create draft button', () =>
       abandon().then(app => {
-        app.first('#form-head-create-draft-button').should.be.visible();
+        app.get('#form-head-create-draft-button').should.be.visible();
       }));
   });
 
@@ -144,8 +144,10 @@ describe('FormDraftAbandon', () => {
       testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
       return load('/projects/1/forms/f/draft')
         .complete()
-        .request(app => trigger.click(app, '#form-draft-status-abandon-button')
-          .then(trigger.click('#form-draft-abandon .btn-danger')))
+        .request(async (app) => {
+          await app.get('#form-draft-status-abandon-button').trigger('click');
+          return app.get('#form-draft-abandon .btn-danger').trigger('click');
+        })
         .respondWithSuccess()
         .respondWithData(() => []); // forms
     };
@@ -162,7 +164,7 @@ describe('FormDraftAbandon', () => {
 
     it('does not show the form in the table', () =>
       abandon().then(app => {
-        app.find(FormRow).length.should.equal(0);
+        app.findComponent(FormRow).exists().should.be.false();
       }));
   });
 });

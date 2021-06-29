@@ -1,5 +1,7 @@
 import EnketoPreview from '../../../src/components/enketo/preview.vue';
+
 import Form from '../../../src/presenters/form';
+
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
@@ -19,8 +21,8 @@ describe('EnketoPreview', () => {
     const button = mountComponent({
       propsData: { formVersion: form }
     });
-    button.vm.$el.tagName.should.equal('A');
-    button.getAttribute('href').should.equal('/-/preview/xyz');
+    button.element.tagName.should.equal('A');
+    button.attributes().href.should.equal('/-/preview/xyz');
   });
 
   it('renders correctly for a form without an enketoId', () => {
@@ -30,9 +32,9 @@ describe('EnketoPreview', () => {
     const button = mountComponent({
       propsData: { formVersion: form }
     });
-    button.vm.$el.tagName.should.equal('BUTTON');
-    button.should.be.disabled();
-    button.getAttribute('title').should.equal('Preview has not finished processing for this Form. Please refresh later and try again.');
+    button.element.tagName.should.equal('BUTTON');
+    button.element.disabled.should.be.true();
+    button.attributes().title.should.equal('Preview has not finished processing for this Form. Please refresh later and try again.');
   });
 
   describe('form is not open', () => {
@@ -43,8 +45,8 @@ describe('EnketoPreview', () => {
       const button = mountComponent({
         propsData: { formVersion: form }
       });
-      button.should.be.disabled();
-      button.getAttribute('title').should.equal('In this version of ODK Central, preview is only available for Forms in the Open state.');
+      button.element.tagName.should.equal('BUTTON');
+      button.attributes().title.should.equal('In this version of ODK Central, preview is only available for Forms in the Open state.');
     });
 
     it('does not disable the button for a draft', () => {
@@ -57,7 +59,7 @@ describe('EnketoPreview', () => {
       const button = mountComponent({
         propsData: { formVersion: draft }
       });
-      button.should.not.be.disabled();
+      button.element.tagName.should.equal('A');
     });
   });
 });

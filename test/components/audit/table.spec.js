@@ -1,19 +1,28 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import ActorLink from '../../../src/components/actor-link.vue';
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import Selectable from '../../../src/components/selectable.vue';
 
+import Audit from '../../../src/presenters/audit';
+
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
-import { load, mockRoute } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
 
-const testType = (component, type) => {
-  const td = component.first('.audit-row .type');
-  td.text().trim().should.equal(type.join('  '));
+const mountComponent = () => mount(AuditRow, {
+  propsData: { audit: new Audit(testData.extendedAudits.last()) },
+  stubs: { RouterLink: RouterLinkStub },
+  mocks: { $route: '/system/audits' }
+});
+const testType = (row, type) => {
+  const td = row.get('.type');
+  td.text().should.equal(type.join('  '));
 
-  const icons = td.find('.icon-angle-right');
+  const icons = td.findAll('.icon-angle-right');
   if (type.length === 1)
     icons.length.should.equal(0);
   else if (type.length === 2)
@@ -21,24 +30,20 @@ const testType = (component, type) => {
   else
     throw new Error('invalid type');
 };
-const testTarget = (component, text, href = undefined) => {
-  const td = component.first('.audit-row .target');
+const testTarget = (row, text, to = undefined) => {
   if (text === '') {
-    td.text().should.equal('');
-  } else if (href == null) {
-    const span = td.first('span');
+    row.get('.target').text().should.equal('');
+  } else if (to == null) {
+    const span = row.get('.target span');
     span.text().should.equal(text);
-    span.getAttribute('title').should.equal(text);
+    span.attributes().title.should.equal(text);
   } else {
-    const a = td.first('a');
-    a.text().trim().should.equal(text);
-    a.getAttribute('title').should.equal(text);
-    a.getAttribute('href').should.equal(`#${href}`);
+    const link = row.findAllComponents(RouterLinkStub).wrappers.find(wrapper =>
+      wrapper.element.closest('.target') != null);
+    link.text().should.equal(text);
+    link.attributes().title.should.equal(text);
+    link.props().to.should.equal(to);
   }
-};
-const testTypeAndTarget = (type, target) => (component) => {
-  testType(component, type);
-  if (target != null) testTarget(component, target.text, target.href);
 };
 
 describe('AuditTable', () => {
@@ -54,9 +59,7 @@ describe('AuditTable', () => {
         actee: testData.toActor(testData.extendedUsers.first())
       })
       .last();
-    return load('/system/audits').then(app => {
-      app.first(AuditRow).first(DateTime).getProp('iso').should.equal(loggedAt);
-    });
+    mountComponent().getComponent(DateTime).props().iso.should.equal(loggedAt);
   });
 
   describe('user target', () => {
@@ -75,21 +78,19 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () =>
-        mockRoute('/system/audits')
-          .respondWithData(() => testData.extendedAudits
-            .createPast(1, {
-              actor: testData.extendedUsers.first(),
-              action,
-              actee: testData.toActor(testData.extendedUsers
-                .createPast(1, { displayName: 'User 2' })
-                .last())
-            })
-            .sorted())
-          .afterResponse(testTypeAndTarget(
-            type,
-            { text: 'User 2', href: '/users/2/edit' }
-          )));
+      it(`renders a ${action} audit correctly`, () => {
+        const user = testData.extendedUsers
+          .createPast(1, { displayName: 'User 2' })
+          .last();
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.toActor(user)
+        });
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'User 2', '/users/2/edit');
+      });
     }
   });
 
@@ -109,10 +110,9 @@ describe('AuditTable', () => {
             .createPast(1, { name: 'My Project' })
             .last()
         });
-        return load('/system/audits').then(testTypeAndTarget(
-          type,
-          { text: 'My Project', href: '/projects/1' }
-        ));
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'My Project', '/projects/1');
       });
     }
   });
@@ -136,13 +136,12 @@ describe('AuditTable', () => {
           actor: testData.extendedUsers.first(),
           action,
           actee: testData.standardForms
-            .createPast(1, { name: 'My Form' })
+            .createPast(1, { xmlFormId: 'a b', name: 'My Form' })
             .last()
         });
-        return load('/system/audits').then(testTypeAndTarget(
-          type,
-          { text: 'My Form', href: '/projects/1/forms/f' }
-        ));
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'My Form', '/projects/1/forms/a%20b');
       });
     }
 
@@ -152,33 +151,21 @@ describe('AuditTable', () => {
         action: 'form.create',
         actee: testData.standardForms.createPast(1, { name: null }).last()
       });
-      return load('/system/audits').then(app => {
-        app.find('.audit-row td')[3].first('a').text().trim().should.equal('f');
-      });
-    });
-
-    it('encodes the xmlFormId in the form URL', () => {
-      testData.extendedAudits.createPast(1, {
-        actor: testData.extendedUsers.first(),
-        action: 'form.create',
-        actee: testData.standardForms.createPast(1, { xmlFormId: 'i ı' }).last()
-      });
-      return load('/system/audits').then(app => {
-        const a = app.find('.audit-row td')[3].first('a');
-        a.getAttribute('href').should.equal('#/projects/1/forms/i%20%C4%B1');
-      });
+      mountComponent().get('.target a').text().should.equal('f');
     });
 
     it('links to .../draft for a form without a published version', () => {
       testData.extendedAudits.createPast(1, {
         actor: testData.extendedUsers.first(),
         action: 'form.create',
-        actee: testData.standardForms.createPast(1, { draft: true }).last()
+        actee: testData.standardForms
+          .createPast(1, { xmlFormId: 'a b', draft: true })
+          .last()
       });
-      return load('/system/audits').then(app => {
-        const a = app.find('.audit-row td')[3].first('a');
-        a.getAttribute('href').should.equal('#/projects/1/forms/f/draft');
-      });
+      const row = mountComponent();
+      const link = row.findAllComponents(RouterLinkStub).wrappers.find(wrapper =>
+        wrapper.element.closest('.target') != null);
+      link.props().to.should.equal('/projects/1/forms/a%20b/draft');
     });
   });
 
@@ -192,7 +179,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, async () => {
+      it(`renders a ${action} audit correctly`, () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -200,9 +187,9 @@ describe('AuditTable', () => {
             .createPast(1, { displayName: 'My Public Link' })
             .last())
         });
-        const component = await load('/system/audits', { root: false });
-        testType(component, type);
-        testTarget(component, 'My Public Link');
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'My Public Link');
       });
     }
   });
@@ -217,7 +204,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, async () => {
+      it(`renders a ${action} audit correctly`, () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -225,32 +212,32 @@ describe('AuditTable', () => {
             .createPast(1, { displayName: 'My App User' })
             .last())
         });
-        const component = await load('/system/audits', { root: false });
-        testType(component, type);
-        testTarget(component, 'My App User');
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'My App User');
       });
     }
   });
 
-  it('renders a config.set audit correctly', async () => {
+  it('renders a config.set audit correctly', () => {
     testData.extendedAudits.createPast(1, { action: 'config.set' });
-    const component = await load('/system/audits', { root: false });
-    testType(component, ['Server Configuration', 'Set']);
-    testTarget(component, '');
+    const row = mountComponent();
+    testType(row, ['Server Configuration', 'Set']);
+    testTarget(row, '');
   });
 
-  it('renders a backup audit correctly', () =>
-    mockRoute('/system/backups')
-      .respondWithData(() => testData.standardBackupsConfigs
-        .createPast(1, { setAt: ago({ days: 2 }).toISO() })
-        .last())
-      .respondWithData(() => testData.standardAudits
-        .createBackupAudit({
-          success: true,
-          loggedAt: ago({ days: 1 }).toISO()
-        })
-        .sorted())
-      .afterResponses(testTypeAndTarget(['Backup'], null)));
+  it('renders a backup audit correctly', () => {
+    testData.standardBackupsConfigs.createPast(1, {
+      setAt: ago({ days: 2 }).toISO()
+    });
+    testData.standardAudits.createBackupAudit({
+      success: true,
+      loggedAt: ago({ days: 1 }).toISO()
+    });
+    const row = mountComponent();
+    testType(row, ['Backup']);
+    testTarget(row, '');
+  });
 
   it('renders an audit with an unknown action correctly', () => {
     testData.extendedAudits.createPast(1, {
@@ -259,10 +246,7 @@ describe('AuditTable', () => {
         .createPast(1, { displayName: 'User 2' })
         .last())
     });
-    return load('/system/audits').then(testTypeAndTarget(
-      ['unknown'],
-      null
-    ));
+    testType(mountComponent(), ['unknown']);
   });
 
   it('renders an audit with an unknown category correctly', () => {
@@ -272,10 +256,7 @@ describe('AuditTable', () => {
         .createPast(1, { displayName: 'User 2' })
         .last())
     });
-    return load('/system/audits').then(testTypeAndTarget(
-      ['something.unknown'],
-      null
-    ));
+    testType(mountComponent(), ['something.unknown']);
   });
 
   it('renders an audit with an unknown action for its category', () => {
@@ -285,14 +266,13 @@ describe('AuditTable', () => {
         .createPast(1, { name: 'My Project' })
         .last()
     });
-    return load('/system/audits').then(testTypeAndTarget(
-      ['project.unknown'],
-      { text: 'My Project', href: '/projects/1' }
-    ));
+    const row = mountComponent();
+    testType(row, ['project.unknown']);
+    testTarget(row, 'My Project', '/projects/1');
   });
 
   describe('initiator', () => {
-    it('renders correctly for an audit with an actor', async () => {
+    it('renders correctly for an audit with an actor', () => {
       testData.extendedAudits.createPast(1, {
         actor: testData.extendedUsers.first(),
         action: 'user.create',
@@ -300,32 +280,29 @@ describe('AuditTable', () => {
           .createPast(1, { displayName: 'User 2' })
           .last())
       });
-      const component = await load('/system/audits', { root: false });
-      const actorLink = component.first(AuditRow).first(ActorLink);
-      actorLink.getProp('actor').displayName.should.equal('User 1');
+      const actorLink = mountComponent().getComponent(ActorLink);
+      actorLink.props().actor.displayName.should.equal('User 1');
     });
 
-    it('renders correctly for an audit without an actor', async () => {
+    it('renders correctly for an audit without an actor', () => {
       testData.extendedAudits.createPast(1, {
         action: 'upgrade.process.form',
         actee: testData.standardForms
           .createPast(1, { name: 'My Form' })
           .last()
       });
-      const component = await load('/system/audits', { root: false });
-      component.first('.audit-row .initiator').text().should.equal('');
+      mountComponent().get('.initiator').text().should.equal('');
     });
   });
 
-  it('renders the details correctly', async () => {
+  it('renders the details correctly', () => {
     testData.extendedAudits.createPast(1, {
       actor: testData.extendedUsers.first(),
       action: 'user.update',
       actee: testData.toActor(testData.extendedUsers.first()),
       details: { some: 'json' }
     });
-    const app = await load('/system/audits');
-    const selectable = app.first(AuditRow).first(Selectable);
+    const selectable = mountComponent().getComponent(Selectable);
     selectable.text().should.equal('{"some":"json"}');
   });
 });

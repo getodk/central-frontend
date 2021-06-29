@@ -1,4 +1,5 @@
 import ProjectFormAccessRow from '../../../../src/components/project/form-access/row.vue';
+
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
@@ -9,16 +10,16 @@ describe('ProjectFormAccessRow', () => {
   it('adds a class for a form without a published version', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/form-access').then(app => {
-      const row = app.first(ProjectFormAccessRow);
-      row.hasClass('project-form-access-row-draft').should.be.true();
+      const row = app.getComponent(ProjectFormAccessRow);
+      row.classes('project-form-access-row-draft').should.be.true();
     });
   });
 
   it('shows an icon for a form without a published version', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/form-access').then(app => {
-      const td = app.first('.project-form-access-row-form-name');
-      td.first('.icon-edit').should.be.visible();
+      const td = app.get('.project-form-access-row-form-name');
+      td.get('.icon-edit').should.be.visible();
     });
   });
 
@@ -26,18 +27,18 @@ describe('ProjectFormAccessRow', () => {
     it("shows the form's name if the form has one", () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form' });
       return load('/projects/1/form-access').then(app => {
-        const a = app.first('.project-form-access-row-form-name a');
-        a.text().trim().should.equal('My Form');
-        a.getAttribute('title').should.equal('My Form');
+        const a = app.get('.project-form-access-row-form-name a');
+        a.text().should.equal('My Form');
+        a.attributes().title.should.equal('My Form');
       });
     });
 
     it('shows the xmlFormId if the form does not have a name', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', name: null });
       return load('/projects/1/form-access').then(app => {
-        const a = app.first('.project-form-access-row-form-name a');
-        a.text().trim().should.equal('f');
-        a.getAttribute('title').should.equal('f');
+        const a = app.get('.project-form-access-row-form-name a');
+        a.text().should.equal('f');
+        a.attributes().title.should.equal('f');
       });
     });
   });
@@ -46,17 +47,16 @@ describe('ProjectFormAccessRow', () => {
     it('links to the form overview for a form with a published version', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
       return load('/projects/1/form-access').then(app => {
-        const a = app.first('.project-form-access-row-form-name a');
-        a.getAttribute('href').should.equal('#/projects/1/forms/a%20b');
+        const a = app.get('.project-form-access-row-form-name a');
+        a.attributes().href.should.endWith('/projects/1/forms/a%20b');
       });
     });
 
     it('links to .../draft for a form without a published version', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       return load('/projects/1/form-access').then(app => {
-        const a = app.first('.project-form-access-row-form-name a');
-        const href = a.getAttribute('href');
-        href.should.equal('#/projects/1/forms/a%20b/draft');
+        const a = app.get('.project-form-access-row-form-name a');
+        a.attributes().href.should.endWith('/projects/1/forms/a%20b/draft');
       });
     });
   });
@@ -64,8 +64,8 @@ describe('ProjectFormAccessRow', () => {
   it('shows the form state', () => {
     testData.extendedForms.createPast(1, { state: 'closing' });
     return load('/projects/1/form-access').then(app => {
-      const td = app.find('.project-form-access-row td')[1];
-      td.first('select').element.value.should.equal('closing');
+      const td = app.findAll('.project-form-access-row td').at(1);
+      td.get('select').element.value.should.equal('closing');
     });
   });
 
@@ -82,10 +82,10 @@ describe('ProjectFormAccessRow', () => {
         xmlFormId: 'f'
       });
       return load('/projects/1/form-access').then(app => {
-        const td = app.find('.project-form-access-row-access');
+        const td = app.findAll('.project-form-access-row-access');
         td.length.should.equal(2);
-        td[0].first('input').element.checked.should.be.true();
-        td[1].first('input').element.checked.should.be.false();
+        td.at(0).get('input').element.checked.should.be.true();
+        td.at(1).get('input').element.checked.should.be.false();
       });
     });
 
@@ -99,7 +99,7 @@ describe('ProjectFormAccessRow', () => {
         xmlFormId: 'f'
       });
       return load('/projects/1/form-access').then(app => {
-        app.find('.project-form-access-row-access').length.should.equal(0);
+        app.find('.project-form-access-row-access').exists().should.be.false();
       });
     });
   });

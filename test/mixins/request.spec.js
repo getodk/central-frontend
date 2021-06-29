@@ -15,7 +15,7 @@ describe('mixins/request', () => {
         .request(component =>
           component.vm.request({ method: 'DELETE', url: '/v1/projects/1' }))
         .beforeEachResponse(component => {
-          component.data().awaitingResponse.should.be.true();
+          component.vm.awaitingResponse.should.be.true();
         })
         .respondWithSuccess());
 
@@ -26,7 +26,7 @@ describe('mixins/request', () => {
           component.vm.request({ method: 'DELETE', url: '/v1/projects/1' }))
         .respondWithSuccess()
         .afterResponse(component => {
-          component.data().awaitingResponse.should.be.false();
+          component.vm.awaitingResponse.should.be.false();
         }));
 
     it('sets awaitingResponse to false after an error response', () =>
@@ -37,7 +37,7 @@ describe('mixins/request', () => {
             .catch(noop))
         .respondWithProblem()
         .afterResponse(component => {
-          component.data().awaitingResponse.should.be.false();
+          component.vm.awaitingResponse.should.be.false();
         }));
   });
 

@@ -1,4 +1,5 @@
 import FormTable from '../../../src/components/form/table.vue';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -9,10 +10,10 @@ describe('FormTable', () => {
       mockLogin({ role: 'admin' });
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1');
-      const table = app.first(FormTable);
-      const headers = table.find('th').map(th => th.text().trim());
+      const table = app.getComponent(FormTable);
+      const headers = table.findAll('th').wrappers.map(th => th.text());
       headers.should.eql(['Name', 'ID and Version', 'Submissions', 'Actions']);
-      table.find('td').length.should.equal(4);
+      table.findAll('td').length.should.equal(4);
     });
 
     it('shows the correct columns to a project viewer', async () => {
@@ -20,13 +21,13 @@ describe('FormTable', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1');
-      const table = app.first(FormTable);
-      const headers = table.find('th').map(th => th.text().trim());
+      const table = app.getComponent(FormTable);
+      const headers = table.findAll('th').wrappers.map(th => th.text());
       headers.should.eql(['Name', 'Submissions']);
-      const td = table.find('td');
+      const td = table.findAll('td');
       td.length.should.equal(2);
-      td[0].hasClass('name').should.be.true();
-      td[1].hasClass('submissions').should.be.true();
+      td.at(0).classes('name').should.be.true();
+      td.at(1).classes('submissions').should.be.true();
     });
 
     it('shows the correct columns to a Data Collector', async () => {
@@ -34,14 +35,14 @@ describe('FormTable', () => {
       testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1');
-      const table = app.first(FormTable);
-      const headers = table.find('th').map(th => th.text().trim());
+      const table = app.getComponent(FormTable);
+      const headers = table.findAll('th').wrappers.map(th => th.text());
       headers.should.eql(['Name', 'ID and Version', 'Actions']);
-      const td = table.find('td');
+      const td = table.findAll('td');
       td.length.should.equal(3);
-      td[0].hasClass('name').should.be.true();
-      td[1].hasClass('id-and-version').should.be.true();
-      td[2].hasClass('actions').should.be.true();
+      td.at(0).classes('name').should.be.true();
+      td.at(1).classes('id-and-version').should.be.true();
+      td.at(2).classes('actions').should.be.true();
     });
   });
 
@@ -55,9 +56,9 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1');
-      const names = app.find('.form-row .name')
-        .map(wrapper => wrapper.text().trim());
-      names.should.eql(['My Draft Form', 'My Published Form']);
+      const td = app.findAll('.form-row .name');
+      const text = td.wrappers.map(wrapper => wrapper.text());
+      text.should.eql(['My Draft Form', 'My Published Form']);
     });
 
     it('shows a form without a published version to a project viewer', async () => {
@@ -69,9 +70,9 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1');
-      const names = app.find('.form-row .name')
-        .map(wrapper => wrapper.text().trim());
-      names.should.eql(['My Draft Form', 'My Published Form']);
+      const td = app.findAll('.form-row .name');
+      const text = td.wrappers.map(wrapper => wrapper.text());
+      text.should.eql(['My Draft Form', 'My Published Form']);
     });
 
     it('does not show form without published version to Data Collector', async () => {
@@ -83,9 +84,9 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1');
-      const names = app.find('.form-row .name')
-        .map(wrapper => wrapper.text().trim());
-      names.should.eql(['My Published Form']);
+      const td = app.findAll('.form-row .name');
+      const text = td.wrappers.map(wrapper => wrapper.text());
+      text.should.eql(['My Published Form']);
     });
   });
 });

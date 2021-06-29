@@ -1,3 +1,5 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
@@ -14,7 +16,8 @@ const mountComponent = () => mount(SubmissionFeedEntry, {
       ? new Audit(testData.extendedAudits.last())
       : testData.extendedComments.last()
   },
-  router: true
+  stubs: { RouterLink: RouterLinkStub },
+  mocks: { $route: '/projects/1/submissions/s' }
 });
 
 describe('SubmissionFeedEntry', () => {
@@ -28,12 +31,12 @@ describe('SubmissionFeedEntry', () => {
       const { loggedAt } = testData.extendedAudits
         .createPast(1, { action: 'submission.create' })
         .last();
-      mountComponent().first(DateTime).getProp('iso').should.equal(loggedAt);
+      mountComponent().getComponent(DateTime).props().iso.should.equal(loggedAt);
     });
 
     it('shows createdAt for a comment', () => {
       const { createdAt } = testData.extendedComments.createPast(1).last();
-      mountComponent().first(DateTime).getProp('iso').should.equal(createdAt);
+      mountComponent().getComponent(DateTime).props().iso.should.equal(createdAt);
     });
   });
 
@@ -42,15 +45,15 @@ describe('SubmissionFeedEntry', () => {
       actor: testData.extendedUsers.first(),
       action: 'submission.create'
     });
-    const actorLink = mountComponent().first(ActorLink);
-    actorLink.getProp('actor').displayName.should.equal('Alice');
+    const actorLink = mountComponent().getComponent(ActorLink);
+    actorLink.props().actor.displayName.should.equal('Alice');
   });
 
   describe('title', () => {
     it('renders correctly for a submission.create audit', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
-      const title = mountComponent().first('.title');
-      title.find('.icon-cloud-upload').length.should.equal(1);
+      const title = mountComponent().get('.title');
+      title.find('.icon-cloud-upload').exists().should.be.true();
       title.text().should.equal('Submitted by Alice');
     });
 
@@ -60,11 +63,11 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: null }
         });
-        const title = mountComponent().first('.title');
+        const title = mountComponent().get('.title');
         title.text().should.equal('Received per Alice');
-        const reviewState = title.first('.review-state');
-        reviewState.getAttribute('class').should.equal('review-state');
-        reviewState.find('.icon-dot-circle-o').length.should.equal(1);
+        const reviewState = title.get('.review-state');
+        reviewState.attributes().class.should.equal('review-state');
+        reviewState.find('.icon-dot-circle-o').exists().should.be.true();
         reviewState.text().should.equal('Received');
       });
 
@@ -73,11 +76,11 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'hasIssues' }
         });
-        const title = mountComponent().first('.title');
+        const title = mountComponent().get('.title');
         title.text().should.equal('Has Issues per Alice');
-        const reviewState = title.first('.review-state');
-        reviewState.hasClass('hasIssues').should.be.true();
-        reviewState.find('.icon-comments').length.should.equal(1);
+        const reviewState = title.get('.review-state');
+        reviewState.classes('hasIssues').should.be.true();
+        reviewState.find('.icon-comments').exists().should.be.true();
         reviewState.text().should.equal('Has Issues');
       });
 
@@ -86,11 +89,11 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'edited' }
         });
-        const title = mountComponent().first('.title');
+        const title = mountComponent().get('.title');
         title.text().should.equal('Edited by Alice');
-        const reviewState = title.first('.review-state');
-        reviewState.hasClass('edited').should.be.true();
-        reviewState.find('.icon-pencil').length.should.equal(1);
+        const reviewState = title.get('.review-state');
+        reviewState.classes('edited').should.be.true();
+        reviewState.find('.icon-pencil').exists().should.be.true();
         reviewState.text().should.equal('Edited');
       });
 
@@ -99,11 +102,11 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'approved' }
         });
-        const title = mountComponent().first('.title');
+        const title = mountComponent().get('.title');
         title.text().should.equal('Approved by Alice');
-        const reviewState = title.first('.review-state');
-        reviewState.hasClass('approved').should.be.true();
-        reviewState.find('.icon-check-circle').length.should.equal(1);
+        const reviewState = title.get('.review-state');
+        reviewState.classes('approved').should.be.true();
+        reviewState.find('.icon-check-circle').exists().should.be.true();
         reviewState.text().should.equal('Approved');
       });
 
@@ -112,11 +115,11 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'rejected' }
         });
-        const title = mountComponent().first('.title');
+        const title = mountComponent().get('.title');
         title.text().should.equal('Rejected by Alice');
-        const reviewState = title.first('.review-state');
-        reviewState.hasClass('rejected').should.be.true();
-        reviewState.find('.icon-times-circle').length.should.equal(1);
+        const reviewState = title.get('.review-state');
+        reviewState.classes('rejected').should.be.true();
+        reviewState.find('.icon-times-circle').exists().should.be.true();
         reviewState.text().should.equal('Rejected');
       });
     });
@@ -125,18 +128,18 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedAudits.createPast(1, {
         action: 'submission.update.version'
       });
-      const title = mountComponent().first('.title');
+      const title = mountComponent().get('.title');
       title.text().should.equal('Edited by Alice');
-      const reviewState = title.first('.review-state');
-      reviewState.hasClass('edited').should.be.true();
-      reviewState.find('.icon-pencil').length.should.equal(1);
+      const reviewState = title.get('.review-state');
+      reviewState.classes('edited').should.be.true();
+      reviewState.find('.icon-pencil').exists().should.be.true();
       reviewState.text().should.equal('Edited');
     });
 
     it('renders correctly for a comment', () => {
       testData.extendedComments.createPast(1);
-      const title = mountComponent().first('.title');
-      title.find('.icon-comment').length.should.equal(1);
+      const title = mountComponent().get('.title');
+      title.find('.icon-comment').exists().should.be.true();
       title.text().should.equal('Comment by Alice');
     });
   });
@@ -148,42 +151,48 @@ describe('SubmissionFeedEntry', () => {
         details: { reviewState: 'approved' },
         notes: 'Some notes'
       });
-      mountComponent().first('.body').text().should.equal('Some notes\n');
+      mountComponent().get('.body').text().should.equal('Some notes');
     });
 
     it("shows a comment's body", () => {
       testData.extendedComments.createPast(1, { body: 'Some comment' });
-      mountComponent().first('.body').text().should.equal('Some comment\n');
+      mountComponent().get('.body').text().should.equal('Some comment');
     });
 
     it("shows a comment's body with rendered markdown", () => {
       testData.extendedComments.createPast(1, { body: 'Some **bold** comment' });
-      mountComponent().first('.body').html().should.equal('<div class="body"><p>Some <strong>bold</strong> comment</p>\n</div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"><p>Some <strong>bold</strong> comment</p>\n</div>');
     });
 
     it('shows a multi-line comment rendered on multiple lines', () => {
       testData.extendedComments.createPast(1, { body: 'Line 1\nLine 2' });
-      mountComponent().first('.body').html().should.equal('<div class="body"><p>Line 1<br>Line 2</p>\n</div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"><p>Line 1<br>Line 2</p>\n</div>');
     });
 
     it('augments links to add target=_blank and open in new tab', () => {
       testData.extendedComments.createPast(1, { body: '[link](https://getodk.org)' });
-      mountComponent().first('.body').html().should.equal('<div class="body"><p><a href="https://getodk.org" target="_blank" rel="noreferrer noopener">link</a></p>\n</div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"><p><a href="https://getodk.org" target="_blank" rel="noreferrer noopener">link</a></p>\n</div>');
     });
 
     it('does allow raw html in markdown', () => {
       testData.extendedComments.createPast(1, { body: '<b>bold</b>' });
-      mountComponent().first('.body').html().should.equal('<div class="body"><p><b>bold</b></p>\n</div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"><p><b>bold</b></p>\n</div>');
     });
 
     it('removes script and svg tags and sanitizes html', () => {
       testData.extendedComments.createPast(1, { body: '<script>foo</script><svg>bar</svg>' });
-      mountComponent().first('.body').html().should.equal('<div class="body"></div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"></div>');
     });
 
     it('removes unwanted attributes', () => {
       testData.extendedComments.createPast(1, { body: '<b style="color: red;" class="c" data-foo="bar">foo</b>' });
-      mountComponent().first('.body').html().should.equal('<div class="body"><p><b>foo</b></p>\n</div>');
+      const { outerHTML } = mountComponent().get('.body').element;
+      outerHTML.should.equal('<div class="body"><p><b>foo</b></p>\n</div>');
     });
   });
 });

@@ -1,7 +1,22 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import ChecklistStep from '../../../src/components/checklist-step.vue';
+import FormDraftChecklist from '../../../src/components/form-draft/checklist.vue';
+
 import testData from '../../data';
-import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mount } from '../../util/lifecycle';
+
+const mountComponent = (options) => mount(FormDraftChecklist, {
+  propsData: { status: options.mocks.$route.endsWith('/draft') },
+  requestData: {
+    form: testData.extendedForms.last(),
+    formDraft: testData.extendedFormDrafts.last(),
+    attachments: testData.standardFormAttachments.sorted()
+  },
+  stubs: { RouterLink: RouterLinkStub },
+  ...options
+});
 
 describe('FormDraftChecklist', () => {
   beforeEach(mockLogin);
@@ -10,35 +25,30 @@ describe('FormDraftChecklist', () => {
     it('is shown for a form without a published version', () => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep).length.should.equal(5);
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      checklist.findAllComponents(ChecklistStep).length.should.equal(5);
     });
 
     it('is not shown for a form with a published version', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep).length.should.equal(4);
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
-    });
-
-    it('is not shown in the form overview', () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
-        app.find('#form-overview-draft .checklist-step').length.should.equal(4);
-      });
+      checklist.findAllComponents(ChecklistStep).length.should.equal(4);
     });
 
     it('is marked as complete', () => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.first(ChecklistStep).getProp('stage').should.equal('complete');
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      const { stage } = checklist.getComponent(ChecklistStep).props();
+      stage.should.equal('complete');
     });
   });
 
@@ -48,21 +58,30 @@ describe('FormDraftChecklist', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
     });
 
-    it('is marked as a current step', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.first(ChecklistStep).getProp('stage').should.equal('current');
-      }));
+    it('is marked as a current step', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
+      });
+      const { stage } = checklist.getComponent(ChecklistStep).props();
+      stage.should.equal('current');
+    });
 
-    it('links to .../draft from the form overview', () =>
-      load('/projects/1/forms/f').then(app => {
-        const a = app.first('#form-overview-draft .checklist-step a');
-        a.getAttribute('href').should.equal('#/projects/1/forms/f/draft');
-      }));
+    it('links to .../draft from the form overview', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f' }
+      });
+      const step = checklist.getComponent(ChecklistStep);
+      const { to } = step.getComponent(RouterLinkStub).props();
+      to.should.equal('/projects/1/forms/f/draft');
+    });
 
-    it('does not link to .../draft from .../draft', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.first(ChecklistStep).find('a').length.should.equal(0);
-      }));
+    it('does not link to .../draft from .../draft', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
+      });
+      const step = checklist.getComponent(ChecklistStep);
+      step.findComponent(RouterLinkStub).exists().should.be.false();
+    });
   });
 
   describe('Upload Form Media Files', () => {
@@ -73,30 +92,37 @@ describe('FormDraftChecklist', () => {
 
     it('is shown if the draft has an attachment', () => {
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep).length.should.equal(4);
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      checklist.findAllComponents(ChecklistStep).length.should.equal(4);
     });
 
-    it('is not shown if the form draft does not have an attachment', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep).length.should.equal(3);
-      }));
+    it('is not shown if the form draft does not have an attachment', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
+      });
+      checklist.findAllComponents(ChecklistStep).length.should.equal(3);
+    });
 
     it('is marked as complete if all attachments exist', () => {
       testData.standardFormAttachments.createPast(1, { exists: true });
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[1].getProp('stage').should.equal('complete');
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      const step = checklist.findAllComponents(ChecklistStep).at(1);
+      step.props().stage.should.equal('complete');
     });
 
     it('is marked as a current step if an attachment is missing', () => {
       testData.standardFormAttachments
         .createPast(1, { exists: true })
         .createPast(1, { exists: false });
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[1].getProp('stage').should.equal('current');
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      const step = checklist.findAllComponents(ChecklistStep).at(1);
+      step.props().stage.should.equal('current');
     });
   });
 
@@ -108,18 +134,22 @@ describe('FormDraftChecklist', () => {
         submissions: 1
       });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[2].getProp('stage').should.equal('complete');
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      const step = checklist.findAllComponents(ChecklistStep).at(2);
+      step.props().stage.should.equal('complete');
     });
 
     it('is marked as a current step if draft does not have a submission', () => {
       testData.extendedForms.createPast(1, { submissions: 1 });
       testData.extendedFormVersions.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[2].getProp('stage').should.equal('current');
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
       });
+      const step = checklist.findAllComponents(ChecklistStep).at(2);
+      step.props().stage.should.equal('current');
     });
   });
 
@@ -130,21 +160,29 @@ describe('FormDraftChecklist', () => {
       testData.standardFormAttachments.createPast(1);
     });
 
-    it('is marked as a current step', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[3].getProp('stage').should.equal('current');
-      }));
+    it('is marked as a current step', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
+      });
+      const step = checklist.findAllComponents(ChecklistStep).at(3);
+      step.props().stage.should.equal('current');
+    });
 
-    it('links to .../draft from the form overview', () =>
-      load('/projects/1/forms/f').then(app => {
-        const a = app.find('#form-overview-draft .checklist-step')[3].find('a');
-        a.length.should.equal(2);
-        a[0].getAttribute('href').should.equal('#/projects/1/forms/f/draft');
-      }));
+    it('links to .../draft from the form overview', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f' }
+      });
+      const step = checklist.findAllComponents(ChecklistStep).at(3);
+      const { to } = step.getComponent(RouterLinkStub).props();
+      to.should.equal('/projects/1/forms/f/draft');
+    });
 
-    it('does not link to .../draft from .../draft', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        app.find(ChecklistStep)[3].find('a').length.should.equal(1);
-      }));
+    it('does not link to .../draft from .../draft', () => {
+      const checklist = mountComponent({
+        mocks: { $route: '/projects/1/forms/f/draft' }
+      });
+      const step = checklist.findAllComponents(ChecklistStep).at(3);
+      step.findComponent(RouterLinkStub).exists().should.be.false();
+    });
   });
 });

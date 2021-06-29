@@ -1,66 +1,55 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
+import ProjectOverviewRightNow from '../../../../src/components/project/overview/right-now.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
+
 import testData from '../../../data';
+import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
-import { mockRoute } from '../../../util/http';
-import { trigger } from '../../../util/event';
+import { mount } from '../../../util/lifecycle';
+import { wait } from '../../../util/util';
+
+const mountComponent = () => mount(ProjectOverviewRightNow, {
+  requestData: { project: testData.extendedProjects.last() },
+  stubs: { RouterLink: RouterLinkStub },
+  mocks: { $route: '/projects/1' }
+});
 
 describe('ProjectOverviewRightNow', () => {
   beforeEach(mockLogin);
 
   describe('app users', () => {
-    it('shows the count', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 3 }).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          const items = app.find(SummaryItem);
-          items.length.should.equal(2);
-          const heading = items[0].first('.summary-item-heading').text().trim();
-          heading.should.equal('3');
-        }));
+    it('shows the count', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 3 });
+      const counts = mountComponent().findAll('.summary-item-heading');
+      counts.length.should.equal(2);
+      counts.at(0).text().should.equal('3');
+    });
 
-    it('links to the app users page', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { appUsers: 1 }).last())
-        .respondWithData(() => testData.extendedForms.sorted())
-        .afterResponses(app => {
-          const items = app.find(SummaryItem);
-          items.length.should.equal(2);
-          const iconContainer = items[0].first('.summary-item-icon-container');
-          const href = iconContainer.getAttribute('href');
-          href.should.equal('#/projects/1/app-users');
-        }));
+    it('links to the app users page', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      const { routeTo } = mountComponent().getComponent(SummaryItem).props();
+      routeTo.should.equal('/projects/1/app-users');
+    });
   });
 
   describe('forms', () => {
-    it('shows the count', () =>
-      mockRoute('/projects/1')
-        .respondWithData(() =>
-          testData.extendedProjects.createPast(1, { forms: 3 }).last())
-        .respondWithData(() => testData.extendedForms.createPast(3).sorted())
-        .afterResponses(app => {
-          const items = app.find(SummaryItem);
-          items.length.should.equal(2);
-          const heading = items[1].first('.summary-item-heading').text().trim();
-          heading.should.equal('3');
-        }));
+    it('shows the count', () => {
+      testData.extendedProjects.createPast(1, { forms: 3 });
+      const counts = mountComponent().findAll('.summary-item-heading');
+      counts.length.should.equal(2);
+      counts.at(1).text().should.equal('3');
+    });
 
-    it('scrolls down the page after a click', () =>
-      mockRoute('/projects/1', { attachToDocument: true })
-        .respondWithData(() => testData.extendedProjects.createPast(1).last())
-        .respondWithData(() => testData.extendedForms.createPast(1).sorted())
-        .afterResponses(app => {
-          window.pageYOffset.should.equal(0);
-          return trigger.click(app.find('.summary-item-icon-container')[1]);
-        })
-        // Wait for the animation to complete.
-        .then(() => new Promise(resolve => {
-          setTimeout(resolve, 400);
-        }))
-        .then(() => {
-          window.pageYOffset.should.not.equal(0);
-        }));
+    it('scrolls down after a click', async () => {
+      testData.extendedForms.createPast(1);
+      const app = await load('/projects/1', { attachTo: document.body });
+      window.pageYOffset.should.equal(0);
+      const component = app.getComponent(ProjectOverviewRightNow);
+      await component.findAll('.summary-item-icon-container').at(1).trigger('click');
+      // Wait for the animation to complete.
+      await wait(400);
+      window.pageYOffset.should.not.equal(0);
+    });
   });
 });

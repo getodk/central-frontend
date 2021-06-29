@@ -1,9 +1,8 @@
-import sinon from 'sinon';
-
 import FormGroup from '../../src/components/form-group.vue';
+
 import TestUtilSpan from '../util/components/span.vue';
+
 import { mount } from '../util/lifecycle';
-import { trigger } from '../util/event';
 
 const mountComponent = (mountOptions = {}) => mount(FormGroup, {
   ...mountOptions,
@@ -20,27 +19,25 @@ describe('FormGroup', () => {
     const formGroup = mountComponent({
       propsData: { value: 'x' }
     });
-    formGroup.first('input').element.value.should.equal('x');
+    formGroup.get('input').element.value.should.equal('x');
   });
 
   it('emits an input event', async () => {
     const formGroup = mountComponent({
       propsData: { value: 'x' }
     });
-    const fake = sinon.fake();
-    sinon.replace(formGroup.vm, '$emit', fake);
-    await trigger.input(formGroup, 'input', 'y');
-    fake.calledWith('input', 'y').should.be.true();
+    await formGroup.get('input').setValue('y');
+    formGroup.emitted().input.should.eql([['y']]);
   });
 
   it('emits a change event', async () => {
     const formGroup = mountComponent({
       propsData: { value: 'x' }
     });
-    const fake = sinon.fake();
-    sinon.replace(formGroup.vm, '$emit', fake);
-    await trigger.changeValue(formGroup, 'input', 'y');
-    fake.calledWith('change', 'y').should.be.true();
+    const input = formGroup.get('input');
+    input.element.value = 'y';
+    await input.trigger('change');
+    formGroup.emitted().change.should.eql([['y']]);
   });
 
   describe('required prop', () => {
@@ -48,18 +45,18 @@ describe('FormGroup', () => {
       const formGroup = mountComponent({
         propsData: { placeholder: 'My input', required: true }
       });
-      const input = formGroup.first('input');
-      input.hasAttribute('required').should.be.true();
-      input.getAttribute('placeholder').should.equal('My input *');
+      const { required, placeholder } = formGroup.get('input').attributes();
+      should.exist(required);
+      placeholder.should.equal('My input *');
     });
 
     it('renders correctly if the prop is false', () => {
       const formGroup = mountComponent({
         propsData: { placeholder: 'My input', required: false }
       });
-      const input = formGroup.first('input');
-      input.hasAttribute('required').should.be.false();
-      input.getAttribute('placeholder').should.equal('My input');
+      const { required, placeholder } = formGroup.get('input').attributes();
+      should.not.exist(required);
+      placeholder.should.equal('My input');
     });
   });
 
@@ -67,28 +64,28 @@ describe('FormGroup', () => {
     const formGroup = mountComponent({
       propsData: { hasError: true }
     });
-    formGroup.hasClass('has-error').should.be.true();
+    formGroup.classes('has-error').should.be.true();
   });
 
   it('passes the autocomplete prop to the input', () => {
     const formGroup = mountComponent({
       propsData: { autocomplete: 'name' }
     });
-    formGroup.first('input').getAttribute('autocomplete').should.equal('name');
+    formGroup.get('input').attributes().autocomplete.should.equal('name');
   });
 
   it('passes attributes to the input', () => {
     const formGroup = mountComponent({
       attrs: { type: 'email' }
     });
-    formGroup.first('input').getAttribute('type').should.equal('email');
+    formGroup.get('input').attributes().type.should.equal('email');
   });
 
   it('uses the before slot', () => {
     const formGroup = mountComponent({
       slots: { before: TestUtilSpan }
     });
-    const { children } = formGroup.vm.$el;
+    const { children } = formGroup.element;
     const tags = Array.from(children).map(child => child.tagName);
     tags.should.eql(['SPAN', 'INPUT', 'SPAN']);
   });
@@ -97,15 +94,15 @@ describe('FormGroup', () => {
     const formGroup = mountComponent({
       slots: { after: TestUtilSpan }
     });
-    const { children } = formGroup.vm.$el;
+    const { children } = formGroup.element;
     const tags = Array.from(children).map(child => child.tagName);
     tags.should.eql(['INPUT', 'SPAN', 'SPAN']);
     children[2].textContent.should.equal('Some span text');
   });
 
   specify('focus() focuses the input', () => {
-    const formGroup = mountComponent({ attachToDocument: true });
+    const formGroup = mountComponent({ attachTo: document.body });
     formGroup.vm.focus();
-    formGroup.first('input').should.be.focused();
+    formGroup.get('input').should.be.focused();
   });
 });

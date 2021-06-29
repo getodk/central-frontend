@@ -12,7 +12,7 @@ describe('SubmissionShow', () => {
     const component = await load('/projects/p/forms/f/submissions/s', {
       root: false
     });
-    component.find(NotFound).length.should.equal(1);
+    component.findComponent(NotFound).exists().should.be.true();
   });
 
   it('renders a back link', async () => {
@@ -21,7 +21,7 @@ describe('SubmissionShow', () => {
     const component = await load('/projects/1/forms/a%20b/submissions/s', {
       root: false
     });
-    const to = component.first(PageBack).getProp('to');
+    const { to } = component.getComponent(PageBack).props();
     to.should.equal('/projects/1/forms/a%20b/submissions');
   });
 
@@ -40,7 +40,7 @@ describe('SubmissionShow', () => {
     const component = await load('/projects/1/forms/f/submissions/s', {
       root: false
     });
-    component.first('#page-head-title').text().should.equal('My Submission');
+    component.get('#page-head-title').text().should.equal('My Submission');
   });
 
   it('shows instance ID if submission does not have an instance name', async () => {
@@ -48,6 +48,6 @@ describe('SubmissionShow', () => {
     const component = await load('/projects/1/forms/f/submissions/s', {
       root: false
     });
-    component.first('#page-head-title').text().should.equal('s');
+    component.get('#page-head-title').text().should.equal('s');
   });
 });

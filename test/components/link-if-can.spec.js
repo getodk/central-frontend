@@ -1,6 +1,9 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import LinkIfCan from '../../src/components/link-if-can.vue';
-import TestUtilIcon from '../util/components/icon.vue';
+
 import TestUtilSpan from '../util/components/span.vue';
+
 import { mockLogin } from '../util/session';
 import { mount } from '../util/lifecycle';
 
@@ -10,11 +13,12 @@ describe('LinkIfCan', () => {
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
       slots: { default: TestUtilSpan },
-      router: true
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/' }
     });
-    component.vm.$el.tagName.should.equal('A');
-    component.getAttribute('href').should.equal('#/users');
-    component.first('span').text().should.equal('Some span text');
+    const link = component.getComponent(RouterLinkStub);
+    link.props().to.should.equal('/users');
+    link.get('span').text().should.equal('Some span text');
   });
 
   it('renders a span if the user cannot navigate to the location', () => {
@@ -22,24 +26,23 @@ describe('LinkIfCan', () => {
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
       slots: { default: TestUtilSpan },
-      router: true
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/' }
     });
-    component.vm.$el.tagName.should.equal('SPAN');
-    component.first('span').text().should.equal('Some span text');
+    component.findComponent(RouterLinkStub).exists().should.be.false();
+    component.element.tagName.should.equal('SPAN');
+    component.get('span').text().should.equal('Some span text');
   });
 
   it('hides an .icon-angle-right if user cannot navigate to location', () => {
     mockLogin({ role: 'none' });
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
-      slots: {
-        default: mount(TestUtilIcon, {
-          propsData: { icon: 'angle-right' }
-        })
-      },
-      router: true,
-      attachToDocument: true
+      slots: { default: '<span class="icon-angle-right"></span>' },
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/' },
+      attachTo: document.body
     });
-    component.first('.icon-angle-right').should.be.hidden(true);
+    component.get('.icon-angle-right').should.be.hidden(true);
   });
 });

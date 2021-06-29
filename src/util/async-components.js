@@ -23,6 +23,10 @@ const loader = (load) => {
 };
 
 const loaders = new Map()
+  .set('Password', loader(() => import(
+    /* webpackChunkName: "component-password" */
+    'vue-password-strength-meter'
+  )))
   .set('AccountClaim', loader(() => import(
     /* webpackChunkName: "component-account-claim" */
     '../components/account/claim.vue'
@@ -110,10 +114,6 @@ const loaders = new Map()
   .set('ProjectShow', loader(() => import(
     /* webpackChunkName: "component-project-show" */
     '../components/project/show.vue'
-  )))
-  .set('ProjectSubmissionOptions', loader(() => import(
-    /* webpackChunkName: "component-project-submission-options" */
-    '../components/project/submission-options.vue'
   )))
   .set('ProjectUserList', loader(() => import(
     /* webpackChunkName: "component-project-user-list" */

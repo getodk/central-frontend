@@ -1,160 +1,134 @@
-import UserEdit from '../../../../src/components/user/edit.vue';
 import UserEditPassword from '../../../../src/components/user/edit/password.vue';
-import testData from '../../../data';
-import { fillForm, submitForm, trigger } from '../../../util/event';
-import { mockHttp, mockRoute } from '../../../util/http';
-import { mockLogin } from '../../../util/session';
-import { mountAndMark } from '../../../util/lifecycle';
 
-const submitPasswords = (wrapper, { match, validSizePass = true }) =>
-  submitForm(wrapper, '#user-edit-password form', [
-    ['#user-edit-password-old-password', 'testPasswordX'],
-    ['#user-edit-password-new-password', validSizePass ? 'testPasswordY' : 'y'],
-    ['#user-edit-password-confirm', match ? validSizePass ? 'testPasswordY' : 'y'
-      : validSizePass ? 'testPasswordZ' : 'z']
-  ]);
+import testData from '../../../data';
+import { load, mockHttp } from '../../../util/http';
+import { mockLogin } from '../../../util/session';
+import { mount } from '../../../util/lifecycle';
+
+const mountOptions = () => ({
+  requestData: { user: testData.standardUsers.first() }
+});
+const submit =
+  async (component, { validSizePass = true, match = true } = {}) => {
+    await component.get('#user-edit-password-old-password').setValue('testPasswordX');
+    await component.get('#user-edit-password-new-password').setValue(validSizePass
+      ? 'testPasswordY'
+      : 'y');
+    await component.get('#user-edit-password-confirm').setValue(match
+      ? (validSizePass ? 'testPasswordY' : 'y')
+      : (validSizePass ? 'testPasswordZ' : 'z'));
+    return component.get('#user-edit-password form').trigger('submit');
+  };
 
 describe('UserEditPassword', () => {
   beforeEach(mockLogin);
 
-  it('resets after a route update', () =>
-    mockRoute('/users/1/edit')
-      .respondWithData(() => testData.standardUsers.last())
-      .afterResponse(app => {
-        const selectors = [
-          '#user-edit-password-old-password',
-          '#user-edit-password-new-password',
-          '#user-edit-password-confirm'
-        ];
-        for (const selector of selectors)
-          app.first(selector).element.value.should.equal('');
-        return fillForm(app.first('#user-edit-password form'), [
-          ['#user-edit-password-old-password', 'x'],
-          ['#user-edit-password-new-password', 'y'],
-          ['#user-edit-password-confirm', 'y']
-        ]);
+  it('resets the form if the route changes', () => {
+    testData.extendedUsers.createPast(1);
+    return load('/users/1/edit', {}, {
+      user: () => testData.standardUsers.first()
+    })
+      .afterResponses(async (app) => {
+        const oldPassword = app.get('#user-edit-password-old-password');
+        const newPassword = app.get('#user-edit-password-new-password');
+        const confirm = app.get('#user-edit-password-confirm');
+        oldPassword.element.value.should.equal('');
+        newPassword.element.value.should.equal('');
+        confirm.element.value.should.equal('');
+        await oldPassword.setValue('x');
+        await newPassword.setValue('y');
+        return confirm.setValue('y');
       })
-      .route('/users/2/edit')
-      .respondWithData(() => testData.standardUsers.createPast(1).last())
+      .load('/users/2/edit')
       .complete()
-      .route('/users/1/edit')
-      .respondWithData(() => testData.standardUsers.first())
-      .afterResponse(app => {
-        const selectors = [
-          '#user-edit-password-old-password',
-          '#user-edit-password-new-password',
-          '#user-edit-password-confirm'
-        ];
-        for (const selector of selectors)
-          app.first(selector).element.value.should.equal('');
-      }));
+      .load('/users/1/edit', { user: () => testData.standardUsers.first() })
+      .afterResponses(app => {
+        app.get('#user-edit-password-old-password').element.value.should.equal('');
+        app.get('#user-edit-password-new-password').element.value.should.equal('');
+        app.get('#user-edit-password-confirm').element.value.should.equal('');
+      });
+  });
 
-  it("does not render form if it is not current user's own account", () =>
+  it("does not render form if it is not current user's own account", async () => {
+    const user = testData.standardUsers.createPast(1).last();
+    const component = mount(UserEditPassword, {
+      requestData: { user }
+    });
+    component.find('form').exists().should.be.false();
+  });
+
+  it('implements some standard button things', () =>
     mockHttp()
-      .mount(UserEdit, {
-        propsData: { id: '2' }
-      })
-      .respondWithData(() => testData.standardUsers.createPast(1).last())
-      .afterResponse(component => {
-        const panelBody = component.first('#user-edit-password .panel-body');
-        panelBody.find('form').length.should.equal(0);
-      }));
-
-  it('standard button thinking things', () =>
-    mockRoute('/account/edit')
-      .respondWithData(() => testData.standardUsers.first())
-      .complete()
-      .request(app => submitPasswords(app, { match: true }))
-      .standardButton('#user-edit-password button'));
-
-  it('shows a success alert after a successful submit', () =>
-    mockRoute('/account/edit')
-      .respondWithData(() => testData.standardUsers.first())
-      .complete()
-      .request(app => submitPasswords(app, { match: true }))
-      .respondWithSuccess()
-      .afterResponse(app => {
-        app.should.alert('success');
+      .mount(UserEditPassword, mountOptions())
+      .testStandardButton({
+        button: 'button',
+        request: submit
       }));
 
   describe('new passwords do not match', () => {
-    it('shows a danger alert', () =>
-      mockRoute('/account/edit')
-        .respondWithData(() => testData.standardUsers.first())
-        .afterResponse(app => submitPasswords(app, { match: false }))
-        .then(app => {
-          app.should.alert('danger');
-        }));
+    it('shows a danger alert', async () => {
+      const component = mount(UserEditPassword, mountOptions());
+      await submit(component, { match: false });
+      component.should.alert('danger');
+    });
 
-    it('adds .has-error to the fields', () => {
-      const component = mountAndMark(UserEditPassword, {
-        requestData: { user: testData.standardUsers.first() }
-      });
-      return submitPasswords(component, { match: false }).then(() => {
-        const formGroups = component.find('.form-group');
-        formGroups.length.should.equal(3);
-        formGroups[1].hasClass('has-error').should.be.true();
-        formGroups[2].hasClass('has-error').should.be.true();
-      });
+    it('adds .has-error to the fields', async () => {
+      const component = mount(UserEditPassword, mountOptions());
+      await submit(component, { match: false });
+      const formGroups = component.findAll('.form-group');
+      formGroups.length.should.equal(3);
+      formGroups.at(1).classes('has-error').should.be.true();
+      formGroups.at(2).classes('has-error').should.be.true();
     });
 
     it('removes .has-error once the passwords match', () =>
       mockHttp()
-        .mount(UserEditPassword, {
-          requestData: { user: testData.standardUsers.first() }
-        })
+        .mount(UserEditPassword, mountOptions())
         .request(async (component) => {
-          await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-old-password', 'testPasswordX'],
-            ['#user-edit-password-new-password', 'testPasswordY'],
-            ['#user-edit-password-confirm', 'testPasswordZ']
-          ]);
-          await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-confirm', 'testPasswordY']
-          ]);
+          await submit(component, { match: false });
+          await component.get('#user-edit-password-confirm').setValue('testPasswordY');
+          return component.get('form').trigger('submit');
         })
         .beforeAnyResponse(component => {
-          const formGroups = component.find('.form-group');
-          formGroups[1].hasClass('has-error').should.be.false();
-          formGroups[2].hasClass('has-error').should.be.false();
+          const formGroups = component.findAll('.form-group');
+          formGroups.at(1).classes('has-error').should.be.false();
+          formGroups.at(2).classes('has-error').should.be.false();
         })
         .respondWithSuccess());
   });
 
   describe('password length does not meet the criteria', () => {
-    it('adds .has-error to the fields when password length < 10', () => {
-      const component = mountAndMark(UserEditPassword, {
-        requestData: { user: testData.standardUsers.first() }
-      });
-      return submitPasswords(component, { match: false, validSizePass: false }).then(() => {
-        const formGroups = component.find('.form-group');
-        formGroups.length.should.equal(3);
-        formGroups[1].hasClass('has-error').should.be.true();
-        formGroups[2].hasClass('has-error').should.be.true();
-      });
+    it('adds .has-error to the field when password length < 10', async () => {
+      const component = mount(UserEditPassword, mountOptions());
+      await submit(component, { validSizePass: false });
+      const formGroups = component.findAll('.form-group');
+      formGroups.length.should.equal(3);
+      formGroups.at(1).classes('has-error').should.be.true();
     });
 
     it('removes .has-error once the passwords length > 10', () =>
       mockHttp()
-        .mount(UserEditPassword, {
-          requestData: { user: testData.standardUsers.first() }
-        })
+        .mount(UserEditPassword, mountOptions())
         .request(async (component) => {
-          await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-old-password', 'testPasswordX'],
-            ['#user-edit-password-new-password', 'y'],
-            ['#user-edit-password-confirm', 'testPasswordY']
-          ]);
-          await trigger.submit(component, '#user-edit-password form', [
-            ['#user-edit-password-new-password', 'testPasswordY']
-          ]);
+          await submit(component, { validSizePass: false });
+          const newPassword = component.get('#user-edit-password-new-password');
+          await newPassword.setValue('testPasswordY');
+          await component.get('#user-edit-password-confirm').setValue('testPasswordY');
+          return component.get('form').trigger('submit');
         })
         .beforeAnyResponse(component => {
-          const formGroups = component.find('.form-group');
-          formGroups.length.should.equal(3);
-          formGroups[1].hasClass('has-error').should.be.false();
-          formGroups[2].hasClass('has-error').should.be.false();
+          const formGroups = component.findAll('.form-group');
+          formGroups.at(1).classes('has-error').should.be.false();
         })
         .respondWithSuccess());
   });
+
+  it('shows a success alert after a successful response', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respondWithSuccess()
+      .afterResponse(component => {
+        component.should.alert('success');
+      }));
 });

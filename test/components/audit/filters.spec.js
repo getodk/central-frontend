@@ -2,33 +2,30 @@ import { DateTime, Settings } from 'luxon';
 
 import AuditFiltersAction from '../../../src/components/audit/filters/action.vue';
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
-import { trigger } from '../../util/event';
 
 describe('AuditFilters', () => {
   beforeEach(mockLogin);
 
   it('initially specifies nonverbose for action', () =>
     load('/system/audits', { root: false })
-      .beforeEachResponse((component, config) => {
-        config.url.should.containEql('action=nonverbose');
-        const value = component.first(AuditFiltersAction).getProp('value');
+      .beforeEachResponse((component, { url }) => {
+        url.should.containEql('action=nonverbose');
+        const { value } = component.getComponent(AuditFiltersAction).props();
         value.should.equal('nonverbose');
       }));
 
   it('sends a request after the action filter is changed', () =>
     load('/system/audits', { root: false })
       .complete()
-      .request(component => trigger.changeValue(
-        component,
-        '#audit-filters-action select',
-        'project.create'
-      ))
-      .beforeEachResponse((component, config) => {
-        config.url.should.containEql('action=project.create');
+      .request(component =>
+        component.get('#audit-filters-action select').setValue('project.create'))
+      .beforeEachResponse((_, { url }) => {
+        url.should.containEql('action=project.create');
       })
       .respondWithData(() => testData.extendedAudits.sorted()));
 
@@ -37,10 +34,10 @@ describe('AuditFilters', () => {
     // zone even if we specify a different time zone for Luxon.
     const restoreLuxon = setLuxon({ now: '1970-01-01T12:00:00' });
     return load('/system/audits', { root: false })
-      .beforeEachResponse((component, config) => {
-        const index = config.url.indexOf('?');
+      .beforeEachResponse((component, { url }) => {
+        const index = url.indexOf('?');
         index.should.not.equal(-1);
-        const params = new URLSearchParams(config.url.slice(index));
+        const params = new URLSearchParams(url.slice(index));
 
         const start = params.get('start');
         start.should.startWith('1970-01-01T00:00:00.000');
@@ -50,7 +47,7 @@ describe('AuditFilters', () => {
         end.should.startWith('1970-01-01T23:59:59.999');
         DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
 
-        const value = component.first(DateRangePicker).getProp('value');
+        const { value } = component.getComponent(DateRangePicker).props();
         value[0].toISO().should.equal(start);
         value[1].toISO().should.equal(start);
       })
@@ -63,11 +60,11 @@ describe('AuditFilters', () => {
       .request(component => {
         const start = DateTime.fromISO('1970-01-02').toJSDate();
         const end = DateTime.fromISO('1970-01-03').toJSDate();
-        component.first(DateRangePicker).vm.close([start, end]);
+        component.getComponent(DateRangePicker).vm.close([start, end]);
       })
-      .beforeEachResponse((component, config) => {
-        config.url.should.containEql('start=1970-01-02T00%3A00%3A00.000');
-        config.url.should.containEql('end=1970-01-03T23%3A59%3A59.999');
+      .beforeEachResponse((component, { url }) => {
+        url.should.containEql('start=1970-01-02T00%3A00%3A00.000');
+        url.should.containEql('end=1970-01-03T23%3A59%3A59.999');
       })
       .respondWithData(() => testData.extendedAudits.sorted()));
 });

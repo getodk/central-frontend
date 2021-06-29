@@ -1,45 +1,48 @@
-import testData from '../../data';
-import { load, mockRoute } from '../../util/http';
+import { RouterLinkStub } from '@vue/test-utils';
+
+import Navbar from '../../../src/components/navbar.vue';
+import NavbarLinks from '../../../src/components/navbar/links.vue';
+
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
+import { mount } from '../../util/lifecycle';
+
+const mountComponent = (options) => mount(NavbarLinks, {
+  stubs: { RouterLink: RouterLinkStub },
+  ...options
+});
 
 describe('NavbarLinks', () => {
-  it('does not render the navbar links before login', () =>
-    mockRoute('/login')
-      .restoreSession(false)
-      .afterResponse(app => {
-        app.find('#navbar-links').length.should.equal(0);
-      }));
+  it('does not render the links before login', () => {
+    const navbar = mount(Navbar, {
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/login' }
+    });
+    navbar.findComponent(NavbarLinks).exists().should.be.false();
+  });
 
-  describe('navigation', () => {
+  describe('sitewide administrator', () => {
     beforeEach(mockLogin);
 
-    it('navigates to / after the user clicks the Projects link', () =>
-      load('/account/edit')
-        .complete()
-        .request(trigger.click('#navbar-links-projects'))
-        .respondFor('/')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        }));
+    it('shows the Projects Link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.get('#navbar-links-projects').should.be.visible();
+    });
 
-    it('navigates to /users after the user clicks the Users link', () =>
-      load('/account/edit')
-        .complete()
-        .request(trigger.click('#navbar-links-users'))
-        .respondFor('/users')
-        .afterResponse(app => {
-          app.vm.$route.path.should.equal('/users');
-        }));
+    it('shows the Users link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.get('#navbar-links-users').should.be.visible();
+    });
 
-    it('navigates to /system/backups after user clicks System link', () =>
-      load('/account/edit')
-        .complete()
-        .request(trigger.click('#navbar-links-system'))
-        .respondFor('/system/backups')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/system/backups');
-        }));
+    it('shows the System link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.get('#navbar-links-system').should.be.visible();
+    });
   });
 
   describe('user with no sitewide role', () => {
@@ -47,62 +50,55 @@ describe('NavbarLinks', () => {
       mockLogin({ role: 'none' });
     });
 
-    it('shows the Projects link', () =>
-      load('/account/edit').then(app => {
-        app.find('#navbar-links-projects').length.should.equal(1);
-      }));
+    it('shows the Projects link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.get('#navbar-links-projects').should.be.visible();
+    });
 
-    it('does not show the Users link', () =>
-      load('/account/edit').then(app => {
-        app.find('#navbar-links-users').length.should.equal(0);
-      }));
+    it('does not render the Users link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.find('#navbar-links-users').exists().should.be.false();
+    });
 
-    it('does not show the System link', () =>
-      load('/account/edit').then(app => {
-        app.find('#navbar-links-system').length.should.equal(0);
-      }));
+    it('does not render the System link', () => {
+      const component = mountComponent({
+        mocks: { $route: '/' }
+      });
+      component.find('#navbar-links-system').exists().should.be.false();
+    });
   });
 
   describe('active link', () => {
     beforeEach(mockLogin);
 
-    const assertActiveLink = (selector) => (app) => {
-      const active = app.find('#navbar-links .active');
-      active.length.should.equal(1);
-      active[0].find(selector).length.should.equal(1);
-    };
-
-    it('marks the Projects link as active for ProjectList', () =>
-      load('/').then(assertActiveLink('#navbar-links-projects')));
-
-    it('marks the Projects link as active for ProjectOverview', () => {
-      testData.extendedProjects.createPast(1);
-      return load('/projects/1')
-        .then(assertActiveLink('#navbar-links-projects'));
-    });
-
-    it('marks the Users link as active for UserList', () =>
-      load('/users').then(assertActiveLink('#navbar-links-users')));
-
-    it('marks the Users link as active for UserEdit', () =>
-      load('/users/1/edit').then(assertActiveLink('#navbar-links-users')));
-
-    it('marks no link as active for AccountEdit', () =>
-      load('/account/edit').then(app => {
-        app.first('#navbar-links').find('.active').length.should.equal(0);
-      }));
-
-    it('marks the System link as active for BackupList', () =>
-      load('/system/backups').then(assertActiveLink('#navbar-links-system')));
-
-    it('marks the System link as active for AuditList', () => {
-      testData.extendedAudits.createPast(1, {
-        actor: testData.extendedUsers.first(),
-        action: 'user.update',
-        actee: testData.toActor(testData.extendedUsers.first())
+    // Array of test cases
+    const cases = [
+      ['/', '#navbar-links-projects'],
+      ['/projects/1', '#navbar-links-projects'],
+      ['/users', '#navbar-links-users'],
+      ['/users/1/edit', '#navbar-links-users'],
+      ['/system/audits', '#navbar-links-system']
+    ];
+    for (const [route, link] of cases) {
+      it(`marks ${link} as active for ${route}`, () => {
+        const component = mountComponent({
+          mocks: { $route: route }
+        });
+        const active = component.findAll('.active');
+        active.length.should.equal(1);
+        active.at(0).find(link).exists().should.be.true();
       });
-      return load('/system/audits')
-        .then(assertActiveLink('#navbar-links-system'));
+    }
+
+    it('marks no link as active for /account/edit', () => {
+      const component = mountComponent({
+        mocks: { $route: '/account/edit' }
+      });
+      component.find('.active').exists().should.be.false();
     });
   });
 });

@@ -9,7 +9,6 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
-import { trigger } from '../../util/event';
 
 // Create submissions along with the associated project and form.
 const createSubmissions = (count, factoryOptions = {}) => {
@@ -60,7 +59,7 @@ describe('SubmissionList', () => {
     it('shows a message if there are no submissions', () => {
       testData.extendedForms.createPast(1);
       return loadSubmissionList().then(component => {
-        component.first('.empty-table-message').should.be.visible();
+        component.get('.empty-table-message').should.be.visible();
       });
     });
 
@@ -68,12 +67,13 @@ describe('SubmissionList', () => {
       it('completes a background refresh', () => {
         testData.extendedSubmissions.createPast(1);
         const assertRowCount = (count) => (component) => {
-          component.find(SubmissionMetadataRow).length.should.equal(count);
-          component.find(SubmissionDataRow).length.should.equal(count);
+          component.findAllComponents(SubmissionMetadataRow).length.should.equal(count);
+          component.findAllComponents(SubmissionDataRow).length.should.equal(count);
         };
         return load('/projects/1/forms/f/submissions', { root: false })
           .afterResponses(assertRowCount(1))
-          .request(trigger.click('#submission-list-refresh-button'))
+          .request(component =>
+            component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse(assertRowCount(1))
           .respondWithData(() => {
             testData.extendedSubmissions.createNew();
@@ -86,9 +86,10 @@ describe('SubmissionList', () => {
         testData.extendedSubmissions.createPast(1);
         return loadSubmissionList()
           .complete()
-          .request(trigger.click('#submission-list-refresh-button'))
+          .request(component =>
+            component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse(component => {
-            component.first('#submission-list-message').should.be.hidden();
+            component.get('#submission-list-message').should.be.hidden();
           })
           .respondWithData(testData.submissionOData);
       });
@@ -100,30 +101,27 @@ describe('SubmissionList', () => {
         url.should.match(new RegExp(`[?&]%24skip=${skip}(&|$)`));
       };
       const checkIds = (component, count, offset = 0) => {
-        const rows = component.find(SubmissionDataRow);
+        const rows = component.findAllComponents(SubmissionDataRow);
         rows.length.should.equal(count);
         const submissions = testData.extendedSubmissions.sorted();
         submissions.length.should.be.aboveOrEqual(count + offset);
         for (let i = 0; i < rows.length; i += 1) {
-          const cells = rows[i].find('td');
-          const lastCell = cells[cells.length - 1];
-          const text = lastCell.text().trim();
+          const text = rows.at(i).findAll('td').at(-1).text();
           text.should.equal(submissions[i + offset].instanceId);
         }
       };
       const checkMessage = (component, text) => {
-        const message = component.first('#submission-list-message');
+        const message = component.get('#submission-list-message');
         if (text == null) {
           message.should.be.hidden();
         } else {
           message.should.not.be.hidden();
+          message.get('#submission-list-message-text').text().should.equal(text);
 
-          const spinners = component.find(Spinner).filter(spinner =>
-            message.element.contains(spinner.vm.$el));
+          const spinners = component.findAllComponents(Spinner)
+            .filter(spinner => message.element.contains(spinner.element));
           spinners.length.should.equal(1);
-          spinners[0].getProp('state').should.equal(true);
-
-          message.first('#submission-list-message-text').text().trim().should.equal(text);
+          spinners.at(0).props().state.should.equal(true);
         }
       };
 
@@ -167,9 +165,10 @@ describe('SubmissionList', () => {
           propsData: { top: () => 2 }
         })
           .complete()
-          .request(trigger.click('#submission-list-refresh-button'))
-          .beforeEachResponse((component, request) => {
-            checkTopSkip(request, 2, 0);
+          .request(component =>
+            component.get('#submission-list-refresh-button').trigger('click'))
+          .beforeEachResponse((_, config) => {
+            checkTopSkip(config, 2, 0);
           })
           .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
@@ -196,8 +195,8 @@ describe('SubmissionList', () => {
               sinon.replace(component.vm, 'scrolledToBottom', () => true);
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 2, 2);
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 2);
               checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 2))
@@ -209,8 +208,8 @@ describe('SubmissionList', () => {
             .request(() => {
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 2, 4);
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 4);
               checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 4))
@@ -222,8 +221,8 @@ describe('SubmissionList', () => {
             .request(() => {
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 2, 6);
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 2, 6);
               checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 6))
@@ -235,8 +234,8 @@ describe('SubmissionList', () => {
             .request(() => {
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 3, 8);
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 3, 8);
               checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(3, 8))
@@ -248,8 +247,8 @@ describe('SubmissionList', () => {
             .request(() => {
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 3, 11);
+            .beforeEachResponse((component, config) => {
+              checkTopSkip(config, 3, 11);
               checkMessage(component, 'Loading the last Submission…');
             })
             .respondWithData(() => testData.submissionOData(3, 11))
@@ -267,7 +266,7 @@ describe('SubmissionList', () => {
             .complete()
             .testNoRequest(component => {
               sinon.replace(
-                component.first(SubmissionList).vm,
+                component.getComponent(SubmissionList).vm,
                 'scrolledToBottom',
                 () => true
               );
@@ -283,7 +282,7 @@ describe('SubmissionList', () => {
             .complete()
             .testNoRequest(component => {
               sinon.replace(
-                component.first(SubmissionList).vm,
+                component.getComponent(SubmissionList).vm,
                 'scrolledToBottom',
                 () => true
               );
@@ -299,7 +298,7 @@ describe('SubmissionList', () => {
             .complete()
             .testNoRequest(component => {
               sinon.replace(
-                component.first(SubmissionList).vm,
+                component.getComponent(SubmissionList).vm,
                 'scrolledToBottom',
                 () => true
               );
@@ -315,7 +314,7 @@ describe('SubmissionList', () => {
             .complete()
             .testNoRequest(component => {
               sinon.replace(
-                component.first(SubmissionList).vm,
+                component.getComponent(SubmissionList).vm,
                 'scrolledToBottom',
                 () => false
               );
@@ -335,9 +334,10 @@ describe('SubmissionList', () => {
             })
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
-            .request(trigger.click('#submission-list-refresh-button'))
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 2, 0);
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
+            .beforeEachResponse((_, config) => {
+              checkTopSkip(config, 2, 0);
             })
             .respondWithData(() => testData.submissionOData(2, 0))
             .afterResponse(component => {
@@ -346,8 +346,8 @@ describe('SubmissionList', () => {
             .request(() => {
               document.dispatchEvent(new Event('scroll'));
             })
-            .beforeEachResponse((component, request) => {
-              checkTopSkip(request, 2, 2);
+            .beforeEachResponse((_, config) => {
+              checkTopSkip(config, 2, 2);
             })
             .respondWithData(() => testData.submissionOData(2, 2));
         });
@@ -371,7 +371,8 @@ describe('SubmissionList', () => {
             })
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
-            .request(trigger.click('#submission-list-refresh-button'))
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
             .beforeAnyResponse(() => {
               // Should not send a request.
               document.dispatchEvent(new Event('scroll'));
@@ -463,14 +464,14 @@ describe('SubmissionList', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false })
             .afterResponses(component => {
-              const { originalCount } = component.first(SubmissionList).data();
+              const { originalCount } = component.getComponent(SubmissionList).vm;
               originalCount.should.equal(251);
               const { form } = component.vm.$store.state.request.data;
               form.submissions.should.equal(251);
             })
             .request(component => {
               sinon.replace(
-                component.first(SubmissionList).vm,
+                component.getComponent(SubmissionList).vm,
                 'scrolledToBottom',
                 () => true
               );
@@ -481,7 +482,7 @@ describe('SubmissionList', () => {
               return testData.submissionOData(2, 250);
             })
             .afterResponse(component => {
-              const { originalCount } = component.first(SubmissionList).data();
+              const { originalCount } = component.getComponent(SubmissionList).vm;
               originalCount.should.equal(251);
               const { form } = component.vm.$store.state.request.data;
               form.submissions.should.equal(252);

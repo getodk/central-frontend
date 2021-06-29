@@ -25,16 +25,8 @@ describe('util/i18n', () => {
         flatpickrLocales.es.weekdays.longhand[0].should.equal('Domingo');
       }));
 
-    it('throws an error for a locale that is not defined', () => {
-      let thrown = false;
-      return loadLocale('la')
-        .catch(() => {
-          thrown = true;
-        })
-        .finally(() => {
-          thrown.should.be.true();
-        });
-    });
+    it('returns a rejected promise for a locale that is not defined', () =>
+      loadLocale('la').should.be.rejected());
   });
 
   describe('pluralization rules', () => {

@@ -1,4 +1,5 @@
 import UserEdit from '../../../src/components/user/edit.vue';
+
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -7,11 +8,11 @@ describe('AccountEdit', () => {
 
   it('renders a UserEdit component', async () => {
     const component = await load('/account/edit', { root: false });
-    component.find(UserEdit).length.should.equal(1);
+    component.findComponent(UserEdit).exists().should.be.true();
   });
 
   it('passes the id of the current user', async () => {
     const component = await load('/account/edit', { root: false });
-    component.first(UserEdit).getProp('id').should.equal('1');
+    component.getComponent(UserEdit).props().id.should.equal('1');
   });
 });

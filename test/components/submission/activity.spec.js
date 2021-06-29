@@ -1,3 +1,5 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import SubmissionActivity from '../../../src/components/submission/activity.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -6,7 +8,6 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 import { wait } from '../../util/util';
 
 const mountComponent = () => {
@@ -22,7 +23,8 @@ const mountComponent = () => {
       instanceId: submission.value[0].__id
     },
     requestData: { project, submission, audits, comments },
-    router: true
+    stubs: { RouterLink: RouterLinkStub },
+    mocks: { $route: '/projects/1/submissions/s' }
   });
 };
 
@@ -74,7 +76,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-update-review-state-button').length.should.equal(0);
+      component.find('#submission-activity-update-review-state-button').exists().should.be.false();
     });
 
     describe('after a successful response', () => {
@@ -89,10 +91,11 @@ describe('SubmissionActivity', () => {
         return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
           .complete()
           .request(async (component) => {
-            await trigger.click(component, '#submission-activity-update-review-state-button');
-            return trigger.submit(component, '#submission-update-review-state form', [
-              ['input[value="hasIssues"]', true]
-            ]);
+            const button = component.get('#submission-activity-update-review-state-button');
+            await button.trigger('click');
+            const modal = component.getComponent(SubmissionUpdateReviewState);
+            await modal.get('input[value="hasIssues"]').setChecked();
+            return modal.get('form').trigger('submit');
           })
           .respondWithData(() => {
             testData.extendedSubmissions.update(-1, { reviewState: 'hasIssues' });
@@ -121,8 +124,8 @@ describe('SubmissionActivity', () => {
 
       it('hides the modal', async () => {
         const component = await submit();
-        const modal = component.first(SubmissionUpdateReviewState);
-        modal.getProp('state').should.be.false();
+        const modal = component.getComponent(SubmissionUpdateReviewState);
+        modal.props().state.should.be.false();
       });
 
       it('shows a success alert', async () => {
@@ -141,7 +144,7 @@ describe('SubmissionActivity', () => {
 
       it('updates the number of entries in the feed', async () => {
         const component = await submit();
-        component.find(SubmissionFeedEntry).length.should.equal(2);
+        component.findAllComponents(SubmissionFeedEntry).length.should.equal(2);
       });
     });
   });
@@ -152,7 +155,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').length.should.equal(1);
+      component.find('#submission-activity-edit-button').exists().should.be.true();
     });
 
     it('does not render button if user cannot submission.update', () => {
@@ -161,7 +164,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').length.should.equal(0);
+      component.find('#submission-activity-edit-button').exists().should.be.false();
     });
 
     it('disables the button if the submission is encrypted', () => {
@@ -169,9 +172,9 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      const btn = component.first('#submission-activity-edit-button');
-      btn.hasAttribute('disabled').should.be.true();
-      btn.getAttribute('title').should.equal('You cannot edit encrypted Submissions.');
+      const btn = component.get('#submission-activity-edit-button');
+      btn.element.disabled.should.be.true();
+      btn.attributes().title.should.equal('You cannot edit encrypted Submissions.');
     });
 
     it('sets the correct href attribute', () => {
@@ -183,8 +186,8 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      const btn = component.first('#submission-activity-edit-button');
-      const href = btn.getAttribute('href');
+      const btn = component.get('#submission-activity-edit-button');
+      const { href } = btn.attributes();
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
   });
@@ -199,11 +202,11 @@ describe('SubmissionActivity', () => {
     testData.extendedAudits.createNew({ action: 'submission.update.version' });
     await wait(1);
     testData.extendedComments.createNew({ body: 'Comment 2' });
-    const entries = mountComponent().find(SubmissionFeedEntry);
+    const entries = mountComponent().findAllComponents(SubmissionFeedEntry);
     entries.length.should.equal(4);
-    entries[0].getProp('entry').body.should.equal('Comment 2');
-    entries[1].getProp('entry').action.should.equal('submission.update.version');
-    entries[2].getProp('entry').body.should.equal('Comment 1');
-    entries[3].getProp('entry').action.should.equal('submission.create');
+    entries.at(0).props().entry.body.should.equal('Comment 2');
+    entries.at(1).props().entry.action.should.equal('submission.update.version');
+    entries.at(2).props().entry.body.should.equal('Comment 1');
+    entries.at(3).props().entry.action.should.equal('submission.create');
   });
 });

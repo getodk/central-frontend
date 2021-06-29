@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
     </a>
     <ul class="dropdown-menu">
       <li>
-        <router-link id="navbar-actions-edit-profile" to="/account/edit">
+        <router-link to="/account/edit">
           {{ $t('action.editProfile') }}
         </router-link>
       </li>

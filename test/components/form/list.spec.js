@@ -8,14 +8,14 @@ describe('FormList', () => {
       mockLogin({ role: 'admin' });
       testData.extendedProjects.createPast(1);
       const app = await load('/projects/1');
-      app.first('#form-list-create-button').should.be.visible();
+      app.get('#form-list-create-button').should.be.visible();
     });
 
     it('does not render the button for a project viewer', async () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       const app = await load('/projects/1');
-      app.find('#form-list-create-button').length.should.equal(0);
+      app.find('#form-list-create-button').exists().should.be.false();
     });
   });
 
@@ -23,6 +23,6 @@ describe('FormList', () => {
     mockLogin();
     testData.extendedProjects.createPast(1);
     const app = await load('/projects/1');
-    app.first('#form-list .empty-table-message').should.be.visible();
+    app.get('#form-list .empty-table-message').should.be.visible();
   });
 });

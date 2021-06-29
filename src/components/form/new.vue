@@ -54,7 +54,7 @@ definition for an existing form -->
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
         <i18n tag="div" path="dropZone.full">
           <template #chooseOne>
-            <input v-show="false" ref="input" type="file">
+            <input v-show="false" ref="input" type="file" @change="afterChange">
             <button type="button" class="btn btn-primary"
               :disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
@@ -142,22 +142,15 @@ export default {
       }
     }
   },
-  mounted() {
-    // Using a jQuery event handler rather than a Vue one in order to facilitate
-    // testing: it is possible to mock a jQuery event but not a Vue event.
-    $(this.$refs.input).on('change.form-new', (event) => {
-      this.afterFileSelection(event.target.files[0]);
-      this.$refs.input.value = '';
-    });
-  },
-  beforeDestroy() {
-    $(this.$refs.input).off('.form-new');
-  },
   methods: {
     afterFileSelection(file) {
       this.$alert().blank();
       this.file = file;
       this.warnings = null;
+    },
+    afterChange(event) {
+      this.afterFileSelection(event.target.files[0]);
+      this.$refs.input.value = '';
     },
     ondrop(jQueryEvent) {
       this.afterFileSelection(jQueryEvent.originalEvent.dataTransfer.files[0]);

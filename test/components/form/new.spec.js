@@ -1,72 +1,68 @@
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormRow from '../../../src/components/form/row.vue';
+
 import testData from '../../data';
-import { dataTransfer, trigger } from '../../util/event';
+import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const xlsForm = () => new File(
-  [''],
-  'my_form.xlsx',
-  { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
-);
-const selectFileByInput = (modal, file) => {
-  const input = modal.first('input[type="file"]');
-  const target = { files: dataTransfer([file]).files };
-  const event = $.Event('change', { target });
-  $(input.element).trigger(event);
-  return modal.vm.$nextTick().then(() => modal);
+const mountOptions = () => {
+  const requestData = { project: testData.extendedProjects.last() };
+  if (testData.extendedForms.size !== 0 &&
+    testData.extendedFormVersions.last().publishedAt == null) {
+    requestData.formDraft = testData.extendedFormDrafts.last();
+  }
+  return {
+    propsData: { state: true },
+    requestData,
+    mocks: {
+      $route: requestData.formDraft == null
+        ? '/projects/1'
+        : '/projects/1/forms/f/draft'
+    }
+  };
 };
-const upload = (app) => selectFileByInput(app.first(FormNew), xlsForm())
-  .then(trigger.click('#form-new-upload-button'));
+const xlsForm = () => new File([''], 'my_form.xlsx', {
+  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+});
+const upload = async (component, file = xlsForm()) => {
+  await setFiles(component.get('#form-new input'), [file]);
+  return component.get('#form-new-upload-button').trigger('click');
+};
 
 describe('FormNew', () => {
   describe('new form modal', () => {
-    it('toggles the modal', () => {
+    beforeEach(() => {
       mockLogin();
       testData.extendedProjects.createPast(1);
-      return load('/projects/1').testModalToggles(
-        FormNew,
-        '#form-list-create-button',
-        '.btn-link'
-      );
     });
 
+    it('toggles the modal', () =>
+      load('/projects/1').testModalToggles({
+        modal: FormNew,
+        show: '#form-list-create-button',
+        hide: '.btn-link'
+      }));
+
     it('shows the correct modal title', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      return load('/projects/1')
-        .then(trigger.click('#form-list-create-button'))
-        .then(app => {
-          const text = app.first('#form-new .modal-title').text().trim();
-          text.should.equal('Create Form');
-        });
+      const text = mount(FormNew, mountOptions()).get('.modal-title').text();
+      text.should.equal('Create Form');
     });
 
     describe('.modal-introduction', () => {
-      beforeEach(() => {
-        mockLogin();
-        testData.extendedProjects.createPast(1);
+      it('shows the correct text for the first paragraph', () => {
+        const modal = mount(FormNew, mountOptions());
+        const text = modal.get('.modal-introduction p').text();
+        text.should.startWith('To create a Form,');
       });
 
-      it('shows the correct text for the first paragraph', () =>
-        load('/projects/1')
-          .then(trigger.click('#form-list-create-button'))
-          .then(app => {
-            const p = app.first('#form-new .modal-introduction p');
-            p.text().trim().should.startWith('To create a Form,');
-          }));
-
-      it('renders the paragraph about media files', () =>
-        load('/projects/1')
-          .then(trigger.click('#form-list-create-button'))
-          .then(app => {
-            const p = app.find('#form-new .modal-introduction p');
-            p.length.should.equal(2);
-            p[1].text().should.containEql('media');
-          }));
+      it('renders the paragraph about media files', () => {
+        const modal = mount(FormNew, mountOptions());
+        const text = modal.findAll('.modal-introduction p').at(1).text();
+        text.should.containEql('media');
+      });
     });
   });
 
@@ -77,116 +73,78 @@ describe('FormNew', () => {
     });
 
     it('toggles the modal', () =>
-      load('/projects/1/forms/f/draft').testModalToggles(
-        FormNew,
-        '#form-draft-status-upload-button',
-        '.btn-link'
-      ));
+      load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
+        modal: FormNew,
+        show: '#form-draft-status-upload-button',
+        hide: '.btn-link'
+      }));
 
-    it('shows the correct modal title', () =>
-      load('/projects/1/forms/f/draft')
-        .then(trigger.click('#form-draft-status-upload-button'))
-        .then(app => {
-          const text = app.first('#form-new .modal-title').text().trim();
-          text.should.equal('Upload New Form Definition');
-        }));
+    it('shows the correct modal title', () => {
+      const text = mount(FormNew, mountOptions()).get('.modal-title').text();
+      text.should.equal('Upload New Form Definition');
+    });
 
     describe('.modal-introduction', () => {
-      it('shows the correct text', () =>
-        load('/projects/1/forms/f/draft')
-          .then(trigger.click('#form-draft-status-upload-button'))
-          .then(app => {
-            const p = app.first('#form-new .modal-introduction p');
-            p.text().trim().should.startWith('To update the Draft,');
-          }));
+      it('shows the correct text', () => {
+        const modal = mount(FormNew, mountOptions());
+        const text = modal.get('.modal-introduction p').text();
+        text.should.startWith('To update the Draft,');
+      });
 
-      it('does not render the paragraph about media files', () =>
-        load('/projects/1/forms/f/draft')
-          .then(trigger.click('#form-draft-status-upload-button'))
-          .then(app => {
-            app.find('#form-new .modal-introduction p').length.should.equal(1);
-          }));
+      it('does not render the paragraph about media files', () => {
+        const modal = mount(FormNew, mountOptions());
+        modal.findAll('.modal-introduction p').length.should.equal(1);
+      });
     });
   });
 
   describe('file selection', () => {
-    beforeEach(mockLogin);
-
-    it('shows an info alert if no file is selected', () => {
-      const modal = mount(FormNew, {
-        propsData: { state: true },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      });
-      modal.should.not.alert();
-      return trigger.click(modal, '#form-new-upload-button')
-        .then(() => {
-          modal.should.alert('info');
-        });
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
     });
 
-    it('hides the alert after a file is selected', () => {
-      const modal = mount(FormNew, {
-        propsData: { state: true },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      });
-      return trigger.click(modal, '#form-new-upload-button')
-        .then(() => {
-          modal.should.alert('info');
-        })
-        .then(() => selectFileByInput(modal, xlsForm()))
-        .then(() => {
-          modal.should.not.alert();
-        });
+    it('shows an info alert if no file is selected', async () => {
+      const modal = mount(FormNew, mountOptions());
+      await modal.get('#form-new-upload-button').trigger('click');
+      modal.should.alert('info');
+    });
+
+    it('hides the alert after a file is selected', async () => {
+      const modal = mount(FormNew, mountOptions());
+      await modal.get('#form-new-upload-button').trigger('click');
+      await setFiles(modal.get('input'), [xlsForm()]);
+      modal.should.not.alert();
     });
 
     describe('after the file is selected using the file input', () => {
-      beforeEach(() => {
-        testData.extendedProjects.createPast(1);
-      });
-
       it('sets the file data property', async () => {
-        const modal = mount(FormNew, {
-          propsData: { state: true },
-          requestData: { project: testData.extendedProjects.last() }
-        });
-        await selectFileByInput(modal, xlsForm());
-        modal.data().file.name.should.equal('my_form.xlsx');
+        const modal = mount(FormNew, mountOptions());
+        await setFiles(modal.get('input'), [xlsForm()]);
+        modal.vm.file.name.should.equal('my_form.xlsx');
       });
 
       it('resets the input', async () => {
-        const modal = mount(FormNew, {
-          propsData: { state: true },
-          requestData: { project: testData.extendedProjects.last() }
-        });
-        await selectFileByInput(modal, xlsForm());
-        modal.first('input').element.value.should.equal('');
+        const modal = mount(FormNew, mountOptions());
+        await setFiles(modal.get('input'), [xlsForm()]);
+        modal.get('input').element.value.should.equal('');
       });
     });
 
     describe('drag and drop', () => {
-      beforeEach(() => {
-        testData.extendedProjects.createPast(1);
-      });
-
       it('adds a class to drop zone while file is dragged', async () => {
-        const modal = mount(FormNew, {
-          propsData: { state: true },
-          requestData: { project: testData.extendedProjects.last() }
+        const modal = mount(FormNew, mountOptions());
+        const dropZone = modal.get('#form-new-drop-zone');
+        await dropZone.trigger('dragenter', {
+          dataTransfer: fileDataTransfer([xlsForm()])
         });
-        const dropZone = modal.first('#form-new-drop-zone');
-        const files = [xlsForm()];
-        await trigger.dragenter(dropZone, files);
-        await trigger.dragover(dropZone, files);
-        dropZone.hasClass('form-new-dragover').should.be.true();
+        dropZone.classes('form-new-dragover').should.be.true();
       });
 
-      it('saves the file after it is dragged and dropped', async () => {
-        const modal = mount(FormNew, {
-          propsData: { state: true },
-          requestData: { project: testData.extendedProjects.last() }
-        });
-        await trigger.dragAndDrop(modal, '#form-new-drop-zone', [xlsForm()]);
-        modal.data().file.name.should.equal('my_form.xlsx');
+      it('sets the file data property after the file is dropped', async () => {
+        const modal = mount(FormNew, mountOptions());
+        await dragAndDrop(modal.get('#form-new-drop-zone'), [xlsForm()]);
+        modal.vm.file.name.should.equal('my_form.xlsx');
       });
     });
   });
@@ -196,21 +154,21 @@ describe('FormNew', () => {
 
     it('sends a request to .../forms when creating a form', () => {
       testData.extendedProjects.createPast(1);
-      return load('/projects/1')
-        .afterResponses(trigger.click('#form-list-create-button'))
+      return mockHttp()
+        .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((app, { url }) => {
+        .beforeEachResponse((_, { url }) => {
           url.should.equal('/v1/projects/1/forms');
         })
         .respondWithProblem();
     });
 
     it('sends a request to .../draft when uploading a new definition', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(trigger.click('#form-draft-status-upload-button'))
+      testData.extendedForms.createPast(1, { draft: true });
+      return mockHttp()
+        .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((app, { url }) => {
+        .beforeEachResponse((_, { url }) => {
           url.should.equal('/v1/projects/1/forms/f/draft');
         })
         .respondWithProblem();
@@ -218,38 +176,26 @@ describe('FormNew', () => {
   });
 
   describe('request headers', () => {
-    beforeEach(mockLogin);
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+    });
 
     it('sends the correct Content-Type header for an XML file', () =>
       mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal =>
-          selectFileByInput(modal, new File(['<a><b/></a>'], 'my_form.xml'))
-            .then(trigger.click('#form-new-upload-button')))
-        .beforeEachResponse((modal, config) => {
-          config.headers['Content-Type'].should.equal('application/xml');
+        .mount(FormNew, mountOptions())
+        .request(modal => upload(modal, new File([''], 'my_form.xml')))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/xml');
         })
         .respondWithProblem());
 
     it('sends the correct headers for an .xlsx file', () =>
       mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(async (modal) => {
-          const type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-          const file = new File([''], 'formulář.xlsx', { type });
-          await selectFileByInput(modal, file);
-          return trigger.click(modal, '#form-new-upload-button');
-        })
+        .mount(FormNew, mountOptions())
+        .request(modal => upload(modal, new File([''], 'formulář.xlsx', {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        })))
         .beforeEachResponse((_, { headers }) => {
           headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
@@ -258,18 +204,10 @@ describe('FormNew', () => {
 
     it('sends the correct headers for an .xls file', () =>
       mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(async (modal) => {
-          const type = 'application/vnd.ms-excel';
-          const file = new File([''], 'formulář.xls', { type });
-          await selectFileByInput(modal, file);
-          return trigger.click(modal, '#form-new-upload-button');
-        })
+        .mount(FormNew, mountOptions())
+        .request(modal => upload(modal, new File([''], 'formulář.xls', {
+          type: 'application/vnd.ms-excel'
+        })))
         .beforeEachResponse((_, { headers }) => {
           headers['Content-Type'].should.equal('application/vnd.ms-excel');
           headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
@@ -278,34 +216,24 @@ describe('FormNew', () => {
 
     it('determines the content type based on the file extension', () =>
       mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => {
-          const file = new File([''], 'my_form.xlsx', { type: 'application/xml' });
-          return selectFileByInput(modal, file)
-            .then(trigger.click('#form-new-upload-button'));
-        })
-        .beforeEachResponse((modal, config) => {
-          config.headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        .mount(FormNew, mountOptions())
+        .request(modal => upload(modal, new File([''], 'my_form.xlsx', {
+          type: 'application/xml'
+        })))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         })
         .respondWithProblem());
   });
 
   it('implements some standard button things for the upload button', () => {
     mockLogin();
+    testData.extendedProjects.createPast(1);
     return mockHttp()
-      .mount(FormNew, {
-        propsData: { state: true },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      })
+      .mount(FormNew, mountOptions())
       .testStandardButton({
         button: '#form-new-upload-button',
-        request: (modal) => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')),
+        request: upload,
         disabled: ['.modal-warnings .btn-primary', '.btn-link'],
         modal: true
       });
@@ -313,32 +241,27 @@ describe('FormNew', () => {
 
   it('disables the drop zone while the request is in progress', () => {
     mockLogin();
+    testData.extendedProjects.createPast(1);
     return mockHttp()
-      .mount(FormNew, {
-        propsData: { state: true },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
-      })
-      .request(async (modal) => {
-        await selectFileByInput(modal, xlsForm());
-        await trigger.click(modal, '#form-new-upload-button');
-      })
+      .mount(FormNew, mountOptions())
+      .request(upload)
       .beforeEachResponse(modal => {
         modal.vm.disabled.should.be.true();
-        const dropZone = modal.first('#form-new-drop-zone');
-        dropZone.hasClass('form-new-disabled').should.be.true();
-        const button = dropZone.first('.btn-primary');
-        button.hasAttribute('disabled').should.be.true();
+        const dropZone = modal.get('#form-new-drop-zone');
+        dropZone.classes('form-new-disabled').should.be.true();
+        const button = dropZone.get('.btn-primary');
+        button.element.disabled.should.be.true();
       })
       .respondWithProblem();
   });
 
   describe('after creating a form', () => {
-    beforeEach(mockLogin);
-
     const createForm = () => {
+      mockLogin();
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'Form 1' });
       return load('/projects/1')
-        .afterResponses(trigger.click('#form-list-create-button'))
+        .afterResponses(app =>
+          app.get('#form-list-create-button').trigger('click'))
         .request(upload)
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
@@ -352,8 +275,7 @@ describe('FormNew', () => {
 
     it('shows the form name', () =>
       createForm().then(app => {
-        const text = app.first('#form-head-form-nav .h1').text().trim();
-        text.should.equal('Form 2');
+        app.get('#form-head-form-nav .h1').text().should.equal('Form 2');
       }));
 
     it('shows a success alert', () =>
@@ -366,7 +288,7 @@ describe('FormNew', () => {
         .complete()
         .load('/projects/1', { project: false })
         .afterResponses(app => {
-          app.find(FormRow).length.should.equal(2);
+          app.findAllComponents(FormRow).length.should.equal(2);
         }));
   });
 
@@ -376,41 +298,10 @@ describe('FormNew', () => {
     it('hides the modal', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
-        .afterResponses(trigger.click('#form-draft-status-upload-button'))
-        .request(upload)
-        .respondWithSuccess()
-        .respondWithData(() =>
-          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          app.first(FormNew).getProp('state').should.be.false();
-        });
-    });
-
-    it('shows a success alert', () => {
-      testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(trigger.click('#form-draft-status-upload-button'))
-        .request(upload)
-        .respondWithSuccess()
-        .respondWithData(() =>
-          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
-        });
-    });
-
-    it('shows the new version string', () => {
-      testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const version = app.first('.form-version-summary-item .version');
-          version.text().trim().should.equal('v1');
-        })
+        .complete()
         .request(async (app) => {
-          await trigger.click(app, '#form-draft-status-upload-button');
-          await upload(app);
+          await app.get('#form-draft-status-upload-button').trigger('click');
+          return upload(app);
         })
         .respondWithData(() => {
           testData.extendedFormVersions.createNew({
@@ -422,8 +313,55 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const version = app.first('.form-version-summary-item .version');
-          version.text().trim().should.equal('v2');
+          app.getComponent(FormNew).props().state.should.be.false();
+        });
+    });
+
+    it('shows a success alert', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-draft-status-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
+        });
+    });
+
+    it('shows the new version string', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(app => {
+          const version = app.get('.form-version-summary-item .version');
+          version.text().should.equal('v1');
+        })
+        .request(async (app) => {
+          await app.get('#form-draft-status-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .afterResponses(app => {
+          const version = app.get('.form-version-summary-item .version');
+          version.text().should.equal('v2');
         });
     });
 
@@ -432,21 +370,26 @@ describe('FormNew', () => {
       testData.standardFormAttachments.createPast(1, { exists: false });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const badge = app.first('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().trim().should.equal('1');
-
-          return trigger.click(app, '#form-draft-status-upload-button');
+          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
+          badge.text().should.equal('1');
         })
-        .request(upload)
-        .respondWithSuccess()
-        .respondWithData(() =>
-          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
-        .respondWithData(() => testData.standardFormAttachments
-          .createPast(1, { exists: false })
-          .sorted())
+        .request(async (app) => {
+          await app.get('#form-draft-status-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          testData.standardFormAttachments.createNew({ exists: false });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const badge = app.first('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().trim().should.equal('2');
+          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
+          badge.text().should.equal('2');
         });
     });
 
@@ -459,21 +402,27 @@ describe('FormNew', () => {
       testData.standardFormAttachments.createPast(1);
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const steps = app.find(ChecklistStep);
+          const steps = app.findAllComponents(ChecklistStep);
           steps.length.should.equal(4);
-          steps[2].getProp('stage').should.equal('complete');
-
-          return trigger.click(app, '#form-draft-status-upload-button');
+          steps.at(2).props().stage.should.equal('complete');
         })
-        .request(upload)
-        .respondWithSuccess()
-        .respondWithData(() =>
-          testData.extendedFormDrafts.createNew({ version: 'v2', draft: true }))
+        .request(async (app) => {
+          await app.get('#form-draft-status-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const steps = app.find(ChecklistStep);
+          const steps = app.findAllComponents(ChecklistStep);
           steps.length.should.equal(4);
-          steps[2].getProp('stage').should.equal('current');
+          steps.at(2).props().stage.should.equal('current');
         });
     });
   });
@@ -481,16 +430,11 @@ describe('FormNew', () => {
   describe('custom alert messages', () => {
     beforeEach(mockLogin);
 
-    it('shows a message for an XLSForm error', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('shows a message for an XLSForm error', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem({
           code: 400.15,
           message: 'The given XLSForm file was not valid.',
@@ -502,18 +446,14 @@ describe('FormNew', () => {
         })
         .afterResponse(modal => {
           modal.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
-        }));
+        });
+    });
 
-    it('shows a message for a projectId,xmlFormId duplicate', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('shows a message for a projectId,xmlFormId duplicate', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem({
           code: 409.3,
           message: 'Some message',
@@ -525,24 +465,17 @@ describe('FormNew', () => {
         })
         .afterResponse(modal => {
           modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
-        }));
+        });
+    });
 
     it('shows a message for an xmlFormId mismatch', () => {
-      const project = testData.extendedProjects
-        .createPast(1, { forms: 1 })
-        .last();
       testData.extendedForms.createPast(1, {
         xmlFormId: 'expected_id',
         draft: true
       });
-      const formDraft = testData.extendedFormDrafts.last();
       return mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: { project, formDraft }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem({
           code: 400.8,
           message: 'Some message',
@@ -570,162 +503,140 @@ describe('FormNew', () => {
       }
     };
 
-    it('shows the warnings', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('shows the warnings', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
-          const warnings = modal.first('.modal-warnings');
+          const warnings = modal.get('.modal-warnings');
           warnings.should.be.visible();
-          warnings.find('li').map(li => li.text()).should.eql(
-            ['warning 1', 'warning 2']
-          );
-        }));
+          warnings.findAll('li').wrappers.map(li => li.text()).should.eql([
+            'warning 1',
+            'warning 2'
+          ]);
+        });
+    });
 
-    it('hides the warnings after a new file is selected', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('hides the warnings after a new file is selected', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(async (modal) => {
+          modal.get('.modal-warnings').should.be.visible();
+          await setFiles(modal.get('input'), [xlsForm()]);
+          modal.get('.modal-warnings').should.be.hidden();
+        });
+    });
+
+    it('hides the warnings after a Problem is received', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
-          modal.first('.modal-warnings').should.be.visible();
-          return modal;
-        })
-        .then(modal => selectFileByInput(modal, xlsForm()))
-        .then(modal => {
-          modal.first('.modal-warnings').should.be.hidden();
-        }));
-
-    it('hides the warnings after a Problem is received', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
-        .respondWithProblem(xlsFormWarning)
-        .afterResponse(modal => {
-          modal.first('.modal-warnings').should.be.visible();
+          modal.get('.modal-warnings').should.be.visible();
           modal.should.not.alert();
         })
-        .request(trigger.click('.modal-warnings .btn-primary'))
+        .request(modal =>
+          modal.get('.modal-warnings .btn-primary').trigger('click'))
         .respondWithProblem()
         .afterResponse(modal => {
-          modal.first('.modal-warnings').should.be.hidden();
+          modal.get('.modal-warnings').should.be.hidden();
           modal.should.alert('danger');
-        }));
+        });
+    });
 
-    it('hides an alert after warnings are received', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('hides an alert after warnings are received', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem()
         .afterResponse(modal => {
           modal.should.alert('danger');
-          modal.first('.modal-warnings').should.be.hidden();
+          modal.get('.modal-warnings').should.be.hidden();
         })
-        .request(trigger.click('#form-new-upload-button'))
+        .request(modal => modal.get('#form-new-upload-button').trigger('click'))
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.should.not.alert();
-          modal.first('.modal-warnings').should.be.visible();
-        }));
+          modal.get('.modal-warnings').should.be.visible();
+        });
+    });
 
     describe('explanatory text', () => {
       it('shows the correct text for the new form modal', () => {
         testData.extendedProjects.createPast(1);
-        return load('/projects/1')
-          .afterResponses(trigger.click('#form-list-create-button'))
+        return mockHttp()
+          .mount(FormNew, mountOptions())
           .request(upload)
           .respondWithProblem(xlsFormWarning)
-          .afterResponse(app => {
-            const text = app.find('#form-new .modal-warnings p')[1].text();
+          .afterResponse(component => {
+            const text = component.findAll('.modal-warnings p').at(1).text();
             text.should.containEql('create the Form');
           });
       });
 
       it('shows the correct text when uploading a new definition', () => {
         testData.extendedForms.createPast(1, { draft: true });
-        return load('/projects/1/forms/f/draft')
-          .afterResponses(trigger.click('#form-draft-status-upload-button'))
+        return mockHttp()
+          .mount(FormNew, mountOptions())
           .request(upload)
           .respondWithProblem(xlsFormWarning)
-          .afterResponse(app => {
-            const text = app.find('#form-new .modal-warnings p')[1].text();
+          .afterResponse(component => {
+            const text = component.findAll('.modal-warnings p').at(1).text();
             text.should.containEql('update the Draft');
           });
       });
     });
 
-    it('implements some standard button things for "Upload anyway" button', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
+    it('implements some standard button things for "Upload anyway" button', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()
         .testStandardButton({
           button: '.modal-warnings .btn-primary',
           disabled: ['#form-new-upload-button', '.btn-link'],
           modal: true
-        }));
+        });
+    });
 
-    it('sends ?ignoreWarnings=true if "Upload anyway" is clicked', () =>
-      mockHttp()
-        .mount(FormNew, {
-          propsData: { state: true },
-          requestData: {
-            project: testData.extendedProjects.createPast(1).last()
-          }
-        })
-        .request(modal => selectFileByInput(modal, xlsForm())
-          .then(trigger.click('#form-new-upload-button')))
-        .beforeEachResponse((modal, config) => {
-          config.url.should.equal('/v1/projects/1/forms');
+    it('specifies ?ignoreWarnings=true if "Upload anyway" is clicked', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .beforeEachResponse((_, { url }) => {
+          url.should.equal('/v1/projects/1/forms');
         })
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(trigger.click('.modal-warnings .btn-primary'))
-        .beforeEachResponse((modal, config) => {
-          config.url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
+        .request(modal =>
+          modal.get('.modal-warnings .btn-primary').trigger('click'))
+        .beforeEachResponse((_, { url }) => {
+          url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
         })
-        .respondWithProblem());
+        .respondWithProblem();
+    });
 
     it('redirects to .../draft if "Upload anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
       return load('/projects/1')
-        .afterResponses(trigger.click('#form-list-create-button'))
+        .afterResponses(app =>
+          app.get('#form-list-create-button').trigger('click'))
         .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(trigger.click('#form-new .modal-warnings .btn-primary'))
+        .request(app =>
+          app.get('#form-new .modal-warnings .btn-primary').trigger('click'))
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f' }))
         .respondFor('/projects/1/forms/f/draft', { project: false })

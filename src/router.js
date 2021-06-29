@@ -22,7 +22,15 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-const router = new VueRouter({ routes });
+const router = new VueRouter({
+  // Using abstract mode simplifies testing quite a bit: there were issues using
+  // hash mode. In hash mode, when the router is injected into a component, the
+  // router examines the hash to determine the initial location. But that
+  // becomes an issue during testing, because the hash diverges from the current
+  // route over time: Headless Chrome seems to rate-limit hash changes.
+  mode: process.env.NODE_ENV === 'test' ? 'abstract' : 'hash',
+  routes
+});
 export default router;
 
 

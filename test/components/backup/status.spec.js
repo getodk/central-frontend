@@ -7,7 +7,6 @@ import { ago } from '../../../src/util/date-time';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const mountComponent = () => mount(BackupStatus, {
   requestData: {
@@ -16,13 +15,12 @@ const mountComponent = () => mount(BackupStatus, {
   }
 });
 const assertContent = (component, iconClass, title, buttonText) => {
-  const icon = component.first('#backup-status-icon');
-  icon.hasClass(iconClass).should.be.true();
+  component.get('#backup-status-icon').classes(iconClass).should.be.true();
 
-  const status = component.first('#backup-status');
-  status.first('p').text().trim().should.equal(title);
+  const status = component.get('#backup-status');
+  status.get('p').text().should.equal(title);
 
-  status.first('button').text().trim().should.equal(buttonText);
+  status.get('button').text().should.equal(buttonText);
 };
 
 describe('BackupStatus', () => {
@@ -65,7 +63,7 @@ describe('BackupStatus', () => {
     );
 
     const { loggedAt } = testData.extendedAudits.last();
-    component.first(DateTime).getProp('iso').should.equal(loggedAt);
+    component.getComponent(DateTime).props().iso.should.equal(loggedAt);
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {
@@ -178,7 +176,7 @@ describe('BackupStatus', () => {
     });
 
     it('renders the link if backups are configured', () => {
-      mountComponent().find('[href="/v1/backup"]').length.should.equal(1);
+      mountComponent().find('[href="/v1/backup"]').exists().should.be.true();
     });
 
     describe('after the link is clicked', () => {
@@ -195,35 +193,35 @@ describe('BackupStatus', () => {
       });
 
       it('shows a success alert', async () => {
-        const app = await load('/system/backups', { attachToDocument: true });
-        await trigger.click(app, '#backup-status [href="/v1/backup"]');
+        const app = await load('/system/backups', { attachTo: document.body });
+        await app.get('#backup-status [href="/v1/backup"]').trigger('click');
         app.should.alert('success');
       });
 
       it('disables the link', async () => {
-        const app = await load('/system/backups', { attachToDocument: true });
-        const a = app.first('#backup-status [href="/v1/backup"]');
-        await trigger.click(a);
-        a.hasClass('disabled').should.be.true();
+        const app = await load('/system/backups', { attachTo: document.body });
+        const a = app.get('#backup-status [href="/v1/backup"]');
+        await a.trigger('click');
+        a.classes('disabled').should.be.true();
       });
 
       it('prevents default if it is clicked again', async () => {
-        const app = await load('/system/backups', { attachToDocument: true });
-        const a = app.first('#backup-status [href="/v1/backup"]');
-        await trigger.click(a);
+        const app = await load('/system/backups', { attachTo: document.body });
+        const a = app.get('#backup-status [href="/v1/backup"]');
+        await a.trigger('click');
         defaultPrevented.should.be.false();
-        trigger.click(a);
+        a.trigger('click');
         defaultPrevented.should.be.true();
       });
 
       it('shows a spinner', async () => {
-        const app = await load('/system/backups', { attachToDocument: true });
-        const component = app.first(BackupStatus);
-        const spinners = component.find(Spinner);
+        const app = await load('/system/backups', { attachTo: document.body });
+        const component = app.getComponent(BackupStatus);
+        const spinners = component.findAllComponents(Spinner);
         spinners.length.should.equal(1);
-        spinners[0].getProp('state').should.be.false();
-        await trigger.click(component, '[href="/v1/backup"]');
-        spinners[0].getProp('state').should.be.true();
+        spinners.at(0).props().state.should.be.false();
+        await component.get('[href="/v1/backup"]').trigger('click');
+        spinners.at(0).props().state.should.be.true();
       });
     });
   });

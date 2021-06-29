@@ -55,6 +55,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import ProjectSubmissionOptions from '../project/submission-options.vue';
 import PublicLinkCreate from './create.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
@@ -63,7 +64,6 @@ import SentenceSeparator from '../sentence-separator.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -72,13 +72,13 @@ export default {
   components: {
     DocLink,
     Loading,
-    ProjectSubmissionOptions: loadAsync('ProjectSubmissionOptions'),
+    ProjectSubmissionOptions,
     PublicLinkCreate,
     PublicLinkRevoke,
     PublicLinkTable,
     SentenceSeparator
   },
-  mixins: [modal({ submissionOptions: 'ProjectSubmissionOptions' }), routes()],
+  mixins: [modal(), routes()],
   props: {
     projectId: {
       type: String,

@@ -2,6 +2,7 @@ import FormList from '../../../src/components/form/list.vue';
 import PageSection from '../../../src/components/page/section.vue';
 import ProjectOverviewAbout from '../../../src/components/project/overview/about.vue';
 import ProjectOverviewRightNow from '../../../src/components/project/overview/right-now.vue';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -12,10 +13,10 @@ describe('ProjectOverview', () => {
       mockLogin({ role: 'admin' });
       testData.extendedProjects.createPast(1);
       const app = await load('/projects/1');
-      app.first(ProjectOverviewAbout).should.be.visible();
-      app.first(ProjectOverviewRightNow).should.be.visible();
-      const section = app.first(FormList).first(PageSection);
-      section.getProp('condensed').should.be.false();
+      app.getComponent(ProjectOverviewAbout).should.be.visible();
+      app.getComponent(ProjectOverviewRightNow).should.be.visible();
+      const section = app.getComponent(FormList).getComponent(PageSection);
+      section.props().condensed.should.be.false();
     });
 
     for (const role of ['viewer', 'formfill']) {
@@ -23,10 +24,10 @@ describe('ProjectOverview', () => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role });
         const app = await load('/projects/1');
-        app.find(ProjectOverviewAbout).length.should.equal(0);
-        app.find(ProjectOverviewRightNow).length.should.equal(0);
-        const section = app.first(FormList).first(PageSection);
-        section.getProp('condensed').should.be.true();
+        app.findComponent(ProjectOverviewAbout).exists().should.be.false();
+        app.findComponent(ProjectOverviewRightNow).exists().should.be.false();
+        const section = app.getComponent(FormList).getComponent(PageSection);
+        section.props().condensed.should.be.true();
       });
     }
   });

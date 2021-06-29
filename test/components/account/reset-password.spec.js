@@ -1,50 +1,73 @@
-import testData from '../../data';
-import { mockRoute } from '../../util/http';
-import { submitForm } from '../../util/event';
+import { RouterLinkStub } from '@vue/test-utils';
+
+import AccountResetPassword from '../../../src/components/account/reset-password.vue';
+
+import { load, mockHttp } from '../../util/http';
+import { mount } from '../../util/lifecycle';
 
 describe('AccountResetPassword', () => {
-  it('focuses the input', () =>
-    mockRoute('/reset-password', { attachToDocument: true })
-      .restoreSession(false)
-      .afterResponse(app => {
-        const input = app.first('#account-reset-password input[type="email"]');
-        input.should.be.focused();
-      }));
-
   it('shows the proper page title', () =>
-    mockRoute('/reset-password', { attachToDocument: true })
+    load('/reset-password')
       .restoreSession(false)
       .afterResponse(() => {
         document.title.should.equal('Reset Password | ODK Central');
       }));
 
+  it('focuses the input', () => {
+    const component = mount(AccountResetPassword, {
+      stubs: { RouterLink: RouterLinkStub },
+      attachTo: document.body
+    });
+    component.get('input').should.be.focused();
+  });
+
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(AccountResetPassword, {
+        stubs: { RouterLink: RouterLinkStub }
+      })
+      .request(async (component) => {
+        await component.get('input').setValue('alice@getodk.org');
+        return component.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { method, url, data }) => {
+        method.should.equal('POST');
+        url.should.equal('/v1/users/reset/initiate');
+        data.should.eql({ email: 'alice@getodk.org' });
+      })
+      .respondWithProblem());
+
   it('implement some standard button things', () =>
-    mockRoute('/reset-password')
-      .restoreSession(false)
-      .complete()
-      .request(app => submitForm(app, '#account-reset-password form', [
-        ['input[type="email"]', testData.administrators.createPast(1).last().email]
-      ]))
-      .standardButton());
+    mockHttp()
+      .mount(AccountResetPassword, {
+        stubs: { RouterLink: RouterLinkStub }
+      })
+      .testStandardButton({
+        button: '.btn-primary',
+        request: async (component) => {
+          await component.get('input').setValue('alice@getodk.org');
+          return component.get('form').trigger('submit');
+        }
+      }));
 
   describe('after a successful response', () => {
-    let app;
-    beforeEach(() => mockRoute('/reset-password')
+    const submit = () => load('/reset-password')
       .restoreSession(false)
       .complete()
-      .request(component => {
-        app = component;
-        return submitForm(app, '#account-reset-password form', [
-          ['input[type="email"]', testData.administrators.createPast(1).last().email]
-        ]);
+      .request(async (app) => {
+        const component = app.getComponent(AccountResetPassword);
+        await component.get('input').setValue('alice@getodk.org');
+        return component.get('form').trigger('submit');
       })
-      .respondWithSuccess());
+      .respondWithSuccess();
 
-    it('redirects to login', () => {
+    it('redirects to login', async () => {
+      const app = await submit();
       app.vm.$route.path.should.equal('/login');
     });
 
-    it('shows a success alert', () => {
+    it('shows a success alert', async () => {
+      const app = await submit();
       app.should.alert('success');
     });
   });

@@ -53,6 +53,10 @@ describe('mixins/routes', () => {
     it('infers the ids if given no arguments', () => {
       formPath().should.equal('/projects/2/forms/g');
     });
+
+    it('encodes the form ID', () => {
+      formPath(1, 'a b').should.equal('/projects/1/forms/a%20b');
+    });
   });
 
   describe('userPath', () => {

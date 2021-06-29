@@ -3,8 +3,7 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount, setProps } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
+import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => ({
   propsData: {
@@ -26,63 +25,63 @@ describe('SubmissionUpdateReviewState', () => {
   it('renders the correct radio buttons for review state', async () => {
     testData.extendedSubmissions.createPast(1);
     const modal = mountComponent();
-    await setProps(modal, { state: true });
-    const radios = modal.find('.radio label');
+    await modal.setProps({ state: true });
+    const radios = modal.findAll('.radio label');
     radios.length.should.equal(3);
 
-    radios[0].first('input').getAttribute('value').should.equal('approved');
-    radios[0].find('.icon-check-circle').length.should.equal(1);
-    radios[0].text().should.equal('Approved');
+    radios.at(0).get('input').attributes().value.should.equal('approved');
+    radios.at(0).find('.icon-check-circle').exists().should.be.true();
+    radios.at(0).text().should.equal('Approved');
 
-    radios[1].first('input').getAttribute('value').should.equal('hasIssues');
-    radios[1].find('.icon-comments').length.should.equal(1);
-    radios[1].text().should.equal('Has issues');
+    radios.at(1).get('input').attributes().value.should.equal('hasIssues');
+    radios.at(1).find('.icon-comments').exists().should.be.true();
+    radios.at(1).text().should.equal('Has issues');
 
-    radios[2].first('input').getAttribute('value').should.equal('rejected');
-    radios[2].find('.icon-times-circle').length.should.equal(1);
-    radios[2].text().should.equal('Rejected');
+    radios.at(2).get('input').attributes().value.should.equal('rejected');
+    radios.at(2).find('.icon-times-circle').exists().should.be.true();
+    radios.at(2).text().should.equal('Rejected');
   });
 
   describe('review state selection', () => {
     it('sets the selection to the current review state', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const modal = mountComponent();
-      await setProps(modal, { state: true });
-      modal.first('input[value="hasIssues"]').element.checked.should.be.true();
+      await modal.setProps({ state: true });
+      modal.get('input[value="hasIssues"]').element.checked.should.be.true();
     });
 
     it('sets selection to approved if current review state is null', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       const modal = mountComponent();
-      await setProps(modal, { state: true });
-      modal.first('input[value="approved"]').element.checked.should.be.true();
+      await modal.setProps({ state: true });
+      modal.get('input[value="approved"]').element.checked.should.be.true();
     });
 
     it('sets selection to approved if current review state is edited', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const modal = mountComponent();
-      await setProps(modal, { state: true });
-      modal.first('input[value="approved"]').element.checked.should.be.true();
+      await modal.setProps({ state: true });
+      modal.get('input[value="approved"]').element.checked.should.be.true();
     });
   });
 
   it('focuses the review state radio', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-    const modal = mountComponent({ attachToDocument: true });
-    await setProps(modal, { state: true });
-    modal.first('input[value="hasIssues"]').should.be.focused();
+    const modal = mountComponent({ attachTo: document.body });
+    await modal.setProps({ state: true });
+    modal.get('input[value="hasIssues"]').should.be.focused();
   });
 
   it('resets the form after the modal is hidden', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
     const modal = mountComponent();
-    await setProps(modal, { state: true });
-    await trigger.check(modal, 'input[value="rejected"]');
-    await trigger.input(modal, 'textarea', 'Some notes');
-    await setProps(modal, { state: false });
-    await setProps(modal, { state: true });
-    modal.first('input[value="hasIssues"]').element.checked.should.be.true();
-    modal.first('textarea').element.value.should.equal('');
+    await modal.setProps({ state: true });
+    await modal.get('input[value="rejected"]').setChecked();
+    await modal.get('textarea').setValue('Some notes');
+    await modal.setProps({ state: false });
+    await modal.setProps({ state: true });
+    modal.get('input[value="hasIssues"]').element.checked.should.be.true();
+    modal.get('textarea').element.value.should.equal('');
   });
 
   describe('request', () => {
@@ -97,10 +96,9 @@ describe('SubmissionUpdateReviewState', () => {
       });
       return mockHttpForComponent()
         .request(async (modal) => {
-          await setProps(modal, { state: true });
-          return trigger.submit(modal, 'form', [
-            ['input[value="hasIssues"]', true]
-          ]);
+          await modal.setProps({ state: true });
+          await modal.get('input[value="hasIssues"]').setChecked();
+          return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('PATCH');
@@ -114,8 +112,9 @@ describe('SubmissionUpdateReviewState', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       return mockHttpForComponent()
         .request(async (modal) => {
-          await setProps(modal, { state: true });
-          return trigger.submit(modal, 'form', [['textarea', 'Some\nnotes']]);
+          await modal.setProps({ state: true });
+          modal.get('textarea').setValue('Some\nnotes');
+          modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { headers }) => {
           headers['X-Action-Notes'].should.equal('Some%0Anotes');
@@ -127,10 +126,10 @@ describe('SubmissionUpdateReviewState', () => {
   it('implements some standard button things', () => {
     testData.extendedSubmissions.createPast(1, { reviewState: null });
     return mockHttpForComponent()
-      .afterResponses(modal => setProps(modal, { state: true }))
+      .afterResponses(modal => modal.setProps({ state: true }))
       .testStandardButton({
         button: '.btn-primary',
-        request: trigger.submit('form'),
+        request: (modal) => modal.get('form').trigger('submit'),
         disabled: ['.btn-link'],
         modal: true
       });

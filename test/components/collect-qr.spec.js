@@ -19,16 +19,13 @@ const mountComponent = (propsData) => mount(CollectQr, {
 });
 
 const qrData = (component) => {
-  // Using querySelector() rather than avoriaz first(), because avoriaz can't
-  // seem to find the <img> element (maybe because we use v-html?).
-  const img = component.vm.$el.querySelector('img');
-  const width = img.getAttribute('width');
-  const height = img.getAttribute('height');
+  const img = component.get('img');
+  const { width, height } = img.attributes();
   const canvas = document.createElement('canvas');
   canvas.setAttribute('width', width);
   canvas.setAttribute('height', height);
   const context = canvas.getContext('2d');
-  context.drawImage(img, 0, 0);
+  context.drawImage(img.element, 0, 0);
   const imageData = context.getImageData(0, 0, width, height);
   const encoded = jsQR(imageData.data, width, height).data;
   const inflated = pako.inflate(atob(encoded), { to: 'string' });
@@ -37,8 +34,7 @@ const qrData = (component) => {
 
 describe('CollectQr', () => {
   it('renders an image', () => {
-    const component = mountComponent();
-    const { childNodes } = component.vm.$el;
+    const { childNodes } = mountComponent().element;
     childNodes.length.should.equal(1);
     childNodes[0].tagName.should.equal('IMG');
   });
@@ -64,12 +60,12 @@ describe('CollectQr', () => {
     const componentL = mountComponent({ errorCorrectionLevel: 'L' });
     const componentM = mountComponent({ errorCorrectionLevel: 'M' });
 
-    const widthL = parseInt(
-      componentL.vm.$el.querySelector('img').getAttribute('width'),
+    const widthL = Number.parseInt(
+      componentL.element.querySelector('img').getAttribute('width'),
       10
     );
-    const widthM = parseInt(
-      componentM.vm.$el.querySelector('img').getAttribute('width'),
+    const widthM = Number.parseInt(
+      componentM.element.querySelector('img').getAttribute('width'),
       10
     );
 
@@ -80,12 +76,12 @@ describe('CollectQr', () => {
     const component1 = mountComponent({ cellSize: 1 });
     const component2 = mountComponent({ cellSize: 2 });
 
-    const width1 = parseInt(
-      component1.vm.$el.querySelector('img').getAttribute('width'),
+    const width1 = Number.parseInt(
+      component1.element.querySelector('img').getAttribute('width'),
       10
     );
-    const width2 = parseInt(
-      component2.vm.$el.querySelector('img').getAttribute('width'),
+    const width2 = Number.parseInt(
+      component2.element.querySelector('img').getAttribute('width'),
       10
     );
 

@@ -4,7 +4,6 @@ import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { trigger } from '../../util/event';
 
 const mountOptions = (propsData) => ({
   propsData: {
@@ -30,7 +29,7 @@ describe('SubmissionComment', () => {
 
     it('does not show the alert if the feed is loading', () => {
       const component = mountComponent({ feed: null });
-      component.find('[role="alert"]').length.should.equal(0);
+      component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('does not show the alert if the user did not make an edit', () => {
@@ -44,7 +43,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       });
-      component.find('[role="alert"]').length.should.equal(0);
+      component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('does not show the alert if the user commented after their edit', () => {
@@ -57,7 +56,7 @@ describe('SubmissionComment', () => {
           testData.extendedComments.createNew()
         ].reverse()
       });
-      component.find('[role="alert"]').length.should.equal(0);
+      component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('shows the alert if the user did not comment', () => {
@@ -69,7 +68,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       });
-      component.find('[role="alert"]').length.should.equal(1);
+      component.find('[role="alert"]').exists().should.be.true();
     });
 
     it('shows the alert if the user commented before their edit', () => {
@@ -82,7 +81,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       });
-      component.find('[role="alert"]').length.should.equal(1);
+      component.find('[role="alert"]').exists().should.be.true();
     });
 
     it('shows the alert if another user commented', () => {
@@ -96,7 +95,7 @@ describe('SubmissionComment', () => {
           testData.extendedComments.createNew({ actor: user })
         ].reverse()
       });
-      component.find('[role="alert"]').length.should.equal(1);
+      component.find('[role="alert"]').exists().should.be.true();
     });
   });
 
@@ -104,22 +103,25 @@ describe('SubmissionComment', () => {
     it('shows the actions if there is input', async () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent();
-      const actions = component.first('#submission-comment-actions');
+      const actions = component.get('#submission-comment-actions');
       actions.should.be.hidden();
-      const textarea = component.first('textarea');
-      await trigger.input(textarea, 'foo');
+      const textarea = component.get('textarea');
+      await textarea.setValue('foo');
       actions.should.be.visible();
-      await trigger.input(textarea, '');
+      await textarea.setValue('');
       actions.should.be.hidden();
     });
 
     it('shows the actions during the request', () => {
       testData.extendedSubmissions.createPast(1);
       return mockHttpForComponent()
-        .request(trigger.submit('form', [['textarea', 'foo']]))
+        .request(async (component) => {
+          await component.get('textarea').setValue('foo');
+          return component.get('form').trigger('submit');
+        })
         .beforeAnyResponse(async (component) => {
-          await trigger.input(component, 'textarea', '');
-          component.first('#submission-comment-actions').should.be.visible();
+          await component.get('textarea').setValue('');
+          component.get('#submission-comment-actions').should.be.visible();
         })
         .respondWithProblem();
     });
@@ -134,7 +136,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       });
-      component.first('#submission-comment-actions').should.be.visible();
+      component.get('#submission-comment-actions').should.be.visible();
     });
   });
 
@@ -142,7 +144,10 @@ describe('SubmissionComment', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
     return mockHttpForComponent()
-      .request(trigger.submit('form', [['textarea', 'foo']]))
+      .request(async (component) => {
+        await component.get('textarea').setValue('foo');
+        return component.get('form').trigger('submit');
+      })
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('POST');
         url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
@@ -155,7 +160,10 @@ describe('SubmissionComment', () => {
     testData.extendedSubmissions.createPast(1);
     return mockHttpForComponent().testStandardButton({
       button: 'button[type="submit"]',
-      request: trigger.submit('form', [['textarea', 'foo']])
+      request: async (component) => {
+        await component.get('textarea').setValue('foo');
+        return component.get('form').trigger('submit');
+      }
     });
   });
 
@@ -166,7 +174,11 @@ describe('SubmissionComment', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
         .complete()
-        .request(trigger.submit('#submission-comment', [['textarea', 'foo']]))
+        .request(async (component) => {
+          const form = component.getComponent(SubmissionComment);
+          await form.get('textarea').setValue('foo');
+          return form.trigger('submit');
+        })
         .respondWithData(() =>
           testData.standardComments.createNew({ body: 'foo' }))
         .respondWithData(() => testData.extendedAudits.sorted())
@@ -188,7 +200,7 @@ describe('SubmissionComment', () => {
 
     it('resets the field', async () => {
       const component = await submit();
-      const { value } = component.first('#submission-comment textarea').element;
+      const { value } = component.get('#submission-comment textarea').element;
       value.should.equal('');
     });
   });

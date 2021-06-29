@@ -1,4 +1,5 @@
 import AuditTable from '../../../src/components/audit/table.vue';
+
 import testData from '../../data';
 import { ago } from '../../../src/util/date-time';
 import { load } from '../../util/http';
@@ -30,12 +31,12 @@ describe('BackupList', () => {
       loggedAt: ago({ days: 1 }).toISO()
     });
     return load('/system/backups', { root: false }).then(component => {
-      component.find(AuditTable).length.should.equal(1);
+      component.findComponent(AuditTable).exists().should.be.true();
     });
   });
 
   it('does not render a table if there are no audit log entries', () =>
     load('/system/backups', { root: false }).then(component => {
-      component.find(AuditTable).length.should.equal(0);
+      component.findComponent(AuditTable).exists().should.be.false();
     }));
 });

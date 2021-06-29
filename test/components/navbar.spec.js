@@ -4,8 +4,6 @@ import router from '../../src/router';
 
 import testData from '../data';
 import { load } from '../util/http';
-import { mockLogin } from '../util/session';
-import { trigger } from '../util/event';
 
 describe('Navbar', () => {
   describe('visibility', () => {
@@ -15,12 +13,12 @@ describe('Navbar', () => {
       const removeGuard = router.afterEach(() => {
         wasHidden = document.querySelector('.navbar').style.display === 'none';
       });
-      return load('/login', { attachToDocument: true })
+      return load('/login', { attachTo: document.body })
         .restoreSession(true)
         .respondFor('/')
         .afterResponses(app => {
           wasHidden.should.be.true();
-          app.first(Navbar).should.be.visible();
+          app.getComponent(Navbar).should.be.visible();
         })
         .finally(removeGuard);
     });
@@ -31,19 +29,8 @@ describe('Navbar', () => {
         query: { token: 'a'.repeat(64) }
       };
       return load(location).then(app => {
-        app.first(Navbar).should.be.visible();
+        app.getComponent(Navbar).should.be.visible();
       });
     });
-  });
-
-  it('navigates to / after the user clicks "ODK Central"', () => {
-    mockLogin();
-    return load('/account/edit')
-      .complete()
-      .request(trigger.click('.navbar-brand'))
-      .respondFor('/')
-      .afterResponses(app => {
-        app.vm.$route.path.should.equal('/');
-      });
   });
 });

@@ -56,24 +56,17 @@ We use Vue.js along with Vue Router, Vuex, and Vue CLI.
 
 ODK Central Frontend uses jQuery in limited ways.
 
-Wherever possible, we try to use Vue instead of jQuery. Vue will not always know about or respect the changes that jQuery makes, and using jQuery can add complexity to a component. It can also add complexity to testing: for example, we generally use avoriaz for testing, but if you use jQuery in a component, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's `trigger()` method.
+Wherever possible, we try to use Vue instead of jQuery. Vue will not always know about or respect changes that jQuery makes to the DOM, and using jQuery can add complexity to a component.
 
-That said, there are a couple of occasions in which we reach for jQuery:
-
-- We use some of Bootstrap's jQuery plugins.
-- avoriaz does not allow you to mock events. However, jQuery does, so we sometimes use jQuery in order to facilitate testing.
-
-One thing to keep in mind when using jQuery is that you will have to manually remove any jQuery listeners and data, perhaps when the component is destroyed.
-
-If possible despite our use of Bootstrap, we may wish to remove jQuery from Frontend in the future. For that reason, if you have a choice between using jQuery and vanilla JavaScript, you should consider using the latter. Remember though that as with jQuery, Vue will not always know about or respect the changes that you make using vanilla JavaScript.
+That said, we make use of some of Bootstrap's jQuery plugins. We may replace those in the future, after which we may be able to remove jQuery. With that in mind, if you have a choice between using jQuery and vanilla JavaScript, consider using the latter. Remember though that as with jQuery, Vue will not always know about or respect changes to the DOM that you make using vanilla JavaScript.
 
 ### Bootstrap
 
-ODK Central Frontend uses Bootstrap 3. (However, we are considering [moving to Bootstrap 4](https://github.com/getodk/central-frontend/issues/142). Let us know if that is something you can help with!)
+ODK Central Frontend uses Bootstrap 3.
 
-Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use most of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing one, you may find it useful to base the new component off the existing one.
+Frontend's [global styles](/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use many of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing Frontend component, you may find it useful to base the new component off the existing one.
 
-We use some, but not all, of Bootstrap's jQuery plugins ([`/src/bootstrap.js`](/src/bootstrap.js)). We try to limit our use of Bootstrap's plugins, because they use jQuery, and jQuery tends to add complexity to components and testing in the ways described above. For example, if you use a Bootstrap plugin, then in testing, you may need to use jQuery's `trigger()` method rather than avoriaz's.
+We use a limited number of Bootstrap's jQuery plugins: see the [section above](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#jquery) on jQuery.
 
 ### Global Utilities
 
@@ -104,6 +97,8 @@ To learn how a given component works, one of the best places to start is how the
 - Does the component have props?
 - Does it have slots?
 - Does it emit events?
+
+A component can also communicate with other components using the Vuex store. For example, a component may use [response data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) that another component requested.
 
 ### Component Names
 
@@ -189,7 +184,7 @@ node bin/transifex/restructure.js
   // Multiple comments are combined.
   "hello": "Hello, world!",
   // This comment will be added for each of the messages within "fruit".
-  fruit: {
+  "fruit": {
     "apple": "Apple",
     "banana": "Banana"
   }
@@ -322,15 +317,15 @@ Our tests use a number of external packages:
 - Should.js, for assertions
 - Sinon.JS, for spies and stubs
 - faker.js, to generate test data
-- avoriaz, to test Vue components
+- Vue Test Utils, to test Vue components
 
 `npm run test` runs [`/test/index.js`](/test/index.js), which mocks global utilities and sets up Mocha hooks.
 
 We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
 
-[avoriaz](https://eddyerburgh.gitbooks.io/avoriaz/content/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of avoriaz, in particular [`mount()`](/test/util/lifecycle.js) and [`trigger`](/test/util/event.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
+[Vue Test Utils](https://vue-test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/test/util/lifecycle.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 
-Many tests involve sending a request. You can mock a series of request-response cycles by using `load()` or `mockHttp()`, defined in [`test/util/http.js`](/test/util/http.js). You can use these to implement common tests, for example, testing some standard button things: see [`/test/util/http/common.js`](/test/util/http/common.js).
+Many tests involve sending a request. You can mock a series of request-response cycles by using `load()` or `mockHttp()`, defined in [`/test/util/http.js`](/test/util/http.js). You can use these to implement common tests, for example, testing some standard button things: see [`/test/util/http/common.js`](/test/util/http/common.js).
 
 As provided by default by Mocha, add `.only` after any `describe()` or `it()` call in the tests to run only the marked tests. For example:
 
@@ -349,11 +344,3 @@ We generate and store test data specific to ODK Central using the [`testData`](/
 Most Backend resources have a `createdAt` property. To generate an object whose `createdAt` property is in the past, use the `createPast()` method of the store or view. To generate an object whose `createdAt` property is set to the current time, use `createNew()`. Most of the time, you will use `createPast()`. For a test that mounts a component, use `createPast()` to set up data that exists before the component is mounted. Use `createNew()` for data created after the component is mounted, for example, after the component sends a POST request. You can pass options to `createPast()` and `createNew()`; each store accepts a different set of options.
 
 To learn more about stores and views, see [`/test/data/data-store.js`](/test/data/data-store.js).
-
-#### Improvements to Testing
-
-We want to improve our testing in two major ways. (Let us know if this is something you can help with!)
-
-- Moving away from Karma
-  - Vue CLI does not offer core support for Karma. Perhaps the easiest move would be to the unit-mocha plugin for Vue CLI, which uses JSDOM.
-- Moving from avoriaz to Vue Test Utils

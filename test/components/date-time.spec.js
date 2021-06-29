@@ -23,15 +23,15 @@ describe('DateTime', () => {
     const component = mount(DateTime, {
       propsData: { iso: '2020-01-01T12:34:56Z' }
     });
-    component.vm.$el.tagName.should.equal('TIME');
-    component.getAttribute('datetime').should.equal('2020-01-01T12:34:56Z');
+    component.element.tagName.should.equal('TIME');
+    component.attributes().datetime.should.equal('2020-01-01T12:34:56Z');
   });
 
   it('sets the correct title attribute', () => {
     const component = mount(DateTime, {
       propsData: { iso: '2020-01-01T12:34:56Z' }
     });
-    component.getAttribute('title').should.equal('2020/01/01 12:34:56');
+    component.attributes().title.should.equal('2020/01/01 12:34:56');
   });
 
   it('shows the correct text', () => {
@@ -46,14 +46,14 @@ describe('DateTime', () => {
       const component = mount(DateTime, {
         propsData: { iso: null }
       });
-      component.vm.$el.tagName.should.equal('SPAN');
+      component.element.tagName.should.equal('SPAN');
     });
 
     it('does not have a title attribute', () => {
       const component = mount(DateTime, {
         propsData: { iso: null }
       });
-      component.hasAttribute('title').should.be.false();
+      should.not.exist(component.attributes().title);
     });
 
     it('shows the correct text if the prop blank exists', () => {

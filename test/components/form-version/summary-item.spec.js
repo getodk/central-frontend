@@ -1,6 +1,8 @@
 import Form from '../../../src/presenters/form';
 import FormVersionSummaryItem from '../../../src/components/form-version/summary-item.vue';
+
 import TestUtilP from '../../util/components/p.vue';
+
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
@@ -11,9 +13,9 @@ describe('FormVersionSummaryItem', () => {
       const component = mount(FormVersionSummaryItem, {
         propsData: { version: new Form(form) }
       });
-      const span = component.first('.version span');
-      span.text().trim().should.equal('v1');
-      span.getAttribute('title').should.equal('v1');
+      const span = component.get('.version span');
+      span.text().should.equal('v1');
+      span.attributes().title.should.equal('v1');
     });
 
     it('accounts for an empty version string', () => {
@@ -21,11 +23,11 @@ describe('FormVersionSummaryItem', () => {
       const component = mount(FormVersionSummaryItem, {
         propsData: { version: new Form(form) }
       });
-      const version = component.first('.version');
-      version.hasClass('blank-version').should.be.true();
-      const span = version.first('span');
-      span.text().trim().should.equal('(blank)');
-      span.getAttribute('title').should.equal('(blank)');
+      const version = component.get('.version');
+      version.classes('blank-version').should.be.true();
+      const span = version.get('span');
+      span.text().should.equal('(blank)');
+      span.attributes().title.should.equal('(blank)');
     });
   });
 
@@ -35,6 +37,6 @@ describe('FormVersionSummaryItem', () => {
       propsData: { version: new Form(form) },
       slots: { body: TestUtilP }
     });
-    component.first('.summary-item-body p').text().should.equal('Some p text');
+    component.get('.summary-item-body p').text().should.equal('Some p text');
   });
 });

@@ -1,8 +1,8 @@
 import Spinner from '../../../../src/components/spinner.vue';
+
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
-import { trigger } from '../../../util/event';
 
 // Creates a project, users, and project assignments. Use `roles` to specify a
 // role for every user; a user will be created for each element of the array.
@@ -27,8 +27,11 @@ const createData = (roles) => {
     }
   }
 };
-const changeQ = (component, q) =>
-  trigger.changeValue(component, '#project-user-list-search-form input', q);
+const changeQ = (component, q) => {
+  const input = component.get('#project-user-list-search-form input');
+  input.element.value = q;
+  return input.trigger('change');
+};
 // Changes the role select element of the first row of the table.
 const changeRole = (component, systemOrNone) => {
   const role = systemOrNone !== 'none'
@@ -36,11 +39,8 @@ const changeRole = (component, systemOrNone) => {
     : null;
   if (systemOrNone !== 'none' && role == null)
     throw new Error('role not found');
-  return trigger.changeValue(
-    component,
-    '#project-user-list select',
-    role != null ? role.id.toString() : ''
-  );
+  const select = component.get('#project-user-list select');
+  return select.setValue(role != null ? role.id.toString() : '');
 };
 // Loads two assignments, then submits a search that returns four users, one of
 // whom has an assignment.
@@ -68,8 +68,8 @@ describe('ProjectUserList', () => {
         createData(['none']);
         return load('/projects/1/users', { root: false })
           .beforeEachResponse(component => {
-            const input = component.first('#project-user-list-search-form input');
-            input.should.be.disabled();
+            const input = component.get('#project-user-list-search-form input');
+            input.element.disabled.should.be.true();
           });
       });
 
@@ -77,7 +77,7 @@ describe('ProjectUserList', () => {
         createData(['none']);
         return load('/projects/1/users', { root: false })
           .beforeEachResponse(component => {
-            component.first('.close').should.be.hidden();
+            component.get('.close').should.be.hidden();
           });
       });
     });
@@ -87,10 +87,10 @@ describe('ProjectUserList', () => {
         mockLogin();
         testData.extendedProjects.createPast(1);
         return load('/projects/1/users').then(app => {
-          const form = app.first('#project-user-list-search-form');
-          const placeholder = form.first('input').getAttribute('placeholder');
+          const form = app.get('#project-user-list-search-form');
+          const { placeholder } = form.get('input').attributes();
           placeholder.should.equal('Search for a user…');
-          const label = form.first('.form-label').text();
+          const label = form.get('.form-label').text();
           label.should.equal('Search for a user…');
         });
       });
@@ -99,10 +99,10 @@ describe('ProjectUserList', () => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role: 'manager' });
         return load('/projects/1/users').then(app => {
-          const form = app.first('#project-user-list-search-form');
-          const placeholder = form.first('input').getAttribute('placeholder');
+          const form = app.get('#project-user-list-search-form');
+          const { placeholder } = form.get('input').attributes();
           placeholder.should.equal('Enter exact user email address…');
-          const label = form.first('.form-label').text();
+          const label = form.get('.form-label').text();
           label.should.equal('Enter exact user email address…');
         });
       });
@@ -111,19 +111,18 @@ describe('ProjectUserList', () => {
     it('shows the correct options for the select', () => {
       createData(['manager']);
       return load('/projects/1/users').then(app => {
-        const options = app.find('#project-user-list tbody tr option');
-        const text = options.map(option => option.text().trim());
-        text.should.eql([
+        const options = app.findAll('#project-user-list tbody tr option');
+        options.wrappers.map(option => option.text()).should.eql([
           'Project Manager',
           'Project Viewer',
           'Data Collector',
           'None'
         ]);
         const standardRoles = testData.standardRoles.sorted();
-        options[0].getAttribute('value').should.equal(
+        options.at(0).attributes().value.should.equal(
           standardRoles.find(role => role.system === 'manager').id.toString()
         );
-        options[options.length - 1].getAttribute('value').should.equal('');
+        options.at(options.length - 1).attributes().value.should.equal('');
       });
     });
 
@@ -131,17 +130,17 @@ describe('ProjectUserList', () => {
       createData(['none', 'viewer', 'manager']);
       return load('/projects/1/users', { root: false })
         .afterResponses(component => {
-          const tr = component.find('tbody tr');
+          const tr = component.findAll('tbody tr');
           tr.length.should.equal(2);
 
-          tr[0].first('td').text().trim().should.equal('User 2');
+          tr.at(0).get('td').text().should.equal('User 2');
           const standardRoles = testData.standardRoles.sorted();
-          tr[0].first('select').element.value.should.equal(
+          tr.at(0).get('select').element.value.should.equal(
             standardRoles.find(role => role.system === 'viewer').id.toString()
           );
 
-          tr[1].first('td').text().trim().should.equal('User 3');
-          tr[1].first('select').element.value.should.equal(
+          tr.at(1).get('td').text().should.equal('User 3');
+          tr.at(1).get('select').element.value.should.equal(
             standardRoles.find(role => role.system === 'manager').id.toString()
           );
         });
@@ -150,16 +149,16 @@ describe('ProjectUserList', () => {
     it('renders the select correctly for the current user', () => {
       createData(['manager', 'manager']);
       return load('/projects/1/users', { root: false }).afterResponses(component => {
-        const tr = component.find('tbody tr');
+        const tr = component.findAll('tbody tr');
         tr.length.should.equal(2);
-        const selects = tr.map(wrapper => wrapper.first('select'));
+        const selects = tr.wrappers.map(wrapper => wrapper.get('select'));
 
-        tr[0].first('td').text().trim().should.equal('User 1');
-        selects[0].should.be.disabled();
-        selects[0].element.title.should.equal('You may not edit your own Project Role.');
+        tr.at(0).get('td').text().should.equal('User 1');
+        selects[0].element.disabled.should.be.true();
+        selects[0].attributes().title.should.equal('You may not edit your own Project Role.');
 
-        selects[1].should.not.be.disabled();
-        selects[1].element.title.should.equal('');
+        selects[1].element.disabled.should.be.false();
+        should.not.exist(selects[1].attributes().title);
       });
     });
 
@@ -167,11 +166,11 @@ describe('ProjectUserList', () => {
       it('shows the table headers and a message', () => {
         createData(['none']);
         return load('/projects/1/users', { root: false }).afterResponses(component => {
-          component.find('thead tr').length.should.equal(1);
+          component.findAll('thead tr').length.should.equal(1);
 
-          const message = component.first('.empty-table-message');
+          const message = component.get('.empty-table-message');
           message.should.be.visible();
-          message.text().trim().should.startWith('There are no users');
+          message.text().should.startWith('There are no users');
         });
       });
 
@@ -182,12 +181,12 @@ describe('ProjectUserList', () => {
           .request(component => changeQ(component, 'some search term'))
           .respondWithData(() => testData.standardUsers.sorted())
           .afterResponse(component => {
-            component.first('.empty-table-message').should.be.hidden();
+            component.get('.empty-table-message').should.be.hidden();
           })
-          .request(component => trigger.click(component, '.close'))
+          .request(component => component.get('.close').trigger('click'))
           .respondWithData(() => testData.extendedProjectAssignments.sorted())
           .afterResponse(component => {
-            component.first('.empty-table-message').should.be.visible();
+            component.get('.empty-table-message').should.be.visible();
           });
       });
     });
@@ -240,7 +239,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.first('select').should.be.disabled();
+            component.get('select').element.disabled.should.be.true();
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -252,7 +251,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.first(Spinner).getProp('state').should.be.true();
+            component.getComponent(Spinner).props().state.should.be.true();
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -264,8 +263,8 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            const form = component.first('#project-user-list-search-form');
-            form.first('input').should.be.disabled();
+            const input = component.get('#project-user-list-search-form input');
+            input.element.disabled.should.be.true();
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -277,7 +276,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.first('.close').should.be.hidden();
+            component.get('.close').should.be.hidden();
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -306,7 +305,7 @@ describe('ProjectUserList', () => {
           .respondWithSuccess()
           .afterResponses(component => {
             const standardRoles = testData.standardRoles.sorted();
-            component.first('select').element.value.should.equal(
+            component.get('select').element.value.should.equal(
               standardRoles.find(role => role.system === 'viewer').id.toString()
             );
           });
@@ -325,7 +324,7 @@ describe('ProjectUserList', () => {
           .route('/projects/1/users')
           .then(app => {
             const standardRoles = testData.standardRoles.sorted();
-            app.first('#project-user-list select').element.value.should.equal(
+            app.get('#project-user-list select').element.value.should.equal(
               standardRoles.find(role => role.system === 'viewer').id.toString()
             );
           });
@@ -356,7 +355,7 @@ describe('ProjectUserList', () => {
           .respondWithSuccess()
           .respondWithProblem()
           .afterResponses(component => {
-            component.first('select').element.value.should.equal('');
+            component.get('select').element.value.should.equal('');
           });
       });
     });
@@ -365,18 +364,18 @@ describe('ProjectUserList', () => {
   describe('during a search request', () => {
     it('hides the assignments', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        component.find('tbody tr').length.should.equal(0);
+        component.find('tbody tr').exists().should.be.false();
       }));
 
     it('does not disable the search input', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        const form = component.first('#project-user-list-search-form');
-        form.first('input').should.not.be.disabled();
+        const input = component.get('#project-user-list-search-form input');
+        input.element.disabled.should.be.false();
       }));
 
     it('shows the .close button', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        component.first('.close').should.be.visible();
+        component.get('.close').should.be.visible();
       }));
 
     it('allows another search, canceling the first search', () =>
@@ -388,7 +387,7 @@ describe('ProjectUserList', () => {
         // response to the second search.
         .respondWithData(() => [testData.standardUsers.last()])
         .afterResponses(component => {
-          component.find('tbody tr').length.should.equal(1);
+          component.findAll('tbody tr').length.should.equal(1);
         }));
   });
 
@@ -400,36 +399,36 @@ describe('ProjectUserList', () => {
         .request(component => changeQ(component, 'some search term'))
         .respondWithData(() => [])
         .afterResponse(component => {
-          const message = component.first('.empty-table-message');
+          const message = component.get('.empty-table-message');
           message.should.be.visible();
-          message.text().trim().should.equal('No results');
+          message.text().should.equal('No results');
         });
     });
 
     it('shows the search results', () =>
       search({ root: false }).afterResponse(component => {
-        const tr = component.find('tbody tr');
+        const tr = component.findAll('tbody tr');
         tr.length.should.equal(4);
 
-        tr[0].first('td').text().trim().should.equal('User 4');
-        tr[0].first('select').element.value.should.equal('');
+        tr.at(0).get('td').text().should.equal('User 4');
+        tr.at(0).get('select').element.value.should.equal('');
 
-        tr[1].first('td').text().trim().should.equal('User 5');
-        tr[1].first('select').element.value.should.equal('');
+        tr.at(1).get('td').text().should.equal('User 5');
+        tr.at(1).get('select').element.value.should.equal('');
 
-        tr[2].first('td').text().trim().should.equal('User 6');
-        tr[2].first('select').element.value.should.equal('');
+        tr.at(2).get('td').text().should.equal('User 6');
+        tr.at(2).get('select').element.value.should.equal('');
 
-        tr[3].first('td').text().trim().should.equal('User 2');
+        tr.at(3).get('td').text().should.equal('User 2');
         const standardRoles = testData.standardRoles.sorted();
-        tr[3].first('select').element.value.should.equal(
+        tr.at(3).get('select').element.value.should.equal(
           standardRoles.find(role => role.system === 'viewer').id.toString()
         );
       }));
 
     it('shows the .close button', () =>
       search({ root: false }).afterResponse(component => {
-        component.first('.close').should.be.visible();
+        component.get('.close').should.be.visible();
       }));
   });
 
@@ -467,7 +466,7 @@ describe('ProjectUserList', () => {
         .complete()
         .route('/projects/1/users')
         .then(app => {
-          app.find('#project-user-list tbody tr').length.should.equal(3);
+          app.findAll('#project-user-list tbody tr').length.should.equal(3);
         }));
   });
 
@@ -478,7 +477,7 @@ describe('ProjectUserList', () => {
       .respondWithSuccess()
       .complete()
       .request(component => (clickClose
-        ? trigger.click(component, '.close')
+        ? component.get('.close').trigger('click')
         : changeQ(component, '')))
       .respondWithData(() => testData.extendedProjectAssignments
         .createPast(1, {
@@ -489,23 +488,23 @@ describe('ProjectUserList', () => {
 
     it('disables the search input during the request', () =>
       giveRoleThenClearSearch().beforeAnyResponse(component => {
-        const form = component.first('#project-user-list-search-form');
-        form.first('input').should.be.disabled();
+        const input = component.get('#project-user-list-search-form input');
+        input.element.disabled.should.be.true();
       }));
 
     it('hides the .close button during the request', () =>
       giveRoleThenClearSearch().beforeAnyResponse(component => {
-        component.first('.close').should.be.hidden();
+        component.get('.close').should.be.hidden();
       }));
 
     it('shows the assignments after the .close button is clicked', () =>
       giveRoleThenClearSearch(true).afterResponse(component => {
-        component.find('tbody tr').length.should.equal(3);
+        component.findAll('tbody tr').length.should.equal(3);
       }));
 
     it("shows assignments after user changes input to '' without clicking .close", () =>
       giveRoleThenClearSearch(false).afterResponse(component => {
-        component.find('tbody tr').length.should.equal(3);
+        component.findAll('tbody tr').length.should.equal(3);
       }));
   });
 });

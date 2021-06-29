@@ -1,40 +1,36 @@
+import NavbarLocaleDropdown from '../../../src/components/navbar/locale-dropdown.vue';
+
 import i18n from '../../../src/i18n';
-import { load } from '../../util/http';
 import { loadLocale } from '../../../src/util/i18n';
-import { trigger } from '../../util/event';
+
+import { load } from '../../util/http';
+import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
 describe('NavbarLocaleDropdown', () => {
-  it('shows the current locale', () =>
-    load('/login')
-      .restoreSession(false)
-      .afterResponses(app => {
-        const toggle = app.first('#navbar-locale-dropdown .dropdown-toggle');
-        toggle.text().trim().should.equal('en');
-      }));
+  it('shows the current locale', () => {
+    const text = mount(NavbarLocaleDropdown).get('.dropdown-toggle').text();
+    text.should.equal('en');
+  });
 
-  it('shows a menu item for each locale', () =>
-    load('/login')
-      .restoreSession(false)
-      .afterResponses(app => {
-        const text = app.find('#navbar-locale-dropdown .dropdown-menu a')
-          .map(a => a.text().trim());
-        text[0].should.eql('English');
-        text[1].should.eql('Čeština');
-        text[2].should.eql('Deutsch');
-      }));
+  it('shows a menu item for each locale', () => {
+    const a = mount(NavbarLocaleDropdown).findAll('.dropdown-menu a');
+    a.at(0).text().should.eql('English');
+    a.at(1).text().should.eql('Čeština');
+    a.at(2).text().should.eql('Deutsch');
+  });
 
   describe('after a locale selection', () => {
     afterEach(() => loadLocale('en'));
 
     const selectLocale = () => load('/login')
       .restoreSession(false)
-      .afterResponses(app => {
-        for (const a of app.find('#navbar-locale-dropdown .dropdown-menu a')) {
-          if (a.text().trim() === 'Español')
-            return trigger.click(a).then(() => app);
-        }
-        throw new Error('locale not found');
+      .afterResponses(async (app) => {
+        const a = app.findAll('#navbar-locale-dropdown .dropdown-menu a');
+        const es = a.wrappers.find(wrapper => wrapper.text() === 'Español');
+        should.exist(es);
+        await es.trigger('click');
+        return app;
       });
 
     it('loads the locale', () =>
@@ -47,8 +43,8 @@ describe('NavbarLocaleDropdown', () => {
 
     it('shows the new locale', () =>
       selectLocale().then(app => {
-        const toggle = app.first('#navbar-locale-dropdown .dropdown-toggle');
-        toggle.text().trim().should.equal('es');
+        const toggle = app.get('#navbar-locale-dropdown .dropdown-toggle');
+        toggle.text().should.equal('es');
       }));
 
     it('saves the new locale in local storage', () =>
