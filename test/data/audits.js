@@ -11,7 +11,8 @@ const actionsWithDefaultActor = new Set([
   'config.set',
   'submission.create',
   'submission.update',
-  'submission.update.version'
+  'submission.update.version',
+  'user.session.create'
 ]);
 const defaultActor = (action) =>
   (actionsWithDefaultActor.has(action) ? extendedUsers.first() : null);

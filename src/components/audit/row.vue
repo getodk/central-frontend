@@ -106,6 +106,7 @@ export default {
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
       const { actee } = this.audit;
+      if (actee == null) return null;
       const result = { title: species.title(actee) };
       if (species.path != null) result.path = species.path(actee, this);
       return result;
