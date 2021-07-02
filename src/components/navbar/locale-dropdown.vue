@@ -92,6 +92,9 @@ export default {
   "fr": {
     "helpTranslate": "Aider à traduire Central"
   },
+  "it": {
+    "helpTranslate": "Aiuta a tradurre Central"
+  },
   "ja": {
     "helpTranslate": "Centralの翻訳に貢献する"
   }

@@ -193,6 +193,12 @@ export default {
       "notes": "Notes et commentaires (facultatif)"
     }
   },
+  "it": {
+    "title": "Aggiorna lo Stato Revisione",
+    "field": {
+      "notes": "Note e commenti (opzionale)"
+    }
+  },
   "ja": {
     "title": "レビュー・ステータスの更新",
     "field": {

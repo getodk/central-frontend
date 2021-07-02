@@ -392,6 +392,21 @@ export default {
       }
     }
   },
+  "it": {
+    "placeholder": "{selected} di {total}",
+    "field": {
+      "columns": "Colonne mostrate",
+      "search": "Cerca colonne..."
+    },
+    "disabled": "Non puoi selezionare piu' di 100 colonne.",
+    "action": {
+      "select": {
+        "full": "Seleziona {all} / {none}",
+        "all": "Tutto",
+        "none": "Nessuno/a"
+      }
+    }
+  },
   "ja": {
     "placeholder": "{total}列の内{selected}列",
     "field": {

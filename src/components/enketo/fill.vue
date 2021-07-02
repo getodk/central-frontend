@@ -93,6 +93,12 @@ export default {
       "notOpen": "Formulir ini sedang tidak menerima kiriman data baru sekarang."
     }
   },
+  "it": {
+    "disabled": {
+      "processing": "Il formulario web non è ancora disponibile. L'elaborazione non è terminata. Per favore riaggiorna più tardi e riprova.",
+      "notOpen": "Questo formulario non accetta nuovi invii in questo momento."
+    }
+  },
   "ja": {
     "disabled": {
       "processing": "Webフォームはまだ利用できません。現在、処理中です。後ほどページを更新し、もう一度試して下さい。",

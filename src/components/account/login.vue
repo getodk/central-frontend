@@ -187,6 +187,14 @@ export default {
       "401_2": "Alamat email dan/atau kata sandi salah."
     }
   },
+  "it": {
+    "alert": {
+      "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare."
+    },
+    "problem": {
+      "401_2": "Indirizzo e-mail e/o password errati."
+    }
+  },
   "ja": {
     "alert": {
       "alreadyLoggedIn": "すでにユーザーでログインされています。 続けるにはページを更新してください。"

@@ -332,6 +332,38 @@ export default {
       "archive": "Proyek \"{name}\" telah diarsipkan."
     }
   },
+  "it": {
+    "encryption": {
+      "title": "Crittografia",
+      "body": {
+        "unencrypted": [
+          "La crittografia dei dati di invio non è abilitata per questo progetto."
+        ],
+        "encrypted": [
+          {
+            "full": "La crittografia dei dati di invio è {enabled} per questo progetto.",
+            "enabled": "abilitato"
+          },
+          "In questa versione di ODK Central, non puoi disabilitare la crittografia una volta attivata."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Abilita crittografia"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Archivia questo Progetto"
+      },
+      "archived": [
+        "Il Progetto è stato archiviato",
+        "In questa versione di ODK Central, non puoi annullare l'archiviazione di un progetto. Tuttavia, la possibilità di annullare l'archiviazione di un progetto è prevista per una versione futura."
+      ]
+    },
+    "alert": {
+      "archive": "Il Progetto \"{name}\" è stato archiviato"
+    }
+  },
   "ja": {
     "encryption": {
       "title": "暗号化",

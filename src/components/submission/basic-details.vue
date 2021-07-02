@@ -168,6 +168,14 @@ export default {
     "attachments": "File Media",
     "present": "{count} berkas"
   },
+  "it": {
+    "reviewState": "Rivedi lo stato",
+    "deviceId": "ID del dispositivo",
+    "attachments": "File multimediali",
+    "present": "{count} file | {count} files",
+    "expected": "{count} atteso | {count} attesi",
+    "attachmentSummary": "{present} / {expected}"
+  },
   "ja": {
     "reviewState": "レビュー・ステータス",
     "deviceId": "デバイスID",

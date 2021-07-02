@@ -316,6 +316,15 @@ export default {
       "success": "Perubahan telah disimpan!"
     }
   },
+  "it": {
+    "heading": [
+      "Gli utenti app possono visualizzare e compilare solo i formulari a cui hanno esplicito accesso nella tabella sottostante. I project manager e i raccoglitori di dati possono utilizzare un browser Web per compilare qualsiasi formulario nel progetto che si trova nello stato Aperto."
+    ],
+    "emptyTable": "Non ci sono formulari da mostrare.",
+    "alert": {
+      "success": "Le tue modifiche sono state salvate!"
+    }
+  },
   "ja": {
     "heading": [
       "アプリユーザーは、以下の表で明示的にアクセス権限を与えられたフォームに対してのみ、閲覧・記入ができます。プロジェクト・マネージャーとデータ収集者は、Webブラウザを使って、公開状態のプロジェクト内のどのフォームにも、記入できます。"

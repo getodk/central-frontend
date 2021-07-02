@@ -115,6 +115,12 @@ export default {
       "Anda hendak mencabut Tautan Akses Publik. Ini berarti semua usaha untuk mengirim data melalui tautan ini akan ditolak, termasuk catatan yang sudah dimulai."
     ]
   },
+  "it": {
+    "title": "Ritira Link con accesso pubblico",
+    "introduction": [
+      "Stai per revocare questo link di accesso pubblico. Ciò significa che tutti i tentativi di inviare dati utilizzando il collegamento verranno negati, inclusi i dati che sono già stati avviati."
+    ]
+  },
   "ja": {
     "title": "一般公開リンクの無効化",
     "introduction": [

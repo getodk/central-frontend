@@ -179,6 +179,10 @@ export default {
     "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements.",
     "markdownSupported": "Markdown disponible"
   },
+  "it": {
+    "editWithoutComment": "Hai apportato modifiche a questi dati. Per favore descrivi le modifiche apportate.",
+    "markdownSupported": "Markdown supportato"
+  },
   "ja": {
     "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。",
     "markdownSupported": "Markdown形式をサポートしています。"

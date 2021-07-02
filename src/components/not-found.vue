@@ -56,6 +56,9 @@ export default {
   "id": {
     "body": "Laman yang Anda minta tidak ditemui."
   },
+  "it": {
+    "body": "La pagina richiesta non è stata trovata."
+  },
   "ja": {
     "body": "リクエストされたページは見つかりません。"
   }

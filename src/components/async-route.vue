@@ -150,6 +150,11 @@ export default {
       "loadError": "Laman yang kamu minta tidak dapat dimuat. Coba periksa kondisi daring dan coba lagi."
     }
   },
+  "it": {
+    "alert": {
+      "loadError": "Impossibile caricare la pagina richiesta. Verifica di essere online e riprova."
+    }
+  },
   "ja": {
     "alert": {
       "loadError": "リクエストされたページを読み込むことができませんでした。オンラインであることを確認して、もう一度試みて下さい。"

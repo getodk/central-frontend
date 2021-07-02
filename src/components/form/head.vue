@@ -334,6 +334,22 @@ $tab-li-margin-top: 5px;
       }
     }
   },
+  "it": {
+    "projectNav": {
+      "action": {
+        "back": "Torna alla panoramica del progetto"
+      }
+    },
+    "formNav": {
+      "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
+    },
+    "draftNav": {
+      "title": "Bozza",
+      "action": {
+        "create": "Crea una nuova bozza"
+      }
+    }
+  },
   "ja": {
     "projectNav": {
       "action": {

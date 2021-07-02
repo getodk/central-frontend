@@ -133,6 +133,14 @@ export default {
       "Tindakan ini tidak bisa dibatalkan/dikembalikan."
     ]
   },
+  "it": {
+    "title": "Revoca l'accesso utente",
+    "introduction": [
+      "Sei sicuro di voler revocare l'accesso all'App User {displayName}?",
+      "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii.",
+      "Questa operazione è irreversibile."
+    ]
+  },
   "ja": {
     "title": "アプリユーザーのアクセス権の取消",
     "introduction": [

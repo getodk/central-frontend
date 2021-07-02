@@ -469,6 +469,52 @@ export default {
       "download": "Pencadangan sedang berlangsung dan akan dienkripsi selanjutnya diunduh ke komputermu. Perlu waktu beberapa saat. Saat pengunduhan dimulai, kamu bisa meninggalkan laman ini."
     }
   },
+  "it": {
+    "getHelp": {
+      "full": "Se hai problemi, consulta il {forum}.",
+      "forum": "forum comunitario"
+    },
+    "notConfigured": [
+      "I backup non sono configurati.",
+      "Il server di dati non è stato configurato per eseguire automaticamente il backup dei dati da nessuna parte.",
+      {
+        "full": "A meno che tu non abbia impostato un'altra forma di backup dei dati di cui il server non è a conoscenza, è {recommended} farlo ora. Se non sei sicuro, è meglio farlo solo per essere al sicuro.",
+        "recommended": "fortemente raccomandato"
+      },
+      "I backup automatici dei dati vengono eseguiti tramite questo sistema una volta al giorno. Tutti i tuoi dati sono crittografati con una password che fornisci in modo che solo tu possa accedervi."
+    ],
+    "neverRun": [
+      "Il backup configurato non è ancora stato eseguito.",
+      "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto.",
+      {
+        "full": "In tal caso, le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
+        "terminate": "terminare"
+      }
+    ],
+    "somethingWentWrong": [
+      "Qualcosa non funziona!",
+      {
+        "full": "L'ultimo backup completato con successo è stato {moreThanThreeDaysAgo}.",
+        "moreThanThreeDaysAgo": "più di tre giorni fa"
+      },
+      {
+        "full": "Le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
+        "terminate": "terminare"
+      }
+    ],
+    "success": [
+      "Il Backup sta funzionando.",
+      "L'ultimo backup è stato completato con successo {dateTime}."
+    ],
+    "action": {
+      "setUp": "Configura adesso",
+      "download": "Scarica il backup ora",
+      "terminate": "Terminare"
+    },
+    "alert": {
+      "download": "Il backup è ora in esecuzione e verrà crittografato e scaricato sul tuo computer. L'operazione potrebbe richiedere del tempo. Una volta avviato il download, puoi lasciare questa pagina."
+    }
+  },
   "ja": {
     "getHelp": {
       "full": "問題がある場合、{forum}を確認して下さい。",

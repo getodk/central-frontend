@@ -149,6 +149,18 @@ export default {
       "success": "Pengaturan proyek tersimpan!"
     }
   },
+  "it": {
+    "title": "Dettagli di base",
+    "field": {
+      "name": "Nome del Progetto"
+    },
+    "action": {
+      "update": "Salva le impostazioni"
+    },
+    "alert": {
+      "success": "Impostazioni del progetto salvate!"
+    }
+  },
   "ja": {
     "title": "基本詳細",
     "field": {

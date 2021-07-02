@@ -208,6 +208,24 @@ export default {
       "abandon": "Buang"
     }
   },
+  "it": {
+    "title": {
+      "abandon": "Abbandona bozza",
+      "deleteForm": "Abbandona ed elimina la bozza"
+    },
+    "introduction": {
+      "abandon": [
+        "Stai per eliminare definitivamente la versione bozza di questo formulario. Ciò significa che la bozza di definizione del formulario, qualsiasi bozza di file multimediali che hai caricato e tutti gli invii di prova verranno rimossi.",
+        "La definizione del formulario pubblicato, i suoi file multimediali e gli invii non saranno interessati."
+      ],
+      "deleteForm": [
+        "Stai per eliminare definitivamente questa bozza di definizione del formulario, insieme a qualsiasi bozza di file multimediali che hai caricato e a tutti gli invii di prova. Poiché non l'hai ancora pubblicato, questo formulario verrà completamente eliminato."
+      ]
+    },
+    "action": {
+      "abandon": "Annulla"
+    }
+  },
   "ja": {
     "title": {
       "abandon": "下書きの削除",

@@ -177,6 +177,22 @@ export default {
       "forms": "Formulir"
     }
   },
+  "it": {
+    "appUsers": {
+      "full": [
+        "{appUsers} che può utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.",
+        "{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto."
+      ],
+      "appUsers": "Utente dell'applicazione | Utenti dell'applicazione"
+    },
+    "forms": {
+      "full": [
+        "{forms} che può essere scaricato e dato come questionario su client mobili.",
+        "{forms} che possono essere scaricati e forniti come questionari su client mobili."
+      ],
+      "forms": "Formulari | Formulari"
+    }
+  },
   "ja": {
     "appUsers": {
       "full": [

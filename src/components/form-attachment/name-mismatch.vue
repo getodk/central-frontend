@@ -151,6 +151,16 @@ export default {
       "Kami sedang mengecek ulang karena nama dokumen tidak cocok."
     ]
   },
+  "it": {
+    "title": {
+      "upload": "Caricare il file",
+      "replace": "Rimpiazzare il file"
+    },
+    "introduction": [
+      "Sei sicuro di voler caricare {filename} come {attachmentName}?",
+      "Stiamo ricontrollando perché i nomi dei file non corrispondono."
+    ]
+  },
   "ja": {
     "title": {
       "upload": "ファイルのアップロード",

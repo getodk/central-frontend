@@ -380,6 +380,33 @@ export default {
       "delete": "Formulir {name} sudah dihapus."
     }
   },
+  "it": {
+    "draftChecklist": {
+      "title": "Lista di controllo bozza"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion} di questo formulario.",
+        "draftVersion": "Versione bozza"
+      },
+      "action": {
+        "upload": "Carica la nuova definizione"
+      }
+    },
+    "actions": {
+      "title": "Azioni",
+      "action": {
+        "publish": "Pubblicare la bozza",
+        "abandon": "Abbandonare la bozza"
+      }
+    },
+    "alert": {
+      "upload": "Successo! La nuova definizione del formulario è stata salvata come bozza.",
+      "publish": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i file multimediali.",
+      "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
+      "delete": "Il Formulario “{name}” è stato cancellato."
+    }
+  },
   "ja": {
     "draftChecklist": {
       "title": "下書きのチェックリスト"

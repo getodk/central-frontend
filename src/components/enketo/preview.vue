@@ -113,6 +113,15 @@ export default {
       "notOpen": "Pada versi ODK Central ini, pratinjau hanya tersedia untuk formulir dalam kondisi terbuka."
     }
   },
+  "it": {
+    "action": {
+      "preview": "Anteprima"
+    },
+    "disabled": {
+      "processing": "L'anteprima non ha terminato l'elaborazione per questo formulario. Per favore riaggiorna più tardi e riprova.",
+      "notOpen": "In questa versione di ODK Central, l'anteprima è disponibile solo per i formulari nello stato aperto."
+    }
+  },
   "ja": {
     "action": {
       "preview": "プレビュー"

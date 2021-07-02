@@ -375,6 +375,41 @@ export default {
       "Pindai kode QR ini untuk mengonfigurasi perangkat dengan akun tersebut “{displayName}”."
     ]
   },
+  "it": {
+    "title": {
+      "managed": "Codice configurazione del Client",
+      "legacy": "Codice di configurazione client legacy"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Questo è un {managedCode}.",
+          "managedCode": "Codice QR gestito"
+        },
+        "legacy": {
+          "full": "Questo è un {legacyCode}.",
+          "legacyCode": "Codice QR legacy"
+        }
+      },
+      {
+        "managed": "Collect corrisponderà esattamente ai formulari disponibili per \"{displayName}\", inclusa l'applicazione automatica degli aggiornamenti. Gli utenti non dovranno recuperare manualmente i formulari vuoti. Inoltre, i formulari finalizzati verranno inviati automaticamente non appena viene trovata una connessione.",
+        "legacy": "Gli utenti dovranno recuperare manualmente i formulari vuoti sul dispositivo e stabilire quali formulari aggiornare. Dovranno anche inviare manualmente i formulari finalizzati."
+      },
+      {
+        "managed": {
+          "full": "Per il vecchio modo di operare, {switchToLegacy}.",
+          "switchToLegacy": "passare a {legacyCode}",
+          "legacyCode": "Codice QR legacy"
+        },
+        "legacy": {
+          "full": "Per un processo più controllato e prova d'errore,{switchToManaged}.",
+          "switchToManaged": "passare a {managedCode}",
+          "managedCode": "Codice QR gestito"
+        }
+      },
+      "Scansiona questo codice QR per configurare un dispositivo con l'account \"{displayName}\"."
+    ]
+  },
   "ja": {
     "title": {
       "managed": "クライアントの設定コード",

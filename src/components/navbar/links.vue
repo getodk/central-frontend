@@ -116,6 +116,12 @@ export default {
     "system": "Sistem",
     "current": "Sekarang ini"
   },
+  "it": {
+    "projects": "Progetti",
+    "users": "Utenti",
+    "system": "Sistema",
+    "current": "attuale"
+  },
   "ja": {
     "projects": "プロジェクト",
     "users": "ユーザー",

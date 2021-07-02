@@ -184,6 +184,13 @@ export default {
       "appUserAccess": "Akses Pengguna Aplikasi"
     }
   },
+  "it": {
+    "draftTitle": "Questo formulario non ha ancora una versione pubblicata. Non apparirà sui dispositivi finché non viene pubblicata una bozza. Una volta pubblicato il formulario, verranno utilizzate le impostazioni mostrate qui.",
+    "field": {
+      "state": "Stato",
+      "appUserAccess": "Accesso utente applicazione"
+    }
+  },
   "ja": {
     "draftTitle": "このフォームには公開バージョンがまだありません。下書きが公開されるまで、端末上には表示されません。フォームを公開すると、ここで示される設定が適応されます。",
     "field": {

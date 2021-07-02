@@ -156,6 +156,17 @@ export default {
       "success": "Kata sandi berhasil diatur ulang."
     }
   },
+  "it": {
+    "action": {
+      "set": "Configurare la password"
+    },
+    "problem": {
+      "401_2": "{message} Il link nella tua e-mail potrebbe essere scaduto e potrebbe essere necessario inviare una nuova e-mail."
+    },
+    "alert": {
+      "success": "La password è stata reimpostata con successo."
+    }
+  },
   "ja": {
     "action": {
       "set": "パスワードの設定"

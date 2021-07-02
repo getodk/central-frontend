@@ -202,6 +202,20 @@ export default {
       }
     }
   },
+  "it": {
+    "action": {
+      "download": {
+        "unfiltered": "Scarica {count} record | Scarica {count} records",
+        "filtered": {
+          "withoutCount": "Scarica records corrispondenti",
+          "withCount": "Scarica {count} record corrispondente | Scarica {count} records corrispondenti"
+        },
+        "withMedia": "Tutti i dati e file multimediali (.zip)",
+        "withoutMedia": "Tutti i dati senza file multimediali (.zip)",
+        "primaryDataTable": "Tabella con i dati principali (.csv)"
+      }
+    }
+  },
   "ja": {
     "action": {
       "download": {

@@ -170,6 +170,16 @@ export default {
     },
     "onceHelp": "Izinkan hanya satu kiriman data dari setiap browser."
   },
+  "it": {
+    "title": "Crea Link con accesso pubblico",
+    "introduction": [
+      "Chiunque disponga di questo collegamento potrà compilare questo formulario in un browser web. Usa il nome visualizzato per ricordarti dove lo hai pubblicato, con chi lo hai condiviso, quando è previsto che sia attivo e così via."
+    ],
+    "field": {
+      "once": "Invio singolo"
+    },
+    "onceHelp": "Consenti solo un invio da ciascun browser."
+  },
   "ja": {
     "title": "一般公開リンクの作成",
     "introduction": [

@@ -80,6 +80,11 @@ export default {
     "forum": "Forum",
     "version": "Versi"
   },
+  "it": {
+    "docs": "Documentazione",
+    "forum": "Forum",
+    "version": "Versione"
+  },
   "ja": {
     "docs": "Docs",
     "forum": "フォーラム",

@@ -141,6 +141,15 @@ export default {
       "success": "Rincian pengguna tersimpan!"
     }
   },
+  "it": {
+    "title": "Dettagli di base",
+    "action": {
+      "update": "Aggiornare dettagli"
+    },
+    "alert": {
+      "success": "Dettagli utente salvati!"
+    }
+  },
   "ja": {
     "title": "基本詳細",
     "action": {

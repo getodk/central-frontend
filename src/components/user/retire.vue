@@ -142,6 +142,16 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Ritirando utente",
+    "introduction": [
+      "Stai per ritirare l'account per l'utente “{displayName}” \u003c{email}>. A tale utente verrà immediatamente impedito di eseguire qualsiasi azione e verrà disconnesso.",
+      {
+        "full": "{noUndo}, ma è sempre possibile creare un nuovo account per quella persona con lo stesso indirizzo email.",
+        "noUndo": "Quest'azione non può essere annullata"
+      }
+    ]
+  },
   "ja": {
     "title": "除外されたユーザー",
     "introduction": [

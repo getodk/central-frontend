@@ -106,6 +106,13 @@ export default {
     },
     "analyzeDisabled": "Akses OData tidak tersedia karena enkripsi Formulir"
   },
+  "it": {
+    "action": {
+      "apiAccess": "accesso attraverso API",
+      "analyze": "Analizzare attraverso OData"
+    },
+    "analyzeDisabled": "L'accesso OData non è disponibile a causa della crittografia del formulario"
+  },
   "ja": {
     "action": {
       "apiAccess": "APIアクセス",

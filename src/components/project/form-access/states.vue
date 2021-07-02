@@ -208,6 +208,27 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Stato del Formulario",
+    "introduction": [
+      "Gli stati del formulario controllano lo stato del ciclo di vita di ogni formulario. Di solito, ma non sempre, un formulario inizia nello stato \"aperto\" e procede negli stati da \"in chiusura\" a \"chiuso\" quando non è più necessario.",
+      {
+        "full": "{open} formulari sono disponibili per il download su dispositivi mobili e accetteranno nuovi Invii.",
+        "open": "Aperto"
+      },
+      {
+        "full": "{closing} I formulari accetteranno nuovi Invii, ma {not} sono disponibili per il download su dispositivi mobili.",
+        "closing": "In fase di chiusura",
+        "not": "non"
+      },
+      {
+        "full": "I formulari {closed} {not1} sono disponibili per il download su dispositivi mobili e {not2}accetteranno nuovi Invii.",
+        "closed": "Chiuso",
+        "not1": "non",
+        "not2": "non"
+      }
+    ]
+  },
   "ja": {
     "title": "フォームの状態",
     "introduction": [

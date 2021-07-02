@@ -122,6 +122,13 @@ export default {
       "resetPassword": "Atur Ulang Kata Sandi"
     }
   },
+  "it": {
+    "title": "Reimpostare la password",
+    "introduction": {
+      "full": "Una volta cliccato {resetPassword} qui sotto, la password per l'utente “{displayName}” \u003c{email}> verrà immediatamente invalidata. Verrà inviata un'e-mail a {email} con le istruzioni su come procedere.",
+      "resetPassword": "Reimposta la password"
+    }
+  },
   "ja": {
     "title": "パスワードのリセット",
     "introduction": {

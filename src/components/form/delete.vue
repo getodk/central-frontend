@@ -126,6 +126,13 @@ export default {
       "Tindakan ini tidak dapat dibatalkan/dikembalikan."
     ]
   },
+  "it": {
+    "title": "Cancellare il formulario",
+    "introduction": [
+      "Sei sicuro di voler eliminare il formulario {name} e tutti i suoi invii?",
+      "Quest'azione non può essere annullata"
+    ]
+  },
   "ja": {
     "title": "フォームの削除",
     "introduction": [

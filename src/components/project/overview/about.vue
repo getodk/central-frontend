@@ -138,6 +138,19 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Informazioni sui progetti",
+    "body": [
+      {
+        "full": "I progetti consentono di raggruppare formulari e utenti correlati. Agli utenti Web possono essere assegnati ruoli che consentono loro di eseguire determinate azioni all'interno del progetto, incluso l'utilizzo di un browser Web per compilare formulari. Gli utenti dell'app per il progetto possono vedere solo i formulari nel progetto a cui hanno {accessTo}.",
+        "accessTo": "accesso"
+      },
+      {
+        "full": "Se hai commenti, visita {forumThread}.",
+        "forumThread": "questo thread del forum"
+      }
+    ]
+  },
   "ja": {
     "title": "プロジェクトについて",
     "body": [

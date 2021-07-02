@@ -1,0 +1,276 @@
+{
+  "title": {
+    "resetPassword": "Reimpostare la password",
+    "setPassword": "Impostare la password",
+    "editProfile": "Modificare il profilo",
+    "download": "Scarica",
+    "pageNotFound": "Pagina non trovata",
+    "details": "Dettagli"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Accesso al form"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versioni",
+      "publicAccess": "Accesso pubblico"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Stato",
+        "attachments": "File multimediali",
+        "testing": "Testare"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Gestione del sistema",
+    "tab": {
+      "backups": "Backup",
+      "audits": "Registri di controllo del server"
+    }
+  },
+  "role": {
+    "none": "Nessuno",
+    "admin": "Amministratore",
+    "manager": "Responsabile del progetto",
+    "viewer": "Visualizzatore del progetto",
+    "formfill": "Raccoglitore di dati"
+  },
+  "formState": {
+    "open": "Aperto",
+    "closing": "In chiusura",
+    "closed": "Chiuso"
+  },
+  "reviewState": {
+    "received": "Ricevuto",
+    "hasIssues": "Ha problemi",
+    "edited": "Modificato",
+    "approved": "Approvato",
+    "rejected": "Respinto",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Tutte le Azioni)",
+      "user": "Azioni utente web",
+      "project": "Azioni di progetto",
+      "form": "Azioni del form",
+      "field_key": "Azioni utente applicazione",
+      "public_link": "Azioni del link di accesso pubblico",
+      "config": "Azioni di configurazione del server",
+      "upgrade": "Aggiornamento del server"
+    },
+    "action": {
+      "default": {
+        "create": "Crea",
+        "update": "Aggiornare dettagli",
+        "session_end": "Revocare",
+        "delete": "Cancellare"
+      },
+      "backup": "Backup",
+      "config": {
+        "set": "Configura"
+      },
+      "field_key": {
+        "assignment_create": "Dare accesso",
+        "assignment_delete": "Rimuovere accesso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "Crea o aggiorna bozza",
+        "update_publish": "Pubblica bozza",
+        "update_draft_delete": "Abbandona bozza",
+        "attachment_update": "Aggiorna allegati",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "Dare accesso",
+        "assignment_delete": "Rimuovi accesso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Processare il formulario",
+        "process_form_draft": "Elabora la bozza del formulario"
+      },
+      "user": {
+        "assignment_create": "Assegna ruolo",
+        "assignment_delete": "Revoca ruolo",
+        "delete": "Ritirare",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Annulla",
+    "clear": "Cancella",
+    "close": "Chiudere",
+    "comment": "Aggiungere un commento",
+    "create": "Crea",
+    "createSubmission": "Nuovo",
+    "done": "Fatto",
+    "download": "Scaricare",
+    "edit": "Modificare",
+    "editProfile": "Modificare profilo",
+    "logIn": "Accedi",
+    "looksGood": "Sembra tutto in ordine, procedere",
+    "more": "Di più",
+    "neverMind": "Lascia perdere, annulla",
+    "next": "Prossimo",
+    "noCancel": "No, annulla",
+    "ok": "Okay",
+    "proceed": "Procedere",
+    "refresh": "Aggiornare",
+    "resetPassword": "Resetta la password",
+    "review": "Rivedi",
+    "save": "Salvare",
+    "update": "Aggiorna",
+    "yesProceed": "Si, procedere"
+  },
+  "field": {
+    "comment": "Lascia un commento...",
+    "dateRange": "Intervallo date",
+    "displayName": "Nome visualizzato",
+    "email": "Indirizzo email",
+    "name": "Nome",
+    "newPassword": "Nuova password",
+    "oldPassword": "Vecchia password",
+    "passphrase": "Passphrase",
+    "password": "Password",
+    "passwordConfirm": "Nuova password (conferma)",
+    "reviewState": "Stato Revisione",
+    "type": "Tipo"
+  },
+  "header": {
+    "actions": "Azioni",
+    "created": "Creato",
+    "createdBy": "Creato da",
+    "displayName": "Nome visualizzato",
+    "email": "Indirizzo email",
+    "instanceId": "ID della istanza",
+    "lastSubmission": "Ultimo invio",
+    "name": "Nome",
+    "submitterName": "Inviato da",
+    "submissionDate": "Inviato alle",
+    "time": "Tempo",
+    "type": "Tipo"
+  },
+  "plural": {
+    "appUser": "Utente dell'applicazione | Utenti dell'applicazione",
+    "form": "Formulario | Formulari",
+    "project": "Progetto | Progetti",
+    "submission": "Invio | Invii",
+    "webUser": "Utente Web | Utenti Web"
+  },
+  "count": {
+    "appUser": "{count} Utente dell'applicazione | {count} Utenti dell'applicazione",
+    "form": "{count} Formulario | {count} Formulari",
+    "submission": "{count} Invio | {count} Invii"
+  },
+  "resource": {
+    "appUser": "Utente dell'applicazione",
+    "appUsers": "Utenti dell'applicazione",
+    "config": "Configurazione del Server",
+    "form": "Formulario",
+    "project": "Progetto",
+    "projects": "Progetti",
+    "publicLink": "Link con accesso pubblico",
+    "user": "Utente",
+    "webUser": "Utente Web",
+    "webUsers": "Utenti web",
+    "session": "Sessioni",
+    "submissions": "Invii",
+    "projectRoles": "Ruoli del progetto"
+  },
+  "alert": {
+    "updateReviewState": "Stato revisione salvato!"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Per maggiori informazioni {clickHere}",
+      "clickHere": "clicca qui"
+    },
+    "helpArticle": {
+      "full": "Per maggiori informazioni, si prega di consultare {helpArticle}.",
+      "helpArticle": "Questo articolo d'aiuto"
+    },
+    "learnMore": "Per saperne di più."
+  },
+  "submission": {
+    "missingMedia": "File multimediale mancnte",
+    "action": {
+      "edit": "Modifica ({count})"
+    },
+    "editDisabled": "Non puoi modificare invii criptati",
+    "binaryLinkTitle": "Il file è stato inviato. Clicca per scaricare.",
+    "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia."
+  },
+  "common": {
+    "activity": "Attività",
+    "anybody": "(Chiunque)",
+    "areYouSure": "Sei sicuro di voler procedere?",
+    "basicInfo": "Informazioni di base",
+    "currentDraft": "La tua bozza attuale",
+    "dangerZone": "Zona pericolo",
+    "filter": "Filtro",
+    "no": "No",
+    "noResults": "Nessun risultato",
+    "rightNow": "Adesso",
+    "success": "Successo!",
+    "yes": "Si",
+    "tab": {
+      "settings": "Impostazioni",
+      "overview": "Panoramica"
+    }
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "Il file “{name}” che stai tentando di caricare è più grande del limite di 100 MB."
+      }
+    }
+  },
+  "presenter": {
+    "Form": {
+      "blankVersion": "(vuoto)"
+    },
+    "Project": {
+      "nameWithArchived": "{name} (archiviato)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "oggi",
+      "yesterday": "ieri"
+    },
+    "request": {
+      "noRequest": "Qualcosa è andato storto: non c'era nessuna request.",
+      "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
+      "errorNotProblem": "Qualcosa è andato storto: codice error {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "La tua sessione scadrà tra 2 minuti e verrai automaticamente disconnesso.",
+        "expired": "La tua sessione è scaduta. Per continuare a lavorare, effettua nuovamente il login.",
+        "logoutError": "Si è verificato un problema e non sei stato completamente disconnesso. Aggiorna la pagina e prova a disconnetterti di nuovo. {message}"
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
+  }
+}
