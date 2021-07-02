@@ -21,6 +21,7 @@ const locales = {
   id: {
     pluralForms: 1
   },
+  it: {},
   ja: {
     pluralForms: 1,
     warnVariableSeparator: false
