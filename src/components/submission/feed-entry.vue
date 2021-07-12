@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
     <div v-if="entry.diff != null">
-      <submission-diff-row v-for="(change, index) in entry.diff" :key="index" :entry="change"/>
+      <submission-diff-container :diffs="entry.diff"/>
     </div>
   </div>
 </template>
@@ -56,7 +56,7 @@ import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
-import SubmissionDiffRow from './diff-row.vue';
+import SubmissionDiffContainer from './diff-container.vue';
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
@@ -67,7 +67,7 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, DateTime, SubmissionDiffRow },
+  components: { ActorLink, DateTime, SubmissionDiffContainer },
   mixins: [reviewState()],
   props: {
     entry: {

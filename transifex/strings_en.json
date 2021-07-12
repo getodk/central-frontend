@@ -3019,18 +3019,14 @@
         }
       }
     },
-    "SubmissionDiffRow": {
+    "SubmissionDiffItem": {
       "editCaption": {
         "added": {
-          "string": "added",
+          "string": "(added)",
           "developer_comment": "The description of how a specific field in a form submission changed"
         },
         "deleted": {
-          "string": "deleted",
-          "developer_comment": "The description of how a specific field in a form submission changed"
-        },
-        "changed": {
-          "string": "changed",
+          "string": "(deleted)",
           "developer_comment": "The description of how a specific field in a form submission changed"
         }
       }
