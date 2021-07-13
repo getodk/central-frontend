@@ -3049,8 +3049,8 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "primaryDataTable": {
-            "string": "Primary data table (.csv)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
+            "string": "Data without repeats (.csv)",
+            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }

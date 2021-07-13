@@ -122,7 +122,9 @@ export default {
         },
         "withMedia": "All data and media files (.zip)",
         "withoutMedia": "All data without media files (.zip)",
-        "primaryDataTable": "Primary data table (.csv)"
+        // This text is shown in a dropdown that allows the user to download
+        // Submissions. "Repeats" refers to repeat groups.
+        "primaryDataTable": "Data without repeats (.csv)"
       }
     }
   }
