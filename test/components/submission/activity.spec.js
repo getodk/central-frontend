@@ -53,7 +53,6 @@ describe('SubmissionActivity', () => {
           headers['X-Extended-Metadata'].should.equal('true');
         } else if (index === 4) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs");
-          headers['X-Extended-Metadata'].should.equal('true');
         }
       })
       .afterResponses(() => {
@@ -126,7 +125,6 @@ describe('SubmissionActivity', () => {
             headers['X-Extended-Metadata'].should.equal('true');
           } else if (index === 3) {
             url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/diffs');
-            headers['X-Extended-Metadata'].should.equal('true');
           }
         }));
 

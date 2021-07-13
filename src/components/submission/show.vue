@@ -133,8 +133,7 @@ export default {
             this.projectId,
             this.xmlFormId,
             this.instanceId
-          ),
-          extended: true
+          )
         }
       ]).catch(noop);
     },
