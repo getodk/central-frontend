@@ -161,11 +161,11 @@ export default {
 .old-to-new { margin: 10px; }
 .change-icon { color: #888; padding: 5px; }
 
-.data-old { color: red; }
-.data-new { color: green; }
+.data-old { color: $color-danger-dark; }
+.data-new { color: $color-success-dark; }
 
-.deleted { color: red; }
-.added { color: green; }
+.deleted { color: $color-danger-dark; }
+.added { color: $color-success-dark; }
 
 .data-empty {
   background-color: #bbb;
