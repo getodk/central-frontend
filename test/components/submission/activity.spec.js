@@ -4,6 +4,8 @@ import SubmissionActivity from '../../../src/components/submission/activity.vue'
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
+import Field from '../../../src/presenters/field';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -14,6 +16,7 @@ const mountComponent = () => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const submission = testData.submissionOData();
+  const fields = form._fields.map(field => new Field(field));
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
   const diffs = Object.create(null); // TODO: make this real extended data
@@ -23,7 +26,7 @@ const mountComponent = () => {
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
     },
-    requestData: { project, submission, audits, comments, diffs },
+    requestData: { project, submission, fields, audits, comments, diffs },
     stubs: { RouterLink: RouterLinkStub },
     mocks: { $route: '/projects/1/submissions/s' }
   });
@@ -46,17 +49,19 @@ describe('SubmissionActivity', () => {
         } else if (index === 1) {
           url.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
         } else if (index === 2) {
+          url.should.equal('/v1/projects/1/forms/a%20b/fields');
+        } else if (index === 3) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits");
           headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 3) {
+        } else if (index === 4) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments");
           headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 4) {
+        } else if (index === 5) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs");
         }
       })
       .afterResponses(() => {
-        count.should.equal(5);
+        count.should.equal(6);
       });
   });
 

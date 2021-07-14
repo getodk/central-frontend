@@ -80,7 +80,7 @@ const mapsByComponent = {
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
   FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
-  SubmissionShow: mapKeys(['project', 'submission', 'audits', 'comments', 'diffs']),
+  SubmissionShow: mapKeys(['project', 'submission', 'fields', 'audits', 'comments', 'diffs']),
 
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),
