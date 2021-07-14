@@ -11,12 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="submission-diff-container">
-    <submission-diff-item v-for="(change, index) in visibleDiffs" :key="index" :entry="change"/>
+    <submission-diff-item v-for="(diff, index) in visibleDiffs" :key="index" :entry="diff" :fields="binaryFields"/>
   </div>
 </template>
 
 <script>
 import SubmissionDiffItem from './diff-item.vue';
+
+import { requestData } from '../../store/modules/request';
+
 
 export default {
   name: 'SubmissionDiffContainer',
@@ -28,10 +31,16 @@ export default {
     }
   },
   computed: {
+    ...requestData(['fields']),
     visibleDiffs() {
       // Filters out diffs about instanceID and deprecatedID
       // TODO: write this long line of code in a shorter way?
       return this.diffs.filter((entry) => ((entry.path[entry.path.length - 1] !== 'instanceID' && entry.path[entry.path.length - 1] !== 'deprecatedID')));
+    },
+    binaryFields() {
+      // Form fields transformed into an object for easily checking
+      // if a field is a downloadable media file.
+      return this.fields.filter((field) => (field.binary)).reduce((acc, cur) => ({ ...acc, [cur.path]: cur.binary }), {});
     }
   }
 };

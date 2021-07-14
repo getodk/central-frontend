@@ -154,6 +154,14 @@ export default {
             this.xmlFormId,
             this.instanceId
           )
+        },
+        {
+          key: 'fields',
+          url: apiPaths.fields(
+            this.projectId,
+            this.xmlFormId,
+            this.draft
+          )
         }
       ]).catch(noop);
       this.fetchActivityData();

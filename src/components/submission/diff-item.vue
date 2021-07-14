@@ -34,10 +34,20 @@ except according to the terms contained in the LICENSE file.
           {{ fieldName }}
         </div>
         <div class="old-to-new">
-          <span v-if="entry.old" class="data-old">{{ entry.old }}</span>
+          <span v-if="entry.old" class="data-old">
+            <span v-if="isBinary">
+              <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
+            </span>
+            <span v-else>{{ entry.old }}</span>
+          </span>
           <span v-else><span class="data-empty">empty</span></span>
           <span class="icon-arrow-circle-right change-icon"></span>
-          <span v-if="entry.new" class="data-new">{{ entry.new }}</span>
+          <span v-if="entry.new" class="data-new">
+            <span v-if="isBinary">
+              <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
+            </span>
+            <span v-else>{{ entry.new }}</span>
+          </span>
           <span v-else><span class="data-empty">empty</span></span>
         </div>
       </template>
@@ -46,7 +56,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t(`editCaption.${typeOfChange}`) }}
         </div>
         <div class="nested-changes">
-          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change"/>
+          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :fields="fields" :parent-path="entry.path"/>
         </div>
       </template>
     </div>
@@ -61,6 +71,16 @@ export default {
     entry: {
       type: Object,
       required: true
+    },
+    parentPath: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    fields: {
+      type: Object,
+      required: false
     }
   },
   computed: {
@@ -90,21 +110,34 @@ export default {
       return 'changed';
     },
     nestedDiffs() {
-      return this.recursivelyUnpack(this.entry.new || this.entry.old, this.typeOfChange);
+      return this.flattenDiff(this.entry.new || this.entry.old, this.typeOfChange);
+    },
+    isBinary() {
+      // Compares path as array by converting it to /field1/field2 string and checks
+      // if it is for a binary field
+      const fullPath = this.parentPath.concat(this.entry.path);
+      const fullPathStr = fullPath.map((field) => (Array.isArray(field) ? field[0] : field)).join('/');
+      const basicPath = `/${fullPathStr}`;
+      if (this.fields[basicPath])
+        return true;
+      return false;
     }
   },
   methods: {
-    recursivelyUnpack(node, typeOfChange, prefix = []) {
+    flattenDiff(node, typeOfChange, prefix = []) {
+      // Flattens the inner diff (JSON of an entire added/removed tree structure)
+      // by recursively traversing the tree
       let changes = [];
       // eslint-disable-next-line guard-for-in
       for (const k in node) {
         const path = prefix.concat(k);
         if (Array.isArray(node)) {
-          path.pop();
+          path.pop(); // pop off the index (e.g. 1 of toy #1)
+          path.pop(); // pop off the name (e.g. toy of toy #1)
           path.push([prefix[prefix.length - 1], k]);
         }
         if (typeof (node[k]) === 'object') {
-          changes = changes.concat(this.recursivelyUnpack(node[k], typeOfChange, path));
+          changes = changes.concat(this.flattenDiff(node[k], typeOfChange, path));
         } else if (typeOfChange === 'added') {
           changes.push({ path, old: null, new: node[k] });
         } else {
@@ -112,6 +145,9 @@ export default {
         }
       }
       return changes;
+    },
+    binaryHref(value) {
+      return `/v1${this.$route.fullPath}/attachments/${value}`;
     }
   }
 };
