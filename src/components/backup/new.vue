@@ -440,6 +440,48 @@ export default {
       "verify": "Mohon coba lagi, dan kunjungi forum komunitas jika terjadi masalah berkelanjutan."
     }
   },
+  "it": {
+    "title": "Configura i Backup",
+    "steps": [
+      {
+        "warning": {
+          "full": "Questo backup attualmente non include collegamenti a formulari Web. Se condividi link di accesso pubblico o ti colleghi esternamente direttamente a Web Forms per creare nuovi Invii, ti consigliamo vivamente di eseguire anche un backup completo del sistema fino a quando questo non viene risolto. Se devi eseguire il ripristino dal backup e ti ritrovi con collegamenti di anteprima non funzionanti, pubblica su {forum} per ottenere assistenza.",
+          "forum": "il Forum"
+        },
+        "introduction": [
+          "Se lo desideri, puoi impostare una passphrase di crittografia che deve essere utilizzata per sbloccare il backup.",
+          "Non c'è modo di recuperare la passphrase se la perdi!",
+          "Assicurati di scegliere qualcosa che ricorderai o scrivilo in un posto sicuro."
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Per motivi di sicurezza, il server invia i tuoi dati a Google Drive. Puoi registrarti {here} per un account gratuito.",
+            "here": "qui"
+          },
+          "Quando premi Avanti, Google confermerà che desideri consentire al server di accedere al tuo account. L'unica cosa che il server potrà manipolare sono i file di backup che crea.",
+          "Una volta confermato, ti verrà chiesto di copiare e incollare del testo qui."
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Ben tornato! Hai ricevuto del testo da copiare e incollare? In caso contrario, fai clic {here} per riprovare.",
+            "here": "qui"
+          },
+          "Altrimenti, incollalo qui sotto e avrai finito!"
+        ]
+      }
+    ],
+    "field": {
+      "passphrase": "Passphrase (opzionale)",
+      "confirmationText": "Testo di conferma"
+    },
+    "problem": {
+      "verify": "Riprova e vai al forum della community se il problema persiste."
+    }
+  },
   "ja": {
     "title": "バックアップの設定",
     "steps": [

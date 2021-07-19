@@ -240,6 +240,21 @@ export default {
       }
     }
   },
+  "it": {
+    "checklist": "Lista di controllo",
+    "draft": {
+      "none": {
+        "title": "Nessuna bozza corrente",
+        "body": "Al momento non esiste una versione bozza di questo formulario. Se desideri apportare modifiche al formulario o ai suoi file multimediali, inizia creando una bozza utilizzando il pulsante in alto."
+      },
+      "any": {
+        "versionCaption": {
+          "full": "{draftVersion} di questo formulario.",
+          "draftVersion": "Versione bozza"
+        }
+      }
+    }
+  },
   "ja": {
     "checklist": "チェックリスト",
     "draft": {

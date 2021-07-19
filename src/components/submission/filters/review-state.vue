@@ -61,6 +61,9 @@ export default {
   "fr": {
     "anyState": "(Tous états)"
   },
+  "it": {
+    "anyState": "(ogni Stato)"
+  },
   "ja": {
     "anyState": "（全ステータス）"
   }

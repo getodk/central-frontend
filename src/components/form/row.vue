@@ -212,6 +212,15 @@ export default {
       "fill": "Isi Formulir"
     }
   },
+  "it": {
+    "lastSubmission": "(ultima {dateTime})",
+    "action": {
+      "fill": "Compila il Formulario"
+    },
+    "formClosedTip": "Questo Formulario è chiuso. Non è scaricabile e non accetta Invii.",
+    "formClosingTip": "Questo Formulario è in fase di chiusura. Non è scaricabile e ma tuttavia accetta Invii.",
+    "formUnpublishedTip": "Questo formulario non ha ancora una versione pubblicata."
+  },
   "ja": {
     "lastSubmission": "（最終提出日時 {dateTime}）",
     "action": {

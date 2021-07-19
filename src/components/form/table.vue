@@ -101,6 +101,11 @@ export default {
       "idAndVersion": "ID dan Versi"
     }
   },
+  "it": {
+    "header": {
+      "idAndVersion": "ID e Versione"
+    }
+  },
   "ja": {
     "header": {
       "idAndVersion": "フォームIDとバージョン"

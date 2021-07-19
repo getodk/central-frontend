@@ -302,6 +302,30 @@ export default {
       "409_6": "Nama yang Anda pilih sama dengan nama dari versi lama formulir ini. Mohon ubah nama dan coba lagi."
     }
   },
+  "it": {
+    "title": "Pubblica bozza",
+    "warnings": {
+      "attachments": {
+        "full": "Non hai fornito tutti i {mediaFiles} che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file in un secondo momento.",
+        "mediaFiles": "File multimediali"
+      },
+      "testing": {
+        "full": "Non hai ancora {tested} su un dispositivo mobile e caricato un invio di prova. Non devi farlo, ma è altamente raccomandato.",
+        "tested": "testato questo Formulario"
+      }
+    },
+    "introduction": [
+      "Stai per rendere questa bozza la versione pubblicata del tuo formulario. Ciò finalizzerà tutte le modifiche apportate alla definizione del formulario e ai suoi file multimediali allegati.",
+      "Gli invii di Formulari esistenti non saranno interessati, ma tutti gli invii di test in bozza verranno rimossi.",
+      "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te."
+    ],
+    "field": {
+      "version": "Versione"
+    },
+    "problem": {
+      "409_6": "Il nome della versione che hai specificato è in conflitto con una versione precedente di questo formulario. Per favore sostituiscilo con un altro nome e riprova."
+    }
+  },
   "ja": {
     "title": "下書きの公開",
     "warnings": {

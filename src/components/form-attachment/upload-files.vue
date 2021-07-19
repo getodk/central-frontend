@@ -149,6 +149,19 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Caricare files",
+    "introduction": [
+      {
+        "full": "Per caricare file, puoi {dragAndDrop} uno o più file su questa pagina",
+        "dragAndDrop": "trascinare e rilasciare"
+      },
+      {
+        "full": "Se preferisci selezionare i file da un prompt, assicurati che i loro nomi corrispondano a quelli nella tabella e poi {clickHere}.",
+        "clickHere": "clicca qui per selezionare"
+      }
+    ]
+  },
   "ja": {
     "title": "ファイルのアップロード",
     "introduction": [

@@ -210,6 +210,14 @@ export default {
       "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
     ]
   },
+  "it": {
+    "title": "Testando la bozza",
+    "body": [
+      "Puoi utilizzare il codice di configurazione a destra per configurare un dispositivo mobile per scaricare questa bozza. Puoi anche fare clic sul pulsante Nuovo sopra per creare un nuovo invio dal tuo browser web.",
+      "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
+    ],
+    "collectProjectName": "[Draft] {name}"
+  },
   "ja": {
     "title": "下書きのテスト",
     "body": [

@@ -158,6 +158,16 @@ export default {
       "title": "Tautan Akses Publik belum tersedia. Tautan belum selesai diproses. Silakan muat ulang dan coba lagi nanti."
     }
   },
+  "it": {
+    "action": {
+      "revoke": "Revocare"
+    },
+    "revoked": "Revocato",
+    "unavailable": {
+      "text": "Non ancora disponibile",
+      "title": "Il link di accesso pubblico non è ancora disponibile. L'elaborazione non è terminata. Riaggiorna più tardi e riprova."
+    }
+  },
   "ja": {
     "action": {
       "revoke": "無効化する"

@@ -486,6 +486,42 @@ export default {
       "unassignRole": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
     }
   },
+  "it": {
+    "heading": [
+      "Gli Amministratori di tutto il sito sono automaticamente considerati Responsabili di ogni Progetto. Altri utenti possono avere ruoli specifici per questo progetto:",
+      {
+        "full": "{projectManagers} possono eseguire qualsiasi attività amministrativa relativa a questo progetto e possono compilare formulari in un browser web",
+        "projectManagers": "Responsabili del progetto"
+      },
+      {
+        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
+        "projectViewers": "Visualizzatori del progetto"
+      },
+      {
+        "full": "{dataCollectors} possono compilare i formulari in un browser Web, ma non possono visualizzare o modificare i dati o le impostazioni",
+        "dataCollectors": "Raccoglitori di dati"
+      }
+    ],
+    "action": {
+      "clearSearch": "Cancella ricerca"
+    },
+    "field": {
+      "q": {
+        "canList": "Cerca un utente...",
+        "cannotList": "Inserisci l'esatto indirizzo email dell'utente..."
+      }
+    },
+    "header": {
+      "user": "Utente",
+      "projectRole": "Ruolo del progetto"
+    },
+    "emptyTable": "Non ci sono ancora utenti assegnati a questo progetto. Per aggiungerne uno, cerca un utente sopra.",
+    "alert": {
+      "unassignWithoutReassign": "Qualcosa è andato storto. “{displayName}” è stato rimosso dal progetto.",
+      "assignRole": "Successo! A \"{displayName}\" è stato assegnato un ruolo di \"{roleName}\" in questo progetto.",
+      "unassignRole": "Successo! \"{displayName}\" è stato rimosso da questo progetto."
+    }
+  },
   "ja": {
     "heading": [
       "サーバー管理者は、自動的に全てのプロジェクトの管理者となります。その他のユーザーは、このプロジェクトに限定した役割を持つことができます。",

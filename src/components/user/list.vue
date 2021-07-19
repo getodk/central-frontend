@@ -306,6 +306,23 @@ export default {
       "retire": "Pengguna {displayName} telah berhenti."
     }
   },
+  "it": {
+    "action": {
+      "create": "Crea un Utente Web"
+    },
+    "heading": [
+      "Gli Utenti Web hanno degli account su questo sito per supervisionare e amministrare i Progetti sul server. Gli amministratori possono gestire qualsiasi cosa sul sito. Agli utenti senza ruolo di supervisione e amministrazione può essere assegnato un ruolo su qualsiasi progetto, attraverso le impostazioni del progetto stesso. Gli amministratori del sito e alcuni ruoli del progetto possono utilizzare un browser Web per compilare i formulari. Per inviare dati tramite un'applicazione come {collect}, create degli Utenti app per ciascun progetto."
+    ],
+    "header": {
+      "sitewideRole": "Ruolo per tutto il sito"
+    },
+    "alert": {
+      "create": "Un utente è stato creato con successo per \"{displayName}\"",
+      "assignRole": "Successo! A \"{displayName}\" è stato assegnato un ruolo di \"{roleName}\" in tutto il sito.",
+      "resetPassword": "La password per \"{displayName}\" è stata invalidata. È stata inviata un'e-mail a {email} con le istruzioni su come procedere.",
+      "retire": "L'utente \"{displayName}\" è stato ritirato."
+    }
+  },
   "ja": {
     "action": {
       "create": "Webユーザーの作成"

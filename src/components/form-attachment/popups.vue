@@ -489,6 +489,42 @@ $popup-width: 300px;
       }
     }
   },
+  "it": {
+    "title": "Caricare files",
+    "duringDragover": {
+      "dropToUpload": "Rilascia ora per caricare questo file come {attachmentName}.",
+      "dragover": "Trascina sulla voce del file che desideri sostituire con il file e rilascia per caricarla.",
+      "dropToPrepare": {
+        "full": "Rilascia ora per preparare {countOfFiles} per il caricamento in questo formulario.",
+        "countOfFiles": "{count} file | {count} files"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": [
+          "{countOfFiles} prontio per essere caricato.",
+          "{countOfFiles} pronti per essere caricati."
+        ],
+        "countOfFiles": "{count} file | {count} files"
+      },
+      "someUnmatched": {
+        "full": [
+          "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo.",
+          "{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi."
+        ],
+        "countOfFiles": "{count} file | {count} files"
+      },
+      "noneMatched": "Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi."
+    },
+    "duringUpload": {
+      "total": "Attendere prego, caricando il tuo {count} file: | Attendere prego, caricando i tuoi {count} files:",
+      "current": "Inviando {filename} ({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} file rimasto. | {count} files rimanenti.",
+        "last": "Questo è l'ultimo file"
+      }
+    }
+  },
   "ja": {
     "title": "ファイルのアップロード",
     "duringDragover": {

@@ -272,6 +272,26 @@ export default {
       "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
     }
   },
+  "it": {
+    "action": {
+      "create": "Crea Link con accesso pubblico"
+    },
+    "heading": [
+      {
+        "full": "Chiunque disponga di un collegamento di accesso pubblico può compilare questo formulario in un browser web. Puoi creare più collegamenti per tenere traccia delle diverse distribuzioni del formulario, per limitare la durata dell'accesso al formulario da parte di un gruppo specifico di persone e altro ancora. Questi collegamenti funzioneranno solo se il formulario è nello {state} \"aperto\".",
+        "state": "stato"
+      },
+      {
+        "full": "I link pubblici sono intesi per l'auto-riempimento. Se stai lavorando con raccoglitori di dati che devono inviare lo stesso formulario più volte, {clickHere} per altre opzioni.",
+        "clickHere": "clicca qui"
+      }
+    ],
+    "emptyTable": "Non ci sono link di accesso pubblico per questo formulario.",
+    "alert": {
+      "create": "Riuscito! Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
+      "revoke": "Il link di accesso pubblico \"{displayName}\" è stato revocato con successo. Non saranno accettati ulteriori Invii utilizzando questo Link."
+    }
+  },
   "ja": {
     "action": {
       "create": "一般公開リンクの作成"

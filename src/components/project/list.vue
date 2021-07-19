@@ -544,6 +544,53 @@ export default {
       "create": "Proyek baru Anda telah sukses dibuat."
     }
   },
+  "it": {
+    "heading": [
+      "Benvenuto su Central",
+      "Facciamo alcune cose."
+    ],
+    "gettingStarted": {
+      "title": "Iniziamo",
+      "body": [
+        {
+          "full": "Se non sai da dove cominciare, sono disponibili una guida introduttiva e la documentazione per l'utente sul {docsWebsite}.",
+          "docsWebsite": "Sito web della documentazione ODK"
+        },
+        {
+          "full": "Inoltre, puoi sempre ricevere aiuto dagli altri sul {forum}, dove puoi cercare domande precedenti o farne una tua.",
+          "forum": "Forum della comunità ODK"
+        }
+      ]
+    },
+    "news": "Novità",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} che può amministrare i Progetti attraverso questo sito web.",
+          "{webUsers} che possono amministrare i Progetti attraverso questo sito web."
+        ],
+        "webUsers": "Utente Web | Utenti web"
+      },
+      "projects": {
+        "full": [
+          "{projects} che può organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi.",
+          "{projects} che possono organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi."
+        ],
+        "projects": "Progetto | Progetti"
+      }
+    },
+    "projectsTitle": "Progetti",
+    "action": {
+      "create": "Nuovo"
+    },
+    "header": {
+      "forms": "Formulari"
+    },
+    "emptyTable": "Non ci sono progetti da visualizzare.",
+    "alert": {
+      "create": "Il tuo nuovo progetto è stato creato con successo."
+    }
+  },
   "ja": {
     "heading": [
       "Centralへようこそ",

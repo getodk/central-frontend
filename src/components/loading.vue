@@ -59,6 +59,9 @@ export default {
   "id": {
     "text": "Memuat..."
   },
+  "it": {
+    "text": "Caricando..."
+  },
   "ja": {
     "text": "読み込み中..."
   }

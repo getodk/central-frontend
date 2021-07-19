@@ -128,6 +128,12 @@ export default {
       "Setelah Anda membuat akun, instruksi untuk mengatur kata sandi dan tahap selanjutnya akan dikirimkan ke alamat email yang Anda sediakan."
     ]
   },
+  "it": {
+    "title": "Crea un Utente Web",
+    "introduction": [
+      "Una volta creato questo account, all'indirizzo email fornito verranno inviate le istruzioni su come impostare una password e procedere."
+    ]
+  },
   "ja": {
     "title": "Webユーザーの作成",
     "introduction": [

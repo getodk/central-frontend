@@ -233,6 +233,11 @@ $shadow-color: #dedede;
       "toggle": "Navigasi Toggle"
     }
   },
+  "it": {
+    "action": {
+      "toggle": "Attiva/disattiva navigazione"
+    }
+  },
   "ja": {
     "action": {
       "toggle": "ナビゲーションを有効化"

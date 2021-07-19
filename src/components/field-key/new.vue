@@ -287,6 +287,23 @@ export default {
       "createAnother": "Buat baru"
     }
   },
+  "it": {
+    "title": "Crea un Utente App",
+    "introduction": [
+      "Inizialmente questo utente non avrà accesso ad alcun formulario. Potrai assegnare i formulari solo dopo la creazione dell'utente."
+    ],
+    "success": [
+      "L'Utente App \"{displayName}\" è stato creato.",
+      "Puoi configurare un dispositivo mobile per \"{displayName}\" in questo momento, oppure puoi farlo in un secondo momento dalla tabella Utenti App facendo clic su \"Vedi codice\".",
+      {
+        "full": "Potresti voler visitare questo progetto {formAccessSettings} per dare a questo utente l'accesso ai formulari.",
+        "formAccessSettings": "Configurazioni di accesso al form"
+      }
+    ],
+    "action": {
+      "createAnother": "Creare un altro"
+    }
+  },
   "ja": {
     "title": "アプリユーザーの作成",
     "introduction": [

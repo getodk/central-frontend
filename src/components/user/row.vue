@@ -228,6 +228,16 @@ export default {
       "retire": "Pengguna Berhenti"
     }
   },
+  "it": {
+    "cannotAssignRole": "Non puoi modificare il tuo ruolo nel sito.",
+    "field": {
+      "sitewideRole": "Ruolo per tutto il sito"
+    },
+    "cannotRetire": "Non è possibile ritirare se stessi",
+    "action": {
+      "retire": "Ritira utente"
+    }
+  },
   "ja": {
     "cannotAssignRole": "自分自身のサーバーでの役割を編集できません。",
     "field": {

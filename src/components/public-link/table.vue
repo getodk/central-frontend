@@ -99,6 +99,12 @@ export default {
       "accessLink": "Tautan Akses"
     }
   },
+  "it": {
+    "header": {
+      "once": "Invio singolo",
+      "accessLink": "Link di accesso"
+    }
+  },
   "ja": {
     "header": {
       "once": "一回限りのデータ提出機能",

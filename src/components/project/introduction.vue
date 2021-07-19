@@ -91,6 +91,12 @@ export default {
       "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek yang aksesnya sudah diberikan kepada mereka."
     ]
   },
+  "it": {
+    "title": "Cosa sono i Progetti?",
+    "introduction": [
+      "I progetti consentono di raggruppare formulari e utenti correlati. Agli utenti Web possono essere assegnati ruoli che consentono loro di eseguire determinate azioni all'interno del progetto, incluso l'utilizzo di un browser Web per compilare formulari. Gli utenti dell'app per il progetto possono vedere solo i formulari nel progetto a cui hanno accesso."
+    ]
+  },
   "ja": {
     "title": "プロジェクトとは？",
     "introduction": [

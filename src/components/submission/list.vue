@@ -536,6 +536,28 @@ export default {
     "emptyTable": "Belum ada kiriman data.",
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
+  "it": {
+    "loading": {
+      "withoutCount": "Cricando invii...",
+      "all": "Cricando {count} invio... | Cricando {count} invii...",
+      "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio…",
+      "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti...",
+      "last": {
+        "multiple": "Caricando l'ultimo {count} invio… | Caricando gli ultimi {count} invii…",
+        "one": "Caricamento dell'ultimo invio in corso..."
+      },
+      "filtered": {
+        "withoutCount": "Cricando invii corrispondenti...",
+        "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
+        "last": {
+          "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti…",
+          "one": "Cricando gli ultimi invii corrispondenti..."
+        }
+      }
+    },
+    "emptyTable": "Non ci sono ancora invii.",
+    "noMatching": "Non sono presenti invii corrispondenti."
+  },
   "ja": {
     "loading": {
       "withoutCount": "提出済フォームの読み込み中...",

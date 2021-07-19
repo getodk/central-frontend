@@ -134,6 +134,15 @@ export default {
       "logOut": "Anda sudah berhasil keluar."
     }
   },
+  "it": {
+    "notLoggedIn": "Accesso non effettuato",
+    "action": {
+      "logOut": "Disconnettersi"
+    },
+    "alert": {
+      "logOut": "Ti sei disconnesso con successo."
+    }
+  },
   "ja": {
     "notLoggedIn": "ログイン",
     "action": {

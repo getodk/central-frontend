@@ -95,6 +95,13 @@ export default {
       "details": "Rincian"
     }
   },
+  "it": {
+    "header": {
+      "initiator": "Iniziatore",
+      "target": "Obbiettivo",
+      "details": "Dettagli"
+    }
+  },
   "ja": {
     "header": {
       "initiator": "操作者",

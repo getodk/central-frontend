@@ -566,6 +566,59 @@ export default {
       "hint": "Petunjuk frasa sandi (opsional)"
     }
   },
+  "it": {
+    "title": "Abilita crittografia",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "Se abiliti la crittografia, accadranno le seguenti cose:",
+            "I dati dell'Invio finalizzato verranno crittografati sui dispositivi mobili.",
+            "I dati inattivi di invio verranno crittografati sul server Central.",
+            [
+              "I formulari configurati con chiavi {submission} manuali continueranno a utilizzare tali chiavi e devono essere decrittografati manualmente.",
+              "Per utilizzare il processo di crittografia centrale automatica su questi formulari, rimuovere la configurazione {base64RsaPublicKey}."
+            ],
+            "Non sarai più in grado di visualizzare in anteprima i dati di invio online.",
+            "Non sarai più in grado di connetterti ai dati tramite OData.",
+            "Non sarai più in grado di modificare gli Invii nel tuo browser web."
+          ],
+          [
+            "Inoltre, quanto segue è reale in questa versione di ODK Central:",
+            [
+              "Gli invii esistenti rimarranno non crittografati.",
+              "In una versione futura, avrai la possibilità di crittografare i dati esistenti."
+            ],
+            [
+              "La crittografia non può essere disattivata una volta abilitata.",
+              "In una versione futura, sarai in grado di disabilitare la crittografia, che decrittograferà i tuoi dati. Questo sarà possibile anche se abiliti la crittografia ora."
+            ]
+          ],
+          {
+            "full": "Puoi imparare di più sulla crittografia {here}. Se questo è quello che desideri, premi Avanti per procedere.",
+            "here": "qui"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Innanzitutto, dovrai scegliere una passphrase. Questa passphrase sarà necessaria per decifrare i tuoi Invii. Per la tua privacy, il server non ricorderà questa passphrase: solo le persone con la passphrase saranno in grado di decifrare e leggere i tuoi dati di invio.",
+          {
+            "full": "Non ci sono restrizioni sulla lunghezza o sul contenuto della passphrase, ma se la perdi, {no} c'è un modo per recuperarla o recuperare i tuoi dati!",
+            "no": "no"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire."
+        ]
+      }
+    ],
+    "field": {
+      "hint": "Suggerimento per la passphrase (opzionale)"
+    }
+  },
   "ja": {
     "title": "暗号化を有効にする",
     "steps": [

@@ -252,6 +252,16 @@ export default {
       "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
     }
   },
+  "it": {
+    "title": "Decifra e scarica",
+    "introduction": [
+      "Per scaricare questi dati, dovrai fornire la tua passphrase. La tua passphrase verrà utilizzata solo per decifrare i tuoi dati per il download, dopodiché il server la cancellerà."
+    ],
+    "hint": "Suggerimento: {hint}",
+    "alert": {
+      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova."
+    }
+  },
   "ja": {
     "title": "復号してダウンロード",
     "introduction": [

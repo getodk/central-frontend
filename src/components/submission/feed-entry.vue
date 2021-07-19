@@ -357,6 +357,34 @@ Comment • {name} */
       "comment": "Commentaire de {name}"
     }
   },
+  "it": {
+    "title": {
+      "create": "Inviato da {name}",
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Ricevuto"
+        },
+        "hasIssues": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Ha problemi"
+        },
+        "edited": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Modificato"
+        },
+        "approved": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Approvato"
+        },
+        "rejected": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Respinto"
+        }
+      },
+      "comment": "Commenti di {name}"
+    }
+  },
   "ja": {
     "title": {
       "create": "{name}による提出済フォーム",

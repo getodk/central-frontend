@@ -146,6 +146,16 @@ export default {
       "create": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
     }
   },
+  "it": {
+    "title": "Formulari",
+    "action": {
+      "create": "Nuovo"
+    },
+    "emptyTable": "Non ci sono formulari da mostrare.",
+    "alert": {
+      "create": "Il tuo nuovo formulario\"{name}\" è stato creato come bozza. Dai un'occhiata alla lista di controllo qui sotto e quando ritieni che sia pronto, puoi pubblicare il formulario per l'uso."
+    }
+  },
   "ja": {
     "title": "フォーム",
     "action": {

@@ -116,6 +116,14 @@ export default {
     },
     "comingSoon": "(akan datang)"
   },
+  "it": {
+    "title": "Impostazioni dell'utente",
+    "tab": {
+      "users": "Utenti web",
+      "roles": "Impostazioni del Ruolo"
+    },
+    "comingSoon": "(prossimamente)"
+  },
   "ja": {
     "title": "ユーザー管理",
     "tab": {

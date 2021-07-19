@@ -143,6 +143,13 @@ export default {
       "revokeAccess": "Cabut akses"
     }
   },
+  "it": {
+    "seeCode": "Mostra il codice",
+    "accessRevoked": "Accesso revocato",
+    "action": {
+      "revokeAccess": "Revoca l'accesso utente"
+    }
+  },
   "ja": {
     "seeCode": "QRコードを表示",
     "accessRevoked": "アクセス権の取消済み",

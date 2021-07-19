@@ -187,6 +187,21 @@ export default {
       "delete": "Formulir {name} telah dihapus."
     }
   },
+  "it": {
+    "state": {
+      "title": "Stato del Formulario",
+      "body": {
+        "full": "Per impostare lo stato di questo formulario, visita il progetto {formAccessSettings}",
+        "formAccessSettings": "Configurazioni di accesso al form"
+      }
+    },
+    "action": {
+      "delete": "Cancella questo formulario"
+    },
+    "alert": {
+      "delete": "Il Formulario “{name}” è stato cancellato."
+    }
+  },
   "ja": {
     "state": {
       "title": "フォームの状態",

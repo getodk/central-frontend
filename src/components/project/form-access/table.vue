@@ -249,6 +249,12 @@ export default {
       "state": "Status"
     }
   },
+  "it": {
+    "header": {
+      "form": "Formulario",
+      "state": "Stato"
+    }
+  },
   "ja": {
     "header": {
       "form": "フォーム",

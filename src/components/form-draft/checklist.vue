@@ -456,6 +456,60 @@ export default {
       }
     ]
   },
+  "it": {
+    "clickForInfo": "Clicca qui per ulteriori informazioni",
+    "steps": [
+      {
+        "title": "Carica la definizione del formulario iniziale",
+        "body": [
+          "Ben fatto!",
+          "Il design del tuo formulario è stato caricato con successo."
+        ]
+      },
+      {
+        "title": "Carica la definizione del formulario revisionata (opzionale)",
+        "body": [
+          {
+            "status": "Se hai apportato modifiche al formulario stesso, incluso il testo della domanda o le regole logiche, ora è il momento di caricare il nuovo XML o XLSForm utilizzando il pulsante a destra.",
+            "link": {
+              "full": "Se hai apportato modifiche al formulario stesso, incluso il testo della domanda o le regole logiche, ora è il momento di {upload} il nuovo XML o XLSForm.",
+              "upload": "carica"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Carica i file multimediali associati al formulario",
+        "body": [
+          {
+            "full": "La definizione del tuo formulario fa rimerimento a files che sono necessari per poter mostrare il tuo Formulario. Puoi caricare copie nuove o aggiornate di questi per la distribuzione nella scheda {mediaFiles} .",
+            "mediaFiles": "File multimediali"
+          }
+        ]
+      },
+      {
+        "title": "Testa il formulario sul tuo dispositivo mobile",
+        "body": [
+          {
+            "full": "Puoi {test} un formulario per assicurarti che funzioni come previsto. Gli invii di prova non sono inclusi nei dati finali.",
+            "test": "test"
+          }
+        ]
+      },
+      {
+        "title": "Pubblica bozza",
+        "body": [
+          {
+            "status": "Quando sei sicuro che la tua bozza è pronta e desideri distribuirla sui tuoi dispositivi sul campo, puoi pubblicarla utilizzando il pulsante a destra.",
+            "link": {
+              "full": "Quando sei sicuro che la tua bozza è pronta e desideri distribuirla sui tuoi dispositivi sul campo, puoi {publish}.",
+              "publish": "pubblica"
+            }
+          }
+        ]
+      }
+    ]
+  },
   "ja": {
     "clickForInfo": "さらに詳細を知るには、こちらをクリックして下さい。",
     "steps": [

@@ -124,6 +124,11 @@ export default {
     "help": "Apa itu Proyek?",
     "noSubmission": "(tidak ada)"
   },
+  "it": {
+    "help": "Cosa sono i Progetti?",
+    "noSubmission": "(nessuno)",
+    "encryptionTip": "Questo progetto utilizza la crittografia gestita."
+  },
   "ja": {
     "help": "プロジェクトとは？",
     "noSubmission": "（なし）",

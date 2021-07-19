@@ -111,6 +111,11 @@ export default {
       "success": "Email sudah dikirimkan ke {email} dengan instruksi lebih lanjut."
     }
   },
+  "it": {
+    "alert": {
+      "success": "È stata inviata un'email a {email} con ulteriori istruzioni."
+    }
+  },
   "ja": {
     "alert": {
       "success": "{email}に詳細の対応についての情報が記されたメールが送信されました。"

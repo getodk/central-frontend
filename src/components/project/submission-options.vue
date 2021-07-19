@@ -215,6 +215,25 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Opzioni invio",
+    "introduction": [
+      "Esistono diverse opzioni per inviare dati a ODK Central:",
+      {
+        "full": "Creare {appUsers} e utilizzare l'applicazione Android {collect}. Questo è più appropriato quando i raccoglitori di dati devono accedere a più formulari, sono offline o nel caso tu abbia un formulario complesso.",
+        "appUsers": "Utenti dell'applicazione"
+      },
+      {
+        "full": "Creane uno o più {publicLinks} da condividere con gli intervistati che si auto-intervisteranno.",
+        "publicLinks": "Link con accesso pubblico"
+      },
+      {
+        "full": "Crea un {webUser} con il ruolo di {dataCollector} per ogni individuo che raccoglierà dati. Questi utenti accederanno a Central per compilare questo formulario in un browser web. I project manager possono anche creare invii da un browser web.",
+        "webUser": "Utente Web",
+        "dataCollector": "Raccoglitore di dati"
+      }
+    ]
+  },
   "ja": {
     "title": "フォーム提出方法の選択肢",
     "introduction": [

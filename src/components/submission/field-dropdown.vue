@@ -302,6 +302,8 @@ export default {
     },
     "disabled": "Cannot select more than 100 columns.",
     "action": {
+      // This text is shown in a dropdown that allows the user to select which
+      // columns to display in a table.
       "select": {
         "full": "Select {all} / {none}",
         "all": "All",
@@ -387,6 +389,21 @@ export default {
         "full": "Pilih {all} / {none}",
         "all": "Semua",
         "none": "Jangan Semua"
+      }
+    }
+  },
+  "it": {
+    "placeholder": "{selected} di {total}",
+    "field": {
+      "columns": "Colonne mostrate",
+      "search": "Cerca colonne..."
+    },
+    "disabled": "Non puoi selezionare piu' di 100 colonne.",
+    "action": {
+      "select": {
+        "full": "Seleziona {all} / {none}",
+        "all": "Tutto",
+        "none": "Nessuno/a"
       }
     }
   },

@@ -88,6 +88,11 @@ export default {
       "submitter": "Terkirim oleh"
     }
   },
+  "it": {
+    "field": {
+      "submitter": "Inviato da"
+    }
+  },
   "ja": {
     "field": {
       "submitter": "フォーム送信者"

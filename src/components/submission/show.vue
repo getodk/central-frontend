@@ -205,6 +205,12 @@ export default {
       "back": "Retour au tableau de soumissions"
     }
   },
+  "it": {
+    "back": {
+      "title": "Dettagli invio",
+      "back": "Indietro alla tabella degli invii"
+    }
+  },
   "ja": {
     "back": {
       "title": "提出フォームの詳細",

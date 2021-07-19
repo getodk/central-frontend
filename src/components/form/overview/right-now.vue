@@ -225,6 +225,24 @@ export default {
       "submissions": "Kiriman data"
     }
   },
+  "it": {
+    "version": {
+      "full": "{publishedVersion} di questo formulario.",
+      "publishedVersion": "Versione pubblicata"
+    },
+    "stateCaption": {
+      "open": "Questo Formulario è scaricabile e accetta Invii.",
+      "closing": "Questo Formulario non è scaricabile e ma tuttavia accetta Invii.",
+      "closed": "Questo Formulario non è scaricabile e non accetta Invii."
+    },
+    "submissions": {
+      "full": [
+        "{submissions} è stato salvato per questo formulario",
+        "{submissions} sono state salvate per questo formulario"
+      ],
+      "submissions": "Invio | Invii"
+    }
+  },
   "ja": {
     "version": {
       "full": "フォームの{publishedVersion}",

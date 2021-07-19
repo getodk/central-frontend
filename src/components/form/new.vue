@@ -510,6 +510,47 @@ $drop-zone-vpadding: 15px;
       }
     ]
   },
+  "it": {
+    "title": {
+      "create": "Creare un formulario",
+      "update": "Carica la nuova definizione del formulario"
+    },
+    "introduction": [
+      {
+        "create": "Per creare un formulario, caricare un file XML XForms o un file Excel XLSForm.",
+        "update": "Per aggiornare la bozza, caricare un file XML XForms o un file Excel XLSForm."
+      },
+      {
+        "full": "Se non ne hai già uno, ci sono {tools} per aiutarti a progettare il tuo formulario.",
+        "tools": "strumenti a disposizione"
+      },
+      "Se disponi di file multimediali, potrai caricarli nella pagina successiva, dopo che il formulario è stato creato."
+    ],
+    "dropZone": {
+      "full": "Trascina un file qui o {chooseOne} per caricarlo.",
+      "chooseOne": "scegli uno"
+    },
+    "action": {
+      "upload": "Carica",
+      "uploadAnyway": "Carica comunque"
+    },
+    "alert": {
+      "fileRequired": "Selezionare un file per favore"
+    },
+    "problem": {
+      "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
+      "400_15": "Non è stato possibile convertire l'XLSForm : {error}",
+      "409_3": "Esiste già un Formulario in questo progetto con il Form ID “{xmlFormId}”."
+    },
+    "warningsText": [
+      "Questo file XLSForm può essere utilizzato, ma presenta i seguenti possibili problemi (avvisi di conversione):",
+      "Si prega di correggere i problemi e riprovare.",
+      {
+        "create": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque il formulario:",
+        "update": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque la bozza del formulario:"
+      }
+    ]
+  },
   "ja": {
     "title": {
       "create": "フォームの作成",

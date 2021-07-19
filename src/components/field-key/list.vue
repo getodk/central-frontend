@@ -352,6 +352,30 @@ export default {
       "revoke": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
     }
   },
+  "it": {
+    "action": {
+      "create": "Creare un Utente App"
+    },
+    "heading": [
+      {
+        "full": "Gli Utenti App raccolgono i dati tramite un'applicazione come {collect}. In genere rappresentano un ruolo condiviso come per esempio di \"Vaccinatore\", ma possono anche rappresentare individui. Gli Utenti App in questo progetto possono scaricare e utilizzare i formulari solo all'interno di questo progetto. Quando crei un nuovo Utente App, inizialmente non avrà accesso a nessun formulario. Per impostare i formulari a cui ogni Utente App può accedere, utilizza la scheda {formAccess}.",
+        "formAccess": "Accesso al form"
+      },
+      {
+        "full": "Gli utenti dell'app sono più appropriati quando i raccoglitori di dati devono accedere a più formulari, sono offline o hai un formulario complesso. Se hai bisogno che gli intervistati rispondano da se o dispongano di un formulario solo online, {clickHere} per altre opzioni.",
+        "clickHere": "clicca qui"
+      }
+    ],
+    "header": {
+      "lastUsed": "Utilzzato ultima volta",
+      "configureClient": "Configurare il Client"
+    },
+    "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
+    "alert": {
+      "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
+      "revoke": "L'accesso per l'Utente App “{displayName}” è stato revocato."
+    }
+  },
   "ja": {
     "action": {
       "create": "アプリユーザーの作成"

@@ -117,6 +117,12 @@ export default {
     ],
     "emptyTable": "Tidak ada catatan audit yang cocok."
   },
+  "it": {
+    "heading": [
+      "Qui troverai un registro delle azioni significative eseguite su questo server. Le modifiche apportate alle impostazioni dell'utente, del progetto o del formulario sono disponibili qui."
+    ],
+    "emptyTable": "Non sono presenti voci del registro di controllo corrispondenti."
+  },
   "ja": {
     "heading": [
       "ここでは、このサーバーで行われた重要な操作履歴を閲覧できます。ユーザーやプロジェクト、フォーム設定への変更は、ここで確認できます。"

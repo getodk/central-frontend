@@ -126,6 +126,12 @@ export default {
       "Proyek mengelompokkan Formulir dan Pengguna Aplikasi untuk mempermudah pengorganisiran dan pengaturan, baik melalui website ini maupun perangkat koleksi data Anda."
     ]
   },
+  "it": {
+    "title": "Crea Progetto",
+    "introduction": [
+      "I progetti raggruppano formulari e utenti dell'app per semplificarne l'organizzazione e la gestione, sia su questo sito Web che sul dispositivo di raccolta dati."
+    ]
+  },
   "ja": {
     "title": "プロジェクトの作成",
     "introduction": [

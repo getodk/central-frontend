@@ -231,6 +231,19 @@ export default {
       "title": "Untuk menunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman ini"
     }
   },
+  "it": {
+    "type": {
+      "image": "File immagine",
+      "audio": "Audio",
+      "video": "Video",
+      "file": "File dati"
+    },
+    "replace": "Rimpiazzare",
+    "notUploaded": {
+      "text": "Non ancora caricato",
+      "title": "Per caricare file, trascina e rilascia uno o più file su questa pagina"
+    }
+  },
   "ja": {
     "type": {
       "image": "画像",

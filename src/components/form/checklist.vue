@@ -402,6 +402,53 @@ export default {
       }
     ]
   },
+  "it": {
+    "clickForInfo": "clicca qui per ulteriori informazioni",
+    "steps": [
+      {
+        "title": "Pubblica la tua prima versione bozza",
+        "body": [
+          "Ben fatto!",
+          "Hai pubblicato il tuo formulario. È pronto per accettare gli invii. Se desideri apportare modifiche al formulario o ai suoi file multimediali, puoi creare una nuova bozza."
+        ]
+      },
+      {
+        "title": "Scarica il formulario sulla aplicazione client e invia dati",
+        "body": [
+          {
+            "none": "Nessuno ha ancora inviato dati a questo formulario.",
+            "any": "Un totale di {count} invio è stato fatto. | Un totale di {count} invii è stato fatto."
+          },
+          {
+            "full": "{clickHere} per conoscere le diverse modalità di invio dei dati.",
+            "clickHere": "Clicca qui"
+          }
+        ]
+      },
+      {
+        "title": "Valutare e analizzare i dati inviati",
+        "body": [
+          {
+            "none": "Una volta che ci sono dati per questo formulario, puoi esportarlo o sincronizzarlo per monitorare e analizzare i dati per qualità e risultati.",
+            "any": "Puoi esportare o sincronizzare il {count} invio su questo formulario per monitorarlo e analizzarlo per qualità e risultati. | Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati."
+          },
+          {
+            "full": "Puoi farlo con i pulsanti Scarica e Analizza sul {submissionsTab}.",
+            "submissionsTab": "Sheda invii"
+          }
+        ]
+      },
+      {
+        "title": "Gestisci il ritiro del formulario",
+        "body": [
+          {
+            "full": "Quando arrivi alla fine della raccolta dati, puoi utilizzare i controlli Stato formulario in {formAccessTab} per controllare se, ad esempio, gli utenti dell'app saranno in grado di visualizzare o creare nuovi invii a questo formulario.",
+            "formAccessTab": "Scheda Accesso al formulario della pagina Progetto"
+          }
+        ]
+      }
+    ]
+  },
   "ja": {
     "clickForInfo": "さらに詳細を知るには、こちらをクリックして下さい。",
     "steps": [

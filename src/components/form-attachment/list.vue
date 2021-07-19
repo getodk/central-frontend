@@ -524,6 +524,26 @@ export default {
       "success": "{count} dokumen berhasil diunggah."
     }
   },
+  "it": {
+    "action": {
+      "upload": "Caricare files"
+    },
+    "heading": [
+      "In base al formulario caricato, sono previsti i seguenti file. Puoi vedere quali sono stati caricati o mancano ancora.",
+      "Per caricare file, trascina e rilascia uno o più file sulla pagina."
+    ],
+    "header": {
+      "uploaded": "Caricati"
+    },
+    "problem": {
+      "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
+      "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
+    },
+    "alert": {
+      "readError": "Qualcosa è andato storto durante la lettura di \"{filename}\".",
+      "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo"
+    }
+  },
   "ja": {
     "action": {
       "upload": "ファイルのアップロード"

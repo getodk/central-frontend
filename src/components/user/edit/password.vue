@@ -169,6 +169,17 @@ export default {
       "success": "Berhasil! Kata sandi telah diperbarui."
     }
   },
+  "it": {
+    "title": "Cambiare la password",
+    "action": {
+      "change": "Cambiare la password"
+    },
+    "cannotChange": "Solo il titolare dell'account può impostare direttamente la propria password.",
+    "alert": {
+      "mismatch": "Per favore verifica che le tue nuove password corrispondano.",
+      "success": "L'operazione è riuscita con successo! La tua password è stata aggiornata."
+    }
+  },
   "ja": {
     "title": "パスワードの変更",
     "action": {

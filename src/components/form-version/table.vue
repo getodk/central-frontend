@@ -96,6 +96,12 @@ export default {
       "definition": "Definisi"
     }
   },
+  "it": {
+    "header": {
+      "published": "Pubblicato",
+      "definition": "Definizione"
+    }
+  },
   "ja": {
     "header": {
       "published": "公開済み",

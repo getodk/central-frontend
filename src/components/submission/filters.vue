@@ -93,6 +93,11 @@ export default {
       "submissionDate": "Terkirim pada"
     }
   },
+  "it": {
+    "field": {
+      "submissionDate": "Inviato alle"
+    }
+  },
   "ja": {
     "field": {
       "submissionDate": "フォームの送信日"

@@ -119,6 +119,13 @@ export default {
       "Anda harus mengonfigurasi ulang dari awal untuk mengaktifkannya kembali, dan tindakan ini tidak bisa dibatalkan/dikembalikan."
     ]
   },
+  "it": {
+    "title": "Termina i backup automatici",
+    "introduction": [
+      "Sei sicuro di voler terminare i tuoi backup automatici?",
+      "Per riavviarli dovrai riconfigurarli di nuovo da zero e questa azione non può essere annullata."
+    ]
+  },
   "ja": {
     "title": "自動バックアップの停止",
     "introduction": [

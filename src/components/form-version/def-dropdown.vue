@@ -131,6 +131,14 @@ export default {
       "viewXml": "Lihat XML di browser"
     }
   },
+  "it": {
+    "action": {
+      "def": "Definizione",
+      "viewXml": "Vedi l'XML nel browser",
+      "downloadXForm": "Scarica come XForm (.xml)",
+      "downloadXlsForm": "Scarica come XForm ({extension})"
+    }
+  },
   "ja": {
     "action": {
       "def": "定義フォーム",

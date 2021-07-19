@@ -151,6 +151,16 @@ export default {
       }
     ]
   },
+  "it": {
+    "title": "Archiviando il Progetto",
+    "introduction": [
+      "Stai per archiviare il Progetto “{name}”. Continuerà a funzionare, ma verrà ordinato in fondo all'elenco dei progetti nella home page di Central.",
+      {
+        "full": "{noUndo}, ma la possibilità di annullare l'archiviazione di un progetto è prevista per una versione futura.",
+        "noUndo": "Quest'azione non può essere annullata"
+      }
+    ]
+  },
   "ja": {
     "title": "プロジェクトのアーカイブ",
     "introduction": [
