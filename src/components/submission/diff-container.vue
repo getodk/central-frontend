@@ -16,6 +16,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { last } from 'ramda';
+
 import SubmissionDiffItem from './diff-item.vue';
 
 import { requestData } from '../../store/modules/request';
@@ -34,8 +36,9 @@ export default {
     ...requestData(['fields']),
     visibleDiffs() {
       // Filters out diffs about instanceID and deprecatedID
-      // TODO: write this long line of code in a shorter way?
-      return this.diffs.filter((entry) => ((entry.path[entry.path.length - 1] !== 'instanceID' && entry.path[entry.path.length - 1] !== 'deprecatedID')));
+      return this.diffs.filter((entry) =>
+        last(entry.path) !== 'instanceID' &&
+        last(entry.path) !== 'deprecatedID');
     },
     binaryFields() {
       // Form fields transformed into an object for easily checking

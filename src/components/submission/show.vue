@@ -159,8 +159,7 @@ export default {
           key: 'fields',
           url: apiPaths.fields(
             this.projectId,
-            this.xmlFormId,
-            this.draft
+            this.xmlFormId
           )
         }
       ]).catch(noop);

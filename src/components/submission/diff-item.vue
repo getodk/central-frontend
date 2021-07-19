@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span :key="index">
           <template v-if="Array.isArray(field)">
             <span>{{ field[0] }}</span>
-            <span class="field-counter"> #</span><span>{{ +field[1] + 1 }}</span>
+            <span class="field-counter"> #</span><span>{{ field[1] + 1 }}</span>
           </template>
           <template v-else>
             <span>{{ field }}</span>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
             </span>
             <span v-else>{{ entry.old }}</span>
           </span>
-          <span v-else><span class="data-empty">empty</span></span>
+          <span v-else><span class="data-empty">{{ $t('empty') }}</span></span>
           <span class="icon-arrow-circle-right change-icon"></span>
           <span v-if="entry.new" class="data-new">
             <span v-if="isBinary">
@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
             </span>
             <span v-else>{{ entry.new }}</span>
           </span>
-          <span v-else><span class="data-empty">empty</span></span>
+          <span v-else><span class="data-empty">{{ $t('empty') }}</span></span>
         </div>
       </template>
       <template v-else>
@@ -65,6 +65,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { last } from 'ramda';
+
 export default {
   name: 'SubmissionDiffItem',
   props: {
@@ -85,29 +87,34 @@ export default {
   },
   computed: {
     isAtomicChange() {
-      // Is this a diff of a single field or whole subtree
-      if (this.entry.old === null)
-        if (typeof (this.entry.new) === 'object')
-          return false;
-      if (this.entry.new === null)
-        if (typeof (this.entry.old) === 'object')
-          return false;
+      // Check whether the change is of a single field (atomic)
+      // or if it is of a whole subtree being added or removed.
+      // If one side is null (addition or deletion) and the remaining
+      // side is an object, then it is NOT an atomic change.
+      if (this.entry.old === null && typeof (this.entry.new) === 'object')
+        return false;
+      if (this.entry.new === null && typeof (this.entry.old) === 'object')
+        return false;
       return true;
     },
     visiblePath() {
+      // If the change is atomic, it will split the path into the field name
+      // of the changed leaf node and the preceeding part of the path (which
+      // could be empty for a short path).
+      // Otherwise, it will show the whole path of the changed subtree.
       if (!this.isAtomicChange)
         return this.entry.path;
       return this.entry.path.slice(0, this.entry.path.length - 1);
     },
     fieldName() {
-      return this.entry.path[this.entry.path.length - 1];
+      return last(this.entry.path);
     },
     typeOfChange() {
-      if (this.entry.old === null)
-        return 'added';
-      if (this.entry.new === null)
-        return 'deleted';
-      return 'changed';
+      // Check which value is null (old or new) to determine the
+      // type of change or edit.
+      // This is only used for non-atomic (nested) changes so
+      // it will always be one or the other.
+      return (this.entry.old === null ? 'added' : 'deleted');
     },
     nestedDiffs() {
       return this.flattenDiff(this.entry.new || this.entry.old, this.typeOfChange);
@@ -127,17 +134,17 @@ export default {
     flattenDiff(node, typeOfChange, prefix = []) {
       // Flattens the inner diff (JSON of an entire added/removed tree structure)
       // by recursively traversing the tree
-      let changes = [];
+      const changes = [];
       // eslint-disable-next-line guard-for-in
       for (const k in node) {
         const path = prefix.concat(k);
         if (Array.isArray(node)) {
           path.pop(); // pop off the index (e.g. 1 of toy #1)
           path.pop(); // pop off the name (e.g. toy of toy #1)
-          path.push([prefix[prefix.length - 1], k]);
+          path.push([prefix[prefix.length - 1], Number.parseInt(k, 10)]);
         }
         if (typeof (node[k]) === 'object') {
-          changes = changes.concat(this.flattenDiff(node[k], typeOfChange, path));
+          changes.push(...this.flattenDiff(node[k], typeOfChange, path));
         } else if (typeOfChange === 'added') {
           changes.push({ path, old: null, new: node[k] });
         } else {
@@ -158,58 +165,54 @@ export default {
 
 .submission-diff-item {
   border-bottom: 1px solid #ccc;
+
+  &:last-child { border-bottom: 0; }
+
+  .full-path, .field-name, .nested-change-type {
+    font-family: $font-family-monospace;
+  }
+
+  .full-path {
+    font-size: 13px;
+    color: #333;
+    margin: 10px 10px -5px 10px;
+  }
+
+  .field-separator, .field-counter{
+    color: #999;
+  }
+
+  .diff-details {
+    display: flex;
+    font-size: 17px;
+  }
+
+  .field-name, .nested-change-type {
+    width: 150px;
+    margin: 10px;
+  }
+
+  .field-name {
+    color: #000;
+    @include text-overflow-ellipsis;
+  }
+
+  .old-to-new { margin: 10px; }
+  .change-icon { color: #888; padding: 5px; }
+
+  .data-old { color: $color-danger-dark; }
+  .data-new { color: $color-success-dark; }
+
+  .deleted { color: $color-danger-dark; }
+  .added { color: $color-success-dark; }
+
+  .data-empty {
+    background-color: #bbb;
+    color: white;
+    padding: 5px;
+    border-radius: 2px;
+  }
 }
-
-.submission-diff-item:last-child {
-  border-bottom: 0;
-}
-
-.full-path, .field-name, .nested-change-type {
-  font-family: $font-family-monospace;
-}
-
-.full-path {
-  font-size: 13px;
-  color: #333;
-  margin: 10px 10px -5px 10px;
-}
-
-.field-separator, .field-counter{
-  color: #999;
-}
-
-.diff-details {
-  display: flex;
-  font-size: 17px;
-}
-
-.field-name, .nested-change-type {
-  width: 150px;
-  margin: 10px;
-}
-
-.field-name {
-  color: #000;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.old-to-new { margin: 10px; }
-.change-icon { color: #888; padding: 5px; }
-
-.data-old { color: $color-danger-dark; }
-.data-new { color: $color-success-dark; }
-
-.deleted { color: $color-danger-dark; }
-.added { color: $color-success-dark; }
-
-.data-empty {
-  background-color: #bbb;
-  color: white;
-  padding: 5px;
-  border-radius: 2px;
-}
-
 
 </style>
 
@@ -220,7 +223,8 @@ export default {
     "editCaption": {
       "added": "(added)",
       "deleted": "(deleted)",
-    }
+    },
+    "empty": "empty", // Text showing that a value in a submission edit is empty
   }
 }
 </i18n>

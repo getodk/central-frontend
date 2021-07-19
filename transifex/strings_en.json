@@ -3029,6 +3029,9 @@
           "string": "(deleted)",
           "developer_comment": "The description of how a specific field in a form submission changed"
         }
+      },
+      "empty": {
+        "string": "empty"
       }
     },
     "SubmissionDownloadDropdown": {
