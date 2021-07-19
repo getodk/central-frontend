@@ -12,22 +12,19 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="submission-diff-item">
     <div v-if="visiblePath.length > 0" class="full-path">
-      <template v-for="(field, index) in visiblePath">
-        <span :key="index">
-          <template v-if="Array.isArray(field)">
-            <span>{{ field[0] }}</span>
-            <span class="field-counter"> #</span><span>{{ field[1] + 1 }}</span>
-          </template>
-          <template v-else>
-            <span>{{ field }}</span>
-          </template>
-          <template v-if="index < visiblePath.length - 1">
-            <span class="field-separator"> &rsaquo; </span>
-          </template>
-        </span>
-      </template>
+      <span v-for="(field, index) in visiblePath" :key="index">
+        <template v-if="Array.isArray(field)">
+          <span>{{ field[0] }}</span>
+          <span class="field-counter"> #</span><span>{{ field[1] + 1 }}</span>
+        </template>
+        <template v-else>
+          <span>{{ field }}</span>
+        </template>
+        <template v-if="index < visiblePath.length - 1">
+          <span class="field-separator"> &rsaquo; </span>
+        </template>
+      </span>
     </div>
-    <div>
     <div class="diff-details">
       <template v-if="isAtomicChange">
         <div class="field-name" :title="fieldName">
@@ -35,31 +32,30 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="old-to-new">
           <span v-if="entry.old" class="data-old">
-            <span v-if="isBinary">
+            <template v-if="isBinary">
               <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
-            </span>
-            <span v-else>{{ entry.old }}</span>
+            </template>
+            <template v-else>{{ entry.old }}</template>
           </span>
-          <span v-else><span class="data-empty">{{ $t('empty') }}</span></span>
+          <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right change-icon"></span>
           <span v-if="entry.new" class="data-new">
-            <span v-if="isBinary">
+            <template v-if="isBinary">
               <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
-            </span>
-            <span v-else>{{ entry.new }}</span>
+            </template>
+            <template v-else>{{ entry.new }}</template>
           </span>
-          <span v-else><span class="data-empty">{{ $t('empty') }}</span></span>
+          <span v-else class="data-empty">{{ $t('empty') }}</span>
         </div>
       </template>
       <template v-else>
         <div class="nested-change-type" :class="typeOfChange">
           {{ $t(`editCaption.${typeOfChange}`) }}
         </div>
-        <div class="nested-changes">
+        <div>
           <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :fields="fields" :parent-path="entry.path"/>
         </div>
       </template>
-    </div>
     </div>
   </div>
 </template>
