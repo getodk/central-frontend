@@ -53,7 +53,8 @@ except according to the terms contained in the LICENSE file.
           {{ $t(`editCaption.${typeOfChange}`) }}
         </div>
         <div>
-          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :parent-path="entry.path"/>
+          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :parent-path="entry.path"
+            :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
         </div>
       </template>
     </div>
@@ -70,6 +71,18 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'SubmissionDiffItem',
   props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    },
+    instanceId: {
+      type: String,
+      required: true
+    },
     entry: {
       type: Object,
       required: true
@@ -158,10 +171,10 @@ export default {
       if (this.submission === null)
         return '#';
       return apiPaths.submissionAttachment(
-        this.$route.params.projectId,
-        this.$route.params.xmlFormId,
+        this.projectId,
+        this.xmlFormId,
         false,
-        this.submission.__id,
+        this.instanceId,
         value
       );
     }

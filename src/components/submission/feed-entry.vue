@@ -43,7 +43,8 @@ except according to the terms contained in the LICENSE file.
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
     <div v-if="entryDiffs != null">
-      <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"/>
+      <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
+        :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
     </div>
   </div>
 </template>
@@ -73,6 +74,18 @@ export default {
   components: { ActorLink, DateTime, SubmissionDiffItem },
   mixins: [reviewState()],
   props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    },
+    instanceId: {
+      type: String,
+      required: true
+    },
     entry: {
       type: Object,
       required: true

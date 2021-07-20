@@ -38,8 +38,8 @@ except according to the terms contained in the LICENSE file.
         :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
       <loading :state="initiallyLoading"/>
       <template v-if="feed != null">
-        <submission-feed-entry v-for="(entry, index) in feed" :key="index"
-          :entry="entry"/>
+        <submission-feed-entry v-for="(entry, index) in feed" :key="index" :entry="entry"
+          :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
       </template>
     </template>
   </page-section>
