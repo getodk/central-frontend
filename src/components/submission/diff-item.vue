@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="submission-diff-item">
+  <div class="submission-diff-item" :class="nestedClass">
     <div v-if="visiblePath.length > 0" class="full-path">
       <span v-for="(field, index) in visiblePath" :key="index">
         <template v-if="Array.isArray(field)">
@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
             <template v-else>{{ entry.old }}</template>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
-          <span class="icon-arrow-circle-right change-icon"></span>
+          <span class="icon-arrow-circle-right"></span>
           <span v-if="entry.new" class="data-new">
             <template v-if="isBinary">
               <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
@@ -107,6 +107,9 @@ export default {
     fieldName() {
       return last(this.entry.path);
     },
+    nestedClass() {
+      return this.parentPath.length === 0 ? 'outer-item' : 'inner-item';
+    },
     typeOfChange() {
       // Check which value is null (old or new) to determine the
       // type of change or edit.
@@ -170,16 +173,27 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-diff-item {
-  border-bottom: 1px solid #ccc;
 
-  &:last-child { border-bottom: 0; }
+  &.outer-item {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+
+    &:last-child { border-bottom: 0; }
+  }
+
+  &.inner-item {
+    padding: 0px;
+    border-bottom: 1px solid #ddd;
+
+    &:last-child { border-bottom: 0; }
+  }
 
   .full-path, .field-name, .nested-change-type {
-    font-family: $font-family-monospace;
+    font-family: monaco;
   }
 
   .full-path {
-    font-size: 13px;
+    font-size: 12px;
     color: #333;
     margin: 10px 10px -5px 10px;
   }
@@ -190,12 +204,13 @@ export default {
 
   .diff-details {
     display: flex;
-    font-size: 17px;
+    font-size: 15px;
   }
 
   .field-name, .nested-change-type {
     width: 150px;
     margin: 10px;
+    font-size: 14px;
   }
 
   .field-name {
@@ -204,7 +219,7 @@ export default {
   }
 
   .old-to-new { margin: 10px; }
-  .change-icon { color: #888; padding: 5px; }
+  .icon-arrow-circle-right { color: #888; padding: 10px; }
 
   .data-old { color: $color-danger-dark; }
   .data-new { color: $color-success-dark; }
@@ -227,8 +242,8 @@ export default {
   "en": {
     // The description of how a specific field in a form submission changed
     "editCaption": {
-      "added": "(added)",
-      "deleted": "(deleted)",
+      "added": "[added:]",
+      "deleted": "[deleted:]",
     },
     "empty": "empty", // Text showing that a value in a submission edit is empty
   }
