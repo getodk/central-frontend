@@ -225,6 +225,10 @@
         "attachment_update": {
           "string": "Update Attachments",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "submission_export": {
+          "string": "Download Submissions",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -250,15 +254,19 @@
       "user": {
         "assignment_create": {
           "string": "Assign Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         },
         "assignment_delete": {
           "string": "Revoke Role",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
+        },
+        "session_create": {
+          "string": "Log in",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         },
         "delete": {
           "string": "Retire",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         }
       }
     }

@@ -10,26 +10,21 @@ const mountComponent = ({ value = 'nonverbose' } = {}) =>
 describe('AuditFiltersAction', () => {
   describe('options', () => {
     it('renders a category option correctly', () => {
-      const option = mountComponent().get('option');
+      const option = mountComponent().get('option[value="nonverbose"]');
       option.text().should.equal('(All Actions)');
-      option.attributes().value.should.equal('nonverbose');
       option.classes('audit-filters-action-category').should.be.true();
     });
 
     it('renders an action option correctly', () => {
-      const option = mountComponent().findAll('option').at(2);
+      const option = mountComponent().get('option[value="user.create"]');
       option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create');
-      const attributes = option.attributes();
-      attributes.value.should.equal('user.create');
-      should.not.exist(attributes.class);
+      should.not.exist(option.attributes().class);
     });
 
     it('renders option correctly for an action with multiple periods', () => {
-      const option = mountComponent().findAll('option').at(14);
+      const option = mountComponent().get('option[value="form.update.draft.set"]');
       option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create or Update Draft');
-      const attributes = option.attributes();
-      attributes.value.should.equal('form.update.draft.set');
-      should.not.exist(attributes.class);
+      should.not.exist(option.attributes().class);
     });
   });
 

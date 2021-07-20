@@ -92,6 +92,13 @@ describe('AuditTable', () => {
         testTarget(row, 'User 2', '/users/2/edit');
       });
     }
+
+    it('renders a user.session.create audit correctly', () => {
+      testData.extendedAudits.createPast(1, { action: 'user.session.create' });
+      const row = mountComponent();
+      testType(row, ['User', 'Log in']);
+      testTarget(row, 'User 1', '/users/1/edit');
+    });
   });
 
   describe('project target', () => {
@@ -125,6 +132,7 @@ describe('AuditTable', () => {
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
+      ['form.submission.export', ['Form', 'Download Submissions']],
       ['form.delete', ['Form', 'Delete']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
       ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]

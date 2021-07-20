@@ -115,6 +115,7 @@
         "update_publish": "Publish Draft",
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
+        "submission_export": "Download Submissions",
         "delete": "@:audit.action.default.delete"
       },
       // This is shown in the log of actions performed on the server. It is a
@@ -140,12 +141,13 @@
         "process_form_draft": "Process Form Draft"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Web User.
+      // type of action that can be taken on or for a Web User.
       "user": {
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "assignment_create": "Assign Role",
         "assignment_delete": "Revoke Role",
+        "session_create": "Log in",
         "delete": "Retire"
       }
     }
