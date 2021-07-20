@@ -92,6 +92,13 @@ describe('AuditTable', () => {
         testTarget(row, 'User 2', '/users/2/edit');
       });
     }
+
+    it('renders a user.session.create audit correctly', () => {
+      testData.extendedAudits.createPast(1, { action: 'user.session.create' });
+      const row = mountComponent();
+      testType(row, ['User', 'Log in']);
+      testTarget(row, 'User 1', '/users/1/edit');
+    });
   });
 
   describe('project target', () => {
@@ -218,13 +225,6 @@ describe('AuditTable', () => {
         testTarget(row, 'My App User');
       });
     }
-  });
-
-  it('renders a user.session.create audit correctly', () => {
-    testData.extendedAudits.createPast(1, { action: 'user.session.create' });
-    const row = mountComponent();
-    testType(row, ['User', 'Log in']);
-    testTarget(row, '');
   });
 
   it('renders a config.set audit correctly', () => {

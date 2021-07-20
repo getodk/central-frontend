@@ -21,6 +21,8 @@ const defaultActee = (action) => {
   if (action === 'submission.create' || action === 'submission.update' ||
     action === 'submission.update.version')
     return extendedForms.last();
+  if (action === 'user.session.create')
+    return extendedUsers.last();
   return null;
 };
 
