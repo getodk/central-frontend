@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
     <div v-if="entryDiffs != null">
-      <submission-diff-container :diffs="entryDiffs"/>
+      <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"/>
     </div>
   </div>
 </template>
@@ -51,12 +51,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DOMPurify from 'dompurify';
 import marked from 'marked';
+import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
-import SubmissionDiffContainer from './diff-container.vue';
+import SubmissionDiffItem from './diff-item.vue';
 
 import { requestData } from '../../store/modules/request';
 
@@ -69,7 +70,7 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, DateTime, SubmissionDiffContainer },
+  components: { ActorLink, DateTime, SubmissionDiffItem },
   mixins: [reviewState()],
   props: {
     entry: {
@@ -106,14 +107,21 @@ export default {
     },
     entryDiffs() {
       // Audit feed entries that represent a submission version change
-      //  will have a field called details with an instance ID
-      // that can be used to look up the corresponding diffs.
+      // will have a field called details with an instance ID
+      // that can be used to look up the corresponding diff from
+      // diffs api response.
       const { details } = this.entry;
       if (details == null) return null;
       const { instanceId } = details;
-      return instanceId != null
+      const allDiffs = (instanceId != null)
         ? this.diffs[instanceId]
         : null;
+      if (!allDiffs)
+        return null;
+      // Filters out diffs about instanceID and deprecatedID
+      return allDiffs.filter((entry) =>
+        last(entry.path) !== 'instanceID' &&
+        last(entry.path) !== 'deprecatedID');
     }
   },
   methods: {
