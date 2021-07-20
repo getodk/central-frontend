@@ -42,8 +42,8 @@ except according to the terms contained in the LICENSE file.
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
-    <div v-if="entry.diff != null">
-      <submission-diff-container :diffs="entry.diff"/>
+    <div v-if="entryDiffs != null">
+      <submission-diff-container :diffs="entryDiffs"/>
     </div>
   </div>
 </template>
@@ -57,6 +57,8 @@ import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
 import SubmissionDiffContainer from './diff-container.vue';
+
+import { requestData } from '../../store/modules/request';
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
@@ -76,6 +78,7 @@ export default {
     }
   },
   computed: {
+    ...requestData(['diffs']),
     updateOrEdit() {
       return this.entry.action === 'submission.update' ||
         this.entry.action === 'submission.update.version';
@@ -100,6 +103,17 @@ export default {
         return santized;
       }
       return null;
+    },
+    entryDiffs() {
+      // Audit feed entries that represent a submission version change
+      //  will have a field called details with an instance ID
+      // that can be used to look up the corresponding diffs.
+      const { details } = this.entry;
+      if (details == null) return null;
+      const { instanceId } = details;
+      return instanceId != null
+        ? this.diffs[instanceId]
+        : null;
     }
   },
   methods: {

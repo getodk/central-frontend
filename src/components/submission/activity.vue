@@ -77,9 +77,12 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'submission', 'audits', 'comments', 'diffs']),
+    ...requestData(['project', 'submission', 'audits', 'comments', 'diffs', 'fields']),
     initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['audits', 'comments', 'diffs']);
+      return this.$store.getters.initiallyLoading(['audits', 'comments', 'diffs', 'fields']);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(['audits', 'comments', 'diffs', 'fields']);
     },
     editPath() {
       return apiPaths.editSubmission(
@@ -89,13 +92,7 @@ export default {
       );
     },
     feed() {
-      if (this.audits == null || this.comments == null || this.diffs == null) return null;
-
-      // Joins submission diff info with matching audit log for feed entry
-      this.audits.forEach((element, index, arr) => {
-        if (element && element.details && this.diffs[element.details.instanceId])
-          arr[index].diff = this.diffs[element.details.instanceId]; // eslint-disable-line no-param-reassign
-      });
+      if (!this.dataExists) return null;
 
       return [...this.audits, ...this.comments].sort(
         descend(entry => DateTime.fromISO(entry.loggedAt != null
