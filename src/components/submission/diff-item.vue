@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t(`editCaption.${typeOfChange}`) }}
         </div>
         <div>
-          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :fields="fields" :parent-path="entry.path"/>
+          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :parent-path="entry.path"/>
         </div>
       </template>
     </div>
@@ -62,6 +62,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { last } from 'ramda';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SubmissionDiffItem',
@@ -75,13 +76,10 @@ export default {
       default() {
         return [];
       }
-    },
-    fields: {
-      type: Object,
-      required: false
     }
   },
   computed: {
+    ...mapGetters(['binaryFieldPaths']),
     isAtomicChange() {
       // Check whether the change is of a single field (atomic)
       // or if it is of a whole subtree being added or removed.
@@ -121,7 +119,7 @@ export default {
       const fullPath = this.parentPath.concat(this.entry.path);
       const fullPathStr = fullPath.map((field) => (Array.isArray(field) ? field[0] : field)).join('/');
       const basicPath = `/${fullPathStr}`;
-      if (this.fields[basicPath])
+      if (this.binaryFieldPaths.has(basicPath))
         return true;
       return false;
     }

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="submission-diff-container">
-    <submission-diff-item v-for="(diff, index) in visibleDiffs" :key="index" :entry="diff" :fields="binaryFields"/>
+    <submission-diff-item v-for="(diff, index) in visibleDiffs" :key="index" :entry="diff"/>
   </div>
 </template>
 
@@ -39,11 +39,6 @@ export default {
       return this.diffs.filter((entry) =>
         last(entry.path) !== 'instanceID' &&
         last(entry.path) !== 'deprecatedID');
-    },
-    binaryFields() {
-      // Form fields transformed into an object for easily checking
-      // if a field is a downloadable media file.
-      return this.fields.filter((field) => (field.binary)).reduce((acc, cur) => ({ ...acc, [cur.path]: cur.binary }), {});
     }
   }
 };
