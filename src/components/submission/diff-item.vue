@@ -64,6 +64,9 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 import { mapGetters } from 'vuex';
 
+import { apiPaths } from '../../util/request';
+import { requestData } from '../../store/modules/request';
+
 export default {
   name: 'SubmissionDiffItem',
   props: {
@@ -79,6 +82,7 @@ export default {
     }
   },
   computed: {
+    ...requestData(['submission']),
     ...mapGetters(['binaryFieldPaths']),
     isAtomicChange() {
       // Check whether the change is of a single field (atomic)
@@ -148,7 +152,15 @@ export default {
       return changes;
     },
     binaryHref(value) {
-      return `/v1${this.$route.fullPath}/attachments/${value}`;
+      if (this.submission === null)
+        return '#';
+      return apiPaths.submissionAttachment(
+        this.$route.params.projectId,
+        this.$route.params.xmlFormId,
+        false,
+        this.submission.__id,
+        value
+      );
     }
   }
 };
