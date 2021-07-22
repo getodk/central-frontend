@@ -168,8 +168,6 @@ export default {
       return changes;
     },
     binaryHref(value) {
-      if (this.submission === null)
-        return '#';
       return apiPaths.submissionAttachment(
         this.projectId,
         this.xmlFormId,
