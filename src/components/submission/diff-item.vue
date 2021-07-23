@@ -33,17 +33,17 @@ except according to the terms contained in the LICENSE file.
         <div class="old-to-new">
           <span v-if="entry.old" class="data-old">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
+              <a :href="binaryHref(entry.old)" :title="entry.old">{{ formatData(entry.old) }}</a>
             </template>
-            <template v-else>{{ entry.old }}</template>
+            <span v-else :title="entry.old">{{ formatData(entry.old) }}</span>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right"></span>
           <span v-if="entry.new" class="data-new">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
+              <a :href="binaryHref(entry.new)" :title="entry.new">{{ formatData(entry.new) }}</a>
             </template>
-            <template v-else>{{ entry.new }}</template>
+            <span v-else :title="entry.new">{{ formatData(entry.new) }}</span>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
         </div>
@@ -175,6 +175,10 @@ export default {
         this.instanceId,
         value
       );
+    },
+    formatData(content) {
+      const length = 240;
+      return content.length > length ? content.slice(0, length).concat('...') : content;
     }
   }
 };
@@ -222,6 +226,7 @@ export default {
     width: 150px;
     margin: 10px;
     font-size: 14px;
+    flex-shrink: 0;
   }
 
   .field-name {
