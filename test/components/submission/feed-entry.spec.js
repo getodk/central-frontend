@@ -195,4 +195,54 @@ describe('SubmissionFeedEntry', () => {
       outerHTML.should.equal('<div class="body"><p><b>foo</b></p>\n</div>');
     });
   });
+
+  describe('diffs', () => {
+    it('shows diffs joined with a submission.update audit event', async () => {
+      // This form with fields is needed to set fields in the store
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'a',
+        fields: [testData.fields.string('/name'), testData.fields.string('/age')]
+      });
+
+      // Diffs attach to audits with the same details.instanceId
+      testData.extendedAudits.createPast(1, {
+        action: 'submission.update',
+        details: { instanceId: '5678' }
+      });
+
+      // Mount the component with diff-specific data
+      const component = await mount(SubmissionFeedEntry, {
+        propsData: {
+          projectId: '1',
+          xmlFormId: testData.extendedForms.last().xmlFormId,
+          instanceId: '1234',
+          entry: testData.extendedAudits.size !== 0
+            ? new Audit(testData.extendedAudits.last())
+            : testData.extendedComments.last()
+        },
+        requestData: {
+          diffs: {
+            5678: [
+              {
+                new: 'Benny',
+                old: 'Berry',
+                path: ['name']
+              },
+              {
+                new: '17',
+                old: '15',
+                path: ['age']
+              }
+            ]
+          },
+          fields: testData.extendedForms.last()._fields
+        },
+        stubs: { RouterLink: RouterLinkStub },
+        mocks: { $route: '/projects/1/submissions/s' }
+      });
+
+      // Two SubmissionDiffItem components should be present
+      component.findAll('.submission-diff-item.outer-item').length.should.equal(2);
+    });
+  });
 });
