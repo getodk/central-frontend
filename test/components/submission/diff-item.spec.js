@@ -100,7 +100,7 @@ describe('SubmissionDiffItem', () => {
     const component = mountComponent(diff);
     component.get('.full-path').text().should.equal('children › child › toy');
     component.find('.submission-diff-item.outer-item > .field-name').exists().should.be.false();
-    component.get('.nested-change-type').text().should.equal('[added:]');
+    component.get('.nested-change-type').text().should.equal('(added)');
     component.get('.nested-change-type').classes('added').should.be.true();
     component.findAll('.submission-diff-item.inner-item').length.should.equal(3);
   });

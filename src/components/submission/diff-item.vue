@@ -199,8 +199,8 @@ export default {
     &:last-child { border-bottom: 0; }
   }
 
-  .full-path, .field-name, .nested-change-type {
-    font-family: monaco;
+  .full-path, .field-name {
+    font-family: $font-family-monospace;
   }
 
   .full-path {
@@ -253,8 +253,8 @@ export default {
   "en": {
     // The description of how a specific field in a form submission changed
     "editCaption": {
-      "added": "[added:]",
-      "deleted": "[deleted:]",
+      "added": "(added)",
+      "deleted": "(deleted)",
     },
     "empty": "empty", // Text showing that a value in a submission edit is empty
   }
