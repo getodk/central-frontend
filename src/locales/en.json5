@@ -147,7 +147,7 @@
         "update": "@:audit.action.default.update",
         "assignment_create": "Assign Role",
         "assignment_delete": "Revoke Role",
-        "session_create": "Log in",
+        "session_create": "@:action.logIn",
         "delete": "Retire"
       }
     }
