@@ -102,9 +102,9 @@ export default {
       // or if it is of a whole subtree being added or removed.
       // If one side is null (addition or deletion) and the remaining
       // side is an object, then it is NOT an atomic change.
-      if (this.entry.old === null && typeof (this.entry.new) === 'object')
+      if (this.entry.old == null && typeof (this.entry.new) === 'object')
         return false;
-      if (this.entry.new === null && typeof (this.entry.old) === 'object')
+      if (this.entry.new == null && typeof (this.entry.old) === 'object')
         return false;
       return true;
     },
@@ -128,7 +128,7 @@ export default {
       // type of change or edit.
       // This is only used for non-atomic (nested) changes so
       // it will always be one or the other.
-      return (this.entry.old === null ? 'added' : 'deleted');
+      return (this.entry.old == null ? 'added' : 'deleted');
     },
     nestedDiffs() {
       return this.flattenDiff(this.entry.new || this.entry.old, this.typeOfChange);
