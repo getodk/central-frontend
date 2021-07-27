@@ -31,19 +31,19 @@ except according to the terms contained in the LICENSE file.
           {{ fieldName }}
         </div>
         <div class="old-to-new">
-          <span v-if="entry.old" class="data-old">
+          <span v-if="entry.old" class="data-old" :title="entry.old">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.old)" :title="entry.old">{{ formatData(entry.old) }}</a>
+              <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
             </template>
-            <span v-else :title="entry.old">{{ formatData(entry.old) }}</span>
+            <template v-else :title="entry.old">{{ entry.old }}</template>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right"></span>
-          <span v-if="entry.new" class="data-new">
+          <span v-if="entry.new" class="data-new" :title="entry.new">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.new)" :title="entry.new">{{ formatData(entry.new) }}</a>
+              <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
             </template>
-            <span v-else :title="entry.new">{{ formatData(entry.new) }}</span>
+            <template v-else :title="entry.new">{{ entry.new }}</template>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
         </div>
@@ -175,10 +175,6 @@ export default {
         this.instanceId,
         value
       );
-    },
-    formatData(content) {
-      const length = 240;
-      return content.length > length ? content.slice(0, length).concat('...') : content;
     }
   }
 };
@@ -239,6 +235,17 @@ export default {
 
   .data-old { color: $color-danger-dark; }
   .data-new { color: $color-success-dark; }
+
+
+  .old-to-new {
+    display: flex;
+    align-items: center;
+  }
+
+  .data-old, .data-new {
+    @include text-overflow-ellipsis;
+    width: 250px;
+  }
 
   .deleted { color: $color-danger-dark; }
   .added { color: $color-success-dark; }
