@@ -268,7 +268,8 @@ export default {
       "added": "(added)",
       "deleted": "(deleted)",
     },
-    "empty": "empty", // Text showing that a value in a submission edit is empty
+    // Text showing that a value in a submission edit is empty
+    "empty": "empty"
   }
 }
 </i18n>

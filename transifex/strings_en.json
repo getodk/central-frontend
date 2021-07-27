@@ -3031,7 +3031,8 @@
         }
       },
       "empty": {
-        "string": "empty"
+        "string": "empty",
+        "developer_comment": "Text showing that a value in a submission edit is empty"
       }
     },
     "SubmissionDownloadDropdown": {
