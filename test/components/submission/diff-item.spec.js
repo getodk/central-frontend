@@ -64,14 +64,13 @@ describe('SubmissionDiffItem', () => {
     component.get('.field-name').text().should.equal('name');
   });
 
-  it('shows field names as tooltips and truncates long fields', () => {
+  it('shows field names as tooltips', () => {
     const diff = {
       new: 'b',
       old: 'a',
       path: ['this_is_a_really_long_field_that_wont_fit']
     };
     const component = mountComponent(diff);
-    // TODO: how to test CSS truncation of long field name?
     component.get('.field-name').attributes('title').should.equal('this_is_a_really_long_field_that_wont_fit');
   });
 

@@ -4,8 +4,6 @@ import SubmissionActivity from '../../../src/components/submission/activity.vue'
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
-import Field from '../../../src/presenters/field';
-
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -16,10 +14,10 @@ const mountComponent = () => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const submission = testData.submissionOData();
-  const fields = form._fields.map(field => new Field(field));
+  const fields = form._fields;
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
-  const diffs = Object.create(null); // TODO: make this real extended data
+  const diffs = {};
   return mount(SubmissionActivity, {
     propsData: {
       projectId: '1',
@@ -115,7 +113,7 @@ describe('SubmissionActivity', () => {
           })
           .respondWithData(() => testData.extendedAudits.sorted())
           .respondWithData(() => testData.extendedComments.sorted())
-          .respondWithData(() => Object.create(null)); // TODO: replace with extendedDiffs
+          .respondWithData(() => ({}));
       };
 
       it('sends the correct requests for activity data', () =>

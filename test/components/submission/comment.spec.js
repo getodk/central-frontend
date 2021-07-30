@@ -183,7 +183,7 @@ describe('SubmissionComment', () => {
           testData.standardComments.createNew({ body: 'foo' }))
         .respondWithData(() => testData.extendedAudits.sorted())
         .respondWithData(() => testData.extendedComments.sorted())
-        .respondWithData(() => Object.create(null)); // empty diff data. TODO: testData.extendedDiffs
+        .respondWithData(() => ({}));
     };
 
     it('sends the correct requests for activity data', () =>

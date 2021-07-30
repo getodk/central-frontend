@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
             <template v-if="isBinary">
               <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
             </template>
-            <template v-else :title="entry.old">{{ entry.old }}</template>
+            <template v-else>{{ entry.old }}</template>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right"></span>
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
             <template v-if="isBinary">
               <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
             </template>
-            <template v-else :title="entry.new">{{ entry.new }}</template>
+            <template v-else>{{ entry.new }}</template>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
         </div>
@@ -66,7 +66,6 @@ import { last } from 'ramda';
 import { mapGetters } from 'vuex';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionDiffItem',
@@ -95,7 +94,6 @@ export default {
     }
   },
   computed: {
-    ...requestData(['submission']),
     ...mapGetters(['binaryFieldPaths']),
     isAtomicChange() {
       // Check whether the change is of a single field (atomic)
@@ -216,6 +214,7 @@ export default {
   .diff-details {
     display: flex;
     font-size: 15px;
+    align-items: center;
   }
 
   .field-name, .nested-change-type {
@@ -240,11 +239,12 @@ export default {
   .old-to-new {
     display: flex;
     align-items: center;
+    width: 100%;
   }
 
   .data-old, .data-new {
     @include text-overflow-ellipsis;
-    width: 250px;
+    max-width: 250px;
   }
 
   .deleted { color: $color-danger-dark; }
