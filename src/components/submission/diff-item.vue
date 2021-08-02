@@ -223,6 +223,7 @@ export default {
   .diff-details {
     display: flex;
     font-size: 15px;
+    align-items: baseline;
   }
 
   .field-name, .nested-change-type {
