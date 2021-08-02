@@ -44,7 +44,8 @@ except according to the terms contained in the LICENSE file.
     <div v-if="comment != null" class="body" v-html="comment"></div>
     <div v-if="entryDiffs != null">
       <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
-        :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
+        :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
+        :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
     </div>
   </div>
 </template>
@@ -118,7 +119,7 @@ export default {
       }
       return null;
     },
-    entryDiffs() {
+    allDiffs() {
       // Audit feed entries that represent a submission version change
       // will have a field called details with an instance ID
       // that can be used to look up the corresponding diff from
@@ -129,12 +130,27 @@ export default {
       const allDiffs = (instanceId != null)
         ? this.diffs[instanceId]
         : null;
+      return allDiffs;
+    },
+    entryDiffs() {
+      const { allDiffs } = this;
       if (!allDiffs)
         return null;
       // Filters out diffs about instanceID and deprecatedID
       return allDiffs.filter((entry) =>
         last(entry.path) !== 'instanceID' &&
         last(entry.path) !== 'deprecatedID');
+    },
+    newVersionId() {
+      const { details } = this.entry;
+      if (details == null) return null;
+      const { instanceId } = details;
+      return instanceId;
+    },
+    oldVersionId() {
+      const deprecatedIdDiff = this.allDiffs.filter((entry) => last(entry.path) === 'deprecatedID')[0];
+      if (deprecatedIdDiff == null) return null;
+      return deprecatedIdDiff.new;
     }
   },
   methods: {

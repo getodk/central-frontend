@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <div class="old-to-new">
           <span v-if="entry.old" class="data-old" :title="entry.old">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.old)">{{ entry.old }}</a>
+              <a :href="binaryHref(entry.old, true)">{{ entry.old }}</a>
             </template>
             <template v-else>{{ entry.old }}</template>
           </span>
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-arrow-circle-right"></span>
           <span v-if="entry.new" class="data-new" :title="entry.new">
             <template v-if="isBinary">
-              <a :href="binaryHref(entry.new)">{{ entry.new }}</a>
+              <a :href="binaryHref(entry.new, false)">{{ entry.new }}</a>
             </template>
             <template v-else>{{ entry.new }}</template>
           </span>
@@ -54,7 +54,8 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div>
           <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :parent-path="entry.path"
-            :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
+            :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
+            :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
         </div>
       </template>
     </div>
@@ -79,6 +80,14 @@ export default {
       required: true
     },
     instanceId: {
+      type: String,
+      required: true
+    },
+    oldVersionId: {
+      type: String,
+      required: true
+    },
+    newVersionId: {
       type: String,
       required: true
     },
@@ -165,12 +174,12 @@ export default {
       }
       return changes;
     },
-    binaryHref(value) {
-      return apiPaths.submissionAttachment(
+    binaryHref(value, useOldVersion) {
+      return apiPaths.submissionVersionAttachment(
         this.projectId,
         this.xmlFormId,
-        false,
         this.instanceId,
+        useOldVersion ? this.oldVersionId : this.newVersionId,
         value
       );
     }
@@ -214,7 +223,6 @@ export default {
   .diff-details {
     display: flex;
     font-size: 15px;
-    align-items: center;
   }
 
   .field-name, .nested-change-type {

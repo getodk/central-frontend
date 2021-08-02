@@ -9,7 +9,9 @@ const mountComponent = (entry) => mount(SubmissionDiffItem, {
     entry,
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
-    instanceId: 'abcd'
+    instanceId: 'abcd',
+    oldVersionId: 'v1',
+    newVersionId: 'v2'
   },
   requestData: {
     fields: testData.extendedForms.last()._fields
@@ -139,11 +141,13 @@ describe('SubmissionDiffItem', () => {
   it('shows media download links for binary files', () => {
     const diff = {
       new: 'new_file.jpg',
-      old: null,
+      old: 'old_file.jpg',
       path: ['birds', ['bird', 3], 'photo'] // (binary field with this path defined in beforeEach)
     };
     const component = mountComponent(diff);
+    component.get('.data-old').text().should.equal('old_file.jpg');
+    component.get('.data-old > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/abcd/versions/v1/attachments/old_file.jpg');
     component.get('.data-new').text().should.equal('new_file.jpg');
-    component.get('.data-new > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/abcd/attachments/new_file.jpg');
+    component.get('.data-new > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/abcd/versions/v2/attachments/new_file.jpg');
   });
 });
