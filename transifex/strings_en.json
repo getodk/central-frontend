@@ -260,10 +260,6 @@
           "string": "Revoke Role",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         },
-        "session_create": {
-          "string": "Log in",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
-        },
         "delete": {
           "string": "Retire",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
