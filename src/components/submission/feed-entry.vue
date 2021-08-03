@@ -148,7 +148,7 @@ export default {
       return instanceId;
     },
     oldVersionId() {
-      const deprecatedIdDiff = this.allDiffs.filter((entry) => last(entry.path) === 'deprecatedID')[0];
+      const deprecatedIdDiff = this.allDiffs.find((entry) => last(entry.path) === 'deprecatedID');
       if (deprecatedIdDiff == null) return null;
       return deprecatedIdDiff.new;
     }

@@ -257,6 +257,11 @@ describe('util/request', () => {
       });
     });
 
+    it('submissionVersionAttachment', () => {
+      const path = apiPaths.submissionVersionAttachment(1, 'a b', 'c d', 'e f', 'g h');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/versions/e%20f/attachments/g%20h');
+    });
+
     it('submissionAudits', () => {
       const path = apiPaths.submissionAudits(1, 'a b', 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');

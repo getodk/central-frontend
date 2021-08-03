@@ -85,11 +85,11 @@ export default {
     },
     oldVersionId: {
       type: String,
-      required: true
+      required: false // only used for making binary file link
     },
     newVersionId: {
       type: String,
-      required: true
+      required: false // only used for making binary file link
     },
     entry: {
       type: Object,
