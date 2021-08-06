@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="valueMarkdown"></div>
     </div>
-    <div v-show="value !== '' || showFooter" id="submission-comment-actions">
+    <div v-show="value !== '' || showFooter || parentAwaitingResponse" id="submission-comment-actions">
       <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <span class="push"></span>
       <button class="btn md-preview-btn" @click.prevent="toggleViewMode">
@@ -58,6 +58,9 @@ export default {
     defaultText: {
       type: String,
       default: ''
+    },
+    parentAwaitingResponse: {
+      type: Boolean
     }
   },
   data() {

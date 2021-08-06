@@ -15,7 +15,8 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-pencil"></span>{{ $t('editWithoutComment') }}
     </div>
     <markdown-textarea v-model="body" :default-text="$t('field.comment')"
-      :show-footer="editWithoutComment">
+      :show-footer="editWithoutComment"
+      :parent-awaiting-response="awaitingResponse">
       <button type="submit" class="btn btn-primary"
         :disabled="awaitingResponse">
         {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
