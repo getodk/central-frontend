@@ -20,9 +20,9 @@ except according to the terms contained in the LICENSE file.
     <div v-if="value !== '' && previewMode" id="preview-container">
       <p class="heading">Preview</p>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <div v-html="valueMarkdown"></div>
+      <markdown-view :raw-markdown="value"/>
     </div>
-    <div v-show="value !== '' || showFooter || parentAwaitingResponse" id="submission-comment-actions">
+    <div v-show="value !== '' || showFooter " id="submission-comment-actions">
       <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <span class="push"></span>
       <button class="btn md-preview-btn" @click.prevent="toggleViewMode">
@@ -37,6 +37,9 @@ except according to the terms contained in the LICENSE file.
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 
+import MarkdownView from '../markdown-view.vue';
+
+
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
     node.setAttribute('target', '_blank');
@@ -46,6 +49,7 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 
 export default {
   name: 'MarkdownTextarea',
+  components: { MarkdownView },
   props: {
     value: {
       type: String,
@@ -58,9 +62,6 @@ export default {
     defaultText: {
       type: String,
       default: ''
-    },
-    parentAwaitingResponse: {
-      type: Boolean
     }
   },
   data() {

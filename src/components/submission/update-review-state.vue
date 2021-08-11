@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="col-xs-8">
             <markdown-textarea v-model="notes" :default-text="$t('field.notes')"
-              :parent-awaiting-response="awaitingResponse"/>
+              :show-footer="awaitingResponse"/>
           </div>
         </div>
         <div class="modal-actions">
