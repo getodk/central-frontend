@@ -10,22 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="markdown-textarea" :class="activeBorderClass">
+  <div class="markdown-textarea" :class="activeBorderClass">
     <div class="form-group">
       <textarea :value="value" class="form-control"
         :placeholder="defaultText" :aria-label="defaultText"
         required rows="2" @input="update">
       </textarea>
     </div>
-    <div v-if="value !== '' && previewMode" id="preview-container">
+    <div v-if="value !== '' && previewMode" class="preview-container">
       <p class="heading">{{ $t('preview') }}</p>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <markdown-view :raw-markdown="value"/>
     </div>
-    <div v-show="value !== '' || showFooter " id="submission-comment-actions">
+    <div v-show="value !== '' || showFooter " class="markdown-textarea-actions">
       <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <span class="push"></span>
-      <button class="btn md-preview-btn" @click.prevent="toggleViewMode">
+      <button class="btn md-preview-btn" type="button" @click="toggleViewMode">
         {{ previewButtonText }}
       </button>
       <slot></slot>
@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 
-import MarkdownView from '../markdown-view.vue';
+import MarkdownView from './view.vue';
 
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
@@ -105,7 +105,7 @@ export default {
 
 <style lang="scss">
 
-#markdown-textarea {
+.markdown-textarea {
   &.active-border {
     border: 1px solid #31708f;
   }
@@ -122,7 +122,7 @@ export default {
     resize: vertical;
   }
 
-  #preview-container {
+  .preview-container {
     padding: 10px;
 
     .heading {
@@ -136,13 +136,13 @@ export default {
     color: white;
   }
 
-  #submission-comment-actions {
+  .markdown-textarea-actions {
     display: flex;
     align-content: stretch;
     align-items: center;
   }
 
-  #submission-comment-actions > .btn {
+  .markdown-textarea-actions > .btn {
     margin: 3px;
   }
 

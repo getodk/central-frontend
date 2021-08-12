@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import MarkdownTextarea from './markdown-textarea.vue';
+import MarkdownTextarea from '../markdown/textarea.vue';
 
 import request from '../../mixins/request';
 import reviewState from '../../mixins/review-state';

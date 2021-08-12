@@ -2102,6 +2102,26 @@
         "string": "Loading…"
       }
     },
+    "MarkdownTextarea": {
+      "markdownSupported": {
+        "string": "Markdown supported",
+        "developer_comment": "This is a link to an external website with Markdown style guidelines"
+      },
+      "preview": {
+        "string": "Preview",
+        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+      },
+      "toggle": {
+        "showPreview": {
+          "string": "Preview",
+          "developer_comment": "This text is shown on a button that the user clicks to change if the Markdown preview is shown or not"
+        },
+        "hidePreview": {
+          "string": "Hide Preview",
+          "developer_comment": "This text is shown on a button that the user clicks to change if the Markdown preview is shown or not"
+        }
+      }
+    },
     "Navbar": {
       "action": {
         "toggle": {
@@ -3241,26 +3261,6 @@
       },
       "noMatching": {
         "string": "There are no matching Submissions."
-      }
-    },
-    "SubmissionMarkdownTextarea": {
-      "markdownSupported": {
-        "string": "Markdown supported",
-        "developer_comment": "This is a link to an external website with Markdown style guidelines"
-      },
-      "preview": {
-        "string": "Preview",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
-      },
-      "toggle": {
-        "showPreview": {
-          "string": "Preview",
-          "developer_comment": "This text is shown on a button that the user clicks to change if the Markdown preview is shown or not"
-        },
-        "hidePreview": {
-          "string": "Hide Preview",
-          "developer_comment": "This text is shown on a button that the user clicks to change if the Markdown preview is shown or not"
-        }
       }
     },
     "SubmissionShow": {

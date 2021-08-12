@@ -54,7 +54,7 @@ import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
-import MarkdownView from '../markdown-view.vue';
+import MarkdownView from '../markdown/view.vue';
 
 import reviewState from '../../mixins/review-state';
 import SubmissionDiffItem from './diff-item.vue';

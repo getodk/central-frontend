@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import MarkdownTextarea from './markdown-textarea.vue';
+import MarkdownTextarea from '../markdown/textarea.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
