@@ -1,4 +1,5 @@
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
+import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
 
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
@@ -77,11 +78,11 @@ describe('SubmissionUpdateReviewState', () => {
     const modal = mountComponent();
     await modal.setProps({ state: true });
     await modal.get('input[value="rejected"]').setChecked();
-    await modal.get('textarea').setValue('Some notes');
+    await modal.setData({ notes: 'Some notes' });
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.get('input[value="hasIssues"]').element.checked.should.be.true();
-    modal.get('textarea').element.value.should.equal('');
+    modal.getComponent(MarkdownTextarea).props().value.should.equal('');
   });
 
   describe('request', () => {
@@ -113,7 +114,7 @@ describe('SubmissionUpdateReviewState', () => {
       return mockHttpForComponent()
         .request(async (modal) => {
           await modal.setProps({ state: true });
-          modal.get('textarea').setValue('Some\nnotes');
+          await modal.setData({ notes: 'Some\nnotes' });
           modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { headers }) => {
@@ -133,5 +134,22 @@ describe('SubmissionUpdateReviewState', () => {
         disabled: ['.btn-link'],
         modal: true
       });
+  });
+
+  describe('markdown preview comment box', () => {
+    it('shows the markdown footer during the request', async () => {
+      testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
+      return mockHttpForComponent()
+        .request(async (modal) => {
+          await modal.setProps({ state: true });
+          await modal.setData({ notes: 'some notes' });
+          modal.get('form').trigger('submit');
+        })
+        .beforeAnyResponse(async (modal) => {
+          await modal.setData({ notes: '' }); // Linked to child's 'value' prop and textarea
+          modal.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+        })
+        .respondWithProblem();
+    });
   });
 });
