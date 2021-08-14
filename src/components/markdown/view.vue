@@ -18,9 +18,6 @@ except according to the terms contained in the LICENSE file.
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 
-// TODO: move tests from feed-entry about markdown rendering to a test for this component
-// test that props are getting set correctly on this component from the other things that use it (feed-entry)
-
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
     node.setAttribute('target', '_blank');

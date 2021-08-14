@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <textarea :value="value" class="form-control"
         :placeholder="defaultText" :aria-label="defaultText"
-        required rows="2" @input="update">
+        required rows="2" @input="$emit('input', $event.target.value);">
       </textarea>
     </div>
     <div v-if="value !== '' && previewMode" class="preview-container">
@@ -34,18 +34,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
-import marked from 'marked';
-
 import MarkdownView from './view.vue';
-
-
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-  if ('target' in node) {
-    node.setAttribute('target', '_blank');
-    node.setAttribute('rel', 'noreferrer noopener');
-  }
-});
 
 export default {
   name: 'MarkdownTextarea',
@@ -66,7 +55,6 @@ export default {
   },
   data() {
     return {
-      valueMarkdown: '',
       previewMode: false
     };
   },
@@ -81,21 +69,6 @@ export default {
     }
   },
   methods: {
-    update(event) {
-      // Sanitize the same way as feed-entry.vue
-      const rawComment = event.target.value;
-      const md = marked(rawComment, { gfm: true, breaks: true });
-      const santized = DOMPurify.sanitize(md, {
-        FORBID_ATTR: ['style', 'class', 'id', 'data'],
-        ALLOWED_TAGS: ['a', 'b', 'br', 'code', 'em',
-          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-          'hr', 'i', 'img', 'li', 'ol', 'p',
-          'pre', 's', 'small', 'sub', 'sup', 'strong', 'u', 'ul'],
-        ALLOW_DATA_ATTR: false
-      });
-      this.valueMarkdown = santized;
-      this.$emit('input', event.target.value);
-    },
     toggleViewMode() {
       this.previewMode = !this.previewMode;
     }

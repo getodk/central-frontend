@@ -2,6 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 
 import Audit from '../../../src/presenters/audit';
@@ -165,6 +166,13 @@ describe('SubmissionFeedEntry', () => {
     it("shows a comment's body", () => {
       testData.extendedComments.createPast(1, { body: 'Some comment' });
       mountComponent().get('.body').text().should.equal('Some comment');
+    });
+
+    it("shows a comment's body rendered as markdown", () => {
+      testData.extendedComments.createPast(1, { body: 'this is **bold**' });
+      const preview = mountComponent().getComponent(MarkdownView);
+      preview.props().rawMarkdown.should.equal('this is **bold**');
+      preview.get('div > p').html().should.equal('<p>this is <strong>bold</strong></p>');
     });
   });
 
