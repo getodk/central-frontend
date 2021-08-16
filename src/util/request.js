@@ -112,8 +112,16 @@ export const apiPaths = {
     const encodedName = encodeURIComponent(attachmentName);
     return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
   },
+  submissionVersionAttachment: (projectId, xmlFormId, instanceId, versionId, attachmentName) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    const encodedVersionId = encodeURIComponent(versionId);
+    const encodedName = encodeURIComponent(attachmentName);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}/versions/${encodedVersionId}/attachments/${encodedName}`;
+  },
   submissionAudits: submissionPath('/audits'),
   submissionComments: submissionPath('/comments'),
+  submissionDiffs: submissionPath('/diffs'),
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

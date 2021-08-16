@@ -14,15 +14,17 @@ const mountComponent = () => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const submission = testData.submissionOData();
+  const fields = form._fields;
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
+  const diffs = {};
   return mount(SubmissionActivity, {
     propsData: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
     },
-    requestData: { project, submission, audits, comments },
+    requestData: { project, submission, fields, audits, comments, diffs },
     stubs: { RouterLink: RouterLinkStub },
     mocks: { $route: '/projects/1/submissions/s' }
   });
@@ -45,15 +47,19 @@ describe('SubmissionActivity', () => {
         } else if (index === 1) {
           url.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
         } else if (index === 2) {
+          url.should.equal('/v1/projects/1/forms/a%20b/fields');
+        } else if (index === 3) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits");
           headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 3) {
+        } else if (index === 4) {
           url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments");
           headers['X-Extended-Metadata'].should.equal('true');
+        } else if (index === 5) {
+          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs");
         }
       })
       .afterResponses(() => {
-        count.should.equal(4);
+        count.should.equal(6);
       });
   });
 
@@ -106,7 +112,8 @@ describe('SubmissionActivity', () => {
             return testData.standardSubmissions.last();
           })
           .respondWithData(() => testData.extendedAudits.sorted())
-          .respondWithData(() => testData.extendedComments.sorted());
+          .respondWithData(() => testData.extendedComments.sorted())
+          .respondWithData(() => ({}));
       };
 
       it('sends the correct requests for activity data', () =>
@@ -116,9 +123,11 @@ describe('SubmissionActivity', () => {
           if (index === 1) {
             url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
             headers['X-Extended-Metadata'].should.equal('true');
-          } else {
+          } else if (index === 2) {
             url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
             headers['X-Extended-Metadata'].should.equal('true');
+          } else if (index === 3) {
+            url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/diffs');
           }
         }));
 

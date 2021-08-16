@@ -38,8 +38,8 @@ except according to the terms contained in the LICENSE file.
         :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
       <loading :state="initiallyLoading"/>
       <template v-if="feed != null">
-        <submission-feed-entry v-for="(entry, index) in feed" :key="index"
-          :entry="entry"/>
+        <submission-feed-entry v-for="(entry, index) in feed" :key="index" :entry="entry"
+          :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
       </template>
     </template>
   </page-section>
@@ -77,9 +77,12 @@ export default {
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'submission', 'audits', 'comments']),
+    ...requestData(['project', 'submission', 'audits', 'comments', 'diffs', 'fields']),
     initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['audits', 'comments']);
+      return this.$store.getters.initiallyLoading(['audits', 'comments', 'diffs', 'fields']);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(['audits', 'comments', 'diffs', 'fields']);
     },
     editPath() {
       return apiPaths.editSubmission(
@@ -89,7 +92,8 @@ export default {
       );
     },
     feed() {
-      if (this.audits == null || this.comments == null) return null;
+      if (!this.dataExists) return null;
+
       return [...this.audits, ...this.comments].sort(
         descend(entry => DateTime.fromISO(entry.loggedAt != null
           ? entry.loggedAt

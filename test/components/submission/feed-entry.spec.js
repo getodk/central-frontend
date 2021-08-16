@@ -10,11 +10,19 @@ import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(SubmissionFeedEntry, {
+const mountComponent = (options = {}) => mount(SubmissionFeedEntry, {
   propsData: {
+    projectId: '1',
+    xmlFormId: testData.extendedForms.last().xmlFormId,
+    instanceId: 's',
     entry: testData.extendedAudits.size !== 0
       ? new Audit(testData.extendedAudits.last())
       : testData.extendedComments.last()
+  },
+  requestData: {
+    diffs: {},
+    fields: testData.extendedForms.last()._fields,
+    ...options.requestData
   },
   stubs: { RouterLink: RouterLinkStub },
   mocks: { $route: '/projects/1/submissions/s' }
@@ -193,6 +201,105 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedComments.createPast(1, { body: '<b style="color: red;" class="c" data-foo="bar">foo</b>' });
       const { outerHTML } = mountComponent().get('.body').element;
       outerHTML.should.equal('<div class="body"><p><b>foo</b></p>\n</div>');
+    });
+  });
+
+  describe('diffs', () => {
+    beforeEach(() => {
+      // This form with fields is needed to set fields in the store
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'a',
+        fields: [testData.fields.string('/name'), testData.fields.string('/age'), testData.fields.binary('/photo')]
+      });
+
+      // Diffs attach to audits with the same details.instanceId
+      testData.extendedAudits.createPast(1, {
+        action: 'submission.update',
+        details: { instanceId: '1234' }
+      });
+    });
+
+    it('shows diffs joined with a submission.update audit event', () => {
+      const component = mountComponent({
+        requestData: {
+          diffs: {
+            1234: [
+              {
+                new: 'Benny',
+                old: 'Berry',
+                path: ['name']
+              },
+              {
+                new: '17',
+                old: '15',
+                path: ['age']
+              }
+            ]
+          }
+        }
+      });
+
+      // Two SubmissionDiffItem components should be present
+      component.findAll('.submission-diff-item.outer-item').length.should.equal(2);
+    });
+
+    it('does not show changes to instanceID and deprecatedID', () => {
+      const component = mountComponent({
+        requestData: {
+          diffs: {
+            1234: [
+              {
+                new: 'Benny',
+                old: 'Berry',
+                path: ['name']
+              },
+              {
+                new: '1234',
+                old: '1111',
+                path: ['meta', 'instanceID']
+              },
+              {
+                new: '1111',
+                path: ['meta', 'deprecatedID']
+              }
+            ]
+          }
+        }
+      });
+
+      const diffItems = component.findAll('.submission-diff-item.outer-item');
+      diffItems.length.should.equal(1);
+      diffItems.at(0).get('.data-new').text().should.equal('Benny');
+    });
+
+    it('uses deprecatedID to create media download links', () => {
+      // The deprecatedID is used to build the media download link to an
+      // attachment in the old version of the submission.
+      // The audit.details.instanceID (key into diffs dict) is used to build
+      // the link for the new version of the submission.
+      const component = mountComponent({
+        requestData: {
+          diffs: {
+            1234: [
+              {
+                new: 'new_file.jpg',
+                old: 'old_file.jpg',
+                path: ['photo']
+              },
+              {
+                new: '1111',
+                path: ['meta', 'deprecatedID']
+              }
+            ]
+          }
+        }
+      });
+
+      const diffItem = component.findAll('.submission-diff-item.outer-item').at(0);
+      diffItem.get('.data-old').text().should.equal('old_file.jpg');
+      diffItem.get('.data-old > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/s/versions/1111/attachments/old_file.jpg');
+      diffItem.get('.data-new').text().should.equal('new_file.jpg');
+      diffItem.get('.data-new > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/s/versions/1234/attachments/new_file.jpg');
     });
   });
 });

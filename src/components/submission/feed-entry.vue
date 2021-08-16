@@ -42,17 +42,26 @@ except according to the terms contained in the LICENSE file.
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="comment != null" class="body" v-html="comment"></div>
+    <div v-if="entryDiffs != null">
+      <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
+        :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
+        :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
+    </div>
   </div>
 </template>
 
 <script>
 import DOMPurify from 'dompurify';
 import marked from 'marked';
+import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 
 import reviewState from '../../mixins/review-state';
+import SubmissionDiffItem from './diff-item.vue';
+
+import { requestData } from '../../store/modules/request';
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
@@ -63,15 +72,28 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, DateTime },
+  components: { ActorLink, DateTime, SubmissionDiffItem },
   mixins: [reviewState()],
   props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    },
+    instanceId: {
+      type: String,
+      required: true
+    },
     entry: {
       type: Object,
       required: true
     }
   },
   computed: {
+    ...requestData(['diffs']),
     updateOrEdit() {
       return this.entry.action === 'submission.update' ||
         this.entry.action === 'submission.update.version';
@@ -96,6 +118,39 @@ export default {
         return santized;
       }
       return null;
+    },
+    allDiffs() {
+      // Audit feed entries that represent a submission version change
+      // will have a field called details with an instance ID
+      // that can be used to look up the corresponding diff from
+      // diffs api response.
+      const { details } = this.entry;
+      if (details == null) return null;
+      const { instanceId } = details;
+      const allDiffs = (instanceId != null)
+        ? this.diffs[instanceId]
+        : null;
+      return allDiffs;
+    },
+    entryDiffs() {
+      const { allDiffs } = this;
+      if (!allDiffs)
+        return null;
+      // Filters out diffs about instanceID and deprecatedID
+      return allDiffs.filter((entry) =>
+        last(entry.path) !== 'instanceID' &&
+        last(entry.path) !== 'deprecatedID');
+    },
+    newVersionId() {
+      const { details } = this.entry;
+      if (details == null) return null;
+      const { instanceId } = details;
+      return instanceId;
+    },
+    oldVersionId() {
+      const deprecatedIdDiff = this.allDiffs.find((entry) => last(entry.path) === 'deprecatedID');
+      if (deprecatedIdDiff == null) return null;
+      return deprecatedIdDiff.new;
     }
   },
   methods: {

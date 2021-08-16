@@ -53,6 +53,7 @@ export const keys = [
   'submission',
   'audits',
   'comments',
+  'diffs',
   'publicLinks',
   'fieldKeys',
 
@@ -147,6 +148,13 @@ const dataGetters = {
       }
     }
     return selectable;
+  },
+  binaryFieldPaths: ({ data: { fields } }) => {
+    if (fields == null) return null;
+    return fields.reduce(
+      (acc, cur) => (cur.binary ? acc.add(cur.path) : acc),
+      new Set()
+    );
   },
   missingAttachmentCount: ({ data: { attachments } }) => {
     if (attachments == null) return null;

@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?6bbdpm') format('truetype'),
-    url('/fonts/icomoon.woff?6bbdpm') format('woff'),
-    url('/fonts/icomoon.svg?6bbdpm#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?4gxpar') format('truetype'),
+    url('/fonts/icomoon.woff?4gxpar') format('woff'),
+    url('/fonts/icomoon.svg?4gxpar#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -179,4 +179,7 @@
 }
 .icon-comment:before {
   content: "\f075";
+}
+.icon-arrow-circle-right:before {
+  content: "\f0a9";
 }

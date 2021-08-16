@@ -182,7 +182,8 @@ describe('SubmissionComment', () => {
         .respondWithData(() =>
           testData.standardComments.createNew({ body: 'foo' }))
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => testData.extendedComments.sorted());
+        .respondWithData(() => testData.extendedComments.sorted())
+        .respondWithData(() => ({}));
     };
 
     it('sends the correct requests for activity data', () =>
@@ -192,9 +193,11 @@ describe('SubmissionComment', () => {
         if (index === 1) {
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
           headers['X-Extended-Metadata'].should.equal('true');
-        } else {
+        } else if (index === 2) {
           url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
           headers['X-Extended-Metadata'].should.equal('true');
+        } else if (index === 3) {
+          url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/diffs');
         }
       }));
 
