@@ -142,8 +142,9 @@ export default {
     },
     isBinary() {
       // Compares path as array by converting it to /field1/field2 string and checks
-      // if it is for a binary field
-      const fullPath = this.parentPath.concat(this.entry.path);
+      // if it is for a binary field.
+      // Filtering out where field[0] == undefined addresses issue with flattenDiff and repeat groups
+      const fullPath = this.parentPath.concat(this.entry.path.filter((field) => field[0] !== undefined));
       const fullPathStr = fullPath.map((field) => (Array.isArray(field) ? field[0] : field)).join('/');
       const basicPath = `/${fullPathStr}`;
       if (this.binaryFieldPaths.has(basicPath))

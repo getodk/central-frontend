@@ -253,4 +253,22 @@ describe('SubmissionDiffItem', () => {
     component.get('.data-new').text().should.equal('new_file.jpg');
     component.get('.data-new > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/abcd/versions/v2/attachments/new_file.jpg');
   });
+
+  it('shows media download links for binary files in repeat groups', () => {
+    // When a repeat group changes between 0 and N elements (and the old or new diff value
+    // is returned as an array), the flattenDiff algorithm has an issue where the path
+    // can have an undefined in it, e.g. [[undefined, 0], 'photo'] for the following example.
+    // This was affecting the binary file check and the binary link formation.
+    const diff = {
+      new: [
+        {
+          photo: 'new_file.jpg'
+        }
+      ],
+      path: ['birds', 'bird']
+    };
+    const component = mountComponent(diff);
+    component.get('.data-new').text().should.equal('new_file.jpg');
+    component.get('.data-new > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/abcd/versions/v2/attachments/new_file.jpg');
+  });
 });
