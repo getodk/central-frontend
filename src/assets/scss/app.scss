@@ -120,6 +120,11 @@ class. */
 
     + .caret { margin-left: 0; }
   }
+
+  &[disabled], &.disabled, fieldset[disabled] & {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
 }
 
 $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
@@ -134,15 +139,22 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:focus, &:active:focus { outline: none; }
   &:focus { box-shadow: $btn-focus-box-shadow; }
+  &[disabled], &.disabled, fieldset[disabled] & { box-shadow: none; }
 }
 
 .btn-primary {
   background-color: $color-action-background;
-  &[disabled] { background-color: $color-action-background-disabled; }
+
+  &[disabled], fieldset[disabled] & {
+    background-color: $color-action-background-disabled;
+  }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
-    &[disabled] { background-color: $color-action-background-disabled; }
+
+    &[disabled], fieldset[disabled] & {
+      background-color: $color-action-background-disabled;
+    }
   }
 }
 
@@ -151,7 +163,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: #ccc;
-    &[disabled] { background-color: #ddd; }
+    &[disabled], fieldset[disabled] & { background-color: #ddd; }
   }
 
   > [class^="icon-"]:first-child { color: $color-action-background; }
@@ -162,43 +174,40 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-danger-dark;
-    &[disabled] { background-color: $color-danger; }
+    &[disabled], fieldset[disabled] { background-color: $color-danger; }
   }
 }
 
 a, .btn-link {
-  &, &:hover {
-    color: $color-action-foreground;
-  }
-
-  &:hover {
-    text-decoration: none;
-  }
+  &, &:hover { color: $color-action-foreground; }
+  &:hover { text-decoration: none; }
 
   &:focus {
     background-color: transparentize(#000, 0.94);
     color: #23527c;
     text-decoration: underline;
   }
+
+  &.disabled, &[disabled], fieldset[disabled] & {
+    color: #888;
+    text-decoration: none;
+  }
 }
 
 a {
+  &.disabled, fieldset[disabled] & {
+    // Not specifying pointer-events so that the cursor and any title attribute
+    // is shown.
+
+    &.btn { color: #fff; }
+  }
+
   &:focus { outline: none; }
 
   &, &:visited {
     @media print {
       text-decoration: none;
     }
-  }
-
-  &.disabled {
-    color: #888;
-    cursor: not-allowed;
-    opacity: 0.65;
-    // Not specifying pointer-events so that the cursor and any title attribute
-    // is shown.
-
-    &.btn { color: #fff; }
   }
 
   > [class^="icon-"]:first-child {
@@ -214,6 +223,10 @@ a {
 
 .btn-link {
   border-radius: 0;
+
+  &, &:active, &[disabled] fieldset[disabled] & {
+    background-color: transparent;
+  }
 
   &:focus {
     background-clip: content-box;
@@ -276,10 +289,33 @@ a {
 ////////////////////////////////////////////////////////////////////////////////
 // FORMS
 
+fieldset {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+
+  &[disabled] { opacity: 0.5; }
+}
+
+input[type="radio"], input[type="checkbox"], input[type="file"] {
+  &:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+}
+
+.help-block {
+  color: #737373;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
 $form-group-padding-bottom: 15px;
 .form-group {
   display: block;
   font-weight: normal;
+  margin-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
   position: relative;
 
@@ -301,9 +337,11 @@ $form-group-padding-bottom: 15px;
 
     &::placeholder { color: $color-text; }
 
-    &[disabled], &[readonly] {
+    &[disabled], &[readonly], fieldset[disabled] & {
       &, &::placeholder { color: $color-input-inactive; }
     }
+
+    &[disabled], fieldset[disabled] & { cursor: not-allowed; }
   }
 
   .form-label {
@@ -332,14 +370,81 @@ $form-group-padding-bottom: 15px;
   }
 }
 
+input[type="radio"], input[type="checkbox"] {
+  margin: 4px 0 0;
+  line-height: normal;
+
+  &[disabled], fieldset[disabled] & { cursor: not-allowed; }
+}
+
+.radio, .checkbox {
+  @include text-block;
+  display: block;
+  margin-bottom: 10px;
+  position: relative;
+
+  label {
+    font-weight: normal;
+    margin-bottom: 0;
+    min-height: 20px;
+    padding-left: 20px;
+
+    + .help-block {
+      margin-left: 20px;
+      margin-top: 0;
+    }
+  }
+
+  &.disabled label, fieldset[disabled] & label { cursor: not-allowed; }
+}
+
+.form-group + .radio,
+.checkbox + .radio,
+.form-group + .checkbox,
+.radio + .checkbox {
+  margin-top: 10px;
+}
+
+.radio + .radio, .checkbox + .checkbox { margin-top: -5px; }
+
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+  position: absolute;
+  margin-left: -20px;
+}
+
+.checkbox label { cursor: pointer; }
+
 .form-inline {
   margin-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
+
+  .form-group, .radio, .checkbox {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
 
   .form-group {
     padding-bottom: 0;
 
     + .form-group { margin-left: 10px; }
+  }
+
+  .form-control {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+  }
+
+  .radio, .checkbox {
+    margin-top: 0;
+
+    label { padding-left: 0; }
+
+    input {
+      margin-left: 0;
+      position: relative;
+    }
   }
 
   .icon-filter {
@@ -348,18 +453,7 @@ $form-group-padding-bottom: 15px;
   }
 }
 
-.radio label {
-  cursor: default;
-}
-
-.checkbox label + .help-block {
-  margin-left: 20px;
-  margin-top: 0;
-}
-
 .has-error {
-  .radio, .checkbox, &.radio label, &.checkbox label { color: $color-danger; }
-
   .form-control {
     border-color: $color-danger;
 
@@ -369,7 +463,15 @@ $form-group-padding-bottom: 15px;
     }
   }
 
-  .form-label { color: $color-danger; }
+  .form-label,
+  .radio,
+  .checkbox,
+  &.radio label,
+  &.checkbox label,
+  .help-block {
+    color: $color-danger;
+  }
+
   .form-control:focus ~ .form-label { color: $color-danger-dark; }
 }
 

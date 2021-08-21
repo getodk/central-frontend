@@ -24,6 +24,11 @@ except according to the terms contained in the LICENSE file.
             {{ $t('systemHome.tab.audits') }}
           </router-link>
         </li>
+        <li :class="tabClass('analytics')" role="presentation">
+          <router-link :to="tabPath('analytics')">
+            {{ $t('systemHome.tab.analytics') }}
+          </router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
@@ -35,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+
 import tab from '../../mixins/tab';
 
 export default {
@@ -48,4 +54,3 @@ export default {
   }
 };
 </script>
-

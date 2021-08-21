@@ -57,7 +57,8 @@ export const keys = [
   'publicLinks',
   'fieldKeys',
 
-  'backupsConfig'
+  'backupsConfig',
+  'analyticsConfig'
 ];
 
 
@@ -98,7 +99,8 @@ export const transforms = {
   audits: ({ data }) => data.map(audit => new Audit(audit)),
   fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
-  backupsConfig: option()
+  backupsConfig: option(),
+  analyticsConfig: option()
 };
 
 

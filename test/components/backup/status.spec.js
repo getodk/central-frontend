@@ -8,12 +8,15 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(BackupStatus, {
-  requestData: {
-    backupsConfig: testData.standardBackupsConfigs.last(),
-    audits: testData.standardAudits.sorted()
-  }
-});
+const mountComponent = () => {
+  const config = testData.standardConfigs.forKey('backups');
+  return mount(BackupStatus, {
+    requestData: {
+      backupsConfig: config != null ? config : { problem: 404.1 },
+      audits: testData.standardAudits.sorted()
+    }
+  });
+};
 const assertContent = (component, iconClass, title, buttonText) => {
   component.get('#backup-status-icon').classes(iconClass).should.be.true();
 
@@ -27,13 +30,8 @@ describe('BackupStatus', () => {
   beforeEach(mockLogin);
 
   it('renders correctly if backups are not configured', () => {
-    const component = mount(BackupStatus, {
-      requestData: {
-        backupsConfig: { problem: 404.1 }
-      }
-    });
     assertContent(
-      component,
+      mountComponent(),
       'icon-question-circle',
       'Backups are not configured.',
       'Set up now…'
@@ -41,20 +39,16 @@ describe('BackupStatus', () => {
   });
 
   it('renders correctly if the latest recent attempt was a success', () => {
-    const component = mount(BackupStatus, {
-      requestData: {
-        backupsConfig: testData.standardBackupsConfigs
-          .createPast(1, { setAt: ago({ days: 4 }).toISO() })
-          .last(),
-        audits: testData.standardAudits
-          .createBackupAudit({
-            success: true,
-            loggedAt: ago({ days: 2 }).toISO()
-          })
-          .sorted()
-      }
+    testData.standardConfigs.createPast(1, {
+      key: 'backups',
+      value: { type: 'google' },
+      setAt: ago({ days: 4 }).toISO()
     });
-
+    testData.extendedAudits.createBackupAudit({
+      success: true,
+      loggedAt: ago({ days: 2 }).toISO()
+    });
+    const component = mountComponent();
     assertContent(
       component,
       'icon-check-circle',
@@ -67,21 +61,17 @@ describe('BackupStatus', () => {
   });
 
   it('renders correctly if the latest recent attempt was a failure', () => {
-    const component = mount(BackupStatus, {
-      requestData: {
-        backupsConfig: testData.standardBackupsConfigs
-          .createPast(1, { setAt: ago({ days: 2 }).toISO() })
-          .last(),
-        audits: testData.standardAudits
-          .createBackupAudit({
-            success: false,
-            loggedAt: ago({ days: 1 }).toISO()
-          })
-          .sorted()
-      }
+    testData.standardConfigs.createPast(1, {
+      key: 'backups',
+      value: { type: 'google' },
+      setAt: ago({ days: 2 }).toISO()
+    });
+    testData.extendedAudits.createBackupAudit({
+      success: false,
+      loggedAt: ago({ days: 1 }).toISO()
     });
     assertContent(
-      component,
+      mountComponent(),
       'icon-times-circle',
       'Something is wrong!',
       'Terminate…'
@@ -90,16 +80,13 @@ describe('BackupStatus', () => {
 
   describe('no recent attempt for the current config', () => {
     it('renders correctly if the config was recently set up', () => {
-      const component = mount(BackupStatus, {
-        requestData: {
-          backupsConfig: testData.standardBackupsConfigs
-            .createPast(1, { setAt: ago({ days: 2 }).toISO() })
-            .last(),
-          audits: []
-        }
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' },
+        setAt: ago({ days: 2 }).toISO()
       });
       assertContent(
-        component,
+        mountComponent(),
         'icon-check-circle',
         'The configured backup has not yet run.',
         'Terminate…'
@@ -107,21 +94,17 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if latest attempt was a recent failure for previous config', () => {
-      const component = mount(BackupStatus, {
-        requestData: {
-          backupsConfig: testData.standardBackupsConfigs
-            .createPast(1, { setAt: ago({ days: 1 }).toISO() })
-            .last(),
-          audits: testData.standardAudits
-            .createBackupAudit({
-              success: false,
-              loggedAt: ago({ days: 2 }).toISO()
-            })
-            .sorted()
-        }
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' },
+        setAt: ago({ days: 1 }).toISO()
+      });
+      testData.extendedAudits.createBackupAudit({
+        success: false,
+        loggedAt: ago({ days: 2 }).toISO()
       });
       assertContent(
-        component,
+        mountComponent(),
         'icon-check-circle',
         'The configured backup has not yet run.',
         'Terminate…'
@@ -129,16 +112,13 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if the config was not recently set up', () => {
-      const component = mount(BackupStatus, {
-        requestData: {
-          backupsConfig: testData.standardBackupsConfigs
-            .createPast(1, { setAt: ago({ days: 4 }).toISO() })
-            .last(),
-          audits: []
-        }
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' },
+        setAt: ago({ days: 4 }).toISO()
       });
       assertContent(
-        component,
+        mountComponent(),
         'icon-times-circle',
         'Something is wrong!',
         'Terminate…'
@@ -146,21 +126,17 @@ describe('BackupStatus', () => {
     });
 
     it('renders correctly if latest non-recent attempt was a success', () => {
-      const component = mount(BackupStatus, {
-        requestData: {
-          backupsConfig: testData.standardBackupsConfigs
-            .createPast(1, { setAt: ago({ days: 5 }).toISO() })
-            .last(),
-          audits: testData.standardAudits
-            .createBackupAudit({
-              success: true,
-              loggedAt: ago({ days: 4 }).toISO()
-            })
-            .sorted()
-        }
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' },
+        setAt: ago({ days: 5 }).toISO()
+      });
+      testData.extendedAudits.createBackupAudit({
+        success: true,
+        loggedAt: ago({ days: 4 }).toISO()
       });
       assertContent(
-        component,
+        mountComponent(),
         'icon-times-circle',
         'Something is wrong!',
         'Terminate…'
@@ -170,7 +146,9 @@ describe('BackupStatus', () => {
 
   describe('download link', () => {
     beforeEach(() => {
-      testData.standardBackupsConfigs.createPast(1, {
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' },
         setAt: ago({ days: 1 }).toISO()
       });
     });

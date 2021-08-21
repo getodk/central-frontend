@@ -8,7 +8,10 @@ describe('BackupTerminate', () => {
   beforeEach(mockLogin);
 
   it('toggles the modal', () => {
-    testData.standardBackupsConfigs.createPast(1);
+    testData.standardConfigs.createPast(1, {
+      key: 'backups',
+      value: { type: 'google' }
+    });
     return load('/system/backups', { root: false }).testModalToggles({
       modal: BackupTerminate,
       show: '#backup-status button',
@@ -38,7 +41,10 @@ describe('BackupTerminate', () => {
 
   describe('after a successful response', () => {
     const submit = () => {
-      testData.standardBackupsConfigs.createPast(1);
+      testData.standardConfigs.createPast(1, {
+        key: 'backups',
+        value: { type: 'google' }
+      });
       return load('/system/backups', { root: false })
         .complete()
         .request(async (component) => {

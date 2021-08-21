@@ -74,6 +74,10 @@
       "audits": {
         "string": "Server Audit Logs",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "analytics": {
+        "string": "Improve Central",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -356,6 +360,10 @@
       "string": "Save",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "saveSettings": {
+      "string": "Save settings",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "update": {
       "string": "Update",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -581,6 +589,21 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "analytics": {
+    "alwaysImprove": {
+      "string": "We are always trying to improve ODK Central."
+    },
+    "needFeedback": {
+      "full": {
+        "string": "To do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you.",
+        "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
+      },
+      "your": {
+        "string": "your",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
+      }
+    }
+  },
   "submission": {
     "missingMedia": {
       "string": "Missing media",
@@ -762,6 +785,79 @@
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
+        }
+      }
+    },
+    "AnalyticsForm": {
+      "enabled": {
+        "null": {
+          "0": {
+            "string": "Remind us later."
+          },
+          "1": {
+            "string": "Administrators will continue to see the message at the top of the screen."
+          }
+        },
+        "true": {
+          "0": {
+            "full": {
+              "string": "{weWillShare} and we accept the {termsOfService} and {privacyPolicy}.",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
+            },
+            "weWillShare": {
+              "string": "We are willing to share anonymous usage data monthly with the Central team,",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "termsOfService": {
+              "string": "Terms of Service",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {termsOfService} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "privacyPolicy": {
+              "string": "Privacy Policy",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {privacyPolicy} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            }
+          },
+          "1": {
+            "string": "What metrics are sent?"
+          }
+        },
+        "false": {
+          "0": {
+            "string": "We are not interested in sharing any information."
+          },
+          "1": {
+            "string": "You won’t see a reminder about this again."
+          }
+        }
+      },
+      "contact": {
+        "0": {
+          "string": "I am willing to include my contact information with the report."
+        },
+        "1": {
+          "string": "We may contact you to learn more about your usage of Central."
+        }
+      },
+      "field": {
+        "workEmail": {
+          "string": "Work email address",
+          "developer_comment": "This is the text of a form field."
+        },
+        "organization": {
+          "string": "Organization name",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Settings saved!"
+        }
+      }
+    },
+    "AnalyticsList": {
+      "heading": {
+        "0": {
+          "string": "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
         }
       }
     },
@@ -2200,12 +2296,6 @@
         "name": {
           "string": "Project name",
           "developer_comment": "This is the text of a form field."
-        }
-      },
-      "action": {
-        "update": {
-          "string": "Save settings",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {

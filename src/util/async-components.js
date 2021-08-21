@@ -39,6 +39,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-account-reset-password" */
     '../components/account/reset-password.vue'
   )))
+  .set('AnalyticsList', loader(() => import(
+    /* webpackChunkName: "component-analytics-list" */
+    '../components/analytics/list.vue'
+  )))
   .set('AuditList', loader(() => import(
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'

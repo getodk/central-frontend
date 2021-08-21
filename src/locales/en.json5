@@ -36,7 +36,8 @@
     "title": "System Management",
     "tab": {
       "backups": "Backups",
-      "audits": "Server Audit Logs"
+      "audits": "Server Audit Logs",
+      "analytics": "Improve Central"
     }
   },
   // This is the name of a user Role.
@@ -178,6 +179,7 @@
     "resetPassword": "Reset password",
     "review": "Review",
     "save": "Save",
+    "saveSettings": "Save settings",
     "update": "Update",
     "yesProceed": "Yes, proceed"
   },
@@ -259,6 +261,14 @@
     },
     // This is a link to more information.
     "learnMore": "Learn more."
+  },
+  "analytics": {
+    "alwaysImprove": "We are always trying to improve ODK Central.",
+    "needFeedback": {
+      // "This" refers to improving Central.
+      "full": "To do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you.",
+      "your": "your"
+    }
   },
   "submission": {
     // This is a possible state for a Submission.

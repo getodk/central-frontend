@@ -147,6 +147,7 @@ describe('router', () => {
       '/account/edit',
       '/system/backups',
       '/system/audits',
+      '/system/analytics',
       '/dl/foo.txt'
     ];
     for (const path of paths) {
@@ -390,7 +391,8 @@ describe('router', () => {
         '/users',
         '/users/2/edit',
         '/system/backups',
-        '/system/audits'
+        '/system/audits',
+        '/system/analytics'
       ];
       for (const path of paths) {
         it(`redirects the user from ${path}`, () =>
@@ -980,6 +982,12 @@ describe('router', () => {
     it('shows static title for /system/audits', async () => {
       await load('/system/audits');
       document.title.should.equal('Server Audit Logs | System Management | ODK Central');
+    });
+
+    it('shows static title for /system/analytics', async () => {
+      await load('/system/analytics');
+      const { title } = document;
+      title.should.equal('Improve Central | System Management | ODK Central');
     });
 
     // General special cases
