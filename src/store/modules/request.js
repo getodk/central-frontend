@@ -271,9 +271,6 @@ export default {
           resend = true
         } = config;
 
-        if (clear && update != null)
-          throw new Error('cannot clear data to be updated');
-
         /*
         We need to handle three cases:
 
@@ -297,23 +294,24 @@ export default {
         */
         const { data } = state;
         const requestsForKey = state.requests[key];
-        const lastRequest = requestsForKey.last;
-        if (!resend && (data[key] != null || lastRequest.state === 'loading'))
-          return Promise.resolve();
-        if ((data[key] == null && lastRequest.state === 'loading') ||
-          data[key] != null) {
-          if (lastRequest.state === 'loading') commit('cancelRequest', key);
-          if (data[key] != null && clear) commit('clearData', key);
+        const loading = requestsForKey.last.state === 'loading';
+        if (!resend && (data[key] != null || loading)) return Promise.resolve();
+        if (loading) commit('cancelRequest', key);
+        if (clear) {
+          if (update != null)
+            throw new Error('cannot clear data to be updated');
+          if (data[key] != null) commit('clearData', key);
         }
-        const { cancelId } = requestsForKey;
 
         const axiosConfig = { method: 'GET', url };
         if (extended)
           axiosConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
         else if (headers != null)
           axiosConfig.headers = headers;
+
+        const { cancelId } = requestsForKey;
         const promise = Vue.prototype.$http.request(withAuth(axiosConfig, data.session))
-          .catch(error => { // eslint-disable-line no-loop-func
+          .catch(error => {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
 
