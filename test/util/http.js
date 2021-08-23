@@ -685,6 +685,7 @@ class MockHttp {
             resolve(response);
           } else {
             const error = new Error();
+            error.config = config;
             error.request = {};
             error.response = response;
             reject(error);

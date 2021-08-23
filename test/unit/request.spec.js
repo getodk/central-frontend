@@ -406,6 +406,7 @@ describe('util/request', () => {
   describe('requestAlertMessage()', () => {
     const errorWithProblem = (code = 500.1) => {
       const error = new Error();
+      error.config = { url: '/v1/projects/1/forms/f' };
       error.request = {};
       error.response = {
         data: { code, message: 'Message from API' }
@@ -425,8 +426,21 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: there was no response to your request.');
     });
 
-    it('returns a message if the response is not a Problem', () => {
+    it('returns a message with status code if request URL does not start with /v1', () => {
       const error = new Error();
+      error.config = { url: 'https://www.google.com' };
+      error.request = {};
+      error.response = {
+        status: 500,
+        data: { code: 500.1, message: 'Message from Google' }
+      };
+      const message = requestAlertMessage(error);
+      message.should.equal('Something went wrong: error code 500.');
+    });
+
+    it('returns a message with status code if response is not a Problem', () => {
+      const error = new Error();
+      error.config = { url: '/v1/projects/1/forms/f' };
       error.request = {};
       error.response = {
         status: 500,
@@ -436,7 +450,7 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: error code 500.');
     });
 
-    it('returns the Problem message by default', () => {
+    it('returns the message of a Problem', () => {
       const message = requestAlertMessage(errorWithProblem());
       message.should.equal('Message from API');
     });
@@ -476,8 +490,8 @@ describe('util/request', () => {
         i18n.fallbackLocale = 'ett';
       });
       afterEach(() => {
-        i18n.fallbackLocale = 'en';
         i18n.locale = 'en';
+        i18n.fallbackLocale = 'en';
         i18n.setLocaleMessage('la', {});
         i18n.setLocaleMessage('ett', {});
       });

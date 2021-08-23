@@ -159,7 +159,7 @@ export const requestAlertMessage = (axiosError, options = {}) => {
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
   const { response } = axiosError;
   if (response == null) return i18n.t('util.request.noResponse');
-  if (!isProblem(response.data))
+  if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data)))
     return i18n.t('util.request.errorNotProblem', response);
 
   const problem = response.data;
