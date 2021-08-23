@@ -60,7 +60,7 @@ export default {
   methods: {
     submit() {
       this
-        .post('/users/reset/initiate', { email: this.email })
+        .post('/v1/users/reset/initiate', { email: this.email })
         .then(() => this.$router.push('/login'))
         .then(() => {
           this.$alert().success(this.$t('alert.success', {

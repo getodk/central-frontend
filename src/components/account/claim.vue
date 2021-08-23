@@ -67,7 +67,7 @@ export default {
       if (typeof token === 'string') headers.Authorization = `Bearer ${token}`;
       this.request({
         method: 'POST',
-        url: '/users/reset/verify',
+        url: '/v1/users/reset/verify',
         headers,
         data: { new: this.password }
       })

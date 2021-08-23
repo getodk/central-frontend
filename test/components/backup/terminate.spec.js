@@ -16,6 +16,15 @@ describe('BackupTerminate', () => {
     });
   });
 
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(BackupTerminate, {
+        propsData: { state: true }
+      })
+      .request(modal => modal.get('.btn-danger').trigger('click'))
+      .respondWithProblem()
+      .testRequests([{ method: 'DELETE', url: '/v1/config/backups' }]));
+
   it('implements some standard button things', () =>
     mockHttp()
       .mount(BackupTerminate, {

@@ -19,8 +19,8 @@ import { pick } from 'ramda';
 import Option from '../../util/option';
 import reconcileData from './request/reconcile';
 import { Presenter } from '../../presenters/base';
-import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
 const updateData = (oldData, newData, props) => {
   if (oldData == null) throw new Error('data does not exist');
@@ -307,16 +307,12 @@ export default {
         }
         const { cancelId } = requestsForKey;
 
-        const baseConfig = { method: 'GET', url };
+        const axiosConfig = { method: 'GET', url };
         if (extended)
-          baseConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
+          axiosConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
         else if (headers != null)
-          baseConfig.headers = headers;
-        const { session } = data;
-        const token = session != null ? session.token : null;
-        const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
-
-        const promise = Vue.prototype.$http.request(axiosConfig)
+          axiosConfig.headers = headers;
+        const promise = Vue.prototype.$http.request(withAuth(axiosConfig, data.session))
           .catch(error => { // eslint-disable-line no-loop-func
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');

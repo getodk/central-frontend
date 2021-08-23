@@ -43,6 +43,17 @@ const createData = () => {
 describe('ProjectFormAccess', () => {
   beforeEach(mockLogin);
 
+  it('sends the correct initial requests', () => {
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/form-access').testRequests([
+      { url: '/v1/projects/1', extended: true },
+      { url: '/v1/projects/1/forms', extended: true },
+      { url: '/v1/projects/1/app-users', extended: true },
+      { url: '/v1/roles' },
+      { url: '/v1/projects/1/assignments/forms/app-user' }
+    ]);
+  });
+
   describe('after login', () => {
     it('initially disables the Save button', async () => {
       createData();

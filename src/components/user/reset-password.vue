@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')">
+  <modal id="user-reset-password" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <i18n v-if="user != null" tag="p" path="introduction.full"
@@ -23,11 +23,11 @@ except according to the terms contained in the LICENSE file.
         <template #email>{{ user.email }}</template>
       </i18n>
       <div class="modal-actions">
-        <button id="user-reset-password-button" :disabled="awaitingResponse"
-          type="button" class="btn btn-primary" @click="resetPassword">
+        <button type="button" class="btn btn-primary"
+          :disabled="awaitingResponse" @click="resetPassword">
           {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button :disabled="awaitingResponse" type="button" class="btn btn-link"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.close') }}
         </button>
@@ -39,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
@@ -47,11 +48,8 @@ export default {
   components: { Modal, Spinner },
   mixins: [request()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    user: Object // eslint-disable-line vue/require-default-prop
+    state: Boolean,
+    user: Object
   },
   data() {
     return {
@@ -60,8 +58,11 @@ export default {
   },
   methods: {
     resetPassword() {
-      const data = { email: this.user.email };
-      this.post('/users/reset/initiate?invalidate=true', data)
+      this.request({
+        method: 'POST',
+        url: '/v1/users/reset/initiate?invalidate=true',
+        data: { email: this.user.email }
+      })
         .then(() => {
           this.$emit('success', this.user);
         })

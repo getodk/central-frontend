@@ -129,19 +129,16 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
-export const configForPossibleBackendRequest = (config, token) => {
-  const { url } = config;
-  // If it is not a Backend request, do nothing.
-  if (!url.startsWith('/')) return config;
-  const result = {
-    ...config,
-    // Prepend /v1 to the path if necessary.
-    url: url.startsWith('/v1/') ? url : `/v1${url}`
-  };
+export const withAuth = (config, session) => {
   const { headers } = config;
-  if (token != null && (headers == null || headers.Authorization == null))
-    result.headers = { ...headers, Authorization: `Bearer ${token}` };
-  return result;
+  if ((headers == null || headers.Authorization == null) &&
+    config.url.startsWith('/v1/') && session != null) {
+    return {
+      ...config,
+      headers: { ...headers, Authorization: `Bearer ${session.token}` }
+    };
+  }
+  return config;
 };
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.

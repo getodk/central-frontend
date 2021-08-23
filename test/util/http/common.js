@@ -3,11 +3,34 @@
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
+import { withAuth } from '../../../src/util/request';
+
+export function testRequests(configs) {
+  let count = 0;
+  return this
+    .beforeEachResponse((component, config, i) => {
+      count += 1;
+
+      if (i < configs.length && configs[i] != null) {
+        const { extended = false, ...expected } = configs[i];
+        if (expected.method == null) expected.method = 'GET';
+        if (extended)
+          expected.headers = { ...expected.headers, 'X-Extended-Metadata': 'true' };
+        const { session } = component.vm.$store.state.request.data;
+        config.should.eql(withAuth(expected, session));
+      }
+    })
+    .afterResponses(() => {
+      if (count !== configs.length)
+        throw new Error('unexpected number of requests');
+    });
+}
+
 // Tests that no request is sent.
 export function testNoRequest(callback = undefined) {
-  return callback != null
-    ? this.request(callback).complete()
-    : this.complete();
+  return this
+    .modify(series => (callback != null ? series.request(callback) : series))
+    .testRequests([]);
 }
 
 // Tests buttons that toggle a modal.

@@ -47,6 +47,21 @@ describe('UserEditBasicDetails', () => {
       });
   });
 
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(UserEditBasicDetails, mountOptions())
+      .request(async (component) => {
+        await component.get('input[type="email"]').setValue('new@email.com');
+        await component.get('input[type="text"]').setValue('New Name');
+        return component.get('form').trigger('submit');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'PATCH',
+        url: '/v1/users/1',
+        data: { email: 'new@email.com', displayName: 'New Name' }
+      }]));
+
   it('implements some standard button things', () =>
     mockHttp()
       .mount(UserEditBasicDetails, mountOptions())

@@ -86,7 +86,7 @@ export default {
       this.$store.dispatch('get', [
         {
           key: 'backupsConfig',
-          url: '/config/backups',
+          url: '/v1/config/backups',
           fulfillProblem: ({ code }) => code === 404.1
         },
         {

@@ -107,11 +107,11 @@ export default {
       return this.$store.dispatch('get', [
         {
           key: 'users',
-          url: '/users'
+          url: '/v1/users'
         },
         {
           key: 'actors',
-          url: '/assignments/admin',
+          url: '/v1/assignments/admin',
           success: ({ actors }) => {
             this.adminIds = new Set();
             for (const actor of actors)

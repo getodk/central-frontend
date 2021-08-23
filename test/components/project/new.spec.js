@@ -34,6 +34,24 @@ describe('ProjectNew', () => {
     modal.get('input').should.be.focused();
   });
 
+  it('sends the correct request', () => {
+    mockLogin();
+    return mockHttp()
+      .mount(ProjectNew, {
+        propsData: { state: true }
+      })
+      .request(async (modal) => {
+        await modal.get('input').setValue('My Project');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects',
+        data: { name: 'My Project' }
+      }]);
+  });
+
   it('implements some standard button things', () => {
     mockLogin();
     return mockHttp()

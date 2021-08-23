@@ -123,6 +123,25 @@ describe('UserEditPassword', () => {
         .respondWithSuccess());
   });
 
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respondWithSuccess()
+      .testRequests([{
+        method: 'PUT',
+        url: '/v1/users/1/password',
+        data: { old: 'testPasswordX', new: 'testPasswordY' }
+      }]));
+
+  it('implements some standard button things', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .testStandardButton({
+        button: '.btn-primary',
+        request: submit
+      }));
+
   it('shows a success alert after a successful response', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
