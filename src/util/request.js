@@ -143,7 +143,7 @@ export const withAuth = (config, session) => {
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.
 export const isProblem = (data) => data != null && typeof data === 'object' &&
-  data.code != null && data.message != null;
+  typeof data.code === 'number' && typeof data.message === 'string';
 
 export const logAxiosError = (error) => {
   if (error.response == null) {

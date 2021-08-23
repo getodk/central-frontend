@@ -370,8 +370,16 @@ describe('util/request', () => {
       isProblem({ message: 'Not found.' }).should.be.false();
     });
 
+    it('returns false for an object whose code property is not a number', () => {
+      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false();
+    });
+
     it('returns false for an object without a message property', () => {
       isProblem({ code: 404.1 }).should.be.false();
+    });
+
+    it('returns false for an object whose message property is not a string', () => {
+      isProblem({ code: 404.1, message: 123 }).should.be.false();
     });
   });
 
