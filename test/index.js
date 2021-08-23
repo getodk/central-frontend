@@ -13,7 +13,7 @@ import { noop } from '../src/util/util';
 import testData from './data';
 import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/async-components';
-import { setHttp } from './util/http';
+import { mockAxios } from './util/axios';
 import './assertions';
 
 
@@ -23,7 +23,7 @@ import './assertions';
 
 {
   let unhandled = null;
-  setHttp(config => {
+  Vue.prototype.$http = mockAxios(config => {
     if (unhandled == null) unhandled = config;
     return Promise.reject(new Error('unhandled request'));
   });
