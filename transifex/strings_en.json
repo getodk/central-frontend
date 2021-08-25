@@ -869,6 +869,23 @@
         }
       }
     },
+    "AnalyticsPreview": {
+      "title": {
+        "string": "Anonymized Metrics Report",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Thank you for thinking about sending some usage information. This data will help us prioritize your needs!"
+        },
+        "1": {
+          "string": "Shown here is the report we are collecting currently. To respond to new features and needs, we will sometimes change what is reported, but we will only ever gather summary averages like you see here."
+        },
+        "2": {
+          "string": "You can always come here to see what is being collected."
+        }
+      }
+    },
     "AsyncRoute": {
       "alert": {
         "loadError": {

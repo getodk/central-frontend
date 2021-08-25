@@ -665,8 +665,7 @@ const routes = [
         meta: {
           validateData: {
             currentUser: (currentUser) =>
-              // TODO. Add the verb for the metrics report.
-              currentUser.can(['config.read', 'config.set'])
+              currentUser.can(['config.read', 'config.set', 'analytics.read'])
           },
           title: {
             parts: () => [

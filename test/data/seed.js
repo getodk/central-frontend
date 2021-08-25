@@ -9,6 +9,7 @@ export default () => {
       // This is not the full list of verbs used in Backend, but it should be
       // the full list used in Frontend.
       verbs: [
+        'analytics.read',
         'assignment.create',
         'assignment.list',
         'assignment.delete',
