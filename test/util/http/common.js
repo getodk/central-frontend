@@ -5,23 +5,31 @@ import Spinner from '../../../src/components/spinner.vue';
 
 import { withAuth } from '../../../src/util/request';
 
-export function testRequests(configs) {
+export function testRequests(expectedConfigs) {
   let count = 0;
   return this
     .beforeEachResponse((component, config, i) => {
       count += 1;
 
-      if (i < configs.length && configs[i] != null) {
-        const { extended = false, ...expected } = configs[i];
-        if (expected.method == null) expected.method = 'GET';
-        if (extended)
-          expected.headers = { ...expected.headers, 'X-Extended-Metadata': 'true' };
+      // If i >= expectedConfigs.length, then there have been too many
+      // requests, and the afterResponses() hook will throw an error. If
+      // expectedConfigs[i] == null, the request is intentionally not checked
+      // (presumably because it is checked elsewhere).
+      if (i < expectedConfigs.length && expectedConfigs[i] != null) {
+        const { extended = false, ...expectedConfig } = expectedConfigs[i];
+        if (expectedConfig.method == null) expectedConfig.method = 'GET';
+        if (extended) {
+          expectedConfig.headers = {
+            ...expectedConfig.headers,
+            'X-Extended-Metadata': 'true'
+          };
+        }
         const { session } = component.vm.$store.state.request.data;
-        config.should.eql(withAuth(expected, session));
+        config.should.eql(withAuth(expectedConfig, session));
       }
     })
     .afterResponses(() => {
-      if (count !== configs.length)
+      if (count !== expectedConfigs.length)
         throw new Error('unexpected number of requests');
     });
 }

@@ -31,7 +31,7 @@ describe('BackupNew', () => {
         })
         .request(async (modal) => {
           await modal.get('input').setValue('supersecret');
-          modal.get('form').trigger('submit');
+          return modal.get('form').trigger('submit');
         })
         .respondWithProblem()
         .testRequests([{

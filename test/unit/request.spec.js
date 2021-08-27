@@ -6,6 +6,7 @@ import i18n from '../../src/i18n';
 import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
 
 import { i18nProps } from '../util/i18n';
+import { mockAxiosError } from '../util/axios';
 
 describe('util/request', () => {
   describe('queryString()', () => {
@@ -412,15 +413,11 @@ describe('util/request', () => {
   });
 
   describe('requestAlertMessage()', () => {
-    const errorWithProblem = (code = 500.1) => {
-      const error = new Error();
-      error.config = { url: '/v1/projects/1/forms/f' };
-      error.request = {};
-      error.response = {
-        data: { code, message: 'Message from API' }
-      };
-      return error;
-    };
+    const errorWithProblem = (code = 500.1) => mockAxiosError({
+      status: Math.floor(code),
+      data: { code, message: 'Message from API' },
+      config: { url: '/v1/projects/1/forms/f' }
+    });
 
     it('returns a message if there was no request', () => {
       const message = requestAlertMessage(new Error());
@@ -435,26 +432,20 @@ describe('util/request', () => {
     });
 
     it('returns a message with status code if request URL does not start with /v1', () => {
-      const error = new Error();
-      error.config = { url: 'https://www.google.com' };
-      error.request = {};
-      error.response = {
+      const message = requestAlertMessage(mockAxiosError({
         status: 500,
-        data: { code: 500.1, message: 'Message from Google' }
-      };
-      const message = requestAlertMessage(error);
+        data: { code: 500.1, message: 'Message from Google' },
+        config: { url: 'https://www.google.com' }
+      }));
       message.should.equal('Something went wrong: error code 500.');
     });
 
     it('returns a message with status code if response is not a Problem', () => {
-      const error = new Error();
-      error.config = { url: '/v1/projects/1/forms/f' };
-      error.request = {};
-      error.response = {
+      const message = requestAlertMessage(mockAxiosError({
         status: 500,
-        data: { x: 1 }
-      };
-      const message = requestAlertMessage(error);
+        data: { x: 1 },
+        config: { url: '/v1/projects/1/forms/f' }
+      }));
       message.should.equal('Something went wrong: error code 500.');
     });
 
