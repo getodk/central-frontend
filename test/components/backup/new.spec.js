@@ -142,10 +142,13 @@ describe('BackupNew', () => {
         return modal.get('form').trigger('submit');
       })
       .respondWithData(() => {
-        testData.standardBackupsConfigs.createNew();
+        testData.standardConfigs.createNew({
+          key: 'backups',
+          value: { type: 'google' }
+        });
         return { success: true };
       })
-      .respondWithData(() => testData.standardBackupsConfigs.last())
+      .respondWithData(() => testData.standardConfigs.forKey('backups'))
       .respondWithData(() => testData.standardAudits.sorted());
 
     it('hides the modal', async () => {

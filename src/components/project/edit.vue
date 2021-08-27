@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           autocomplete="off"/>
         <button type="submit" class="btn btn-primary"
           :disabled="awaitingResponse">
-          {{ $t('action.update') }} <spinner :state="awaitingResponse"/>
+          {{ $t('action.saveSettings') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>
     </div>
@@ -30,6 +30,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -75,9 +76,6 @@ export default {
     "title": "Basic Details",
     "field": {
       "name": "Project name"
-    },
-    "action": {
-      "update": "Save settings"
     },
     "alert": {
       "success": "Project settings saved!"

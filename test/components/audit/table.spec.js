@@ -235,7 +235,9 @@ describe('AuditTable', () => {
   });
 
   it('renders a backup audit correctly', () => {
-    testData.standardBackupsConfigs.createPast(1, {
+    testData.standardConfigs.createPast(1, {
+      key: 'backups',
+      value: { type: 'google' },
       setAt: ago({ days: 2 }).toISO()
     });
     testData.standardAudits.createBackupAudit({

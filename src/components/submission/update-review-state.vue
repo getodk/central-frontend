@@ -17,8 +17,9 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <div class="row">
           <div class="col-xs-4">
-            <div class="radio">
-              <label v-for="reviewState of selectableStates" :key="reviewState">
+            <div v-for="reviewState of selectableStates" :key="reviewState"
+              class="radio">
+              <label>
                 <input v-model="selectedState" type="radio"
                   :value="reviewState">
                 <span :class="reviewStateIcon(reviewState)"></span>
@@ -134,9 +135,7 @@ export default {
 @import '../../assets/scss/variables';
 
 #submission-update-review-state {
-  .radio, .form-group { margin-bottom: 0; }
-  .radio { margin-top: 0; }
-  .radio > label { margin-bottom: 5px; }
+  .form-group { margin-bottom: 0; }
 
   $margin-left-icon: 2px;
   .icon-comments {

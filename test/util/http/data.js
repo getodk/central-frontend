@@ -37,9 +37,14 @@ const defaults = {
   publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
-  backupsConfig: () => (testData.standardBackupsConfigs.size !== 0
-    ? testData.standardBackupsConfigs.last()
-    : { problem: 404.1 })
+  backupsConfig: () => {
+    const config = testData.standardConfigs.forKey('backups');
+    return config != null ? config : { problem: 404.1 };
+  },
+  analyticsConfig: () => {
+    const config = testData.standardConfigs.forKey('analytics');
+    return config != null ? config : { problem: 404.1 };
+  }
 };
 
 // Maps each request key to its corresponding callback. Returns a Map so that
@@ -92,6 +97,7 @@ const mapsByComponent = {
     audits: () => testData.standardAudits.sorted()
   }),
   AuditList: mapKeys(['audits']),
+  AnalyticsList: mapKeys(['analyticsConfig']),
 
   Download: new Map(),
 

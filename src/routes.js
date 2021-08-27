@@ -639,9 +639,8 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can([
               'config.read',
-              'backup.create',
+              'config.set',
               'backup.run',
-              'backup.terminate',
               'audit.read'
             ])
           },
@@ -657,6 +656,24 @@ const routes = [
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
           title: { parts: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')] }
+        }
+      }),
+      asyncRoute({
+        path: 'analytics',
+        component: 'AnalyticsList',
+        loading: 'tab',
+        meta: {
+          validateData: {
+            currentUser: (currentUser) =>
+              // TODO. Add the verb for the metrics report.
+              currentUser.can(['config.read', 'config.set'])
+          },
+          title: {
+            parts: () => [
+              i18n.t('systemHome.tab.analytics'),
+              i18n.t('systemHome.title')
+            ]
+          }
         }
       })
     ]
