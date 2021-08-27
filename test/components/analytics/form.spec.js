@@ -103,6 +103,19 @@ describe('AnalyticsForm', () => {
       form.get('fieldset').element.disabled.should.be.false();
       form.get('input[type="checkbox"]').element.checked.should.be.true();
       form.get('fieldset fieldset').element.disabled.should.be.false();
+      form.get('input[type="email"]').element.value.should.equal('');
+      form.get('input[autocomplete="organization"]').element.value.should.equal('ODK');
+    });
+
+    it('renders the contact fields correctly if both were provided', () => {
+      testData.standardConfigs.createPast(1, {
+        key: 'analytics',
+        value: { enabled: true, email: 'alice@getodk.org', organization: 'ODK' }
+      });
+      const form = mount(AnalyticsForm, mountOptions());
+      form.get('fieldset').element.disabled.should.be.false();
+      form.get('input[type="checkbox"]').element.checked.should.be.true();
+      form.get('fieldset fieldset').element.disabled.should.be.false();
       form.get('input[type="email"]').element.value.should.equal('alice@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('ODK');
     });
@@ -114,14 +127,18 @@ describe('AnalyticsForm', () => {
     form.get('fieldset').element.disabled.should.be.false();
   });
 
-  it('enables the contact form once the checkbox is checked', async () => {
+  it('enables the contact form if the checkbox is checked', async () => {
     testData.standardConfigs.createPast(1, {
       key: 'analytics',
       value: { enabled: true }
     });
     const form = mount(AnalyticsForm, mountOptions());
-    await form.get('input[type="checkbox"]').setChecked();
-    form.get('fieldset fieldset').element.disabled.should.be.false();
+    const checkbox = form.get('input[type="checkbox"]');
+    await checkbox.setChecked();
+    const fieldset = form.get('fieldset fieldset');
+    fieldset.element.disabled.should.be.false();
+    await checkbox.setChecked(false);
+    fieldset.element.disabled.should.be.true();
   });
 
   describe('request to unset the configuration', () => {
@@ -202,7 +219,7 @@ describe('AnalyticsForm', () => {
         }))
         .afterResponse(form => {
           const { analyticsConfig } = form.vm.$store.state.request.data;
-          analyticsConfig.get().enabled.should.be.false();
+          analyticsConfig.get().value.enabled.should.be.false();
         }));
   });
 
@@ -285,7 +302,7 @@ describe('AnalyticsForm', () => {
         }))
         .afterResponse(form => {
           const { analyticsConfig } = form.vm.$store.state.request.data;
-          analyticsConfig.get().enabled.should.be.true();
+          analyticsConfig.get().value.enabled.should.be.true();
         }));
   });
 

@@ -100,7 +100,7 @@ export default {
       contact: configValue.email != null || configValue.organization != null,
       email: configValue.email != null
         ? configValue.email
-        : requestData.currentUser.email,
+        : (configValue.organization == null ? requestData.currentUser.email : ''),
       organization: configValue.organization != null
         ? configValue.organization
         : ''
@@ -117,7 +117,7 @@ export default {
       const response = await this.post('/v1/config/analytics', postData);
       this.$store.commit('setData', {
         key: 'analyticsConfig',
-        value: Option.of(response.data.value)
+        value: Option.of(response.data)
       });
     },
     async unsetConfig() {
