@@ -24,6 +24,22 @@ describe('BackupNew', () => {
       modal.get('input').should.be.focused();
     });
 
+    it('sends the correct request', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true }
+        })
+        .request(async (modal) => {
+          await modal.get('input').setValue('supersecret');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/config/backups/initiate',
+          data: { passphrase: 'supersecret' }
+        }]));
+
     it('implements some standard button things', () =>
       mockHttp()
         .mount(BackupNew, {
@@ -50,6 +66,26 @@ describe('BackupNew', () => {
           await modal.get('.btn-primary').trigger('click');
           modal.get('input').should.be.focused();
         }));
+
+    it('sends the correct request', () =>
+      mockHttp()
+        .mount(BackupNew, {
+          propsData: { state: true }
+        })
+        .request(modal => modal.get('form').trigger('submit'))
+        .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
+        .afterResponse(modal => modal.get('.btn-primary').trigger('click'))
+        .request(async (modal) => {
+          await modal.get('input').setValue('bar');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/config/backups/verify',
+          headers: { Authorization: 'Bearer foo' },
+          data: { code: 'bar' }
+        }]));
 
     it('implements some standard button things', () =>
       mockHttp()

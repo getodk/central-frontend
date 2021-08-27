@@ -73,7 +73,7 @@ export default {
     submit() {
       const postData = { email: this.email };
       if (this.displayName !== '') postData.displayName = this.displayName;
-      this.post('/users', postData)
+      this.post('/v1/users', postData)
         .then(response => {
           this.$emit('success', response.data);
         })

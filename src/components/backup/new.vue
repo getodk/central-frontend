@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     initiate() {
-      this.post('/config/backups/initiate', { passphrase: this.passphrase })
+      this.post('/v1/config/backups/initiate', { passphrase: this.passphrase })
         .then(({ data }) => {
           this.step += 1;
           this.googleUrl = data.url;
@@ -168,7 +168,7 @@ export default {
     verify() {
       this.request({
         method: 'POST',
-        url: '/config/backups/verify',
+        url: '/v1/config/backups/verify',
         headers: { Authorization: `Bearer ${this.authToken}` },
         data: { code: this.confirmationText },
         problemToAlert: ({ message }) =>

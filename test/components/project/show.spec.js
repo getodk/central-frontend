@@ -14,6 +14,14 @@ describe('ProjectShow', () => {
     app.findComponent(NotFound).exists().should.be.true();
   });
 
+  it('sends the correct initial requests', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/settings').testRequests([
+      { url: '/v1/projects/1', extended: true }
+    ]);
+  });
+
   it('re-renders the router view after a route change', () => {
     mockLogin();
     testData.extendedProjects.createPast(2);

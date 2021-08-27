@@ -36,31 +36,14 @@ describe('SubmissionActivity', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: "'c d'" });
     testData.extendedAudits.createPast(1, { action: 'submission.create' });
-    let count = 0;
-    return load("/projects/1/forms/a%20b/submissions/'c%20d'")
-      .beforeEachResponse((_, { method, url, headers }, index) => {
-        count += 1;
-        method.should.equal('GET');
-        if (index === 0) {
-          url.should.equal('/v1/projects/1');
-          headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 1) {
-          url.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
-        } else if (index === 2) {
-          url.should.equal('/v1/projects/1/forms/a%20b/fields');
-        } else if (index === 3) {
-          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits");
-          headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 4) {
-          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments");
-          headers['X-Extended-Metadata'].should.equal('true');
-        } else if (index === 5) {
-          url.should.equal("/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs");
-        }
-      })
-      .afterResponses(() => {
-        count.should.equal(6);
-      });
+    return load("/projects/1/forms/a%20b/submissions/'c%20d'").testRequests([
+      { url: '/v1/projects/1', extended: true },
+      { url: "/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')" },
+      { url: '/v1/projects/1/forms/a%20b/fields' },
+      { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits", extended: true },
+      { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments", extended: true },
+      { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/diffs" }
+    ]);
   });
 
   describe('review button', () => {
@@ -117,19 +100,12 @@ describe('SubmissionActivity', () => {
       };
 
       it('sends the correct requests for activity data', () =>
-        submit().beforeEachResponse((_, { method, url, headers }, index) => {
-          if (index === 0) return;
-          method.should.equal('GET');
-          if (index === 1) {
-            url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/audits');
-            headers['X-Extended-Metadata'].should.equal('true');
-          } else if (index === 2) {
-            url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
-            headers['X-Extended-Metadata'].should.equal('true');
-          } else if (index === 3) {
-            url.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/diffs');
-          }
-        }));
+        submit().testRequests([
+          null,
+          { url: '/v1/projects/1/forms/a%20b/submissions/c%20d/audits', extended: true },
+          { url: '/v1/projects/1/forms/a%20b/submissions/c%20d/comments', extended: true },
+          { url: '/v1/projects/1/forms/a%20b/submissions/c%20d/diffs' }
+        ]));
 
       it('hides the modal', async () => {
         const component = await submit();

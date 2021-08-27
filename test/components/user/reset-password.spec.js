@@ -6,6 +6,10 @@ import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
+const mountOptions = () => ({
+  propsData: { state: true, user: new User(testData.standardUsers.first()) }
+});
+
 describe('UserResetPassword', () => {
   beforeEach(() => {
     mockLogin({ email: 'alice@getodk.org', displayName: 'Alice' });
@@ -18,16 +22,22 @@ describe('UserResetPassword', () => {
       hide: '.btn-link'
     }));
 
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(UserResetPassword, mountOptions())
+      .request(modal => modal.get('.btn-primary').trigger('click'))
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/users/reset/initiate?invalidate=true',
+        data: { email: 'alice@getodk.org' }
+      }]));
+
   it('implements some standard button things', () =>
     mockHttp()
-      .mount(UserResetPassword, {
-        propsData: {
-          state: true,
-          user: new User(testData.standardUsers.first())
-        }
-      })
+      .mount(UserResetPassword, mountOptions())
       .testStandardButton({
-        button: '#user-reset-password-button',
+        button: '.btn-primary',
         disabled: ['.btn-link'],
         modal: true
       }));
@@ -37,7 +47,7 @@ describe('UserResetPassword', () => {
       .complete()
       .request(async (component) => {
         await component.get('.user-row .reset-password').trigger('click');
-        return component.get('#user-reset-password-button').trigger('click');
+        return component.get('#user-reset-password .btn-primary').trigger('click');
       })
       .respondWithSuccess();
 
@@ -46,7 +56,7 @@ describe('UserResetPassword', () => {
       component.getComponent(UserResetPassword).props().state.should.be.false();
     });
 
-    it('shows a success message', async () => {
+    it('shows a success alert', async () => {
       const component = await submit();
       component.should.alert('success', (message) => {
         message.should.containEql('Alice');

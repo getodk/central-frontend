@@ -1,52 +1,3 @@
-import Vue from 'vue';
-import { RouterLinkStub } from '@vue/test-utils';
-import { last } from 'ramda';
-
-import App from '../../src/components/app.vue';
-
-import router from '../../src/router';
-import { noop } from '../../src/util/util';
-import { routeProps } from '../../src/util/router';
-
-import requestDataByComponent from './http/data';
-import testData from '../data';
-import * as commonTests from './http/common';
-import { loadAsyncCache } from './async-components';
-import { mockAxiosResponse } from './axios';
-import { mount as lifecycleMount } from './lifecycle';
-import { wait, waitUntil } from './util';
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// setHttp()
-
-// Sets Vue.prototype.$http to a mock.
-export const setHttp = (respond) => {
-  const http = (config) => respond(config);
-  http.request = http;
-  http.get = (url, config) => http({ ...config, method: 'GET', url });
-  http.post = (url, data, config) => {
-    const full = { ...config, method: 'POST', url };
-    if (data != null) full.data = data;
-    return http(full);
-  };
-  http.put = (url, data, config) => http({ ...config, method: 'PUT', url, data });
-  http.patch = (url, data, config) => http({ ...config, method: 'PATCH', url, data });
-  http.delete = (url, config) => http({ ...config, method: 'DELETE', url });
-  http.defaults = {
-    headers: {
-      common: {}
-    }
-  };
-  Vue.prototype.$http = http;
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// mockHttp() and load()
-
 /*
 mockHttp() mocks a series of request-response cycles. It allows you to mount a
 component, specify one or more requests, then examine the component once the
@@ -320,6 +271,24 @@ Additional options
 There is a lot you can do with mockHttp() and load(). You can learn more by
 reviewing the comments above each method below.
 */
+
+import Vue from 'vue';
+import { RouterLinkStub } from '@vue/test-utils';
+import { last } from 'ramda';
+
+import App from '../../src/components/app.vue';
+
+import router from '../../src/router';
+import { noop } from '../../src/util/util';
+import { routeProps } from '../../src/util/router';
+
+import requestDataByComponent from './http/data';
+import testData from '../data';
+import * as commonTests from './http/common';
+import { loadAsyncCache } from './async-components';
+import { mockAxios, mockAxiosError, mockAxiosResponse } from './axios';
+import { mount as lifecycleMount } from './lifecycle';
+import { wait, waitUntil } from './util';
 
 let inProgress = false;
 
@@ -606,7 +575,7 @@ class MockHttp {
       if (inProgress) throw new Error('another series is in progress');
       inProgress = true;
       this._previousHttp = Vue.prototype.$http;
-      setHttp(this._http());
+      Vue.prototype.$http = mockAxios(this._http());
       this._component = component;
       /*
       MockHttp uses two promises:
@@ -684,10 +653,7 @@ class MockHttp {
           if (response.status >= 200 && response.status < 300) {
             resolve(response);
           } else {
-            const error = new Error();
-            error.request = {};
-            error.response = response;
-            reject(error);
+            reject(mockAxiosError(response));
           }
         }));
       return this._responsesPromise;

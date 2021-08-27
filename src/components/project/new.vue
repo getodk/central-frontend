@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     submit() {
-      this.post('/projects', { name: this.name })
+      this.post('/v1/projects', { name: this.name })
         .then(({ data }) => {
           this.$emit('success', data);
         })

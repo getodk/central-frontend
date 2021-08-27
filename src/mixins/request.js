@@ -31,11 +31,11 @@ property:
 */
 
 import i18n from '../i18n';
-import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
 
 /*
-request() accepts all the options that axios.request() does (with the exception
-of validateStatus). It also accepts the following options:
+request() accepts all the options that axios.request() does. It also accepts the
+following options:
 
   - fulfillProblem. Usually, an error response means that the request was
     invalid or that something went wrong. However, in some cases, an error
@@ -86,12 +86,6 @@ function request({
   problemToAlert = undefined,
   ...axiosConfig
 }) {
-  // We don't allow validateStatus, because it is so similar to
-  // fulfillProblem, and it might not be clear how the two would work
-  // together.
-  if (axiosConfig.validateStatus != null)
-    throw new Error('validateStatus is not supported. Use fulfillProblem instead.');
-
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
@@ -102,9 +96,8 @@ function request({
   if (this.awaitingResponse != null) this.awaitingResponse = true;
 
   const { session } = this.$store.state.request.data;
-  const token = session != null ? session.token : null;
   const { currentRoute } = this.$store.state.router;
-  return this.$http.request(configForPossibleBackendRequest(axiosConfig, token))
+  return this.$http.request(withAuth(axiosConfig, session))
     .catch(error => {
       // this.$store seems to be defined even after the component has been
       // destroyed.

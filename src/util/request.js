@@ -129,24 +129,21 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
-export const configForPossibleBackendRequest = (config, token) => {
-  const { url } = config;
-  // If it is not a Backend request, do nothing.
-  if (!url.startsWith('/')) return config;
-  const result = {
-    ...config,
-    // Prepend /v1 to the path if necessary.
-    url: url.startsWith('/v1/') ? url : `/v1${url}`
-  };
+export const withAuth = (config, session) => {
   const { headers } = config;
-  if (token != null && (headers == null || headers.Authorization == null))
-    result.headers = { ...headers, Authorization: `Bearer ${token}` };
-  return result;
+  if ((headers == null || headers.Authorization == null) &&
+    config.url.startsWith('/v1/') && session != null) {
+    return {
+      ...config,
+      headers: { ...headers, Authorization: `Bearer ${session.token}` }
+    };
+  }
+  return config;
 };
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.
 export const isProblem = (data) => data != null && typeof data === 'object' &&
-  data.code != null && data.message != null;
+  typeof data.code === 'number' && typeof data.message === 'string';
 
 export const logAxiosError = (error) => {
   if (error.response == null) {
@@ -162,7 +159,7 @@ export const requestAlertMessage = (axiosError, options = {}) => {
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
   const { response } = axiosError;
   if (response == null) return i18n.t('util.request.noResponse');
-  if (!isProblem(response.data))
+  if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data)))
     return i18n.t('util.request.errorNotProblem', response);
 
   const problem = response.data;

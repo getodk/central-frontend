@@ -62,6 +62,15 @@ const search = (mountOptions = {}) => {
 };
 
 describe('ProjectUserList', () => {
+  it('sends the correct initial requests', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/users', { root: false }).testRequests([
+      { url: '/v1/roles' },
+      { url: '/v1/projects/1/assignments', extended: true }
+    ]);
+  });
+
   describe('behavior of the component before any role change', () => {
     describe('before the initial data is received', () => {
       it('disables the search input', () => {

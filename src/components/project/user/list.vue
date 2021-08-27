@@ -155,7 +155,7 @@ export default {
       this.$store.dispatch('get', [
         {
           key: 'roles',
-          url: '/roles',
+          url: '/v1/roles',
           resend: false
         },
         {

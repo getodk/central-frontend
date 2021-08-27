@@ -3,9 +3,10 @@ import Vue from 'vue';
 import sinon from 'sinon';
 
 import i18n from '../../src/i18n';
-import { apiPaths, configForPossibleBackendRequest, isProblem, logAxiosError, queryString, requestAlertMessage } from '../../src/util/request';
+import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
 
 import { i18nProps } from '../util/i18n';
+import { mockAxiosError } from '../util/axios';
 
 describe('util/request', () => {
   describe('queryString()', () => {
@@ -313,50 +314,43 @@ describe('util/request', () => {
     });
   });
 
-  describe('configForPossibleBackendRequest()', () => {
-    it('prepends /v1 to a URL that starts with /', () => {
-      const { url } = configForPossibleBackendRequest({ url: '/users' }, 'xyz');
-      url.should.equal('/v1/users');
+  describe('withAuth()', () => {
+    it('specifies the session token in the Authorization header', () => {
+      withAuth({ url: '/v1/users' }, { token: 'xyz' }).should.eql({
+        url: '/v1/users',
+        headers: { Authorization: 'Bearer xyz' }
+      });
     });
 
-    it('does not prepend /v1 to a URL that does not start with /', () => {
-      const { url } = configForPossibleBackendRequest(
-        { url: 'https://www.google.com/' },
-        'xyz'
-      );
-      url.should.equal('https://www.google.com/');
+    it('does not add an Authorization header if URL does not start with /v1', () => {
+      const config = { url: '/version.txt' };
+      withAuth(config, { token: 'xyz' }).should.equal(config);
     });
 
-    it('does not prepend /v1 to a URL that starts with /v1', () => {
-      const { url } = configForPossibleBackendRequest(
-        { url: '/v1/users' },
-        'xyz'
-      );
-      url.should.equal('/v1/users');
-    });
-
-    it('specifies an Authorization header if the URL starts with /', () => {
-      const { headers } = configForPossibleBackendRequest(
-        { url: '/users' },
-        'xyz'
-      );
-      headers.Authorization.should.equal('Bearer xyz');
-    });
-
-    it('does not specify Authorization if URL does not start with /', () => {
-      const { headers } = configForPossibleBackendRequest(
-        { url: 'https://www.google.com/' },
-        'xyz'
-      );
-      should.not.exist(headers);
+    it('does not add an Authorization header if there is no session', () => {
+      const config = { url: '/v1/users' };
+      withAuth(config, null).should.equal(config);
     });
 
     it('does not overwrite an existing Authorization header', () => {
-      const { headers } = configForPossibleBackendRequest(
-        { url: '/users', headers: { Authorization: 'auth' } },
-        'xyz'
-      );
-      headers.Authorization.should.equal('auth');
+      const config = {
+        url: '/v1/users',
+        headers: { Authorization: 'auth' }
+      };
+      withAuth(config, { token: 'xyz' }).should.equal(config);
+    });
+
+    it('preserves other headers and options', () => {
+      const config = {
+        method: 'GET',
+        url: '/v1/users',
+        headers: { 'X-Extended-Metadata': 'true' }
+      };
+      withAuth(config, { token: 'xyz' }).should.eql({
+        method: 'GET',
+        url: '/v1/users',
+        headers: { 'X-Extended-Metadata': 'true', Authorization: 'Bearer xyz' }
+      });
     });
   });
 
@@ -377,8 +371,16 @@ describe('util/request', () => {
       isProblem({ message: 'Not found.' }).should.be.false();
     });
 
+    it('returns false for an object whose code property is not a number', () => {
+      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false();
+    });
+
     it('returns false for an object without a message property', () => {
       isProblem({ code: 404.1 }).should.be.false();
+    });
+
+    it('returns false for an object whose message property is not a string', () => {
+      isProblem({ code: 404.1, message: 123 }).should.be.false();
     });
   });
 
@@ -411,14 +413,11 @@ describe('util/request', () => {
   });
 
   describe('requestAlertMessage()', () => {
-    const errorWithProblem = (code = 500.1) => {
-      const error = new Error();
-      error.request = {};
-      error.response = {
-        data: { code, message: 'Message from API' }
-      };
-      return error;
-    };
+    const errorWithProblem = (code = 500.1) => mockAxiosError({
+      status: Math.floor(code),
+      data: { code, message: 'Message from API' },
+      config: { url: '/v1/projects/1/forms/f' }
+    });
 
     it('returns a message if there was no request', () => {
       const message = requestAlertMessage(new Error());
@@ -432,18 +431,25 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: there was no response to your request.');
     });
 
-    it('returns a message if the response is not a Problem', () => {
-      const error = new Error();
-      error.request = {};
-      error.response = {
+    it('returns a message with status code if request URL does not start with /v1', () => {
+      const message = requestAlertMessage(mockAxiosError({
         status: 500,
-        data: { x: 1 }
-      };
-      const message = requestAlertMessage(error);
+        data: { code: 500.1, message: 'Message from Google' },
+        config: { url: 'https://www.google.com' }
+      }));
       message.should.equal('Something went wrong: error code 500.');
     });
 
-    it('returns the Problem message by default', () => {
+    it('returns a message with status code if response is not a Problem', () => {
+      const message = requestAlertMessage(mockAxiosError({
+        status: 500,
+        data: { x: 1 },
+        config: { url: '/v1/projects/1/forms/f' }
+      }));
+      message.should.equal('Something went wrong: error code 500.');
+    });
+
+    it('returns the message of a Problem', () => {
       const message = requestAlertMessage(errorWithProblem());
       message.should.equal('Message from API');
     });
@@ -483,8 +489,8 @@ describe('util/request', () => {
         i18n.fallbackLocale = 'ett';
       });
       afterEach(() => {
-        i18n.fallbackLocale = 'en';
         i18n.locale = 'en';
+        i18n.fallbackLocale = 'en';
         i18n.setLocaleMessage('la', {});
         i18n.setLocaleMessage('ett', {});
       });

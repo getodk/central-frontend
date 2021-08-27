@@ -55,10 +55,7 @@ export default {
   },
   methods: {
     terminate() {
-      this.request({
-        method: 'DELETE',
-        url: '/config/backups'
-      })
+      this.request({ method: 'DELETE', url: '/v1/config/backups' })
         .then(() => {
           this.$emit('success');
         })

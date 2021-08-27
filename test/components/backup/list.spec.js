@@ -8,22 +8,11 @@ import { mockLogin } from '../../util/session';
 describe('BackupList', () => {
   beforeEach(mockLogin);
 
-  it('sends the correct requests', () => {
-    let success = false;
-    return load('/system/backups', { root: false })
-      .beforeEachResponse((component, { method, url }, index) => {
-        method.should.equal('GET');
-        if (index === 0) {
-          url.should.equal('/v1/config/backups');
-        } else {
-          url.should.equal('/v1/audits?action=backup&limit=10');
-          success = true;
-        }
-      })
-      .then(() => {
-        success.should.be.true();
-      });
-  });
+  it('sends the correct initial requests', () =>
+    load('/system/backups', { root: false }).testRequests([
+      { url: '/v1/config/backups' },
+      { url: '/v1/audits?action=backup&limit=10' }
+    ]));
 
   it('renders a table if there are audit log entries', () => {
     testData.extendedAudits.createBackupAudit({

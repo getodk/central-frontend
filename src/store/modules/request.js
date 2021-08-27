@@ -19,8 +19,8 @@ import { pick } from 'ramda';
 import Option from '../../util/option';
 import reconcileData from './request/reconcile';
 import { Presenter } from '../../presenters/base';
-import { configForPossibleBackendRequest, isProblem, logAxiosError, requestAlertMessage } from '../../util/request';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
 const updateData = (oldData, newData, props) => {
   if (oldData == null) throw new Error('data does not exist');
@@ -271,9 +271,6 @@ export default {
           resend = true
         } = config;
 
-        if (clear && update != null)
-          throw new Error('cannot clear data to be updated');
-
         /*
         We need to handle three cases:
 
@@ -297,27 +294,24 @@ export default {
         */
         const { data } = state;
         const requestsForKey = state.requests[key];
-        const lastRequest = requestsForKey.last;
-        if (!resend && (data[key] != null || lastRequest.state === 'loading'))
-          return Promise.resolve();
-        if ((data[key] == null && lastRequest.state === 'loading') ||
-          data[key] != null) {
-          if (lastRequest.state === 'loading') commit('cancelRequest', key);
-          if (data[key] != null && clear) commit('clearData', key);
+        const loading = requestsForKey.last.state === 'loading';
+        if (!resend && (data[key] != null || loading)) return Promise.resolve();
+        if (loading) commit('cancelRequest', key);
+        if (clear) {
+          if (update != null)
+            throw new Error('cannot clear data to be updated');
+          if (data[key] != null) commit('clearData', key);
         }
-        const { cancelId } = requestsForKey;
 
-        const baseConfig = { method: 'GET', url };
+        const axiosConfig = { method: 'GET', url };
         if (extended)
-          baseConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
+          axiosConfig.headers = { ...headers, 'X-Extended-Metadata': 'true' };
         else if (headers != null)
-          baseConfig.headers = headers;
-        const { session } = data;
-        const token = session != null ? session.token : null;
-        const axiosConfig = configForPossibleBackendRequest(baseConfig, token);
+          axiosConfig.headers = headers;
 
-        const promise = Vue.prototype.$http.request(axiosConfig)
-          .catch(error => { // eslint-disable-line no-loop-func
+        const { cancelId } = requestsForKey;
+        const promise = Vue.prototype.$http.request(withAuth(axiosConfig, data.session))
+          .catch(error => {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
 

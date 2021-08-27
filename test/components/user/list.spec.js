@@ -12,6 +12,12 @@ describe('UserList', () => {
     mockLogin({ email: 'a@email.com', displayName: 'Alice' });
   });
 
+  it('sends the correct initial requests', () =>
+    load('/users', { root: false }).testRequests([
+      { url: '/v1/users' },
+      { url: '/v1/assignments/admin' }
+    ]));
+
   it('correctly renders the display name', async () => {
     const component = await load('/users', { root: false });
     const link = component.getComponent(UserRow).getComponent(RouterLinkStub);

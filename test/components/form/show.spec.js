@@ -12,22 +12,19 @@ import { mockLogin } from '../../util/session';
 describe('FormShow', () => {
   beforeEach(mockLogin);
 
-  describe('route params', () => {
-    it('requires the projectId param to be integer', async () => {
-      const app = await load('/projects/p/forms/f');
-      app.findComponent(NotFound).exists().should.be.true();
-    });
+  it('requires the projectId route param to be integer', async () => {
+    const app = await load('/projects/p/forms/f');
+    app.findComponent(NotFound).exists().should.be.true();
+  });
 
-    it('handles an encoded xmlFormId correctly', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'i ı' });
-      return load('/projects/1/forms/i%20%C4%B1')
-        .beforeEachResponse((_, { url }, index) => {
-          if (index === 1) url.should.equal('/v1/projects/1/forms/i%20%C4%B1');
-        })
-        .afterResponses(component => {
-          component.vm.$route.params.xmlFormId.should.equal('i ı');
-        });
-    });
+  it('sends the correct initial requests', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
+    return load('/projects/1/forms/a%20b').testRequests([
+      { url: '/v1/projects/1', extended: true },
+      { url: '/v1/projects/1/forms/a%20b', extended: true },
+      { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
+      { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
+    ]);
   });
 
   it('re-renders the router view after a route change', () => {

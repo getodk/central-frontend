@@ -183,11 +183,11 @@ export default {
   created() {
     this.$store.dispatch('get', [{
       key: 'projects',
-      url: '/projects',
+      url: '/v1/projects',
       extended: true
     }]).catch(noop);
     if (this.currentUser.can('user.list')) {
-      this.$store.dispatch('get', [{ key: 'users', url: '/users' }])
+      this.$store.dispatch('get', [{ key: 'users', url: '/v1/users' }])
         .catch(noop);
     }
   },
