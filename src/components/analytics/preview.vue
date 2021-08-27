@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" hideable backdrop @hide="$emit('hide')">
+  <modal id="analytics-preview" :state="state" hideable backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -19,7 +19,17 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[2]') }}</p>
       </div>
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
-      <pre v-if="analyticsPreview != null"><code>{{ formattedJson }}</code></pre>
+      <template v-if="analyticsPreview">
+        <analytics-metrics-table title="system" :summary="systemSummary"/>
+        <h4>Project Summary</h4>
+        <p>Showing 1 project of {{ numProjects }}</p>
+        <!--<div style="display: flex">-->
+          <analytics-metrics-table title="users" :summary="userSummary"/>
+          <analytics-metrics-table title="forms" :summary="formSummary"/>
+          <analytics-metrics-table title="submissions" :summary="submissionSummary"/>
+        <!--</div>-->
+      </template>
+      <!--<pre v-if="analyticsPreview != null"><code>{{ formattedJson }}</code></pre>-->
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           {{ $t('action.close') }}
@@ -32,13 +42,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
+import AnalyticsMetricsTable from './metrics-table.vue';
 
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'AnalyticsPreview',
-  components: { Loading, Modal },
+  components: { AnalyticsMetricsTable, Loading, Modal },
   props: {
     state: Boolean
   },
@@ -46,6 +57,24 @@ export default {
     ...requestData(['analyticsPreview']),
     formattedJson() {
       return JSON.stringify(this.analyticsPreview, null, 2);
+    },
+    systemSummary() {
+      return this.analyticsPreview.system;
+    },
+    firstProject() {
+      return this.analyticsPreview.projects[0];
+    },
+    userSummary() {
+      return this.firstProject.users;
+    },
+    formSummary() {
+      return this.firstProject.forms;
+    },
+    submissionSummary() {
+      return this.firstProject.submissions;
+    },
+    numProjects() {
+      return this.analyticsPreview.projects.length;
     }
   },
   watch: {
@@ -63,6 +92,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#analytics-preview {
+  .metric-value {
+    text-align: right;
+  }
+}
+
+</style>
 
 <i18n lang="json5">
 {
