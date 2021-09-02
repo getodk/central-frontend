@@ -212,8 +212,9 @@ export default {
   }
 
   .full-path {
-    font-size: 12px;
+    font-size: 11px;
     color: #333;
+    letter-spacing: -0.02em;
     margin: 10px 10px -5px 10px;
   }
 
@@ -223,15 +224,19 @@ export default {
 
   .diff-details {
     display: flex;
-    font-size: 15px;
+    font-size: 13px;
     align-items: baseline;
   }
 
   .field-name, .nested-change-type {
     width: 150px;
-    margin: 10px;
-    font-size: 14px;
+    margin: 0 10px;
+    font-size: 13px;
     flex-shrink: 0;
+  }
+
+  .nested-change-type {
+    margin-top: 12px;
   }
 
   .field-name {
@@ -239,7 +244,7 @@ export default {
     @include text-overflow-ellipsis;
   }
 
-  .old-to-new { margin: 10px; }
+  .old-to-new { margin: 0 10px; }
   .icon-arrow-circle-right { color: #888; padding: 10px; }
 
   .data-old { color: $color-danger-dark; }
@@ -261,10 +266,11 @@ export default {
   .added { color: $color-success-dark; }
 
   .data-empty {
-    background-color: #bbb;
+    background-color: #aaa;
     color: white;
-    padding: 5px;
+    padding: 2px 5px 3px;
     border-radius: 2px;
+    font-size: 12px;
   }
 }
 
