@@ -7,7 +7,7 @@ const createData = () => {
     name: 'My Project',
     archived: false
   });
-  testData.extendedForms.createPast(1, { name: 'My Form', state: 'closing' });
+  testData.extendedForms.createPast(1, { state: 'closing' });
   testData.extendedFieldKeys
     .createPast(1, { displayName: 'App User 1' })
     .createPast(1, { displayName: 'App User 2' })
@@ -227,26 +227,32 @@ describe('ProjectFormAccess', () => {
             button: '#project-form-access-save-button'
           }));
 
-      it('sends the correct data', () =>
-        saveWithSuccess().beforeEachResponse((_, { data }, index) => {
-          if (index !== 0) return;
-          const roleId = testData.standardRoles.sorted()
-            .find(role => role.system === 'app-user')
-            .id;
-          data.should.eql({
-            name: 'My Project',
-            archived: false,
-            forms: [
-              {
-                xmlFormId: 'f',
-                name: 'My Form',
-                state: 'open',
-                // The assignment for "App User 3" is not included.
-                assignments: [{ actorId: 1, roleId }]
-              }
-            ]
-          });
-        }));
+      it('sends the correct requests', () => {
+        const roleId = testData.standardRoles.sorted()
+          .find(role => role.system === 'app-user')
+          .id;
+        return saveWithSuccess().testRequests([
+          {
+            method: 'PUT',
+            url: '/v1/projects/1',
+            data: {
+              name: 'My Project',
+              archived: false,
+              forms: [
+                {
+                  xmlFormId: 'f',
+                  state: 'open',
+                  // The assignment for "App User 3" is not included.
+                  assignments: [{ actorId: 1, roleId }]
+                }
+              ]
+            }
+          },
+          { url: '/v1/projects/1/forms', extended: true },
+          { url: '/v1/projects/1/app-users', extended: true },
+          { url: '/v1/projects/1/assignments/forms/app-user' }
+        ]);
+      });
 
       it('shows a success alert', () =>
         saveWithSuccess().afterResponses(app => {
