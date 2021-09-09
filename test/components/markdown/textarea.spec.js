@@ -92,4 +92,12 @@ describe('MarkdownTextarea', () => {
     preview.props().rawMarkdown.should.equal('this is **bold**');
     preview.get('div > p').html().should.equal('<p>this is <strong>bold</strong></p>');
   });
+
+  it('uses the default slot', () => {
+    const component = mount(MarkdownTextarea, {
+      propsData: { value: '', defaultText: 'default text', showFooter: true },
+      slots: { default: '<button id="some-button">Button text</button>' }
+    });
+    component.find('#some-button').exists().should.be.true();
+  });
 });

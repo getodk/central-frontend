@@ -100,33 +100,31 @@ describe('SubmissionComment', () => {
     });
   });
 
-  describe('visibility of actions during requests', () => {
-    it('shows the actions during the request', () => {
-      testData.extendedSubmissions.createPast(1);
-      return mockHttpForComponent()
-        .request(async (component) => {
-          await component.setData({ body: 'foo' }); // Linked to child's 'value' prop and textarea
-          return component.get('form').trigger('submit');
+  it('shows the actions if the user should comment after editing', () => {
+    testData.extendedSubmissions.createNew();
+    const component = mountComponent({
+      feed: [
+        testData.extendedAudits.createNew({ action: 'submission.create' }),
+        testData.extendedAudits.createNew({
+          action: 'submission.update.version'
         })
-        .beforeAnyResponse(async (component) => {
-          await component.setData({ body: '' }); // Linked to child's 'value' prop and textarea
-          component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
-        })
-        .respondWithProblem();
+      ].reverse()
     });
+    component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+  });
 
-    it('shows the actions if the user did not comment after editing', () => {
-      testData.extendedSubmissions.createNew();
-      const component = mountComponent({
-        feed: [
-          testData.extendedAudits.createNew({ action: 'submission.create' }),
-          testData.extendedAudits.createNew({
-            action: 'submission.update.version'
-          })
-        ].reverse()
-      });
-      component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
-    });
+  it('shows the actions during the request', () => {
+    testData.extendedSubmissions.createPast(1);
+    return mockHttpForComponent()
+      .request(async (component) => {
+        await component.setData({ body: 'foo' }); // Linked to child's 'value' prop and textarea
+        return component.get('form').trigger('submit');
+      })
+      .beforeAnyResponse(async (component) => {
+        await component.setData({ body: '' }); // Linked to child's 'value' prop and textarea
+        component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+      })
+      .respondWithProblem();
   });
 
   it('sends the correct request', () => {
