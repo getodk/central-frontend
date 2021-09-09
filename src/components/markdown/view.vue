@@ -25,6 +25,12 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   }
 });
 
+const forbiddenAttributes = ['style', 'class', 'id', 'data'];
+const allowedTags = ['a', 'b', 'br', 'code', 'em',
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'hr', 'i', 'img', 'li', 'ol', 'p',
+  'pre', 's', 'small', 'sub', 'sup', 'strong', 'u', 'ul'];
+
 export default {
   name: 'MarkdownView',
   props: {
@@ -37,11 +43,8 @@ export default {
     renderedMarkdown() {
       const md = marked(this.rawMarkdown, { gfm: true, breaks: true });
       const santized = DOMPurify.sanitize(md, {
-        FORBID_ATTR: ['style', 'class', 'id', 'data'],
-        ALLOWED_TAGS: ['a', 'b', 'br', 'code', 'em',
-          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-          'hr', 'i', 'img', 'li', 'ol', 'p',
-          'pre', 's', 'small', 'sub', 'sup', 'strong', 'u', 'ul'],
+        FORBID_ATTR: forbiddenAttributes,
+        ALLOWED_TAGS: allowedTags,
         ALLOW_DATA_ATTR: false
       });
       return santized;

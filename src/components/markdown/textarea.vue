@@ -14,12 +14,11 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <textarea :value="value" class="form-control"
         :placeholder="defaultText" :aria-label="defaultText"
-        required rows="2" @input="$emit('input', $event.target.value);">
+        required rows="2" @input="$emit('input', $event.target.value)">
       </textarea>
     </div>
     <div v-if="value !== '' && previewMode" class="preview-container">
       <p class="heading">{{ $t('preview') }}</p>
-      <!-- eslint-disable-next-line vue/no-v-html -->
       <markdown-view :raw-markdown="value"/>
     </div>
     <div v-show="value !== '' || showFooter " class="markdown-textarea-actions">
@@ -60,7 +59,7 @@ export default {
   },
   computed: {
     previewButtonText() {
-      return this.previewMode ? this.$t('toggle.hidePreview') : this.$t('toggle.showPreview');
+      return this.previewMode ? this.$t('action.hidePreview') : this.$t('action.showPreview');
     },
     activeBorderClass() {
       if (this.showFooter || this.value !== '')
@@ -77,13 +76,15 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
 
 .markdown-textarea {
+  border: 1px solid transparent;
   &.active-border {
-    border: 1px solid #31708f;
+    border: 1px solid $color-info;
   }
 
-  background: #eaeaea;
+  background: darken( $color-subpanel-background, 3% );
 
   .form-group {
     margin-bottom: 0;
@@ -107,6 +108,7 @@ export default {
   .md-preview-btn {
     background-color: #999;
     color: white;
+    &:hover, &:focus, &:active:focus { background-color: #888; }
   }
 
   .markdown-textarea-actions {
@@ -129,6 +131,7 @@ export default {
     text-decoration: underline;
     text-decoration-style: dotted;
     padding: 10px;
+    &:hover, &:focus, &:active:focus { color: #777; }
   }
 }
 
@@ -140,12 +143,7 @@ export default {
     // This is a link to an external website with Markdown style guidelines
     "markdownSupported": "Markdown supported",
     // This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)
-    "preview": "Preview",
-    // This text is shown on a button that the user clicks to change if the Markdown preview is shown or not
-    "toggle": {
-      "showPreview": "Preview",
-      "hidePreview": "Hide Preview"
-    }
+    "preview": "Preview"
   }
 }
 </i18n>
