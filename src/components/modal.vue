@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     data-keyboard="false" role="dialog" :aria-labelledby="titleId"
     @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
     @focusout="refocus">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" :class="{ 'modal-lg': large }" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" :disabled="!hideable"
@@ -68,6 +68,10 @@ export default {
       default: false
     },
     backdrop: {
+      type: Boolean,
+      default: false
+    },
+    large: {
       type: Boolean,
       default: false
     }

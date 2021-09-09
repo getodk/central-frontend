@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="analytics-preview" :state="state" hideable backdrop @hide="$emit('hide')">
+  <modal id="analytics-preview" :state="state" hideable backdrop large @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -21,13 +21,17 @@ except according to the terms contained in the LICENSE file.
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
       <template v-if="analyticsPreview">
         <analytics-metrics-table title="system" :summary="systemSummary"/>
-        <h4>Project Summary</h4>
-        <p>Showing 1 project of {{ numProjects }}</p>
-        <!--<div style="display: flex">-->
-          <analytics-metrics-table title="users" :summary="userSummary"/>
-          <analytics-metrics-table title="forms" :summary="formSummary"/>
+        <div id="projectSummary">
+          <span class="header">{{ $t('projects.title') }}</span>
+          <span class="explanation">{{ $t('projects.subtitle') }} {{ numProjects }}</span>
+        </div>
+        <div style="display: flex">
+          <div id="usersFormsColumn">
+            <analytics-metrics-table title="users" :summary="userSummary"/>
+            <analytics-metrics-table title="forms" :summary="formSummary"/>
+          </div>
           <analytics-metrics-table title="submissions" :summary="submissionSummary"/>
-        <!--</div>-->
+        </div>
       </template>
       <!--<pre v-if="analyticsPreview != null"><code>{{ formattedJson }}</code></pre>-->
       <div class="modal-actions">
@@ -62,7 +66,10 @@ export default {
       return this.analyticsPreview.system;
     },
     firstProject() {
-      return this.analyticsPreview.projects[0];
+      // eslint-disable-next-line arrow-body-style
+      return this.analyticsPreview.projects.reduce((a, b) => {
+        return (a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b;
+      });
     },
     userSummary() {
       return this.firstProject.users;
@@ -97,8 +104,22 @@ export default {
 @import '../../assets/scss/variables';
 
 #analytics-preview {
-  .metric-value {
-    text-align: right;
+  .modal-introduction > p {
+    max-width: 100%;
+  }
+
+  #usersFormsColumn {
+    padding-right: 10px;
+  }
+
+  #projectSummary > .header {
+    font-size: 18px;
+    font-weight: 500;
+    padding-right: 10px;
+  }
+
+  #projectSummary {
+    padding-bottom: 5px;
   }
 }
 
@@ -113,7 +134,11 @@ export default {
       "Thank you for thinking about sending some usage information. This data will help us prioritize your needs!",
       "Shown here is the report we are collecting currently. To respond to new features and needs, we will sometimes change what is reported, but we will only ever gather summary averages like you see here.",
       "You can always come here to see what is being collected."
-    ]
+    ],
+    "projects": {
+      "title": "Project Summaries",
+      "subtitle": "Showing 1 project of"
+    }
   }
 }
 </i18n>
