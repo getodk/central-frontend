@@ -40,8 +40,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </div>
     </div>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-if="comment != null" class="body" v-html="comment"></div>
+    <markdown-view v-if="comment != null" class="body" :raw-markdown="comment"/>
     <div v-if="entryDiffs != null">
       <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
         :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
@@ -51,28 +50,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
-import marked from 'marked';
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
+import MarkdownView from '../markdown/view.vue';
 
 import reviewState from '../../mixins/review-state';
 import SubmissionDiffItem from './diff-item.vue';
 
 import { requestData } from '../../store/modules/request';
 
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-  if ('target' in node) {
-    node.setAttribute('target', '_blank');
-    node.setAttribute('rel', 'noreferrer noopener');
-  }
-});
-
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, DateTime, SubmissionDiffItem },
+  components: { ActorLink, DateTime, MarkdownView, SubmissionDiffItem },
   mixins: [reviewState()],
   props: {
     projectId: {
@@ -104,20 +95,7 @@ export default {
         : 'edited';
     },
     comment() {
-      const comment = this.entry.notes != null ? this.entry.notes : this.entry.body;
-      if (comment != null) {
-        const md = marked(comment, { gfm: true, breaks: true });
-        const santized = DOMPurify.sanitize(md, {
-          FORBID_ATTR: ['style', 'class', 'id', 'data'],
-          ALLOWED_TAGS: ['a', 'b', 'br', 'code', 'em',
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-            'hr', 'i', 'img', 'li', 'ol', 'p',
-            'pre', 's', 'small', 'sub', 'sup', 'strong', 'u', 'ul'],
-          ALLOW_DATA_ATTR: false
-        });
-        return santized;
-      }
-      return null;
+      return this.entry.notes != null ? this.entry.notes : this.entry.body;
     },
     allDiffs() {
       // Audit feed entries that represent a submission version change

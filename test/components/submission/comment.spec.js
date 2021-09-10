@@ -1,4 +1,5 @@
 import SubmissionComment from '../../../src/components/submission/comment.vue';
+import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
@@ -99,45 +100,31 @@ describe('SubmissionComment', () => {
     });
   });
 
-  describe('visibility of actions', () => {
-    it('shows the actions if there is input', async () => {
-      testData.extendedSubmissions.createPast(1);
-      const component = mountComponent();
-      const actions = component.get('#submission-comment-actions');
-      actions.should.be.hidden();
-      const textarea = component.get('textarea');
-      await textarea.setValue('foo');
-      actions.should.be.visible();
-      await textarea.setValue('');
-      actions.should.be.hidden();
-    });
-
-    it('shows the actions during the request', () => {
-      testData.extendedSubmissions.createPast(1);
-      return mockHttpForComponent()
-        .request(async (component) => {
-          await component.get('textarea').setValue('foo');
-          return component.get('form').trigger('submit');
+  it('shows the actions if the user should comment after editing', () => {
+    testData.extendedSubmissions.createNew();
+    const component = mountComponent({
+      feed: [
+        testData.extendedAudits.createNew({ action: 'submission.create' }),
+        testData.extendedAudits.createNew({
+          action: 'submission.update.version'
         })
-        .beforeAnyResponse(async (component) => {
-          await component.get('textarea').setValue('');
-          component.get('#submission-comment-actions').should.be.visible();
-        })
-        .respondWithProblem();
+      ].reverse()
     });
+    component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+  });
 
-    it('shows the actions if the user did not comment after editing', () => {
-      testData.extendedSubmissions.createNew();
-      const component = mountComponent({
-        feed: [
-          testData.extendedAudits.createNew({ action: 'submission.create' }),
-          testData.extendedAudits.createNew({
-            action: 'submission.update.version'
-          })
-        ].reverse()
-      });
-      component.get('#submission-comment-actions').should.be.visible();
-    });
+  it('shows the actions during the request', () => {
+    testData.extendedSubmissions.createPast(1);
+    return mockHttpForComponent()
+      .request(async (component) => {
+        await component.setData({ body: 'foo' }); // Linked to child's 'value' prop and textarea
+        return component.get('form').trigger('submit');
+      })
+      .beforeAnyResponse(async (component) => {
+        await component.setData({ body: '' }); // Linked to child's 'value' prop and textarea
+        component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+      })
+      .respondWithProblem();
   });
 
   it('sends the correct request', () => {
@@ -145,7 +132,7 @@ describe('SubmissionComment', () => {
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
     return mockHttpForComponent()
       .request(async (component) => {
-        await component.get('textarea').setValue('foo');
+        await component.setData({ body: 'foo' });
         return component.get('form').trigger('submit');
       })
       .beforeEachResponse((_, { method, url, data }) => {
@@ -161,7 +148,7 @@ describe('SubmissionComment', () => {
     return mockHttpForComponent().testStandardButton({
       button: 'button[type="submit"]',
       request: async (component) => {
-        await component.get('textarea').setValue('foo');
+        await component.setData({ body: 'foo' });
         return component.get('form').trigger('submit');
       }
     });
@@ -176,7 +163,7 @@ describe('SubmissionComment', () => {
         .complete()
         .request(async (component) => {
           const form = component.getComponent(SubmissionComment);
-          await form.get('textarea').setValue('foo');
+          await form.setData({ body: 'foo' });
           return form.trigger('submit');
         })
         .respondWithData(() =>
@@ -203,8 +190,7 @@ describe('SubmissionComment', () => {
 
     it('resets the field', async () => {
       const component = await submit();
-      const { value } = component.get('#submission-comment textarea').element;
-      value.should.equal('');
+      component.getComponent(MarkdownTextarea).props().value.should.equal('');
     });
   });
 });

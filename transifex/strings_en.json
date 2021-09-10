@@ -371,6 +371,14 @@
     "yesProceed": {
       "string": "Yes, proceed",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "showPreview": {
+      "string": "Preview",
+      "developer_comment": "This text is shown on a button that the user clicks to show a preview of something"
+    },
+    "hidePreview": {
+      "string": "Hide preview",
+      "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     }
   },
   "field": {
@@ -2198,6 +2206,16 @@
         "string": "Loading…"
       }
     },
+    "MarkdownTextarea": {
+      "markdownSupported": {
+        "string": "Markdown supported",
+        "developer_comment": "This is a link to an external website with Markdown style guidelines"
+      },
+      "preview": {
+        "string": "Preview",
+        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+      }
+    },
     "Navbar": {
       "action": {
         "toggle": {
@@ -3076,10 +3094,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "You have made edits to this data. Please describe the changes you made."
-      },
-      "markdownSupported": {
-        "string": "Markdown supported",
-        "developer_comment": "This is a link to an external website with Markdown style guidelines"
       }
     },
     "SubmissionDataAccess": {

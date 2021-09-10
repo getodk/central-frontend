@@ -181,7 +181,11 @@
     "save": "Save",
     "saveSettings": "Save settings",
     "update": "Update",
-    "yesProceed": "Yes, proceed"
+    "yesProceed": "Yes, proceed",
+    // This text is shown on a button that the user clicks to show a preview of something
+    "showPreview": "Preview",
+    // This text is shown on a button that the user clicks to hide a preview of something
+    "hidePreview": "Hide preview"
   },
   "field": {
     "comment": "Leave a comment…",

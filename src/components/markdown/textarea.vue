@@ -1,0 +1,149 @@
+<!--
+Copyright 2021 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div class="markdown-textarea" :class="activeBorderClass">
+    <div class="form-group">
+      <textarea :value="value" class="form-control"
+        :placeholder="defaultText" :aria-label="defaultText"
+        required rows="2" @input="$emit('input', $event.target.value)">
+      </textarea>
+    </div>
+    <div v-if="value !== '' && previewMode" class="preview-container">
+      <p class="heading">{{ $t('preview') }}</p>
+      <markdown-view :raw-markdown="value"/>
+    </div>
+    <div v-show="value !== '' || showFooter " class="markdown-textarea-actions">
+      <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
+      <span class="push"></span>
+      <button class="btn md-preview-btn" type="button" @click="toggleViewMode">
+        {{ previewButtonText }}
+      </button>
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
+<script>
+import MarkdownView from './view.vue';
+
+export default {
+  name: 'MarkdownTextarea',
+  components: { MarkdownView },
+  props: {
+    value: {
+      type: String,
+      required: true
+    },
+    showFooter: {
+      type: Boolean,
+      default: false
+    },
+    defaultText: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      previewMode: false
+    };
+  },
+  computed: {
+    previewButtonText() {
+      return this.previewMode ? this.$t('action.hidePreview') : this.$t('action.showPreview');
+    },
+    activeBorderClass() {
+      if (this.showFooter || this.value !== '')
+        return 'active-border';
+      return null;
+    }
+  },
+  methods: {
+    toggleViewMode() {
+      this.previewMode = !this.previewMode;
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+.markdown-textarea {
+  border: 1px solid transparent;
+  &.active-border {
+    border: 1px solid $color-info;
+  }
+
+  background: darken( $color-subpanel-background, 3% );
+
+  .form-group {
+    margin-bottom: 0;
+    padding-bottom: 0px;
+  }
+
+  textarea {
+    border-bottom-color: #aaa;
+    resize: vertical;
+  }
+
+  .preview-container {
+    padding: 10px;
+
+    .heading {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  }
+
+  .md-preview-btn {
+    background-color: #999;
+    color: white;
+    &:hover, &:focus, &:active:focus { background-color: #888; }
+  }
+
+  .markdown-textarea-actions {
+    display: flex;
+    align-content: stretch;
+    align-items: center;
+  }
+
+  .markdown-textarea-actions > .btn {
+    margin: 3px;
+  }
+
+  .push {
+    margin-left: auto;
+  }
+
+  .external-help-link {
+    color: #888;
+    font-size: 12px;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    padding: 10px;
+    &:hover, &:focus, &:active:focus { color: #777; }
+  }
+}
+
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a link to an external website with Markdown style guidelines
+    "markdownSupported": "Markdown supported",
+    // This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)
+    "preview": "Preview"
+  }
+}
+</i18n>

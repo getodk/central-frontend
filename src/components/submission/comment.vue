@@ -14,24 +14,18 @@ except according to the terms contained in the LICENSE file.
     <div v-if="editWithoutComment" role="alert">
       <span class="icon-pencil"></span>{{ $t('editWithoutComment') }}
     </div>
-    <div class="form-group">
-      <textarea v-model.trim="body" class="form-control"
-        :placeholder="$t('field.comment')" :aria-label="$t('field.comment')"
-        required rows="2">
-      </textarea>
-    </div>
-    <div v-show="body !== '' || awaitingResponse || editWithoutComment"
-      id="submission-comment-actions">
-      <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
+    <markdown-textarea v-model="body" :default-text="$t('field.comment')"
+      :show-footer="editWithoutComment || awaitingResponse">
       <button type="submit" class="btn btn-primary"
         :disabled="awaitingResponse">
         {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
       </button>
-    </div>
+    </markdown-textarea>
   </form>
 </template>
 
 <script>
+import MarkdownTextarea from '../markdown/textarea.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
@@ -41,7 +35,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionComment',
-  components: { Spinner },
+  components: { Spinner, MarkdownTextarea },
   mixins: [request()],
   props: {
     projectId: {
@@ -113,17 +107,6 @@ export default {
 
     .icon-pencil { margin-right: 10px; }
   }
-
-  .form-group {
-    margin-bottom: 0;
-    padding-bottom: 5px;
-  }
-
-  textarea {
-    border-bottom-color: #aaa;
-  }
-
-  .btn { float: right; }
 }
 
 #submission-comment-actions {
@@ -140,22 +123,12 @@ export default {
   100% { margin-bottom: 0; }
 }
 
-.external-help-link {
-  color: #999;
-  font-size: 12px;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  padding: 10px;
-}
-
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "editWithoutComment": "You have made edits to this data. Please describe the changes you made.",
-    // This is a link to an external website with Markdown style guidelines
-    "markdownSupported": "Markdown supported"
+    "editWithoutComment": "You have made edits to this data. Please describe the changes you made."
   }
 }
 </i18n>

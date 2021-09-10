@@ -28,12 +28,8 @@ except according to the terms contained in the LICENSE file.
             </div>
           </div>
           <div class="col-xs-8">
-            <label class="form-group">
-              <textarea v-model.trim="notes" class="form-control"
-                :placeholder="$t('field.notes')" rows="3">
-              </textarea>
-              <span class="form-label">{{ $t('field.notes') }}</span>
-            </label>
+            <markdown-textarea v-model="notes" :default-text="$t('field.notes')"
+              :show-footer="awaitingResponse"/>
           </div>
         </div>
         <div class="modal-actions">
@@ -54,6 +50,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+import MarkdownTextarea from '../markdown/textarea.vue';
 
 import request from '../../mixins/request';
 import reviewState from '../../mixins/review-state';
@@ -64,7 +61,7 @@ const selectableStates = ['approved', 'hasIssues', 'rejected'];
 
 export default {
   name: 'SubmissionUpdateReviewState',
-  components: { Modal, Spinner },
+  components: { Modal, Spinner, MarkdownTextarea },
   mixins: [request(), reviewState()],
   props: {
     state: Boolean,
