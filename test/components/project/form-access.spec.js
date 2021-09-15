@@ -7,7 +7,9 @@ const createData = () => {
     name: 'My Project',
     archived: false
   });
-  testData.extendedForms.createPast(1, { state: 'closing' });
+  // We specify a name for the form in order to test that the PUT request does
+  // not send it.
+  testData.extendedForms.createPast(1, { name: 'My Form', state: 'closing' });
   testData.extendedFieldKeys
     .createPast(1, { displayName: 'App User 1' })
     .createPast(1, { displayName: 'App User 2' })
