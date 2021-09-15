@@ -527,30 +527,29 @@ class MockHttp {
       return this.afterResponses({ callback: optionsOrCallback });
     const { callback, pollWork = undefined } = optionsOrCallback;
     const promise = this._initialPromise()
-      .then(() => this._navigateAndMount())
-      // If both this.route() and this.request() were specified, then wait for
-      // any async components associated with the route to load.
-      .then(this._location && this._request != null ? wait : noop)
-      .then(() => {
-        if (this._request == null) return undefined;
-        this._checkStateBeforeRequest();
-        return this._request(this._component);
-      })
-      // Wait for any responses to be processed.
-      .finally(wait)
-      .finally(pollWork != null
-        ? () => waitUntil(() => pollWork(this._component))
-        : noop)
-      .finally(() => {
-        if (this._previousHttp != null)
+      .then(() => this._navigateAndMount()
+        // If both this.route() and this.request() were specified, then wait for
+        // any async components associated with the route to load.
+        .then(this._location && this._request != null ? wait : noop)
+        .then(() => {
+          if (this._request == null) return undefined;
+          this._checkStateBeforeRequest();
+          return this._request(this._component);
+        })
+        // Wait for any responses to be processed.
+        .finally(wait)
+        .finally(pollWork != null
+          ? () => waitUntil(() => pollWork(this._component))
+          : noop)
+        .finally(() => {
           Vue.prototype.$http = this._previousHttp;
-      })
-      .then(() => this._checkStateAfterWait())
-      .then(() => callback(this._component))
-      .then(result => ({ component: this._component, result }))
-      .finally(() => {
-        inProgress = false;
-      });
+        })
+        .then(() => this._checkStateAfterWait())
+        .then(() => callback(this._component))
+        .then(result => ({ component: this._component, result }))
+        .finally(() => {
+          inProgress = false;
+        }));
     return new MockHttp({ previousPromise: promise });
   }
 
@@ -598,11 +597,10 @@ class MockHttp {
       first promise if something unexpected happens in the second promise.
       */
       this._responsesPromise = Promise.resolve();
+      this._requestCount = 0;
       this._errorFromBeforeAnyResponse = null;
       this._errorFromBeforeEachResponse = null;
       this._errorFromResponse = null;
-      this._requestWithoutResponse = false;
-      this._responseWithoutRequest = this._responses.length !== 0;
       this._requestResponseLog = [];
     });
   }
@@ -610,25 +608,18 @@ class MockHttp {
   // Returns a function that responds with each of the specified responses in
   // turn.
   _http() {
-    // The number of requests sent so far
-    let count = 0;
     return (config) => {
       this._requestResponseLog.push(config);
-      if (count === this._responses.length - 1)
-        this._responseWithoutRequest = false;
-      else if (count === this._responses.length) {
-        this._requestWithoutResponse = true;
+      const index = this._requestCount;
+      this._requestCount += 1;
+      if (this._requestCount > this._responses.length)
         return Promise.reject(new Error());
-      }
 
-      const responseCallback = this._responses[count];
-      const index = count;
-      count += 1;
       this._responsesPromise = this._responsesPromise
         // If this is not the first response, and the previous response was an
         // error, then this._responsesPromise will be rejected. However, we need
         // this part of the promise chain to be fulfilled, because this response
-        // will not necessarily be an error even if the prevous one was.
+        // will not necessarily be an error even if the previous one was.
         .catch(noop)
         .then(() => (index === 0 && this._beforeAnyResponse != null
           ? this._tryBeforeAnyResponse()
@@ -639,7 +630,7 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           let response;
           try {
-            response = responseCallback(config);
+            response = (this._responses[index])(config);
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
@@ -650,11 +641,10 @@ class MockHttp {
           delete withoutConfig.config;
           this._requestResponseLog.push(withoutConfig);
 
-          if (response.status >= 200 && response.status < 300) {
+          if (response.status >= 200 && response.status < 300)
             resolve(response);
-          } else {
+          else
             reject(mockAxiosError(response));
-          }
         }));
       return this._responsesPromise;
     };
@@ -708,7 +698,7 @@ class MockHttp {
     }
     if (this._location != null) return this._navigate();
     if (this._mount != null) this._component = this._mount();
-    return undefined;
+    return Promise.resolve();
   }
 
   _checkStateBeforeRequest() {
@@ -748,9 +738,9 @@ class MockHttp {
       console.error(this._errorFromResponse);
       throw new Error('a response callback threw an error');
     }
-    if (this._requestWithoutResponse || this._responseWithoutRequest) {
+    if (this._requestCount !== this._responses.length) {
       this._listRequestResponseLog();
-      if (this._requestWithoutResponse)
+      if (this._requestCount > this._responses.length)
         throw new Error('request without response: no response specified for request');
       else
         throw new Error('response without request: not all responses were requested');
@@ -775,7 +765,7 @@ class MockHttp {
 
   // The inclusion of these methods means that we can return a MockHttp to Mocha
   // in lieu of a Promise.
-  then(p1, p2) { return this.toPromise().then(p1, p2); }
+  then(...args) { return this.toPromise().then(...args); }
   catch(onRejected) { return this.toPromise().catch(onRejected); }
   finally(onFinally) { return this.toPromise().finally(onFinally); }
 }
