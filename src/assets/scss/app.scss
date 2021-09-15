@@ -295,7 +295,11 @@ fieldset {
   min-width: 0;
   padding: 0;
 
-  &[disabled] { opacity: 0.5; }
+  &[disabled] {
+    opacity: 0.5;
+    // Do not additionally dim a nested disabled fieldset.
+    fieldset[disabled] & { opacity: 1; }
+  }
 }
 
 input[type="radio"], input[type="checkbox"], input[type="file"] {
