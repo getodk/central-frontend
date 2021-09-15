@@ -1134,12 +1134,6 @@
       }
     },
     "EnketoPreview": {
-      "action": {
-        "preview": {
-          "string": "Preview",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "disabled": {
         "processing": {
           "string": "Preview has not finished processing for this Form. Please refresh later and try again."
