@@ -148,7 +148,6 @@ export default {
 
           return {
             xmlFormId: form.xmlFormId,
-            name: form.name,
             state: changes.current.state,
             // If there is an assignment on Backend whose app user is not in
             // this.fieldKeysWithToken, then Backend will delete the assignment.
