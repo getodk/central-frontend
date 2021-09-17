@@ -869,6 +869,13 @@
         }
       }
     },
+    "App": {
+      "alert": {
+        "versionChange": {
+          "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+        }
+      }
+    },
     "AsyncRoute": {
       "alert": {
         "loadError": {
