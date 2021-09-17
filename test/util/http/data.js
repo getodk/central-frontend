@@ -1,4 +1,5 @@
 import testData from '../../data';
+import { mockResponse } from '../axios';
 
 // The names of the following properties correspond to request keys.
 const defaults = {
@@ -19,10 +20,10 @@ const defaults = {
   formVersions: () => testData.extendedFormVersions.published(),
   formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.extendedFormDrafts.last()
-    : { problem: 404.1 }),
+    : mockResponse.problem(404.1)),
   attachments: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.standardFormAttachments.sorted()
-    : { problem: 404.1 }),
+    : mockResponse.problem(404.1)),
   odataChunk: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
   submitters: () => testData.extendedFieldKeys
@@ -39,11 +40,11 @@ const defaults = {
 
   backupsConfig: () => {
     const config = testData.standardConfigs.forKey('backups');
-    return config != null ? config : { problem: 404.1 };
+    return config != null ? config : mockResponse.problem(404.1);
   },
   analyticsConfig: () => {
     const config = testData.standardConfigs.forKey('analytics');
-    return config != null ? config : { problem: 404.1 };
+    return config != null ? config : mockResponse.problem(404.1);
   }
 };
 

@@ -286,7 +286,7 @@ import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { loadAsyncCache } from './async-components';
-import { mockAxios, mockAxiosError, mockAxiosResponse } from './axios';
+import { mockAxios, mockAxiosError, mockResponse } from './axios';
 import { mount as lifecycleMount } from './lifecycle';
 import { wait, waitUntil } from './util';
 
@@ -368,20 +368,22 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // RESPONSES
 
+  // `callback` must return a response object (specifically, an object with
+  // `status` and `data` properties).
   respond(callback) {
-    return this._with({
-      responses: [
-        ...this._responses,
-        (config) => mockAxiosResponse(callback(), config)
-      ]
-    });
+    return this._with({ responses: [...this._responses, callback] });
   }
 
-  respondWithData(callback) { return this.respond(callback); }
-  respondWithSuccess() { return this.respond(() => ({ success: true })); }
+  respondWithData(callback) {
+    return this.respond(() => ({ status: 200, data: callback() }));
+  }
+
+  respondWithSuccess() {
+    return this.respond(() => ({ status: 200, data: { success: true } }));
+  }
 
   respondWithProblem(problemOrCode = 500.1) {
-    return this.respond(() => ({ problem: problemOrCode }));
+    return this.respond(() => mockResponse.problem(problemOrCode));
   }
 
   restoreSession(restore) {
@@ -399,13 +401,9 @@ class MockHttp {
     return [...requestDataByComponent(component.name)].reduce(
       (series, [key, callback]) => {
         const option = options != null ? options[key] : null;
-        if (option != null) {
-          if (option === false) return series;
-          return typeof option === 'number'
-            ? series.respondWithProblem(option)
-            : series.respond(option);
-        }
-        return series.respond(callback);
+        if (option === false) return series;
+        return series.respond(() =>
+          mockResponse.of(option != null ? option() : callback()));
       },
       this
     );
@@ -425,7 +423,8 @@ class MockHttp {
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => [])
 
-    .respondFor('/projects/1', { forms: 500.1 }) is equivalent to:
+    .respondFor('/projects/1', { forms: () => mockResponse.problem(500.1) }) is
+    equivalent to:
 
       .respondWithData(() => testData.extendedProjects.last())
       .respondWithProblem(500.1)
@@ -435,6 +434,8 @@ class MockHttp {
       .respondWithData(() => testData.extendedProjects.last())
       // No response for `forms`
 
+  In other words, a default response can be overriden with a callback that
+  returns response data or a full response, or can be overriden with `false`.
   The property names of `options` correspond to request keys.
   */
   respondFor(location, options = undefined) {
@@ -628,19 +629,18 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          let response;
+          let withoutConfig;
           try {
-            response = (this._responses[index])(config);
+            withoutConfig = (this._responses[index])(config);
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
 
-          const withoutConfig = { ...response };
-          delete withoutConfig.config;
           this._requestResponseLog.push(withoutConfig);
 
+          const response = { ...withoutConfig, config };
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else
@@ -806,9 +806,7 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
         const option = respondForOptions != null
           ? respondForOptions[key]
           : null;
-        requestData[key] = option != null
-          ? (typeof option === 'number' ? { problem: option } : option())
-          : callback();
+        requestData[key] = option != null ? option() : callback();
       }
     }
     fullMountOptions.requestData = requestData;

@@ -7,6 +7,7 @@ import { noop } from '../src/util/util';
 import testData from './data';
 import { load } from './util/http';
 import { mockLogin } from './util/session';
+import { mockResponse } from './util/axios';
 
 describe('router', () => {
   describe('i18n', () => {
@@ -463,14 +464,18 @@ describe('router', () => {
         });
 
         it('redirects the user from .../users', () =>
-          load('/projects/1/users', {}, { projectAssignments: 403.1 })
+          load('/projects/1/users', {}, {
+            projectAssignments: () => mockResponse.problem(403.1)
+          })
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
 
         it('redirects the user from .../app-users', () =>
-          load('/projects/1/app-users', {}, { fieldKeys: 403.1 })
+          load('/projects/1/app-users', {}, {
+            fieldKeys: () => mockResponse.problem(403.1)
+          })
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
@@ -478,8 +483,8 @@ describe('router', () => {
 
         it('redirects the user from .../form-access', () =>
           load('/projects/1/form-access', {}, {
-            fieldKeys: 403.1,
-            formSummaryAssignments: 403.1
+            fieldKeys: () => mockResponse.problem(403.1),
+            formSummaryAssignments: () => mockResponse.problem(403.1)
           })
             .respondFor('/', { users: false })
             .afterResponses(app => {
@@ -612,8 +617,8 @@ describe('router', () => {
         it('redirects a user navigating from a different form', () =>
           load('/projects/1/forms/f2', {}, {
             form: () => testData.extendedForms.first(),
-            formDraft: 404.1,
-            attachments: 404.1
+            formDraft: () => mockResponse.problem(404.1),
+            attachments: () => mockResponse.problem(404.1)
           })
             .complete()
             .load('/projects/1/forms/f', { project: false })
@@ -722,7 +727,7 @@ describe('router', () => {
         load('/projects/1/forms/f2/draft', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: 404.1,
+          attachments: () => mockResponse.problem(404.1),
           formVersions: () => []
         })
           .respondFor('/')
