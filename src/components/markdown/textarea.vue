@@ -106,7 +106,7 @@ export default {
   }
 
   .md-preview-btn {
-    background-color: #999;
+    background-color: #666;
     color: white;
     &:hover, &:focus, &:active:focus { background-color: #888; }
   }
