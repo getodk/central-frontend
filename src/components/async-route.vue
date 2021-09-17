@@ -103,7 +103,12 @@ export default {
         })
         .catch(() => {
           if (!canceled) {
-            this.$alert().danger(this.$i18n.t('alert.loadError'));
+            // It would be ideal to show a more informative error message.
+            // However, the error seems to provide limited information. For
+            // example, if there is a 404 because Frontend was rebuilt, the
+            // resulting error is a ChunkLoadError with a `type` property equal
+            // to 'error'.
+            this.$alert().danger(this.$t('alert.loadError'));
             this.showsLoading = false;
           }
         });
@@ -116,7 +121,7 @@ export default {
 {
   "en": {
     "alert": {
-      "loadError": "The page you requested could not be loaded. Please check that you are online and try again."
+      "loadError": "The page you requested could not be loaded. Please refresh the page and try again."
     }
   }
 }
