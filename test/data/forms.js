@@ -36,6 +36,7 @@ const forms = dataStore({
     name = faker.random.boolean() ? faker.name.findName() : null,
     enketoId = 'xyz',
     draft = !inPast,
+    publishedAt = undefined,
     enketoOnceId = !draft ? 'zyx' : null,
     state = !inPast
       ? 'open'
@@ -55,9 +56,11 @@ const forms = dataStore({
       enketoId: !draft ? enketoId : null,
       enketoOnceId,
       state,
-      createdAt: inPast
-        ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
-        : new Date().toISOString(),
+      createdAt: publishedAt != null
+        ? publishedAt
+        : (inPast
+          ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
+          : new Date().toISOString()),
       updatedAt: null,
       // Extended metadata
       createdBy: toActor(createdBy),
@@ -69,6 +72,7 @@ const forms = dataStore({
       ...rest,
       form,
       draft,
+      publishedAt,
       enketoId: draft ? enketoId : null,
       submissions,
       lastSubmission

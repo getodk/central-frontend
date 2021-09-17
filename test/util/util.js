@@ -1,7 +1,3 @@
-import sinon from 'sinon';
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // setTimeout()
 
@@ -21,28 +17,3 @@ export const waitUntil = (f) => new Promise(resolve => {
   };
   waiter();
 });
-
-// Deprecated. Use sinon.useFakeTimers() instead.
-export const fakeSetTimeout = () => {
-  const callbacks = new Map();
-  let currentId = 0;
-  sinon.replace(window, 'setTimeout', sinon.fake(callback => {
-    currentId += 1;
-    callbacks.set(currentId, callback);
-    return currentId;
-  }));
-  sinon.replace(window, 'clearTimeout', sinon.fake(id => {
-    callbacks.delete(id);
-  }));
-  return {
-    runAll: () => {
-      // Looping in this way, because a callback may itself call setTimeout() or
-      // clearTimeout().
-      while (callbacks.size !== 0) {
-        const [id, callback] = callbacks.entries().next().value;
-        callbacks.delete(id);
-        callback();
-      }
-    }
-  };
-};

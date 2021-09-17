@@ -1,11 +1,13 @@
+import sinon from 'sinon';
+
 import FormOverview from '../../../src/components/form/overview.vue';
 import FormShow from '../../../src/components/form/show.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 
-import testData from '../../data';
 import { ago } from '../../../src/util/date-time';
-import { fakeSetTimeout } from '../../util/util';
+
+import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -66,19 +68,23 @@ describe('FormShow', () => {
 
   describe('draft enketoId', () => {
     it('does not fetch the enketoId if the draft has an enketoId', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { draft: true, enketoId: 'xyz' });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
         .complete()
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     it('fetches the enketoId if the draft does not have one', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .beforeEachResponse((_, { method, url, headers }) => {
           method.should.equal('GET');
           url.should.equal('/v1/projects/1/forms/f/draft');
@@ -92,18 +98,24 @@ describe('FormShow', () => {
           const { formDraft } = app.vm.$store.state.request.data;
           formDraft.get().enketoId.should.equal('xyz');
         })
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     it('continues to fetch the enketoId if the draft does not have one', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => testData.standardFormDrafts.last())
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => {
           testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
@@ -115,24 +127,28 @@ describe('FormShow', () => {
     });
 
     it('stops fetching the enketoId after an error response', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithProblem()
         .complete()
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
-    it('does not fetch enketoId if a new request for draft is sent', () => {
+    it('does not fetch enketoId during a new request for draft', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(app => {
           app.getComponent(FormShow).vm.fetchDraft();
-          runAll();
+          clock.tick(3000);
         })
         // There should be only two responses, not three.
         .respondWithProblem(() => testData.extendedFormDrafts.last())
@@ -141,22 +157,24 @@ describe('FormShow', () => {
 
     describe('route change', () => {
       it('continues to fetch enketoId as user navigates within form', () => {
+        const clock = sinon.useFakeTimers(Date.now());
         testData.extendedForms.createPast(1, { draft: true, enketoId: null });
         testData.standardFormAttachments.createPast(1);
-        const { runAll } = fakeSetTimeout();
         return load('/projects/1/forms/f/draft')
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
           .complete()
-          .request(runAll)
+          .request(() => {
+            clock.tick(3000);
+          })
           .respondWithData(() => testData.standardFormDrafts.last());
       });
 
       it('stops fetching enketoId if user navigates to a form draft with an enketoId', () => {
+        const clock = sinon.useFakeTimers(Date.now());
         testData.extendedForms
           .createPast(1, { xmlFormId: 'f', draft: true, enketoId: null })
           .createPast(1, { xmlFormId: 'f2', draft: true, enketoId: 'xyz' });
-        const { runAll } = fakeSetTimeout();
         return load('/projects/1/forms/f/draft', {}, {
           form: () => testData.extendedForms.first(),
           formDraft: () => testData.extendedFormDrafts.first()
@@ -164,50 +182,60 @@ describe('FormShow', () => {
           .complete()
           .load('/projects/1/forms/f2/draft', { project: false })
           .complete()
-          .testNoRequest(runAll);
+          .testNoRequest(() => {
+            clock.tick(3000);
+          });
       });
 
       it('stops fetching enketoId if user navigates somewhere other than a form route', () => {
+        const clock = sinon.useFakeTimers(Date.now());
         testData.extendedForms.createPast(1, { draft: true, enketoId: null });
-        const { runAll } = fakeSetTimeout();
         return load('/projects/1/forms/f/draft')
           .complete()
           .load('/account/edit')
           .complete()
-          .testNoRequest(runAll);
+          .testNoRequest(() => {
+            clock.tick(3000);
+          });
       });
     });
   });
 
   describe('form enketoId', () => {
     it('does not fetch the enketoId if the form has an enketoId', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, { enketoId: 'xyz' });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     it('does not fetch enketoId for form published more than 15 minutes ago', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: ago({ minutes: 16 }).toISO()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     it('fetches the enketoId if a recently published form does not have one', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .beforeEachResponse((_, { method, url, headers }) => {
           method.should.equal('GET');
           url.should.equal('/v1/projects/1/forms/f');
@@ -221,21 +249,27 @@ describe('FormShow', () => {
           const { form } = app.vm.$store.state.request.data;
           form.enketoId.should.equal('xyz');
         })
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     it('continues to fetch enketoId if form still does not have one', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => testData.standardForms.last())
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => {
           testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
@@ -247,45 +281,51 @@ describe('FormShow', () => {
     });
 
     it('stops fetching the enketoId after an error response', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithProblem()
         .complete()
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
-    it('does not fetch enketoId if a new request for form is sent', () => {
+    it('does not fetch the enketoId during a new request for the form', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
         .request(app => {
           app.getComponent(FormShow).vm.fetchForm();
-          runAll();
+          clock.tick(3000);
         })
         // There should be only one response, not two.
         .respondWithData(() => testData.extendedForms.last());
     });
 
     it('sends two requests if form and draft both do not have an enketoId', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: null,
         publishedAt: new Date().toISOString()
       });
       testData.extendedFormDrafts.createPast(1, { draft: true, enketoId: null });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => {
           testData.extendedForms.update(0, { enketoId: 'xyz' });
           return testData.standardForms.last();
@@ -299,20 +339,24 @@ describe('FormShow', () => {
           form.enketoId.should.equal('xyz');
           formDraft.get().enketoId.should.equal('abc');
         })
-        .testNoRequest(runAll);
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
     });
 
     describe('enketoOnceId', () => {
       it('fetches the enketoOnceId', () => {
+        const clock = sinon.useFakeTimers(Date.now());
         testData.extendedForms.createPast(1, {
           enketoId: 'xyz',
           enketoOnceId: null,
           publishedAt: new Date().toISOString()
         });
-        const { runAll } = fakeSetTimeout();
         return load('/projects/1/forms/f')
           .complete()
-          .request(runAll)
+          .request(() => {
+            clock.tick(3000);
+          })
           .respondWithData(() => {
             testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
             return testData.standardForms.last();
@@ -321,23 +365,29 @@ describe('FormShow', () => {
             const { form } = app.vm.$store.state.request.data;
             form.enketoOnceId.should.equal('zyx');
           })
-          .testNoRequest(runAll);
+          .testNoRequest(() => {
+            clock.tick(3000);
+          });
       });
     });
 
     it('continues to fetch the enketoOnceId', () => {
+      const clock = sinon.useFakeTimers(Date.now());
       testData.extendedForms.createPast(1, {
         enketoId: 'xyz',
         enketoOnceId: null,
         publishedAt: new Date().toISOString()
       });
-      const { runAll } = fakeSetTimeout();
       return load('/projects/1/forms/f')
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => testData.standardForms.last())
         .complete()
-        .request(runAll)
+        .request(() => {
+          clock.tick(3000);
+        })
         .respondWithData(() => {
           testData.extendedForms.update(-1, { enketoOnceId: 'zyx' });
           return testData.standardForms.last();

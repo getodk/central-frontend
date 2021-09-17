@@ -41,7 +41,8 @@ export const fakePastDate = (dateStrings) => {
     .filter(s => s != null)
     .map(s => DateTime.fromISO(s));
   if (dateTimes.length === 0) return faker.date.past().toISOString();
-  return faker.date
-    .between(DateTime.max(...dateTimes).toISO(), new Date().toISOString())
-    .toISOString();
+  const from = DateTime.max(...dateTimes);
+  const now = DateTime.local();
+  if (from > now) throw new Error('future date');
+  return faker.date.between(from.toISO(), now.toISO()).toISOString();
 };
