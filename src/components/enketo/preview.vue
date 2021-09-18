@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <a v-if="disabledTitle == null" class="enketo-preview btn btn-default"
     :href="href" target="_blank">
-    <span class="icon-eye"></span>{{ $t('action.preview') }}
+    <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
   <button v-else type="button" class="enketo-preview btn btn-default" disabled
     :title="disabledTitle">
-    <span class="icon-eye"></span>{{ $t('action.preview') }}
+    <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
 </template>
 
@@ -54,9 +54,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "preview": "Preview"
-    },
     "disabled": {
       "processing": "Preview has not finished processing for this Form. Please refresh later and try again.",
       "notOpen": "In this version of ODK Central, preview is only available for Forms in the Open state."
