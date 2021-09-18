@@ -37,7 +37,7 @@
     "tab": {
       "backups": "Backups",
       "audits": "Server Audit Logs",
-      "analytics": "Improve Central"
+      "analytics": "Usage Information"
     }
   },
   // This is the name of a user Role.
