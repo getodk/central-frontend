@@ -1006,7 +1006,7 @@
           "string": "Project Summaries"
         },
         "subtitle": {
-          "string": "Showing 1 project of"
+          "string": "Showing 1 project of {numProjects}"
         }
       }
     },

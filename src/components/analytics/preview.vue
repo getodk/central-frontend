@@ -20,20 +20,19 @@ except according to the terms contained in the LICENSE file.
       </div>
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
       <template v-if="analyticsPreview">
-        <analytics-metrics-table title="system" :summary="systemSummary"/>
+        <analytics-metrics-table title="system" :metrics="systemSummary"/>
         <div id="projectSummary">
           <span class="header">{{ $t('projects.title') }}</span>
-          <span class="explanation">{{ $t('projects.subtitle') }} {{ numProjects }}</span>
+          <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
         </div>
         <div style="display: flex">
           <div id="usersFormsColumn">
-            <analytics-metrics-table title="users" :summary="userSummary"/>
-            <analytics-metrics-table title="forms" :summary="formSummary"/>
+            <analytics-metrics-table title="users" :metrics="userSummary"/>
+            <analytics-metrics-table title="forms" :metrics="formSummary"/>
           </div>
-          <analytics-metrics-table title="submissions" :summary="submissionSummary"/>
+          <analytics-metrics-table title="submissions" :metrics="submissionSummary"/>
         </div>
       </template>
-      <!--<pre v-if="analyticsPreview != null"><code>{{ formattedJson }}</code></pre>-->
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           {{ $t('action.close') }}
@@ -137,7 +136,7 @@ export default {
     ],
     "projects": {
       "title": "Project Summaries",
-      "subtitle": "Showing 1 project of"
+      "subtitle": "Showing 1 project of {numProjects}"
     }
   }
 }

@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(value, name) in summary" :key="value" class="metric-row">
+        <tr v-for="(value, name) in metrics" :key="name" class="metric-row">
           <td class="metric-name">{{ $t(`analytics.metricsTable.${name}`) }}</td>
           <template v-if="value.recent != null">
-            <td class="metric-value">{{ value.recent }}</td>
-            <td class="metric-value">{{ value.total }}</td>
+            <td class="metric-value">{{ $n(value.recent) }}</td>
+            <td class="metric-value">{{ $n(value.total) }}</td>
           </template>
           <template v-else>
-            <td colspan="2" class="metric-value">{{ value }}</td>
+            <td colspan="2" class="metric-value">{{ $n(value) }}</td>
           </template>
         </tr>
       </tbody>
@@ -43,7 +43,7 @@ export default {
       type: String,
       required: true
     },
-    summary: {
+    metrics: {
       type: Object,
       required: true
     }
