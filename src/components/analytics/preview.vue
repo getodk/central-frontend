@@ -20,17 +20,18 @@ except according to the terms contained in the LICENSE file.
       </div>
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
       <template v-if="analyticsPreview">
-        <analytics-metrics-table title="system" :metrics="systemSummary"/>
+        <analytics-metrics-table :title="$t('system')" :metrics="systemSummary"/>
         <div id="projectSummary">
           <span class="header">{{ $t('projects.title') }}</span>
           <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
         </div>
         <div style="display: flex">
           <div id="usersFormsColumn">
-            <analytics-metrics-table title="users" :metrics="userSummary"/>
-            <analytics-metrics-table title="forms" :metrics="formSummary"/>
+            <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
+            <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
           </div>
-          <analytics-metrics-table title="submissions" :metrics="submissionSummary"/>
+          <analytics-metrics-table :title="$t('resource.submissions')"
+            :metrics="submissionSummary"/>
         </div>
       </template>
       <div class="modal-actions">
@@ -134,7 +135,11 @@ export default {
       "Shown here is the report we are collecting currently. To respond to new features and needs, we will sometimes change what is reported, but we will only ever gather summary averages like you see here.",
       "You can always come here to see what is being collected."
     ],
+    // This is the title shown above usage information about the server as a
+    // whole.
+    "system": "System",
     "projects": {
+      // This is the title shown above a series of metrics about Project usage.
       "title": "Project Summaries",
       "subtitle": "Showing 1 project of {numProjects}"
     }

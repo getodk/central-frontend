@@ -529,6 +529,10 @@
       "string": "Form",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "forms": {
+      "string": "Forms",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "project": {
       "string": "Project",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -543,6 +547,10 @@
     },
     "user": {
       "string": "User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "users": {
+      "string": "Users",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -621,9 +629,6 @@
       "organization": {
         "string": "Organization"
       },
-      "system": {
-        "string": "System"
-      },
       "num_admins": {
         "string": "Number of Administrators"
       },
@@ -654,9 +659,6 @@
       "id": {
         "string": "Project ID"
       },
-      "users": {
-        "string": "Users"
-      },
       "num_managers": {
         "string": "Number of project managers"
       },
@@ -675,9 +677,6 @@
       "num_public_access_links": {
         "string": "Number of public access links"
       },
-      "forms": {
-        "string": "Forms"
-      },
       "num_forms": {
         "string": "Number of forms"
       },
@@ -692,9 +691,6 @@
       },
       "num_forms_with_audits": {
         "string": "Number of forms with audits"
-      },
-      "submissions": {
-        "string": "Submissions"
       },
       "num_submissions_received": {
         "string": "Number of submissions received"
@@ -1001,9 +997,14 @@
           "string": "You can always come here to see what is being collected."
         }
       },
+      "system": {
+        "string": "System",
+        "developer_comment": "This is the title shown above usage information about the server as a whole."
+      },
       "projects": {
         "title": {
-          "string": "Project Summaries"
+          "string": "Project Summaries",
+          "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
           "string": "Showing 1 project of {numProjects}"

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <table class="table metric-table">
       <thead>
         <tr>
-          <th class="sectionTitle">{{ $t(`analytics.metricsTable.${title}`) }}</th>
+          <th>{{ title }}</th>
           <th class="metric-value recent-col">{{ $t('analytics.metricsTable.recent') }}</th>
           <th class="metric-value">{{ $t('analytics.metricsTable.total') }}</th>
         </tr>
