@@ -987,7 +987,7 @@
     },
     "AnalyticsPreview": {
       "title": {
-        "string": "Anonymized Metrics Report",
+        "string": "Anonymized Usage Report",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {

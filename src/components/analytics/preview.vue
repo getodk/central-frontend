@@ -128,7 +128,7 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Anonymized Metrics Report",
+    "title": "Anonymized Usage Report",
     "introduction": [
       "Thank you for thinking about sending some usage information. This data will help us prioritize your needs!",
       "Shown here is the report we are collecting currently. To respond to new features and needs, we will sometimes change what is reported, but we will only ever gather summary averages like you see here.",
