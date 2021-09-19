@@ -57,24 +57,12 @@ export default {
   name: 'Modal',
   components: { Alert },
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
+    state: Boolean,
     // Indicates whether the user is able to hide the modal by clicking ×,
     // pressing escape, or clicking outside the modal.
-    hideable: {
-      type: Boolean,
-      default: false
-    },
-    backdrop: {
-      type: Boolean,
-      default: false
-    },
-    large: {
-      type: Boolean,
-      default: false
-    }
+    hideable: Boolean,
+    backdrop: Boolean,
+    large: Boolean
   },
   data() {
     id += 1;

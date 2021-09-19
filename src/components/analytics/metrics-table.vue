@@ -20,8 +20,8 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(value, name) in metrics" :key="name" class="metric-row">
-          <td class="metric-name">{{ $t(`analytics.metricsTable.${name}`) }}</td>
+        <tr v-for="(value, name) in metrics" :key="name">
+          <td>{{ $t(`analytics.metricsTable.${name}`) }}</td>
           <template v-if="value.recent != null">
             <td class="metric-value">{{ $n(value.recent) }}</td>
             <td class="metric-value">{{ $n(value.total) }}</td>

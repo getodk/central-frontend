@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
       <template v-if="analyticsPreview">
         <analytics-metrics-table :title="$t('system')" :metrics="systemSummary"/>
-        <div id="projectSummary">
+        <div id="project-summary">
           <span class="header">{{ $t('projects.title') }}</span>
           <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
         </div>
@@ -112,13 +112,13 @@ export default {
     padding-right: 10px;
   }
 
-  #projectSummary > .header {
+  #project-summary > .header {
     font-size: 18px;
     font-weight: 500;
     padding-right: 10px;
   }
 
-  #projectSummary {
+  #project-summary {
     padding-bottom: 5px;
   }
 }
