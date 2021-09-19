@@ -1007,7 +1007,7 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "Showing 1 project of {numProjects}"
+          "string": "Showing 1 Project of {numProjects}"
         }
       }
     },
@@ -1513,7 +1513,7 @@
         },
         "someUploaded": {
           "string": "{count, plural, one {{message} Only {uploaded} of {total} files was successfully uploaded.} other {{message} Only {uploaded} of {total} files were successfully uploaded.}}",
-          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers. {uploaded} is at least 1, and {total} is at least 2. The string will be pluralized based on {uploaded}."
         }
       },
       "alert": {

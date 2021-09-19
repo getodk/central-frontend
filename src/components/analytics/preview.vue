@@ -81,7 +81,7 @@ export default {
       return this.firstProject.submissions;
     },
     numProjects() {
-      return this.analyticsPreview.projects.length;
+      return this.$n(this.analyticsPreview.projects.length);
     }
   },
   watch: {
@@ -141,7 +141,7 @@ export default {
     "projects": {
       // This is the title shown above a series of metrics about Project usage.
       "title": "Project Summaries",
-      "subtitle": "Showing 1 project of {numProjects}"
+      "subtitle": "Showing 1 Project of {numProjects}"
     }
   }
 }
