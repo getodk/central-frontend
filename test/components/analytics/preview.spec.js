@@ -51,7 +51,7 @@ describe('AnalyticsPreview', () => {
 
   it('shows the number of projects', async () => {
     const modal = await mockHttpForComponent();
-    const text = modal.get('#project-summary .explanation').text();
+    const text = modal.get('#analytics-preview-project-summary .explanation').text();
     text.should.equal('Showing 1 Project of 2');
   });
 

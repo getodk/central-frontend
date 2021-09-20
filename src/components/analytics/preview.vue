@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
       <template v-if="analyticsPreview">
         <analytics-metrics-table :title="$t('system')" :metrics="systemSummary"/>
-        <div id="project-summary">
+        <div id="analytics-preview-project-summary">
           <span class="header">{{ $t('projects.title') }}</span>
           <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
         </div>
@@ -111,18 +111,17 @@ export default {
   #usersFormsColumn {
     padding-right: 10px;
   }
+}
 
-  #project-summary > .header {
+#analytics-preview-project-summary {
+  padding-bottom: 5px;
+
+  .header {
     font-size: 18px;
     font-weight: 500;
     padding-right: 10px;
   }
-
-  #project-summary {
-    padding-bottom: 5px;
-  }
 }
-
 </style>
 
 <i18n lang="json5">
