@@ -37,6 +37,8 @@ import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
 
+import { noop } from '../util/util';
+
 /*
 We manually toggle the modal:
 
@@ -67,8 +69,8 @@ export default {
   data() {
     id += 1;
     return {
-      // jQuery wrapper of the .modal element
-      wrapper: null,
+      // The modal() method of the Boostrap plugin
+      bs: null,
       titleId: `modal-title${id}`,
       mousedownOutsideDialog: false
     };
@@ -101,6 +103,16 @@ export default {
     }
   },
   mounted() {
+    if (this.$el.closest('body') != null) {
+      const wrapper = $(this.$el);
+      this.bs = wrapper.modal.bind(wrapper);
+    } else {
+      // We do not call modal() if the component is not attached to the
+      // document, because modal() can have side effects on the document. Most
+      // tests do not attach the component to the document.
+      this.bs = noop;
+    }
+
     if (this.state) this.show();
   },
   beforeDestroy() {
@@ -108,22 +120,11 @@ export default {
   },
   methods: {
     show() {
-      // We do not call .modal('show') if the component is not attached to the
-      // document, because .modal() has side effects on the document. Most tests
-      // do not attach the component to the document.
-      if (this.$el.closest('body') == null) return;
-
-      this.wrapper = $(this.$el)
-        .one('shown.bs.modal', () => {
-          this.$emit('shown');
-        })
-        .modal('show');
+      this.bs('show');
+      this.$emit('shown');
     },
     hide() {
-      if (this.wrapper != null) {
-        this.wrapper.modal('hide');
-        this.wrapper = null;
-      }
+      this.bs('hide');
 
       const selection = getSelection();
       const { anchorNode } = selection;
