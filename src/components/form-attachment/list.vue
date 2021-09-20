@@ -410,7 +410,9 @@ export default {
       "noneUploaded": "{message} No files were successfully uploaded.",
       // This string is an error message. It is shown only if the user tried to
       // upload multiple files. {message} is an error message from the server.
-      // {uploaded} and {total} are numbers.
+      // {uploaded} and {total} are numbers. {uploaded} is at least 1, and
+      // {total} is at least 2. The string will be pluralized based on
+      // {uploaded}.
       "someUploaded": "{message} Only {uploaded} of {total} files was successfully uploaded. | {message} Only {uploaded} of {total} files were successfully uploaded."
     },
     "alert": {

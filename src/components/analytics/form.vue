@@ -47,9 +47,8 @@ except according to the terms contained in the LICENSE file.
         </i18n>
       </label>
       <p id="analytics-form-enabled-true-help" class="help-block">
-        <a href="#" @click.prevent>
-          <!-- TODO. Update the icon. -->
-          <span class="icon-question-circle"></span>{{ $t('enabled.true[1]') }}
+        <a href="#" @click.prevent="$emit('preview')">
+          <span class="icon-question-circle-o"></span>{{ $t('enabled.true[1]') }}
         </a>
       </p>
     </div>

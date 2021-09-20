@@ -241,10 +241,12 @@
     "appUsers": "App Users",
     "config": "Server Configuration",
     "form": "Form",
+    "forms": "Forms",
     "project": "Project",
     "projects": "Projects",
     "publicLink": "Public Access Link",
     "user": "User",
+    "users": "Users",
     "webUser": "Web User",
     "webUsers": "Web Users",
     "session": "Session",
@@ -313,7 +315,8 @@
     "tab": {
       "settings": "Settings",
       "overview": "Overview"
-    }
+    },
+    "total": "Total"
   },
   "mixin": {
     "request": {

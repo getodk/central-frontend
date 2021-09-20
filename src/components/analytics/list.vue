@@ -21,20 +21,32 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $t('heading[0]') }}</p>
     </div>
     <loading :state="$store.getters.initiallyLoading(['analyticsConfig'])"/>
-    <analytics-form v-if="analyticsConfig != null"/>
+    <analytics-form v-if="analyticsConfig != null"
+      @preview="showModal('preview')"/>
+    <analytics-preview v-bind="preview" @hide="hideModal('preview')"/>
   </div>
 </template>
 
 <script>
 import AnalyticsForm from './form.vue';
+import AnalyticsPreview from './preview.vue';
 import Loading from '../loading.vue';
 
+import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'AnalyticsList',
-  components: { AnalyticsForm, Loading },
+  components: { AnalyticsForm, AnalyticsPreview, Loading },
+  mixins: [modal()],
+  data() {
+    return {
+      preview: {
+        state: false
+      }
+    };
+  },
   computed: requestData(['analyticsConfig']),
   created() {
     this.fetchData();

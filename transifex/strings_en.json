@@ -529,6 +529,10 @@
       "string": "Form",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "forms": {
+      "string": "Forms",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "project": {
       "string": "Project",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -543,6 +547,10 @@
     },
     "user": {
       "string": "User",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "users": {
+      "string": "Users",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -689,6 +697,9 @@
         "string": "Overview",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "total": {
+      "string": "Total"
     }
   },
   "mixin": {
@@ -866,6 +877,124 @@
       "heading": {
         "0": {
           "string": "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
+        }
+      }
+    },
+    "AnalyticsMetricsTable": {
+      "recent": {
+        "string": "in the past 45 days"
+      },
+      "fields": {
+        "num_admins": {
+          "string": "Number of Administrators"
+        },
+        "num_projects_encryption": {
+          "string": "Number of Projects with encryption enabled"
+        },
+        "num_questions_biggest_form": {
+          "string": "Number of questions in biggest Form"
+        },
+        "num_audit_log_entries": {
+          "string": "Number of Audit Log entries"
+        },
+        "backups_configured": {
+          "string": "Backups configured"
+        },
+        "database_size": {
+          "string": "System database size"
+        },
+        "num_managers": {
+          "string": "Number of Project Managers"
+        },
+        "num_viewers": {
+          "string": "Number of Project Viewers"
+        },
+        "num_data_collectors": {
+          "string": "Number of Data Collectors"
+        },
+        "num_app_users": {
+          "string": "Number of App Users"
+        },
+        "num_device_ids": {
+          "string": "Number of device IDs"
+        },
+        "num_public_access_links": {
+          "string": "Number of Public Access Links"
+        },
+        "num_forms": {
+          "string": "Number of Forms"
+        },
+        "num_forms_with_repeats": {
+          "string": "Number of Forms with repeats"
+        },
+        "num_forms_with_geospatial": {
+          "string": "Number of Forms with geospatial"
+        },
+        "num_forms_with_encryption": {
+          "string": "Number of Forms with encryption"
+        },
+        "num_forms_with_audits": {
+          "string": "Number of Forms with audits"
+        },
+        "num_submissions_received": {
+          "string": "Number of Submissions received"
+        },
+        "num_submissions_approved": {
+          "string": "Number of Submissions approved"
+        },
+        "num_submissions_has_issues": {
+          "string": "Number of Submissions with issues"
+        },
+        "num_submissions_rejected": {
+          "string": "Number of Submissions rejected"
+        },
+        "num_submissions_edited": {
+          "string": "Number of Submissions in edited state"
+        },
+        "num_submissions_with_edits": {
+          "string": "Number of Submissions with edits"
+        },
+        "num_submissions_with_comments": {
+          "string": "Number of Submissions with comments"
+        },
+        "num_submissions_from_app_users": {
+          "string": "Number of Submissions from App Users"
+        },
+        "num_submissions_from_public_links": {
+          "string": "Number of Submissions from Public Links"
+        },
+        "num_submissions_from_web_users": {
+          "string": "Number of Submissions from Web Users"
+        }
+      }
+    },
+    "AnalyticsPreview": {
+      "title": {
+        "string": "Anonymized Usage Report",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Thank you for thinking about sending some usage information. This data will help us prioritize your needs!"
+        },
+        "1": {
+          "string": "Shown here is the report we are collecting currently. To respond to new features and needs, we will sometimes change what is reported, but we will only ever gather summary averages like you see here."
+        },
+        "2": {
+          "string": "You can always come here to see what is being collected."
+        }
+      },
+      "system": {
+        "string": "System",
+        "developer_comment": "This is the title shown above usage information about the server as a whole."
+      },
+      "projects": {
+        "title": {
+          "string": "Project Summaries",
+          "developer_comment": "This is the title shown above a series of metrics about Project usage."
+        },
+        "subtitle": {
+          "string": "Showing 1 Project of {numProjects}"
         }
       }
     },
@@ -1371,7 +1500,7 @@
         },
         "someUploaded": {
           "string": "{count, plural, one {{message} Only {uploaded} of {total} files was successfully uploaded.} other {{message} Only {uploaded} of {total} files were successfully uploaded.}}",
-          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers. {uploaded} is at least 1, and {total} is at least 2. The string will be pluralized based on {uploaded}."
         }
       },
       "alert": {
