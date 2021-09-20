@@ -21,6 +21,20 @@ const mountComponent = (options = {}) => mount(Modal, {
 });
 
 describe('Modal', () => {
+  it('uses the title slot', () => {
+    const modal = mountComponent({
+      slots: { title: 'foo' }
+    });
+    modal.get('.modal-title').text().should.equal('foo');
+  });
+
+  it('uses the body slot', () => {
+    const modal = mountComponent({
+      slots: { body: '<pre>foo</pre>' }
+    });
+    modal.get('.modal-body pre').text().should.equal('foo');
+  });
+
   it('shows any alert', () => {
     mountComponent().findComponent(Alert).exists().should.be.true();
   });
@@ -90,6 +104,20 @@ describe('Modal', () => {
       await modal.setProps({ state: false });
       modal.should.alert();
     });
+  });
+
+  it("updates the modal's position after its body changes", async () => {
+    const modal = mountComponent({
+      slots: { body: '<p>Some text</p>' },
+      attachTo: document.body
+    });
+    const bs = sinon.fake(modal.vm.bs);
+    modal.setData({ bs });
+    modal.vm.$alert().info('Some alert');
+    await modal.vm.$nextTick();
+    modal.get('.modal-body p').element.textContent = 'New text';
+    await modal.vm.$nextTick();
+    bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
   });
 
   it('adds the modal-lg class if the large prop is true', () => {

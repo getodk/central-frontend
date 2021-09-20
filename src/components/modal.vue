@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
-        <div class="modal-body">
+        <div ref="body" class="modal-body">
           <alert/>
           <slot name="body"></slot>
         </div>
@@ -72,6 +72,9 @@ export default {
       id,
       // The modal() method of the Boostrap plugin
       bs: null,
+      observer: new MutationObserver(() => {
+        if (this.state) this.bs('handleUpdate');
+      }),
       mousedownOutsideDialog: false
     };
   },
@@ -87,8 +90,7 @@ export default {
     state(state) {
       if (state) {
         // The DOM hasn't updated yet, but it should be OK to show the modal
-        // now: I think it will all happen in the same event loop. (That said,
-        // at some point we may end up wanting to call .modal('handleUpdate').)
+        // now: I think it will all happen in the same event loop.
         this.show();
       } else {
         this.hide();
@@ -124,10 +126,17 @@ export default {
   methods: {
     show() {
       this.bs('show');
+      this.observer.observe(this.$refs.body, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        characterData: true
+      });
       this.$emit('shown');
     },
     hide() {
       this.bs('hide');
+      this.observer.disconnect();
 
       const selection = getSelection();
       const { anchorNode } = selection;
