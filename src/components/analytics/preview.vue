@@ -30,8 +30,10 @@ except according to the terms contained in the LICENSE file.
             <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
             <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
           </div>
-          <analytics-metrics-table :title="$t('resource.submissions')"
-            :metrics="submissionSummary"/>
+          <div>
+            <analytics-metrics-table :title="$t('resource.submissions')"
+              :metrics="submissionSummary"/>
+          </div>
         </div>
       </template>
       <div class="modal-actions">

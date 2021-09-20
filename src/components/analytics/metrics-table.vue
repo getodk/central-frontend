@@ -10,29 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="metrics-table">
-    <table class="table metric-table">
-      <thead>
-        <tr>
-          <th>{{ title }}</th>
-          <th class="metric-value recent-col">{{ $t('analytics.metricsTable.recent') }}</th>
-          <th class="metric-value">{{ $t('analytics.metricsTable.total') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(value, name) in metrics" :key="name">
-          <td>{{ $t(`analytics.metricsTable.${name}`) }}</td>
-          <template v-if="value.recent != null">
-            <td class="metric-value">{{ $n(value.recent) }}</td>
-            <td class="metric-value">{{ $n(value.total) }}</td>
-          </template>
-          <template v-else>
-            <td colspan="2" class="metric-value">{{ $n(value) }}</td>
-          </template>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table analytics-metrics-table">
+    <thead>
+      <tr>
+        <th>{{ title }}</th>
+        <th class="metric-value recent-col">{{ $t('analytics.metricsTable.recent') }}</th>
+        <th class="metric-value">{{ $t('analytics.metricsTable.total') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(value, name) in metrics" :key="name">
+        <td>{{ $t(`analytics.metricsTable.${name}`) }}</td>
+        <template v-if="value.recent != null">
+          <td class="metric-value">{{ $n(value.recent) }}</td>
+          <td class="metric-value">{{ $n(value.total) }}</td>
+        </template>
+        <template v-else>
+          <td colspan="2" class="metric-value">{{ $n(value) }}</td>
+        </template>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -58,7 +56,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-.metric-table {
+.analytics-metrics-table {
   .metric-value {
     text-align: right;
   }
