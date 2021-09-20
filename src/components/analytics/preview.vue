@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
             <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
             <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
           </div>
-          <div>
+          <div id="submissions-column">
             <analytics-metrics-table :title="$t('resource.submissions')"
               :metrics="submissionSummary"/>
           </div>
@@ -119,11 +119,17 @@ export default {
 }
 
 #analytics-preview-project-tables {
+  display: flex;
+  flex-wrap: wrap;
+
   #users-forms-column {
     padding-right: 10px;
+    flex-grow: 1;
   }
 
-  display: flex;
+  #submissions-column {
+    flex-grow: 1;
+  }
 }
 </style>
 

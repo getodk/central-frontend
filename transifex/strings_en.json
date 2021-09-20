@@ -618,110 +618,6 @@
         "string": "your",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
-    },
-    "metricsTable": {
-      "config": {
-        "string": "Analytics Configuration"
-      },
-      "email": {
-        "string": "Email"
-      },
-      "organization": {
-        "string": "Organization"
-      },
-      "num_admins": {
-        "string": "Number of Administrators"
-      },
-      "recent": {
-        "string": "in the past 45 days"
-      },
-      "total": {
-        "string": "Total"
-      },
-      "num_projects_encryption": {
-        "string": "Number of projects with encryption enabled"
-      },
-      "num_questions_biggest_form": {
-        "string": "Number of questions in biggest form"
-      },
-      "num_audit_log_entries": {
-        "string": "Number of audit log entries"
-      },
-      "backups_configured": {
-        "string": "Backups configured"
-      },
-      "database_size": {
-        "string": "System database size"
-      },
-      "projects": {
-        "string": "Project Details"
-      },
-      "id": {
-        "string": "Project ID"
-      },
-      "num_managers": {
-        "string": "Number of project managers"
-      },
-      "num_viewers": {
-        "string": "Number of project viewers"
-      },
-      "num_data_collectors": {
-        "string": "Number of data collectors"
-      },
-      "num_app_users": {
-        "string": "Number of app users"
-      },
-      "num_device_ids": {
-        "string": "Number of device IDs"
-      },
-      "num_public_access_links": {
-        "string": "Number of public access links"
-      },
-      "num_forms": {
-        "string": "Number of forms"
-      },
-      "num_forms_with_repeats": {
-        "string": "Number of forms with repeats"
-      },
-      "num_forms_with_geospatial": {
-        "string": "Number of forms with geospatial"
-      },
-      "num_forms_with_encryption": {
-        "string": "Number of forms with encryption"
-      },
-      "num_forms_with_audits": {
-        "string": "Number of forms with audits"
-      },
-      "num_submissions_received": {
-        "string": "Number of submissions received"
-      },
-      "num_submissions_approved": {
-        "string": "Number of submissions approved"
-      },
-      "num_submissions_has_issues": {
-        "string": "Number of submissions with issues"
-      },
-      "num_submissions_rejected": {
-        "string": "Number of submissions rejected"
-      },
-      "num_submissions_edited": {
-        "string": "Number of submissions in edited state"
-      },
-      "num_submissions_with_edits": {
-        "string": "Number of submissions with changes"
-      },
-      "num_submissions_with_comments": {
-        "string": "Number of submissions with comments"
-      },
-      "num_submissions_from_app_users": {
-        "string": "Number of submissions from app users"
-      },
-      "num_submissions_from_public_links": {
-        "string": "Number of submissions from public links"
-      },
-      "num_submissions_from_web_users": {
-        "string": "Number of submissions from web users"
-      }
     }
   },
   "submission": {
@@ -801,6 +697,9 @@
         "string": "Overview",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "total": {
+      "string": "Total"
     }
   },
   "mixin": {
@@ -978,6 +877,94 @@
       "heading": {
         "0": {
           "string": "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
+        }
+      }
+    },
+    "AnalyticsMetricsTable": {
+      "recent": {
+        "string": "in the past 45 days"
+      },
+      "fields": {
+        "num_admins": {
+          "string": "Number of Administrators"
+        },
+        "num_projects_encryption": {
+          "string": "Number of Projects with encryption enabled"
+        },
+        "num_questions_biggest_form": {
+          "string": "Number of questions in biggest Form"
+        },
+        "num_audit_log_entries": {
+          "string": "Number of Audit Log entries"
+        },
+        "backups_configured": {
+          "string": "Backups configured"
+        },
+        "database_size": {
+          "string": "System database size"
+        },
+        "num_managers": {
+          "string": "Number of Project Managers"
+        },
+        "num_viewers": {
+          "string": "Number of Project Viewers"
+        },
+        "num_data_collectors": {
+          "string": "Number of Data Collectors"
+        },
+        "num_app_users": {
+          "string": "Number of App Users"
+        },
+        "num_device_ids": {
+          "string": "Number of device IDs"
+        },
+        "num_public_access_links": {
+          "string": "Number of Public Access Links"
+        },
+        "num_forms": {
+          "string": "Number of Forms"
+        },
+        "num_forms_with_repeats": {
+          "string": "Number of Forms with repeats"
+        },
+        "num_forms_with_geospatial": {
+          "string": "Number of Forms with geospatial"
+        },
+        "num_forms_with_encryption": {
+          "string": "Number of Forms with encryption"
+        },
+        "num_forms_with_audits": {
+          "string": "Number of Forms with audits"
+        },
+        "num_submissions_received": {
+          "string": "Number of Submissions received"
+        },
+        "num_submissions_approved": {
+          "string": "Number of Submissions approved"
+        },
+        "num_submissions_has_issues": {
+          "string": "Number of Submissions with issues"
+        },
+        "num_submissions_rejected": {
+          "string": "Number of Submissions rejected"
+        },
+        "num_submissions_edited": {
+          "string": "Number of Submissions in edited state"
+        },
+        "num_submissions_with_edits": {
+          "string": "Number of Submissions with edits"
+        },
+        "num_submissions_with_comments": {
+          "string": "Number of Submissions with comments"
+        },
+        "num_submissions_from_app_users": {
+          "string": "Number of Submissions from App Users"
+        },
+        "num_submissions_from_public_links": {
+          "string": "Number of Submissions from Public Links"
+        },
+        "num_submissions_from_web_users": {
+          "string": "Number of Submissions from Web Users"
         }
       }
     },
