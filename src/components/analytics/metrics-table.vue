@@ -45,10 +45,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  computed: {
-  },
-  methods: {
   }
 };
 </script>
@@ -59,10 +55,6 @@ export default {
 .analytics-metrics-table {
   .metric-value {
     text-align: right;
-  }
-
-  .recent-col {
-    width: 130px;
   }
 }
 

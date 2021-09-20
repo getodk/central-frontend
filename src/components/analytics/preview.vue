@@ -25,8 +25,8 @@ except according to the terms contained in the LICENSE file.
           <span class="header">{{ $t('projects.title') }}</span>
           <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
         </div>
-        <div style="display: flex">
-          <div id="usersFormsColumn">
+        <div id="analytics-preview-project-tables">
+          <div id="users-forms-column">
             <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
             <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
           </div>
@@ -61,9 +61,6 @@ export default {
   },
   computed: {
     ...requestData(['analyticsPreview']),
-    formattedJson() {
-      return JSON.stringify(this.analyticsPreview, null, 2);
-    },
     systemSummary() {
       return this.analyticsPreview.system;
     },
@@ -109,10 +106,6 @@ export default {
   .modal-introduction > p {
     max-width: 100%;
   }
-
-  #usersFormsColumn {
-    padding-right: 10px;
-  }
 }
 
 #analytics-preview-project-summary {
@@ -123,6 +116,14 @@ export default {
     font-weight: 500;
     padding-right: 10px;
   }
+}
+
+#analytics-preview-project-tables {
+  #users-forms-column {
+    padding-right: 10px;
+  }
+
+  display: flex;
 }
 </style>
 
