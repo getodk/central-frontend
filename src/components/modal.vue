@@ -69,15 +69,18 @@ export default {
   data() {
     id += 1;
     return {
+      id,
       // The modal() method of the Boostrap plugin
       bs: null,
-      titleId: `modal-title${id}`,
       mousedownOutsideDialog: false
     };
   },
   computed: {
     stateAndAlertAt() {
       return [this.state, this.$store.state.alert.at];
+    },
+    titleId() {
+      return `modal-title${this.id}`;
     }
   },
   watch: {
