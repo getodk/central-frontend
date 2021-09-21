@@ -34,6 +34,26 @@ export const destroyAll = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // MOUNT
 
+/*
+Our mount() function is similar to mount() from Vue Test Utils. It automatically
+specifies useful options to Vue Test Utils' mount(). It also accepts additional
+options:
+
+  - mocks
+    - $route. Vue Test Utils' mount() expects $route to be similar to a Route
+      object. However, our mount() function also allows $route to be a string
+      location; it will automatically convert it to a Route object.
+      Additionally, because it is so common for $route and $router to be used
+      together, if you specify $route without $router, our mount() function will
+      pass a minimal mock of $router with read-only functionality. If you need
+      additional router functionality, you should probably inject the router.
+  - requestData. Passed to setData() before the component is mounted.
+  - throwIfEmit. A message to throw if the component emits an event. Used
+    internally by load() when the `root` option is `false`.
+
+Our mount() function will also set it up so that the component is destroyed
+after the test.
+*/
 export const mount = (component, options = {}) => {
   const { requestData, throwIfEmit, ...mountOptions } = options;
 
@@ -44,7 +64,7 @@ export const mount = (component, options = {}) => {
   root VueI18n instance (`i18n`) to the root component, which we can do using
   the parentComponent option. This can be helpful even if `component` itself
   doesn't use an i18n custom block, because a child component may use one. Since
-  we're passing `i18n` to the parent component, it also felt right to pass
+  we are passing `i18n` to the parent component, it also feels right to pass
   `store`. */
   mountOptions.parentComponent = { store, i18n };
 
@@ -58,12 +78,6 @@ export const mount = (component, options = {}) => {
     mountOptions.localVue = localVues.withoutRouter;
 
     if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
-      /* mount() makes it easy to mock $route: if you specify a string location,
-      mount() will convert it to a Route object. Because it is so common for
-      $route and $router to be used together, if you specify $route without
-      $router, then mount() will pass a minimal mock of $router with read-only
-      functionality. If you need additional router functionality, you should
-      probably inject the router. */
       const mocks = { ...mountOptions.mocks };
       if (typeof mocks.$route === 'string')
         mocks.$route = router.resolve(mocks.$route).route;

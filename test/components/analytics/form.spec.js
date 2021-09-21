@@ -3,13 +3,14 @@ import AnalyticsForm from '../../../src/components/analytics/form.vue';
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockResponse } from '../../util/axios';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => {
   const config = testData.standardConfigs.forKey('analytics');
   return {
     requestData: {
-      analyticsConfig: config != null ? config : { problem: 404.1 }
+      analyticsConfig: config != null ? config : mockResponse.problem(404.1)
     }
   };
 };

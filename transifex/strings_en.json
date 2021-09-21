@@ -998,10 +998,17 @@
         }
       }
     },
+    "App": {
+      "alert": {
+        "versionChange": {
+          "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+        }
+      }
+    },
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": "The page you requested could not be loaded. Please check that you are online and try again."
+          "string": "The page you requested could not be loaded. Please refresh the page and try again."
         }
       }
     },

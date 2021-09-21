@@ -43,6 +43,7 @@ import { mapGetters } from 'vuex';
 
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+
 import callWait from '../../mixins/call-wait';
 import { isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
@@ -147,11 +148,8 @@ export default {
     },
     scheduleProblemCheck() {
       this.cancelCall('checkForProblem');
-      this.callWait(
-        'checkForProblem',
-        () => this.checkForProblem(),
-        (tries) => (tries < 300 ? this.delayBetweenChecks : null)
-      );
+      this.callWait('checkForProblem', this.checkForProblem, (tries) =>
+        (tries < 300 ? this.delayBetweenChecks : null));
     },
     submit() {
       // Return immediately if the iframe is still loading. It would probably be

@@ -11,9 +11,10 @@ except according to the terms contained in the LICENSE file.
 */
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import { routeProps } from './util/router';
+
 import i18n from './i18n';
 import { instanceNameOrId } from './util/odata';
+import { routeProps } from './util/router';
 
 /*
 Lazy-Loading Routes
@@ -766,7 +767,7 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 // Data that does not change with navigation
 {
   const names = Object.keys(routesByName);
-  for (const key of ['session', 'currentUser', 'roles'])
+  for (const key of ['centralVersion', 'session', 'currentUser', 'roles'])
     preserveDataForKey({ key, to: names, params: [] });
 }
 

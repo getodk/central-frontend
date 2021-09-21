@@ -21,6 +21,8 @@ import User from '../../../presenters/user';
 // Each type of response data that the `request` module manages is associated
 // with a key. Each key tends to correspond to a single Backend endpoint.
 export const keys = [
+  'centralVersion',
+
   'session',
   'currentUser',
 

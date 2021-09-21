@@ -9,6 +9,7 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
+import { mockResponse } from '../../util/axios';
 
 // Create submissions along with the associated project and form.
 const createSubmissions = (count, factoryOptions = {}) => {
@@ -261,7 +262,7 @@ describe('SubmissionList', () => {
         it('does nothing upon scroll if keys request results in error', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false }, {
-            keys: 500.1
+            keys: mockResponse.problem
           })
             .complete()
             .testNoRequest(component => {
@@ -277,7 +278,7 @@ describe('SubmissionList', () => {
         it('does nothing upon scroll if fields request results in error', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false }, {
-            fields: 500.1
+            fields: mockResponse.problem
           })
             .complete()
             .testNoRequest(component => {
@@ -293,7 +294,7 @@ describe('SubmissionList', () => {
         it('does nothing upon scroll if submissions request results in error', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false }, {
-            odataChunk: 500.1
+            odataChunk: mockResponse.problem
           })
             .complete()
             .testNoRequest(component => {

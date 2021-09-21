@@ -18,19 +18,25 @@ export const mockAxios = (respond) => {
   return http;
 };
 
-export const mockAxiosResponse = (data, config = undefined) => {
-  const response = { config };
-  if (data.problem == null) {
-    response.status = 200;
-    response.data = data;
-  } else {
-    const problem = typeof data.problem === 'object'
-      ? data.problem
-      : { code: data.problem, message: 'There was a problem.' };
-    response.status = Math.floor(problem.code);
-    response.data = problem;
+export const mockResponse = {
+  // Given a Problem object or a Problem code, returns a Problem response. (Note
+  // that the response will not have a `config` property.)
+  problem: (problemOrCode = 500.1) => {
+    const data = typeof problemOrCode === 'object'
+      ? problemOrCode
+      : { code: problemOrCode, message: 'There was a problem.' };
+    return { status: Math.floor(data.code), data };
+  },
+  // Converts an object that may be a response to a response. If the object
+  // looks like a response, it is returned as-is. Otherwise a 200 response is
+  // returned, with the object as the response data. (In that case, the response
+  // will not have a `config` property.)
+  of: (responseOrData) => {
+    if (typeof responseOrData === 'object' &&
+      typeof responseOrData.status === 'number' && responseOrData.data != null)
+      return responseOrData;
+    return { status: 200, data: responseOrData };
   }
-  return response;
 };
 
 export const mockAxiosError = (response) => {

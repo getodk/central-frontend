@@ -79,11 +79,11 @@ describe('util/session', () => {
   });
 
   describe('login', () => {
-    beforeEach(() => {
-      testData.extendedUsers.createPast(1);
-    });
-
     describe('request for the current user', () => {
+      beforeEach(() => {
+        testData.extendedUsers.createPast(1);
+      });
+
       it('sends the correct request', () => {
         setData({ session: testData.sessions.createNew({ token: 'foo' }) });
         return mockHttp()
@@ -118,6 +118,7 @@ describe('util/session', () => {
     describe('newSession', () => {
       it('sets local storage if newSession is true', () => {
         sinon.useFakeTimers();
+        testData.extendedUsers.createPast(1);
         setData({
           session: testData.sessions.createNew({
             expiresAt: '1970-01-02T00:00:00Z'
@@ -132,6 +133,7 @@ describe('util/session', () => {
       });
 
       it('does not set local storage if newSession is false', () => {
+        testData.extendedUsers.createPast(1);
         setData({ session: testData.sessions.createNew() });
         return mockHttp()
           .request(() => logIn(router, store, false))
@@ -441,7 +443,12 @@ describe('util/session', () => {
         .respondFor('/users')
         .complete()
         .request(() => {
-          clock.tick(240000);
+          clock.tick(15000);
+        })
+        .respond(() => ({ status: 404, data: '' })) // /version.txt
+        .complete()
+        .request(() => {
+          clock.tick(225000);
         })
         .respondWithSuccess()
         .afterResponse(app => {

@@ -4,6 +4,7 @@ import SubmissionList from '../../src/components/submission/list.vue';
 
 import testData from '../data';
 import { mockHttp } from './http';
+import { mockResponse } from './axios';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadSubmissionList = (mountOptions = {}) => {
@@ -28,7 +29,7 @@ export const loadSubmissionList = (mountOptions = {}) => {
         form,
         formDraft: form.publishedAt == null
           ? testData.extendedFormDrafts.last()
-          : { problem: 404.1 },
+          : mockResponse.problem(404.1),
         keys: testData.standardKeys.sorted(),
         ...mountOptions.requestData
       },
