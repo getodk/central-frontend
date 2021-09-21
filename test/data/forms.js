@@ -56,6 +56,8 @@ const forms = dataStore({
       enketoId: !draft ? enketoId : null,
       enketoOnceId,
       state,
+      // If publishedAt was specified, set createdAt to publishedAt in order to
+      // ensure that createdAt is not after publishedAt.
       createdAt: publishedAt != null
         ? publishedAt
         : (inPast
