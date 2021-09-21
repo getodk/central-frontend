@@ -631,7 +631,7 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           let withoutConfig;
           try {
-            withoutConfig = (this._responses[index])(config);
+            withoutConfig = (this._responses[index])();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
