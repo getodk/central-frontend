@@ -145,15 +145,6 @@ export default {
         (this.formDraft.isDefined() || this.project.permits('form.update'));
     }
   },
-  created() {
-    // If as the user navigates between the tabs, the scrollbar is visible for
-    // only some tabs, then the position of the tabs will shift as the user
-    // navigates. To prevent that, we always show the scrollbar.
-    document.body.classList.add('scroll');
-  },
-  beforeDestroy() {
-    document.body.classList.remove('scroll');
-  },
   methods: {
     formTabClass(path) {
       const htmlClass = this.tabClass(path);

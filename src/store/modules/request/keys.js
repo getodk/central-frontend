@@ -60,7 +60,8 @@ export const keys = [
   'fieldKeys',
 
   'backupsConfig',
-  'analyticsConfig'
+  'analyticsConfig',
+  'analyticsPreview'
 ];
 
 

@@ -23,12 +23,11 @@ body {
   color: $color-text;
   min-height: 100vh;
 
-  &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
+  // Always show the scrollbar in order to prevent content shifting to the left.
+  overflow-y: scroll;
+  &.modal-open { overflow-y: hidden; }
 
-  &.scroll {
-    overflow-y: scroll;
-    &.modal-open { overflow-y: hidden; }
-  }
+  &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
 }
 
 h1, .h1 {

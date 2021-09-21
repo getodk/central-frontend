@@ -992,7 +992,7 @@ describe('router', () => {
     it('shows static title for /system/analytics', async () => {
       await load('/system/analytics');
       const { title } = document;
-      title.should.equal('Improve Central | System Management | ODK Central');
+      title.should.equal('Usage Information | System Management | ODK Central');
     });
 
     // General special cases

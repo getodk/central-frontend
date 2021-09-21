@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     data-keyboard="false" role="dialog" :aria-labelledby="titleId"
     @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
     @focusout="refocus">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" :class="{ 'modal-lg': large }" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" :disabled="!hideable"
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
           </button>
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
-        <div class="modal-body">
+        <div ref="body" class="modal-body">
           <alert/>
           <slot name="body"></slot>
         </div>
@@ -36,6 +36,8 @@ except according to the terms contained in the LICENSE file.
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
+
+import { noop } from '../util/util';
 
 /*
 We manually toggle the modal:
@@ -57,41 +59,38 @@ export default {
   name: 'Modal',
   components: { Alert },
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
+    state: Boolean,
     // Indicates whether the user is able to hide the modal by clicking ×,
     // pressing escape, or clicking outside the modal.
-    hideable: {
-      type: Boolean,
-      default: false
-    },
-    backdrop: {
-      type: Boolean,
-      default: false
-    }
+    hideable: Boolean,
+    backdrop: Boolean,
+    large: Boolean
   },
   data() {
     id += 1;
     return {
-      // jQuery wrapper of the .modal element
-      wrapper: null,
-      titleId: `modal-title${id}`,
+      id,
+      // The modal() method of the Boostrap plugin
+      bs: null,
+      observer: new MutationObserver(() => {
+        if (this.state) this.bs('handleUpdate');
+      }),
       mousedownOutsideDialog: false
     };
   },
   computed: {
     stateAndAlertAt() {
       return [this.state, this.$store.state.alert.at];
+    },
+    titleId() {
+      return `modal-title${this.id}`;
     }
   },
   watch: {
     state(state) {
       if (state) {
         // The DOM hasn't updated yet, but it should be OK to show the modal
-        // now: I think it will all happen in the same event loop. (That said,
-        // at some point we may end up wanting to call .modal('handleUpdate').)
+        // now: I think it will all happen in the same event loop.
         this.show();
       } else {
         this.hide();
@@ -109,6 +108,16 @@ export default {
     }
   },
   mounted() {
+    if (this.$el.closest('body') != null) {
+      const wrapper = $(this.$el);
+      this.bs = wrapper.modal.bind(wrapper);
+    } else {
+      // We do not call modal() if the component is not attached to the
+      // document, because modal() can have side effects on the document. Most
+      // tests do not attach the component to the document.
+      this.bs = noop;
+    }
+
     if (this.state) this.show();
   },
   beforeDestroy() {
@@ -116,22 +125,18 @@ export default {
   },
   methods: {
     show() {
-      // We do not call .modal('show') if the component is not attached to the
-      // document, because .modal() has side effects on the document. Most tests
-      // do not attach the component to the document.
-      if (this.$el.closest('body') == null) return;
-
-      this.wrapper = $(this.$el)
-        .one('shown.bs.modal', () => {
-          this.$emit('shown');
-        })
-        .modal('show');
+      this.bs('show');
+      this.observer.observe(this.$refs.body, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        characterData: true
+      });
+      this.$emit('shown');
     },
     hide() {
-      if (this.wrapper != null) {
-        this.wrapper.modal('hide');
-        this.wrapper = null;
-      }
+      this.bs('hide');
+      this.observer.disconnect();
 
       const selection = getSelection();
       const { anchorNode } = selection;
