@@ -81,7 +81,9 @@ describe('util/session', () => {
   describe('login', () => {
     describe('request for the current user', () => {
       beforeEach(() => {
-        testData.extendedUsers.createPast(1);
+        // Specifying 'none' so that the request for the analytics config is not
+        // sent.
+        testData.extendedUsers.createPast(1, { role: 'none' });
       });
 
       it('sends the correct request', () => {
@@ -118,7 +120,7 @@ describe('util/session', () => {
     describe('newSession', () => {
       it('sets local storage if newSession is true', () => {
         sinon.useFakeTimers();
-        testData.extendedUsers.createPast(1);
+        testData.extendedUsers.createPast(1, { role: 'none' });
         setData({
           session: testData.sessions.createNew({
             expiresAt: '1970-01-02T00:00:00Z'
@@ -133,7 +135,7 @@ describe('util/session', () => {
       });
 
       it('does not set local storage if newSession is false', () => {
-        testData.extendedUsers.createPast(1);
+        testData.extendedUsers.createPast(1, { role: 'none' });
         setData({ session: testData.sessions.createNew() });
         return mockHttp()
           .request(() => logIn(router, store, false))
@@ -143,11 +145,27 @@ describe('util/session', () => {
           });
       });
     });
+
+    it('sends a request for analytics config if user can config.read', () => {
+      testData.extendedUsers.createPast(1, { role: 'admin' });
+      setData({ session: testData.sessions.createNew({ token: 'foo' }) });
+      return mockHttp()
+        .request(() => logIn(router, store, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithProblem(404.1)
+        .testRequests([
+          null,
+          {
+            url: '/v1/config/analytics',
+            headers: { Authorization: 'Bearer foo' }
+          }
+        ]);
+    });
   });
 
   describe('logout', () => {
     it('sends the correct request', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({ session: testData.sessions.createNew({ token: 'foo' }) });
       return mockHttp()
         .request(() => logIn(router, store, true))
@@ -163,7 +181,7 @@ describe('util/session', () => {
     });
 
     it('returns a promise', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
         .request(() => logIn(router, store, true))
@@ -174,7 +192,7 @@ describe('util/session', () => {
     });
 
     it('clears response data', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
         .request(() => logIn(router, store, true))
@@ -193,8 +211,50 @@ describe('util/session', () => {
         });
     });
 
+    describe('canceling requests', () => {
+      it('cancels the request for the analytics config', () => {
+        testData.extendedUsers.createPast(1);
+        setData({ session: testData.sessions.createNew() });
+        return mockHttp()
+          .request(() => logIn(router, store, true))
+          .beforeEachResponse((_, { url }) => {
+            if (url === '/v1/config/analytics') logOut(router, store, false);
+          })
+          .respondWithData(() => testData.extendedUsers.first())
+          .respondWithProblem(404.1)
+          .respondWithSuccess()
+          .afterResponses(() => {
+            const { state } = store.state.request.requests.analyticsConfig.last;
+            state.should.equal('canceled');
+          });
+      });
+
+      it('cancels a request for the roles', () => {
+        testData.extendedUsers.createPast(1, { role: 'none' });
+        setData({ session: testData.sessions.createNew() });
+        return mockHttp()
+          .request(() => logIn(router, store, true))
+          .respondWithData(() => testData.extendedUsers.first())
+          .complete()
+          // Send a request that would not be canceled by a route change.
+          .request(() => store.dispatch('get', [{
+            key: 'roles',
+            url: '/v1/roles'
+          }]).catch(noop))
+          .beforeEachResponse((_, { url }) => {
+            if (url === '/v1/roles') logOut(router, store, false);
+          })
+          .respondWithData(() => testData.standardRoles.sorted())
+          .respondWithSuccess()
+          .afterResponses(() => {
+            const { state } = store.state.request.requests.roles.last;
+            state.should.equal('canceled');
+          });
+      });
+    });
+
     it('removes sessionExpires from local storage', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
         .request(() => logIn(router, store, true))
@@ -249,7 +309,7 @@ describe('util/session', () => {
 
     describe('request results in an error', () => {
       beforeEach(() => {
-        testData.extendedUsers.createPast(1);
+        testData.extendedUsers.createPast(1, { role: 'none' });
         setData({ session: testData.sessions.createNew() });
       });
 
@@ -308,8 +368,7 @@ describe('util/session', () => {
               if (url === '/v1/users/current')
                 logOut(app.vm.$router, app.vm.$store, false).catch(noop);
             })
-            .respondWithData(() => testData.sessions.createNew())
-            .respondWithData(() => testData.extendedUsers.first())
+            .restoreSession()
             .respondWithProblem(401.2)
             .afterResponses(app => {
               const { state } = app.vm.$store.state.request.requests.currentUser.last;
@@ -324,8 +383,7 @@ describe('util/session', () => {
               if (url === '/v1/users/current')
                 logOut(app.vm.$router, app.vm.$store, false).catch(noop);
             })
-            .respondWithData(() => testData.sessions.createNew())
-            .respondWithData(() => testData.extendedUsers.first())
+            .restoreSession()
             .respondWithProblem(401.2)
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/reset-password');
@@ -409,7 +467,7 @@ describe('util/session', () => {
   describe('logout before session expiration', () => {
     it('logs out a minute before the session expires', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -435,12 +493,11 @@ describe('util/session', () => {
 
     it('sets the ?next query parameter', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
-      return load('/users', {}, false)
-        .respondWithData(() =>
-          testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' }))
-        .respondWithData(() => testData.extendedUsers.first())
-        .respondFor('/users')
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
+      return load('/', {}, false)
+        .restoreSession()
+        .respondFor('/', { users: false })
         .complete()
         .request(() => {
           clock.tick(15000);
@@ -452,13 +509,13 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(app => {
-          app.vm.$route.query.next.should.equal('/users');
+          app.vm.$route.query.next.should.equal('/');
         });
     });
 
     it('shows an alert after the logout', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -484,7 +541,7 @@ describe('util/session', () => {
 
     it('does not attempt to log out if there was already a logout', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -508,7 +565,7 @@ describe('util/session', () => {
   describe('logout after session expiration', () => {
     it('does not send a request', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -526,7 +583,7 @@ describe('util/session', () => {
 
     it('returns a fulfilled promise', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -545,7 +602,7 @@ describe('util/session', () => {
   describe('session expiration warning', () => {
     it('shows an alert 2 minutes before logout', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -569,7 +626,7 @@ describe('util/session', () => {
 
     it('does not show the alert more than once for the same session', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -608,7 +665,7 @@ describe('util/session', () => {
 
     it('does not show the alert if there was already a logout', () => {
       const clock = sinon.useFakeTimers();
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({
         session: testData.sessions.createNew({
@@ -632,7 +689,7 @@ describe('util/session', () => {
 
   describe('local storage changes', () => {
     it('logs out after sessionExpires changes', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
@@ -653,7 +710,7 @@ describe('util/session', () => {
     });
 
     it('logs out after local storage is cleared', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
@@ -690,7 +747,7 @@ describe('util/session', () => {
     });
 
     it('does not attempt to log out if there was already a logout', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({ session: testData.sessions.createNew() });
       return mockHttp()
@@ -710,7 +767,7 @@ describe('util/session', () => {
     });
 
     it('does not log out after a different item in local storage changes', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       const cleanup = useSessions(router, store);
       setData({ session: testData.sessions.createNew() });
       return mockHttp()

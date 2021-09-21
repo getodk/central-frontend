@@ -3,6 +3,8 @@ import sinon from 'sinon';
 import DocLink from '../../src/components/doc-link.vue';
 import ProjectList from '../../src/components/project/list.vue';
 
+import { logOut } from '../../src/util/session';
+
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
@@ -11,7 +13,7 @@ describe('App', () => {
     beforeEach(mockLogin);
 
     it('sends the correct request', () => {
-      const clock = sinon.useFakeTimers();
+      const clock = sinon.useFakeTimers(Date.now());
       return load('/')
         .complete()
         .request(() => {
@@ -24,7 +26,7 @@ describe('App', () => {
     });
 
     it('re-sends the request after 60 seconds', () => {
-      const clock = sinon.useFakeTimers();
+      const clock = sinon.useFakeTimers(Date.now());
       return load('/')
         .complete()
         .request(() => {
@@ -41,7 +43,7 @@ describe('App', () => {
 
     describe('after a version change', () => {
       it('shows an alert', () => {
-        const clock = sinon.useFakeTimers();
+        const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
           .request(() => {
@@ -70,7 +72,7 @@ describe('App', () => {
       });
 
       it('stops sending the request', () => {
-        const clock = sinon.useFakeTimers();
+        const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
           .request(() => {
@@ -89,7 +91,7 @@ describe('App', () => {
       });
 
       it('keeps alerting the user', () => {
-        const clock = sinon.useFakeTimers();
+        const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
           .request(() => {
@@ -113,7 +115,7 @@ describe('App', () => {
 
     describe('error response', () => {
       it('stops sending the request after a 404', () => {
-        const clock = sinon.useFakeTimers();
+        const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
           .request(() => {
@@ -126,14 +128,35 @@ describe('App', () => {
           });
       });
 
-      it('does not stop sending the request after a different error', () => {
-        const clock = sinon.useFakeTimers();
+      it('does not stop sending request after a different response error', () => {
+        const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
           .request(() => {
             clock.tick(15000);
           })
           .respond(() => ({ status: 500, data: '' }))
+          .complete()
+          .request(() => {
+            clock.tick(60000);
+          })
+          .respondWithData(() => 'v1.2')
+          .testRequests([{ url: '/version.txt' }]);
+      });
+
+      it('does not stop sending the request if it is canceled during logout', () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        return load('/')
+          .complete()
+          .request(() => {
+            clock.tick(15000);
+          })
+          .beforeEachResponse((app, { url }) => {
+            if (url === '/version.txt')
+              logOut(app.vm.$router, app.vm.$store, false);
+          })
+          .respondWithData(() => 'v1.2')
+          .respondWithSuccess()
           .complete()
           .request(() => {
             clock.tick(60000);

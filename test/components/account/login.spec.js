@@ -71,14 +71,16 @@ describe('AccountLogin', () => {
       }));
 
   it('logs in', () => {
-    testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+    // Specifying 'none' so that the request for the analytics config is not
+    // sent.
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
     return load('/login')
       .restoreSession(false)
       .complete()
       .request(submit)
       .respondWithData(() => testData.sessions.createNew())
       .respondWithData(() => testData.extendedUsers.first())
-      .respondFor('/')
+      .respondFor('/', { users: false })
       .afterResponses(app => {
         const { data } = app.vm.$store.state.request;
         should.exist(data.session);
@@ -141,16 +143,16 @@ describe('AccountLogin', () => {
     });
 
     it('uses the param after the user submits the form', () => {
-      testData.extendedUsers.createPast(1, { email: 'test@email.com' });
-      return load('/login?next=%2Fusers')
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?next=%2Faccount%2Fedit')
         .restoreSession(false)
         .complete()
         .request(submit)
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())
-        .respondFor('/users')
+        .respondFor('/account/edit')
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/users');
+          app.vm.$route.path.should.equal('/account/edit');
         });
     });
 
@@ -172,10 +174,10 @@ describe('AccountLogin', () => {
     });
 
     it("does not use the param if the user's session is restored", () => {
-      testData.extendedUsers.createPast(1);
-      return load('/login?next=%2Fusers')
-        .restoreSession(true)
-        .respondFor('/')
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      return load('/login?next=%2Faccount%2Fedit')
+        .restoreSession()
+        .respondFor('/', { users: false })
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
         });
@@ -193,7 +195,7 @@ describe('AccountLogin', () => {
     });
 
     it('does not update Frontend before an external redirect', () => {
-      testData.extendedUsers.createPast(1, { email: 'test@email.com' });
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
       return load('/login?next=%2F-%2Fxyz')
         .restoreSession(false)
         .complete()
