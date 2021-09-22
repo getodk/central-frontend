@@ -386,11 +386,14 @@ class MockHttp {
     return this.respond(() => mockResponse.problem(problemOrCode));
   }
 
-  restoreSession(restore) {
+  restoreSession(restore = true) {
     if (!restore) return this.respondWithProblem(404.1);
     if (testData.extendedUsers.size === 0) throw new Error('user not found');
+    const session = testData.sessions.size !== 0
+      ? testData.sessions.last()
+      : testData.sessions.createPast(1).last();
     return this
-      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => session)
       .respondWithData(() => testData.extendedUsers.first());
   }
 

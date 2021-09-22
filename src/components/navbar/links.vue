@@ -12,20 +12,20 @@ except according to the terms contained in the LICENSE file.
 <template>
   <ul id="navbar-links" class="nav navbar-nav">
     <li :class="{ active: projectsLinkIsActive }">
-      <router-link id="navbar-links-projects" to="/">
-        {{ $t('projects') }} <span class="sr-only">{{ $t('current') }}</span>
+      <router-link to="/">
+        {{ $t('resource.projects') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
-    <li v-if="canRoute('/users')"
+    <li v-if="canRoute('/users')" id="navbar-links-users"
       :class="{ active: routePathStartsWith('/users') }">
-      <router-link id="navbar-links-users" to="/users">
-        {{ $t('users') }} <span class="sr-only">{{ $t('current') }}</span>
+      <router-link to="/users">
+        {{ $t('resource.users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/system/backups')"
       :class="{ active: routePathStartsWith('/system') }">
-      <router-link id="navbar-links-system" to="/system/backups">
-        {{ $t('system') }} <span class="sr-only">{{ $t('current') }}</span>
+      <router-link to="/system/backups">
+        {{ $t('common.system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
   </ul>
@@ -58,25 +58,18 @@ export default {
 }
 
 @media (min-width: 768px) {
-  // It would probably be better to add the margin to the <li> element rather
-  // than the <a> element.
-  #navbar-links > li > a { margin-right: 10px; }
-  #navbar-links-projects, #navbar-links-users { margin-left: 30px; }
+  #navbar-links {
+    margin-left: 30px;
+
+    > li + li { margin-left: 10px; }
+    #navbar-links-users { margin-left: 30px; }
+  }
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "projects": "Projects",
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "users": "Users",
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "system": "System",
     // Used by screen readers to identify the currently-selected navigation tab
     "current": "current"
   }

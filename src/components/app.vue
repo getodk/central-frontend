@@ -83,6 +83,8 @@ export default {
 
           return false;
         })
+        // This error could be the result of logout, which will cancel all
+        // requests.
         .catch(error =>
           (error.response != null && error.response.status === 404));
     },

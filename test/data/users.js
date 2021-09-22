@@ -22,16 +22,17 @@ export const extendedUsers = dataStore({
     email = `${faker.random.uuid()}@getodk.org`,
     // Sitewide role
     role = 'admin',
-    verbs = verbsByRole(role)
+    verbs = verbsByRole(role),
+    createdAt
   }) => ({
     id,
     type: 'user',
     displayName,
     email,
     verbs,
-    createdAt: inPast
-      ? fakePastDate([lastCreatedAt])
-      : new Date().toISOString(),
+    createdAt: createdAt != null
+      ? createdAt
+      : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
     updated: null
   }),
   sort: (administrator1, administrator2) =>

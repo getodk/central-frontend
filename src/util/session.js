@@ -122,19 +122,21 @@ export const logOut = (router, store, setNext) => {
   const promise = Date.parse(expiresAt) > Date.now()
     ? requestLogout(store)
     : Promise.resolve();
+  // We clear all data and cancel any requests. However, that isn't ideal for
+  // centralVersion, and we may need to revisit this logic in the future.
   store.commit('clearData');
+  // Below, we navigate to /login. That alone would cancel many requests.
+  // However, we also need to cancel requests for data that does not change with
+  // navigation. There are also some cases in which we don't navigate to /login.
+  store.commit('cancelRequests');
 
   // We do not navigate to /login for a logout during login or during the
   // initial navigation. After the initial navigation, navigation is
   // synchronous, so a logout during navigation is not possible.
-  if (!store.state.router.anyNavigationConfirmed ||
-    router.currentRoute.path === '/login') {
-    if (store.getters.loading('currentUser'))
-      store.commit('cancelRequest', 'currentUser');
-  } else {
+  if (store.state.router.anyNavigationConfirmed &&
+    router.currentRoute.path !== '/login') {
     const location = { path: '/login' };
     if (setNext) location.query = { next: router.currentRoute.fullPath };
-    // This will cancel any requests.
     forceReplace(router, store, location);
   }
 
@@ -245,8 +247,6 @@ export const logIn = (router, store, newSession) => {
     localStore.setItem('sessionExpires', Date.parse(expiresAt).toString());
   }
 
-  // If the route changed during this request, it would cancel the request. It
-  // is the caller's responsibility to ensure that the route does not change.
   return store.dispatch('get', [{
     key: 'currentUser',
     url: '/v1/users/current',
@@ -262,5 +262,15 @@ export const logIn = (router, store, newSession) => {
         .then(() => {
           throw error;
         });
+    })
+    .then(() => {
+      if (store.state.request.data.currentUser.can('config.read')) {
+        store.dispatch('get', [{
+          key: 'analyticsConfig',
+          url: '/v1/config/analytics',
+          fulfillProblem: ({ code }) => code === 404.1,
+          alert: false
+        }]).catch(noop);
+      }
     });
 };

@@ -97,29 +97,25 @@ describe('router', () => {
 
     describe('restoreSession is true for the first route', () => {
       beforeEach(() => {
-        testData.extendedUsers.createPast(1);
+        testData.extendedUsers.createPast(1, { role: 'none' });
       });
 
       it('sends the correct requests', () =>
-        load('/users', {}, false)
-          .beforeEachResponse((_, { method, url }, index) => {
-            if (index === 0) {
-              method.should.equal('GET');
-              url.should.equal('/v1/sessions/restore');
-            } else if (index === 1) {
-              method.should.equal('GET');
-              url.should.equal('/v1/users/current');
-            }
-          })
-          .restoreSession(true)
-          .respondFor('/users'));
+        load('/account/edit', {}, false)
+          .restoreSession()
+          .respondFor('/account/edit')
+          .testRequests([
+            { url: '/v1/sessions/restore' },
+            { url: '/v1/users/current', extended: true },
+            null
+          ]));
 
       it('does not redirect the user from a location that requires login', () =>
-        load('/users', {}, false)
-          .restoreSession(true)
-          .respondFor('/users')
+        load('/account/edit', {}, false)
+          .restoreSession()
+          .respondFor('/account/edit')
           .afterResponses(app => {
-            app.vm.$route.path.should.equal('/users');
+            app.vm.$route.path.should.equal('/account/edit');
           }));
     });
   });

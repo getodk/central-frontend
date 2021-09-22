@@ -685,6 +685,10 @@
     "success": {
       "string": "Success!"
     },
+    "system": {
+      "string": "System",
+      "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
+    },
     "yes": {
       "string": "Yes"
     },
@@ -873,6 +877,33 @@
         }
       }
     },
+    "AnalyticsIntroduction": {
+      "title": {
+        "string": "Help Improve Central!",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "In the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team.",
+            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+          },
+          "usageInformation": {
+            "string": "Usage Information",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          }
+        },
+        "1": {
+          "string": "There, you can also choose to not see this message again."
+        }
+      },
+      "action": {
+        "improveCentral": {
+          "string": "Improve Central",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "AnalyticsList": {
       "heading": {
         "0": {
@@ -983,10 +1014,6 @@
         "2": {
           "string": "You can always come here to see what is being collected."
         }
-      },
-      "system": {
-        "string": "System",
-        "developer_comment": "This is the title shown above usage information about the server as a whole."
       },
       "projects": {
         "title": {
@@ -2352,6 +2379,9 @@
           "string": "Toggle navigation",
           "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
         }
+      },
+      "analyticsNotice": {
+        "string": "Help improve Central!"
       }
     },
     "NavbarActions": {
@@ -2386,18 +2416,6 @@
       }
     },
     "NavbarLinks": {
-      "projects": {
-        "string": "Projects",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "users": {
-        "string": "Users",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "system": {
-        "string": "System",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
       "current": {
         "string": "current",
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"

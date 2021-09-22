@@ -11,7 +11,8 @@ import { mount } from '../../util/lifecycle';
 describe('NavbarActions', () => {
   it('indicates if the user is not logged in', () => {
     const navbar = mount(Navbar, {
-      stubs: { RouterLink: RouterLinkStub },
+      // Stubbing AnalyticsIntroduction because of its custom <router-link>
+      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/login' }
     });
     const text = navbar.getComponent(NavbarActions).get('a').text();
@@ -21,7 +22,7 @@ describe('NavbarActions', () => {
   it("shows the user's display name", () => {
     mockLogin({ displayName: 'Alice' });
     const navbar = mount(Navbar, {
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/' }
     });
     navbar.getComponent(NavbarActions).get('a').text().should.equal('Alice');

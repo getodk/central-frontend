@@ -8,14 +8,14 @@ import { load } from '../util/http';
 describe('Navbar', () => {
   describe('visibility', () => {
     it('does not show the navbar until the first confirmed navigation', () => {
-      testData.extendedUsers.createPast(1);
+      testData.extendedUsers.createPast(1, { role: 'none' });
       let wasHidden;
       const removeGuard = router.afterEach(() => {
-        wasHidden = document.querySelector('.navbar').style.display === 'none';
+        wasHidden = document.querySelector('.navbar').parentElement.style.display === 'none';
       });
       return load('/login', { attachTo: document.body })
-        .restoreSession(true)
-        .respondFor('/')
+        .restoreSession()
+        .respondFor('/', { users: false })
         .afterResponses(app => {
           wasHidden.should.be.true();
           app.getComponent(Navbar).should.be.visible();

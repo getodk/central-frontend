@@ -126,6 +126,16 @@ export default {
       requestsForKey.last.state = 'canceled';
       requestsForKey.cancelId += 1;
     },
+    cancelRequests({ requests }) {
+      for (const key of allKeys) {
+        const requestsForKey = requests[key];
+        const { last } = requestsForKey;
+        if (last.state === 'loading') {
+          last.state = 'canceled';
+          requestsForKey.cancelId += 1;
+        }
+      }
+    },
     setData({ data }, { key, value }) {
       data[key] = value;
     },

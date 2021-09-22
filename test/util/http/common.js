@@ -24,7 +24,9 @@ export function testRequests(expectedConfigs) {
             'X-Extended-Metadata': 'true'
           };
         }
-        const { session } = component.vm.$store.state.request.data;
+        const session = component != null
+          ? component.vm.$store.state.request.data.session
+          : null;
         config.should.eql(withAuth(expectedConfig, session));
       }
     })

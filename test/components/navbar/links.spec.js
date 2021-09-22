@@ -14,62 +14,30 @@ const mountComponent = (options) => mount(NavbarLinks, {
 describe('NavbarLinks', () => {
   it('does not render the links before login', () => {
     const navbar = mount(Navbar, {
-      stubs: { RouterLink: RouterLinkStub },
+      // Stubbing AnalyticsIntroduction because of its custom <router-link>
+      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/login' }
     });
     navbar.findComponent(NavbarLinks).exists().should.be.false();
   });
 
-  describe('sitewide administrator', () => {
-    beforeEach(mockLogin);
-
-    it('shows the Projects Link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.get('#navbar-links-projects').should.be.visible();
+  it('renders the correct links for a sitewide administrator', () => {
+    mockLogin();
+    const component = mountComponent({
+      mocks: { $route: '/' }
     });
-
-    it('shows the Users link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.get('#navbar-links-users').should.be.visible();
-    });
-
-    it('shows the System link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.get('#navbar-links-system').should.be.visible();
-    });
+    const links = component.findAllComponents(RouterLinkStub);
+    const to = links.wrappers.map(link => link.props().to);
+    to.should.eql(['/', '/users', '/system/backups']);
   });
 
-  describe('user with no sitewide role', () => {
-    beforeEach(() => {
-      mockLogin({ role: 'none' });
+  it('renders the correct links for a user without a sitewide role', () => {
+    mockLogin({ role: 'none' });
+    const component = mountComponent({
+      mocks: { $route: '/' }
     });
-
-    it('shows the Projects link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.get('#navbar-links-projects').should.be.visible();
-    });
-
-    it('does not render the Users link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.find('#navbar-links-users').exists().should.be.false();
-    });
-
-    it('does not render the System link', () => {
-      const component = mountComponent({
-        mocks: { $route: '/' }
-      });
-      component.find('#navbar-links-system').exists().should.be.false();
-    });
+    const links = component.findAllComponents(RouterLinkStub);
+    links.wrappers.map(link => link.props().to).should.eql(['/']);
   });
 
   describe('active link', () => {
@@ -77,20 +45,23 @@ describe('NavbarLinks', () => {
 
     // Array of test cases
     const cases = [
-      ['/', '#navbar-links-projects'],
-      ['/projects/1', '#navbar-links-projects'],
-      ['/users', '#navbar-links-users'],
-      ['/users/1/edit', '#navbar-links-users'],
-      ['/system/audits', '#navbar-links-system']
+      ['/', '/'],
+      ['/projects/1', '/'],
+      ['/users', '/users'],
+      ['/users/1/edit', '/users'],
+      ['/system/audits', '/system/backups']
     ];
-    for (const [route, link] of cases) {
-      it(`marks ${link} as active for ${route}`, () => {
+    for (const [location, activeLink] of cases) {
+      it(`marks ${activeLink} as active for ${location}`, () => {
         const component = mountComponent({
-          mocks: { $route: route }
+          mocks: { $route: location }
         });
         const active = component.findAll('.active');
         active.length.should.equal(1);
-        active.at(0).find(link).exists().should.be.true();
+        const link = component.findAllComponents(RouterLinkStub)
+          .filter(wrapper => active.at(0).element.contains(wrapper.element))
+          .at(0);
+        link.props().to.should.equal(activeLink);
       });
     }
 

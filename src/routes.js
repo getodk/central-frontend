@@ -766,8 +766,15 @@ const preserveDataForKey = ({ key, to, params, from = to }) => {
 
 // Data that does not change with navigation
 {
+  const keys = [
+    'centralVersion',
+    'session',
+    'currentUser',
+    'roles',
+    'analyticsConfig'
+  ];
   const names = Object.keys(routesByName);
-  for (const key of ['centralVersion', 'session', 'currentUser', 'roles'])
+  for (const key of keys)
     preserveDataForKey({ key, to: names, params: [] });
 }
 

@@ -10,29 +10,39 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed"
-          data-toggle="collapse" data-target="#navbar-collapse"
-          aria-expanded="false">
-          <span class="sr-only">{{ $t('action.toggle') }}</span>
-          <span class="navbar-icon-bar"></span>
-          <span class="navbar-icon-bar"></span>
-          <span class="navbar-icon-bar"></span>
-        </button>
-        <router-link to="/" class="navbar-brand">ODK Central</router-link>
+  <div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed"
+            data-toggle="collapse" data-target=".navbar-collapse"
+            aria-expanded="false">
+            <span class="sr-only">{{ $t('action.toggle') }}</span>
+            <span class="navbar-icon-bar"></span>
+            <span class="navbar-icon-bar"></span>
+            <span class="navbar-icon-bar"></span>
+          </button>
+          <router-link to="/" class="navbar-brand">ODK Central</router-link>
+        </div>
+        <div class="collapse navbar-collapse">
+          <navbar-links v-if="loggedIn"/>
+          <div class="navbar-right">
+            <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
+              href="#" @click.prevent="showModal('analyticsIntroduction')">
+              {{ $t('analyticsNotice') }}
+            </a>
+            <ul class="nav navbar-nav">
+              <navbar-help-dropdown/>
+              <navbar-locale-dropdown/>
+              <navbar-actions :logged-in="loggedIn"/>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div id="navbar-collapse" class="collapse navbar-collapse">
-        <navbar-links v-if="loggedIn"/>
-        <ul class="nav navbar-nav navbar-right">
-          <navbar-help-dropdown/>
-          <navbar-locale-dropdown/>
-          <navbar-actions :logged-in="loggedIn"/>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    </nav>
+    <analytics-introduction v-bind="analyticsIntroduction"
+      @hide="hideModal('analyticsIntroduction')"/>
+  </div>
 </template>
 
 <script>
@@ -41,20 +51,32 @@ import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
+import modal from '../mixins/modal';
+import routes from '../mixins/routes';
+import { loadAsync } from '../util/async-components';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
   components: {
+    AnalyticsIntroduction: loadAsync('AnalyticsIntroduction'),
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,
     NavbarLocaleDropdown
   },
+  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
+  data() {
+    return {
+      analyticsIntroduction: {
+        state: false
+      }
+    };
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['currentUser']),
+    ...requestData(['currentUser', 'analyticsConfig']),
     // Usually once the user is logged in (either after their session has been
     // restored or after they have submitted the login form), we render a fuller
     // navbar. However, if after submitting the login form, the user is
@@ -62,36 +84,44 @@ export default {
     // redirected. In that case, we do not render the fuller navbar.
     loggedIn() {
       return this.currentUser != null && this.$route.path !== '/login';
+    },
+    showsAnalyticsNotice() {
+      return this.loggedIn && this.canRoute('/system/analytics') &&
+        this.analyticsConfig != null && this.analyticsConfig.isEmpty() &&
+        Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
-$active-background-color: #b40066;
 $border-height: 3px;
-$shadow-color: #dedede;
 
 .navbar-default {
   background-color: $color-accent-primary;
   border: none;
   border-top: $border-height solid $color-accent-secondary;
-  box-shadow: 0 $border-height 0 $shadow-color;
+  box-shadow: 0 $border-height 0 #dedede;
   height: 30px + $border-height; // the way bootstrap is set up, the border eats the body.
   margin-bottom: 0;
   min-height: auto;
 
   .navbar-brand {
+    float: left;
     font-size: $font-size-btn;
     font-weight: bold;
     height: auto;
     letter-spacing: -0.02em;
+    line-height: 20px;
     padding: 5px 15px;
 
-    &, &:hover, &:focus {
-      color: #fff;
+    &, &:hover, &:focus { color: #fff; }
+
+    &:focus {
+      background-color: transparent;
+      text-decoration: none;
     }
   }
 
@@ -99,10 +129,24 @@ $shadow-color: #dedede;
     font-size: $font-size-btn;
 
     > li > a {
-      &, &:hover, &:focus {
-        color: #fff;
-      }
+      &, &:hover, &:focus { color: #fff; }
     }
+  }
+}
+
+#navbar-analytics-notice {
+  @include text-link;
+  background-color: #ffed88;
+  border: 1px solid #e39941;
+  float: left;
+  font-size: 10px;
+  margin-top: 6px;
+  margin-right: 30px;
+  padding: 1px 3px;
+
+  &:hover, &:focus {
+    background-color: #ffdc1c;
+    border-color: #ffed88;
   }
 }
 
@@ -110,6 +154,8 @@ $shadow-color: #dedede;
 @media (min-width: 768px) {
   .navbar-default {
     border-radius: 0;
+
+    .navbar-brand { margin-left: -15px; }
 
     .navbar-nav {
       margin-top: -1 * $border-height;
@@ -136,7 +182,7 @@ $shadow-color: #dedede;
         box-shadow: 0 0 6px transparentize($color-accent-secondary, 0.7) inset;
 
         &, &:hover, &:focus {
-          background-color: $active-background-color;
+          background-color: #b40066;
           border-top-color: #fff;
           color: #fff;
         }
@@ -144,7 +190,12 @@ $shadow-color: #dedede;
     }
   }
 
-  .navbar-right { margin-right: -25px; }
+  .navbar-right {
+    // Counters the 15px padding of .navbar-collapse and the 15px padding of
+    // .container-fluid. The Bootstrap default is -15px.
+    margin-right: -25px;
+  }
+
   #navbar-actions { margin-left: 10px; }
 }
 
@@ -155,13 +206,9 @@ $shadow-color: #dedede;
       border: none;
       margin: -2px 5px;
 
-      &:hover, &:focus {
-        background-color: inherit;
-      }
+      &:hover, &:focus { background-color: inherit; }
 
-      .navbar-icon-bar {
-        background-color: #fff;
-      }
+      .navbar-icon-bar { background-color: #fff; }
     }
 
     .navbar-collapse {
@@ -185,12 +232,12 @@ $shadow-color: #dedede;
       }
 
       .open .dropdown-menu > li > a {
-        &, &:hover, &:focus {
-          color: #fff;
-        }
+        &, &:hover, &:focus { color: #fff; }
       }
     }
   }
+
+  #navbar-analytics-notice { display: none; }
 }
 </style>
 
@@ -200,7 +247,8 @@ $shadow-color: #dedede;
     "action": {
       // Used by screen readers to describe the button used to show or hide the navigation bar on small screens ("hamburger menu").
       "toggle": "Toggle navigation"
-    }
+    },
+    "analyticsNotice": "Help improve Central!"
   }
 }
 </i18n>
