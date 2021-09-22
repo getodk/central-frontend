@@ -14,7 +14,7 @@ const mountComponent = (options) => mount(NavbarLinks, {
 describe('NavbarLinks', () => {
   it('does not render the links before login', () => {
     const navbar = mount(Navbar, {
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/login' }
     });
     navbar.findComponent(NavbarLinks).exists().should.be.false();

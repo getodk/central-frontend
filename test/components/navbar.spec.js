@@ -11,7 +11,7 @@ describe('Navbar', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       let wasHidden;
       const removeGuard = router.afterEach(() => {
-        wasHidden = document.querySelector('.navbar').style.display === 'none';
+        wasHidden = document.querySelector('.navbar').parentElement.style.display === 'none';
       });
       return load('/login', { attachTo: document.body })
         .restoreSession()

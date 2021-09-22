@@ -10,29 +10,38 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed"
-          data-toggle="collapse" data-target=".navbar-collapse"
-          aria-expanded="false">
-          <span class="sr-only">{{ $t('action.toggle') }}</span>
-          <span class="navbar-icon-bar"></span>
-          <span class="navbar-icon-bar"></span>
-          <span class="navbar-icon-bar"></span>
-        </button>
-        <router-link to="/" class="navbar-brand">ODK Central</router-link>
+  <div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed"
+            data-toggle="collapse" data-target=".navbar-collapse"
+            aria-expanded="false">
+            <span class="sr-only">{{ $t('action.toggle') }}</span>
+            <span class="navbar-icon-bar"></span>
+            <span class="navbar-icon-bar"></span>
+            <span class="navbar-icon-bar"></span>
+          </button>
+          <router-link to="/" class="navbar-brand">ODK Central</router-link>
+        </div>
+        <div class="collapse navbar-collapse">
+          <navbar-links v-if="loggedIn"/>
+          <div class="navbar-right">
+            <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
+              href="#" @click.prevent="showModal('analytics')">
+              {{ $t('analyticsNotice') }}
+            </a>
+            <ul class="nav navbar-nav">
+              <navbar-help-dropdown/>
+              <navbar-locale-dropdown/>
+              <navbar-actions :logged-in="loggedIn"/>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="collapse navbar-collapse">
-        <navbar-links v-if="loggedIn"/>
-        <ul class="nav navbar-nav navbar-right">
-          <navbar-help-dropdown/>
-          <navbar-locale-dropdown/>
-          <navbar-actions :logged-in="loggedIn"/>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    </nav>
+    <analytics-introduction v-bind="analytics" @hide="hideModal('analytics')"/>
+  </div>
 </template>
 
 <script>
@@ -41,20 +50,32 @@ import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
+import modal from '../mixins/modal';
+import routes from '../mixins/routes';
+import { loadAsync } from '../util/async-components';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
   components: {
+    AnalyticsIntroduction: loadAsync('AnalyticsIntroduction'),
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,
     NavbarLocaleDropdown
   },
+  mixins: [modal({ analytics: 'AnalyticsIntroduction' }), routes()],
+  data() {
+    return {
+      analytics: {
+        state: false
+      }
+    };
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['currentUser']),
+    ...requestData(['currentUser', 'analyticsConfig']),
     // Usually once the user is logged in (either after their session has been
     // restored or after they have submitted the login form), we render a fuller
     // navbar. However, if after submitting the login form, the user is
@@ -62,13 +83,18 @@ export default {
     // redirected. In that case, we do not render the fuller navbar.
     loggedIn() {
       return this.currentUser != null && this.$route.path !== '/login';
+    },
+    showsAnalyticsNotice() {
+      return this.loggedIn && this.canRoute('/system/analytics') &&
+        this.analyticsConfig != null && this.analyticsConfig.isEmpty() &&
+        Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
 $border-height: 3px;
 
@@ -104,6 +130,22 @@ $border-height: 3px;
     > li > a {
       &, &:hover, &:focus { color: #fff; }
     }
+  }
+}
+
+#navbar-analytics-notice {
+  @include text-link;
+  background-color: #ffed88;
+  border: 1px solid #e39941;
+  float: left;
+  font-size: 10px;
+  margin-top: 6px;
+  margin-right: 30px;
+  padding: 1px 3px;
+
+  &:hover, &:focus {
+    background-color: #ffdc1c;
+    border-color: #ffed88;
   }
 }
 
@@ -193,6 +235,8 @@ $border-height: 3px;
       }
     }
   }
+
+  #navbar-analytics-notice { display: none; }
 }
 </style>
 
@@ -202,7 +246,8 @@ $border-height: 3px;
     "action": {
       // Used by screen readers to describe the button used to show or hide the navigation bar on small screens ("hamburger menu").
       "toggle": "Toggle navigation"
-    }
+    },
+    "analyticsNotice": "Help improve Central!"
   }
 }
 </i18n>

@@ -54,9 +54,9 @@ describe('AccountLogin', () => {
       .restoreSession(false)
       .complete()
       .testStandardButton({
-        button: '.btn-primary',
+        button: '#account-login .btn-primary',
         request: submit,
-        disabled: ['.btn-link']
+        disabled: ['#account-login .btn-link']
       }));
 
   it('shows a danger alert for incorrect credentials', () =>
