@@ -12,19 +12,19 @@ except according to the terms contained in the LICENSE file.
 <template>
   <ul id="navbar-links" class="nav navbar-nav">
     <li :class="{ active: projectsLinkIsActive }">
-      <router-link id="navbar-links-projects" to="/">
+      <router-link to="/">
         {{ $t('projects') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
-    <li v-if="canRoute('/users')"
+    <li v-if="canRoute('/users')" id="navbar-links-users"
       :class="{ active: routePathStartsWith('/users') }">
-      <router-link id="navbar-links-users" to="/users">
+      <router-link to="/users">
         {{ $t('users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/system/backups')"
       :class="{ active: routePathStartsWith('/system') }">
-      <router-link id="navbar-links-system" to="/system/backups">
+      <router-link to="/system/backups">
         {{ $t('system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
@@ -58,10 +58,12 @@ export default {
 }
 
 @media (min-width: 768px) {
-  // It would probably be better to add the margin to the <li> element rather
-  // than the <a> element.
-  #navbar-links > li > a { margin-right: 10px; }
-  #navbar-links-projects, #navbar-links-users { margin-left: 30px; }
+  #navbar-links {
+    margin-left: 30px;
+
+    > li + li { margin-left: 10px; }
+    #navbar-links-users { margin-left: 30px; }
+  }
 }
 </style>
 
