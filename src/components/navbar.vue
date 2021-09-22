@@ -84,14 +84,19 @@ $shadow-color: #dedede;
   min-height: auto;
 
   .navbar-brand {
+    float: left;
     font-size: $font-size-btn;
     font-weight: bold;
     height: auto;
     letter-spacing: -0.02em;
+    line-height: 20px;
     padding: 5px 15px;
 
-    &, &:hover, &:focus {
-      color: #fff;
+    &, &:hover, &:focus { color: #fff; }
+
+    &:focus {
+      background-color: transparent;
+      text-decoration: none;
     }
   }
 
@@ -110,6 +115,8 @@ $shadow-color: #dedede;
 @media (min-width: 768px) {
   .navbar-default {
     border-radius: 0;
+
+    .navbar-brand { margin-left: -15px; }
 
     .navbar-nav {
       margin-top: -1 * $border-height;
