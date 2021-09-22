@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed"
-          data-toggle="collapse" data-target="#navbar-collapse"
+          data-toggle="collapse" data-target=".navbar-collapse"
           aria-expanded="false">
           <span class="sr-only">{{ $t('action.toggle') }}</span>
           <span class="navbar-icon-bar"></span>
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <router-link to="/" class="navbar-brand">ODK Central</router-link>
       </div>
-      <div id="navbar-collapse" class="collapse navbar-collapse">
+      <div class="collapse navbar-collapse">
         <navbar-links v-if="loggedIn"/>
         <ul class="nav navbar-nav navbar-right">
           <navbar-help-dropdown/>
@@ -70,15 +70,13 @@ export default {
 <style lang="scss">
 @import '../assets/scss/variables';
 
-$active-background-color: #b40066;
 $border-height: 3px;
-$shadow-color: #dedede;
 
 .navbar-default {
   background-color: $color-accent-primary;
   border: none;
   border-top: $border-height solid $color-accent-secondary;
-  box-shadow: 0 $border-height 0 $shadow-color;
+  box-shadow: 0 $border-height 0 #dedede;
   height: 30px + $border-height; // the way bootstrap is set up, the border eats the body.
   margin-bottom: 0;
   min-height: auto;
@@ -104,9 +102,7 @@ $shadow-color: #dedede;
     font-size: $font-size-btn;
 
     > li > a {
-      &, &:hover, &:focus {
-        color: #fff;
-      }
+      &, &:hover, &:focus { color: #fff; }
     }
   }
 }
@@ -143,7 +139,7 @@ $shadow-color: #dedede;
         box-shadow: 0 0 6px transparentize($color-accent-secondary, 0.7) inset;
 
         &, &:hover, &:focus {
-          background-color: $active-background-color;
+          background-color: #b40066;
           border-top-color: #fff;
           color: #fff;
         }
@@ -151,7 +147,12 @@ $shadow-color: #dedede;
     }
   }
 
-  .navbar-right { margin-right: -25px; }
+  .navbar-right {
+    // Counters the 15px padding of .navbar-collapse and the 15px padding of
+    // .container-fluid. The Bootstrap default is -15px.
+    margin-right: -25px;
+  }
+
   #navbar-actions { margin-left: 10px; }
 }
 
@@ -162,13 +163,9 @@ $shadow-color: #dedede;
       border: none;
       margin: -2px 5px;
 
-      &:hover, &:focus {
-        background-color: inherit;
-      }
+      &:hover, &:focus { background-color: inherit; }
 
-      .navbar-icon-bar {
-        background-color: #fff;
-      }
+      .navbar-icon-bar { background-color: #fff; }
     }
 
     .navbar-collapse {
@@ -192,9 +189,7 @@ $shadow-color: #dedede;
       }
 
       .open .dropdown-menu > li > a {
-        &, &:hover, &:focus {
-          color: #fff;
-        }
+        &, &:hover, &:focus { color: #fff; }
       }
     }
   }
