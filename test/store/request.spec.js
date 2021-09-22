@@ -33,9 +33,10 @@ describe('store/modules/request', () => {
             }
           })
           .afterResponses(() => {
-            const { currentUser, roles } = store.state.request.data;
+            const { currentUser, roles, projects } = store.state.request.data;
             should.exist(currentUser);
             should.not.exist(roles);
+            should.not.exist(projects);
           });
       });
     });
