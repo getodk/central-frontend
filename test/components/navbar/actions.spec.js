@@ -11,6 +11,7 @@ import { mount } from '../../util/lifecycle';
 describe('NavbarActions', () => {
   it('indicates if the user is not logged in', () => {
     const navbar = mount(Navbar, {
+      // Stubbing AnalyticsIntroduction because of its custom <router-link>
       stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/login' }
     });

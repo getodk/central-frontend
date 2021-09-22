@@ -14,7 +14,7 @@ describe('AnalyticsIntroduction', () => {
       });
       return load('/account/edit', {}, false)
         .restoreSession()
-        .respondWithProblem(404.1)
+        .respondWithProblem(404.1) // analyticsConfig
         .respondFor('/account/edit')
         .afterResponses(app => {
           app.find('#navbar-analytics-notice').should.be.visible();

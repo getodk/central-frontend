@@ -14,6 +14,7 @@ const mountComponent = (options) => mount(NavbarLinks, {
 describe('NavbarLinks', () => {
   it('does not render the links before login', () => {
     const navbar = mount(Navbar, {
+      // Stubbing AnalyticsIntroduction because of its custom <router-link>
       stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
       mocks: { $route: '/login' }
     });

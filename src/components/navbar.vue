@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <navbar-links v-if="loggedIn"/>
           <div class="navbar-right">
             <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
-              href="#" @click.prevent="showModal('analytics')">
+              href="#" @click.prevent="showModal('analyticsIntroduction')">
               {{ $t('analyticsNotice') }}
             </a>
             <ul class="nav navbar-nav">
@@ -40,7 +40,8 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
-    <analytics-introduction v-bind="analytics" @hide="hideModal('analytics')"/>
+    <analytics-introduction v-bind="analyticsIntroduction"
+      @hide="hideModal('analyticsIntroduction')"/>
   </div>
 </template>
 
@@ -64,10 +65,10 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  mixins: [modal({ analytics: 'AnalyticsIntroduction' }), routes()],
+  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
   data() {
     return {
-      analytics: {
+      analyticsIntroduction: {
         state: false
       }
     };

@@ -49,7 +49,7 @@ describe('AccountLogin', () => {
       .respondWithProblem());
 
   it('implements some standard button things', () =>
-    // Using load() because of the <router-link> scoped slot
+    // Using load() because of the custom <router-link>
     load('/login')
       .restoreSession(false)
       .complete()

@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         <router-link v-slot="{ href, navigate }" to="/system/analytics" custom>
           <a class="btn btn-primary" :href="href"
             @click="hideAndNavigate(navigate, $event)">
-            {{ $t('action.navigate') }}
+            {{ $t('action.improveCentral') }}
           </a>
         </router-link>
         <button type="button" class="btn btn-link" @click="$emit('hide')">
