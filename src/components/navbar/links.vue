@@ -13,19 +13,19 @@ except according to the terms contained in the LICENSE file.
   <ul id="navbar-links" class="nav navbar-nav">
     <li :class="{ active: projectsLinkIsActive }">
       <router-link to="/">
-        {{ $t('projects') }} <span class="sr-only">{{ $t('current') }}</span>
+        {{ $t('resource.projects') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/users')" id="navbar-links-users"
       :class="{ active: routePathStartsWith('/users') }">
       <router-link to="/users">
-        {{ $t('users') }} <span class="sr-only">{{ $t('current') }}</span>
+        {{ $t('resource.users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
     <li v-if="canRoute('/system/backups')"
       :class="{ active: routePathStartsWith('/system') }">
       <router-link to="/system/backups">
-        {{ $t('system') }} <span class="sr-only">{{ $t('current') }}</span>
+        {{ $t('common.system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
   </ul>
@@ -70,15 +70,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "projects": "Projects",
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "users": "Users",
-    // This is the text of a link shown in the navigation bar at the top of the
-    // page.
-    "system": "System",
     // Used by screen readers to identify the currently-selected navigation tab
     "current": "current"
   }

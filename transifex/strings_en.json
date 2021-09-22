@@ -685,6 +685,10 @@
     "success": {
       "string": "Success!"
     },
+    "system": {
+      "string": "System",
+      "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
+    },
     "yes": {
       "string": "Yes"
     },
@@ -1010,10 +1014,6 @@
         "2": {
           "string": "You can always come here to see what is being collected."
         }
-      },
-      "system": {
-        "string": "System",
-        "developer_comment": "This is the title shown above usage information about the server as a whole."
       },
       "projects": {
         "title": {
@@ -2416,18 +2416,6 @@
       }
     },
     "NavbarLinks": {
-      "projects": {
-        "string": "Projects",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "users": {
-        "string": "Users",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "system": {
-        "string": "System",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
       "current": {
         "string": "current",
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
