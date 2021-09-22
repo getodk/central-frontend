@@ -61,6 +61,9 @@ export default {
   "fr": {
     "anyState": "(Tous états)"
   },
+  "id": {
+    "anyState": "(Status apapun)"
+  },
   "it": {
     "anyState": "(ogni Stato)"
   },

@@ -165,6 +165,8 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "id": {
+    "reviewState": "Status ulasan",
+    "deviceId": "ID Perangkat",
     "attachments": "File Media",
     "present": "{count} berkas"
   },

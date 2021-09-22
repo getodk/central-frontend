@@ -187,14 +187,16 @@ export default {
     "body": [
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
-    ]
+    ],
+    "collectProjectName": "[Entwurf] {name}"
   },
   "es": {
     "title": "Prueba de borrador",
     "body": [
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
-    ]
+    ],
+    "collectProjectName": "borrador {name}"
   },
   "fr": {
     "title": "Test de l'ébauche",
@@ -223,7 +225,8 @@ export default {
     "body": [
       "右の設定コードを利用してモバイル端末に、この下書きフォームをダウンロードする設定ができます。また上の「新規作成」ボタンをクリックすると、Webブラウザからフォームの作成と提出が可能です。",
       "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
-    ]
+    ],
+    "collectProjectName": "[下書き] {name}"
   }
 }
 </i18n>

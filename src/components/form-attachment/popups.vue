@@ -379,6 +379,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Bitte warten Sie, {count} Datei wird hochgeladen. | Bitte warten Sie, {count} Dateien werden hochgeladen.",
+      "current": "Sende {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "Noch {count} Datei | Noch {count} Dateien",
         "last": "Dies ist die letzte Datei"

@@ -86,6 +86,7 @@
         "update_publish": "Zveřejnit koncept",
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
+        "submission_export": "Stáhnout příspěvky",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -106,7 +107,8 @@
         "assignment_delete": "Odebrat roli",
         "delete": "Uspat",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",
@@ -138,8 +140,11 @@
     "resetPassword": "Resetovat heslo",
     "review": "Zkontrolovat",
     "save": "Uložit",
+    "saveSettings": "Uložit nastavení",
     "update": "Aktualizovat",
-    "yesProceed": "Ano, pokračovat"
+    "yesProceed": "Ano, pokračovat",
+    "showPreview": "Náhled",
+    "hidePreview": "Skrýt náhled"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -209,6 +214,13 @@
       "helpArticle": "tento článek nápovědy"
     },
     "learnMore": "Další informace."
+  },
+  "analytics": {
+    "alwaysImprove": "Neustále se snažíme ODK Central vylepšovat.",
+    "needFeedback": {
+      "full": "K tomu potřebujeme {your} zpětnou vazbu, abychom pochopili, jak Central používáte a jak by pro vás mohl být lepší.",
+      "your": "vaší"
+    }
   },
   "submission": {
     "missingMedia": "Chybějící média",

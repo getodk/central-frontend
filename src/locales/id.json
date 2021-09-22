@@ -86,12 +86,14 @@
         "update_publish": "Terbitkan Draf",
         "update_draft_delete": "Buang Draf",
         "attachment_update": "Perbarui Lampiran",
+        "submission_export": "Unduh kiriman",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
       },
       "public_link": {
         "assignment_create": "Beri Akses",
+        "assignment_delete": "Hapus akses",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
@@ -105,7 +107,8 @@
         "assignment_delete": "Cabut Peran",
         "delete": "Mengundurkan Diri",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",
@@ -118,13 +121,16 @@
     "cancel": "Batal",
     "clear": "Bersihkan",
     "close": "Tutup",
+    "comment": "Komentar",
     "create": "Buat",
     "createSubmission": "Baru",
     "done": "Selesai",
     "download": "Unduh",
+    "edit": "Edit",
     "editProfile": "Sunting Profil",
     "logIn": "Masuk",
     "looksGood": "Terlihat bagus, lanjutkan",
+    "more": "Lebih banyak",
     "neverMind": "Tidak jadi, batalkan",
     "next": "Lanjut",
     "noCancel": "Tidak, batalkan",
@@ -132,10 +138,13 @@
     "proceed": "Lanjutkan",
     "refresh": "Segarkan",
     "resetPassword": "Atur Ulang Kata Sandi",
+    "review": "Tinjau",
     "save": "Simpan",
+    "update": "Memperbarui",
     "yesProceed": "Ya, lanjutkan"
   },
   "field": {
+    "comment": "Tinggalkan komentar",
     "dateRange": "Rentang Tanggal",
     "displayName": "Nama tampilan",
     "email": "Alamat email",
@@ -145,6 +154,7 @@
     "passphrase": "Frasa sandi",
     "password": "Kata sandi",
     "passwordConfirm": "Kata sandi baru (konfirmasi)",
+    "reviewState": "Status ulasan",
     "type": "Tipe"
   },
   "header": {
@@ -176,6 +186,7 @@
   "resource": {
     "appUser": "Pengguna Aplikasi",
     "appUsers": "Pengguna Aplikasi",
+    "config": "Konfigurasi server",
     "form": "Formulir",
     "project": "Proyek",
     "projects": "Proyek",
@@ -186,6 +197,9 @@
     "session": "Sesi",
     "submissions": "Kiriman",
     "projectRoles": "Peran Proyek"
+  },
+  "alert": {
+    "updateReviewState": "Status Ulasan disimpan!"
   },
   "moreInfo": {
     "clickHere": {
@@ -199,12 +213,16 @@
     "learnMore": "Pelajari lebih lanjut."
   },
   "submission": {
+    "missingMedia": "Media hilang",
+    "editDisabled": "Anda tidak bisa mengubah kiriman terenkripsi",
     "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
     "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
   },
   "common": {
+    "activity": "Aktivitas",
     "anybody": "(Semua orang)",
     "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
+    "basicInfo": "Informasi dasar",
     "currentDraft": "Draf Anda Saat Ini",
     "dangerZone": "Zona Bahaya",
     "filter": "Filter",
@@ -234,6 +252,12 @@
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
       "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Sesi Anda akan berakhir dalam 2 menit, dan Anda akan keluar secara otomatis.",
+        "expired": "Sesi Anda telah berakhir. Untuk melanjutkan pekerjaan, mohon masuk kembali."
+      }
     }
   },
   "router": {

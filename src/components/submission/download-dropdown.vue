@@ -144,7 +144,7 @@ export default {
         },
         "withMedia": "Všechna data a mediální soubory (.zip)",
         "withoutMedia": "Všechna data bez mediálních souborů (.zip)",
-        "primaryDataTable": "Tabulka primárních dat (.csv)"
+        "primaryDataTable": "Data bez opakování (.csv)"
       }
     }
   },
@@ -158,7 +158,7 @@ export default {
         },
         "withMedia": "Alle Daten und Mediendateien (.zip)",
         "withoutMedia": "Alle Daten ohne Mediendateien (.zip)",
-        "primaryDataTable": "Primäre Datentabelle (.csv)"
+        "primaryDataTable": "Daten ohne Wiederholungen (.csv)"
       }
     }
   },
@@ -172,7 +172,7 @@ export default {
         },
         "withMedia": "Todos los datos y archivos multimedia (.zip)",
         "withoutMedia": "Todos los datos sin archivos multimedia (.zip)",
-        "primaryDataTable": "Tabla de datos primario (.csv)"
+        "primaryDataTable": "Datos sin grupos de repetición (.csv)"
       }
     }
   },
@@ -185,8 +185,7 @@ export default {
           "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
         },
         "withMedia": "Toutes les données et fichiers médias (.zip)",
-        "withoutMedia": "Toutes les données sans fichiers médias",
-        "primaryDataTable": "Table primaire (sans \"repeats\") (.csv)"
+        "withoutMedia": "Toutes les données sans fichiers médias"
       }
     }
   },
@@ -200,7 +199,7 @@ export default {
         },
         "withMedia": "Semua data dan berkas media (.zip)",
         "withoutMedia": "Semua data tanpa berkas media (.zip)",
-        "primaryDataTable": "Tabel data primer (.csv)"
+        "primaryDataTable": "Data tanpa perulangan (.csv)"
       }
     }
   },
@@ -214,7 +213,7 @@ export default {
         },
         "withMedia": "Tutti i dati e file multimediali (.zip)",
         "withoutMedia": "Tutti i dati senza file multimediali (.zip)",
-        "primaryDataTable": "Tabella con i dati principali (.csv)"
+        "primaryDataTable": "Data senza repeats (.csv)"
       }
     }
   },
@@ -228,7 +227,7 @@ export default {
         },
         "withMedia": "全データとメディアファイルの保存（.zip形式）",
         "withoutMedia": "メディアファイルを除く、全データの保存（.zip形式）",
-        "primaryDataTable": "データテーブル（.csv形式）"
+        "primaryDataTable": "繰返し質問の回答を含まないデータ（.csv形式）"
       }
     }
   }

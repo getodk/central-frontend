@@ -323,7 +323,7 @@ export default {
     "steps": [
       {
         "warning": {
-          "full": "Actualmente, esta copia de seguridad no incluye enlaces a formularios web. Si comparte enlaces de acceso público o un enlace externo directamente a formularios web para realizar nuevos envíos, le recomendamos encarecidamente que también haga una copia de seguridad completa del sistema hasta que se solucione este problema. Si tiene que restaurar desde la copia de seguridad y termina con enlaces de vista previa rotos, publique en el {forum} para obtener ayuda.",
+          "full": "Actualmente, esta copia de seguridad no incluye enlaces a Formulario web. Si comparte enlaces de acceso público o un enlace externo directamente a formularios web para realizar nuevos envíos, le recomendamos encarecidamente que también haga una copia de seguridad completa del sistema hasta que se solucione este problema. Si tiene que restaurar desde la copia de seguridad y termina con enlaces de vista previa rotos, publique en el {forum} para obtener ayuda.",
           "forum": "el foro"
         },
         "introduction": [
@@ -336,7 +336,7 @@ export default {
         "introduction": [
           {
             "full": "Para su custodia, el servidor envía sus datos a Google Drive. Puedes registrarte para obtener una cuenta gratuita {here}.",
-            "here": "Aquí"
+            "here": "aquí"
           },
           "Cuando presione siguiente, Google confirmará que desea permitir que el servidor acceda a su cuenta. Lo único que el servidor podrá tocar son los archivos de respaldo que crea.",
           "Una vez que confirme esto, se le pedirá que copie y pegue algún texto aquí."

@@ -92,9 +92,6 @@ export default {
     "field": {
       "name": "Název projektu"
     },
-    "action": {
-      "update": "Uložit nastavení"
-    },
     "alert": {
       "success": "Nastavení projektu uloženo."
     }
@@ -103,9 +100,6 @@ export default {
     "title": "Basisinformationen",
     "field": {
       "name": "Projektname"
-    },
-    "action": {
-      "update": "Einstellungen speichern"
     },
     "alert": {
       "success": "Projekteinstellungen wurden gespeichert"
@@ -116,9 +110,6 @@ export default {
     "field": {
       "name": "Nombre del proyecto"
     },
-    "action": {
-      "update": "Guardar la configuración"
-    },
     "alert": {
       "success": "¡Configuración del proyecto guardada!"
     }
@@ -127,9 +118,6 @@ export default {
     "title": "Détails basiques",
     "field": {
       "name": "Nom du projet"
-    },
-    "action": {
-      "update": "Enregistrer les paramètres"
     },
     "alert": {
       "success": "Paramètres du projet enregistrés !"
@@ -140,9 +128,6 @@ export default {
     "field": {
       "name": "Nama Proyek"
     },
-    "action": {
-      "update": "Simpan pengaturan"
-    },
     "alert": {
       "success": "Pengaturan proyek tersimpan!"
     }
@@ -152,9 +137,6 @@ export default {
     "field": {
       "name": "Nome del Progetto"
     },
-    "action": {
-      "update": "Salva le impostazioni"
-    },
     "alert": {
       "success": "Impostazioni del progetto salvate!"
     }
@@ -163,9 +145,6 @@ export default {
     "title": "基本詳細",
     "field": {
       "name": "プロジェクト名"
-    },
-    "action": {
-      "update": "設定の保存"
     },
     "alert": {
       "success": "プロジェクト設定の保存完了！"

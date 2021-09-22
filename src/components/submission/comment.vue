@@ -137,28 +137,25 @@ export default {
 <i18n>
 {
   "cs": {
-    "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny.",
-    "markdownSupported": "Podporován formát Markdown"
+    "editWithoutComment": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
   },
   "de": {
-    "editWithoutComment": "Sie haben die Daten geändert. Bitte beschreiben Sie die Änderungen, die Sie gemacht haben.",
-    "markdownSupported": "unterstützt durch Markdown"
+    "editWithoutComment": "Sie haben die Daten geändert. Bitte beschreiben Sie die Änderungen, die Sie gemacht haben."
   },
   "es": {
-    "editWithoutComment": "Ha realizado modificaciones en estos datos. Describe los cambios que hiciste.",
-    "markdownSupported": "soporte Markdown"
+    "editWithoutComment": "Ha realizado modificaciones en estos datos. Describe los cambios que hiciste."
   },
   "fr": {
-    "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements.",
-    "markdownSupported": "Markdown disponible"
+    "editWithoutComment": "Vous avez édité cette soumission. Veuillez décrire vos changements."
+  },
+  "id": {
+    "editWithoutComment": "Anda telah mengubah redaksi pada data ini. Mohon jelaskan perubahan yang telah Anda buat"
   },
   "it": {
-    "editWithoutComment": "Hai apportato modifiche a questi dati. Per favore descrivi le modifiche apportate.",
-    "markdownSupported": "Markdown supportato"
+    "editWithoutComment": "Hai apportato modifiche a questi dati. Per favore descrivi le modifiche apportate."
   },
   "ja": {
-    "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。",
-    "markdownSupported": "Markdown形式をサポートしています。"
+    "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。"
   }
 }
 </i18n>

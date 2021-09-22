@@ -86,6 +86,7 @@
         "update_publish": "下書きの公開",
         "update_draft_delete": "下書きの削除",
         "attachment_update": "メディアファイルの更新",
+        "submission_export": "提出済フォームのダウンロード",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -106,7 +107,8 @@
         "assignment_delete": "役割の取消",
         "delete": "除外",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",

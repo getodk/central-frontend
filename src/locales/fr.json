@@ -106,7 +106,8 @@
         "assignment_delete": "Révoquer un rôle",
         "delete": "Supprimer",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",
@@ -138,7 +139,7 @@
     "resetPassword": "Réinitialiser le mot de passe",
     "review": "Réviser",
     "save": "Enregistrer",
-    "update": "Actualizer",
+    "update": "Actualiser",
     "yesProceed": "Oui, procéder"
   },
   "field": {

@@ -122,7 +122,8 @@ export default {
   },
   "id": {
     "help": "Apa itu Proyek?",
-    "noSubmission": "(tidak ada)"
+    "noSubmission": "(tidak ada)",
+    "encryptionTip": "Proyek ini menggunakan enkripsi terkelola"
   },
   "it": {
     "help": "Cosa sono i Progetti?",
