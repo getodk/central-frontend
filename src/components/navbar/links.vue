@@ -80,45 +80,24 @@ export default {
 <i18n>
 {
   "cs": {
-    "projects": "Projekty",
-    "users": "Uživatelé",
-    "system": "Systém",
     "current": "stávající"
   },
   "de": {
-    "projects": "Projekte",
-    "users": "Benutzer",
-    "system": "System",
     "current": "aktuell"
   },
   "es": {
-    "projects": "Proyectos",
-    "users": "Usuarios",
-    "system": "Sistema",
     "current": "actual"
   },
   "fr": {
-    "projects": "Projets",
-    "users": "Utilisateurs",
-    "system": "Système",
     "current": "actuel"
   },
   "id": {
-    "projects": "Proyek",
-    "users": "Pengguna",
-    "system": "Sistem",
     "current": "Sekarang ini"
   },
   "it": {
-    "projects": "Progetti",
-    "users": "Utenti",
-    "system": "Sistema",
     "current": "attuale"
   },
   "ja": {
-    "projects": "プロジェクト",
-    "users": "ユーザー",
-    "system": "システム",
     "current": "現在"
   }
 }

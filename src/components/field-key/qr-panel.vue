@@ -359,7 +359,9 @@ export default {
           "legacyCode": "kode QR Versi Lama"
         }
       },
-      {},
+      {
+        "legacy": "Pengguna harus mendapatkan formulir kosong secara manual di perangkat dan menentukan formulir mana yang akan diperbarui. Pengguna juga harus mengirim formulir yang telah selesai secara manual."
+      },
       {
         "managed": {
           "full": "Untuk cara lama, {switchToLegacy}.",

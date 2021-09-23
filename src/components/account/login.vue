@@ -183,6 +183,9 @@ export default {
     }
   },
   "id": {
+    "alert": {
+      "alreadyLoggedIn": "Seorang pengguna sudah masuk. Mohon perbarui halaman untuk melanjutkan."
+    },
     "problem": {
       "401_2": "Alamat email dan/atau kata sandi salah."
     }

@@ -236,6 +236,11 @@ export default {
       "stateAndActions": "État et actions"
     }
   },
+  "id": {
+    "header": {
+      "stateAndActions": "Status dan tindakan"
+    }
+  },
   "it": {
     "header": {
       "stateAndActions": "Stato e azioni"

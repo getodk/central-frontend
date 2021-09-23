@@ -66,63 +66,42 @@ export default {
 <i18n>
 {
   "cs": {
-    "action": {
-      "preview": "Náhled"
-    },
     "disabled": {
       "processing": "Náhled nedokončil zpracování tohoto formuláře. Aktualizujte prosím později a zkuste to znovu.",
       "notOpen": "V této verzi ODK Central je náhled k dispozici pouze pro formuláře v otevřeném stavu."
     }
   },
   "de": {
-    "action": {
-      "preview": "Vorschau"
-    },
     "disabled": {
       "processing": "Die Vorschau für dieses Formular ist noch nicht vollständig erstellt. Bitte aktualieren Sie und versuchen Sie es später noch einmal.",
       "notOpen": "In dieser Version von ODK Central steht die Vorschau nur für Formule im Zustand \"Offen\" zur Verfügung."
     }
   },
   "es": {
-    "action": {
-      "preview": "Vista previa"
-    },
     "disabled": {
       "processing": "La vista previa no ha finalizado el procesamiento de este formulario. Por favor actualice más tarde e intente nuevamente.",
       "notOpen": "En esta versión de ODK Central, la vista previa solo está disponible para formularios en estado abierto."
     }
   },
   "fr": {
-    "action": {
-      "preview": "Prévisualiser"
-    },
     "disabled": {
       "processing": "L'aperçu n'a pas fini d'être exécuté pour ce formulaire. Veuillez rafraîchir plus tard et réessayer.",
       "notOpen": "Dans cette version d'ODK Central, l'aperçu n'est disponible que pour les formulaires dont l'état est ouvert."
     }
   },
   "id": {
-    "action": {
-      "preview": "Pratinjau"
-    },
     "disabled": {
       "processing": "Pratinjau untuk formulir ini masih dalam proses pengerjaan. Silakan muat ulang dan coba lagi nanti.",
       "notOpen": "Pada versi ODK Central ini, pratinjau hanya tersedia untuk formulir dalam kondisi terbuka."
     }
   },
   "it": {
-    "action": {
-      "preview": "Anteprima"
-    },
     "disabled": {
       "processing": "L'anteprima non ha terminato l'elaborazione per questo formulario. Per favore riaggiorna più tardi e riprova.",
       "notOpen": "In questa versione di ODK Central, l'anteprima è disponibile solo per i formulari nello stato aperto."
     }
   },
   "ja": {
-    "action": {
-      "preview": "プレビュー"
-    },
     "disabled": {
       "processing": "このフォームのプレビュー処理が終了していません。後ほどページを更新し、もう一度試して下さい。",
       "notOpen": "このバージョンのODK Centralでは、プレビューは、公開状態のフォームでのみ利用可能です。"

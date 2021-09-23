@@ -28,8 +28,9 @@
   "systemHome": {
     "title": "Gestione del sistema",
     "tab": {
-      "backups": "Backup",
-      "audits": "Registri di controllo del server"
+      "backups": "Backups",
+      "audits": "Registri di controllo del server",
+      "analytics": "Informazioni sull'utilizzo"
     }
   },
   "role": {
@@ -86,6 +87,7 @@
         "update_publish": "Pubblica bozza",
         "update_draft_delete": "Abbandona bozza",
         "attachment_update": "Aggiorna allegati",
+        "submission_export": "Scarica invii",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -106,7 +108,8 @@
         "assignment_delete": "Revoca ruolo",
         "delete": "Ritirare",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",
@@ -138,8 +141,11 @@
     "resetPassword": "Resetta la password",
     "review": "Rivedi",
     "save": "Salvare",
+    "saveSettings": "Salva le impostazioni",
     "update": "Aggiorna",
-    "yesProceed": "Si, procedere"
+    "yesProceed": "Si, procedere",
+    "showPreview": "Anteprima",
+    "hidePreview": "Nascondi anteprima"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -186,10 +192,12 @@
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
     "form": "Formulario",
+    "forms": "Formulari",
     "project": "Progetto",
     "projects": "Progetti",
     "publicLink": "Link con accesso pubblico",
     "user": "Utente",
+    "users": "Utenti",
     "webUser": "Utente Web",
     "webUsers": "Utenti web",
     "session": "Sessioni",
@@ -209,6 +217,13 @@
       "helpArticle": "Questo articolo d'aiuto"
     },
     "learnMore": "Per saperne di più."
+  },
+  "analytics": {
+    "alwaysImprove": "Stiamo sempre cercando di migliorare ODK Central",
+    "needFeedback": {
+      "full": "Per fare questo, abbiamo bisogno del {your} feedback, cosicché possiamo capire come stai usando Central, e come potrebbe essere meglio per te.",
+      "your": "tuo"
+    }
   },
   "submission": {
     "missingMedia": "File multimediale mancnte",
@@ -235,7 +250,8 @@
     "tab": {
       "settings": "Impostazioni",
       "overview": "Panoramica"
-    }
+    },
+    "total": "Totale"
   },
   "mixin": {
     "request": {

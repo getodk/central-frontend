@@ -216,6 +216,12 @@ export default {
       "back": "Retour au tableau de soumissions"
     }
   },
+  "id": {
+    "back": {
+      "title": "Detail kiriman",
+      "back": "Kembali ke tabel kiriman"
+    }
+  },
   "it": {
     "back": {
       "title": "Dettagli invio",

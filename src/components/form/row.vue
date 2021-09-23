@@ -210,7 +210,10 @@ export default {
     "lastSubmission": "(terakhir {dateTime})",
     "action": {
       "fill": "Isi Formulir"
-    }
+    },
+    "formClosedTip": "Formulir ini telah tertutup. Formulir tidak dapat diunduh dan tidak menerima kiriman.",
+    "formClosingTip": "Formulir ini telah ditutup. Formulir tidak dapat diunduh namun tetap dapat menerima kiriman.",
+    "formUnpublishedTip": "Formulir ini belum memiliki versi yang dipublikasikan."
   },
   "it": {
     "lastSubmission": "(ultima {dateTime})",

@@ -529,7 +529,18 @@ export default {
     "steps": [
       {
         "introduction": [
-          [],
+          [
+            "Apabila Anda mengizinkan enkripsi, hal-hal berikut akan terjadi:",
+            "Kiriman data yang sudah difinalisasi akan dienkripsi di perangkat seluler.",
+            "Kiriman data lain akan dienkripsi di server Central.",
+            [
+              "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
+              "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}."
+            ],
+            "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
+            "Anda tidak akan bisa menghubungkan data lewat OData.",
+            "Anda tidak akan bisa lagi mengedit kiriman di situs web Anda."
+          ],
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
             [

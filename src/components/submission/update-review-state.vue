@@ -189,6 +189,12 @@ export default {
       "notes": "Notes et commentaires (facultatif)"
     }
   },
+  "id": {
+    "title": "Perbarui status ulasan",
+    "field": {
+      "notes": "Catatan dan komentar (opsional)"
+    }
+  },
   "it": {
     "title": "Aggiorna lo Stato Revisione",
     "field": {

@@ -21,7 +21,7 @@
       "tab": {
         "status": "Estado",
         "attachments": "Archivos multimedia",
-        "testing": "Pruebas"
+        "testing": "Probando"
       }
     }
   },
@@ -29,7 +29,8 @@
     "title": "Gestión del sistema",
     "tab": {
       "backups": "Copias de seguridad",
-      "audits": "Registro y auditoría de la actividad del servidor"
+      "audits": "Registro y auditoría de la actividad del servidor",
+      "analytics": "Información de uso"
     }
   },
   "role": {
@@ -86,6 +87,7 @@
         "update_publish": "Publicar borrador",
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
+        "submission_export": "Descargar datos enviados",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -106,7 +108,8 @@
         "assignment_delete": "Revocar el rol",
         "delete": "Retirar",
         "create": "@:audit.action.default.create",
-        "update": "@:audit.action.default.update"
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
       },
       "project": {
         "create": "@:audit.action.default.create",
@@ -138,8 +141,11 @@
     "resetPassword": "Restablecer contraseña",
     "review": "Revisar",
     "save": "Guardar",
+    "saveSettings": "Guardar las configuraciónes",
     "update": "Actualizar",
-    "yesProceed": "Si, continuar"
+    "yesProceed": "Sí, continuar",
+    "showPreview": "Vista previa",
+    "hidePreview": "Ocultar vista previa"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -186,10 +192,12 @@
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
     "form": "Formulario",
+    "forms": "Formularios",
     "project": "Proyecto",
     "projects": "Proyectos",
     "publicLink": "Enlace de acceso público",
     "user": "Usuario",
+    "users": "Usuarios",
     "webUser": "Usuario web",
     "webUsers": "Usuarios web",
     "session": "Sesión",
@@ -208,7 +216,14 @@
       "full": "Para más información, por favor véase {helpArticle}.",
       "helpArticle": "este artículo de ayuda"
     },
-    "learnMore": "Conocer más."
+    "learnMore": "Aprende más."
+  },
+  "analytics": {
+    "alwaysImprove": "Siempre estamos tratando de mejorar ODK Central.",
+    "needFeedback": {
+      "full": "Para hacer esto, necesitamos {your}comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
+      "your": "Tu"
+    }
   },
   "submission": {
     "missingMedia": "Medios faltantes",
@@ -235,7 +250,8 @@
     "tab": {
       "settings": "Ajustes",
       "overview": "Descripción general"
-    }
+    },
+    "total": "Total"
   },
   "mixin": {
     "request": {

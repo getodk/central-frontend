@@ -74,6 +74,10 @@
       "audits": {
         "string": "Catatan Server Audit",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "analytics": {
+        "string": "",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -225,6 +229,10 @@
         "attachment_update": {
           "string": "Perbarui Lampiran",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "submission_export": {
+          "string": "Unduh kiriman",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -233,7 +241,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         },
         "assignment_delete": {
-          "string": "",
+          "string": "Hapus akses",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         }
       },
@@ -250,15 +258,15 @@
       "user": {
         "assignment_create": {
           "string": "Tetapkan Peran",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         },
         "assignment_delete": {
           "string": "Cabut Peran",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         },
         "delete": {
           "string": "Mengundurkan Diri",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Web User."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
         }
       }
     }
@@ -277,7 +285,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "comment": {
-      "string": "",
+      "string": "Komentar",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -297,7 +305,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "edit": {
-      "string": "",
+      "string": "Edit",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "editProfile": {
@@ -313,7 +321,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "more": {
-      "string": "",
+      "string": "Lebih banyak",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "neverMind": {
@@ -345,25 +353,37 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "review": {
-      "string": "",
+      "string": "Tinjau",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
       "string": "Simpan",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "update": {
+    "saveSettings": {
       "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "update": {
+      "string": "Memperbarui",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "yesProceed": {
       "string": "Ya, lanjutkan",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "showPreview": {
+      "string": "",
+      "developer_comment": "This text is shown on a button that the user clicks to show a preview of something"
+    },
+    "hidePreview": {
+      "string": "",
+      "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     }
   },
   "field": {
     "comment": {
-      "string": "",
+      "string": "Tinggalkan komentar",
       "developer_comment": "This is the text of a form field."
     },
     "dateRange": {
@@ -403,7 +423,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "reviewState": {
-      "string": "",
+      "string": "Status ulasan",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -502,11 +522,15 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
-      "string": "",
+      "string": "Konfigurasi server",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
       "string": "Formulir",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "forms": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -523,6 +547,10 @@
     },
     "user": {
       "string": "Pengguna",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "users": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -548,7 +576,7 @@
   },
   "alert": {
     "updateReviewState": {
-      "string": ""
+      "string": "Status Ulasan disimpan!"
     }
   },
   "moreInfo": {
@@ -577,9 +605,24 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "analytics": {
+    "alwaysImprove": {
+      "string": ""
+    },
+    "needFeedback": {
+      "full": {
+        "string": "",
+        "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
+      },
+      "your": {
+        "string": "",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
+      }
+    }
+  },
   "submission": {
     "missingMedia": {
-      "string": "",
+      "string": "Media hilang",
       "developer_comment": "This is a possible state for a Submission."
     },
     "action": {
@@ -589,7 +632,7 @@
       }
     },
     "editDisabled": {
-      "string": "",
+      "string": "Anda tidak bisa mengubah kiriman terenkripsi",
       "developer_comment": "This is shown when the Edit button is disabled."
     },
     "binaryLinkTitle": {
@@ -601,7 +644,7 @@
   },
   "common": {
     "activity": {
-      "string": "",
+      "string": "Aktivitas",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "anybody": {
@@ -613,7 +656,7 @@
       "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
     },
     "basicInfo": {
-      "string": "",
+      "string": "Informasi dasar",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "currentDraft": {
@@ -642,6 +685,10 @@
     "success": {
       "string": "Sukses!"
     },
+    "system": {
+      "string": "",
+      "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
+    },
     "yes": {
       "string": "Iya"
     },
@@ -654,6 +701,9 @@
         "string": "Gambaran",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "total": {
+      "string": ""
     }
   },
   "mixin": {
@@ -705,10 +755,10 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": ""
+          "string": "Sesi Anda akan berakhir dalam 2 menit, dan Anda akan keluar secara otomatis."
         },
         "expired": {
-          "string": ""
+          "string": "Sesi Anda telah berakhir. Untuk melanjutkan pekerjaan, mohon masuk kembali."
         },
         "logoutError": {
           "string": "",
@@ -745,7 +795,7 @@
     "AccountLogin": {
       "alert": {
         "alreadyLoggedIn": {
-          "string": ""
+          "string": "Seorang pengguna sudah masuk. Mohon perbarui halaman untuk melanjutkan."
         }
       },
       "problem": {
@@ -761,10 +811,231 @@
         }
       }
     },
+    "AnalyticsForm": {
+      "enabled": {
+        "null": {
+          "0": {
+            "string": ""
+          },
+          "1": {
+            "string": ""
+          }
+        },
+        "true": {
+          "0": {
+            "full": {
+              "string": "",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
+            },
+            "weWillShare": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "termsOfService": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {termsOfService} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "privacyPolicy": {
+              "string": "",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {privacyPolicy} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            }
+          },
+          "1": {
+            "string": ""
+          }
+        },
+        "false": {
+          "0": {
+            "string": ""
+          },
+          "1": {
+            "string": ""
+          }
+        }
+      },
+      "contact": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "field": {
+        "workEmail": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "organization": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": ""
+        }
+      }
+    },
+    "AnalyticsIntroduction": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "",
+            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+          },
+          "usageInformation": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          }
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "action": {
+        "improveCentral": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "AnalyticsList": {
+      "heading": {
+        "0": {
+          "string": ""
+        }
+      }
+    },
+    "AnalyticsMetricsTable": {
+      "recent": {
+        "string": ""
+      },
+      "fields": {
+        "num_admins": {
+          "string": ""
+        },
+        "num_projects_encryption": {
+          "string": ""
+        },
+        "num_questions_biggest_form": {
+          "string": ""
+        },
+        "num_audit_log_entries": {
+          "string": ""
+        },
+        "backups_configured": {
+          "string": ""
+        },
+        "database_size": {
+          "string": ""
+        },
+        "num_managers": {
+          "string": ""
+        },
+        "num_viewers": {
+          "string": ""
+        },
+        "num_data_collectors": {
+          "string": ""
+        },
+        "num_app_users": {
+          "string": ""
+        },
+        "num_device_ids": {
+          "string": ""
+        },
+        "num_public_access_links": {
+          "string": ""
+        },
+        "num_forms": {
+          "string": ""
+        },
+        "num_forms_with_repeats": {
+          "string": ""
+        },
+        "num_forms_with_geospatial": {
+          "string": ""
+        },
+        "num_forms_with_encryption": {
+          "string": ""
+        },
+        "num_forms_with_audits": {
+          "string": ""
+        },
+        "num_submissions_received": {
+          "string": ""
+        },
+        "num_submissions_approved": {
+          "string": ""
+        },
+        "num_submissions_has_issues": {
+          "string": ""
+        },
+        "num_submissions_rejected": {
+          "string": ""
+        },
+        "num_submissions_edited": {
+          "string": ""
+        },
+        "num_submissions_with_edits": {
+          "string": ""
+        },
+        "num_submissions_with_comments": {
+          "string": ""
+        },
+        "num_submissions_from_app_users": {
+          "string": ""
+        },
+        "num_submissions_from_public_links": {
+          "string": ""
+        },
+        "num_submissions_from_web_users": {
+          "string": ""
+        }
+      }
+    },
+    "AnalyticsPreview": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      },
+      "projects": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is the title shown above a series of metrics about Project usage."
+        },
+        "subtitle": {
+          "string": ""
+        }
+      }
+    },
+    "App": {
+      "alert": {
+        "versionChange": {
+          "string": ""
+        }
+      }
+    },
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": "Laman yang kamu minta tidak dapat dimuat. Coba periksa kondisi daring dan coba lagi."
+          "string": ""
         }
       }
     },
@@ -821,7 +1092,7 @@
               "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
             },
             "forum": {
-              "string": "",
+              "string": "Forum",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
             }
           },
@@ -1026,12 +1297,6 @@
       }
     },
     "EnketoPreview": {
-      "action": {
-        "preview": {
-          "string": "Pratinjau",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "disabled": {
         "processing": {
           "string": "Pratinjau untuk formulir ini masih dalam proses pengerjaan. Silakan muat ulang dan coba lagi nanti."
@@ -1168,7 +1433,7 @@
             "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
           },
           "legacy": {
-            "string": "",
+            "string": "Pengguna harus mendapatkan formulir kosong secara manual di perangkat dan menentukan formulir mana yang akan diperbarui. Pengguna juga harus mengirim formulir yang telah selesai secara manual.",
             "developer_comment": "\"Get Blank Form\" and \"Send Finalized Form\" are the text of buttons in ODK Collect."
           }
         },
@@ -1269,7 +1534,7 @@
         },
         "someUploaded": {
           "string": "{count, plural, other {{message} Hanya {uploaded} dari {total} dokumen berhasil diunggah.}}",
-          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers."
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers. {uploaded} is at least 1, and {total} is at least 2. The string will be pluralized based on {uploaded}."
         }
       },
       "alert": {
@@ -2009,13 +2274,13 @@
         }
       },
       "formClosedTip": {
-        "string": ""
+        "string": "Formulir ini telah tertutup. Formulir tidak dapat diunduh dan tidak menerima kiriman."
       },
       "formClosingTip": {
-        "string": ""
+        "string": "Formulir ini telah ditutup. Formulir tidak dapat diunduh namun tetap dapat menerima kiriman."
       },
       "formUnpublishedTip": {
-        "string": ""
+        "string": "Formulir ini belum memiliki versi yang dipublikasikan."
       }
     },
     "FormSettings": {
@@ -2066,7 +2331,7 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "downloadXForm": {
-          "string": "",
+          "string": "Unduh sebagai XForm (.xml)",
           "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
         },
         "downloadXlsForm": {
@@ -2098,12 +2363,25 @@
         "string": "Memuat..."
       }
     },
+    "MarkdownTextarea": {
+      "markdownSupported": {
+        "string": "",
+        "developer_comment": "This is a link to an external website with Markdown style guidelines"
+      },
+      "preview": {
+        "string": "",
+        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+      }
+    },
     "Navbar": {
       "action": {
         "toggle": {
           "string": "Navigasi Toggle",
           "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
         }
+      },
+      "analyticsNotice": {
+        "string": ""
       }
     },
     "NavbarActions": {
@@ -2138,18 +2416,6 @@
       }
     },
     "NavbarLinks": {
-      "projects": {
-        "string": "Proyek",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "users": {
-        "string": "Pengguna",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
-      "system": {
-        "string": "Sistem",
-        "developer_comment": "This is the text of a link shown in the navigation bar at the top of the page."
-      },
       "current": {
         "string": "Sekarang ini",
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
@@ -2157,7 +2423,7 @@
     },
     "NavbarLocaleDropdown": {
       "helpTranslate": {
-        "string": "",
+        "string": "Bantu terjemahan pusat",
         "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
       }
     },
@@ -2196,12 +2462,6 @@
         "name": {
           "string": "Nama Proyek",
           "developer_comment": "This is the text of a form field."
-        }
-      },
-      "action": {
-        "update": {
-          "string": "Simpan pengaturan",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
@@ -2245,7 +2505,7 @@
                 "string": "Anda tidak akan bisa menghubungkan data lewat OData."
               },
               "6": {
-                "string": ""
+                "string": "Anda tidak akan bisa lagi mengedit kiriman di situs web Anda."
               }
             },
             "1": {
@@ -2578,7 +2838,7 @@
         "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
       },
       "encryptionTip": {
-        "string": ""
+        "string": "Proyek ini menggunakan enkripsi terkelola"
       }
     },
     "ProjectSettings": {
@@ -2959,10 +3219,10 @@
     },
     "SubmissionBasicDetails": {
       "reviewState": {
-        "string": ""
+        "string": "Status ulasan"
       },
       "deviceId": {
-        "string": ""
+        "string": "ID Perangkat"
       },
       "attachments": {
         "string": "File Media"
@@ -2981,11 +3241,7 @@
     },
     "SubmissionComment": {
       "editWithoutComment": {
-        "string": ""
-      },
-      "markdownSupported": {
-        "string": "",
-        "developer_comment": "This is a link to an external website with Markdown style guidelines"
+        "string": "Anda telah mengubah redaksi pada data ini. Mohon jelaskan perubahan yang telah Anda buat"
       }
     },
     "SubmissionDataAccess": {
@@ -3023,6 +3279,22 @@
         }
       }
     },
+    "SubmissionDiffItem": {
+      "editCaption": {
+        "added": {
+          "string": "(ditambahkan)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        },
+        "deleted": {
+          "string": "(dihapus)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        }
+      },
+      "empty": {
+        "string": "kosong",
+        "developer_comment": "Text showing that a value in a submission edit is empty"
+      }
+    },
     "SubmissionDownloadDropdown": {
       "action": {
         "download": {
@@ -3049,8 +3321,8 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "primaryDataTable": {
-            "string": "Tabel data primer (.csv)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
+            "string": "Data tanpa perulangan (.csv)",
+            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3068,7 +3340,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
             },
             "reviewState": {
-              "string": "",
+              "string": "Diterima",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
@@ -3078,7 +3350,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
             },
             "reviewState": {
-              "string": "",
+              "string": "Memiliki masalah",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
             }
           },
@@ -3088,7 +3360,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
             },
             "reviewState": {
-              "string": "",
+              "string": "Diubah",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
@@ -3098,7 +3370,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
             },
             "reviewState": {
-              "string": "",
+              "string": "Disetujui",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           },
@@ -3108,7 +3380,7 @@
               "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
             },
             "reviewState": {
-              "string": "",
+              "string": "Ditolak",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
             }
           }
@@ -3141,15 +3413,15 @@
         "select": {
           "full": {
             "string": "Pilih {all} / {none}",
-            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
           },
           "all": {
             "string": "Semua",
-            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
             "string": "Jangan Semua",
-            "developer_comment": "This is the text for an action, for example, the text of a button.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       }
@@ -3164,7 +3436,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(Status apapun)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
@@ -3230,11 +3502,11 @@
     "SubmissionShow": {
       "back": {
         "title": {
-          "string": "",
+          "string": "Detail kiriman",
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
-          "string": "",
+          "string": "Kembali ke tabel kiriman",
           "developer_comment": "This is shown at the top of the page."
         }
       }
@@ -3242,19 +3514,19 @@
     "SubmissionTable": {
       "header": {
         "stateAndActions": {
-          "string": "",
+          "string": "Status dan tindakan",
           "developer_comment": "This is the text of a table column header."
         }
       }
     },
     "SubmissionUpdateReviewState": {
       "title": {
-        "string": "",
+        "string": "Perbarui status ulasan",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "field": {
         "notes": {
-          "string": "",
+          "string": "Catatan dan komentar (opsional)",
           "developer_comment": "This is the text of a form field."
         }
       }

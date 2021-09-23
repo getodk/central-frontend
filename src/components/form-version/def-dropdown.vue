@@ -108,7 +108,9 @@ export default {
   "de": {
     "action": {
       "def": "Definition",
-      "viewXml": "XML im Browser ansehen"
+      "viewXml": "XML im Browser ansehen",
+      "downloadXForm": "Download als XForm (.xml)",
+      "downloadXlsForm": "Download als XLSForm ({extension})"
     }
   },
   "es": {
@@ -128,7 +130,8 @@ export default {
   "id": {
     "action": {
       "def": "Definisi",
-      "viewXml": "Lihat XML di browser"
+      "viewXml": "Lihat XML di browser",
+      "downloadXForm": "Unduh sebagai XForm (.xml)"
     }
   },
   "it": {

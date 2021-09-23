@@ -538,7 +538,7 @@ export default {
   },
   "it": {
     "loading": {
-      "withoutCount": "Cricando invii...",
+      "withoutCount": "Caricando invii...",
       "all": "Cricando {count} invio... | Cricando {count} invii...",
       "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio…",
       "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti...",
