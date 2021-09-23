@@ -22,10 +22,10 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n>
         <i18n tag="p" path="introduction[0].full">
-          <template #usageInformation>
+          <template #usageReporting>
             <router-link v-slot="{ href, navigate }" to="/system/analytics"
               custom>
-              <a :href="href" @click="hideAndNavigate(navigate, $event)">{{ $t('introduction[0].usageInformation') }}</a>
+              <a :href="href" @click="hideAndNavigate(navigate, $event)">{{ $t('introduction[0].usageReporting') }}</a>
             </router-link>
           </template>
         </i18n>
@@ -71,8 +71,8 @@ export default {
     "title": "Help Improve Central!",
     "introduction": [
       {
-        "full": "In the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team.",
-        "usageInformation": "Usage Information"
+        "full": "In the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team.",
+        "usageReporting": "Usage Reporting"
       },
       "There, you can also choose to not see this message again."
     ],
