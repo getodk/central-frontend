@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "Usage Information",
+        "string": "Usage Reporting",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -885,12 +885,12 @@
       "introduction": {
         "0": {
           "full": {
-            "string": "In the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team.",
-            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+            "string": "In the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team.",
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
-          "usageInformation": {
-            "string": "Usage Information",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          "usageReporting": {
+            "string": "Usage Reporting",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
