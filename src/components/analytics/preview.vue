@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
         <div id="analytics-preview-project-summary">
           <span class="header">{{ $t('projects.title') }}</span>
-          <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
+          <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
         </div>
         <div id="analytics-preview-project-tables">
           <div id="users-forms-column">
@@ -33,6 +33,8 @@ except according to the terms contained in the LICENSE file.
           <div id="submissions-column">
             <analytics-metrics-table :title="$t('resource.submissions')"
               :metrics="submissionSummary"/>
+            <analytics-metrics-table :title="$t('submissionStates')"
+              :metrics="submissionStateSummary"/>
           </div>
         </div>
       </template>
@@ -46,12 +48,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { omit, pick } from 'ramda';
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import AnalyticsMetricsTable from './metrics-table.vue';
 
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
+
+// Metrics to filter out (with pick/omit) and put in
+// a separate table
+const submissionStateMetrics = [
+  'num_submissions_received',
+  'num_submissions_approved',
+  'num_submissions_has_issues',
+  'num_submissions_rejected',
+  'num_submissions_edited'
+];
 
 export default {
   name: 'AnalyticsPreview',
@@ -77,10 +90,17 @@ export default {
       return this.firstProject.forms;
     },
     submissionSummary() {
-      return this.firstProject.submissions;
+      // The submission metrics come from the API together but will be split.
+      // This summary is for submission metrics NOT about state.
+      return omit(submissionStateMetrics, this.firstProject.submissions);
+    },
+    submissionStateSummary() {
+      // The submission metrics come from the API together but will be split.
+      // This summary is for submission state metrics (approved, rejected, etc.)
+      return pick(submissionStateMetrics, this.firstProject.submissions);
     },
     numProjects() {
-      return this.$n(this.analyticsPreview.projects.length);
+      return this.analyticsPreview.projects.length;
     }
   },
   watch: {
@@ -112,7 +132,6 @@ export default {
   padding-bottom: 5px;
 
   .header {
-    font-size: 18px;
     font-weight: 500;
     padding-right: 10px;
   }
@@ -146,8 +165,11 @@ export default {
     "projects": {
       // This is the title shown above a series of metrics about Project usage.
       "title": "Project Summaries",
-      "subtitle": "Showing 1 Project of {numProjects}"
-    }
+      "subtitle": "(Showing the most active Project of {count} Project) | (Showing the most active Project of {count} Projects)"
+    },
+    // This is the title of a single table in the analytics metrics report
+    // of metrics about submission state (approved, rejected, etc)
+    "submissionStates": "Submission States"
   }
 }
 </i18n>

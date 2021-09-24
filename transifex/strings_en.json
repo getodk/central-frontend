@@ -959,7 +959,7 @@
           "string": "Number of Forms with repeats"
         },
         "num_forms_with_geospatial": {
-          "string": "Number of Forms with geospatial"
+          "string": "Number of Forms with geodata"
         },
         "num_forms_with_encryption": {
           "string": "Number of Forms with encryption"
@@ -968,19 +968,19 @@
           "string": "Number of Forms with audits"
         },
         "num_submissions_received": {
-          "string": "Number of Submissions received"
+          "string": "Number of Submissions - Received"
         },
         "num_submissions_approved": {
-          "string": "Number of Submissions approved"
+          "string": "Number of Submissions - Approved"
         },
         "num_submissions_has_issues": {
-          "string": "Number of Submissions with issues"
+          "string": "Number of Submissions - Has Issues"
         },
         "num_submissions_rejected": {
-          "string": "Number of Submissions rejected"
+          "string": "Number of Submissions - Rejected"
         },
         "num_submissions_edited": {
-          "string": "Number of Submissions in edited state"
+          "string": "Number of Submissions - Edited"
         },
         "num_submissions_with_edits": {
           "string": "Number of Submissions with edits"
@@ -1021,8 +1021,12 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "Showing 1 Project of {numProjects}"
+          "string": "{count, plural, one {(Showing the most active Project of {count} Project)} other {(Showing the most active Project of {count} Projects)}}"
         }
+      },
+      "submissionStates": {
+        "string": "Submission States",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
