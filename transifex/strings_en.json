@@ -959,7 +959,7 @@
           "string": "Number of Forms with repeats"
         },
         "num_forms_with_geospatial": {
-          "string": "Number of Forms with geosdata"
+          "string": "Number of Forms with geodata"
         },
         "num_forms_with_encryption": {
           "string": "Number of Forms with encryption"
@@ -1021,7 +1021,7 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "(Showing the most active Project of {numProjects} Projects)"
+          "string": "{count, plural, one {(Showing the most active Project of {count} Project)} other {(Showing the most active Project of {count} Projects)}}"
         }
       },
       "submissionStates": {

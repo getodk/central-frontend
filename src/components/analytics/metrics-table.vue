@@ -56,10 +56,6 @@ export default {
   .metric-value {
     text-align: right;
   }
-
-  tbody {
-    border-bottom: 1px solid #ddd;
-  }
 }
 </style>
 
@@ -82,7 +78,7 @@ export default {
       "num_public_access_links": "Number of Public Access Links",
       "num_forms": "Number of Forms",
       "num_forms_with_repeats": "Number of Forms with repeats",
-      "num_forms_with_geospatial": "Number of Forms with geosdata",
+      "num_forms_with_geospatial": "Number of Forms with geodata",
       "num_forms_with_encryption": "Number of Forms with encryption",
       "num_forms_with_audits": "Number of Forms with audits",
       "num_submissions_received": "Number of Submissions - Received",

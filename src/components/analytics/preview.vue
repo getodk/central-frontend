@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
         <div id="analytics-preview-project-summary">
           <span class="header">{{ $t('projects.title') }}</span>
-          <span class="explanation">{{ $t('projects.subtitle', { numProjects }) }}</span>
+          <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
         </div>
         <div id="analytics-preview-project-tables">
           <div id="users-forms-column">
@@ -100,7 +100,7 @@ export default {
       return pick(submissionStateMetrics, this.firstProject.submissions);
     },
     numProjects() {
-      return this.$n(this.analyticsPreview.projects.length);
+      return this.analyticsPreview.projects.length;
     }
   },
   watch: {
@@ -165,7 +165,7 @@ export default {
     "projects": {
       // This is the title shown above a series of metrics about Project usage.
       "title": "Project Summaries",
-      "subtitle": "(Showing the most active Project of {numProjects} Projects)"
+      "subtitle": "(Showing the most active Project of {count} Project) | (Showing the most active Project of {count} Projects)"
     },
     // This is the title of a single table in the analytics metrics report
     // of metrics about submission state (approved, rejected, etc)
