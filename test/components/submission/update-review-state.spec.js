@@ -73,6 +73,15 @@ describe('SubmissionUpdateReviewState', () => {
     modal.get('input[value="hasIssues"]').should.be.focused();
   });
 
+  it('does not require a comment in the text area', async () => {
+    testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
+    const modal = mountComponent();
+    await modal.setProps({ state: true });
+    modal.getComponent(MarkdownTextarea).props().required.should.equal(false);
+    const required = await modal.get('textarea').attributes('required');
+    should.not.exist(required);
+  });
+
   it('resets the form after the modal is hidden', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
     const modal = mountComponent();

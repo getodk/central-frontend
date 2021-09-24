@@ -154,6 +154,13 @@ describe('SubmissionComment', () => {
     });
   });
 
+  it('should make the textarea required', async () => {
+    testData.extendedSubmissions.createPast(1);
+    const component = mountComponent();
+    const required = await component.get('textarea');
+    should.exist(required);
+  });
+
   describe('after a successful response', () => {
     const submit = () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
