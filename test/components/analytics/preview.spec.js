@@ -10,12 +10,18 @@ const analyticsPreview = {
     {
       users: { num_managers: { recent: 0, total: 0 } },
       forms: { num_forms: { recent: 0, total: 0 } },
-      submissions: { num_submissions_received: { recent: 0, total: 0 } }
+      submissions: {
+        num_submissions_received: { recent: 0, total: 0 },
+        num_submissions_from_web_users: { recent: 0, total: 0 }
+      }
     },
     {
       users: { num_managers: { recent: 1, total: 1 } },
       forms: { num_forms: { recent: 1, total: 1 } },
-      submissions: { num_submissions_received: { recent: 1, total: 1 } }
+      submissions: {
+        num_submissions_received: { recent: 1, total: 1 },
+        num_submissions_from_web_users: { recent: 0, total: 0 }
+      }
     }
   ]
 };
@@ -40,7 +46,7 @@ describe('AnalyticsPreview', () => {
 
   it('renders the correct number of tables', async () => {
     const modal = await mockHttpForComponent();
-    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(4);
+    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(5);
   });
 
   it('shows system metrics', async () => {
@@ -52,7 +58,7 @@ describe('AnalyticsPreview', () => {
   it('shows the number of projects', async () => {
     const modal = await mockHttpForComponent();
     const text = modal.get('#analytics-preview-project-summary .explanation').text();
-    text.should.equal('Showing 1 Project of 2');
+    text.should.equal('(Showing the most active Project of 2 Projects)');
   });
 
   it('shows metrics for project with most submissions', async () => {
@@ -61,6 +67,14 @@ describe('AnalyticsPreview', () => {
     const projectMetrics = analyticsPreview.projects[1];
     tables.at(1).props().metrics.should.equal(projectMetrics.users);
     tables.at(2).props().metrics.should.equal(projectMetrics.forms);
-    tables.at(3).props().metrics.should.equal(projectMetrics.submissions);
+  });
+
+  it('shows submission metrics split into two tables', async () => {
+    const modal = await mockHttpForComponent();
+    const tables = modal.findAllComponents(AnalyticsMetricsTable);
+    const subMetrics = { num_submissions_from_web_users: { recent: 0, total: 0 } };
+    const stateMetrics = { num_submissions_received: { recent: 1, total: 1 } };
+    tables.at(3).props().metrics.should.eql(subMetrics);
+    tables.at(4).props().metrics.should.eql(stateMetrics);
   });
 });
