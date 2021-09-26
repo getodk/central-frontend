@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 
 import i18n from '../src/i18n';
+import store from '../src/store';
 import { loadLocale } from '../src/util/i18n';
 import { noop } from '../src/util/util';
 
@@ -1005,5 +1006,27 @@ describe('router', () => {
         .afterResponses(() => {
           document.title.should.equal('Log in | ODK Central');
         }));
+  });
+
+  describe('config', () => {
+    beforeEach(mockLogin);
+
+    it('redirects user from /system/backups if showsBackups is false', () => {
+      store.commit('setConfig', { key: 'showsBackups', value: false });
+      return load('/system/backups', {}, false)
+        .respondFor('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it('redirects user from /system/analytics if showsAnalytics is false', () => {
+      store.commit('setConfig', { key: 'showsAnalytics', value: false });
+      return load('/system/analytics', {}, false)
+        .respondFor('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
   });
 });

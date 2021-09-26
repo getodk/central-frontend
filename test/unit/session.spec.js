@@ -146,20 +146,38 @@ describe('util/session', () => {
       });
     });
 
-    it('sends a request for analytics config if user can config.read', () => {
-      testData.extendedUsers.createPast(1, { role: 'admin' });
-      setData({ session: testData.sessions.createNew({ token: 'foo' }) });
-      return mockHttp()
-        .request(() => logIn(router, store, true))
-        .respondWithData(() => testData.extendedUsers.first())
-        .respondWithProblem(404.1)
-        .testRequests([
-          null,
-          {
-            url: '/v1/config/analytics',
-            headers: { Authorization: 'Bearer foo' }
-          }
-        ]);
+    describe('request for the analytics config', () => {
+      it('sends the request if the user can config.read', () => {
+        testData.extendedUsers.createPast(1, { role: 'admin' });
+        setData({ session: testData.sessions.createNew({ token: 'foo' }) });
+        return mockHttp()
+          .request(() => logIn(router, store, true))
+          .respondWithData(() => testData.extendedUsers.first())
+          .respondWithProblem(404.1)
+          .testRequests([
+            null,
+            {
+              url: '/v1/config/analytics',
+              headers: { Authorization: 'Bearer foo' }
+            }
+          ]);
+      });
+
+      it('does not send request if showsAnalytics config is false', () => {
+        store.commit('setConfig', { key: 'showsAnalytics', value: false });
+        testData.extendedUsers.createPast(1, { role: 'admin' });
+        setData({ session: testData.sessions.createNew({ token: 'foo' }) });
+        return mockHttp()
+          .request(() => logIn(router, store, true))
+          .respondWithData(() => testData.extendedUsers.first())
+          .testRequests([
+            {
+              url: '/v1/users/current',
+              headers: { Authorization: 'Bearer foo' },
+              extended: true
+            }
+          ]);
+      });
     });
   });
 

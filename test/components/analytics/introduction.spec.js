@@ -1,5 +1,6 @@
 import AnalyticsIntroduction from '../../../src/components/analytics/introduction.vue';
 
+import store from '../../../src/store';
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
@@ -57,6 +58,19 @@ describe('AnalyticsIntroduction', () => {
       return load('/account/edit', {}, false)
         .restoreSession()
         .respondWithProblem(404.1)
+        .respondFor('/account/edit')
+        .afterResponses(app => {
+          app.find('#navbar-analytics-notice').should.be.hidden();
+        });
+    });
+
+    it('does not show the notice if the showsAnalytics config is false', () => {
+      store.commit('setConfig', { key: 'showsAnalytics', value: false });
+      testData.extendedUsers.createPast(1, {
+        createdAt: ago({ days: 15 }).toISO()
+      });
+      return load('/account/edit', {}, false)
+        .restoreSession()
         .respondFor('/account/edit')
         .afterResponses(app => {
           app.find('#navbar-analytics-notice').should.be.hidden();

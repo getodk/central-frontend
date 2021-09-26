@@ -13,6 +13,7 @@ import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
 import i18n from './i18n';
+import store from './store';
 import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
@@ -646,6 +647,12 @@ const routes = [
             ])
           },
           title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
+        },
+        beforeEnter: (to, from, next) => {
+          if (store.state.config.showsBackups)
+            next();
+          else
+            next('/');
         }
       }),
       asyncRoute({
@@ -674,6 +681,12 @@ const routes = [
               i18n.t('systemHome.title')
             ]
           }
+        },
+        beforeEnter: (to, from, next) => {
+          if (store.state.config.showsAnalytics)
+            next();
+          else
+            next('/');
         }
       })
     ]
@@ -828,5 +841,3 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
-
-

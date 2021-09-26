@@ -22,9 +22,9 @@ except according to the terms contained in the LICENSE file.
         {{ $t('resource.users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
-    <li v-if="canRoute('/system/backups')"
+    <li v-if="canRoute(systemPath)"
       :class="{ active: routePathStartsWith('/system') }">
-      <router-link to="/system/backups">
+      <router-link :to="systemPath">
         {{ $t('common.system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
@@ -32,14 +32,22 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import routes from '../../mixins/routes';
 
 export default {
   name: 'NavbarLinks',
   mixins: [routes()],
   computed: {
+    ...mapState({
+      showsBackups: (state) => state.config.showsBackups
+    }),
     projectsLinkIsActive() {
       return this.$route.path === '/' || this.routePathStartsWith('/projects');
+    },
+    systemPath() {
+      return this.showsBackups ? '/system/backups' : '/system/audits';
     }
   },
   methods: {

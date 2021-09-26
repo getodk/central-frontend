@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template #title>{{ $t('systemHome.title') }}</template>
       <template #tabs>
-        <li :class="tabClass('backups')" role="presentation">
+        <li v-show="showsBackups" :class="tabClass('backups')"
+          role="presentation">
           <router-link :to="tabPath('backups')">
             {{ $t('systemHome.tab.backups') }}
           </router-link>
@@ -24,7 +25,8 @@ except according to the terms contained in the LICENSE file.
             {{ $t('systemHome.tab.audits') }}
           </router-link>
         </li>
-        <li :class="tabClass('analytics')" role="presentation">
+        <li v-show="showsAnalytics" :class="tabClass('analytics')"
+          role="presentation">
           <router-link :to="tabPath('analytics')">
             {{ $t('systemHome.tab.analytics') }}
           </router-link>
@@ -38,6 +40,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -48,6 +52,10 @@ export default {
   components: { PageBody, PageHead },
   mixins: [tab()],
   computed: {
+    ...mapState({
+      showsBackups: (state) => state.config.showsBackups,
+      showsAnalytics: (state) => state.config.showsAnalytics
+    }),
     tabPathPrefix() {
       return '/system';
     }

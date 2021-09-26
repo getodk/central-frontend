@@ -264,7 +264,8 @@ export const logIn = (router, store, newSession) => {
         });
     })
     .then(() => {
-      if (store.state.request.data.currentUser.can('config.read')) {
+      if (store.state.config.showsAnalytics &&
+        store.state.request.data.currentUser.can('config.read')) {
         store.dispatch('get', [{
           key: 'analyticsConfig',
           url: '/v1/config/analytics',
