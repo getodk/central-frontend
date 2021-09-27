@@ -7,6 +7,7 @@ const mountComponent = (propsData) => {
   const props = {
     defaultText: 'default text',
     showFooter: false,
+    required: false,
     ...propsData
   };
 
@@ -18,7 +19,8 @@ const mountComponent = (propsData) => {
     },
     template: `<div><markdown-textarea v-model="body"
       default-text="${props.defaultText}"
-      :show-footer="${props.showFooter}">
+      :show-footer="${props.showFooter}"
+      :required="${props.required}">
     </markdown-textarea></div>`,
     components: { 'markdown-textarea': MarkdownTextarea }
   });
@@ -99,5 +101,19 @@ describe('MarkdownTextarea', () => {
       slots: { default: '<button id="some-button">Button text</button>' }
     });
     component.find('#some-button').exists().should.be.true();
+  });
+
+  it('adds "required" to textarea if required prop is true', () => {
+    const component = mountComponent({
+      required: true
+    });
+    const required = component.get('textarea').attributes('required');
+    should.exist(required);
+  });
+
+  it('does not make textarea required by default', () => {
+    const component = mountComponent({});
+    const required = component.get('textarea').attributes('required');
+    should.not.exist(required);
   });
 });

@@ -78,8 +78,6 @@ describe('SubmissionUpdateReviewState', () => {
     const modal = mountComponent();
     await modal.setProps({ state: true });
     modal.getComponent(MarkdownTextarea).props().required.should.equal(false);
-    const required = await modal.get('textarea').attributes('required');
-    should.not.exist(required);
   });
 
   it('resets the form after the modal is hidden', async () => {

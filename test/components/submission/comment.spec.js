@@ -157,8 +157,7 @@ describe('SubmissionComment', () => {
   it('should make the textarea required', async () => {
     testData.extendedSubmissions.createPast(1);
     const component = mountComponent();
-    const required = await component.get('textarea');
-    should.exist(required);
+    component.getComponent(MarkdownTextarea).props().required.should.equal(true);
   });
 
   describe('after a successful response', () => {
