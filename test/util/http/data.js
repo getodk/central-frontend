@@ -98,7 +98,7 @@ const mapsByComponent = {
     audits: () => testData.standardAudits.sorted()
   }),
   AuditList: mapKeys(['audits']),
-  AnalyticsList: mapKeys(['analyticsConfig']),
+  AnalyticsList: mapKeys(['analyticsConfig', 'audits']),
 
   Download: new Map(),
 
