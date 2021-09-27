@@ -20,9 +20,18 @@ except according to the terms contained in the LICENSE file.
       </i18n>
       <p>{{ $t('heading[0]') }}</p>
     </div>
-    <loading :state="$store.getters.initiallyLoading(['analyticsConfig'])"/>
-    <analytics-form v-if="analyticsConfig != null"
-      @preview="showModal('preview')"/>
+    <loading :state="initiallyLoading"/>
+    <template v-if="dataExists">
+      <analytics-form @preview="showModal('preview')"/>
+      <page-section v-if="audits.length !== 0">
+        <template #heading>
+          <span>{{ $t('auditsTitle') }}</span>
+        </template>
+        <template #body>
+          <audit-table :audits="audits"/>
+        </template>
+      </page-section>
+    </template>
     <analytics-preview v-bind="preview" @hide="hideModal('preview')"/>
   </div>
 </template>
@@ -30,15 +39,26 @@ except according to the terms contained in the LICENSE file.
 <script>
 import AnalyticsForm from './form.vue';
 import AnalyticsPreview from './preview.vue';
+import AuditTable from '../audit/table.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 
 import modal from '../../mixins/modal';
+import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
+const requestKeys = ['analyticsConfig', 'audits'];
+
 export default {
   name: 'AnalyticsList',
-  components: { AnalyticsForm, AnalyticsPreview, Loading },
+  components: {
+    AnalyticsForm,
+    AnalyticsPreview,
+    AuditTable,
+    Loading,
+    PageSection
+  },
   mixins: [modal()],
   data() {
     return {
@@ -47,17 +67,31 @@ export default {
       }
     };
   },
-  computed: requestData(['analyticsConfig']),
+  computed: {
+    ...requestData(requestKeys),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(requestKeys);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(requestKeys);
+    }
+  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'analyticsConfig',
-        url: '/v1/config/analytics',
-        fulfillProblem: ({ code }) => code === 404.1
-      }]).catch(noop);
+      this.$store.dispatch('get', [
+        {
+          key: 'analyticsConfig',
+          url: '/v1/config/analytics',
+          fulfillProblem: ({ code }) => code === 404.1
+        },
+        {
+          key: 'audits',
+          url: apiPaths.audits({ action: 'analytics', limit: 10 })
+        }
+      ]).catch(noop);
     }
   }
 };
@@ -68,7 +102,9 @@ export default {
   "en": {
     "heading": [
       "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
-    ]
+    ],
+    // This is a title shown above a section of the page.
+    "auditsTitle": "Latest Usage Reports"
   }
 }
 </i18n>

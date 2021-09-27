@@ -193,6 +193,10 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
+      "analytics": {
+        "string": "Report Usage",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
       "backup": {
         "string": "Backup",
         "developer_comment": "This is shown in the log of actions performed on the server."
@@ -909,6 +913,10 @@
         "0": {
           "string": "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
         }
+      },
+      "auditsTitle": {
+        "string": "Latest Usage Reports",
+        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {

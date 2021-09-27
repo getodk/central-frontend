@@ -249,6 +249,13 @@ describe('AuditTable', () => {
     testTarget(row, '');
   });
 
+  it('renders an analytics audit correctly', () => {
+    testData.extendedAudits.createPast(1, { action: 'analytics' });
+    const row = mountComponent();
+    testType(row, ['Report Usage']);
+    testTarget(row, '');
+  });
+
   it('renders an audit with an unknown action correctly', () => {
     testData.extendedAudits.createPast(1, {
       action: 'unknown',
