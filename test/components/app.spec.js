@@ -113,7 +113,7 @@ describe('App', () => {
       });
     });
 
-    describe('error response', () => {
+    describe('request error', () => {
       it('stops sending the request after a 404', () => {
         const clock = sinon.useFakeTimers(Date.now());
         return load('/')
@@ -163,6 +163,31 @@ describe('App', () => {
           })
           .respondWithData(() => 'v1.2')
           .testRequests([{ url: '/version.txt' }]);
+      });
+
+      it('shows an alert despite an intermediate error', () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        return load('/')
+          .complete()
+          .request(() => {
+            clock.tick(15000);
+          })
+          .respondWithData(() => 'v1.2')
+          .complete()
+          .request(() => {
+            clock.tick(60000);
+          })
+          .respond(() => ({ status: 500, data: '' }))
+          .complete()
+          .request(() => {
+            clock.tick(60000);
+          })
+          .respondWithData(() => 'v1.3')
+          .afterResponse(app => {
+            app.should.alert('info', (message) => {
+              message.should.startWith('The server has been updated.');
+            });
+          });
       });
     });
   });

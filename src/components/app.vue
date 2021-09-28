@@ -61,6 +61,7 @@ export default {
       return this.$store.dispatch('get', [{
         key: 'centralVersion',
         url: '/version.txt',
+        clear: false,
         alert: false
       }])
         .then(() => {
