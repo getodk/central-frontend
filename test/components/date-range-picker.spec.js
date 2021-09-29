@@ -106,7 +106,7 @@ describe('DateRangePicker', () => {
         propsData: { value: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ value: [] });
-      component.vm.flatpickrValue.should.equal('');
+      should.not.exist(component.vm.flatpickrValue);
       component.get('input').element.value.should.equal('');
     });
   });
