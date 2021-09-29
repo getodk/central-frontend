@@ -49,8 +49,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-// Import PageSection before FloatRow in order to have the same import order as
-// FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
 import PageSection from '../page/section.vue';
 import FloatRow from '../float-row.vue';
 import CollectQr from '../collect-qr.vue';
