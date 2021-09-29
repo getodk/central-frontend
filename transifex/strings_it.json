@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "Informazioni sull'utilizzo",
+        "string": "Report di utilizzo",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -192,6 +192,10 @@
           "string": "Cancellare",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
+      },
+      "analytics": {
+        "string": "",
+        "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
         "string": "Backup",
@@ -686,7 +690,7 @@
       "string": "Successo!"
     },
     "system": {
-      "string": "",
+      "string": "Sistema",
       "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
     },
     "yes": {
@@ -879,27 +883,27 @@
     },
     "AnalyticsIntroduction": {
       "title": {
-        "string": "",
+        "string": "Aiuta a migliorare Central",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
           "full": {
-            "string": "",
-            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+            "string": "Nella scheda {usageReporting}  in Impostazioni di sistema, puoi scegliere di condividere dati di utilizzo anonimi o informazioni di contatto con il team Central.",
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
-          "usageInformation": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          "usageReporting": {
+            "string": "Report di utilizzo",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "Lì, puoi anche scegliere di non vedere più questo messaggio."
         }
       },
       "action": {
         "improveCentral": {
-          "string": "",
+          "string": "Migliora Central",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -909,6 +913,10 @@
         "0": {
           "string": "Di seguito, puoi scegliere se questo server Central condividerà le informazioni di utilizzo anonime con il team Central. Questa impostazione interessa l'intero server."
         }
+      },
+      "auditsTitle": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
@@ -959,7 +967,7 @@
           "string": "Numero di formulari con repeats all'interno"
         },
         "num_forms_with_geospatial": {
-          "string": "Numero di formulari con elementi geospaziali"
+          "string": ""
         },
         "num_forms_with_encryption": {
           "string": "Numero di formulari con crittografia abilitata"
@@ -968,19 +976,19 @@
           "string": "Numero di formulari con audit"
         },
         "num_submissions_received": {
-          "string": "Numero di invii ricevuti"
+          "string": ""
         },
         "num_submissions_approved": {
-          "string": "Numero di invii approvati"
+          "string": ""
         },
         "num_submissions_has_issues": {
-          "string": "Numero di invii con problemi"
+          "string": ""
         },
         "num_submissions_rejected": {
-          "string": "Numero di invii scartati"
+          "string": ""
         },
         "num_submissions_edited": {
-          "string": "Numero di invii in stato modificato"
+          "string": ""
         },
         "num_submissions_with_edits": {
           "string": "Numero di invii con modifiche"
@@ -1021,8 +1029,12 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "Mostrando 1 progetto di  {numProjects}"
+          "string": "{count, plural, one {} other {}}"
         }
+      },
+      "submissionStates": {
+        "string": "",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
@@ -2381,7 +2393,7 @@
         }
       },
       "analyticsNotice": {
-        "string": ""
+        "string": "Aiuta a migliorare Central"
       }
     },
     "NavbarActions": {

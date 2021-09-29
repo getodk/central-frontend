@@ -193,6 +193,10 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
+      "analytics": {
+        "string": "",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
       "backup": {
         "string": "Sicherheitskopie",
         "developer_comment": "This is shown in the log of actions performed on the server."
@@ -886,11 +890,11 @@
         "0": {
           "full": {
             "string": "",
-            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
-          "usageInformation": {
+          "usageReporting": {
             "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
@@ -909,6 +913,10 @@
         "0": {
           "string": ""
         }
+      },
+      "auditsTitle": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
@@ -1021,8 +1029,12 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": ""
+          "string": "{count, plural, one {} other {}}"
         }
+      },
+      "submissionStates": {
+        "string": "",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {

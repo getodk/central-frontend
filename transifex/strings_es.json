@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "Información de uso",
+        "string": "Informes de uso",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -192,6 +192,10 @@
           "string": "Borrar",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
+      },
+      "analytics": {
+        "string": "",
+        "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
         "string": "Copia de seguridad",
@@ -611,7 +615,7 @@
     },
     "needFeedback": {
       "full": {
-        "string": "Para hacer esto, necesitamos {your}comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
+        "string": "Para hacer esto, necesitamos {your} comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
@@ -686,7 +690,7 @@
       "string": "¡Éxito!"
     },
     "system": {
-      "string": "",
+      "string": "Sistema",
       "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
     },
     "yes": {
@@ -879,27 +883,27 @@
     },
     "AnalyticsIntroduction": {
       "title": {
-        "string": "",
+        "string": "Ayuda a mejorar Central",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
           "full": {
-            "string": "",
-            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+            "string": "En la pestaña {usageReporting} en Configuración del sistema, puede optar por compartir datos de uso anónimos o información de contacto con el equipo Central.",
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
-          "usageInformation": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          "usageReporting": {
+            "string": "Informes de uso",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "Allí, también puede optar por no volver a ver este mensaje."
         }
       },
       "action": {
         "improveCentral": {
-          "string": "",
+          "string": "Mejorar Central",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -909,6 +913,10 @@
         "0": {
           "string": "A continuación, puede elegir si este servidor Central compartirá información de uso anónima con el equipo Central. Esta configuración afecta a todo el servidor."
         }
+      },
+      "auditsTitle": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
@@ -959,7 +967,7 @@
           "string": "Número de formularios con repeticiones"
         },
         "num_forms_with_geospatial": {
-          "string": "Número de formularios con geoespacial"
+          "string": ""
         },
         "num_forms_with_encryption": {
           "string": "Número de formularios con cifrado"
@@ -968,19 +976,19 @@
           "string": "Número de formularios con auditorías"
         },
         "num_submissions_received": {
-          "string": "Número de envíos recibidos"
+          "string": ""
         },
         "num_submissions_approved": {
-          "string": "Número de envíos aprobados"
+          "string": ""
         },
         "num_submissions_has_issues": {
-          "string": "Número de envíos con problemas"
+          "string": ""
         },
         "num_submissions_rejected": {
-          "string": "Número de envíos rechazados"
+          "string": ""
         },
         "num_submissions_edited": {
-          "string": "Número de envíos en estado editado"
+          "string": ""
         },
         "num_submissions_with_edits": {
           "string": "Número de envíos con ediciones"
@@ -1021,8 +1029,12 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "Mostrando 1 Proyecto de {numProjects}"
+          "string": "{count, plural, one {} other {}}"
         }
+      },
+      "submissionStates": {
+        "string": "",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
@@ -2381,7 +2393,7 @@
         }
       },
       "analyticsNotice": {
-        "string": ""
+        "string": "Ayuda a mejorar Central"
       }
     },
     "NavbarActions": {

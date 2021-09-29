@@ -263,7 +263,8 @@ $border-height: 3px;
   "cs": {
     "action": {
       "toggle": "Přepnout navigaci"
-    }
+    },
+    "analyticsNotice": "Pomozte zlepšit Central!"
   },
   "de": {
     "action": {
@@ -273,7 +274,8 @@ $border-height: 3px;
   "es": {
     "action": {
       "toggle": "Alternar la navegación"
-    }
+    },
+    "analyticsNotice": "Ayuda a mejorar Central"
   },
   "fr": {
     "action": {
@@ -288,7 +290,8 @@ $border-height: 3px;
   "it": {
     "action": {
       "toggle": "Attiva/disattiva navigazione"
-    }
+    },
+    "analyticsNotice": "Aiuta a migliorare Central"
   },
   "ja": {
     "action": {
