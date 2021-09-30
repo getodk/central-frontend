@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "",
+        "string": "Hlášení o používání",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -192,6 +192,10 @@
           "string": "Smazat",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
+      },
+      "analytics": {
+        "string": "",
+        "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
         "string": "Záloha",
@@ -530,7 +534,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "forms": {
-      "string": "",
+      "string": "Formuláře",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -550,7 +554,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "users": {
-      "string": "",
+      "string": "Uživatelé",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -686,7 +690,7 @@
       "string": "Úspěch!"
     },
     "system": {
-      "string": "",
+      "string": "System",
       "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
     },
     "yes": {
@@ -703,7 +707,7 @@
       }
     },
     "total": {
-      "string": ""
+      "string": "Celkem"
     }
   },
   "mixin": {
@@ -879,27 +883,27 @@
     },
     "AnalyticsIntroduction": {
       "title": {
-        "string": "",
+        "string": "Pomozte zlepšit Central!",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
           "full": {
-            "string": "",
-            "developer_comment": "{usageInformation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Information"
+            "string": "Na kartě {usageReporting} v Nastavení systému můžete zvolit sdílení anonymizovaných údajů o používání nebo kontaktních informací s týmem Central.",
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
-          "usageInformation": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageInformation} is in the following text:\n\nIn the {usageInformation} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          "usageReporting": {
+            "string": "Hlášení o použití",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "Tam můžete také zvolit, že se tato zpráva již nebude zobrazovat."
         }
       },
       "action": {
         "improveCentral": {
-          "string": "",
+          "string": "Zlepšit Central",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -909,133 +913,141 @@
         "0": {
           "string": "Níže můžete zvolit, zda bude tento server Central sdílet anonymní informace o používání s týmem Central. Toto nastavení ovlivňuje celý server."
         }
+      },
+      "auditsTitle": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
       "recent": {
-        "string": ""
+        "string": "v posledních 45 dnech"
       },
       "fields": {
         "num_admins": {
-          "string": ""
+          "string": "Počet správců"
         },
         "num_projects_encryption": {
-          "string": ""
+          "string": "Počet projektů s povoleným šifrováním"
         },
         "num_questions_biggest_form": {
-          "string": ""
+          "string": "Počet otázek v největším formuláři"
         },
         "num_audit_log_entries": {
-          "string": ""
+          "string": "Počet záznamů v protokolu auditů"
         },
         "backups_configured": {
-          "string": ""
+          "string": "Konfigurace záloh"
         },
         "database_size": {
-          "string": ""
+          "string": "Velikost systémové databáze"
         },
         "num_managers": {
-          "string": ""
+          "string": "Počet projektových manažerů"
         },
         "num_viewers": {
-          "string": ""
+          "string": "Počet diváků projektu"
         },
         "num_data_collectors": {
-          "string": ""
+          "string": "Počet sběračů dat"
         },
         "num_app_users": {
-          "string": ""
+          "string": "Počet uživatelů aplikace"
         },
         "num_device_ids": {
-          "string": ""
+          "string": "Počet ID zařízení"
         },
         "num_public_access_links": {
-          "string": ""
+          "string": "Počet veřejně přístupných odkazů"
         },
         "num_forms": {
-          "string": ""
+          "string": "Počet formulářů"
         },
         "num_forms_with_repeats": {
-          "string": ""
+          "string": "Počet formulářů s opakováním"
         },
         "num_forms_with_geospatial": {
-          "string": ""
+          "string": "Počet formulářů s geodaty"
         },
         "num_forms_with_encryption": {
-          "string": ""
+          "string": "Počet formulářů se šifrováním"
         },
         "num_forms_with_audits": {
-          "string": ""
+          "string": "Počet formulářů s audity"
         },
         "num_submissions_received": {
-          "string": ""
+          "string": "Počet přijatých podání"
         },
         "num_submissions_approved": {
-          "string": ""
+          "string": "Počet podání - schváleno"
         },
         "num_submissions_has_issues": {
-          "string": ""
+          "string": "Počet podání - Má problémy"
         },
         "num_submissions_rejected": {
-          "string": ""
+          "string": "Počet podání - Zamítnuto"
         },
         "num_submissions_edited": {
-          "string": ""
+          "string": "Počet příspěvků - Upraveno"
         },
         "num_submissions_with_edits": {
-          "string": ""
+          "string": "Počet podání s úpravami"
         },
         "num_submissions_with_comments": {
-          "string": ""
+          "string": "Počet podání s komentáři"
         },
         "num_submissions_from_app_users": {
-          "string": ""
+          "string": "Počet podání od uživatelů aplikace"
         },
         "num_submissions_from_public_links": {
-          "string": ""
+          "string": "Počet podání z veřejných odkazů"
         },
         "num_submissions_from_web_users": {
-          "string": ""
+          "string": "Počet podání od uživatelů webu"
         }
       }
     },
     "AnalyticsPreview": {
       "title": {
-        "string": "",
+        "string": "Anonymizovaná zpráva o použití",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Děkujeme, že uvažujete o zaslání informací o používání. Tyto údaje nám pomohou stanovit priority vašich potřeb!"
         },
         "1": {
-          "string": ""
+          "string": "Zde je zobrazena zpráva, kterou v současné době shromažďujeme. Abychom mohli reagovat na nové funkce a potřeby, budeme občas měnit to, co se hlásí, ale vždy budeme shromažďovat pouze souhrnné průměry, které vidíte zde."
         },
         "2": {
-          "string": ""
+          "string": "Vždy se sem můžete přijít podívat, co se sbírá."
         }
       },
       "projects": {
         "title": {
-          "string": "",
+          "string": "Shrnutí projektu",
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": ""
+          "string": "{count, plural, one {(Zobrazuje {count} nejaktivnější projekt projektu)} few {(Zobrazuje {count} nejaktivnější projekty projektu)} many {(Zobrazuje {count} nejaktivnějších projektů projektu)} other {(Zobrazuje {count} nejaktivnějších projektů projektu)}}"
         }
+      },
+      "submissionStates": {
+        "string": "Stavy odeslání",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
       "alert": {
         "versionChange": {
-          "string": ""
+          "string": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
         }
       }
     },
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": ""
+          "string": "Požadovanou stránku se nepodařilo načíst. Obnovte prosím stránku a zkuste to znovu."
         }
       }
     },
@@ -2381,7 +2393,7 @@
         }
       },
       "analyticsNotice": {
-        "string": ""
+        "string": "Pomozte zlepšit Central!"
       }
     },
     "NavbarActions": {

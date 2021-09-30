@@ -30,7 +30,7 @@
     "tab": {
       "backups": "Backups",
       "audits": "Registri di controllo del server",
-      "analytics": "Informazioni sull'utilizzo"
+      "analytics": "Report di utilizzo"
     }
   },
   "role": {
@@ -246,6 +246,7 @@
     "noResults": "Nessun risultato",
     "rightNow": "Adesso",
     "success": "Successo!",
+    "system": "Sistema",
     "yes": "Si",
     "tab": {
       "settings": "Impostazioni",

@@ -30,7 +30,7 @@
     "tab": {
       "backups": "Copias de seguridad",
       "audits": "Registro y auditoría de la actividad del servidor",
-      "analytics": "Información de uso"
+      "analytics": "Informes de uso"
     }
   },
   "role": {
@@ -221,7 +221,7 @@
   "analytics": {
     "alwaysImprove": "Siempre estamos tratando de mejorar ODK Central.",
     "needFeedback": {
-      "full": "Para hacer esto, necesitamos {your}comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
+      "full": "Para hacer esto, necesitamos {your} comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
       "your": "Tu"
     }
   },
@@ -246,6 +246,7 @@
     "noResults": "Sin resultados",
     "rightNow": "Ahora mismo",
     "success": "¡Éxito!",
+    "system": "Sistema",
     "yes": "Sí",
     "tab": {
       "settings": "Ajustes",

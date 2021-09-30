@@ -29,7 +29,8 @@
     "title": "Řízení systému",
     "tab": {
       "backups": "Zálohy",
-      "audits": "Protokoly auditu serveru"
+      "audits": "Protokoly auditu serveru",
+      "analytics": "Hlášení o používání"
     }
   },
   "role": {
@@ -191,10 +192,12 @@
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
     "form": "Formulář",
+    "forms": "Formuláře",
     "project": "Projekt",
     "projects": "Projekty",
     "publicLink": "Veřejný odkaz",
     "user": "Uživatel",
+    "users": "Uživatelé",
     "webUser": "Webový uživatel",
     "webUsers": "Uživatelé webu",
     "session": "Relace",
@@ -243,11 +246,13 @@
     "noResults": "Žádné výsledky",
     "rightNow": "Právě teď",
     "success": "Úspěch!",
+    "system": "System",
     "yes": "Ano",
     "tab": {
       "settings": "Nastavení",
       "overview": "Přehled"
-    }
+    },
+    "total": "Celkem"
   },
   "mixin": {
     "request": {
