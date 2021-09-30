@@ -141,14 +141,14 @@ export default {
   display: flex;
   flex-wrap: wrap;
 
-  #users-forms-column {
-    padding-right: 10px;
+  #users-forms-column, #submissions-column {
+    margin-right: 5px;
+    margin-left: 5px;
     flex-grow: 1;
   }
 
-  #submissions-column {
-    flex-grow: 1;
-  }
+  margin-left: -5px;
+  margin-right: -5px;
 }
 </style>
 

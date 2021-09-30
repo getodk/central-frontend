@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <tr>
         <th>{{ title }}</th>
         <th class="metric-value recent-col">{{ $t('recent') }}</th>
-        <th class="metric-value">{{ $t('common.total') }}</th>
+        <th class="metric-value total-col">{{ $t('common.total') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -55,6 +55,10 @@ export default {
 .analytics-metrics-table {
   .metric-value {
     text-align: right;
+  }
+
+  .total-col {
+    width: 50px;
   }
 }
 </style>
