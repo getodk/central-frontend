@@ -70,7 +70,7 @@ export default {
     margin-left: 30px;
 
     > li + li { margin-left: 10px; }
-    #navbar-links-users { margin-left: 30px; }
+    #navbar-links-users { margin-left: 40px; }
   }
 }
 </style>
