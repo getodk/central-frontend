@@ -83,8 +83,8 @@ export default {
     "forms": {
       // The count of Forms is shown separately above this text.
       "full": [
-        "{forms} which can be downloaded and given as surveys on mobile clients.",
-        "{forms} which can be downloaded and given as surveys on mobile clients."
+        "{forms} which can be downloaded and given as a survey.",
+        "{forms} which can be downloaded and given as surveys."
       ],
       "forms": "Form | Forms"
     }

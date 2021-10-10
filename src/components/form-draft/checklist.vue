@@ -157,7 +157,7 @@ export default {
       },
       {
         // This is the title of a checklist item.
-        "title": "Test the Form on your mobile device",
+        "title": "Test the Form by creating a Submission",
         "body": [
           {
             "full": "You can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data.",

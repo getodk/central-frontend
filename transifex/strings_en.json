@@ -1908,7 +1908,7 @@
         },
         "3": {
           "title": {
-            "string": "Test the Form on your mobile device",
+            "string": "Test the Form by creating a Submission",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,12 +1967,12 @@
         },
         "testing": {
           "full": {
-            "string": "You have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended.",
+            "string": "You have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended.",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
             "string": "tested this Form",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
       },
@@ -2832,12 +2832,12 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {{forms} which can be downloaded and given as surveys on mobile clients.} other {{forms} which can be downloaded and given as surveys on mobile clients.}}",
+          "string": "{count, plural, one {{forms} which can be downloaded and given as a survey.} other {{forms} which can be downloaded and given as surveys.}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
           "string": "{count, plural, one {Form} other {Forms}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
       }
     },
