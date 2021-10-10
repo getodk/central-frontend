@@ -13,19 +13,7 @@ jobs:
 
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v2-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
-
-      - run: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
+      - run: npm ci
 
       - run: |
           node bin/transifex/restructure.js
