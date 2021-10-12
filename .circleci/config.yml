@@ -1,36 +1,19 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@1.1.3
+  browser-tools: circleci/browser-tools@1.2.3
 jobs:
   build:
     docker:
-      - image: cimg/node:12.21.0-browsers
+      - image: cimg/node:14.17.6-browsers
 
     working_directory: ~/repo
 
     steps:
       - browser-tools/install-chrome
-
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v2-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
-
-      - run: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
-
+      - run: npm ci
       - run: |
           node bin/transifex/restructure.js
           git diff --exit-code -- transifex/strings_en.json
-
       - run: npm run lint
-
       - run: npm run test
