@@ -234,7 +234,13 @@ export default {
     When we gzip a CSV file, we read the entire file into memory. That should be
     OK, because any CSV file is likely intended for a data collection client on
     a relatively low-resource device: we expect that a CSV file will not exceed
-    a few dozen MBs. */
+    a few dozen MBs.
+
+    Note that the development nginx.conf does not support request body
+    decompression. That means that in development, if this component gzips a CSV
+    file, Backend will store the gzipped contents rather than the file's
+    original contents.
+    */
     maybeGzip(file) {
       // We determine whether the file is CSV using its file extension rather
       // than its MIME type. I think the MIME type for a CSV file should be
