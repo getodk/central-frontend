@@ -194,7 +194,7 @@
         }
       },
       "analytics": {
-        "string": "",
+        "string": "Rapporto di utilizzo",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
@@ -915,7 +915,7 @@
         }
       },
       "auditsTitle": {
-        "string": "",
+        "string": "Ultimo rapporto di utilizzo",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
@@ -967,7 +967,7 @@
           "string": "Numero di formulari con repeats all'interno"
         },
         "num_forms_with_geospatial": {
-          "string": ""
+          "string": "Numero di formulari con geodati"
         },
         "num_forms_with_encryption": {
           "string": "Numero di formulari con crittografia abilitata"
@@ -976,19 +976,19 @@
           "string": "Numero di formulari con audit"
         },
         "num_submissions_received": {
-          "string": ""
+          "string": "Numero di invii - Ricevuti"
         },
         "num_submissions_approved": {
-          "string": ""
+          "string": "Numero di invii - Approvati"
         },
         "num_submissions_has_issues": {
-          "string": ""
+          "string": "Numero di invii - Con problemi"
         },
         "num_submissions_rejected": {
-          "string": ""
+          "string": "Numero di invii - Scartati"
         },
         "num_submissions_edited": {
-          "string": ""
+          "string": "Numero di invii - Modificati"
         },
         "num_submissions_with_edits": {
           "string": "Numero di invii con modifiche"
@@ -1029,11 +1029,11 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {(Visualizzazione del progetto più attivo di {count} Progetto)} other {(Visualizzazione del progetto più attivo di {count} Progetti)}}"
         }
       },
       "submissionStates": {
-        "string": "",
+        "string": "Stato invio",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },

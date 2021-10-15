@@ -29,7 +29,8 @@
     "title": "Manajemen Sistem",
     "tab": {
       "backups": "Data Cadangan",
-      "audits": "Catatan Server Audit"
+      "audits": "Catatan Server Audit",
+      "analytics": "Pelaporan Penggunaan"
     }
   },
   "role": {
@@ -70,6 +71,7 @@
         "session_end": "Cabut",
         "delete": "Hapus"
       },
+      "analytics": "Laporkan Penggunaan",
       "backup": "Pembuatan data cadangan",
       "config": {
         "set": "Set"
@@ -140,8 +142,11 @@
     "resetPassword": "Atur Ulang Kata Sandi",
     "review": "Tinjau",
     "save": "Simpan",
+    "saveSettings": "Simpan pengaturan",
     "update": "Memperbarui",
-    "yesProceed": "Ya, lanjutkan"
+    "yesProceed": "Ya, lanjutkan",
+    "showPreview": "Pratinjau",
+    "hidePreview": "Sembunyikan pratinjau"
   },
   "field": {
     "comment": "Tinggalkan komentar",
@@ -188,10 +193,12 @@
     "appUsers": "Pengguna Aplikasi",
     "config": "Konfigurasi server",
     "form": "Formulir",
+    "forms": "Formulir",
     "project": "Proyek",
     "projects": "Proyek",
     "publicLink": "Tautan Akses Publik",
     "user": "Pengguna",
+    "users": "Pengguna",
     "webUser": "Pengguna Web",
     "webUsers": "Pengguna Web",
     "session": "Sesi",
@@ -230,11 +237,13 @@
     "noResults": "Tidak ada hasil",
     "rightNow": "Sekarang Juga",
     "success": "Sukses!",
+    "system": "Sistem",
     "yes": "Iya",
     "tab": {
       "settings": "Pengaturan",
       "overview": "Gambaran"
-    }
+    },
+    "total": "Total"
   },
   "presenter": {
     "Form": {

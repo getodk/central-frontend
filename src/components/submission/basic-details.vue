@@ -168,7 +168,9 @@ export default {
     "reviewState": "Status ulasan",
     "deviceId": "ID Perangkat",
     "attachments": "File Media",
-    "present": "{count} berkas"
+    "present": "{count} berkas",
+    "expected": "{count} diharapkan",
+    "attachmentSummary": "{present} / {expected}"
   },
   "it": {
     "reviewState": "Rivedi lo stato",

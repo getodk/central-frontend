@@ -112,6 +112,12 @@ export default {
       "improveCentral": "Mejorar Central"
     }
   },
+  "fr": {
+    "title": "Aidez à améliorer Central !",
+    "action": {
+      "improveCentral": "Améliorer Central"
+    }
+  },
   "it": {
     "title": "Aiuta a migliorare Central",
     "introduction": [

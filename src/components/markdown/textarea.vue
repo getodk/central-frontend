@@ -163,6 +163,14 @@ export default {
     "markdownSupported": "soporte Markdown",
     "preview": "Vista previa"
   },
+  "fr": {
+    "markdownSupported": "Syntaxe Markdown supportée",
+    "preview": "Aperçu"
+  },
+  "id": {
+    "markdownSupported": "Markdown didukung",
+    "preview": "Pratinjau"
+  },
   "it": {
     "markdownSupported": "Markdown supportato",
     "preview": "Anteprima"

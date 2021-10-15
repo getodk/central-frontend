@@ -194,7 +194,7 @@
         }
       },
       "analytics": {
-        "string": "",
+        "string": "Zpráva o použití",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
@@ -915,7 +915,7 @@
         }
       },
       "auditsTitle": {
-        "string": "",
+        "string": "Nejnovější zprávy o použití",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },

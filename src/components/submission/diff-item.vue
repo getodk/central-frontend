@@ -307,6 +307,13 @@ export default {
     },
     "empty": "(vacío)"
   },
+  "fr": {
+    "editCaption": {
+      "added": "(ajouté)",
+      "deleted": "(supprimé)"
+    },
+    "empty": "vide"
+  },
   "id": {
     "editCaption": {
       "added": "(ditambahkan)",

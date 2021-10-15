@@ -280,12 +280,14 @@ $border-height: 3px;
   "fr": {
     "action": {
       "toggle": "Basculer la navigation"
-    }
+    },
+    "analyticsNotice": "Aidez à améliorer Central !"
   },
   "id": {
     "action": {
       "toggle": "Navigasi Toggle"
-    }
+    },
+    "analyticsNotice": "Bantu Memperbaiki Central!"
   },
   "it": {
     "action": {

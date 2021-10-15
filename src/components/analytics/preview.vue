@@ -201,6 +201,12 @@ export default {
       "title": "Resúmenes de proyectos"
     }
   },
+  "fr": {
+    "title": "Rapport d'utilisation anonymisé",
+    "projects": {
+      "title": "Résumés du projet"
+    }
+  },
   "it": {
     "title": "Report di utilizzo anonimo",
     "introduction": [
@@ -209,8 +215,10 @@ export default {
       "Puoi sempre venire qui per vedere cosa viene raccolto."
     ],
     "projects": {
-      "title": "Riepiloghi del progetto"
-    }
+      "title": "Riepiloghi del progetto",
+      "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti)"
+    },
+    "submissionStates": "Stato invio"
   }
 }
 </i18n>

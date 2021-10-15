@@ -124,14 +124,17 @@ export default {
   "fr": {
     "action": {
       "def": "Définition",
-      "viewXml": "Aperçu XML"
+      "viewXml": "Aperçu XML",
+      "downloadXForm": "Télécharger au format XForm (.xml)",
+      "downloadXlsForm": "Télécharger au format XLSForm ({extension})"
     }
   },
   "id": {
     "action": {
       "def": "Definisi",
       "viewXml": "Lihat XML di browser",
-      "downloadXForm": "Unduh sebagai XForm (.xml)"
+      "downloadXForm": "Unduh sebagai XForm (.xml)",
+      "downloadXlsForm": "Unduh sebagai XLSForm ({extension})"
     }
   },
   "it": {

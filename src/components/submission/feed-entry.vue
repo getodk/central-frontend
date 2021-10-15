@@ -390,6 +390,11 @@ Comment • {name} */
       "comment": "Commentaire de {name}"
     }
   },
+  "id": {
+    "title": {
+      "create": "Terkirim oleh {name}"
+    }
+  },
   "it": {
     "title": {
       "create": "Inviato da {name}",

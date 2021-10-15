@@ -484,6 +484,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Mohon tungguh, menunggah {count} dokumen:",
+      "current": "Mengirim {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "Tersisa {count} dokumen.",
         "last": "Ini adalah dokumen terakhir."
