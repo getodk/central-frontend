@@ -189,7 +189,7 @@ export default {
     }
   },
   "id": {
-    "cannotAssignRole": "Anda tidak dapat menyunting Peran Proyek Anda sendiri.",
+    "cannotAssignRole": "Anda tidak dapat mengubah Peran Proyek Anda sendiri.",
     "field": {
       "projectRole": "Peran Proyek"
     }

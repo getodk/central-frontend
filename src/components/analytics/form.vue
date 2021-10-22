@@ -258,6 +258,43 @@ export default {
       "success": "¡Configuración guardada!"
     }
   },
+  "fr": {
+    "enabled": {
+      "null": [
+        "Nous le rappeler plus tard.",
+        "Les administrateurs continueront à voir le message en haut de l'écran."
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} et nous acceptons les {termsOfService} et la {privacyPolicy}.",
+          "weWillShare": "Nous souhaitons partager mensuellement des données d'usage anonymisées avec l’équipe de Central .",
+          "termsOfService": "Conditions de service",
+          "privacyPolicy": "Politique de confidentialité"
+        },
+        "Quelles sont les métriques envoyées ?"
+      ],
+      "false": [
+        "Nous ne sommes pas intéressés par le partage de ces informations.",
+        "Vous ne verrez plus de rappel à ce sujet."
+      ]
+    },
+    "contact": [
+      "Je souhaite inclure mes informations de contact dans le rapport.",
+      "Nous pouvons vous contacter pour en savoir plus sur votre utilisation de Central."
+    ],
+    "field": {
+      "workEmail": "Adresse de courriel professionnelle",
+      "organization": "Nom de l'organisation"
+    },
+    "alert": {
+      "success": "Réglages enregistrés."
+    }
+  },
+  "id": {
+    "alert": {
+      "success": "Pengaturan disimpan!"
+    }
+  },
   "it": {
     "enabled": {
       "null": [
@@ -288,6 +325,21 @@ export default {
     },
     "alert": {
       "success": "Impostazioni salvate!"
+    }
+  },
+  "ja": {
+    "enabled": {
+      "null": [
+        "後で通知する。",
+        "管理者には引き続きスクリーン上部にメッセージが表示されます。"
+      ]
+    },
+    "field": {
+      "workEmail": "職場のメールアドレス",
+      "organization": "組織名"
+    },
+    "alert": {
+      "success": "設定が保存されました！"
     }
   }
 }

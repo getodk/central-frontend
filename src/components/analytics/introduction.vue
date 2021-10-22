@@ -112,6 +112,19 @@ export default {
       "improveCentral": "Mejorar Central"
     }
   },
+  "fr": {
+    "title": "Aidez à améliorer Central !",
+    "introduction": [
+      {
+        "full": "Dans l'onglet {usageReporting} des Paramètres Système, vous pouvez choisir de partager des données d'usage anonymisées ou vos coordonnées avec l'équipe de Central.",
+        "usageReporting": "Rapports d'utilisation"
+      },
+      "Là, vous pouvez également choisir de ne plus voir à nouveau ce message."
+    ],
+    "action": {
+      "improveCentral": "Améliorer Central"
+    }
+  },
   "it": {
     "title": "Aiuta a migliorare Central",
     "introduction": [
@@ -123,6 +136,12 @@ export default {
     ],
     "action": {
       "improveCentral": "Migliora Central"
+    }
+  },
+  "ja": {
+    "title": "Centralの改善に貢献",
+    "action": {
+      "improveCentral": "Centralを改善する。"
     }
   }
 }

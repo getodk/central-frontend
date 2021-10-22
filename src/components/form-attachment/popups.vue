@@ -451,6 +451,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Merci de patienter, téléversement de votre {count} fichier en cours : | Merci de patienter, téléversement de vos {count} fichiers en cours :",
+      "current": "Envoi de {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "{count} fichier restant. | {count} fichiers restants.",
         "last": "Ceci est le dernier fichier."
@@ -484,6 +485,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Mohon tungguh, menunggah {count} dokumen:",
+      "current": "Mengirim {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "Tersisa {count} dokumen.",
         "last": "Ini adalah dokumen terakhir."

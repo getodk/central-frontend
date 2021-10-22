@@ -157,6 +157,11 @@ body.modal-open #app-alert {
       "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."
     }
   },
+  "fr": {
+    "alert": {
+      "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page afin d'éviter un comportement imprévisible."
+    }
+  },
   "it": {
     "alert": {
       "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili."

@@ -2,7 +2,7 @@
   "title": {
     "resetPassword": "Atur Ulang Kata Sandi",
     "setPassword": "Atur Kata Sandi",
-    "editProfile": "Sunting Profil",
+    "editProfile": "Ubah Profil",
     "download": "Unduh",
     "pageNotFound": "Laman tidak ditemui",
     "details": "Rincian"
@@ -29,7 +29,8 @@
     "title": "Manajemen Sistem",
     "tab": {
       "backups": "Data Cadangan",
-      "audits": "Catatan Server Audit"
+      "audits": "Catatan Server Audit",
+      "analytics": "Pelaporan Penggunaan"
     }
   },
   "role": {
@@ -47,7 +48,7 @@
   "reviewState": {
     "received": "Diterima",
     "hasIssues": "Memiliki isu",
-    "edited": "Diedit",
+    "edited": "Telah Diubah",
     "approved": "Disetujui",
     "rejected": "Ditolak",
     "null": "@:reviewState.received"
@@ -70,6 +71,7 @@
         "session_end": "Cabut",
         "delete": "Hapus"
       },
+      "analytics": "Laporkan Penggunaan",
       "backup": "Pembuatan data cadangan",
       "config": {
         "set": "Set"
@@ -126,8 +128,8 @@
     "createSubmission": "Baru",
     "done": "Selesai",
     "download": "Unduh",
-    "edit": "Edit",
-    "editProfile": "Sunting Profil",
+    "edit": "Ubah",
+    "editProfile": "Ubah Profil",
     "logIn": "Masuk",
     "looksGood": "Terlihat bagus, lanjutkan",
     "more": "Lebih banyak",
@@ -140,8 +142,11 @@
     "resetPassword": "Atur Ulang Kata Sandi",
     "review": "Tinjau",
     "save": "Simpan",
+    "saveSettings": "Simpan pengaturan",
     "update": "Memperbarui",
-    "yesProceed": "Ya, lanjutkan"
+    "yesProceed": "Ya, lanjutkan",
+    "showPreview": "Pratinjau",
+    "hidePreview": "Sembunyikan pratinjau"
   },
   "field": {
     "comment": "Tinggalkan komentar",
@@ -188,10 +193,12 @@
     "appUsers": "Pengguna Aplikasi",
     "config": "Konfigurasi server",
     "form": "Formulir",
+    "forms": "Formulir",
     "project": "Proyek",
     "projects": "Proyek",
     "publicLink": "Tautan Akses Publik",
     "user": "Pengguna",
+    "users": "Pengguna",
     "webUser": "Pengguna Web",
     "webUsers": "Pengguna Web",
     "session": "Sesi",
@@ -212,9 +219,19 @@
     },
     "learnMore": "Pelajari lebih lanjut."
   },
+  "analytics": {
+    "alwaysImprove": "Kami selalu berusaha untuk meningkatkan ODK Central.",
+    "needFeedback": {
+      "full": "Untuk melakukan hal ini, kami membutuhkan umpan balik {your}, sehingga kami dapat memahami bagaimana Anda menggunakan Central, dan bagaimana aplikasi tersebut bisa lebih baik untuk Anda.",
+      "your": "Anda"
+    }
+  },
   "submission": {
     "missingMedia": "Media hilang",
-    "editDisabled": "Anda tidak bisa mengubah kiriman terenkripsi",
+    "action": {
+      "edit": "Ubah ({count})"
+    },
+    "editDisabled": "Anda tidak dapat mengubah kiriman terenkripsi",
     "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
     "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
   },
@@ -230,11 +247,13 @@
     "noResults": "Tidak ada hasil",
     "rightNow": "Sekarang Juga",
     "success": "Sukses!",
+    "system": "Sistem",
     "yes": "Iya",
     "tab": {
       "settings": "Pengaturan",
       "overview": "Gambaran"
-    }
+    },
+    "total": "Total"
   },
   "presenter": {
     "Form": {

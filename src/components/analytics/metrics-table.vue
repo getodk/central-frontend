@@ -161,6 +161,53 @@ export default {
       "num_submissions_from_web_users": "Número de envíos de usuarios web"
     }
   },
+  "fr": {
+    "recent": "au cours des 45 derniers jours",
+    "fields": {
+      "num_admins": "Nombre d'administrateurs",
+      "num_projects_encryption": "Nombre de projets avec le chiffrement activé",
+      "num_questions_biggest_form": "Nombre de question dans le plus gros formulaire",
+      "num_audit_log_entries": "Nombre d'entrées dans le log d'audit",
+      "backups_configured": "Sauvegardes configurées",
+      "database_size": "Taille de la base de données du système",
+      "num_managers": "Nombre de gestionnaires de projet",
+      "num_viewers": "Nombre de lecteurs de projet",
+      "num_data_collectors": "Nombre de collecteurs de données",
+      "num_app_users": "Nombre d'utilisateurs mobiles",
+      "num_device_ids": "Nombre d'identifiants d'appareils",
+      "num_public_access_links": "Nombre de liens d'accès public",
+      "num_forms": "Nombre de formulaires",
+      "num_forms_with_repeats": "Nombre de formulaires avec répétitions",
+      "num_forms_with_geospatial": "Nombre de formulaires avec données géographiques",
+      "num_forms_with_encryption": "Nombre de formulaires avec chiffrement",
+      "num_forms_with_audits": "Nombre de formulaires avec audits",
+      "num_submissions_received": "Nombre de soumissions - Reçues",
+      "num_submissions_approved": "Nombre de soumissions - Approuvées",
+      "num_submissions_has_issues": "Nombre de soumissions - Avec problèmes",
+      "num_submissions_rejected": "Nombre de soumissions - Rejetées",
+      "num_submissions_edited": "Nombre de soumissions - Editées",
+      "num_submissions_with_edits": "Nombre de soumissions avec éditions",
+      "num_submissions_with_comments": "Nombre de soumissions avec commentaires",
+      "num_submissions_from_app_users": "Nombre de soumissions depuis les utilisateurs d'application",
+      "num_submissions_from_public_links": "Nombre de soumissions depuis les liens d'accès public",
+      "num_submissions_from_web_users": "Nombre de soumissions par des utilisateurs web"
+    }
+  },
+  "id": {
+    "fields": {
+      "database_size": "Ukuran database sistem",
+      "num_app_users": "Jumlah Pengguna Aplikasi",
+      "num_forms": "Jumlah Formulir",
+      "num_forms_with_repeats": "Jumlah Formulir dengan ulangan",
+      "num_forms_with_geospatial": "Jumlah Formulir dengan geodata",
+      "num_forms_with_encryption": "Jumlah Formulir dengan enkripsi",
+      "num_forms_with_audits": "Jumlah Formulir dengan audit",
+      "num_submissions_edited": "Jumlah Kiriman - Diubah",
+      "num_submissions_with_edits": "Jumlah Kiriman yang diubah",
+      "num_submissions_from_app_users": "Jumlah Kiriman dari Pengguna Aplikasi",
+      "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web"
+    }
+  },
   "it": {
     "recent": "Negli ultimi 45 giorni",
     "fields": {
@@ -178,8 +225,14 @@ export default {
       "num_public_access_links": "Numero di link con accesso pubblico",
       "num_forms": "Numero di formulari",
       "num_forms_with_repeats": "Numero di formulari con repeats all'interno",
+      "num_forms_with_geospatial": "Numero di formulari con geodati",
       "num_forms_with_encryption": "Numero di formulari con crittografia abilitata",
       "num_forms_with_audits": "Numero di formulari con audit",
+      "num_submissions_received": "Numero di invii - Ricevuti",
+      "num_submissions_approved": "Numero di invii - Approvati",
+      "num_submissions_has_issues": "Numero di invii - Con problemi",
+      "num_submissions_rejected": "Numero di invii - Scartati",
+      "num_submissions_edited": "Numero di invii - Modificati",
       "num_submissions_with_edits": "Numero di invii con modifiche",
       "num_submissions_with_comments": "Numero di invii con commenti",
       "num_submissions_from_app_users": "Numero di invii ricevuti da utenti applicazione",

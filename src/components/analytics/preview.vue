@@ -201,6 +201,19 @@ export default {
       "title": "Resúmenes de proyectos"
     }
   },
+  "fr": {
+    "title": "Rapport d'utilisation anonymisé",
+    "introduction": [
+      "Merci de penser à nous envoyer quelques informations d’utilisation. Ces données nous aideront à prioriser vos besoins !",
+      "Voici le rapport que nous recueillons actuellement. Pour répondre aux nouvelles fonctionnalités et aux nouveaux besoins, nous changerons parfois ce qui est rapporté, mais nous ne recueillerons jamais que des informations synthétiques, comme celles que vous voyez ici.",
+      "Vous pouvez toujours venir ici voir ce qui est collecté."
+    ],
+    "projects": {
+      "title": "Résumés du projet",
+      "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
+    },
+    "submissionStates": "États des soumissions"
+  },
   "it": {
     "title": "Report di utilizzo anonimo",
     "introduction": [
@@ -209,8 +222,10 @@ export default {
       "Puoi sempre venire qui per vedere cosa viene raccolto."
     ],
     "projects": {
-      "title": "Riepiloghi del progetto"
-    }
+      "title": "Riepiloghi del progetto",
+      "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti)"
+    },
+    "submissionStates": "Stato invio"
   }
 }
 </i18n>

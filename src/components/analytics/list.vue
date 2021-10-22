@@ -115,17 +115,25 @@ export default {
   "cs": {
     "heading": [
       "Níže můžete zvolit, zda bude tento server Central sdílet anonymní informace o používání s týmem Central. Toto nastavení ovlivňuje celý server."
-    ]
+    ],
+    "auditsTitle": "Nejnovější zprávy o použití"
   },
   "es": {
     "heading": [
       "A continuación, puede elegir si este servidor Central compartirá información de uso anónima con el equipo Central. Esta configuración afecta a todo el servidor."
     ]
   },
+  "fr": {
+    "heading": [
+      "Ci-dessous, vous pouvez choisir si ce serveur Central partagera les informations d'utilisation anonymisées avec l'équipe de Central. Ce paramètre affecte l'ensemble du serveur."
+    ],
+    "auditsTitle": "Dernier rapport d'utilisation"
+  },
   "it": {
     "heading": [
       "Di seguito, puoi scegliere se questo server Central condividerà le informazioni di utilizzo anonime con il team Central. Questa impostazione interessa l'intero server."
-    ]
+    ],
+    "auditsTitle": "Ultimo rapporto di utilizzo"
   }
 }
 </i18n>

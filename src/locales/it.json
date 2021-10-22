@@ -71,6 +71,7 @@
         "session_end": "Revocare",
         "delete": "Cancellare"
       },
+      "analytics": "Rapporto di utilizzo",
       "backup": "Backup",
       "config": {
         "set": "Configura"

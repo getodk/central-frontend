@@ -29,7 +29,8 @@
     "title": "Gestion du système",
     "tab": {
       "backups": "Sauvegardes",
-      "audits": "Journal d'audit"
+      "audits": "Journal d'audit",
+      "analytics": "Reporting des usages"
     }
   },
   "role": {
@@ -70,6 +71,7 @@
         "session_end": "Révoquer",
         "delete": "Supprimer"
       },
+      "analytics": "Rapport d'utilisation",
       "backup": "Sauvegarder",
       "config": {
         "set": "Spécifier"
@@ -86,6 +88,7 @@
         "update_publish": "Publier l'ébauche",
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
+        "submission_export": "Télécharger les soumissions",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -139,8 +142,11 @@
     "resetPassword": "Réinitialiser le mot de passe",
     "review": "Réviser",
     "save": "Enregistrer",
+    "saveSettings": "Enregistrer les réglages",
     "update": "Actualiser",
-    "yesProceed": "Oui, procéder"
+    "yesProceed": "Oui, procéder",
+    "showPreview": "Aperçu",
+    "hidePreview": "Cacher l'aperçu"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -187,15 +193,20 @@
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
     "form": "Formulaire",
+    "forms": "Formulaires",
     "project": "Projet",
     "projects": "Projets",
     "publicLink": "Lien d'accès public",
     "user": "Utilisateur",
+    "users": "Utilisateurs",
     "webUser": "Utilisateur web",
     "webUsers": "Utilisateurs web",
     "session": "Session",
     "submissions": "Soumissions",
     "projectRoles": "Rôles du projet"
+  },
+  "alert": {
+    "updateReviewState": "État sauvegardé!"
   },
   "moreInfo": {
     "clickHere": {
@@ -207,6 +218,13 @@
       "helpArticle": "cet article d'aide"
     },
     "learnMore": "En savoir plus."
+  },
+  "analytics": {
+    "alwaysImprove": "Nous veillons toujours à améliorer ODK Central.",
+    "needFeedback": {
+      "full": "Pour cela nous avons besoin de {your} retour, ainsi nous pourrons comprendre qui sont les utilisateurs de Central, et comment l'améliorer pour vous.",
+      "your": "votre"
+    }
   },
   "submission": {
     "missingMedia": "Média manquant",
@@ -229,11 +247,13 @@
     "noResults": "Aucun résultat",
     "rightNow": "Présentement",
     "success": "Succès !",
+    "system": "Système",
     "yes": "Oui",
     "tab": {
       "settings": "Paramètres",
       "overview": "Aperçu"
-    }
+    },
+    "total": "Total"
   },
   "mixin": {
     "request": {

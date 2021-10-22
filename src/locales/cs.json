@@ -71,6 +71,7 @@
         "session_end": "Zrušit",
         "delete": "Smazat"
       },
+      "analytics": "Zpráva o použití",
       "backup": "Záloha",
       "config": {
         "set": "Nastavit"

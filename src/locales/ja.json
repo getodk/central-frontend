@@ -29,7 +29,8 @@
     "title": "システム管理",
     "tab": {
       "backups": "バックアップ",
-      "audits": "サーバー監査ログ"
+      "audits": "サーバー監査ログ",
+      "analytics": "利用状況報告"
     }
   },
   "role": {
@@ -140,8 +141,11 @@
     "resetPassword": "パスワードのリセット",
     "review": "レビュー",
     "save": "保存",
+    "saveSettings": "設定の保存",
     "update": "更新",
-    "yesProceed": "はい、続けます。"
+    "yesProceed": "はい、続けます。",
+    "showPreview": "プレビュー",
+    "hidePreview": "プレビューを隠す"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -188,10 +192,12 @@
     "appUsers": "アプリユーザー",
     "config": "サーバー設定",
     "form": "フォーム",
+    "forms": "フォーム",
     "project": "プロジェクト",
     "projects": "プロジェクト",
     "publicLink": "一般公開リンク",
     "user": "ユーザー",
+    "users": "ユーザー",
     "webUser": "Webユーザー",
     "webUsers": "Webユーザー",
     "session": "セッション",
@@ -211,6 +217,9 @@
       "helpArticle": "こちらのヘルプ"
     },
     "learnMore": "さらに詳しく知る。"
+  },
+  "analytics": {
+    "alwaysImprove": "私たちはいつもODK Centralを改良しようとしています。"
   },
   "submission": {
     "missingMedia": "メディアファイルが見つかりません",
@@ -233,6 +242,7 @@
     "noResults": "該当なし",
     "rightNow": "現在の状況",
     "success": "成功です！",
+    "system": "システム",
     "yes": "はい",
     "tab": {
       "settings": "設定",

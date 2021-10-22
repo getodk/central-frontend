@@ -140,6 +140,11 @@ export default {
       "loadError": "No se pudo cargar la página solicitada. Actualice la página y vuelva a intentarlo."
     }
   },
+  "fr": {
+    "alert": {
+      "loadError": "La page demandée ne peut être chargée. Merci de rafraîchir la page et d'essayer à nouveau."
+    }
+  },
   "it": {
     "alert": {
       "loadError": "Impossibile caricare la pagina richiesta. Perfavore ricarica la pagina e riprova."

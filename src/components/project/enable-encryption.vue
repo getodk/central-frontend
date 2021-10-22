@@ -539,7 +539,7 @@ export default {
             ],
             "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
             "Anda tidak akan bisa menghubungkan data lewat OData.",
-            "Anda tidak akan bisa lagi mengedit kiriman di situs web Anda."
+            "Anda tidak akan bisa lagi mengubah kiriman di situs web Anda."
           ],
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
