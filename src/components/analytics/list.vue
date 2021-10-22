@@ -124,6 +124,9 @@ export default {
     ]
   },
   "fr": {
+    "heading": [
+      "Ci-dessous, vous pouvez choisir si ce serveur Central partagera les informations d'utilisation anonymisées avec l'équipe de Central. Ce paramètre affecte l'ensemble du serveur."
+    ],
     "auditsTitle": "Dernier rapport d'utilisation"
   },
   "it": {

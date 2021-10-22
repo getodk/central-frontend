@@ -219,7 +219,7 @@ export default {
     }
   },
   "id": {
-    "cannotAssignRole": "Anda tidak dapat menyunting Peran Seluruh Situs Anda sendiri.",
+    "cannotAssignRole": "Anda tidak dapat mengubah Peran Seluruh Situs Anda sendiri.",
     "field": {
       "sitewideRole": "Peran Seluruh Situs"
     },

@@ -2,7 +2,7 @@
   "title": {
     "resetPassword": "Atur Ulang Kata Sandi",
     "setPassword": "Atur Kata Sandi",
-    "editProfile": "Sunting Profil",
+    "editProfile": "Ubah Profil",
     "download": "Unduh",
     "pageNotFound": "Laman tidak ditemui",
     "details": "Rincian"
@@ -48,7 +48,7 @@
   "reviewState": {
     "received": "Diterima",
     "hasIssues": "Memiliki isu",
-    "edited": "Diedit",
+    "edited": "Telah Diubah",
     "approved": "Disetujui",
     "rejected": "Ditolak",
     "null": "@:reviewState.received"
@@ -128,8 +128,8 @@
     "createSubmission": "Baru",
     "done": "Selesai",
     "download": "Unduh",
-    "edit": "Edit",
-    "editProfile": "Sunting Profil",
+    "edit": "Ubah",
+    "editProfile": "Ubah Profil",
     "logIn": "Masuk",
     "looksGood": "Terlihat bagus, lanjutkan",
     "more": "Lebih banyak",
@@ -219,9 +219,19 @@
     },
     "learnMore": "Pelajari lebih lanjut."
   },
+  "analytics": {
+    "alwaysImprove": "Kami selalu berusaha untuk meningkatkan ODK Central.",
+    "needFeedback": {
+      "full": "Untuk melakukan hal ini, kami membutuhkan umpan balik {your}, sehingga kami dapat memahami bagaimana Anda menggunakan Central, dan bagaimana aplikasi tersebut bisa lebih baik untuk Anda.",
+      "your": "Anda"
+    }
+  },
   "submission": {
     "missingMedia": "Media hilang",
-    "editDisabled": "Anda tidak bisa mengubah kiriman terenkripsi",
+    "action": {
+      "edit": "Ubah ({count})"
+    },
+    "editDisabled": "Anda tidak dapat mengubah kiriman terenkripsi",
     "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
     "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
   },

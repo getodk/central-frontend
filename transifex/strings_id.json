@@ -9,7 +9,7 @@
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "editProfile": {
-      "string": "Sunting Profil",
+      "string": "Ubah Profil",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     },
     "download": {
@@ -127,7 +127,7 @@
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "edited": {
-      "string": "Diedit",
+      "string": "Telah Diubah",
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "approved": {
@@ -309,11 +309,11 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "edit": {
-      "string": "Edit",
+      "string": "Ubah",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "editProfile": {
-      "string": "Sunting Profil",
+      "string": "Ubah Profil",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "logIn": {
@@ -611,15 +611,15 @@
   },
   "analytics": {
     "alwaysImprove": {
-      "string": ""
+      "string": "Kami selalu berusaha untuk meningkatkan ODK Central."
     },
     "needFeedback": {
       "full": {
-        "string": "",
+        "string": "Untuk melakukan hal ini, kami membutuhkan umpan balik {your}, sehingga kami dapat memahami bagaimana Anda menggunakan Central, dan bagaimana aplikasi tersebut bisa lebih baik untuk Anda. ",
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
-        "string": "",
+        "string": "Anda",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
     }
@@ -631,12 +631,12 @@
     },
     "action": {
       "edit": {
-        "string": "",
+        "string": "Ubah ({count})",
         "developer_comment": "{count} is the number of previous edits."
       }
     },
     "editDisabled": {
-      "string": "Anda tidak bisa mengubah kiriman terenkripsi",
+      "string": "Anda tidak dapat mengubah kiriman terenkripsi",
       "developer_comment": "This is shown when the Edit button is disabled."
     },
     "binaryLinkTitle": {
@@ -991,7 +991,7 @@
           "string": "Jumlah Kiriman - Diubah"
         },
         "num_submissions_with_edits": {
-          "string": "Jumlah Kiriman dengan suntingan"
+          "string": "Jumlah Kiriman yang diubah"
         },
         "num_submissions_with_comments": {
           "string": ""
@@ -2517,7 +2517,7 @@
                 "string": "Anda tidak akan bisa menghubungkan data lewat OData."
               },
               "6": {
-                "string": "Anda tidak akan bisa lagi mengedit kiriman di situs web Anda."
+                "string": "Anda tidak akan bisa lagi mengubah kiriman di situs web Anda."
               }
             },
             "1": {
@@ -3038,7 +3038,7 @@
     },
     "ProjectUserRow": {
       "cannotAssignRole": {
-        "string": "Anda tidak dapat menyunting Peran Proyek Anda sendiri."
+        "string": "Anda tidak dapat mengubah Peran Proyek Anda sendiri."
       },
       "field": {
         "projectRole": {
@@ -3693,7 +3693,7 @@
     },
     "UserRow": {
       "cannotAssignRole": {
-        "string": "Anda tidak dapat menyunting Peran Seluruh Situs Anda sendiri."
+        "string": "Anda tidak dapat mengubah Peran Seluruh Situs Anda sendiri."
       },
       "field": {
         "sitewideRole": {

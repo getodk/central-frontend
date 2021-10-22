@@ -203,7 +203,7 @@ export default {
       "num_forms_with_encryption": "Jumlah Formulir dengan enkripsi",
       "num_forms_with_audits": "Jumlah Formulir dengan audit",
       "num_submissions_edited": "Jumlah Kiriman - Diubah",
-      "num_submissions_with_edits": "Jumlah Kiriman dengan suntingan",
+      "num_submissions_with_edits": "Jumlah Kiriman yang diubah",
       "num_submissions_from_app_users": "Jumlah Kiriman dari Pengguna Aplikasi",
       "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web"
     }

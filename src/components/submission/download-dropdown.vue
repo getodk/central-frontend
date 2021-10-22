@@ -185,7 +185,8 @@ export default {
           "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
         },
         "withMedia": "Toutes les données et fichiers médias (.zip)",
-        "withoutMedia": "Toutes les données sans fichiers médias"
+        "withoutMedia": "Toutes les données sans fichiers médias",
+        "primaryDataTable": "Données sans \"repeats\" (.csv)"
       }
     }
   },

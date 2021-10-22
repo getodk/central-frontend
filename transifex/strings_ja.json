@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "",
+        "string": "利用状況報告",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -365,7 +365,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "saveSettings": {
-      "string": "",
+      "string": "設定の保存",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
@@ -377,11 +377,11 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "showPreview": {
-      "string": "",
+      "string": "プレビュー",
       "developer_comment": "This text is shown on a button that the user clicks to show a preview of something"
     },
     "hidePreview": {
-      "string": "",
+      "string": "プレビューを隠す",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     }
   },
@@ -534,7 +534,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "forms": {
-      "string": "",
+      "string": "フォーム",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -554,7 +554,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "users": {
-      "string": "",
+      "string": "ユーザー",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -611,7 +611,7 @@
   },
   "analytics": {
     "alwaysImprove": {
-      "string": ""
+      "string": "私たちはいつもODK Centralを改良しようとしています。"
     },
     "needFeedback": {
       "full": {
@@ -619,7 +619,7 @@
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
-        "string": "",
+        "string": "あなたの",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
     }
@@ -690,7 +690,7 @@
       "string": "成功です！"
     },
     "system": {
-      "string": "",
+      "string": "システム",
       "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
     },
     "yes": {
@@ -819,10 +819,10 @@
       "enabled": {
         "null": {
           "0": {
-            "string": ""
+            "string": "後で通知する。"
           },
           "1": {
-            "string": ""
+            "string": "管理者には引き続きスクリーン上部にメッセージが表示されます。"
           }
         },
         "true": {
@@ -836,11 +836,11 @@
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             },
             "termsOfService": {
-              "string": "",
+              "string": "利用規約",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {termsOfService} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             },
             "privacyPolicy": {
-              "string": "",
+              "string": "プライバシーポリシー",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {privacyPolicy} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             }
           },
@@ -862,28 +862,28 @@
           "string": ""
         },
         "1": {
-          "string": ""
+          "string": "私たちからあなたのODK Centralの利用状況について問い合わせることがあります。"
         }
       },
       "field": {
         "workEmail": {
-          "string": "",
+          "string": "職場のメールアドレス",
           "developer_comment": "This is the text of a form field."
         },
         "organization": {
-          "string": "",
+          "string": "組織名",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "設定が保存されました！"
         }
       }
     },
     "AnalyticsIntroduction": {
       "title": {
-        "string": "",
+        "string": "Centralの改善に貢献",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -903,7 +903,7 @@
       },
       "action": {
         "improveCentral": {
-          "string": "",
+          "string": "Centralを改善する。",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }

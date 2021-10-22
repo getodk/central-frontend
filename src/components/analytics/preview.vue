@@ -203,9 +203,16 @@ export default {
   },
   "fr": {
     "title": "Rapport d'utilisation anonymisé",
+    "introduction": [
+      "Merci de penser à nous envoyer quelques informations d’utilisation. Ces données nous aideront à prioriser vos besoins !",
+      "Voici le rapport que nous recueillons actuellement. Pour répondre aux nouvelles fonctionnalités et aux nouveaux besoins, nous changerons parfois ce qui est rapporté, mais nous ne recueillerons jamais que des informations synthétiques, comme celles que vous voyez ici.",
+      "Vous pouvez toujours venir ici voir ce qui est collecté."
+    ],
     "projects": {
-      "title": "Résumés du projet"
-    }
+      "title": "Résumés du projet",
+      "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
+    },
+    "submissionStates": "États des soumissions"
   },
   "it": {
     "title": "Report di utilizzo anonimo",

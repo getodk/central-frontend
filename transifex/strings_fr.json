@@ -194,7 +194,7 @@
         }
       },
       "analytics": {
-        "string": "",
+        "string": "Rapport d'utilisation",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
@@ -615,7 +615,7 @@
     },
     "needFeedback": {
       "full": {
-        "string": "",
+        "string": "Pour cela nous avons besoin de {your} retour, ainsi nous pourrons comprendre qui sont les utilisateurs de Central, et comment l'améliorer pour vous.",
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
@@ -828,7 +828,7 @@
         "true": {
           "0": {
             "full": {
-              "string": "",
+              "string": "{weWillShare} et nous acceptons les {termsOfService} et la {privacyPolicy}.",
               "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
             },
             "weWillShare": {
@@ -889,16 +889,16 @@
       "introduction": {
         "0": {
           "full": {
-            "string": "",
+            "string": "Dans l'onglet {usageReporting} des Paramètres Système, vous pouvez choisir de partager des données d'usage anonymisées ou vos coordonnées avec l'équipe de Central. ",
             "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
           "usageReporting": {
-            "string": "",
+            "string": "Rapports d'utilisation",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "Là, vous pouvez également choisir de ne plus voir à nouveau ce message."
         }
       },
       "action": {
@@ -911,7 +911,7 @@
     "AnalyticsList": {
       "heading": {
         "0": {
-          "string": ""
+          "string": "Ci-dessous, vous pouvez choisir si ce serveur Central partagera les informations d'utilisation anonymisées avec l'équipe de Central. Ce paramètre affecte l'ensemble du serveur."
         }
       },
       "auditsTitle": {
@@ -1017,7 +1017,7 @@
           "string": "Merci de penser à nous envoyer quelques informations d’utilisation. Ces données nous aideront à prioriser vos besoins !"
         },
         "1": {
-          "string": ""
+          "string": "Voici le rapport que nous recueillons actuellement. Pour répondre aux nouvelles fonctionnalités et aux nouveaux besoins, nous changerons parfois ce qui est rapporté, mais nous ne recueillerons jamais que des informations synthétiques, comme celles que vous voyez ici."
         },
         "2": {
           "string": "Vous pouvez toujours venir ici voir ce qui est collecté."
@@ -1029,11 +1029,11 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {(Affichage du projet le plus actif parmi {count} projets)} other {(Affichage du projet le plus actif parmi {count} projets)}}"
         }
       },
       "submissionStates": {
-        "string": "",
+        "string": "États des soumissions ",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
@@ -1633,7 +1633,7 @@
           "string": "{count, plural, one {Merci de patienter, téléversement de votre {count} fichier en cours :} other {Merci de patienter, téléversement de vos {count} fichiers en cours :}}"
         },
         "current": {
-          "string": "",
+          "string": "Envoi de {filename} ({percentUploaded})",
           "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
@@ -3333,7 +3333,7 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "primaryDataTable": {
-            "string": "",
+            "string": "Données sans \"repeats\" (.csv)",
             "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
