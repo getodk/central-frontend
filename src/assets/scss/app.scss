@@ -417,6 +417,14 @@ input[type="radio"], input[type="checkbox"] {
 
 .checkbox label { cursor: pointer; }
 
+select {
+  // We want to specify `appearance: auto;` for Chrome and Firefox and
+  // `-webkit-appearance: none;` for Safari. Safari does not support `auto`, so
+  // it will ignore the second `appearance`.
+  appearance: none;
+  appearance: auto;
+}
+
 .form-inline {
   margin-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
