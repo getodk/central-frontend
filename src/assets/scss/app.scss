@@ -308,6 +308,8 @@ input[type="radio"], input[type="checkbox"], input[type="file"] {
   }
 }
 
+select[multiple], select[size] { height: auto; }
+
 .help-block {
   color: #737373;
   margin-bottom: 10px;
