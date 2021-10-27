@@ -81,16 +81,16 @@ export default {
     "introduction": [
       "Form States control the lifecycle state of each Form. Usually, but not always, a Form will start Open and proceed through Closing to Closed when it is no longer needed.",
       {
-        "full": "{open} Forms are available to download on mobile devices, and will accept new Submissions.",
+        "full": "{open} Forms are available to download and will accept new Submissions.",
         "open": "Open"
       },
       {
-        "full": "{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices.",
+        "full": "{closing} Forms will accept new Submissions, but are {not} available to download.",
         "closing": "Closing",
         "not": "not"
       },
       {
-        "full": "{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions.",
+        "full": "{closed} Forms are {not1} available to download and will {not2} accept new Submissions.",
         "closed": "Closed",
         "not1": "not",
         "not2": "not"

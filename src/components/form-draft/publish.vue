@@ -158,7 +158,7 @@ export default {
       },
       "testing": {
         // This is a warning shown to the user.
-        "full": "You have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended.",
+        "full": "You have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended.",
         "tested": "tested this Form"
       }
     },
