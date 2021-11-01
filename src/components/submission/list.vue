@@ -106,7 +106,7 @@ export default {
       filters: {
         submitterId: '',
         submissionDate: [],
-        reviewState: ''
+        reviewState: []
       },
       selectedFields: null,
       refreshing: false,
@@ -149,8 +149,12 @@ export default {
         conditions.push(`__system/submissionDate ge ${start}`);
         conditions.push(`__system/submissionDate le ${end}`);
       }
-      if (this.filters.reviewState !== '')
-        conditions.push(`__system/reviewState eq ${this.filters.reviewState}`);
+      if (this.filters.reviewState.length !== 0) {
+        const condition = this.filters.reviewState
+          .map(reviewState => `__system/reviewState eq ${reviewState}`)
+          .join(' or ');
+        conditions.push(`(${condition})`);
+      }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
     loadingOData() {

@@ -46,7 +46,7 @@ export default {
       required: true
     },
     reviewState: {
-      type: String,
+      type: Array,
       required: true
     }
   }

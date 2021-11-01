@@ -104,7 +104,24 @@ describe('SubmissionFilters', () => {
         return select.setValue('null');
       })
       .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=__system%2FreviewState\+eq\+null(&|$)/);
+        url.should.match(/&%24filter=%28__system%2FreviewState\+eq\+null%29(&|$)/);
+      })
+      .respondWithData(testData.submissionOData);
+  });
+
+  it('allows multiple review states to be selected', () => {
+    testData.extendedForms.createPast(1);
+    return loadSubmissionList()
+      .complete()
+      .request(component => {
+        const select = component.get('#submission-filters-review-state select');
+        const options = select.findAll('option');
+        options.at(0).element.selected = true;
+        options.at(1).element.selected = true;
+        return select.trigger('change');
+      })
+      .beforeEachResponse((_, { url }) => {
+        url.should.match(/&%24filter=%28__system%2FreviewState\+eq\+null\+or\+__system%2FreviewState\+eq\+%27approved%27%29(&|$)/);
       })
       .respondWithData(testData.submissionOData);
   });
@@ -135,7 +152,7 @@ describe('SubmissionFilters', () => {
         return select.setValue('null');
       })
       .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+\+and\+__system%2FreviewState\+eq\+null(&|$)/);
+        url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+\+and\+%28__system%2FreviewState\+eq\+null%29(&|$)/);
       })
       .respondWithData(() => testData.submissionOData(0));
   });
