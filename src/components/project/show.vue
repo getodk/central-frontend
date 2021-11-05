@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> may send its own requests before the server has
       responded to ProjectShow's request for the project. -->
       <router-view v-show="project != null" @fetch-project="fetchProject"
-        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
+        @fetch-forms="fetchForms" @fetch-deleted-forms="fetchDeletedForms" @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
 </template>
@@ -123,6 +123,14 @@ export default {
       this.$store.dispatch('get', [{
         key: 'forms',
         url: apiPaths.forms(this.projectId),
+        extended: true,
+        resend
+      }]).catch(noop);
+    },
+    fetchDeletedForms(resend) {
+      this.$store.dispatch('get', [{
+        key: 'deletedForms',
+        url: apiPaths.deletedForms(this.projectId),
         extended: true,
         resend
       }]).catch(noop);

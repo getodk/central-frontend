@@ -50,6 +50,7 @@ export default {
   },
   created() {
     this.$emit('fetch-forms', false);
+    this.$emit('fetch-deleted-forms', false);
   },
   methods: {
     scrollToForms() {
