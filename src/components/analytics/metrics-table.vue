@@ -152,8 +152,14 @@ export default {
       "num_public_access_links": "Número de enlaces de acceso público",
       "num_forms": "Número de formularios",
       "num_forms_with_repeats": "Número de formularios con repeticiones",
+      "num_forms_with_geospatial": "Número de formularios con geodatos",
       "num_forms_with_encryption": "Número de formularios con cifrado",
       "num_forms_with_audits": "Número de formularios con auditorías",
+      "num_submissions_received": "Número de envíos - Recibidos",
+      "num_submissions_approved": "Número de envíos - Aprobados",
+      "num_submissions_has_issues": "Número de envíos - Con problemas",
+      "num_submissions_rejected": "Número de envíos - Rechazados",
+      "num_submissions_edited": "Número de envíos - Con ediciones",
       "num_submissions_with_edits": "Número de envíos con ediciones",
       "num_submissions_with_comments": "Número de envíos con comentarios",
       "num_submissions_from_app_users": "Número de envíos de Usuarios móviles",
@@ -238,6 +244,38 @@ export default {
       "num_submissions_from_app_users": "Numero di invii ricevuti da utenti applicazione",
       "num_submissions_from_public_links": "Numero di invii ricevuti da link pubblici",
       "num_submissions_from_web_users": "Numero di invii ricevuti da utenti web"
+    }
+  },
+  "ja": {
+    "recent": "過去45日間",
+    "fields": {
+      "num_admins": "管理者数",
+      "num_projects_encryption": "暗号化が有効化されたプロジェクト数",
+      "num_questions_biggest_form": "最も大きなフォームの質問数",
+      "num_audit_log_entries": "監査ログ数",
+      "backups_configured": "設定されたバックアップ",
+      "database_size": "システムのデータベースサイズ",
+      "num_managers": "プロジェクト・マネージャー数",
+      "num_viewers": "プロジェクト・閲覧者数",
+      "num_data_collectors": "データ収集者数",
+      "num_app_users": "アプリユーザー数",
+      "num_device_ids": "デバイスID数",
+      "num_public_access_links": "一般公開リンク数",
+      "num_forms": "フォーム数",
+      "num_forms_with_repeats": "リピートを有するフォーム数",
+      "num_forms_with_geospatial": "ジオデータを有するフォーム数",
+      "num_forms_with_encryption": "暗号化されたフォーム数",
+      "num_forms_with_audits": "監査を受けたフォーム数",
+      "num_submissions_received": "提出済みフォーム数 ー 受信済み",
+      "num_submissions_approved": "提出済みフォーム数 ー 承認済み",
+      "num_submissions_has_issues": "提出済みフォーム数 ー 問題有り",
+      "num_submissions_rejected": "提出済みフォーム数 ー リジェクト済み",
+      "num_submissions_edited": "提出済みフォーム数 ー 編集済み",
+      "num_submissions_with_edits": "編集された提出済みフォーム数",
+      "num_submissions_with_comments": "コメントのある提出済みフォーム数",
+      "num_submissions_from_app_users": "アプリユーザーから提出されたフォーム数",
+      "num_submissions_from_public_links": "一般公開リンクから提出されたフォーム数",
+      "num_submissions_from_web_users": "Webユーザーから提出されたフォーム数"
     }
   }
 }

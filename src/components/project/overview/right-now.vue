@@ -107,10 +107,10 @@ export default {
     },
     "forms": {
       "full": [
-        "{forms} který lze stáhnout a zadat jako průzkumy mobilních klientů.",
-        "{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.",
-        "{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.",
-        "{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů."
+        "{forms} který lze stáhnout a zadat jako dotazník.",
+        "{forms} které lze stáhnout a zadat jako dotazník.",
+        "{forms} které lze stáhnout a zadat jako dotazník.",
+        "{forms} které lze stáhnout a zadat jako dotazník."
       ],
       "forms": "Formulář | Formulářů | Formulářů | Formuláře"
     }
@@ -122,13 +122,6 @@ export default {
         "{appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können."
       ],
       "appUsers": "App-Benutzer | App-Benutzer"
-    },
-    "forms": {
-      "full": [
-        "{forms}, das heruntergeladen und als Umfrage auf mobilen Geräten ausgegeben werden kann.",
-        "{forms}, die heruntergeladen und als Umfragen auf mobilen Geräten ausgegeben werden können."
-      ],
-      "forms": "Formular | Formulare"
     }
   },
   "es": {
@@ -138,13 +131,6 @@ export default {
         "{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto."
       ],
       "appUsers": "Usuario móvil | Usuarios móviles"
-    },
-    "forms": {
-      "full": [
-        "{forms} que puede ser descargado y mostrado como encuesta en dispositivos móviles.",
-        "{forms} que pueden ser descargados y mostrados como encuestas en dispositivos móviles."
-      ],
-      "forms": "Formulario | Formularios"
     }
   },
   "fr": {
@@ -154,13 +140,6 @@ export default {
         "{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données."
       ],
       "appUsers": "Utilisateur mobile | Utilisateurs mobiles"
-    },
-    "forms": {
-      "full": [
-        "{forms} qui peut être téléchargé et donné sous forme d'une enquête sur les clients mobiles.",
-        "{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes sur les clients mobiles."
-      ],
-      "forms": "Formulaire | Formulaires"
     }
   },
   "id": {
@@ -169,12 +148,6 @@ export default {
         "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini."
       ],
       "appUsers": "Pengguna Aplikasi"
-    },
-    "forms": {
-      "full": [
-        "{forms} yang dapat diunduh dan diberikan sebagai survei di klien seluler."
-      ],
-      "forms": "Formulir"
     }
   },
   "it": {
@@ -184,13 +157,6 @@ export default {
         "{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto."
       ],
       "appUsers": "Utente dell'applicazione | Utenti dell'applicazione"
-    },
-    "forms": {
-      "full": [
-        "{forms} che può essere scaricato e dato come questionario su client mobili.",
-        "{forms} che possono essere scaricati e forniti come questionari su client mobili."
-      ],
-      "forms": "Formulari | Formulari"
     }
   },
   "ja": {
@@ -202,7 +168,7 @@ export default {
     },
     "forms": {
       "full": [
-        "{forms}は、モバイル端末にダウンロードし、調査が可能です。"
+        "{forms}は、ダウンロードし、調査が可能です。"
       ],
       "forms": "フォーム"
     }

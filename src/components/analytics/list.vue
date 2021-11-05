@@ -121,7 +121,8 @@ export default {
   "es": {
     "heading": [
       "A continuación, puede elegir si este servidor Central compartirá información de uso anónima con el equipo Central. Esta configuración afecta a todo el servidor."
-    ]
+    ],
+    "auditsTitle": "Últimos informes de uso"
   },
   "fr": {
     "heading": [
@@ -134,6 +135,12 @@ export default {
       "Di seguito, puoi scegliere se questo server Central condividerà le informazioni di utilizzo anonime con il team Central. Questa impostazione interessa l'intero server."
     ],
     "auditsTitle": "Ultimo rapporto di utilizzo"
+  },
+  "ja": {
+    "heading": [
+      "以下で、あなたはこのCentralサーバーがCentralチームと匿名化された利用情報を共有するかどうかを選択できます。この設定はサーバー全体の及びます。"
+    ],
+    "auditsTitle": "最新の利用情報"
   }
 }
 </i18n>

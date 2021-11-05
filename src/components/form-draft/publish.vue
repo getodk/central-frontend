@@ -190,7 +190,7 @@ export default {
         "mediaFiles": "Mediální soubory"
       },
       "testing": {
-        "full": "Ještě nemáte {tested} na mobilním zařízení a nahráli jste zkušební příspěvek. Nemusíte to dělat, ale je to velmi doporučeno.",
+        "full": "Ještě jste nenahráli {tested} nahráním testovacího podání. Nemusíte to dělat, ale důrazně to doporučujeme.",
         "tested": "otestovaný tento formulář"
       }
     },
@@ -212,10 +212,6 @@ export default {
       "attachments": {
         "full": "Sie haben die {mediaFiles} für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
         "mediaFiles": "Mediendateien"
-      },
-      "testing": {
-        "full": "Sie haben {tested} noch nicht auf einem Mobilgerät getestet und eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
-        "tested": "dieses Formular"
       }
     },
     "introduction": [
@@ -236,10 +232,6 @@ export default {
       "attachments": {
         "full": "No ha proporcionado todos los {mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
         "mediaFiles": "archivos multimedia"
-      },
-      "testing": {
-        "full": "Aún no ha {tested} con un dispositivo móvil y subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
-        "tested": "probado este formulario"
       }
     },
     "introduction": [
@@ -260,10 +252,6 @@ export default {
       "attachments": {
         "full": "Vous n'avez pas fourni tous les {mediaFiles} requis par votre formulaire. Vous pouvez ignorer cette notification, mais vous devrez créer une nouvelle ébauche pour ajouter ces fichiers plus tard.",
         "mediaFiles": "fichiers média"
-      },
-      "testing": {
-        "full": "Vous n'avez pas encore {tested} sur un appareil mobile et téléchargé une soumission de test. Vous n'êtes pas obligé de le faire, mais c'est fortement recommandé.",
-        "tested": "testé ce formulaire"
       }
     },
     "introduction": [
@@ -284,10 +272,6 @@ export default {
       "attachments": {
         "full": "Anda belum melengkapi {mediaFiles} yang dibutuhkan formulir Anda. Anda dapat mengabaikan ini sekarang, tetapi Anda harus membuat Draf versi baru untuk mengunggah file-file tersebut nanti.",
         "mediaFiles": "File Media"
-      },
-      "testing": {
-        "full": "Anda belum {tested} dan mengunggah tes kiriman data pada perangkat seluler. Hal ini tidak harus, tetapi sangat direkomendasikan.",
-        "tested": "mengetes formulir ini"
       }
     },
     "introduction": [
@@ -308,10 +292,6 @@ export default {
       "attachments": {
         "full": "Non hai fornito tutti i {mediaFiles} che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file in un secondo momento.",
         "mediaFiles": "File multimediali"
-      },
-      "testing": {
-        "full": "Non hai ancora {tested} su un dispositivo mobile e caricato un invio di prova. Non devi farlo, ma è altamente raccomandato.",
-        "tested": "testato questo Formulario"
       }
     },
     "introduction": [
@@ -334,7 +314,7 @@ export default {
         "mediaFiles": "メディアファイル"
       },
       "testing": {
-        "full": "まだモバイル端末で{tested}し、フォームのテスト提出がされていません。これは必須ではありませんが、強く推奨します。",
+        "full": "まだテストフォームのアップロードにより、{tested}していません。これは必須ではありませんが、強く推奨します。",
         "tested": "このフォームをテスト"
       }
     },

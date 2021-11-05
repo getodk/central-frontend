@@ -332,8 +332,25 @@ export default {
       "null": [
         "後で通知する。",
         "管理者には引き続きスクリーン上部にメッセージが表示されます。"
+      ],
+      "true": [
+        {
+          "full": "{weWillShare}また、{termsOfService}と{privacyPolicy}に同意します。",
+          "weWillShare": "私たちは毎月、匿名化された利用情報をCentralチームと共有します。",
+          "termsOfService": "利用規約",
+          "privacyPolicy": "プライバシーポリシー"
+        },
+        "どのような情報が送信されるのか？"
+      ],
+      "false": [
+        "私たちはデータを共有することに興味はありません。",
+        "あなたはこれに関する再通知を受け取ることはありません。"
       ]
     },
+    "contact": [
+      "私は報告にコンタクトの情報を含みます。",
+      "私たちからあなたのODK Centralの利用状況について問い合わせることがあります。"
+    ],
     "field": {
       "workEmail": "職場のメールアドレス",
       "organization": "組織名"

@@ -298,7 +298,8 @@ $border-height: 3px;
   "ja": {
     "action": {
       "toggle": "ナビゲーションを有効化"
-    }
+    },
+    "analyticsNotice": "Centralの改善を支援！"
   }
 }
 </i18n>

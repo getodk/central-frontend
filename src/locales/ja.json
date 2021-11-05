@@ -71,6 +71,7 @@
         "session_end": "無効化",
         "delete": "削除"
       },
+      "analytics": "利用状況報告",
       "backup": "バックアップ",
       "config": {
         "set": "設定"
@@ -219,7 +220,11 @@
     "learnMore": "さらに詳しく知る。"
   },
   "analytics": {
-    "alwaysImprove": "私たちはいつもODK Centralを改良しようとしています。"
+    "alwaysImprove": "私たちは常にODK Centralを改良しようとしています。",
+    "needFeedback": {
+      "full": "そのために、私たちは{your}フィードバックが必要です。それによりあなたがどの様にCentralを使い、またどの様にすればあなたにとって良くなるのかが分かります。",
+      "your": "あなたの"
+    }
   },
   "submission": {
     "missingMedia": "メディアファイルが見つかりません",
@@ -247,7 +252,8 @@
     "tab": {
       "settings": "設定",
       "overview": "概要"
-    }
+    },
+    "total": "全期間"
   },
   "mixin": {
     "request": {
