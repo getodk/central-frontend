@@ -1908,7 +1908,7 @@
         },
         "3": {
           "title": {
-            "string": "Vyzkoušejte formulář na svém mobilním zařízení",
+            "string": "Otestujte formulář vytvořením podání",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,12 +1967,12 @@
         },
         "testing": {
           "full": {
-            "string": "Ještě nemáte {tested} na mobilním zařízení a nahráli jste zkušební příspěvek. Nemusíte to dělat, ale je to velmi  doporučeno.",
+            "string": "Ještě jste nenahráli {tested} nahráním testovacího podání. Nemusíte to dělat, ale důrazně to doporučujeme.",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
             "string": "otestovaný tento formulář",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
       },
@@ -2626,44 +2626,44 @@
         },
         "1": {
           "full": {
-            "string": "{open} formuláře jsou k dispozici ke stažení na mobilních zařízeních a budou přijímat nové příspěvky.",
+            "string": "{open}  Formuláře jsou k dispozici ke stažení a přijímají nová podání.",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
             "string": "Otevřené",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
           }
         },
         "2": {
           "full": {
-            "string": "{closing} formuláře přijímají nové příspěvky, ale {not} k dispozici ke stažení na mobilních zařízeních.",
+            "string": " {closing} Formuláře přijímají nová podání, ale {not}jsou k dispozici ke stažení.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
             "string": "Uzavřené",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           },
           "not": {
             "string": "nejsou",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           }
         },
         "3": {
           "full": {
-            "string": "{closed} formuláře {not1}jsou k dispozici ke stažení na mobilních zařízeních a {not2}přijímají nová podání.",
+            "string": " {closed} Formuláře {not1}jsou k dispozici ke stažení a {not2}přijímají nová podání.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
             "string": "Uzavřené",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not1": {
             "string": "ne",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not2": {
             "string": "ne",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           }
         }
       }
@@ -2832,12 +2832,12 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {{forms} který lze stáhnout a zadat jako průzkumy mobilních klientů.} few {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} many {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.} other {{forms} které lze stáhnout a zadat jako průzkumy mobilních klientů.}}",
+          "string": "{count, plural, one {{forms} který lze stáhnout a zadat jako dotazník. } few {{forms}  které lze stáhnout a zadat jako dotazník.} many {{forms} které lze stáhnout a zadat jako dotazník.} other {{forms}  které lze stáhnout a zadat jako dotazník.}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
           "string": "{count, plural, one {Formulář} few {Formulářů} many {Formulářů} other {Formuláře}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
       }
     },
@@ -3444,12 +3444,6 @@
           "string": "Odesláno v",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
-      }
-    },
-    "SubmissionFiltersReviewState": {
-      "anyState": {
-        "string": "(jakýkoliv stav)",
-        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

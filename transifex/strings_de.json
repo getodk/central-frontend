@@ -1908,7 +1908,7 @@
         },
         "3": {
           "title": {
-            "string": "Testen Sie das Formular auf Ihrem Mobilgerät",
+            "string": "",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,12 +1967,12 @@
         },
         "testing": {
           "full": {
-            "string": "Sie haben {tested} noch nicht auf einem Mobilgerät getestet und eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
+            "string": "",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
             "string": "dieses Formular ",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
       },
@@ -2626,44 +2626,44 @@
         },
         "1": {
           "full": {
-            "string": "{open} Formulare können auf mobile Geräte heruntergeladen werden und akzeptieren neue Übermittlungen.",
+            "string": "",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
             "string": "Offen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
           }
         },
         "2": {
           "full": {
-            "string": "{closing} Formulare akzeptieren neue Übermittlungen, aber können {not} auf mobile Geräte heruntergeladen werden. ",
+            "string": "",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
             "string": "Schließen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           },
           "not": {
             "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           }
         },
         "3": {
           "full": {
-            "string": "{closed} Formulare können {not1} auf mobile Geräte heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
+            "string": "",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
             "string": "Geschlossene",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not1": {
             "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not2": {
             "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           }
         }
       }
@@ -2832,12 +2832,12 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {{forms}, das heruntergeladen und als Umfrage auf mobilen Geräten ausgegeben werden kann. } other {{forms}, die heruntergeladen und als Umfragen auf mobilen Geräten ausgegeben werden können. }}",
+          "string": "{count, plural, one {} other {}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
           "string": "{count, plural, one {Formular} other {Formulare}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
       }
     },
@@ -3444,12 +3444,6 @@
           "string": "Übermittelt um",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
-      }
-    },
-    "SubmissionFiltersReviewState": {
-      "anyState": {
-        "string": "(Beliebiger Status)",
-        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

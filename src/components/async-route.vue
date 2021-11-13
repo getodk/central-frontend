@@ -149,6 +149,11 @@ export default {
     "alert": {
       "loadError": "Impossibile caricare la pagina richiesta. Perfavore ricarica la pagina e riprova."
     }
+  },
+  "ja": {
+    "alert": {
+      "loadError": "リクエストされたページを読み込むことができませんでした。ページを更新して、もう一度試みて下さい。"
+    }
   }
 }
 </i18n>

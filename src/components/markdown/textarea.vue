@@ -174,6 +174,10 @@ export default {
   "it": {
     "markdownSupported": "Markdown supportato",
     "preview": "Anteprima"
+  },
+  "ja": {
+    "markdownSupported": "マークダウンがサポートされています。",
+    "preview": "プレビュー"
   }
 }
 </i18n>

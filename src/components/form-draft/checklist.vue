@@ -218,7 +218,7 @@ export default {
         ]
       },
       {
-        "title": "Vyzkoušejte formulář na svém mobilním zařízení",
+        "title": "Otestujte formulář vytvořením podání",
         "body": [
           {
             "full": "Můžete {test} formulář abyste se ujistili, že funguje tak, jak očekáváte. Testovací odeslání nejsou součástí vašich konečných údajů.",
@@ -272,7 +272,6 @@ export default {
         ]
       },
       {
-        "title": "Testen Sie das Formular auf Ihrem Mobilgerät",
         "body": [
           {
             "full": "Sie können ein Formular {test}, um sicher zu sein, dass es wie erwartet funktioniert. Test-Übermittlungen sind in den endgültigen Daten nicht enthalten.",
@@ -326,7 +325,6 @@ export default {
         ]
       },
       {
-        "title": "Pruebe el formulario en su dispositivo móvil",
         "body": [
           {
             "full": "Puede {test} un formulario para asegurarse de que funciona como usted espera. Los envíos de prueba no son incluidos en sus datos finales.",
@@ -380,7 +378,6 @@ export default {
         ]
       },
       {
-        "title": "Testez le formulaire sur votre appareil mobile",
         "body": [
           {
             "full": "Vous pouvez {test} un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
@@ -434,7 +431,6 @@ export default {
         ]
       },
       {
-        "title": "Tes formulir pada perangkat seluler Anda",
         "body": [
           {
             "full": "Anda bisa {test} formulir untuk memastikan kesesuaiannya dengan yang Anda ekspektasikan. Kiriman data dari hasil tes tidak akan dimasukkan ke dalam data akhir Anda.",
@@ -488,7 +484,6 @@ export default {
         ]
       },
       {
-        "title": "Testa il formulario sul tuo dispositivo mobile",
         "body": [
           {
             "full": "Puoi {test} un formulario per assicurarti che funzioni come previsto. Gli invii di prova non sono inclusi nei dati finali.",
@@ -542,7 +537,7 @@ export default {
         ]
       },
       {
-        "title": "フォームをモバイル端末でテスト",
+        "title": "提出フォームを作成して、フォームをテストする。",
         "body": [
           {
             "full": "フォームが期待通りに動作するかを{test}できます。テストの目的で提出されたフォームは、最終的なデータには含まれません。",

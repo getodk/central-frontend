@@ -194,7 +194,7 @@
         }
       },
       "analytics": {
-        "string": "",
+        "string": "利用状況報告",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
@@ -611,11 +611,11 @@
   },
   "analytics": {
     "alwaysImprove": {
-      "string": "私たちはいつもODK Centralを改良しようとしています。"
+      "string": "私たちは常にODK Centralを改良しようとしています。"
     },
     "needFeedback": {
       "full": {
-        "string": "",
+        "string": "そのために、私たちは{your}フィードバックが必要です。それによりあなたがどの様にCentralを使い、またどの様にすればあなたにとって良くなるのかが分かります。",
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
@@ -707,7 +707,7 @@
       }
     },
     "total": {
-      "string": ""
+      "string": "全期間"
     }
   },
   "mixin": {
@@ -828,11 +828,11 @@
         "true": {
           "0": {
             "full": {
-              "string": "",
+              "string": "{weWillShare}また、{termsOfService}と{privacyPolicy}に同意します。",
               "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
             },
             "weWillShare": {
-              "string": "",
+              "string": "私たちは毎月、匿名化された利用情報をCentralチームと共有します。",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             },
             "termsOfService": {
@@ -845,21 +845,21 @@
             }
           },
           "1": {
-            "string": ""
+            "string": "どのような情報が送信されるのか？"
           }
         },
         "false": {
           "0": {
-            "string": ""
+            "string": "私たちはデータを共有することに興味はありません。"
           },
           "1": {
-            "string": ""
+            "string": "あなたはこれに関する再通知を受け取ることはありません。"
           }
         }
       },
       "contact": {
         "0": {
-          "string": ""
+          "string": "私は報告にコンタクトの情報を含みます。"
         },
         "1": {
           "string": "私たちからあなたのODK Centralの利用状況について問い合わせることがあります。"
@@ -889,16 +889,16 @@
       "introduction": {
         "0": {
           "full": {
-            "string": "",
+            "string": "システム管理の{usageReporting}タブで、あなたは匿名の利用データを共有するか、あなたのコンタクトをCentralの開発チームと共有するかを選択できます。",
             "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
           "usageReporting": {
-            "string": "",
+            "string": "利用状況報告",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "そこで、あなたはこのメッセージを再び表示しないように設定できます。"
         }
       },
       "action": {
@@ -911,143 +911,143 @@
     "AnalyticsList": {
       "heading": {
         "0": {
-          "string": ""
+          "string": "以下で、あなたはこのCentralサーバーがCentralチームと匿名化された利用情報を共有するかどうかを選択できます。この設定はサーバー全体の及びます。"
         }
       },
       "auditsTitle": {
-        "string": "",
+        "string": "最新の利用情報",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
       "recent": {
-        "string": ""
+        "string": "過去45日間"
       },
       "fields": {
         "num_admins": {
-          "string": ""
+          "string": "管理者数"
         },
         "num_projects_encryption": {
-          "string": ""
+          "string": "暗号化が有効化されたプロジェクト数"
         },
         "num_questions_biggest_form": {
-          "string": ""
+          "string": "最も大きなフォームの質問数"
         },
         "num_audit_log_entries": {
-          "string": ""
+          "string": "監査ログ数"
         },
         "backups_configured": {
-          "string": ""
+          "string": "設定されたバックアップ"
         },
         "database_size": {
-          "string": ""
+          "string": "システムのデータベースサイズ"
         },
         "num_managers": {
-          "string": ""
+          "string": "プロジェクト・マネージャー数"
         },
         "num_viewers": {
-          "string": ""
+          "string": "プロジェクト・閲覧者数"
         },
         "num_data_collectors": {
-          "string": ""
+          "string": "データ収集者数"
         },
         "num_app_users": {
-          "string": ""
+          "string": "アプリユーザー数"
         },
         "num_device_ids": {
-          "string": ""
+          "string": "デバイスID数"
         },
         "num_public_access_links": {
-          "string": ""
+          "string": "一般公開リンク数"
         },
         "num_forms": {
-          "string": ""
+          "string": "フォーム数"
         },
         "num_forms_with_repeats": {
-          "string": ""
+          "string": "リピートを有するフォーム数"
         },
         "num_forms_with_geospatial": {
-          "string": ""
+          "string": "ジオデータを有するフォーム数"
         },
         "num_forms_with_encryption": {
-          "string": ""
+          "string": "暗号化されたフォーム数"
         },
         "num_forms_with_audits": {
-          "string": ""
+          "string": "監査を受けたフォーム数"
         },
         "num_submissions_received": {
-          "string": ""
+          "string": "提出済みフォーム数　ー　受信済み"
         },
         "num_submissions_approved": {
-          "string": ""
+          "string": "提出済みフォーム数　ー　承認済み"
         },
         "num_submissions_has_issues": {
-          "string": ""
+          "string": "提出済みフォーム数　ー　問題有り"
         },
         "num_submissions_rejected": {
-          "string": ""
+          "string": "提出済みフォーム数　ー　リジェクト済み"
         },
         "num_submissions_edited": {
-          "string": ""
+          "string": "提出済みフォーム数　ー　編集済み"
         },
         "num_submissions_with_edits": {
-          "string": ""
+          "string": "編集された提出済みフォーム数"
         },
         "num_submissions_with_comments": {
-          "string": ""
+          "string": "コメントのある提出済みフォーム数"
         },
         "num_submissions_from_app_users": {
-          "string": ""
+          "string": "アプリユーザーから提出されたフォーム数"
         },
         "num_submissions_from_public_links": {
-          "string": ""
+          "string": "一般公開リンクから提出されたフォーム数"
         },
         "num_submissions_from_web_users": {
-          "string": ""
+          "string": "Webユーザーから提出されたフォーム数"
         }
       }
     },
     "AnalyticsPreview": {
       "title": {
-        "string": "",
+        "string": "匿名化された利用状況報告",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "利用データの送信を検討して頂き、ありがとうございます。データによりあなたのニーズは満たされやすくなります。"
         },
         "1": {
-          "string": ""
+          "string": "ここで表示されている情報を私たちは収集しています。新たな機能や要望に応えるため、収集する情報を時折変更しますが、ここで表示されるような集計データのみを収集します。"
         },
         "2": {
-          "string": ""
+          "string": "あなたはいつでもここで何が収集されているのかを確認できます。"
         }
       },
       "projects": {
         "title": {
-          "string": "",
+          "string": "プロジェクトの概要",
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {（最もアクティブな{count}つのプロジェクトについて）}}"
         }
       },
       "submissionStates": {
-        "string": "",
+        "string": "提出済フォームの状態",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
       "alert": {
         "versionChange": {
-          "string": ""
+          "string": "サーバーがアップデートされました。予期しない動作を避けるため、ページを更新してください。"
         }
       }
     },
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": ""
+          "string": "リクエストされたページを読み込むことができませんでした。ページを更新して、もう一度試みて下さい。"
         }
       }
     },
@@ -1908,7 +1908,7 @@
         },
         "3": {
           "title": {
-            "string": "フォームをモバイル端末でテスト",
+            "string": "提出フォームを作成して、フォームをテストする。",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,12 +1967,12 @@
         },
         "testing": {
           "full": {
-            "string": "まだモバイル端末で{tested}し、フォームのテスト提出がされていません。これは必須ではありませんが、強く推奨します。",
+            "string": "まだテストフォームのアップロードにより、{tested}していません。これは必須ではありませんが、強く推奨します。",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
             "string": "このフォームをテスト",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} on a mobile device and uploaded a test Submission. You do not have to do this, but it is highly recommended."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended."
           }
         }
       },
@@ -2377,11 +2377,11 @@
     },
     "MarkdownTextarea": {
       "markdownSupported": {
-        "string": "",
+        "string": "マークダウンがサポートされています。",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       },
       "preview": {
-        "string": "",
+        "string": "プレビュー",
         "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
       }
     },
@@ -2393,7 +2393,7 @@
         }
       },
       "analyticsNotice": {
-        "string": ""
+        "string": "Centralの改善を支援！"
       }
     },
     "NavbarActions": {
@@ -2626,44 +2626,44 @@
         },
         "1": {
           "full": {
-            "string": "{open}のフォームはモバイル端末にダウンロードでき、新規のフォームの提出も受け付けます。",
+            "string": "{open}のフォームはダウンロードでき、新規のフォームの提出も受け付けます。",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
             "string": "公開中",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download on mobile devices, and will accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
           }
         },
         "2": {
           "full": {
-            "string": "{closing}のフォームは新規のフォームの提出を受け付けますが、モバイル端末にダウンロードはでき{not}。",
+            "string": "{closing}のフォームは新規のフォームの提出を受け付けますが、ダウンロードはでき{not}。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
             "string": "クロージング状態",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           },
           "not": {
             "string": "ません",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download on mobile devices."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
           }
         },
         "3": {
           "full": {
-            "string": "{closed}したフォームはモバイル端末にダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
+            "string": "{closed}したフォームはダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
             "string": "終了",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not1": {
             "string": "ません",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           },
           "not2": {
             "string": "ません",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download on mobile devices, and will {not2} accept new Submissions."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
           }
         }
       }
@@ -2832,12 +2832,12 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, other {{forms}は、モバイル端末にダウンロードし、調査が可能です。}}",
+          "string": "{count, plural, other {{forms}は、ダウンロードし、調査が可能です。}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
           "string": "{count, plural, other {フォーム}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys on mobile clients."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
       }
     },
@@ -3444,12 +3444,6 @@
           "string": "フォームの送信日",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
-      }
-    },
-    "SubmissionFiltersReviewState": {
-      "anyState": {
-        "string": "（全ステータス）",
-        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

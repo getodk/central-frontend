@@ -108,16 +108,16 @@ export default {
     "introduction": [
       "Stavy formuláře kontrolují stav životního cyklu každého formuláře. Obvykle, ale ne vždy, bude formulář otevřen a bude pokračovat přes Uzavření až do Uzavřeno, pokud již nebude potřeba.",
       {
-        "full": "{open} formuláře jsou k dispozici ke stažení na mobilních zařízeních a budou přijímat nové příspěvky.",
+        "full": "{open} Formuláře jsou k dispozici ke stažení a přijímají nová podání.",
         "open": "Otevřené"
       },
       {
-        "full": "{closing} formuláře přijímají nové příspěvky, ale {not} k dispozici ke stažení na mobilních zařízeních.",
+        "full": "{closing} Formuláře přijímají nová podání, ale {not}jsou k dispozici ke stažení.",
         "closing": "Uzavřené",
         "not": "nejsou"
       },
       {
-        "full": "{closed} formuláře {not1}jsou k dispozici ke stažení na mobilních zařízeních a {not2}přijímají nová podání.",
+        "full": "{closed} Formuláře {not1}jsou k dispozici ke stažení a {not2}přijímají nová podání.",
         "closed": "Uzavřené",
         "not1": "ne",
         "not2": "ne"
@@ -128,105 +128,45 @@ export default {
     "title": "Formular-Status",
     "introduction": [
       "Formular-Status steuern den Lebenszyklusstatus eines jeden Formulars. Normalerweise, aber nicht immer, beginnt ein Formular im Status Offen und geht weiter über Schließen nach Geschlossen, wenn es nicht mehr benötigt wird.",
-      {
-        "full": "{open} Formulare können auf mobile Geräte heruntergeladen werden und akzeptieren neue Übermittlungen.",
-        "open": "Offen"
-      },
-      {
-        "full": "{closing} Formulare akzeptieren neue Übermittlungen, aber können {not} auf mobile Geräte heruntergeladen werden.",
-        "closing": "Schließen",
-        "not": "nicht"
-      },
-      {
-        "full": "{closed} Formulare können {not1} auf mobile Geräte heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
-        "closed": "Geschlossene",
-        "not1": "nicht",
-        "not2": "nicht"
-      }
+      {},
+      {},
+      {}
     ]
   },
   "es": {
     "title": "Estado del formulario",
     "introduction": [
       "El estado del formulario controla el ciclo de vida de cada formulario. Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario.",
-      {
-        "full": "Los formularios {open} están disponibles para descarga en dispositivos móviles y aceptán nuevos envíos.",
-        "open": "abiertos"
-      },
-      {
-        "full": "Los formularios {closing} aceptán nuevos envíos pero {not} están disponibles para descarga en dispositivos móviles.",
-        "closing": "cerrando",
-        "not": "no"
-      },
-      {
-        "full": "Los formularios {closed} {not1} están disponibles para descarga en dispositivos móviles, y {not2} aceptán nuevos envíos.",
-        "closed": "cerrados",
-        "not1": "no",
-        "not2": "no"
-      }
+      {},
+      {},
+      {}
     ]
   },
   "fr": {
     "title": "États des formulaires",
     "introduction": [
       "Les États de formulaire contrôlent le cycle de vie de chaque formulaire. Généralement, mais pas toujours, un formulaire démarrera \"Ouvert\", sera utilisé jusqu'à sa \"Fermeture\", et sera \"Fermé\" quand il ne sera plus utile.",
-      {
-        "full": "Les formulaires {open} sont téléchargeables sur les appareils mobiles, et peuvent accepter des soumissions.",
-        "open": "Ouvert"
-      },
-      {
-        "full": "Les formulaires {closing} acceptent les nouvelles soumissions, mais ne sont {not} disponibles en téléchargement sur les appareils mobiles.",
-        "closing": "Fermeture",
-        "not": "pas"
-      },
-      {
-        "full": "Les formulaires {closed} ne sont {not1} disponibles en téléchargement sur les appareils mobiles, et n'accepteront {not2} de nouvelles soumissions.",
-        "closed": "Fermé",
-        "not1": "pas",
-        "not2": "pas"
-      }
+      {},
+      {},
+      {}
     ]
   },
   "id": {
     "title": "Status Formulir",
     "introduction": [
       "Status Formulir mengontrol keadaan lingkar keaktifan setiap formulir. Biasanya, tidak selalu, sebuah formulir akan dimulai dengan status Terbuka, kemudian Penutupan, hingga Ditutup, ketika sudah tidak diperlukan lagi.",
-      {
-        "full": "Formulir {open} tersedia untuk diunduh lewat perangkat seluler dan akan menerima kiriman data baru.",
-        "open": "Terbuka"
-      },
-      {
-        "full": "{closing} Formulir akan menerima kiriman data baru, tetapi {not} tersedia untuk diunduh di perangkat seluler.",
-        "closing": "Penutupan",
-        "not": "tidak"
-      },
-      {
-        "full": "Formulir {closed} {not1} tersedia untuk diunduh di perangkat seluler dan {not2} menerima kiriman data baru.",
-        "closed": "Ditutup",
-        "not1": "tidak",
-        "not2": "tidak"
-      }
+      {},
+      {},
+      {}
     ]
   },
   "it": {
     "title": "Stato del Formulario",
     "introduction": [
       "Gli stati del formulario controllano lo stato del ciclo di vita di ogni formulario. Di solito, ma non sempre, un formulario inizia nello stato \"aperto\" e procede negli stati da \"in chiusura\" a \"chiuso\" quando non è più necessario.",
-      {
-        "full": "{open} formulari sono disponibili per il download su dispositivi mobili e accetteranno nuovi Invii.",
-        "open": "Aperto"
-      },
-      {
-        "full": "{closing} I formulari accetteranno nuovi Invii, ma {not} sono disponibili per il download su dispositivi mobili.",
-        "closing": "In fase di chiusura",
-        "not": "non"
-      },
-      {
-        "full": "I formulari {closed} {not1} sono disponibili per il download su dispositivi mobili e {not2}accetteranno nuovi Invii.",
-        "closed": "Chiuso",
-        "not1": "non",
-        "not2": "non"
-      }
+      {},
+      {},
+      {}
     ]
   },
   "ja": {
@@ -234,16 +174,16 @@ export default {
     "introduction": [
       "フォームの状態では、各フォームのライフサイクルにおける状態を制御します。例外もありますが、通常、フォームは「公開」から始まり、「クロージング状態」を経て、不要になったら「終了」となります。",
       {
-        "full": "{open}のフォームはモバイル端末にダウンロードでき、新規のフォームの提出も受け付けます。",
+        "full": "{open}のフォームはダウンロードでき、新規のフォームの提出も受け付けます。",
         "open": "公開中"
       },
       {
-        "full": "{closing}のフォームは新規のフォームの提出を受け付けますが、モバイル端末にダウンロードはでき{not}。",
+        "full": "{closing}のフォームは新規のフォームの提出を受け付けますが、ダウンロードはでき{not}。",
         "closing": "クロージング状態",
         "not": "ません"
       },
       {
-        "full": "{closed}したフォームはモバイル端末にダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
+        "full": "{closed}したフォームはダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
         "closed": "終了",
         "not1": "ません",
         "not2": "ません"

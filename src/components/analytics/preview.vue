@@ -198,8 +198,10 @@ export default {
       "Siempre puedes venir aquí para ver qué se está recolectando."
     ],
     "projects": {
-      "title": "Resúmenes de proyectos"
-    }
+      "title": "Resúmenes de proyectos",
+      "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos)"
+    },
+    "submissionStates": "Estados de envío"
   },
   "fr": {
     "title": "Rapport d'utilisation anonymisé",
@@ -226,6 +228,19 @@ export default {
       "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
     "submissionStates": "Stato invio"
+  },
+  "ja": {
+    "title": "匿名化された利用状況報告",
+    "introduction": [
+      "利用データの送信を検討して頂き、ありがとうございます。データによりあなたのニーズは満たされやすくなります。",
+      "ここで表示されている情報を私たちは収集しています。新たな機能や要望に応えるため、収集する情報を時折変更しますが、ここで表示されるような集計データのみを収集します。",
+      "あなたはいつでもここで何が収集されているのかを確認できます。"
+    ],
+    "projects": {
+      "title": "プロジェクトの概要",
+      "subtitle": "（最もアクティブな{count}つのプロジェクトについて）"
+    },
+    "submissionStates": "提出済フォームの状態"
   }
 }
 </i18n>

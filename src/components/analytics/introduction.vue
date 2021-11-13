@@ -140,6 +140,13 @@ export default {
   },
   "ja": {
     "title": "Centralの改善に貢献",
+    "introduction": [
+      {
+        "full": "システム管理の{usageReporting}タブで、あなたは匿名の利用データを共有するか、あなたのコンタクトをCentralの開発チームと共有するかを選択できます。",
+        "usageReporting": "利用状況報告"
+      },
+      "そこで、あなたはこのメッセージを再び表示しないように設定できます。"
+    ],
     "action": {
       "improveCentral": "Centralを改善する。"
     }
