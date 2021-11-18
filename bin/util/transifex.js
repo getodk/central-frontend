@@ -759,6 +759,8 @@ const writeTranslations = (
   localesDir,
   filenamesByComponent
 ) => {
+  if (locales[locale] == null) throw new Error(`unknown locale ${locale}`);
+
   const translations = new Translations(null, null, source, translated);
 
   // Instead of overwriting the source messages, here we check that
