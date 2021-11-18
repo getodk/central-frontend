@@ -12,33 +12,30 @@ const { logThenThrow } = require('./util');
 
 const locales = {
   en: {},
-  cs: {
-    pluralForms: 4
-  },
+  cs: {},
   de: {},
   es: {},
-  fr: {},
-  id: {
-    pluralForms: 1
-  },
+  fr: { pluralCategories: ['one', 'other'] },
+  id: {},
   it: {},
-  ja: {
-    pluralForms: 1,
-    warnVariableSeparator: false
-  }
+  ja: { warnVariableSeparator: false }
 };
 
 const sourceLocale = 'en';
 
 // Normalize `locales`.
 {
-  const normalizeLocale = (options) => ({
-    pluralForms: 2,
-    warnVariableSeparator: true,
-    ...options
-  });
-  for (const [locale, options] of Object.entries(locales))
-    locales[locale] = normalizeLocale(options);
+  const defaults = { warnVariableSeparator: true };
+  for (const [locale, options] of Object.entries(locales)) {
+    const normalized = { ...defaults, ...options };
+
+    if (normalized.pluralCategories == null) {
+      const pluralRules = new Intl.PluralRules([locale]);
+      normalized.pluralCategories = pluralRules.resolvedOptions().pluralCategories;
+    }
+
+    locales[locale] = normalized;
+  }
 }
 
 
@@ -88,15 +85,18 @@ class PluralForms {
 
   // Transifex uses ICU plurals.
   static fromTransifex(string, locale) {
-    const icuMatch = string.match(/^({count, plural,).+}$/);
     const forms = [];
+    const icuMatch = string.match(/^({count, plural,).+}$/);
     if (icuMatch == null) {
       forms.push(string);
     } else {
+      const categories = [];
       for (let begin = icuMatch[1].length; begin < string.length - 1;) {
         // Using a single RegExp along with lastIndex might be more efficient.
-        const formMatch = string.slice(begin).match(/^ [a-z]+ {/);
+        const formMatch = string.slice(begin).match(/^ ([a-z]+) {/);
         if (formMatch == null) logThenThrow(string, 'invalid plural');
+        categories.push(formMatch[1]);
+
         let end = begin + formMatch[0].length;
         let unmatchedBraces = 1;
         for (; unmatchedBraces > 0 && end < string.length - 1; end += 1) {
@@ -110,8 +110,10 @@ class PluralForms {
         begin = end;
       }
 
-      if (forms.length !== locales[locale].pluralForms)
-        logThenThrow(string, `Expected ${locales[locale].pluralForms} plural forms, but found ${forms.length}. Did you download the translations "to translate"?`);
+      categories.sort();
+      const expectedCategories = locales[locale].pluralCategories;
+      if (!equals(categories, expectedCategories))
+        logThenThrow(string, `Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
@@ -726,7 +728,7 @@ const deletePartialTranslation = ({ translated, parent }) => {
 const validateTranslation = (locale) => ({ source, translated, path }) => {
   if (translated == null) return;
   // Our Transifex translation checks should prevent these possibilities.
-  if (locales[locale].pluralForms !== 1 &&
+  if (locales[locale].pluralCategories.length !== 1 &&
     (source.length !== 1) !== (translated.length !== 1))
     logThenThrow({ source, translated }, 'pluralization mismatch');
   if (!translated.isEmpty() &&
