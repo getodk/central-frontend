@@ -35,7 +35,7 @@ const fallbackLocale = 'en';
 const noPlural = () => 0;
 
 /*
-The functions below assume that `choice` is a non-negative integer.
+The functions below assume that `count` is a non-negative integer.
 
 Transifex and Intl.PluralRules differ on the number of plural categories in
 French: Transifex has two, but Intl.PluralRules lists three. The default Vue
@@ -49,9 +49,9 @@ const pluralizationRules = {
   // refers to quantifying adjectives, for example, "several users.") Note that
   // this differs from Intl.PluralRules, which only returns "many" for
   // non-integers.
-  cs: (choice) => {
-    if (choice === 1) return 0;
-    if (choice >= 2 && choice <= 4) return 1;
+  cs: (count) => {
+    if (count === 1) return 0;
+    if (count >= 2 && count <= 4) return 1;
     /*
     I have encountered conflicting information about which plural form to use
     for zero. On Transifex, trendspotter wrote that it is best to restructure
