@@ -230,7 +230,7 @@ To add a new locale to ODK Central Frontend:
 
 1. Add the locale to Transifex.
 2. Add the locale to `locales` in [`/src/i18n.js`](/src/i18n.js) and [`/bin/util/transifex.js`](/bin/util/transifex.js).
-3. If the locale pluralizes differently from the default, specify its pluralization rules in `/src/i18n.js`. If the locale does not have exactly two plural forms, specify the number of plural forms in `/bin/util/transifex.js`.
+3. If the locale pluralizes differently from the default, specify its pluralization rules in `/src/i18n.js`.
 4. Check that there is a flatpickr config for the locale. If there isn't one, create a GitHub issue in this repository or contact us on Slack.
 5. Consider spot-checking the translations. In particular, check that messages used in component interpolation have been translated correctly.
 

@@ -33,21 +33,33 @@ const fallbackLocale = 'en';
 // PLURALIZATION RULES
 
 const noPlural = () => 0;
+
+/*
+The functions below assume that `count` is a non-negative integer.
+
+Transifex and Intl.PluralRules differ on the number of plural categories in
+French: Transifex has two, but Intl.PluralRules lists three. The default Vue
+I18n pluralization rules match the French translations on Transifex, so we don't
+specify pluralization rules for French here.
+*/
 const pluralizationRules = {
-  // Czech has four plual forms on Transifex: 1, "few", "many", and "other".
-  // However, we never use the fourth form, which seems to be used with
-  // quantifying adjectives (for example, "several users").
-  cs: (choice) => {
-    if (choice === 1) return 0;
-    if (choice >= 2 && choice <= 4) return 1;
+  // Czech has four plural forms on Transifex: one, few, many, and other.
+  // However, we never use the "other" form. On Transifex, trendspotter wrote
+  // that "other" implies an undetermined/unspecified number. (I think this
+  // refers to quantifying adjectives, for example, "several users.") Note that
+  // this differs from Intl.PluralRules, which only returns "many" for
+  // non-integers.
+  cs: (count) => {
+    if (count === 1) return 0;
+    if (count >= 2 && count <= 4) return 1;
     /*
     I have encountered conflicting information about which plural form to use
     for zero. On Transifex, trendspotter wrote that it is best to restructure
     the sentence, for example, "There are no users" rather than
     "There are 0 users". I think that is often the case in English as well, and
     we have a number of messages specifically for the zero case. We could
-    consider increasing the number of such messages. Until then, MDN indicates
-    that the "many" form is used for zero:
+    consider increasing the number of such messages. Until then, an old MDN
+    article indicates that the "many" form is used for zero:
     https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals
     */
     return 2;
