@@ -10,38 +10,41 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="form-row">
-    <td class="name">
-      <span>{{ form.nameOrId() }}</span>
-      <div style="color: red;">deleted at: {{ form._data.deletedAt }}</div>
-      <div>{{ form.draftToken !== null ? "draft (should have been immediately purged)" : "" }}</div>
-    </td>
-    <td v-if="columns.has('idAndVersion')" class="id-and-version">
-      <div class="form-id">
-        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
-      </div>
-      <div v-if="form.version != null && form.version !== ''" class="version">
-        <span :title="form.version">{{ form.version }}</span>
-      </div>
-    </td>
-    <td v-if="columns.has('submissions')" class="submissions">
-      <div v-if="form.publishedAt != null">
-        <span>{{ $tcn('count.submission', form.submissions) }}</span>
-      </div>
-      <div v-if="form.lastSubmission != null">
-        <router-link :to="submissionsPath">
-          <i18n :tag="false" path="lastSubmission">
-            <template #dateTime>
-              <date-time :iso="form.lastSubmission"/>
-            </template>
-          </i18n>
-        </router-link>
-      </div>
-    </td>
-    <td v-if="columns.has('actions')" class="actions">
-        <div class="btn btn-default">Undelete</div>
-    </td>
-  </tr>
+    <tr class="form-row">
+      <td class="name">
+        <span>{{ form.nameOrId() }}</span>
+        <div style="color: red;">deleted at: {{ form._data.deletedAt }}</div>
+        <div>{{ form.draftToken !== null ? "draft (should have been immediately purged)" : "" }}</div>
+      </td>
+      <td v-if="columns.has('idAndVersion')" class="id-and-version">
+        <div class="form-id">
+          <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
+        </div>
+        <div v-if="form.version != null && form.version !== ''" class="version">
+          <span :title="form.version">{{ form.version }}</span>
+        </div>
+      </td>
+      <td v-if="columns.has('submissions')" class="submissions">
+        <div v-if="form.publishedAt != null">
+          <span>{{ $tcn('count.submission', form.submissions) }}</span>
+        </div>
+        <div v-if="form.lastSubmission != null">
+          <router-link :to="submissionsPath">
+            <i18n :tag="false" path="lastSubmission">
+              <template #dateTime>
+                <date-time :iso="form.lastSubmission"/>
+              </template>
+            </i18n>
+          </router-link>
+        </div>
+      </td>
+      <td v-if="columns.has('actions')" class="actions">
+        <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
+          @click="openRestoreModal(form)">
+          Undelete
+        </button>
+      </td>
+    </tr>
 </template>
 
 <script>
@@ -74,6 +77,11 @@ export default {
         this.form.xmlFormId,
         this.form.publishedAt != null ? 'submissions' : 'draft/testing'
       );
+    }
+  },
+  methods: {
+    openRestoreModal(form) {
+      this.$emit('start-restore', form);
     }
   }
 };

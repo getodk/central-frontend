@@ -25,21 +25,34 @@ except according to the terms contained in the LICENSE file.
           <th v-if="columns.has('actions')">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
-      <tbody v-if="deleted-forms != null">
-        <deleted-form-row v-for="form of deletedForms" :key="form.xmlFormId" :form="form"
-          :columns="columns"/>
+      <tbody v-if="deletedForms != null">
+        <deleted-form-row v-for="form of deletedForms" :key="form.hash" :form="form"
+          :columns="columns" @start-restore="showRestore"/>
       </tbody>
     </table>
+    <form-restore :state="restoreForm.state" :form="restoreForm.form" @hide="hideRestore"/>
   </div>
 </template>
 
 <script>
 import DeletedFormRow from './trash-row.vue';
 import { requestData } from '../../store/modules/request';
+import FormRestore from './restore.vue';
+
+import modal from '../../mixins/modal';
 
 export default {
   name: 'DeletedFormTable',
-  components: { DeletedFormRow },
+  components: { DeletedFormRow, FormRestore },
+  mixins: [modal()],
+  data() {
+    return {
+      restoreForm: {
+        state: false,
+        form: null
+      }
+    };
+  },
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -53,6 +66,16 @@ export default {
       // Hide the Submissions column from a Data Collector.
       if (this.project.permits('submission.list')) columns.add('submissions');
       return columns;
+    }
+  },
+  methods: {
+    showRestore(form) {
+      this.restoreForm.form = form;
+      this.showModal('restoreForm');
+    },
+    hideRestore() {
+      this.restoreForm.form = null;
+      this.hideModal('restoreForm');
     }
   }
 };
