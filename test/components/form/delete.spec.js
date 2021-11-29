@@ -42,7 +42,8 @@ describe('FormDelete', () => {
           testData.extendedForms.splice(0, 1);
           return { success: true };
         })
-        .respondWithData(() => testData.extendedForms.sorted());
+        .respondWithData(() => testData.extendedForms.sorted())
+        .respondWithData(() => []); // Empty list of deleted forms
     };
 
     it('navigates to the project overview', async () => {

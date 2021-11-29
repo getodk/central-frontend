@@ -149,7 +149,8 @@ describe('FormDraftAbandon', () => {
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
-        .respondWithData(() => []); // forms
+        .respondWithData(() => []) // forms
+        .respondWithData(() => []); // deleted forms
     };
 
     it('shows a success alert', () =>
