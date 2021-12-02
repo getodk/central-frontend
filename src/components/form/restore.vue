@@ -61,7 +61,7 @@ export default {
     doRestore() {
       this.post(apiPaths.restoreForm(this.form.projectId, this.form._data.id))
         .then(() => {
-          this.$emit('success', this.form);
+          this.$emit('success');
         })
         .catch(noop);
     }

@@ -20,11 +20,13 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <form-list :condensed="!rendersTopRow"/>
+    <form-trash-list v-if="project != null && project.permits('form.restore')" @restore="refreshData()"/>
   </div>
 </template>
 
 <script>
 import FormList from '../form/list.vue';
+import FormTrashList from '../form/trash-list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import routes from '../../mixins/routes';
@@ -32,7 +34,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
-  components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
+  components: { FormList, FormTrashList, ProjectOverviewAbout, ProjectOverviewRightNow },
   mixins: [routes()],
   props: {
     projectId: {
@@ -48,14 +50,32 @@ export default {
       return this.project != null && this.project.permits('project.update');
     }
   },
+  watch: {
+    project: {
+      handler(project) {
+        // We need to check permissions on the project before we send
+        // a request for the deleted forms, which is why this happens here
+        // where we can watch for the project to be fetched instead of
+        // immediately requesting deleted forms in created().
+        if (project != null && project.permits('form.restore')) {
+          this.$emit('fetch-deleted-forms', false);
+        }
+      },
+      immediate: true
+    }
+  },
   created() {
     this.$emit('fetch-forms', false);
-    this.$emit('fetch-deleted-forms', false);
   },
   methods: {
     scrollToForms() {
       const scrollTop = Math.round($('#form-list').offset().top);
       $('html, body').animate({ scrollTop });
+    },
+    refreshData() {
+      this.$emit('fetch-forms', true);
+      if (this.project.permits('form.restore'))
+        this.$emit('fetch-deleted-forms', true);
     }
   }
 };

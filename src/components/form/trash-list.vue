@@ -30,20 +30,22 @@ except according to the terms contained in the LICENSE file.
           :columns="columns" @start-restore="showRestore"/>
       </tbody>
     </table>
-    <form-restore :state="restoreForm.state" :form="restoreForm.form" @hide="hideRestore"/>
+    <loading :state="$store.getters.initiallyLoading(['deletedForms'])"/>
+    <form-restore :state="restoreForm.state" :form="restoreForm.form" @hide="hideRestore" @success="afterRestore"/>
   </div>
 </template>
 
 <script>
 import DeletedFormRow from './trash-row.vue';
+import Loading from '../loading.vue';
 import { requestData } from '../../store/modules/request';
 import FormRestore from './restore.vue';
 
 import modal from '../../mixins/modal';
 
 export default {
-  name: 'DeletedFormTable',
-  components: { DeletedFormRow, FormRestore },
+  name: 'FormTrashList',
+  components: { DeletedFormRow, FormRestore, Loading },
   mixins: [modal()],
   data() {
     return {
@@ -76,6 +78,11 @@ export default {
     hideRestore() {
       this.restoreForm.form = null;
       this.hideModal('restoreForm');
+    },
+    afterRestore() {
+      this.hideRestore();
+      this.$emit('restore');
+      this.$alert().success(this.$t('alert.restore', { name: 'TODO: pass this through' }));
     }
   }
 };
@@ -88,6 +95,9 @@ export default {
       // This is the text of a column header in a table of Forms. The column
       // shows the ID of each Form, as well as the name of its primary version.
       "idAndVersion": "ID and Version"
+    },
+    "alert": {
+      "restore": "The Form “{name}” has been undeleted"
     }
   }
 }

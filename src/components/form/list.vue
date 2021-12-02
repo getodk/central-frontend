@@ -22,8 +22,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <form-table/>
-        <deleted-form-table/>
-        <loading :state="$store.getters.initiallyLoading(['forms', 'deletedForms'])"/>
+        <loading :state="$store.getters.initiallyLoading(['forms'])"/>
         <p v-if="forms != null && forms.length === 0"
           class="empty-table-message">
           {{ $t('emptyTable') }}
@@ -38,7 +37,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormNew from './new.vue';
 import FormTable from './table.vue';
-import DeletedFormTable from './trash-table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
@@ -47,7 +45,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormList',
-  components: { FormTable, DeletedFormTable, FormNew, Loading, PageSection },
+  components: { FormTable, FormNew, Loading, PageSection },
   mixins: [modal(), routes()],
   props: {
     condensed: {
