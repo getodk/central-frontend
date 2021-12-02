@@ -211,11 +211,9 @@ describe('router', () => {
       });
 
       it('preserves data while navigating to/from the project overview', () =>
-        // Load .../form-access, which requests all the data that the project
-        // overview uses.
         load('/projects/1/form-access')
           .complete()
-          .route('/projects/1')
+          .load('/projects/1', { project: false, forms: false }) // allow deletedForms to be fetched
           .complete()
           .route('/projects/1/form-access')
           .then(dataExists(['project', 'forms'])));
