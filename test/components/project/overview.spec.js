@@ -23,7 +23,7 @@ describe('ProjectOverview', () => {
       it(`does not render the row for a ${role}`, async () => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role });
-        const app = await load('/projects/1');
+        const app = await load('/projects/1', {}, { deletedForms: false });
         app.findComponent(ProjectOverviewAbout).exists().should.be.false();
         app.findComponent(ProjectOverviewRightNow).exists().should.be.false();
         const section = app.getComponent(FormList).getComponent(PageSection);

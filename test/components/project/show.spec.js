@@ -105,7 +105,7 @@ describe('ProjectShow', () => {
       it(`does not show the tabs to a ${role}`, async () => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role });
-        const app = await load('/projects/1', { attachTo: document.body });
+        const app = await load('/projects/1', { attachTo: document.body }, { deletedForms: false });
         const li = app.findAll('#page-head-tabs li');
         li.length.should.equal(1);
         li.at(0).should.be.hidden(true);

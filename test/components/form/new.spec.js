@@ -288,6 +288,8 @@ describe('FormNew', () => {
         .complete()
         .load('/projects/1', { project: false })
         .afterResponses(app => {
+          // TODO: something super weird with this test where the forms
+          // are getting rendered in the trash section
           app.findAllComponents(FormRow).length.should.equal(2);
         }));
   });

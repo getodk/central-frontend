@@ -14,7 +14,7 @@ describe('FormList', () => {
     it('does not render the button for a project viewer', async () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
-      const app = await load('/projects/1');
+      const app = await load('/projects/1', {}, { deletedForms: false });
       app.find('#form-list-create-button').exists().should.be.false();
     });
   });

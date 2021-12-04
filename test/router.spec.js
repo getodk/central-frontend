@@ -433,7 +433,7 @@ describe('router', () => {
               }));
 
           it('redirects a user navigating from a different project route', () =>
-            load('/projects/1')
+            load('/projects/1', {}, { deletedForms: false })
               .complete()
               .route('/projects/1/settings')
               .respondFor('/', { users: false })
@@ -454,7 +454,7 @@ describe('router', () => {
         });
 
         it('does not redirect the user from the project overview', async () => {
-          const app = await load('/projects/1');
+          const app = await load('/projects/1', {}, { deletedForms: false });
           app.vm.$route.path.should.equal('/projects/1');
         });
 
@@ -550,7 +550,7 @@ describe('router', () => {
       });
 
       it('does not redirect the user from the project overview', async () => {
-        const app = await load('/projects/1');
+        const app = await load('/projects/1', {}, { deletedForms: false });
         app.vm.$route.path.should.equal('/projects/1');
       });
 
@@ -573,7 +573,7 @@ describe('router', () => {
         '/projects/1/forms/f/submissions/s'
       ]) {
         it(`redirects the user from ${path}`, () =>
-          load('/projects/1')
+          load('/projects/1', {}, { deletedForms: false })
             .complete()
             .route(path)
             .respondFor('/', { users: false })
