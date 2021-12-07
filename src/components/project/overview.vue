@@ -51,21 +51,13 @@ export default {
     }
   },
   watch: {
-    project: {
-      handler(project) {
-        // We need to check permissions on the project before we send
-        // a request for the deleted forms, which is why this happens here
-        // where we can watch for the project to be fetched instead of
-        // immediately requesting deleted forms in created().
-        if (project != null && project.permits('form.restore')) {
-          this.$emit('fetch-deleted-forms', false);
-        }
-      },
-      immediate: true
+    project() {
+      this.fetchDeletedFormsIfAllowed(false);
     }
   },
   created() {
     this.$emit('fetch-forms', false);
+    this.fetchDeletedFormsIfAllowed(false);
   },
   methods: {
     scrollToForms() {
@@ -74,8 +66,11 @@ export default {
     },
     refreshData() {
       this.$emit('fetch-forms', true);
-      if (this.project.permits('form.restore'))
-        this.$emit('fetch-deleted-forms', true);
+      this.fetchDeletedFormsIfAllowed(true);
+    },
+    fetchDeletedFormsIfAllowed(resend) {
+      if (this.project != null && this.project.permits('form.restore'))
+        this.$emit('fetch-deleted-forms', resend);
     }
   }
 };
