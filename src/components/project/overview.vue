@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <form-list :condensed="!rendersTopRow"/>
-    <form-trash-list v-if="project != null && project.permits('form.restore')" @restore="refreshData()"/>
+    <form-trash-list v-if="rendersTrashList" @restore="$emit('fetch-forms', true)"/>
   </div>
 </template>
 
@@ -48,29 +48,18 @@ export default {
     ...requestData(['project']),
     rendersTopRow() {
       return this.project != null && this.project.permits('project.update');
-    }
-  },
-  watch: {
-    project() {
-      this.fetchDeletedFormsIfAllowed(false);
+    },
+    rendersTrashList() {
+      return this.project != null && this.project.permits('form.restore');
     }
   },
   created() {
     this.$emit('fetch-forms', false);
-    this.fetchDeletedFormsIfAllowed(false);
   },
   methods: {
     scrollToForms() {
       const scrollTop = Math.round($('#form-list').offset().top);
       $('html, body').animate({ scrollTop });
-    },
-    refreshData() {
-      this.$emit('fetch-forms', true);
-      this.fetchDeletedFormsIfAllowed(true);
-    },
-    fetchDeletedFormsIfAllowed(resend) {
-      if (this.project != null && this.project.permits('form.restore'))
-        this.$emit('fetch-deleted-forms', resend);
     }
   }
 };

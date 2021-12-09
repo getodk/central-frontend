@@ -37,10 +37,11 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DeletedFormRow from './trash-row.vue';
+import FormRestore from './restore.vue';
 import Loading from '../loading.vue';
 import { requestData } from '../../store/modules/request';
-import FormRestore from './restore.vue';
-
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import modal from '../../mixins/modal';
 
 export default {
@@ -70,7 +71,18 @@ export default {
       return columns;
     }
   },
+  created() {
+    this.fetchDeletedForms(false);
+  },
   methods: {
+    fetchDeletedForms(resend) {
+      this.$store.dispatch('get', [{
+        key: 'deletedForms',
+        url: apiPaths.deletedForms(this.project.id),
+        extended: true,
+        resend
+      }]).catch(noop);
+    },
     showRestore(form) {
       this.restoreForm.form = form;
       this.showModal('restoreForm');
@@ -81,8 +93,14 @@ export default {
     },
     afterRestore() {
       this.hideRestore();
-      this.$emit('restore');
       this.$alert().success(this.$t('alert.restore', { name: 'TODO: pass this through' }));
+
+      // refresh trashed forms list
+      this.fetchDeletedForms(true);
+
+      // tell parent component (project overview) to refresh regular forms list
+      // (by emitting event to that component's parent)
+      this.$emit('restore');
     }
   }
 };
