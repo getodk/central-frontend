@@ -88,12 +88,12 @@ export default {
       this.showModal('restoreForm');
     },
     hideRestore() {
-      this.restoreForm.form = null;
       this.hideModal('restoreForm');
     },
     afterRestore() {
       this.hideRestore();
-      this.$alert().success(this.$t('alert.restore', { name: 'TODO: pass this through' }));
+      this.$alert().success(this.$t('alert.restore', { name: this.restoreForm.form.name }));
+      this.restoreForm.form = null;
 
       // refresh trashed forms list
       this.fetchDeletedForms(true);
