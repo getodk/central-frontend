@@ -106,6 +106,15 @@ export default {
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
       const { actee } = this.audit;
+
+      // purged actee (used purgedName as title)
+      if (actee.purgedAt != null)
+        return { title: actee.purgedName };
+
+      // soft-deleted actee (use species title but don't make a link)
+      if (actee.deletedAt != null)
+        return { title: species.title(actee) };
+
       const result = { title: species.title(actee) };
       if (species.path != null) result.path = species.path(actee, this);
       return result;
