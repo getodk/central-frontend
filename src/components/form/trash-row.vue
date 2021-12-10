@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $tcn('count.submission', form.submissions) }}</span>
         </div>
         <div v-if="form.lastSubmission != null">
-            <i18n :tag="false" path="lastSubmission">
+            <i18n :tag="false" path="common.lastSubmission">
               <template #dateTime>
                 <date-time :iso="form.lastSubmission"/>
               </template>
@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
       <td class="actions">
         <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
           @click="openRestoreModal(form)">
-          <span class="icon-refresh"></span>{{ $t('undelete') }}
+          <span class="icon-refresh"></span>{{ $t('action.undelete') }}
         </button>
       </td>
     </tr>
@@ -126,13 +126,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This text shows when the last Submission was received. {dateTime} shows
-    // the date and time, for example: "2020/01/01 01:23". It may show a
-    // formatted date like "2020/01/01", or it may use a word like "today",
-    // "yesterday", or "Sunday".
-    "lastSubmission": "(last {dateTime})",
-    "deleted": "Deleted",
-    "undelete": "Undelete"
+    "action": {
+      "undelete": "Undelete"
+    },
+    "deleted": "Deleted"
   }
 }
 </i18n>

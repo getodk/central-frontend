@@ -322,7 +322,12 @@
       "settings": "Settings",
       "overview": "Overview"
     },
-    "total": "Total"
+    "total": "Total",
+    // This text shows when the last Submission was received. {dateTime} shows
+    // the date and time, for example: "2020/01/01 01:23". It may show a
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
+    "lastSubmission": "(last {dateTime})",
   },
   "mixin": {
     "request": {

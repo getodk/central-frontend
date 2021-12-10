@@ -127,7 +127,7 @@ export default {
   "en": {
     "title": "Trash",
     "alert": {
-      "restore": "The Form “{name}” has been undeleted"
+      "restore": "The Form “{name}” has been undeleted."
     },
     "message": "Forms and Form-related data are deleted after 30 days in the Trash"
   }

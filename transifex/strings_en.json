@@ -712,6 +712,10 @@
     },
     "total": {
       "string": "Total"
+    },
+    "lastSubmission": {
+      "string": "(last {dateTime})",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -2280,15 +2284,15 @@
     },
     "FormRestore": {
       "title": {
-        "string": "Restore Form",
+        "string": "Undelete Form",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to restore the Form {name}?"
+          "string": "Are you sure you want to undelete the Form {name}?"
         },
         "1": {
-          "string": "This will restore all Submissions and other data associated with this Form."
+          "string": "This will restore this Form, including all Submissions and other associated data. It will also restore access to the Form."
         },
         "2": {
           "string": "If the Form is deleted again, it will be another 30 days before it is removed."
@@ -2296,14 +2300,10 @@
       }
     },
     "FormRow": {
-      "lastSubmission": {
-        "string": "(last {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
-      },
       "action": {
         "fill": {
           "string": "Fill Form",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2359,7 +2359,7 @@
       },
       "alert": {
         "restore": {
-          "string": "The Form “{name}” has been undeleted"
+          "string": "The Form “{name}” has been undeleted."
         }
       },
       "message": {
@@ -2367,15 +2367,14 @@
       }
     },
     "FormTrashRow": {
-      "lastSubmission": {
-        "string": "(last {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      "action": {
+        "undelete": {
+          "string": "Undelete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       },
       "deleted": {
         "string": "Deleted"
-      },
-      "undelete": {
-        "string": "Undelete"
       }
     },
     "FormVersionDefDropdown": {
