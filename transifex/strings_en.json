@@ -2375,6 +2375,11 @@
       },
       "deleted": {
         "string": "Deleted"
+      },
+      "disabled": {
+        "conflict": {
+          "string": "This Form cannot be undeleted because an active Form with the same ID exists."
+        }
       }
     },
     "FormVersionDefDropdown": {

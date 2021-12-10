@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
       </td>
       <td class="actions">
         <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
-          @click="openRestoreModal(form)">
+          :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
           <span class="icon-refresh"></span>{{ $t('action.undelete') }}
         </button>
       </td>
@@ -63,7 +63,22 @@ export default {
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['project'])
+    ...requestData(['project', 'forms']),
+    activeFormIds() {
+      // returns ids of existing forms to disable restoring deleted
+      // forms with conflicting ids (also prevented on backend)
+      return (this.forms != null
+        ? this.forms.map((f) => f.xmlFormId)
+        : null);
+    },
+    disabled() {
+      return this.activeFormIds.includes(this.form.xmlFormId);
+    },
+    disabledTitle() {
+      if (this.disabled)
+        return this.$t('disabled.conflict');
+      return null;
+    }
   },
   methods: {
     openRestoreModal(form) {
@@ -129,7 +144,10 @@ export default {
     "action": {
       "undelete": "Undelete"
     },
-    "deleted": "Deleted"
+    "deleted": "Deleted",
+    "disabled": {
+      "conflict": "This Form cannot be undeleted because an active Form with the same ID exists."
+    }
   }
 }
 </i18n>
