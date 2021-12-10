@@ -2354,22 +2354,28 @@
       }
     },
     "FormTrashList": {
-      "header": {
-        "idAndVersion": {
-          "string": "ID and Version",
-          "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
-        }
+      "title": {
+        "string": "Trash"
       },
       "alert": {
         "restore": {
           "string": "The Form “{name}” has been undeleted"
         }
+      },
+      "message": {
+        "string": "Forms and Form-related data are deleted after 30 days in the Trash"
       }
     },
     "FormTrashRow": {
       "lastSubmission": {
         "string": "(last {dateTime})",
         "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "deleted": {
+        "string": "Deleted"
+      },
+      "undelete": {
+        "string": "Undelete"
       }
     },
     "FormVersionDefDropdown": {

@@ -10,13 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-    <tr class="form-row">
+    <tr class="form-trash-row">
       <td class="name">
-        <span>{{ form.nameOrId() }}</span>
-        <div style="color: red;">deleted at: {{ form._data.deletedAt }}</div>
-        <div>{{ form.draftToken !== null ? "draft (should have been immediately purged)" : "" }}</div>
+        <span class="form-name">{{ form.nameOrId() }}</span>
+        <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form._data.deletedAt"/></div>
       </td>
-      <td v-if="columns.has('idAndVersion')" class="id-and-version">
+      <td class="id-and-version">
         <div class="form-id">
           <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
         </div>
@@ -24,24 +23,22 @@ except according to the terms contained in the LICENSE file.
           <span :title="form.version">{{ form.version }}</span>
         </div>
       </td>
-      <td v-if="columns.has('submissions')" class="submissions">
+      <td class="submissions">
         <div v-if="form.publishedAt != null">
           <span>{{ $tcn('count.submission', form.submissions) }}</span>
         </div>
         <div v-if="form.lastSubmission != null">
-          <router-link :to="submissionsPath">
             <i18n :tag="false" path="lastSubmission">
               <template #dateTime>
                 <date-time :iso="form.lastSubmission"/>
               </template>
             </i18n>
-          </router-link>
         </div>
       </td>
-      <td v-if="columns.has('actions')" class="actions">
+      <td class="actions">
         <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
           @click="openRestoreModal(form)">
-          Undelete
+          <span class="icon-refresh"></span>{{ $t('undelete') }}
         </button>
       </td>
     </tr>
@@ -61,23 +58,12 @@ export default {
     form: {
       type: Form,
       required: true
-    },
-    columns: {
-      type: Set,
-      required: true
     }
   },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['project']),
-    submissionsPath() {
-      return this.formPath(
-        this.form.projectId,
-        this.form.xmlFormId,
-        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-      );
-    }
+    ...requestData(['project'])
   },
   methods: {
     openRestoreModal(form) {
@@ -90,39 +76,33 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-.form-row {
+.form-trash-row {
   .table tbody & td { vertical-align: middle; }
 
+  // column widths
   .name {
-    .link-if-can { font-size: 24px; }
-    a { @include text-link; }
+    width: 500px;
+    max-width: 500px;
+    @include text-overflow-ellipsis;
+  }
 
-    .icon-angle-right {
-      font-size: 20px;
-      margin-left: 9px;
-    }
+  .id-and-version {
+    width: 180px;
+    max-width: 180px;
+  }
 
-    .form-icon {
-      font-size: 20px;
-      margin-right: 9px;
-      cursor: help;
-    }
+  .submissions {
+    width: 180px;
+    max-width: 180px;
+  }
 
-    .form-name-closed {
-      color: #999;
-    }
+  .actions {
+    width: 180px;
+    max-width: 180px;
+  }
 
-    .form-icon-unpublished {
-      color: #999;
-    }
-
-    .form-icon-closed{
-      color: $color-danger;
-    }
-
-    .form-icon-closing{
-      color: $color-warning;
-    }
+  .form-name {
+    font-size: 20px;
   }
 
   .form-id, .version {
@@ -136,6 +116,10 @@ export default {
     a { @include text-link; }
     .icon-angle-right { margin-left: 6px; }
   }
+
+  .deleted-date {
+    color: $color-danger;
+  }
 }
 </style>
 
@@ -146,7 +130,9 @@ export default {
     // the date and time, for example: "2020/01/01 01:23". It may show a
     // formatted date like "2020/01/01", or it may use a word like "today",
     // "yesterday", or "Sunday".
-    "lastSubmission": "(last {dateTime})"
+    "lastSubmission": "(last {dateTime})",
+    "deleted": "Deleted",
+    "undelete": "Undelete"
   }
 }
 </i18n>

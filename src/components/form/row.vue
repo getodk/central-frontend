@@ -103,6 +103,28 @@ export default {
 .form-row {
   .table tbody & td { vertical-align: middle; }
 
+  // column widths
+  .name {
+    width: 500px;
+    max-width: 500px;
+    @include text-overflow-ellipsis;
+  }
+
+  .id-and-version {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .submissions {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .actions {
+    width: 180px;
+    max-width: 180px;
+  }
+
   .name {
     .link-if-can { font-size: 24px; }
     a { @include text-link; }

@@ -10,24 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <h1>Trash</h1>
+  <div v-if="count > 0">
+    <div id="trash-list-header">
+      <span id="title"><span class="icon-trash"></span>{{ $t('title') }}</span>
+      <span id="trash-count">({{ count }})</span>
+      <span id="note">{{ $t('message') }}</span>
+    </div>
     <table v-if="project != null" class="table">
-      <thead>
-        <tr>
-          <th>{{ $t('header.name') }}</th>
-          <th v-if="columns.has('idAndVersion')">
-            {{ $t('header.idAndVersion') }}
-          </th>
-          <th v-if="columns.has('submissions')">
-            {{ $t('resource.submissions') }}
-          </th>
-          <th v-if="columns.has('actions')">{{ $t('header.actions') }}</th>
-        </tr>
-      </thead>
       <tbody v-if="deletedForms != null">
         <deleted-form-row v-for="form of deletedForms" :key="form.hash" :form="form"
-          :columns="columns" @start-restore="showRestore"/>
+          @start-restore="showRestore"/>
       </tbody>
     </table>
     <loading :state="$store.getters.initiallyLoading(['deletedForms'])"/>
@@ -60,15 +52,8 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['project', 'deletedForms']),
-    columns() {
-      const columns = new Set(['name']);
-      // Hide columns from a project viewer.
-      if (this.project.permits('project.update') ||
-        this.project.permits('submission.create'))
-        columns.add('idAndVersion').add('actions');
-      // Hide the Submissions column from a Data Collector.
-      if (this.project.permits('submission.list')) columns.add('submissions');
-      return columns;
+    count() {
+      return (this.deletedForms != null ? this.deletedForms.length : 0);
     }
   },
   created() {
@@ -106,17 +91,45 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+#trash-list-header {
+  display: flex;
+  align-items: baseline;
+
+  .icon-trash {
+    padding-right: 8px;
+  }
+
+  #title {
+    font-size: 26px;
+    font-weight: 700;
+    color: $color-danger;
+  }
+
+  #trash-count {
+    font-size: 20px;
+    color: #888;
+    padding-left: 4px;
+  }
+
+  #note {
+    margin-left: auto;
+    color: #888
+  }
+}
+
+</style>
+
 <i18n lang="json5">
 {
   "en": {
-    "header": {
-      // This is the text of a column header in a table of Forms. The column
-      // shows the ID of each Form, as well as the name of its primary version.
-      "idAndVersion": "ID and Version"
-    },
+    "title": "Trash",
     "alert": {
       "restore": "The Form “{name}” has been undeleted"
-    }
+    },
+    "message": "Forms and Form-related data are deleted after 30 days in the Trash"
   }
 }
 </i18n>
