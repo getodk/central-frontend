@@ -30,6 +30,7 @@ const props = [
   'publishedAt',
   'createdAt',
   'updatedAt',
+  'deletedAt',
   // Extended form, extended form version, and extended form draft
   'excelContentType',
   // Extended form and extended form draft

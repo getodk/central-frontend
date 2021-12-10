@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
     <tr class="form-trash-row">
       <td class="name">
         <span class="form-name">{{ form.nameOrId() }}</span>
-        <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form._data.deletedAt"/></div>
+        <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form.deletedAt"/></div>
       </td>
       <td class="id-and-version">
         <div class="form-id">
