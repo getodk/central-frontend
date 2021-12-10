@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
       <td class="actions">
         <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
           :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
-          <span class="icon-refresh"></span>{{ $t('action.undelete') }}
+          <span class="icon-recycle"></span>{{ $t('action.undelete') }}
         </button>
       </td>
     </tr>
