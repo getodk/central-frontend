@@ -10,38 +10,38 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-    <tr class="form-trash-row">
-      <td class="name">
-        <span class="form-name">{{ form.nameOrId() }}</span>
-        <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form.deletedAt"/></div>
-      </td>
-      <td class="id-and-version">
-        <div class="form-id">
-          <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
-        </div>
-        <div v-if="form.version != null && form.version !== ''" class="version">
-          <span :title="form.version">{{ form.version }}</span>
-        </div>
-      </td>
-      <td class="submissions">
-        <div v-if="form.publishedAt != null">
-          <span>{{ $tcn('count.submission', form.submissions) }}</span>
-        </div>
-        <div v-if="form.lastSubmission != null">
-            <i18n :tag="false" path="common.lastSubmission">
-              <template #dateTime>
-                <date-time :iso="form.lastSubmission"/>
-              </template>
-            </i18n>
-        </div>
-      </td>
-      <td class="actions">
-        <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
-          :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
-          <span class="icon-recycle"></span>{{ $t('action.undelete') }}
-        </button>
-      </td>
-    </tr>
+  <tr class="form-trash-row">
+    <td class="name">
+      <span class="form-name">{{ form.nameOrId() }}</span>
+      <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form.deletedAt"/></div>
+    </td>
+    <td class="id-and-version">
+      <div class="form-id">
+        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
+      </div>
+      <div v-if="form.version != null && form.version !== ''" class="version">
+        <span :title="form.version">{{ form.version }}</span>
+      </div>
+    </td>
+    <td class="submissions">
+      <div v-if="form.publishedAt != null">
+        <span>{{ $tcn('count.submission', form.submissions) }}</span>
+      </div>
+      <div v-if="form.lastSubmission != null">
+          <i18n :tag="false" path="common.lastSubmission">
+            <template #dateTime>
+              <date-time :iso="form.lastSubmission"/>
+            </template>
+          </i18n>
+      </div>
+    </td>
+    <td class="actions">
+      <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
+        :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
+        <span class="icon-recycle"></span>{{ $t('action.undelete') }}
+      </button>
+    </td>
+  </tr>
 </template>
 
 <script>

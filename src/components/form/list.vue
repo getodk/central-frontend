@@ -62,7 +62,7 @@ export default {
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['project', 'forms', 'deletedForms']),
+  computed: requestData(['project', 'forms']),
   methods: {
     afterCreate(form) {
       this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
