@@ -12,9 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="count > 0">
     <div id="trash-list-header">
-      <span id="title"><span class="icon-trash"></span>{{ $t('title') }}</span>
-      <span id="trash-count">({{ count }})</span>
-      <span id="note">{{ $t('message') }}</span>
+      <span id="trash-list-title"><span class="icon-trash"></span>{{ $t('title') }}</span>
+      <span id="trash-list-count">({{ count }})</span>
+      <span id="trash-list-note">{{ $t('message') }}</span>
     </div>
     <table v-if="project != null" class="table">
       <tbody v-if="deletedForms != null">
@@ -107,19 +107,19 @@ export default {
     padding-right: 8px;
   }
 
-  #title {
+  #trash-list-title {
     font-size: 26px;
     font-weight: 700;
     color: $color-danger;
   }
 
-  #trash-count {
+  #trash-list-count {
     font-size: 20px;
     color: #888;
     padding-left: 4px;
   }
 
-  #note {
+  #trash-list-note {
     margin-left: auto;
     color: #888
   }
