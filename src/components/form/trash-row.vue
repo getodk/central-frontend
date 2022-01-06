@@ -24,9 +24,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td class="submissions">
-      <div v-if="form.publishedAt != null">
-        <span>{{ $tcn('count.submission', form.submissions) }}</span>
-      </div>
+      <div>{{ $tcn('count.submission', form.submissions) }}</div>
       <div v-if="form.lastSubmission != null">
           <i18n :tag="false" path="common.lastSubmission">
             <template #dateTime>
@@ -47,13 +45,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
-import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'DeletedFormRow',
   components: { DateTime },
-  mixins: [routes()],
   props: {
     form: {
       type: Form,
@@ -63,7 +59,7 @@ export default {
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['project', 'forms']),
+    ...requestData(['forms']),
     activeFormIds() {
       // returns ids of existing forms to disable restoring deleted
       // forms with conflicting ids (also prevented on backend)
