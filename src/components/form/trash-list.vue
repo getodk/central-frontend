@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <table v-if="project != null" class="table">
       <tbody v-if="deletedForms != null">
-        <deleted-form-row v-for="form of sortedDeletedForms" :key="form.hash" :form="form"
+        <form-trash-row v-for="form of sortedDeletedForms" :key="form.hash" :form="form"
           @start-restore="showRestore"/>
       </tbody>
     </table>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { ascend } from 'ramda';
-import DeletedFormRow from './trash-row.vue';
+import FormTrashRow from './trash-row.vue';
 import FormRestore from './restore.vue';
 import Loading from '../loading.vue';
 import { requestData } from '../../store/modules/request';
@@ -39,7 +39,7 @@ import modal from '../../mixins/modal';
 
 export default {
   name: 'FormTrashList',
-  components: { DeletedFormRow, FormRestore, Loading },
+  components: { FormTrashRow, FormRestore, Loading },
   mixins: [modal()],
   data() {
     return {

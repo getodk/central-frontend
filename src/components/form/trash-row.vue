@@ -48,7 +48,7 @@ import Form from '../../presenters/form';
 import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'DeletedFormRow',
+  name: 'FormTrashRow',
   components: { DateTime },
   props: {
     form: {
