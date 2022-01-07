@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2021 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     doRestore() {
-      this.post(apiPaths.restoreForm(this.form.projectId, this.form._data.id))
+      this.post(apiPaths.restoreForm(this.form.projectId, this.form.id))
         .then(() => {
           this.$emit('success');
         })
@@ -76,7 +76,7 @@ export default {
     "title": "Undelete Form",
     "introduction": [
       "Are you sure you want to undelete the Form {name}?",
-      "This will restore this Form, including all Submissions and other associated data. It will also restore access to the Form.",
+      "The Form will be restored to its previous state, including all data, settings, and permissions.",
       "If the Form is deleted again, it will be another 30 days before it is removed."
     ]
   }

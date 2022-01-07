@@ -2296,7 +2296,7 @@
           "string": "Are you sure you want to undelete the Form {name}?"
         },
         "1": {
-          "string": "This will restore this Form, including all Submissions and other associated data. It will also restore access to the Form."
+          "string": "The Form will be restored to its previous state, including all data, settings, and permissions."
         },
         "2": {
           "string": "If the Form is deleted again, it will be another 30 days before it is removed."
@@ -2372,7 +2372,7 @@
     },
     "FormTrashRow": {
       "action": {
-        "undelete": {
+        "restore": {
           "string": "Undelete",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }

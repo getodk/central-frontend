@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2021 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
     <td class="actions">
       <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
         :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
-        <span class="icon-recycle"></span>{{ $t('action.undelete') }}
+        <span class="icon-recycle"></span>{{ $t('action.restore') }}
       </button>
     </td>
   </tr>
@@ -123,11 +123,6 @@ export default {
 
   .version { color: #888; }
 
-  .submissions {
-    a { @include text-link; }
-    .icon-angle-right { margin-left: 6px; }
-  }
-
   .deleted-date {
     color: $color-danger;
   }
@@ -138,7 +133,7 @@ export default {
 {
   "en": {
     "action": {
-      "undelete": "Undelete"
+      "restore": "Undelete"
     },
     "deleted": "Deleted",
     "disabled": {

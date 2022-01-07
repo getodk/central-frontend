@@ -1,5 +1,5 @@
 <!--
-Copyright 2017 ODK Central Developers
+Copyright 2021 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -11,27 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="count > 0">
-    <div id="trash-list-header">
-      <span id="trash-list-title"><span class="icon-trash"></span>{{ $t('title') }}</span>
-      <span id="trash-list-count">({{ count }})</span>
-      <span id="trash-list-note">{{ $t('message') }}</span>
+    <div id="form-trash-list-header">
+      <span id="form-trash-list-title"><span class="icon-trash"></span>{{ $t('title') }}</span>
+      <span id="form-trash-list-count">({{ count }})</span>
+      <span id="form-trash-list-note">{{ $t('message') }}</span>
     </div>
-    <table v-if="project != null" class="table">
-      <tbody v-if="deletedForms != null">
-        <form-trash-row v-for="form of sortedDeletedForms" :key="form.hash" :form="form"
+    <table class="table">
+      <tbody>
+        <form-trash-row v-for="form of sortedDeletedForms" :key="form.id" :form="form"
           @start-restore="showRestore"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['deletedForms'])"/>
     <form-restore :state="restoreForm.state" :form="restoreForm.form" @hide="hideRestore" @success="afterRestore"/>
   </div>
 </template>
 
 <script>
-import { ascend } from 'ramda';
+import { ascend, sortWith } from 'ramda';
 import FormTrashRow from './trash-row.vue';
 import FormRestore from './restore.vue';
-import Loading from '../loading.vue';
 import { requestData } from '../../store/modules/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -39,7 +37,7 @@ import modal from '../../mixins/modal';
 
 export default {
   name: 'FormTrashList',
-  components: { FormTrashRow, FormRestore, Loading },
+  components: { FormTrashRow, FormRestore },
   mixins: [modal()],
   data() {
     return {
@@ -57,8 +55,8 @@ export default {
       return (this.deletedForms != null ? this.deletedForms.length : 0);
     },
     sortedDeletedForms() {
-      const formCopy = this.deletedForms;
-      return (formCopy.sort(ascend(entry => entry.deletedAt)));
+      const sortByDeletedAt = sortWith([ascend(entry => entry.deletedAt)]);
+      return sortByDeletedAt(this.deletedForms);
     }
   },
   created() {
@@ -99,7 +97,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#trash-list-header {
+#form-trash-list-header {
   display: flex;
   align-items: baseline;
 
@@ -107,19 +105,19 @@ export default {
     padding-right: 8px;
   }
 
-  #trash-list-title {
+  #form-trash-list-title {
     font-size: 26px;
     font-weight: 700;
     color: $color-danger;
   }
 
-  #trash-list-count {
+  #form-trash-list-count {
     font-size: 20px;
     color: #888;
     padding-left: 4px;
   }
 
-  #trash-list-note {
+  #form-trash-list-note {
     margin-left: auto;
     color: #888
   }

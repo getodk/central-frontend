@@ -16,6 +16,8 @@ import { presenterClass } from './base';
 // archived).
 
 const props = [
+  // Numeric id
+  'id',
   'projectId',
   'xmlFormId',
   'name',
