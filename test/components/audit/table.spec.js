@@ -398,4 +398,24 @@ describe('AuditTable', () => {
     const selectable = mountComponent().getComponent(Selectable);
     selectable.text().should.equal('{"some":"json"}');
   });
+
+  it('renders a purged form row correctly', () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'form.purge',
+      actee: {
+        purgedAt: ago({ days: 2 }).toISO(),
+        purgedName: 'Purged Form',
+        details: { formId: 123 }
+      },
+      details: { some: 'json' }
+    });
+    const target = mountComponent().get('.target');
+    target.find('a').exists().should.be.false();
+    target.text().should.equal('Purged Form');
+    // The purged details aren't part of the audit and don't show up here
+    // but the original details of the audit do
+    const selectable = mountComponent().getComponent(Selectable);
+    selectable.text().should.equal('{"some":"json"}');
+  });
 });
