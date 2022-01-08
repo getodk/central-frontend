@@ -99,6 +99,20 @@ describe('AuditTable', () => {
       testType(row, ['User', 'Log in']);
       testTarget(row, 'User 1', '/users/1/edit');
     });
+
+    it('renders deleted user targets correctly', () => {
+      testData.extendedUsers.createPast(1, { displayName: 'User Name' });
+      const deletedUser = testData.toActor(testData.extendedUsers.last());
+      deletedUser.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'user.delete', // will display the same way for all actions
+        actee: deletedUser
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('User Name');
+    });
   });
 
   describe('project target', () => {
@@ -122,6 +136,21 @@ describe('AuditTable', () => {
         testTarget(row, 'My Project', '/projects/1');
       });
     }
+
+    it('renders deleted project targets correctly', () => {
+      const deletedProject = testData.standardProjects
+        .createPast(1, { name: 'My Project' })
+        .last();
+      deletedProject.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'project.delete', // will display the same way for all actions
+        actee: deletedProject
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Project');
+    });
   });
 
   describe('form target', () => {
@@ -134,6 +163,8 @@ describe('AuditTable', () => {
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.submission.export', ['Form', 'Download Submissions']],
       ['form.delete', ['Form', 'Delete']],
+      ['form.restore', ['Form', 'Undelete']],
+      ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
       ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]
     ];
@@ -152,6 +183,21 @@ describe('AuditTable', () => {
         testTarget(row, 'My Form', '/projects/1/forms/a%20b');
       });
     }
+
+    it('renders deleted form targets correctly', () => {
+      const deletedForm = testData.standardForms
+        .createPast(1, { xmlFormId: 'a', name: 'My Form' })
+        .last();
+      deletedForm.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.delete', // will display the same way for all actions
+        actee: deletedForm
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Form');
+    });
 
     it('shows the xmlFormId if the form does not have a name', () => {
       testData.extendedAudits.createPast(1, {
@@ -200,6 +246,21 @@ describe('AuditTable', () => {
         testTarget(row, 'My Public Link');
       });
     }
+
+    it('renders deleted public link targets correctly', () => {
+      const deletedActor = testData.toActor(testData.standardPublicLinks
+        .createPast(1, { displayName: 'My Public Link' })
+        .last());
+      deletedActor.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'public_link.delete', // will display the same way for all actions
+        actee: deletedActor
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Public Link');
+    });
   });
 
   describe('app user target', () => {
@@ -225,6 +286,21 @@ describe('AuditTable', () => {
         testTarget(row, 'My App User');
       });
     }
+
+    it('renders deleted app user targets correctly', () => {
+      const deletedActor = testData.toActor(testData.extendedFieldKeys
+        .createPast(1, { displayName: 'My App User' })
+        .last());
+      deletedActor.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'field_key.delete', // will display the same way for all actions
+        actee: deletedActor
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My App User');
+    });
   });
 
   it('renders a config.set audit correctly', () => {
