@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td class="actions">
-      <button id="form-trash-row-restore-button" type="button" class="btn btn-default"
+      <button class="form-trash-row-restore-button btn btn-default" type="button"
         :disabled="disabled" :title="disabledTitle" @click="openRestoreModal(form)">
         <span class="icon-recycle"></span>{{ $t('action.restore') }}
       </button>
@@ -65,7 +65,7 @@ export default {
       // forms with conflicting ids (also prevented on backend)
       return (this.forms != null
         ? this.forms.map((f) => f.xmlFormId)
-        : null);
+        : []);
     },
     disabled() {
       return this.activeFormIds.includes(this.form.xmlFormId);

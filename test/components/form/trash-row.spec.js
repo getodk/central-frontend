@@ -86,14 +86,14 @@ describe('FormTrashRow', () => {
     beforeEach(mockLogin);
 
     it('shows the undelete button', () => {
-      const button = mountComponent({}).get('#form-trash-row-restore-button');
+      const button = mountComponent({}).get('.form-trash-row-restore-button');
       button.element.tagName.should.equal('BUTTON');
       button.element.disabled.should.be.false();
     });
 
     it('disables the undelete button if active form with same id exists', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'foo' });
-      const button = mountComponent({ xmlFormId: 'foo' }).get('#form-trash-row-restore-button');
+      const button = mountComponent({ xmlFormId: 'foo' }).get('.form-trash-row-restore-button');
       button.element.tagName.should.equal('BUTTON');
       button.element.disabled.should.be.true();
       button.attributes().title.should.equal('This Form cannot be undeleted because an active Form with the same ID exists.');

@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <span id="form-trash-list-count">({{ count }})</span>
       <span id="form-trash-list-note">{{ $t('message') }}</span>
     </div>
-    <table class="table">
+    <table id="form-trash-list-table" class="table">
       <tbody>
         <form-trash-row v-for="form of sortedDeletedForms" :key="form.id" :form="form"
           @start-restore="showRestore"/>

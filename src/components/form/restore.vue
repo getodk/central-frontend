@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal class="form-restore" :state="state" :hideable="!awaitingResponse" backdrop
+  <modal id="form-restore" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
