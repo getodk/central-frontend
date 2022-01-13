@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="count > 0">
+  <div v-if="count > 0" id="form-trash-list">
     <div id="form-trash-list-header">
       <span id="form-trash-list-title"><span class="icon-trash"></span>{{ $t('title') }}</span>
       <span id="form-trash-list-count">({{ count }})</span>
