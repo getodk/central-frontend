@@ -64,6 +64,7 @@ export default () => {
         'form.read',
         'form.update',
         'form.delete',
+        'form.restore',
         'project.update',
         'public_link.create',
         'public_link.list',
