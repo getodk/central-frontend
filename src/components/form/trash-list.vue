@@ -12,8 +12,15 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="count > 0" id="form-trash-list">
     <div id="form-trash-list-header">
-      <span id="form-trash-list-title"><span class="icon-trash"></span>{{ $t('title') }}</span>
-      <span id="form-trash-list-count">({{ count }})</span>
+      <span id="form-trash-list-title">
+        <span class="icon-trash"></span>
+        <span>{{ $t('title') }}</span>
+      </span>
+      <span id="form-trash-list-count">
+        <i18n :tag="false" path="trashCount">
+          <template #count>{{ count }}</template>
+        </i18n>
+      </span>
       <span id="form-trash-list-note">{{ $t('message') }}</span>
     </div>
     <table id="form-trash-list-table" class="table">
@@ -105,6 +112,11 @@ export default {
     padding-right: 8px;
   }
 
+  .trash-count {
+    font-weight: normal;
+    color: black;
+  }
+
   #form-trash-list-title {
     font-size: 26px;
     font-weight: 700;
@@ -129,6 +141,8 @@ export default {
 {
   "en": {
     "title": "Trash",
+    // {count} is the number of Forms in the trash.
+    "trashCount": "({count})",
     "alert": {
       "restore": "The Form “{name}” has been undeleted."
     },

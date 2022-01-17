@@ -13,7 +13,13 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-trash-row">
     <td class="name">
       <span class="form-name">{{ form.nameOrId() }}</span>
-      <div class="deleted-date">{{ $t('deleted') }} <date-time :iso="form.deletedAt"/></div>
+      <div class="deleted-date">
+        <i18n :tag="false" path="deletedDate">
+          <template #dateTime>
+            <date-time :iso="form.deletedAt"/>
+          </template>
+        </i18n>
+      </div>
     </td>
     <td class="id-and-version">
       <div class="form-id">
@@ -26,11 +32,11 @@ except according to the terms contained in the LICENSE file.
     <td class="submissions">
       <div>{{ $tcn('count.submission', form.submissions) }}</div>
       <div v-if="form.lastSubmission != null">
-          <i18n :tag="false" path="common.lastSubmission">
-            <template #dateTime>
-              <date-time :iso="form.lastSubmission"/>
-            </template>
-          </i18n>
+        <i18n :tag="false" path="common.lastSubmission">
+          <template #dateTime>
+            <date-time :iso="form.lastSubmission"/>
+          </template>
+        </i18n>
       </div>
     </td>
     <td class="actions">
@@ -137,7 +143,11 @@ export default {
     "action": {
       "restore": "Undelete"
     },
-    "deleted": "Deleted",
+    // This text shows when the Form was deleted. {dateTime} shows
+    // the date and time, for example: "2020/01/01 01:23". It may show a
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
+    "deletedDate": "Deleted {dateTime}",
     "disabled": {
       "conflict": "This Form cannot be undeleted because an active Form with the same ID exists."
     }
