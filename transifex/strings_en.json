@@ -1073,6 +1073,16 @@
         "string": "There are no matching audit log entries."
       }
     },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "This resource has been deleted.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "This resource has been purged.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
+      }
+    },
     "AuditTable": {
       "header": {
         "initiator": {

@@ -112,6 +112,9 @@ describe('AuditTable', () => {
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
       target.text().should.equal('User Name');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
     });
   });
 
@@ -150,6 +153,9 @@ describe('AuditTable', () => {
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
       target.text().should.equal('My Project');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
     });
   });
 
@@ -197,6 +203,9 @@ describe('AuditTable', () => {
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
       target.text().should.equal('My Form');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
     });
 
     it('shows the xmlFormId if the form does not have a name', () => {
@@ -260,6 +269,9 @@ describe('AuditTable', () => {
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
       target.text().should.equal('My Public Link');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
     });
   });
 
@@ -300,6 +312,9 @@ describe('AuditTable', () => {
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
       target.text().should.equal('My App User');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
     });
   });
 
@@ -413,6 +428,9 @@ describe('AuditTable', () => {
     const target = mountComponent().get('.target');
     target.find('a').exists().should.be.false();
     target.text().should.equal('Purged Form');
+    const icon = target.find('.icon-trash');
+    icon.exists().should.be.true();
+    icon.attributes().title.should.equal('This resource has been purged.');
     // The purged details aren't part of the audit and don't show up here
     // but the original details of the audit do
     const selectable = mountComponent().getComponent(Selectable);
