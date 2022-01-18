@@ -57,12 +57,12 @@ describe('FormShow', () => {
       .beforeEachResponse(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading.at(0).props().state.should.eql(true);
+        loading[0].props().state.should.eql(true);
       })
       .afterResponses(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading.at(0).props().state.should.eql(false);
+        loading[0].props().state.should.eql(false);
       });
   });
 

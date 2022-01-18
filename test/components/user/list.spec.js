@@ -37,12 +37,12 @@ describe('UserList', () => {
   it('correctly renders the edit profile action', async () => {
     const component = await load('/users', { root: false });
     const row = component.getComponent(UserRow);
-    const link = row.findAllComponents(RouterLinkStub).wrappers.find(wrapper =>
+    const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
       wrapper.element.closest('.edit-profile') != null);
     link.props().to.should.equal('/users/1/edit');
   });
 
-  it('correctly renders the role selects', async () => {
+  it('sets the roles', async () => {
     testData.extendedUsers.createPast(1, {
       email: 'b@email.com',
       role: 'none'
@@ -51,20 +51,19 @@ describe('UserList', () => {
       actors: () => [testData.toActor(testData.standardUsers.first())]
     });
     const selects = component.findAll('.user-row select');
-    selects.at(0).element.value.should.equal('admin');
-    selects.at(1).element.value.should.equal('');
+    selects.map(select => select.element.value).should.eql(['admin', '']);
   });
 
-  it('renders the role select correctly for the current user', async () => {
+  it('disables the role select for the current user', async () => {
     testData.extendedUsers.createPast(1, { email: 'b@email.com' });
     const component = await load('/users', { root: false });
     const selects = component.findAll('.user-row select');
 
-    selects.at(0).element.disabled.should.be.true();
-    selects.at(1).element.disabled.should.be.false();
+    selects[0].element.disabled.should.be.true();
+    selects[1].element.disabled.should.be.false();
 
-    should.exist(selects.at(0).attributes().title);
-    should.not.exist(selects.at(1).attributes().title);
+    should.exist(selects[0].attributes().title);
+    should.not.exist(selects[1].attributes().title);
   });
 
   describe('changing a role', () => {
@@ -86,7 +85,7 @@ describe('UserList', () => {
       })
         .complete()
         .request(component =>
-          component.findAll('.user-row select').at(rowIndex).setValue(selectValue));
+          component.findAll('.user-row select')[rowIndex].setValue(selectValue));
     };
 
     // Array of test cases, where each case is an array with the following
@@ -110,19 +109,19 @@ describe('UserList', () => {
         it('disables the select during the request', () =>
           loadUsersAndChangeRole({ rowIndex, selectValue })
             .beforeAnyResponse(component => {
-              const select = component.findAll('.user-row select').at(rowIndex);
+              const select = component.findAll('.user-row select')[rowIndex];
               select.element.disabled.should.be.true();
             })
             .respondWithSuccess()
             .afterResponse(component => {
-              const select = component.findAll('.user-row select').at(rowIndex);
+              const select = component.findAll('.user-row select')[rowIndex];
               select.element.disabled.should.be.false();
             }));
 
         it('shows a spinner during the request', () =>
           loadUsersAndChangeRole({ rowIndex, selectValue })
             .beforeAnyResponse(component => {
-              const row = component.findAllComponents(UserRow).at(rowIndex);
+              const row = component.findAllComponents(UserRow)[rowIndex];
               row.getComponent(Spinner).props().state.should.be.true();
             })
             .respondWithSuccess());

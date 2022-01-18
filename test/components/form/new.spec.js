@@ -60,7 +60,7 @@ describe('FormNew', () => {
 
       it('renders the paragraph about media files', () => {
         const modal = mount(FormNew, mountOptions());
-        const text = modal.findAll('.modal-introduction p').at(1).text();
+        const text = modal.findAll('.modal-introduction p')[1].text();
         text.should.containEql('media');
       });
     });
@@ -404,7 +404,7 @@ describe('FormNew', () => {
         .afterResponses(app => {
           const steps = app.findAllComponents(ChecklistStep);
           steps.length.should.equal(4);
-          steps.at(2).props().stage.should.equal('complete');
+          steps[2].props().stage.should.equal('complete');
         })
         .request(async (app) => {
           await app.get('#form-draft-status-upload-button').trigger('click');
@@ -422,7 +422,7 @@ describe('FormNew', () => {
         .afterResponses(app => {
           const steps = app.findAllComponents(ChecklistStep);
           steps.length.should.equal(4);
-          steps.at(2).props().stage.should.equal('current');
+          steps[2].props().stage.should.equal('current');
         });
     });
   });
@@ -512,10 +512,8 @@ describe('FormNew', () => {
         .afterResponse(modal => {
           const warnings = modal.get('.modal-warnings');
           warnings.should.be.visible();
-          warnings.findAll('li').wrappers.map(li => li.text()).should.eql([
-            'warning 1',
-            'warning 2'
-          ]);
+          const text = warnings.findAll('li').map(li => li.text());
+          text.should.eql(['warning 1', 'warning 2']);
         });
     });
 
@@ -577,7 +575,7 @@ describe('FormNew', () => {
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p').at(1).text();
+            const text = component.findAll('.modal-warnings p')[1].text();
             text.should.containEql('create the Form');
           });
       });
@@ -589,7 +587,7 @@ describe('FormNew', () => {
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p').at(1).text();
+            const text = component.findAll('.modal-warnings p')[1].text();
             text.should.containEql('update the Draft');
           });
       });

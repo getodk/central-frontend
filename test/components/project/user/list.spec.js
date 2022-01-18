@@ -121,7 +121,7 @@ describe('ProjectUserList', () => {
       createData(['manager']);
       return load('/projects/1/users').then(app => {
         const options = app.findAll('#project-user-list tbody tr option');
-        options.wrappers.map(option => option.text()).should.eql([
+        options.map(option => option.text()).should.eql([
           'Project Manager',
           'Project Viewer',
           'Data Collector',
@@ -142,14 +142,14 @@ describe('ProjectUserList', () => {
           const tr = component.findAll('tbody tr');
           tr.length.should.equal(2);
 
-          tr.at(0).get('td').text().should.equal('User 2');
+          tr[0].get('td').text().should.equal('User 2');
           const standardRoles = testData.standardRoles.sorted();
-          tr.at(0).get('select').element.value.should.equal(
+          tr[0].get('select').element.value.should.equal(
             standardRoles.find(role => role.system === 'viewer').id.toString()
           );
 
-          tr.at(1).get('td').text().should.equal('User 3');
-          tr.at(1).get('select').element.value.should.equal(
+          tr[1].get('td').text().should.equal('User 3');
+          tr[1].get('select').element.value.should.equal(
             standardRoles.find(role => role.system === 'manager').id.toString()
           );
         });
@@ -160,9 +160,9 @@ describe('ProjectUserList', () => {
       return load('/projects/1/users', { root: false }).afterResponses(component => {
         const tr = component.findAll('tbody tr');
         tr.length.should.equal(2);
-        const selects = tr.wrappers.map(wrapper => wrapper.get('select'));
+        const selects = tr.map(wrapper => wrapper.get('select'));
 
-        tr.at(0).get('td').text().should.equal('User 1');
+        tr[0].get('td').text().should.equal('User 1');
         selects[0].element.disabled.should.be.true();
         selects[0].attributes().title.should.equal('You may not edit your own Project Role.');
 
@@ -419,18 +419,18 @@ describe('ProjectUserList', () => {
         const tr = component.findAll('tbody tr');
         tr.length.should.equal(4);
 
-        tr.at(0).get('td').text().should.equal('User 4');
-        tr.at(0).get('select').element.value.should.equal('');
+        tr[0].get('td').text().should.equal('User 4');
+        tr[0].get('select').element.value.should.equal('');
 
-        tr.at(1).get('td').text().should.equal('User 5');
-        tr.at(1).get('select').element.value.should.equal('');
+        tr[1].get('td').text().should.equal('User 5');
+        tr[1].get('select').element.value.should.equal('');
 
-        tr.at(2).get('td').text().should.equal('User 6');
-        tr.at(2).get('select').element.value.should.equal('');
+        tr[2].get('td').text().should.equal('User 6');
+        tr[2].get('select').element.value.should.equal('');
 
-        tr.at(3).get('td').text().should.equal('User 2');
+        tr[3].get('td').text().should.equal('User 2');
         const standardRoles = testData.standardRoles.sorted();
-        tr.at(3).get('select').element.value.should.equal(
+        tr[3].get('select').element.value.should.equal(
           standardRoles.find(role => role.system === 'viewer').id.toString()
         );
       }));

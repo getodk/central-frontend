@@ -103,8 +103,8 @@ describe('SubmissionDiffItem', () => {
     component.get('.nested-change-type').classes('added').should.be.true();
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(3);
-    nestedDiffs.at(0).find('.data-old').exists().should.be.false();
-    nestedDiffs.at(0).get('.data-new').text().should.equal('Really Cool Toy');
+    nestedDiffs[0].find('.data-old').exists().should.be.false();
+    nestedDiffs[0].get('.data-new').text().should.equal('Really Cool Toy');
   });
 
   it('shows the full path of an instance deletion and word "deleted"', () => {
@@ -123,8 +123,8 @@ describe('SubmissionDiffItem', () => {
     component.get('.nested-change-type').classes('deleted').should.be.true();
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(3);
-    nestedDiffs.at(0).get('.data-old').text().should.equal('Really Cool Toy');
-    nestedDiffs.at(0).find('.data-new').exists().should.be.false();
+    nestedDiffs[0].get('.data-old').text().should.equal('Really Cool Toy');
+    nestedDiffs[0].find('.data-new').exists().should.be.false();
   });
 
   it('shows nested instance diffs correctly', () => {
@@ -147,15 +147,15 @@ describe('SubmissionDiffItem', () => {
     component.get('.full-path').text().should.equal('children › child › toy');
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(6);
-    nestedDiffs.at(0).find('.full-path').exists().should.be.false();
-    nestedDiffs.at(0).get('.field-name').text().should.equal('name');
-    nestedDiffs.at(0).get('.data-new').text().should.equal('Really Cool Toy');
-    nestedDiffs.at(3).get('.full-path').text().should.equal('manufacturer');
-    nestedDiffs.at(3).get('.field-name').text().should.equal('company');
-    nestedDiffs.at(3).get('.data-new').text().should.equal('Big Toy Co.');
-    nestedDiffs.at(4).get('.full-path').text().should.equal('manufacturer › location');
-    nestedDiffs.at(4).get('.field-name').text().should.equal('city');
-    nestedDiffs.at(4).get('.data-new').text().should.equal('Cityville');
+    nestedDiffs[0].find('.full-path').exists().should.be.false();
+    nestedDiffs[0].get('.field-name').text().should.equal('name');
+    nestedDiffs[0].get('.data-new').text().should.equal('Really Cool Toy');
+    nestedDiffs[3].get('.full-path').text().should.equal('manufacturer');
+    nestedDiffs[3].get('.field-name').text().should.equal('company');
+    nestedDiffs[3].get('.data-new').text().should.equal('Big Toy Co.');
+    nestedDiffs[4].get('.full-path').text().should.equal('manufacturer › location');
+    nestedDiffs[4].get('.field-name').text().should.equal('city');
+    nestedDiffs[4].get('.data-new').text().should.equal('Cityville');
   });
 
   it('shows nested repeat groups correctly flattened', () => {
@@ -182,12 +182,12 @@ describe('SubmissionDiffItem', () => {
     component.get('.full-path').text().should.equal('children › child #2');
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(6);
-    nestedDiffs.at(0).find('.full-path').exists().should.be.false();
-    nestedDiffs.at(0).get('.field-name').text().should.equal('first_name');
-    nestedDiffs.at(0).get('.data-old').text().should.equal('Windy');
-    nestedDiffs.at(5).get('.full-path').text().should.equal('toys › toy #2');
-    nestedDiffs.at(5).get('.field-name').text().should.equal('price');
-    nestedDiffs.at(5).get('.data-old').text().should.equal('15');
+    nestedDiffs[0].find('.full-path').exists().should.be.false();
+    nestedDiffs[0].get('.field-name').text().should.equal('first_name');
+    nestedDiffs[0].get('.data-old').text().should.equal('Windy');
+    nestedDiffs[5].get('.full-path').text().should.equal('toys › toy #2');
+    nestedDiffs[5].get('.field-name').text().should.equal('price');
+    nestedDiffs[5].get('.data-old').text().should.equal('15');
   });
 
   it('handles when a repeat group goes between 0 and N elements', () => {
@@ -215,9 +215,9 @@ describe('SubmissionDiffItem', () => {
     component.get('.full-path').text().should.equal('child › toys › toy');
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(1);
-    nestedDiffs.at(0).get('.full-path').text().should.equal('#1');
-    nestedDiffs.at(0).get('.field-name').text().should.equal('name');
-    nestedDiffs.at(0).get('.data-new').text().should.equal('Tonka Truck');
+    nestedDiffs[0].get('.full-path').text().should.equal('#1');
+    nestedDiffs[0].get('.field-name').text().should.equal('name');
+    nestedDiffs[0].get('.data-new').text().should.equal('Tonka Truck');
   });
 
   it('shows empty -> empty when instance added/deleted with empty string', () => {
@@ -235,10 +235,10 @@ describe('SubmissionDiffItem', () => {
     component.get('.full-path').text().should.equal('child › toys › toy #3');
     const nestedDiffs = component.findAll('.submission-diff-item.inner-item');
     nestedDiffs.length.should.equal(1);
-    nestedDiffs.at(0).get('.field-name').text().should.equal('name');
-    nestedDiffs.at(0).findAll('.data-empty').length.should.equal(2);
-    nestedDiffs.at(0).find('.data-old').exists().should.be.false();
-    nestedDiffs.at(0).find('.data-new').exists().should.be.false();
+    nestedDiffs[0].get('.field-name').text().should.equal('name');
+    nestedDiffs[0].findAll('.data-empty').length.should.equal(2);
+    nestedDiffs[0].find('.data-old').exists().should.be.false();
+    nestedDiffs[0].find('.data-new').exists().should.be.false();
   });
 
   it('shows media download links for binary files', () => {

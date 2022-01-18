@@ -199,9 +199,9 @@ describe('BackupStatus', () => {
         const component = app.getComponent(BackupStatus);
         const spinners = component.findAllComponents(Spinner);
         spinners.length.should.equal(1);
-        spinners.at(0).props().state.should.be.false();
+        spinners[0].props().state.should.be.false();
         await component.get('[href="/v1/backup"]').trigger('click');
-        spinners.at(0).props().state.should.be.true();
+        spinners[0].props().state.should.be.true();
       });
     });
   });

@@ -37,7 +37,7 @@ describe('FieldKeyRow', () => {
     testData.extendedFieldKeys.createPast(1, { lastUsed: now });
     return load('/projects/1/app-users').then(app => {
       const row = app.getComponent(FieldKeyRow);
-      row.findAllComponents(DateTime).at(1).props().iso.should.equal(now);
+      row.findAllComponents(DateTime)[1].props().iso.should.equal(now);
     });
   });
 
@@ -91,10 +91,10 @@ describe('FieldKeyRow', () => {
       it('shows a legacy QR code in the next popover', async () => {
         const app = await load('/projects/1/app-users', { attachTo: document.body });
         const links = app.findAll('.field-key-row-popover-link');
-        await links.at(0).trigger('click');
+        await links[0].trigger('click');
         document.querySelector('.popover .switch-code').click();
         await app.vm.$nextTick();
-        await links.at(1).trigger('click');
+        await links[1].trigger('click');
         const panel = document.querySelector('.popover .field-key-qr-panel');
         const text = panel.querySelectorAll('p')[1].textContent;
         text.should.containEql('App User 1');
@@ -107,7 +107,7 @@ describe('FieldKeyRow', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1, { token: null });
     return load('/projects/1/app-users').then(app => {
-      const text = app.getComponent(FieldKeyRow).findAll('td').at(3).text();
+      const text = app.getComponent(FieldKeyRow).findAll('td')[3].text();
       text.should.equal('Access revoked');
     });
   });

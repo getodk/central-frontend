@@ -49,8 +49,8 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const step = app.findAll('#form-checklist .checklist-step').at(1);
-          const text = step.findAll('p').at(1).text();
+          const p = app.get('#form-checklist .checklist-step:nth-child(2) p:nth-child(2)');
+          const text = p.text();
           text.should.containEql('10 ');
           text.should.not.containEql('11 ');
         })
@@ -60,8 +60,8 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const step = app.findAll('#form-checklist .checklist-step').at(1);
-          const text = step.findAll('p').at(1).text();
+          const p = app.get('#form-checklist .checklist-step:nth-child(2) p:nth-child(2)');
+          const text = p.text();
           text.should.containEql('11 ');
           text.should.not.containEql('10 ');
         });

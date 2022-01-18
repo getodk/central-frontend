@@ -58,7 +58,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the correct href attributes for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      mountComponent().findAll('a').wrappers.map(a => a.attributes().href).should.eql([
+      mountComponent().findAll('a').map(a => a.attributes().href).should.eql([
         '/v1/projects/1/forms/a%20b/submissions.csv.zip',
         '/v1/projects/1/forms/a%20b/submissions.csv.zip?attachments=false',
         '/v1/projects/1/forms/a%20b/submissions.csv'
@@ -67,7 +67,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the correct href attributes for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      mountComponent().findAll('a').wrappers.map(a => a.attributes().href).should.eql([
+      mountComponent().findAll('a').map(a => a.attributes().href).should.eql([
         '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip',
         '/v1/projects/1/forms/a%20b/draft/submissions.csv.zip?attachments=false',
         '/v1/projects/1/forms/a%20b/draft/submissions.csv'
@@ -76,8 +76,8 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('sets the target attribute to _blank', () => {
       testData.extendedForms.createPast(1);
-      mountComponent().findAll('a').wrappers.should.matchEach(a =>
-        a.attributes().target === '_blank');
+      for (const a of mountComponent().findAll('a'))
+        a.attributes().target.should.equal('_blank');
     });
 
     describe('form does not have a binary field', () => {
@@ -122,7 +122,7 @@ describe('SubmissionDownloadDropdown', () => {
     it('emits a decrypt event for the "without media" link', () => {
       testData.extendedForms.createPast(1);
       const dropdown = mountComponent();
-      dropdown.findAll('a').at(1).trigger('click');
+      dropdown.findAll('a')[1].trigger('click');
       dropdown.emitted().decrypt.should.eql([
         ['/v1/projects/1/forms/f/submissions.csv.zip?attachments=false']
       ]);
@@ -131,7 +131,7 @@ describe('SubmissionDownloadDropdown', () => {
     it('emits a decrypt event for the "primary data table" link', () => {
       testData.extendedForms.createPast(1);
       const dropdown = mountComponent();
-      dropdown.findAll('a').at(2).trigger('click');
+      dropdown.findAll('a')[2].trigger('click');
       dropdown.emitted().decrypt.should.eql([
         ['/v1/projects/1/forms/f/submissions.csv']
       ]);
@@ -139,7 +139,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('prevents default', () => {
       testData.extendedForms.createPast(1);
-      const a = mountComponent().findAll('a').at(1);
+      const a = mountComponent().findAll('a')[1];
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
@@ -149,7 +149,7 @@ describe('SubmissionDownloadDropdown', () => {
 
     it('does not set the target attribute', () => {
       testData.extendedForms.createPast(1);
-      for (const a of mountComponent().findAll('a').wrappers)
+      for (const a of mountComponent().findAll('a'))
         should.not.exist(a.attributes().target);
     });
 
@@ -178,7 +178,7 @@ describe('SubmissionDownloadDropdown', () => {
     const dropdown = mountComponent({
       props: { odataFilter: '__system/submitterId eq 1' }
     });
-    dropdown.findAll('a').wrappers.map(a => a.attributes().href).should.eql([
+    dropdown.findAll('a').map(a => a.attributes().href).should.eql([
       '/v1/projects/1/forms/f/submissions.csv.zip?%24filter=__system%2FsubmitterId+eq+1',
       '/v1/projects/1/forms/f/submissions.csv.zip?attachments=false&%24filter=__system%2FsubmitterId+eq+1',
       '/v1/projects/1/forms/f/submissions.csv?%24filter=__system%2FsubmitterId+eq+1'

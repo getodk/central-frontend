@@ -77,8 +77,8 @@ describe('UserEditPassword', () => {
       await submit(component, { match: false });
       const formGroups = component.findAll('.form-group');
       formGroups.length.should.equal(3);
-      formGroups.at(1).classes('has-error').should.be.true();
-      formGroups.at(2).classes('has-error').should.be.true();
+      formGroups[1].classes('has-error').should.be.true();
+      formGroups[2].classes('has-error').should.be.true();
     });
 
     it('removes .has-error once the passwords match', () =>
@@ -91,8 +91,8 @@ describe('UserEditPassword', () => {
         })
         .beforeAnyResponse(component => {
           const formGroups = component.findAll('.form-group');
-          formGroups.at(1).classes('has-error').should.be.false();
-          formGroups.at(2).classes('has-error').should.be.false();
+          formGroups[1].classes('has-error').should.be.false();
+          formGroups[2].classes('has-error').should.be.false();
         })
         .respondWithSuccess());
   });
@@ -103,7 +103,7 @@ describe('UserEditPassword', () => {
       await submit(component, { validSizePass: false });
       const formGroups = component.findAll('.form-group');
       formGroups.length.should.equal(3);
-      formGroups.at(1).classes('has-error').should.be.true();
+      formGroups[1].classes('has-error').should.be.true();
     });
 
     it('removes .has-error once the passwords length > 10', () =>
@@ -118,7 +118,7 @@ describe('UserEditPassword', () => {
         })
         .beforeAnyResponse(component => {
           const formGroups = component.findAll('.form-group');
-          formGroups.at(1).classes('has-error').should.be.false();
+          formGroups[1].classes('has-error').should.be.false();
         })
         .respondWithSuccess());
   });

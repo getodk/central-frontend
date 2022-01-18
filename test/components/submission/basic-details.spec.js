@@ -25,7 +25,7 @@ describe('SubmissionBasicDetails', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedUsers.first()
     });
-    const span = mountComponent().findAll('dd').at(1).get('span');
+    const span = mountComponent().get('dd:nth-child(2) span');
     span.text().should.equal('Alice');
     span.attributes().title.should.equal('Alice');
   });
@@ -80,7 +80,7 @@ describe('SubmissionBasicDetails', () => {
   describe('device ID', () => {
     it('shows the device ID', () => {
       testData.extendedSubmissions.createPast(1, { deviceId: 'foo' });
-      const span = mountComponent().findAll('dd').at(4).get('span');
+      const span = mountComponent().get('dd:nth-child(5) span');
       span.text().should.equal('foo');
       span.attributes().title.should.equal('foo');
     });
@@ -97,7 +97,7 @@ describe('SubmissionBasicDetails', () => {
         attachmentsExpected: 3,
         attachmentsPresent: 2
       });
-      const text = mountComponent().findAll('dd').at(4).get('span').text();
+      const text = mountComponent().get('dd:nth-child(5) span').text();
       text.should.equal('2 files / 3 expected');
     });
 
@@ -106,9 +106,10 @@ describe('SubmissionBasicDetails', () => {
         attachmentsExpected: 3,
         attachmentsPresent: 2
       });
-      const spans = mountComponent().findAll('dd').at(4).findAll('span');
-      spans.at(1).classes('icon-exclamation-triangle').should.be.true();
-      spans.at(2).text().should.equal('Missing media');
+      const spans = mountComponent().findAll('dd:nth-child(5) span');
+      spans.length.should.equal(3);
+      spans[1].classes('icon-exclamation-triangle').should.be.true();
+      spans[2].text().should.equal('Missing media');
     });
 
     it('does not render if no attachments are expected', () => {

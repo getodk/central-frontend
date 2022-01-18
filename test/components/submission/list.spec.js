@@ -107,7 +107,7 @@ describe('SubmissionList', () => {
         const submissions = testData.extendedSubmissions.sorted();
         submissions.length.should.be.aboveOrEqual(count + offset);
         for (let i = 0; i < rows.length; i += 1) {
-          const text = rows.at(i).findAll('td').at(-1).text();
+          const text = rows[i].get('td:last-child').text();
           text.should.equal(submissions[i + offset].instanceId);
         }
       };
@@ -119,10 +119,9 @@ describe('SubmissionList', () => {
           message.should.not.be.hidden();
           message.get('#submission-list-message-text').text().should.equal(text);
 
-          const spinners = component.findAllComponents(Spinner)
-            .filter(spinner => message.element.contains(spinner.element));
-          spinners.length.should.equal(1);
-          spinners.at(0).props().state.should.equal(true);
+          const spinner = component.findAllComponents(Spinner).find(wrapper =>
+            message.element.contains(wrapper.element));
+          spinner.props().state.should.be.true();
         }
       };
 

@@ -23,7 +23,7 @@ describe('ProjectOverviewRightNow', () => {
       testData.extendedProjects.createPast(1, { appUsers: 3 });
       const counts = mountComponent().findAll('.summary-item-heading');
       counts.length.should.equal(2);
-      counts.at(0).text().should.equal('3');
+      counts[0].text().should.equal('3');
     });
 
     it('links to the app users page', () => {
@@ -38,7 +38,7 @@ describe('ProjectOverviewRightNow', () => {
       testData.extendedProjects.createPast(1, { forms: 3 });
       const counts = mountComponent().findAll('.summary-item-heading');
       counts.length.should.equal(2);
-      counts.at(1).text().should.equal('3');
+      counts[1].text().should.equal('3');
     });
 
     it('scrolls down after a click', async () => {
@@ -46,7 +46,7 @@ describe('ProjectOverviewRightNow', () => {
       const app = await load('/projects/1', { attachTo: document.body });
       window.pageYOffset.should.equal(0);
       const component = app.getComponent(ProjectOverviewRightNow);
-      await component.findAll('.summary-item-icon-container').at(1).trigger('click');
+      await component.findAll('.summary-item-icon-container')[1].trigger('click');
       // Wait for the animation to complete.
       await wait(400);
       window.pageYOffset.should.not.equal(0);

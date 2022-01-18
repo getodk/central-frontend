@@ -31,7 +31,7 @@ describe('ProjectList', () => {
         const component = await load('/', { root: false });
         const counts = component.findAll('.summary-item-heading');
         counts.length.should.equal(2);
-        counts.at(0).text().should.equal('1');
+        counts[0].text().should.equal('1');
       });
 
       it('links to the users page', async () => {
@@ -49,7 +49,7 @@ describe('ProjectList', () => {
         const component = await load('/', { root: false });
         const counts = component.findAll('.summary-item-heading');
         counts.length.should.equal(2);
-        counts.at(1).text().should.equal('2');
+        counts[1].text().should.equal('2');
       });
 
       it('scrolls down after a click', async () => {
@@ -59,7 +59,7 @@ describe('ProjectList', () => {
           attachTo: document.body
         });
         window.pageYOffset.should.equal(0);
-        await component.findAll('.summary-item-icon-container').at(1).trigger('click');
+        await component.findAll('.summary-item-icon-container')[1].trigger('click');
         // Wait for the animation to complete.
         await wait(400);
         window.pageYOffset.should.not.equal(0);
@@ -72,7 +72,7 @@ describe('ProjectList', () => {
       const component = await load('/', { root: false }, { users: false });
       const counts = component.findAll('.summary-item-heading');
       counts.length.should.equal(1);
-      counts.at(0).text().should.eql('2');
+      counts[0].text().should.eql('2');
     });
   });
 

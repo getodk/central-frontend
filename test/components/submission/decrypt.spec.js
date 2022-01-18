@@ -61,7 +61,7 @@ describe('SubmissionDecrypt', () => {
     });
     const introductions = modal.findAll('.modal-introduction');
     introductions.length.should.equal(2);
-    introductions.at(1).text().should.equal('Hint: some hint');
+    introductions[1].text().should.equal('Hint: some hint');
   });
 
   it('resets the form after the modal is hidden', async () => {

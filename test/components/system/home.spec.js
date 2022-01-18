@@ -17,7 +17,7 @@ describe('SystemHome', () => {
       mocks: { $route: '/system/backups' }
     });
     const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub);
-    const to = links.wrappers.map(link => link.props().to);
+    const to = links.map(link => link.props().to);
     to.should.eql(['/system/backups', '/system/audits', '/system/analytics']);
   });
 
@@ -36,7 +36,7 @@ describe('SystemHome', () => {
       stubs: { RouterLink: RouterLinkStub, RouterView: true },
       mocks: { $route: '/system/backups' }
     });
-    component.findAll('#page-head-tabs li').at(2).should.be.hidden();
+    component.findAll('#page-head-tabs li')[2].should.be.hidden();
   });
 
   describe('active tab', () => {
@@ -59,7 +59,7 @@ describe('SystemHome', () => {
       const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub)
         .filter(link => (link.element.closest('.active') != null));
       links.length.should.equal(1);
-      links.at(0).props().to.should.equal('/system/audits');
+      links[0].props().to.should.equal('/system/audits');
     });
 
     it('activates correct tab after user navigates to .../analytics', () => {
@@ -70,7 +70,7 @@ describe('SystemHome', () => {
       const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub)
         .filter(link => (link.element.closest('.active') != null));
       links.length.should.equal(1);
-      links.at(0).props().to.should.equal('/system/analytics');
+      links[0].props().to.should.equal('/system/analytics');
     });
   });
 });
