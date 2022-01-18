@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueRouter from 'vue-router';
+import { createMemoryHistory, createRouter, createWebHashHistory } from 'vue-router';
 import { last } from 'ramda';
 
 import routes from './routes';
@@ -22,13 +22,16 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-const router = new VueRouter({
-  // Using abstract mode simplifies testing quite a bit: there were issues using
-  // hash mode. In hash mode, when the router is injected into a component, the
-  // router examines the hash to determine the initial location. But that
-  // becomes an issue during testing, because the hash diverges from the current
-  // route over time: Headless Chrome seems to rate-limit hash changes.
-  mode: process.env.NODE_ENV === 'test' ? 'abstract' : 'hash',
+const router = createRouter({
+  // Using memory history mode simplifies testing quite a bit: there were issues
+  // using hash mode. In hash mode, when the router is installed on an
+  // application instance, the router examines the hash to determine the initial
+  // location. But that becomes an issue during testing, because the hash
+  // diverges from the current route over time: Headless Chrome seems to
+  // rate-limit hash changes.
+  history: process.env.NODE_ENV === 'test'
+    ? createMemoryHistory()
+    : createWebHashHistory(),
   routes
 });
 export default router;
