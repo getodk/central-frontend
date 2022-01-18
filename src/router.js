@@ -87,16 +87,11 @@ const restoreSessionForRoute = async (to) => {
   }
 };
 
-router.beforeEach((to, from, next) => {
-  if (!store.state.router.sendInitialRequests) {
-    next();
-    return;
-  }
-
-  Promise.allSettled([loadLocale(initialLocale()), restoreSessionForRoute(to)])
+router.beforeEach(to => {
+  if (!store.state.router.sendInitialRequests) return true;
+  return Promise.allSettled([loadLocale(initialLocale()), restoreSessionForRoute(to)])
     .then(() => {
       store.commit('setSendInitialRequests', false);
-      next();
     });
 });
 
@@ -106,22 +101,16 @@ router.beforeEach((to, from, next) => {
 // LOGIN
 
 // Implements the requireLogin and requireAnonymity meta fields.
-router.beforeEach((to, from, next) => {
+router.beforeEach(to => {
   const { meta } = last(to.matched);
-  const { session } = store.state.request.data;
   if (meta.requireLogin) {
-    if (session != null)
-      next();
-    else
-      next({ path: '/login', query: { next: to.fullPath } });
-  } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
-    if (session != null)
-      next('/');
-    else
-      next();
-  } else {
-    next();
+    return store.state.request.data.session != null
+      ? true
+      : { path: '/login', query: { next: to.fullPath } };
   }
+  if (meta.requireAnonymity)
+    return store.state.request.data.session != null ? '/' : true;
+  return true;
 });
 
 
@@ -142,12 +131,7 @@ router.afterEach((to, from) => {
 
 // validateData
 
-router.beforeEach((to, from, next) => {
-  if (canRoute(to, from, store))
-    next();
-  else
-    next('/');
-});
+router.beforeEach((to, from) => (canRoute(to, from, store) ? true : '/'));
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
@@ -193,12 +177,7 @@ window.addEventListener('beforeunload', (event) => {
   event.returnValue = ''; // eslint-disable-line no-param-reassign
 });
 
-router.beforeEach((to, from, next) => {
-  if (confirmUnsavedChanges(store))
-    next();
-  else
-    next(false);
-});
+router.beforeEach(() => confirmUnsavedChanges(store));
 
 router.afterEach(() => {
   if (store.state.router.unsavedChanges)

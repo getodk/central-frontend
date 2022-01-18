@@ -648,12 +648,7 @@ const routes = [
           },
           title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
         },
-        beforeEnter: (to, from, next) => {
-          if (store.state.config.showsBackups)
-            next();
-          else
-            next('/');
-        }
+        beforeEnter: () => (store.state.config.showsBackups ? true : '/')
       }),
       asyncRoute({
         path: 'audits',
@@ -682,12 +677,7 @@ const routes = [
             ]
           }
         },
-        beforeEnter: (to, from, next) => {
-          if (store.state.config.showsAnalytics)
-            next();
-          else
-            next('/');
-        }
+        beforeEnter: () => (store.state.config.showsAnalytics ? true : '/')
       })
     ]
   }),
