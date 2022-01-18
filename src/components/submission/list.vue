@@ -329,11 +329,7 @@ export default {
       const index = this.submissions.findIndex(submission =>
         submission.__id === originalSubmission.__id);
       if (index !== -1) {
-        const submission = this.submissions[index];
-        this.$set(this.submissions, index, {
-          ...submission,
-          __system: { ...submission.__system, reviewState }
-        });
+        this.submissions[index].__system.reviewState = reviewState;
         this.$refs.table.afterReview(index);
       }
     }

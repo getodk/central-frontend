@@ -196,7 +196,7 @@ export default {
       this.changesByForm = Object.create(null);
       for (const form of this.forms) {
         const fieldKeyAccess = this.fieldKeyAccessByForm[form.xmlFormId];
-        this.$set(this.changesByForm, form.xmlFormId, {
+        this.changesByForm[form.xmlFormId] = {
           previous: {
             state: form.state,
             fieldKeyAccess
@@ -205,7 +205,7 @@ export default {
             state: form.state,
             fieldKeyAccess: { ...fieldKeyAccess }
           }
-        });
+        };
       }
     },
     setUnsavedChanges() {
