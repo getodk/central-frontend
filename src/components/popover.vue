@@ -39,6 +39,7 @@ own popover functionality, perhaps using Popper.
 </template>
 
 <script>
+import { markRaw } from 'vue';
 import 'bootstrap/js/tooltip';
 import 'bootstrap/js/popover';
 
@@ -80,7 +81,7 @@ export default {
   },
   methods: {
     show() {
-      this.wrapper = $(this.target)
+      this.wrapper = markRaw($(this.target)
         .popover({
           container: 'body',
           content: this.$el.innerHTML,
@@ -89,7 +90,7 @@ export default {
           trigger: 'manual',
           animation: false
         })
-        .popover('show');
+        .popover('show'));
     },
     hide() {
       this.wrapper.popover('destroy');
