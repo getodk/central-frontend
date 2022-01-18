@@ -58,8 +58,9 @@ export default {
       type: Object,
       required: true
     },
-    highlighted: Number // eslint-disable-line vue/require-default-prop
+    highlighted: Number
   },
+  emits: ['show-code', 'revoke'],
   computed: {
     actionsId() {
       return `field-key-row-actions${this.fieldKey.id}`;

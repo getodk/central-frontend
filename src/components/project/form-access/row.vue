@@ -73,6 +73,7 @@ export default {
       default: false
     }
   },
+  emits: ['update:state', 'update:fieldKeyAccess'],
   computed: {
     ...mapGetters(['fieldKeysWithToken']),
     htmlClass() {
@@ -94,7 +95,7 @@ export default {
       this.$emit('update:state', this.form, state);
     },
     updateFieldKeyAccess(fieldKey, accessible) {
-      this.$emit('update:field-key-access', this.form, fieldKey, accessible);
+      this.$emit('update:fieldKeyAccess', this.form, fieldKey, accessible);
     }
   }
 };

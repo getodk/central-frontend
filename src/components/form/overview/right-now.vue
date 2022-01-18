@@ -59,6 +59,7 @@ import FormVersionStandardButtons from '../../form-version/standard-buttons.vue'
 import FormVersionSummaryItem from '../../form-version/summary-item.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+
 import routes from '../../../mixins/routes';
 import { requestData } from '../../../store/modules/request';
 
@@ -71,6 +72,7 @@ export default {
     SummaryItem
   },
   mixins: [routes()],
+  emits: ['view-xml'],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.

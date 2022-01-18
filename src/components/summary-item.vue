@@ -53,16 +53,14 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'SummaryItem',
   props: {
-    routeTo: String, // eslint-disable-line vue/require-default-prop
-    clickable: {
-      type: Boolean,
-      default: false
-    },
+    routeTo: String,
+    clickable: Boolean,
     icon: {
       type: String,
       required: true
     }
   },
+  emits: ['click'],
   computed: {
     iconClass() {
       return `icon-${this.icon}`;

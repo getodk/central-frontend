@@ -52,6 +52,7 @@ export default {
     },
     feed: Array
   },
+  emits: ['success'],
   data() {
     return {
       awaitingResponse: false,

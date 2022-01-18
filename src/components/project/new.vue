@@ -45,6 +45,7 @@ import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
@@ -58,6 +59,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false,

@@ -55,6 +55,7 @@ export default {
     },
     odataFilter: String
   },
+  emits: ['decrypt'],
   computed: {
     ...requestData(['fields', 'odataChunk']),
     ...mapGetters(['managedKey']),

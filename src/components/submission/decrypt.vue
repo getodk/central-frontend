@@ -53,16 +53,14 @@ export default {
   components: { FormGroup, Modal },
   mixins: [callWait()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    formAction: String, // eslint-disable-line vue/require-default-prop
+    state: Boolean,
+    formAction: String,
     delayBetweenChecks: {
       type: Number,
       default: 1000
     }
   },
+  emits: ['hide'],
   data() {
     return {
       calls: {},

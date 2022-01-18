@@ -102,6 +102,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       dragDepth: 0,

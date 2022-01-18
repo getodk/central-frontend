@@ -107,6 +107,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'BackupStatus',
   components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
+  emits: ['create', 'terminate'],
   data() {
     return {
       downloading: false

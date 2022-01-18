@@ -48,6 +48,7 @@ export default {
       required: true
     }
   },
+  emits: ['view-xml'],
   computed: {
     toggleId() {
       return `form-version-def-dropdown-toggle${this.version.key}`;

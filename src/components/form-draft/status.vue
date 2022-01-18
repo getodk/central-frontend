@@ -123,6 +123,7 @@ export default {
       required: true
     }
   },
+  emits: ['fetch-draft', 'fetch-form'],
   data() {
     return {
       // Modals

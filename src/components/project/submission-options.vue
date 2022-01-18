@@ -72,6 +72,7 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import LinkIfCan from '../link-if-can.vue';
 import Modal from '../modal.vue';
+
 import routes from '../../mixins/routes';
 
 export default {
@@ -83,7 +84,8 @@ export default {
       type: Boolean,
       default: false
     }
-  }
+  },
+  emits: ['hide']
 };
 </script>
 

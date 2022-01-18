@@ -88,6 +88,7 @@ export default {
   name: 'AnalyticsForm',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  emits: ['preview'],
   data() {
     const requestData = this.$store.state.request.data;
     const configValue = requestData.analyticsConfig

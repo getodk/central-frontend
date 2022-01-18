@@ -39,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -54,6 +55,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false

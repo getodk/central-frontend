@@ -80,6 +80,7 @@ export default {
   name: 'FormChecklist',
   components: { ChecklistStep, DocLink, SentenceSeparator },
   mixins: [routes()],
+  emits: ['show-submission-options'],
   computed: {
     ...requestData(requestKeys),
     dataExists() {

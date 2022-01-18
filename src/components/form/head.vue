@@ -121,6 +121,7 @@ export default {
   name: 'FormHead',
   components: { PageBack },
   mixins: [routes(), tab()],
+  emits: ['create-draft'],
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.

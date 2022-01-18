@@ -99,6 +99,7 @@ export default {
     SentenceSeparator
   },
   mixins: [modal(), routes()],
+  emits: ['fetch-project'],
   data() {
     return {
       enableEncryption: {

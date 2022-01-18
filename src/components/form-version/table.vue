@@ -32,6 +32,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormVersionTable',
   components: { FormVersionRow },
+  emits: ['view-xml'],
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['formVersions'])

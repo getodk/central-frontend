@@ -91,6 +91,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false,

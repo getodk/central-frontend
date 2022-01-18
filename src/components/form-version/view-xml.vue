@@ -50,6 +50,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide'],
   computed: {
     ...requestData(['formVersionXml']),
     initiallyLoading() {

@@ -56,6 +56,7 @@ export default {
   name: 'ProjectOverviewRightNow',
   components: { PageSection, SummaryItem },
   mixins: [routes()],
+  emits: ['scroll-to-forms'],
   computed: requestData(['project'])
 };
 </script>

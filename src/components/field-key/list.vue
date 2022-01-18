@@ -98,6 +98,7 @@ export default {
       required: true
     }
   },
+  emits: ['fetch-field-keys'],
   data() {
     return {
       // The id of the highlighted app user

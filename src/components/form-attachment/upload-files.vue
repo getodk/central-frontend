@@ -53,6 +53,7 @@ export default {
       default: false
     }
   },
+  emits: ['hide', 'select'],
   methods: {
     afterChange(event) {
       this.$emit('select', event.target.files);
