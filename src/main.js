@@ -21,8 +21,6 @@ import i18n from './i18n';
 import router from './router';
 import store from './store';
 
-Vue.config.productionTip = false;
-
 new Vue({ // eslint-disable-line no-new
   el: '#app',
   render: (h) => h(App),
