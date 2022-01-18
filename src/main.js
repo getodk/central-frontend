@@ -9,10 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
+import { createApp } from 'vue';
 
-// These files must be imported before the rest.
-import './plugins';
 import './setup';
 
 import App from './components/app.vue';
@@ -21,10 +19,8 @@ import i18n from './i18n';
 import router from './router';
 import store from './store';
 
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router,
-  store,
-  i18n
-});
+createApp(App)
+  .use(i18n)
+  .use(store)
+  .use(router)
+  .mount('#app');
