@@ -55,6 +55,7 @@ export default {
   props: {
     state: Boolean
   },
+  emits: ['hide'],
   methods: {
     hideAndNavigate(navigate, event) {
       this.$emit('hide');

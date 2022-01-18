@@ -124,6 +124,7 @@ export default {
     formVersion: Object,
     odataFilter: String
   },
+  emits: ['hide'],
   data() {
     return {
       calls: {},

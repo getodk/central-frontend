@@ -64,6 +64,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -79,12 +80,10 @@ export default {
       type: Object,
       required: true
     },
-    admin: {
-      type: Boolean,
-      required: true
-    },
-    highlighted: Number // eslint-disable-line vue/require-default-prop
+    admin: Boolean,
+    highlighted: Number
   },
+  emits: ['reset-password', 'assigned-role', 'retire'],
   data() {
     return {
       awaitingResponse: false,

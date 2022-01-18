@@ -74,6 +74,7 @@ export default {
       required: true
     }
   },
+  emits: ['update-review-state', 'comment'],
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.

@@ -28,6 +28,7 @@ export default {
     formVersion: Object,
     filtered: Boolean
   },
+  emits: ['decrypt'],
   computed: {
     ...requestData(['odataChunk']),
     text() {

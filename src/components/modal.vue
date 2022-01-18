@@ -66,6 +66,7 @@ export default {
     backdrop: Boolean,
     large: Boolean
   },
+  emits: ['shown', 'hide'],
   data() {
     id += 1;
     return {

@@ -35,6 +35,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -44,12 +45,10 @@ export default {
   components: { Modal, Spinner },
   mixins: [request()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    publicLink: Object // eslint-disable-line vue/require-default-prop
+    state: Boolean,
+    publicLink: Object
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false

@@ -29,14 +29,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import PublicLinkRow from './row.vue';
+
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'PublicLinkTable',
   components: { PublicLinkRow },
   props: {
-    highlighted: Number // eslint-disable-line vue/require-default-prop
+    highlighted: Number
   },
+  emits: ['revoke'],
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['publicLinks'])

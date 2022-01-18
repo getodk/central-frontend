@@ -51,6 +51,7 @@ export default {
     state: Boolean,
     user: Object
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false
