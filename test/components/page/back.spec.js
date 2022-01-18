@@ -10,7 +10,7 @@ describe('PageBack', () => {
   describe('linkTitle prop is true', () => {
     it('renders a link', () => {
       const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: true },
+        props: { to: '/users', linkTitle: true },
         stubs: { RouterLink: RouterLinkStub }
       });
       const link = component.getComponent(RouterLinkStub);
@@ -20,7 +20,7 @@ describe('PageBack', () => {
 
     it('uses the title slot', () => {
       const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: true },
+        props: { to: '/users', linkTitle: true },
         slots: { title: TestUtilSpan },
         stubs: { RouterLink: RouterLinkStub }
       });
@@ -32,7 +32,7 @@ describe('PageBack', () => {
   describe('linkTitle prop is false', () => {
     it('does not render a link', () => {
       const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: false },
+        props: { to: '/users', linkTitle: false },
         stubs: { RouterLink: RouterLinkStub }
       });
       component.find('#page-back-title a').exists().should.be.false();
@@ -40,7 +40,7 @@ describe('PageBack', () => {
 
     it('uses the title slot', () => {
       const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: false },
+        props: { to: '/users', linkTitle: false },
         slots: { title: TestUtilSpan },
         stubs: { RouterLink: RouterLinkStub }
       });
@@ -51,7 +51,7 @@ describe('PageBack', () => {
 
   it('renders a link for the back slot', () => {
     const component = mount(PageBack, {
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       stubs: { RouterLink: RouterLinkStub }
     });
     const link = component.getComponent(RouterLinkStub);
@@ -61,7 +61,7 @@ describe('PageBack', () => {
 
   it('uses the back slot', () => {
     const component = mount(PageBack, {
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       slots: { back: TestUtilSpan },
       stubs: { RouterLink: RouterLinkStub }
     });

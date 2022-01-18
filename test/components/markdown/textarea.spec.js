@@ -3,28 +3,19 @@ import MarkdownView from '../../../src/components/markdown/view.vue';
 
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData) => {
-  const props = {
-    defaultText: 'default text',
-    showFooter: false,
-    required: false,
-    ...propsData
-  };
-
+const mountComponent = (props) => {
   const parent = mount({
     data() {
       return {
+        props: { defaultText: 'default text', ...props },
         body: ''
       };
     },
-    template: `<div><markdown-textarea v-model="body"
-      default-text="${props.defaultText}"
-      :show-footer="${props.showFooter}"
-      :required="${props.required}">
-    </markdown-textarea></div>`,
+    template: `<div>
+      <markdown-textarea v-model="body" v-bind="props"></markdown-textarea>
+    </div>`,
     components: { 'markdown-textarea': MarkdownTextarea }
   });
-
   return parent.getComponent(MarkdownTextarea);
 };
 
@@ -97,7 +88,7 @@ describe('MarkdownTextarea', () => {
 
   it('uses the default slot', () => {
     const component = mount(MarkdownTextarea, {
-      propsData: { value: '', defaultText: 'default text', showFooter: true },
+      props: { value: '', defaultText: 'default text', showFooter: true },
       slots: { default: '<button id="some-button">Button text</button>' }
     });
     component.find('#some-button').exists().should.be.true();

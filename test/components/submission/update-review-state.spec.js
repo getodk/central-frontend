@@ -7,7 +7,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => ({
-  propsData: {
+  props: {
     state: false,
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,

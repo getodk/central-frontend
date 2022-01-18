@@ -860,7 +860,7 @@ describe('FormAttachmentList', () => {
 
     it('resets the input after a file is selected', async () => {
       const modal = mount(FormAttachmentUploadFiles, {
-        propsData: { state: true }
+        props: { state: true }
       });
       const input = modal.get('input');
       await setFiles(input, blankFiles(['a']));

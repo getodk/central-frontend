@@ -7,11 +7,11 @@ import { mount } from '../util/lifecycle';
 
 const mountComponent = (options = {}) => mount(Modal, {
   ...options,
-  propsData: {
+  props: {
     state: true,
     hideable: true,
     backdrop: true,
-    ...options.propsData
+    ...options.props
   },
   slots: {
     title: 'Some Title',
@@ -42,7 +42,7 @@ describe('Modal', () => {
   describe('state prop is true', () => {
     it('shows the modal', () => {
       mountComponent({
-        propsData: { state: true },
+        props: { state: true },
         attachTo: document.body
       });
       document.body.classList.contains('modal-open').should.be.true();
@@ -50,7 +50,7 @@ describe('Modal', () => {
 
     it('emits a shown event', () => {
       const modal = mountComponent({
-        propsData: { state: true }
+        props: { state: true }
       });
       modal.emitted().shown.should.eql([[]]);
     });
@@ -59,7 +59,7 @@ describe('Modal', () => {
   describe('after the state prop changes to true', () => {
     it('shows the modal', async () => {
       const modal = mountComponent({
-        propsData: { state: false },
+        props: { state: false },
         attachTo: document.body
       });
       await modal.setProps({ state: true });
@@ -68,7 +68,7 @@ describe('Modal', () => {
 
     it('hides any alert', async () => {
       const modal = mountComponent({
-        propsData: { state: false }
+        props: { state: false }
       });
       modal.vm.$alert().info('Some alert');
       await modal.setProps({ state: true });
@@ -79,7 +79,7 @@ describe('Modal', () => {
   describe('after the state prop changes to false', () => {
     it('hides the modal', async () => {
       const modal = mountComponent({
-        propsData: { state: true },
+        props: { state: true },
         attachTo: document.body
       });
       await modal.setProps({ state: false });
@@ -88,7 +88,7 @@ describe('Modal', () => {
 
     it('hides an alert that was shown before modal was hidden', async () => {
       const modal = mountComponent({
-        propsData: { state: true }
+        props: { state: true }
       });
       modal.vm.$alert().info('Some alert');
       await modal.vm.$nextTick();
@@ -98,7 +98,7 @@ describe('Modal', () => {
 
     it('does not hide an alert that is set as modal is hidden', async () => {
       const modal = mountComponent({
-        propsData: { state: true }
+        props: { state: true }
       });
       modal.vm.$alert().info('Some alert');
       await modal.setProps({ state: false });
@@ -122,7 +122,7 @@ describe('Modal', () => {
 
   it('adds the modal-lg class if the large prop is true', () => {
     const modal = mountComponent({
-      propsData: { large: true }
+      props: { large: true }
     });
     modal.get('.modal-dialog').classes('modal-lg').should.be.true();
   });

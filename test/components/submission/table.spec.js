@@ -12,7 +12,7 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
   ...mountOptions,
-  propsData: {
+  props: {
     projectId: '1',
     xmlFormId: 'f',
     draft: false,
@@ -20,7 +20,7 @@ const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
     fields: testData.extendedForms.last()._fields
       .map(field => new Field(field)),
     originalCount: testData.extendedSubmissions.size,
-    ...mountOptions.propsData
+    ...mountOptions.props
   },
   requestData: { project: testData.extendedProjects.last() },
   stubs: { RouterLink: RouterLinkStub }
@@ -33,7 +33,7 @@ describe('SubmissionTable', () => {
     it('renders the correct headers for a form', () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { draft: false }
+        props: { draft: false }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
@@ -43,7 +43,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { draft: true }
+        props: { draft: true }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted at']);
@@ -69,7 +69,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { fields: [new Field(fields[1])] }
+        props: { fields: [new Field(fields[1])] }
       });
       const table = component.get('#submission-table-data');
       headers(table).should.eql(['g-s', 'Instance ID']);
@@ -90,7 +90,7 @@ describe('SubmissionTable', () => {
     testData.extendedForms.createPast(1, { submissions: 10 });
     testData.extendedSubmissions.createPast(10);
     const component = mountComponent({
-      propsData: { submissions: testData.submissionOData(2).value }
+      props: { submissions: testData.submissionOData(2).value }
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.length.should.equal(2);

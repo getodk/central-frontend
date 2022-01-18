@@ -778,7 +778,7 @@ Object.assign(MockHttp.prototype, commonTests);
 export const mockHttp = () => new MockHttp();
 
 // Mounts the component associated with the bottom-level route matching
-// `location`, setting propsData. If respondForOptions is not `false`, it will
+// `location`, setting `props`. If respondForOptions is not `false`, it will
 // also set requestData and respond to the initial requests that the component
 // sends.
 const loadBottomComponent = (location, mountOptions, respondForOptions) => {
@@ -798,7 +798,7 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
 
   const bottomRouteRecord = last(route.matched);
   const props = routeProps(route, bottomRouteRecord.props.default);
-  fullMountOptions.propsData = bottomRouteRecord.meta.asyncRoute == null
+  fullMountOptions.props = bottomRouteRecord.meta.asyncRoute == null
     ? props
     : props.props;
 

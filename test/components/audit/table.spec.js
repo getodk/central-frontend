@@ -14,7 +14,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(AuditRow, {
-  propsData: { audit: new Audit(testData.extendedAudits.last()) },
+  props: { audit: new Audit(testData.extendedAudits.last()) },
   stubs: { RouterLink: RouterLinkStub },
   mocks: { $route: '/system/audits' }
 });

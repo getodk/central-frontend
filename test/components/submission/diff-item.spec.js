@@ -5,7 +5,7 @@ import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (entry) => mount(SubmissionDiffItem, {
-  propsData: {
+  props: {
     entry,
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,

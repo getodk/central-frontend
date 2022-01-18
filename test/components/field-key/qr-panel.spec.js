@@ -5,10 +5,10 @@ import FieldKey from '../../../src/presenters/field-key';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData) => mount(FieldKeyQrPanel, {
-  propsData: {
+const mountComponent = (props) => mount(FieldKeyQrPanel, {
+  props: {
     fieldKey: new FieldKey(testData.extendedFieldKeys.last()),
-    ...propsData
+    ...props
   },
   requestData: { project: testData.extendedProjects.last() }
 });

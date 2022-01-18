@@ -14,7 +14,7 @@ describe('ActorLink', () => {
 
   it('renders a LinkIfCan component if the actor is a user', () => {
     const component = mount(ActorLink, {
-      propsData: { actor: testData.extendedUsers.first() },
+      props: { actor: testData.extendedUsers.first() },
       stubs: { RouterLink: RouterLinkStub },
       mocks: { $route: '/system/audits' }
     });
@@ -29,7 +29,7 @@ describe('ActorLink', () => {
       .createPast(1, { displayName: 'My App User' })
       .last();
     const component = mount(ActorLink, {
-      propsData: { actor },
+      props: { actor },
       stubs: { RouterLink: RouterLinkStub },
       mocks: { $route: '/system/audits' }
     });

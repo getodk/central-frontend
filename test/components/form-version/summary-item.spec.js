@@ -11,7 +11,7 @@ describe('FormVersionSummaryItem', () => {
     it('shows the version string', () => {
       const form = testData.extendedForms.createPast(1).last();
       const component = mount(FormVersionSummaryItem, {
-        propsData: { version: new Form(form) }
+        props: { version: new Form(form) }
       });
       const span = component.get('.version span');
       span.text().should.equal('v1');
@@ -21,7 +21,7 @@ describe('FormVersionSummaryItem', () => {
     it('accounts for an empty version string', () => {
       const form = testData.extendedForms.createPast(1, { version: '' }).last();
       const component = mount(FormVersionSummaryItem, {
-        propsData: { version: new Form(form) }
+        props: { version: new Form(form) }
       });
       const version = component.get('.version');
       version.classes('blank-version').should.be.true();
@@ -34,7 +34,7 @@ describe('FormVersionSummaryItem', () => {
   it('uses the body slot', () => {
     const form = testData.extendedForms.createPast(1).last();
     const component = mount(FormVersionSummaryItem, {
-      propsData: { version: new Form(form) },
+      props: { version: new Form(form) },
       slots: { body: TestUtilP }
     });
     component.get('.summary-item-body p').text().should.equal('Some p text');

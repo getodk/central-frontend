@@ -17,18 +17,16 @@ const toISO = (value) => {
   });
 };
 const mountComponent = (options = {}) => {
-  const propsData = options.propsData != null ? options.propsData : {};
-  const value = propsData.value != null
-    ? propsData.value
+  const props = options.props != null ? options.props : {};
+  const value = props.value != null
+    ? props.value
     : ['1970-01-01', '1970-01-01'];
   return mount(DateRangePicker, {
     ...options,
-    propsData: {
-      ...propsData,
+    props: {
+      ...props,
       value: value.map(fromISO),
-      placeholder: propsData.placeholder != null
-        ? propsData.placeholder
-        : 'Date range'
+      placeholder: props.placeholder != null ? props.placeholder : 'Date range'
     }
   });
 };
@@ -51,7 +49,7 @@ describe('DateRangePicker', () => {
   describe('initial value of flatpickrValue', () => {
     it('initializes flatpickrValue according to value', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'] }
+        props: { value: ['1970-01-02', '1970-01-03'] }
       });
       component.vm.flatpickrValue.map(toISO).should.eql([
         '1970-01-02T00:00',
@@ -63,7 +61,7 @@ describe('DateRangePicker', () => {
 
     it('initializes flatpickrValue correctly for a range of a single date', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-02'] }
+        props: { value: ['1970-01-02', '1970-01-02'] }
       });
       component.vm.flatpickrValue.map(toISO).should.eql([
         '1970-01-02T00:00',
@@ -74,7 +72,7 @@ describe('DateRangePicker', () => {
 
     it('initializes flatpickrValue correctly if value is empty', () => {
       const component = mountComponent({
-        propsData: { value: [] }
+        props: { value: [] }
       });
       component.vm.flatpickrValue.length.should.equal(0);
       component.get('input').element.value.should.equal('');
@@ -84,7 +82,7 @@ describe('DateRangePicker', () => {
   describe('value of flatpickrValue after the value prop changes', () => {
     it('changes flatpickrValue after value changes', async () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'] }
+        props: { value: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ value: ['1970-01-04', '1970-01-05'].map(fromISO) });
       component.vm.flatpickrValue.should.equal('1970/01/04 to 1970/01/05');
@@ -94,7 +92,7 @@ describe('DateRangePicker', () => {
 
     it('changes flatpickrValue after value changes to range of single date', async () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'] }
+        props: { value: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ value: ['1970-01-04', '1970-01-04'].map(fromISO) });
       component.vm.flatpickrValue.should.equal('1970/01/04');
@@ -103,7 +101,7 @@ describe('DateRangePicker', () => {
 
     it('changes flatpickrValue after value changes to empty array', async () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'] }
+        props: { value: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ value: [] });
       should.not.exist(component.vm.flatpickrValue);
@@ -113,7 +111,7 @@ describe('DateRangePicker', () => {
 
   it('emits an input event after a different range is selected', () => {
     const component = mountComponent({
-      propsData: { value: ['1970-01-02', '1970-01-03'] }
+      props: { value: ['1970-01-02', '1970-01-03'] }
     });
     // Ideally, we would actually open the flatpickr calendar and select the
     // dates, but writing that test turned out to be fairly challenging.
@@ -126,7 +124,7 @@ describe('DateRangePicker', () => {
 
   it('emits correct value after a range of a single date is selected', () => {
     const component = mountComponent({
-      propsData: { value: ['1970-01-02', '1970-01-03'] }
+      props: { value: ['1970-01-02', '1970-01-03'] }
     });
     close(component, ['1970-01-04', '1970-01-04']);
     component.emitted().input[0][0].map(toISO).should.eql([
@@ -137,7 +135,7 @@ describe('DateRangePicker', () => {
 
   it('does not emit an input event if the same range is selected', () => {
     const component = mountComponent({
-      propsData: { value: ['1970-01-02', '1970-01-03'] }
+      props: { value: ['1970-01-02', '1970-01-03'] }
     });
     close(component, ['1970-01-02', '1970-01-03']);
     should(component.emitted()).be.empty();
@@ -146,7 +144,7 @@ describe('DateRangePicker', () => {
   describe('incomplete selection of a single date', () => {
     it('emits the correct value', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'] }
+        props: { value: ['1970-01-02', '1970-01-03'] }
       });
       close(component, ['1970-01-04']);
       component.emitted().input[0][0].map(toISO).should.eql([
@@ -157,7 +155,7 @@ describe('DateRangePicker', () => {
 
     it('changes flatpickrValue even if value does not change', async () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-02'] }
+        props: { value: ['1970-01-02', '1970-01-02'] }
       });
       let changeCount = 0;
       component.vm.$watch('flatpickrValue', () => { changeCount += 1; });
@@ -175,7 +173,7 @@ describe('DateRangePicker', () => {
   describe('clearing the selection', () => {
     it('emits an empty array if the required prop is false', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'], required: false }
+        props: { value: ['1970-01-02', '1970-01-03'], required: false }
       });
       close(component, []);
       component.emitted().input[0][0].should.eql([]);
@@ -184,7 +182,7 @@ describe('DateRangePicker', () => {
     describe('required prop is true', () => {
       it('emits the current date', () => {
         const component = mountComponent({
-          propsData: { value: ['1970-01-02', '1970-01-03'], required: true }
+          props: { value: ['1970-01-02', '1970-01-03'], required: true }
         });
         close(component, []);
         component.emitted().input[0][0].map(toISO).should.eql([
@@ -195,7 +193,7 @@ describe('DateRangePicker', () => {
 
       it('changes flatpickrValue even if value does not change', async () => {
         const component = mountComponent({
-          propsData: { value: ['1970-01-01', '1970-01-01'], required: true }
+          props: { value: ['1970-01-01', '1970-01-01'], required: true }
         });
         let changeCount = 0;
         component.vm.$watch('flatpickrValue', () => { changeCount += 1; });
@@ -211,21 +209,21 @@ describe('DateRangePicker', () => {
   describe('.close button', () => {
     it('does not render the button if the required prop is true', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'], required: true }
+        props: { value: ['1970-01-02', '1970-01-03'], required: true }
       });
       component.find('.close').exists().should.be.false();
     });
 
     it('hides the button if value is an empty array', () => {
       const component = mountComponent({
-        propsData: { value: [], required: false }
+        props: { value: [], required: false }
       });
       component.get('.close').should.be.hidden();
     });
 
     it('shows the button otherwise', () => {
       const component = mountComponent({
-        propsData: { value: ['1970-01-02', '1970-01-03'], required: false }
+        props: { value: ['1970-01-02', '1970-01-03'], required: false }
       });
       component.get('.close').should.be.visible();
     });
@@ -233,7 +231,7 @@ describe('DateRangePicker', () => {
     describe('after the button is clicked', () => {
       it('emits an empty array', async () => {
         const component = mountComponent({
-          propsData: { value: ['1970-01-02', '1970-01-03'], required: false }
+          props: { value: ['1970-01-02', '1970-01-03'], required: false }
         });
         await component.get('.close').trigger('click');
         component.emitted().input[0][0].should.eql([]);
@@ -241,7 +239,7 @@ describe('DateRangePicker', () => {
 
       it('focuses the input', async () => {
         const component = mountComponent({
-          propsData: { value: ['1970-01-02', '1970-01-03'], required: false },
+          props: { value: ['1970-01-02', '1970-01-03'], required: false },
           attachTo: document.body
         });
         await component.get('.close').trigger('click');
@@ -253,7 +251,7 @@ describe('DateRangePicker', () => {
   describe('placeholder prop', () => {
     it('uses the placeholder prop', () => {
       const component = mountComponent({
-        propsData: { placeholder: 'My date range', required: false }
+        props: { placeholder: 'My date range', required: false }
       });
       const { placeholder } = component.get('input').attributes();
       placeholder.should.equal('My date range');
@@ -262,7 +260,7 @@ describe('DateRangePicker', () => {
 
     it('appends * to the placeholder if the required prop is true', () => {
       const component = mountComponent({
-        propsData: { placeholder: 'My date range', required: true }
+        props: { placeholder: 'My date range', required: true }
       });
       const { placeholder } = component.get('input').attributes();
       placeholder.should.equal('My date range*');
@@ -272,7 +270,7 @@ describe('DateRangePicker', () => {
 
   it('adds the required class if the required prop is true', () => {
     const component = mountComponent({
-      propsData: { required: true }
+      props: { required: true }
     });
     component.get('input').classes('required').should.be.true();
   });

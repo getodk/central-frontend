@@ -22,7 +22,7 @@ const createData = () => {
 };
 const mountComponent = (options = {}) => mount(SubmissionDecrypt, {
   ...options,
-  propsData: { state: true, ...options.propsData },
+  props: { state: true, ...options.props },
   requestData: { keys: testData.standardKeys.sorted() }
 });
 
@@ -57,7 +57,7 @@ describe('SubmissionDecrypt', () => {
   it('shows a hint if there is one', () => {
     testData.standardKeys.createPast(1, { managed: true, hint: 'some hint' });
     const modal = mountComponent({
-      propsData: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' }
+      props: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' }
     });
     const introductions = modal.findAll('.modal-introduction');
     introductions.length.should.equal(2);
@@ -93,7 +93,7 @@ describe('SubmissionDecrypt', () => {
   it('appends a form to the iframe body and fills it', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     const modal = mountComponent({
-      propsData: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' },
+      props: { formAction: '/v1/projects/1/forms/f/submissions.csv.zip' },
       attachTo: document.body
     });
     // Wait for the iframe to load.
@@ -128,7 +128,7 @@ describe('SubmissionDecrypt', () => {
 
     it('shows a danger alert if a Problem is returned', async () => {
       const modal = mountComponent({
-        propsData: {
+        props: {
           formAction: '/test/files/problem.html',
           delayBetweenChecks: 1
         },
@@ -148,7 +148,7 @@ describe('SubmissionDecrypt', () => {
     // then call the scheduleProblemCheck() method.
     it('continually checks for a Problem even if form submission is successful', async () => {
       const modal = mountComponent({
-        propsData: {
+        props: {
           formAction: '/v1/projects/1/forms/f/submissions.csv.zip',
           delayBetweenChecks: 1
         },
@@ -173,7 +173,7 @@ describe('SubmissionDecrypt', () => {
     // a Problem.
     it('shows an info alert', async () => {
       const modal = mountComponent({
-        propsData: { formAction: '/blank.html' },
+        props: { formAction: '/blank.html' },
         attachTo: document.body
       });
       await submit(modal);

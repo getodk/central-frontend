@@ -7,11 +7,11 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(FormDraftAbandon, {
-  propsData: { state: true },
+  props: { state: true },
   requestData: { form: testData.extendedForms.last() }
 });
 const mockHttpForComponent = () => mockHttp().mount(FormDraftAbandon, {
-  propsData: { state: true },
+  props: { state: true },
   requestData: { form: testData.extendedForms.last() }
 });
 

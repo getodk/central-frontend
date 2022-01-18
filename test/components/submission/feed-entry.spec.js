@@ -12,7 +12,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options = {}) => mount(SubmissionFeedEntry, {
-  propsData: {
+  props: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     instanceId: 's',

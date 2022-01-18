@@ -6,7 +6,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options) => ({
-  propsData: { state: true },
+  props: { state: true },
   requestData: { project: testData.extendedProjects.last() },
   ...options
 });

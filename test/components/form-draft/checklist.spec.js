@@ -8,7 +8,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(FormDraftChecklist, {
-  propsData: { status: options.mocks.$route.endsWith('/draft') },
+  props: { status: options.mocks.$route.endsWith('/draft') },
   requestData: {
     form: testData.extendedForms.last(),
     formDraft: testData.extendedFormDrafts.last(),

@@ -9,7 +9,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => ({
-  propsData: { state: false },
+  props: { state: false },
   requestData: {
     formVersions: testData.extendedFormVersions.published(),
     formDraft: testData.extendedFormDrafts.last(),

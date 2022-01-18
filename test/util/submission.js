@@ -10,19 +10,19 @@ import { mockResponse } from './axios';
 export const loadSubmissionList = (mountOptions = {}) => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
-  const { propsData } = mountOptions;
-  const top = propsData != null && propsData.top != null
-    ? propsData.top
+  const { props } = mountOptions;
+  const top = props != null && props.top != null
+    ? props.top
     : SubmissionList.props.top.default;
   return mockHttp()
     .mount(SubmissionList, {
       ...mountOptions,
-      propsData: {
+      props: {
         projectId: project.id.toString(),
         xmlFormId: form.xmlFormId,
         draft: form.publishedAt == null,
         top,
-        ...propsData
+        ...props
       },
       requestData: {
         project,

@@ -9,7 +9,7 @@ import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(ProjectRow, {
-  propsData: {
+  props: {
     project: new Project(testData.extendedProjects.last()),
     introduction: false
   },

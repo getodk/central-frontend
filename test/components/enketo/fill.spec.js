@@ -9,9 +9,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(EnketoFill, {
   ...options,
-  propsData: {
-    ...options.propsData,
-    formVersion: new Form(options.propsData.formVersion)
+  props: {
+    ...options.props,
+    formVersion: new Form(options.props.formVersion)
   }
 });
 
@@ -21,7 +21,7 @@ describe('EnketoFill', () => {
       .createPast(1, { enketoId: 'xyz', state: 'open' })
       .last();
     const button = mountComponent({
-      propsData: { formVersion: form },
+      props: { formVersion: form },
       slots: { default: TestUtilSpan }
     });
     button.element.tagName.should.equal('A');
@@ -34,7 +34,7 @@ describe('EnketoFill', () => {
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
     const button = mountComponent({
-      propsData: { formVersion: form },
+      props: { formVersion: form },
       slots: { default: TestUtilSpan }
     });
     button.element.tagName.should.equal('BUTTON');
@@ -49,7 +49,7 @@ describe('EnketoFill', () => {
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
       const button = mountComponent({
-        propsData: { formVersion: form },
+        props: { formVersion: form },
         slots: { default: TestUtilSpan }
       });
       button.element.tagName.should.equal('BUTTON');
@@ -64,7 +64,7 @@ describe('EnketoFill', () => {
       });
       const draft = testData.extendedFormDrafts.last();
       const button = mountComponent({
-        propsData: { formVersion: draft },
+        props: { formVersion: draft },
         slots: { default: TestUtilSpan }
       });
       button.element.tagName.should.equal('A');

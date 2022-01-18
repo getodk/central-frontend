@@ -6,19 +6,19 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountOptions = (propsData) => ({
-  propsData: {
+const mountOptions = (props) => ({
+  props: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     instanceId: testData.extendedSubmissions.last().instanceId,
     feed: null,
-    ...propsData
+    ...props
   }
 });
-const mountComponent = (propsData = undefined) =>
-  mount(SubmissionComment, mountOptions(propsData));
-const mockHttpForComponent = (propsData = undefined) =>
-  mockHttp().mount(SubmissionComment, mountOptions(propsData));
+const mountComponent = (props = undefined) =>
+  mount(SubmissionComment, mountOptions(props));
+const mockHttpForComponent = (props = undefined) =>
+  mockHttp().mount(SubmissionComment, mountOptions(props));
 
 describe('SubmissionComment', () => {
   beforeEach(mockLogin);

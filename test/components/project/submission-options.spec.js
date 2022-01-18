@@ -7,7 +7,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(ProjectSubmissionOptions, {
-  propsData: { state: true },
+  props: { state: true },
   stubs: { RouterLink: RouterLinkStub },
   ...options
 });

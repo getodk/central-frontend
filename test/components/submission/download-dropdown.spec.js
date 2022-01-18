@@ -8,7 +8,7 @@ import { mount } from '../../util/lifecycle';
 const mountComponent = (options = {}) => {
   const form = testData.extendedForms.last();
   return mount(SubmissionDownloadDropdown, {
-    propsData: { formVersion: new Form(form), ...options.propsData },
+    props: { formVersion: new Form(form), ...options.props },
     requestData: {
       fields: form._fields,
       keys: testData.standardKeys.sorted(),
@@ -29,7 +29,7 @@ describe('SubmissionDownloadDropdown', () => {
       it('shows correct text while first chunk of submissions is loading', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const dropdown = mountComponent({
-          propsData: { odataFilter: '__system/submitterId eq 1' }
+          props: { odataFilter: '__system/submitterId eq 1' }
         });
         const text = dropdown.get('button').text();
         text.should.equal('Download matching records');
@@ -38,7 +38,7 @@ describe('SubmissionDownloadDropdown', () => {
       it('shows correct text after first chunk of submissions has loaded', async () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const dropdown = mountComponent({
-          propsData: { odataFilter: '__system/submitterId eq 1' }
+          props: { odataFilter: '__system/submitterId eq 1' }
         });
         dropdown.vm.$store.commit('setData', {
           key: 'odataChunk',
@@ -176,7 +176,7 @@ describe('SubmissionDownloadDropdown', () => {
     testData.extendedProjects.createPast(1, { key: null });
     testData.extendedForms.createPast(1);
     const dropdown = mountComponent({
-      propsData: { odataFilter: '__system/submitterId eq 1' }
+      props: { odataFilter: '__system/submitterId eq 1' }
     });
     dropdown.findAll('a').wrappers.map(a => a.attributes().href).should.eql([
       '/v1/projects/1/forms/f/submissions.csv.zip?%24filter=__system%2FsubmitterId+eq+1',

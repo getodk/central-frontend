@@ -7,13 +7,13 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(PublicLinkCreate, {
   ...options,
-  propsData: { state: true },
+  props: { state: true },
   requestData: { form: testData.extendedForms.last() }
 });
 const mockHttpForComponent = (mountOptions) => mockHttp()
   .mount(PublicLinkCreate, {
     ...mountOptions,
-    propsData: { state: true },
+    props: { state: true },
     requestData: { form: testData.extendedForms.last() }
   });
 

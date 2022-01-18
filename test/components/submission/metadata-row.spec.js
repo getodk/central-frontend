@@ -11,15 +11,15 @@ import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData = undefined) => mount(SubmissionMetadataRow, {
-  propsData: {
+const mountComponent = (props = undefined) => mount(SubmissionMetadataRow, {
+  props: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     draft: false,
     submission: testData.submissionOData().value[0],
     rowNumber: 1,
     canUpdate: true,
-    ...propsData
+    ...props
   },
   stubs: { RouterLink: RouterLinkStub }
 });

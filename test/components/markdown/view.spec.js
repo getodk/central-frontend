@@ -3,7 +3,7 @@ import MarkdownView from '../../../src/components/markdown/view.vue';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (raw) => mount(MarkdownView, {
-  propsData: {
+  props: {
     rawMarkdown: raw
   }
 });
