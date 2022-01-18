@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <p class="page-body-heading">{{ $t('heading[0]') }}</p>
-    <audit-filters v-bind.sync="filters"/>
+    <audit-filters v-model:action="filters.action"
+      v-model:date-range="filters.dateRange"/>
     <audit-table :audits="audits"/>
     <loading :state="$store.getters.initiallyLoading(['audits'])"/>
     <p v-show="audits != null && audits.length === 0"
@@ -28,6 +29,7 @@ import { DateTime } from 'luxon';
 import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import Loading from '../loading.vue';
+
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -48,10 +50,8 @@ export default {
   // is created.
   computed: requestData(['audits']),
   watch: {
-    filters: {
-      handler: 'fetchData',
-      deep: true
-    }
+    'filters.action': 'fetchData',
+    'filters.dateRange': 'fetchData'
   },
   created() {
     this.fetchData();

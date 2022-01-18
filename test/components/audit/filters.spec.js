@@ -15,8 +15,8 @@ describe('AuditFilters', () => {
     load('/system/audits', { root: false })
       .beforeEachResponse((component, { url }) => {
         url.should.containEql('action=nonverbose');
-        const { value } = component.getComponent(AuditFiltersAction).props();
-        value.should.equal('nonverbose');
+        const { modelValue } = component.getComponent(AuditFiltersAction).props();
+        modelValue.should.equal('nonverbose');
       }));
 
   it('sends a request after the action filter is changed', () =>
@@ -47,9 +47,9 @@ describe('AuditFilters', () => {
         end.should.startWith('1970-01-01T23:59:59.999');
         DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
 
-        const { value } = component.getComponent(DateRangePicker).props();
-        value[0].toISO().should.equal(start);
-        value[1].toISO().should.equal(start);
+        const { modelValue } = component.getComponent(DateRangePicker).props();
+        modelValue[0].toISO().should.equal(start);
+        modelValue[1].toISO().should.equal(start);
       })
       .finally(restoreLuxon);
   });

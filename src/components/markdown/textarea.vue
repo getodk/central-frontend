@@ -12,16 +12,17 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="markdown-textarea" :class="activeBorderClass">
     <div class="form-group">
-      <textarea :value="value" class="form-control"
+      <textarea :value="modelValue" class="form-control"
         :placeholder="defaultText" :aria-label="defaultText"
-        :required="required" rows="2" @input="$emit('input', $event.target.value)">
+        :required="required" rows="2"
+        @input="$emit('update:modelValue', $event.target.value)">
       </textarea>
     </div>
-    <div v-if="value !== '' && previewMode" class="preview-container">
+    <div v-if="modelValue !== '' && previewMode" class="preview-container">
       <p class="heading">{{ $t('preview') }}</p>
-      <markdown-view :raw-markdown="value"/>
+      <markdown-view :raw-markdown="modelValue"/>
     </div>
-    <div v-show="value !== '' || showFooter " class="markdown-textarea-actions">
+    <div v-show="modelValue !== '' || showFooter" class="markdown-textarea-actions">
       <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <span class="push"></span>
       <button class="btn md-preview-btn" type="button" @click="toggleViewMode">
@@ -39,7 +40,7 @@ export default {
   name: 'MarkdownTextarea',
   components: { MarkdownView },
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     },
@@ -56,6 +57,7 @@ export default {
       default: false
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       previewMode: false
@@ -66,7 +68,7 @@ export default {
       return this.previewMode ? this.$t('action.hidePreview') : this.$t('action.showPreview');
     },
     activeBorderClass() {
-      if (this.showFooter || this.value !== '')
+      if (this.showFooter || this.modelValue !== '')
         return 'active-border';
       return null;
     }

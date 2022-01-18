@@ -196,7 +196,7 @@ describe('SubmissionComment', () => {
 
     it('resets the field', async () => {
       const component = await submit();
-      component.getComponent(MarkdownTextarea).props().value.should.equal('');
+      component.getComponent(MarkdownTextarea).props().modelValue.should.equal('');
     });
   });
 });

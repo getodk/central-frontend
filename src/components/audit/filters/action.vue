@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="audit-filters-action" class="form-group">
-    <select class="form-control" :value="value"
-      @change="$emit('input', $event.target.value)">
+    <select class="form-control" :value="modelValue"
+      @change="$emit('update:modelValue', $event.target.value)">
       <option v-for="option of options" :key="option.value"
         :class="option.htmlClass" :value="option.value">
         {{ option.text }}
@@ -29,11 +29,12 @@ export default {
   name: 'AuditFiltersAction',
   mixins: [audit()],
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     }
   },
+  emits: ['update:modelValue'],
   computed: {
     options() {
       return [

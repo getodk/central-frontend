@@ -26,18 +26,19 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'SubmissionFiltersReviewState',
   props: {
-    value: {
+    modelValue: {
       type: Array,
       required: true
     }
   },
+  emits: ['update:modelValue'],
   computed: {
     selectValue: {
       get() {
-        return this.value;
+        return this.modelValue;
       },
-      set(value) {
-        this.$emit('input', value);
+      set(selectValue) {
+        this.$emit('update:modelValue', selectValue);
       }
     }
   }

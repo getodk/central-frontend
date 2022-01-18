@@ -7,7 +7,7 @@ import { mount } from '../util/lifecycle';
 const mountComponent = (mountOptions = {}) => mount(FormGroup, {
   ...mountOptions,
   props: {
-    value: '',
+    modelValue: '',
     placeholder: 'My input',
     autocomplete: 'off',
     ...mountOptions.props
@@ -15,29 +15,19 @@ const mountComponent = (mountOptions = {}) => mount(FormGroup, {
 });
 
 describe('FormGroup', () => {
-  it('uses the value prop', () => {
+  it('uses the modelValue prop', () => {
     const formGroup = mountComponent({
       props: { modelValue: 'x' }
     });
     formGroup.get('input').element.value.should.equal('x');
   });
 
-  it('emits an input event', async () => {
+  it('emits an update:modelValue event', async () => {
     const formGroup = mountComponent({
       props: { modelValue: 'x' }
     });
     await formGroup.get('input').setValue('y');
-    formGroup.emitted().input.should.eql([['y']]);
-  });
-
-  it('emits a change event', async () => {
-    const formGroup = mountComponent({
-      props: { value: 'x' }
-    });
-    const input = formGroup.get('input');
-    input.element.value = 'y';
-    await input.trigger('change');
-    formGroup.emitted().change.should.eql([['y']]);
+    formGroup.emitted('update:modelValue').should.eql([['y']]);
   });
 
   describe('required prop', () => {

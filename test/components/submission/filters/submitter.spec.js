@@ -3,9 +3,9 @@ import SubmissionFiltersSubmitter from '../../../../src/components/submission/fi
 import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
 
-const mountComponent = ({ value = '' } = {}) =>
+const mountComponent = ({ modelValue = '' } = {}) =>
   mount(SubmissionFiltersSubmitter, {
-    props: { value },
+    props: { modelValue },
     requestData: {
       submitters: testData.extendedFieldKeys
         .sorted()
@@ -32,20 +32,20 @@ describe('SubmissionFiltersSubmitter', () => {
     options[2].text().should.equal('App User 2');
   });
 
-  it('sets the value of the select element to the value prop', () => {
+  it('sets the value of the select element to the modelValue prop', () => {
     const { id } = testData.extendedFieldKeys
       .createPast(1, 'App User 1')
       .last();
-    const select = mountComponent({ value: id.toString() }).get('select');
+    const select = mountComponent({ modelValue: id.toString() }).get('select');
     select.element.value.should.equal(id.toString());
   });
 
-  it('emits an input event', () => {
+  it('emits an update:modelValue event', () => {
     const { id } = testData.extendedFieldKeys
       .createPast(1, 'App User 1')
       .last();
-    const component = mountComponent({ value: '' });
+    const component = mountComponent({ modelValue: '' });
     component.get('select').setValue(id.toString());
-    component.emitted().input.should.eql([[id.toString()]]);
+    component.emitted('update:modelValue').should.eql([[id.toString()]]);
   });
 });

@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       :placeholder="`${placeholder}${star}`" autocomplete="off"
       @on-close="close"/>
     <template v-if="!required">
-      <button v-show="value.length === 2" type="button" class="close"
+      <button v-show="modelValue.length === 2" type="button" class="close"
         :aria-label="$t('action.clear')" @click="clear">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -41,7 +41,7 @@ export default {
   components: { flatpickr },
   props: {
     // Either an array of two DateTime objects or an empty array
-    value: {
+    modelValue: {
       type: Array,
       required: true
     },
@@ -54,12 +54,13 @@ export default {
       required: true
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       // We initialize this.flatpickrValue as an array of Date objects, but
       // vue-flatpickr-component will replace it with a string when the user
       // makes a selection.
-      flatpickrValue: this.value.map(dateTime => dateTime.toJSDate())
+      flatpickrValue: this.modelValue.map(dateTime => dateTime.toJSDate())
     };
   },
   computed: {
@@ -92,8 +93,8 @@ export default {
     }
   },
   watch: {
-    value(value) {
-      this.flatpickrValue = value.map(dateTime => dateTime.toJSDate());
+    modelValue(modelValue) {
+      this.flatpickrValue = modelValue.map(dateTime => dateTime.toJSDate());
     }
   },
   methods: {
@@ -123,21 +124,22 @@ export default {
     close(selectedDates) {
       const [newValue, complete] = this.selectedDatesToDateTimes(selectedDates);
       const newEqualsOld = newValue.length === 0
-        ? this.value.length === 0
-        : this.value.length === 2 &&
-          newValue[0].valueOf() === this.value[0].valueOf() &&
-          newValue[1].valueOf() === this.value[1].valueOf();
+        ? this.modelValue.length === 0
+        : this.modelValue.length === 2 &&
+          newValue[0].valueOf() === this.modelValue[0].valueOf() &&
+          newValue[1].valueOf() === this.modelValue[1].valueOf();
       if (!newEqualsOld) {
-        this.$emit('input', newValue);
+        this.$emit('update:modelValue', newValue);
       // newValue represents a complete selection, so if the actual
       // selection was incomplete, it does not match newValue. In that case,
-      // even if this.value will not change, we need to set this.flatpickrValue.
+      // even though this.modelValue will not change, we still need to set
+      // this.flatpickrValue.
       } else if (!complete) {
         this.flatpickrValue = newValue.map(dateTime => dateTime.toJSDate());
       }
     },
     clear() {
-      this.$emit('input', []);
+      this.$emit('update:modelValue', []);
 
       // The .close button will be hidden, so we focus the flatpickr input.
       // Focusing it will open the calendar, which we don't want, so we

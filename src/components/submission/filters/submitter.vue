@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="submission-filters-submitter" class="form-group">
-    <select class="form-control" :value="value"
-      @change="$emit('input', $event.target.value)">
+    <select class="form-control" :value="modelValue"
+      @change="$emit('update:modelValue', $event.target.value)">
       <option value="">{{ $t('common.anybody') }}</option>
       <template v-if="submitters != null">
         <option v-for="submitter of submitters" :key="submitter.id"
@@ -31,11 +31,12 @@ import { requestData } from '../../../store/modules/request';
 export default {
   name: 'SubmissionFiltersSubmitter',
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     }
   },
+  emits: ['update:modelValue'],
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['submitters'])
