@@ -51,7 +51,7 @@ The component using this mixin must define the following data property:
 
 // @vue/component
 const mixin = {
-  beforeDestroy() {
+  beforeUnmount() {
     this.cancelCalls();
   },
   methods: {

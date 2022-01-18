@@ -121,7 +121,7 @@ export default {
 
     if (this.state) this.show();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.state) this.hide();
   },
   methods: {

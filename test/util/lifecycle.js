@@ -10,23 +10,23 @@ import { setData } from './store';
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DESTROY
+// UNMOUNT
 
-const componentsToDestroy = [];
+const componentsToUnmount = [];
 
-export const destroyAll = () => {
-  for (const component of componentsToDestroy) {
+export const unmountAll = () => {
+  for (const component of componentsToUnmount) {
     // Vue Test Utils always seems to create a parent component, so we also
-    // destroy that. This is particularly important when the router is injected
+    // unmount that. This is particularly important when the router is injected
     // into the component: see
     // https://github.com/vuejs/vue-test-utils/issues/1862
     const parent = component.vm.$parent;
     if (parent.$el.parentNode != null)
       parent.$el.parentNode.removeChild(parent.$el);
-    // This will also destroy `component`.
-    parent.$destroy();
+    // This will also unmount `component`.
+    parent.$unmount();
   }
-  componentsToDestroy.splice(0);
+  componentsToUnmount.splice(0);
 };
 
 
@@ -51,7 +51,7 @@ options:
   - throwIfEmit. A message to throw if the component emits an event. Used
     internally by load() when the `root` option is `false`.
 
-Our mount() function will also set it up so that the component is destroyed
+Our mount() function will also set it up so that the component is unmounted
 after the test.
 */
 export const mount = (component, options = {}) => {
@@ -93,7 +93,7 @@ export const mount = (component, options = {}) => {
   }
 
   const wrapper = vtuMount(component, mountOptions);
-  componentsToDestroy.push(wrapper);
+  componentsToUnmount.push(wrapper);
 
   if (throwIfEmit != null) {
     const emitted = wrapper.emitted();

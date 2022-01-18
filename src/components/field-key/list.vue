@@ -130,7 +130,7 @@ export default {
   mounted() {
     document.addEventListener('click', this.switchCode);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('click', this.switchCode);
   },
   methods: {

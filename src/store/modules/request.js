@@ -229,7 +229,7 @@ export default {
         One common example of specifying `false` for `resend` arises with tabbed
         navigation. Say a component associated with one tab sends a request for
         a particular key. In most cases, navigating from that tab to another
-        tab, then back to the original tab will destroy and recreate the
+        tab, then back to the original tab will unmount and recreate the
         component. However, in that case, we usually do not need to send a new
         request for the data that the component needs.
 

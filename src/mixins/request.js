@@ -100,7 +100,7 @@ function request({
   return this.$http.request(withAuth(axiosConfig, session))
     .catch(error => {
       // this.$store seems to be defined even after the component has been
-      // destroyed.
+      // unmounted.
       if (this.$store.state.router.currentRoute !== currentRoute)
         throw new Error('route change');
 

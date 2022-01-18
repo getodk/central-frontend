@@ -210,7 +210,7 @@ export default {
   mounted() {
     document.addEventListener('scroll', this.afterScroll);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {

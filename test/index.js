@@ -11,9 +11,9 @@ import store from '../src/store';
 import { noop } from '../src/util/util';
 
 import testData from './data';
-import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { mockAxios } from './util/axios';
+import { unmountAll } from './util/lifecycle';
 import './assertions';
 
 
@@ -49,12 +49,12 @@ Vue.prototype.$logger = { log: noop, error: noop };
 beforeEach(testData.seed);
 
 afterEach(() => {
-  destroyAll();
+  unmountAll();
 
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
     console.log(document.body.innerHTML); // eslint-disable-line no-console
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been removed?');
   }
 });
 
