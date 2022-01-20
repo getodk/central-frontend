@@ -52,8 +52,8 @@ import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
 import modalData from '../util/modal';
-import routes from '../mixins/routes';
 import { loadAsync } from '../util/async-components';
+import { mixinPaths } from '../reusables/paths';
 import { requestDataComputed } from '../reusables/request-data';
 
 export default {
@@ -65,7 +65,7 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData', 'staticConfig'],
   data() {
     return {

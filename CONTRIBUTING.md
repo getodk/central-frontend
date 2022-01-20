@@ -129,7 +129,7 @@ If the user navigates to a location to which the `validateData` meta field forbi
 
 Before the user's session expires, the user will be automatically redirected to `/login`. Further, in general, the user is permitted to change the route at any time. That means that components should be prepared to be unmounted at any point. For example, if a component starts asynchronous work, it should probably check when that work completes whether the route has changed.
 
-We store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using the `routes` mixin ([`/src/mixins/routes.js`](/src/mixins/routes.js)).
+We store router state in the Vuex store (see [`/src/store/modules/router.js`](/src/store/modules/router.js)). Some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js), and components can access router-related methods by using `usePaths()` or `mixinPaths` ([`/src/reusables/paths.js`](/src/reusables/paths.js)).
 
 The router is responsible for updating the document title (text in the browser tab and history) when navigating to a new route. It uses the `parts()` function in a route record's `meta.title` field. Much like with `validateData`, it may not have all the information it needs when first changing the route (e.g. navigating to a new Project page), so it watches for changes to the Vuex store (the key to watch is defined in `meta.title.key`) and then updates the page title again (e.g. using a Project's name after the project info has been fetched from the backend.)
 

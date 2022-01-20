@@ -36,12 +36,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 
 export default {
   name: 'ProjectRow',
   components: { DateTime },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     project: {
       type: Object,

@@ -93,9 +93,9 @@ import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import Loading from '../loading.vue';
 
 import modalData from '../../util/modal';
-import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
+import { mixinPaths } from '../../reusables/paths';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -112,7 +112,7 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData', 'alert'],
   props: {
     projectId: {

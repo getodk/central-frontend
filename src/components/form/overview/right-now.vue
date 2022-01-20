@@ -60,7 +60,7 @@ import FormVersionSummaryItem from '../../form-version/summary-item.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 
-import routes from '../../../mixins/routes';
+import { mixinPaths } from '../../../reusables/paths';
 import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
@@ -71,7 +71,7 @@ export default {
     PageSection,
     SummaryItem
   },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   emits: ['view-xml'],
   computed: {

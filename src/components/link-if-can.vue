@@ -19,11 +19,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../mixins/routes';
+import { mixinPaths } from '../reusables/paths';
 
 export default {
   name: 'LinkIfCan',
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     to: {
       type: String,

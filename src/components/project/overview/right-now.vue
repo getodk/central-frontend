@@ -49,13 +49,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import routes from '../../../mixins/routes';
+import { mixinPaths } from '../../../reusables/paths';
 import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectOverviewRightNow',
   components: { PageSection, SummaryItem },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   emits: ['scroll-to-forms'],
   computed: requestDataComputed({

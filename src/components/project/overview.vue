@@ -27,13 +27,13 @@ except according to the terms contained in the LICENSE file.
 import FormList from '../form/list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   props: {
     projectId: {

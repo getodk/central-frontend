@@ -73,12 +73,12 @@ import DocLink from '../doc-link.vue';
 import LinkIfCan from '../link-if-can.vue';
 import Modal from '../modal.vue';
 
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 
 export default {
   name: 'ProjectSubmissionOptions',
   components: { DocLink, LinkIfCan, Modal },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     state: {
       type: Boolean,

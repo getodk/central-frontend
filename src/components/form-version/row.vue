@@ -30,12 +30,12 @@ except according to the terms contained in the LICENSE file.
 import FormVersionDefDropdown from './def-dropdown.vue';
 import TimeAndUser from '../time-and-user.vue';
 
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 
 export default {
   name: 'FormVersionRow',
   components: { FormVersionDefDropdown, TimeAndUser },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     version: {
       type: Object,

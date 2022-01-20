@@ -17,12 +17,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import LinkIfCan from './link-if-can.vue';
 
-import routes from '../mixins/routes';
+import { mixinPaths } from '../reusables/paths';
 
 export default {
   name: 'ActorLink',
   components: { LinkIfCan },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     actor: {
       type: Object,

@@ -40,13 +40,13 @@ import FormTable from './table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, Loading, PageSection },
-  mixins: [modal(), routes()],
+  mixins: [modal(), mixinPaths],
   inject: ['requestData', 'alert'],
   props: {
     condensed: {

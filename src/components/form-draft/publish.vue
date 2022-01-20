@@ -73,15 +73,15 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
-import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
+import { mixinPaths } from '../../reusables/paths';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftPublish',
   components: { FormGroup, Modal, Spinner },
-  mixins: [request(), routes()],
+  mixins: [mixinPaths, request()],
   inject: ['requestData'],
   props: {
     state: {

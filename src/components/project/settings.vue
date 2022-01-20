@@ -86,7 +86,7 @@ import ProjectEnableEncryption from './enable-encryption.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
@@ -98,7 +98,7 @@ export default {
     ProjectEnableEncryption,
     SentenceSeparator
   },
-  mixins: [modal(), routes()],
+  mixins: [modal(), mixinPaths],
   inject: ['requestData', 'alert'],
   emits: ['fetch-project'],
   data() {

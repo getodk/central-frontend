@@ -28,12 +28,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from './date-time.vue';
 import LinkIfCan from './link-if-can.vue';
-import routes from '../mixins/routes';
+import { mixinPaths } from '../reusables/paths';
 
 export default {
   name: 'TimeAndUser',
   components: { DateTime, LinkIfCan },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   props: {
     iso: {
       type: String,

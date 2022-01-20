@@ -77,13 +77,13 @@ import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftChecklist',
   components: { ChecklistStep, DocLink, SentenceSeparator },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   props: {
     // Indicates whether the current route path is .../draft.

@@ -76,7 +76,7 @@ import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 
 import modalData from '../../util/modal';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
@@ -91,7 +91,7 @@ export default {
     FieldKeyRevoke,
     ProjectSubmissionOptions
   },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData', 'alert'],
   props: {
     projectId: {

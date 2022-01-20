@@ -51,12 +51,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../../mixins/routes';
+import { mixinPaths } from '../../../reusables/paths';
 import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   props: {
     form: {

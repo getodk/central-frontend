@@ -42,12 +42,12 @@ import DocLink from '../../doc-link.vue';
 import PageSection from '../../page/section.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
-import routes from '../../../mixins/routes';
+import { mixinPaths } from '../../../reusables/paths';
 
 export default {
   name: 'ProjectOverviewAbout',
   components: { DocLink, PageSection, SentenceSeparator },
-  mixins: [routes()]
+  mixins: [mixinPaths]
 };
 </script>
 

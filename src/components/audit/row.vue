@@ -40,7 +40,7 @@ import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
 import audit from '../../mixins/audit';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 
 const categories = {
   user: {
@@ -87,7 +87,7 @@ categories.upgrade.target = categories.form.target;
 export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
-  mixins: [audit(), routes()],
+  mixins: [audit(), mixinPaths],
   inject: ['container'],
   props: {
     audit: {

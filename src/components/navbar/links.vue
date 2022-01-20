@@ -32,11 +32,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 
 export default {
   name: 'NavbarLinks',
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['staticConfig'],
   computed: {
     projectsLinkIsActive() {

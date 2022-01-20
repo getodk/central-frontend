@@ -64,13 +64,13 @@ import DateTime from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
-import routes from '../../mixins/routes';
+import { mixinPaths } from '../../reusables/paths';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormRow',
   components: { DateTime, EnketoFill, EnketoPreview, LinkIfCan },
-  mixins: [routes()],
+  mixins: [mixinPaths],
   inject: ['requestData'],
   props: {
     form: {

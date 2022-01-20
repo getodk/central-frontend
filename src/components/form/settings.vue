@@ -50,13 +50,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormDelete from './delete.vue';
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
-import { requestData } from '../../reusables/request-data';
+import { mixinPaths } from '../../reusables/paths';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
-  mixins: [modal(), routes()],
+  mixins: [modal(), mixinPaths],
   inject: ['requestData', 'alert'],
   data() {
     return {

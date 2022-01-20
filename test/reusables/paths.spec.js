@@ -1,6 +1,5 @@
-import routes from '../../src/mixins/routes';
+import { mixinPaths } from '../../src/reusables/paths';
 
-const mixin = routes();
 const component = {
   $route: {
     params: {
@@ -10,9 +9,9 @@ const component = {
   }
 };
 
-describe('mixins/routes', () => {
+describe('paths reusable', () => {
   describe('projectPath', () => {
-    const projectPath = mixin.methods.projectPath.bind(component);
+    const projectPath = mixinPaths.methods.projectPath.bind(component);
 
     it('returns a path if given a numeric id and suffix', () => {
       projectPath(1, 'settings').should.equal('/projects/1/settings');
@@ -36,7 +35,7 @@ describe('mixins/routes', () => {
   });
 
   describe('formPath', () => {
-    const formPath = mixin.methods.formPath.bind(component);
+    const formPath = mixinPaths.methods.formPath.bind(component);
 
     it('returns a path if given three arguments', () => {
       formPath(1, 'f', 'settings').should.equal('/projects/1/forms/f/settings');
@@ -61,7 +60,7 @@ describe('mixins/routes', () => {
 
   describe('userPath', () => {
     it('returns a path if given an id', () => {
-      mixin.methods.userPath(1).should.equal('/users/1/edit');
+      mixinPaths.methods.userPath(1).should.equal('/users/1/edit');
     });
   });
 });
