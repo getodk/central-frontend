@@ -1,12 +1,14 @@
-import Vue from 'vue';
-
 import sinon from 'sinon';
+import { F, T } from 'ramda';
 
-import i18n from '../../src/i18n';
-import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
+import createCentralI18n from '../../src/i18n';
+import { apiPaths, isProblem, queryString, request } from '../../src/util/request';
+import { noop } from '../../src/util/util';
 
-import { i18nProps } from '../util/i18n';
-import { mockAxiosError } from '../util/axios';
+import createTestContainer from '../util/container';
+import testData from '../data';
+import { mockAxios } from '../util/axios';
+import { mockHttp } from '../util/http';
 
 describe('util/request', () => {
   describe('queryString()', () => {
@@ -314,46 +316,6 @@ describe('util/request', () => {
     });
   });
 
-  describe('withAuth()', () => {
-    it('specifies the session token in the Authorization header', () => {
-      withAuth({ url: '/v1/users' }, { token: 'xyz' }).should.eql({
-        url: '/v1/users',
-        headers: { Authorization: 'Bearer xyz' }
-      });
-    });
-
-    it('does not add an Authorization header if URL does not start with /v1', () => {
-      const config = { url: '/version.txt' };
-      withAuth(config, { token: 'xyz' }).should.equal(config);
-    });
-
-    it('does not add an Authorization header if there is no session', () => {
-      const config = { url: '/v1/users' };
-      withAuth(config, null).should.equal(config);
-    });
-
-    it('does not overwrite an existing Authorization header', () => {
-      const config = {
-        url: '/v1/users',
-        headers: { Authorization: 'auth' }
-      };
-      withAuth(config, { token: 'xyz' }).should.equal(config);
-    });
-
-    it('preserves other headers and options', () => {
-      const config = {
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true' }
-      };
-      withAuth(config, { token: 'xyz' }).should.eql({
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true', Authorization: 'Bearer xyz' }
-      });
-    });
-  });
-
   describe('isProblem()', () => {
     it('returns true for a Problem', () => {
       isProblem({ code: 404.1, message: 'Not found.' }).should.be.true();
@@ -384,102 +346,299 @@ describe('util/request', () => {
     });
   });
 
-  describe('logAxiosError()', () => {
-    it('does not log if there was a response', () => {
-      const error = new Error();
-      error.response = {};
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.called.should.be.false();
-    });
+  describe('request()', () => {
+    describe('file size exceeds limit', () => {
+      const largeFile = (name) => {
+        const file = new File([''], name);
+        // At least in Headless Chrome, `file` does not have its own `size`
+        // property, but rather uses the Blob.prototype.size getter.
+        Object.prototype.hasOwnProperty.call(file, 'size').should.be.false();
+        Object.defineProperty(file, 'size', { value: 100000001 });
+        return file;
+      };
 
-    it('logs the request if there was one', () => {
-      const error = new Error();
-      error.request = {};
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.calledWith(error.request).should.be.true();
-    });
-
-    it('logs the error message if there was no request', () => {
-      const error = new Error('foo');
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.calledWith('foo').should.be.true();
-    });
-  });
-
-  describe('requestAlertMessage()', () => {
-    const errorWithProblem = (code = 500.1) => mockAxiosError({
-      status: Math.floor(code),
-      data: { code, message: 'Message from API' },
-      config: { url: '/v1/projects/1/forms/f' }
-    });
-
-    it('returns a message if there was no request', () => {
-      const message = requestAlertMessage(new Error());
-      message.should.equal('Something went wrong: there was no request.');
-    });
-
-    it('returns a message if there was no response', () => {
-      const error = new Error();
-      error.request = {};
-      const message = requestAlertMessage(error);
-      message.should.equal('Something went wrong: there was no response to your request.');
-    });
-
-    it('returns a message with status code if request URL does not start with /v1', () => {
-      const message = requestAlertMessage(mockAxiosError({
-        status: 500,
-        data: { code: 500.1, message: 'Message from Google' },
-        config: { url: 'https://www.google.com' }
-      }));
-      message.should.equal('Something went wrong: error code 500.');
-    });
-
-    it('returns a message with status code if response is not a Problem', () => {
-      const message = requestAlertMessage(mockAxiosError({
-        status: 500,
-        data: { x: 1 },
-        config: { url: '/v1/projects/1/forms/f' }
-      }));
-      message.should.equal('Something went wrong: error code 500.');
-    });
-
-    it('returns the message of a Problem', () => {
-      const message = requestAlertMessage(errorWithProblem());
-      message.should.equal('Message from API');
-    });
-
-    describe('problemToAlert', () => {
-      it('returns the message from the function', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          problemToAlert: (problem) =>
-            `Message from problemToAlert: ${problem.message} (${problem.code})`
-        });
-        message.should.equal('Message from problemToAlert: Message from API (500.1)');
+      it('does not send a request', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .testNoRequest(() => request(container, {
+            method: 'POST',
+            url: '/v1/projects/1/forms',
+            data: largeFile('form.xml')
+          }).catch(noop));
       });
 
-      it('returns the Problem message if the function returns null', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          problemToAlert: () => null
+      it('returns a rejected promise', () => {
+        const result = request(createTestContainer(), {
+          method: 'POST',
+          url: '/v1/projects/1/forms',
+          data: largeFile('form.xml')
         });
-        message.should.equal('Message from API');
+        return result.should.be.rejected();
+      });
+
+      it('shows a danger alert', () => {
+        const container = createTestContainer();
+        request(container, {
+          method: 'POST',
+          url: '/v1/projects/1/forms',
+          data: largeFile('form.xml')
+        }).catch(noop);
+        const { alert } = container;
+        alert.data.type.should.equal('danger');
+        alert.data.message.should.containEql('form.xml');
       });
     });
 
-    describe('i18n', () => {
-      beforeEach(() => {
+    describe('Authorization header', () => {
+      it('specifies the session token in the Authorization header', () => {
+        const container = createTestContainer({
+          requestData: { session: testData.sessions.createNew({ token: 'xyz' }) }
+        });
+        return mockHttp(container)
+          .request(() => request(container, '/v1/projects'))
+          .beforeEachResponse((_, { headers }) => {
+            headers.Authorization.should.equal('Bearer xyz');
+          })
+          .respondWithData(() => []);
+      });
+
+      it('does not add an Authorization header if URL does not start with /v1', () => {
+        const container = createTestContainer({
+          requestData: { session: testData.sessions.createNew({ token: 'xyz' }) }
+        });
+        return mockHttp(container)
+          .request(() => request(container, '/version.txt'))
+          .beforeEachResponse((_, { headers }) => {
+            should.not.exist(headers.Authorization);
+          })
+          .respondWithData(() => 'v1.4');
+      });
+
+      it('does not add an Authorization header if there is no session', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => request(container, '/v1/projects'))
+          .beforeEachResponse((_, { headers }) => {
+            should.not.exist(headers.Authorization);
+          })
+          .respondWithData(() => []);
+      });
+
+      it('does not overwrite an existing Authorization header', () => {
+        const container = createTestContainer({
+          requestData: { session: testData.sessions.createNew({ token: 'xyz' }) }
+        });
+        return mockHttp(container)
+          .request(() => request(container, {
+            url: '/v1/projects',
+            headers: { Authorization: 'auth' }
+          }))
+          .beforeEachResponse((_, { headers }) => {
+            headers.Authorization.should.equal('auth');
+          })
+          .respondWithData(() => []);
+      });
+    });
+
+    describe('fulfillProblem', () => {
+      it('rejects if fulfillProblem returns false', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => {
+            const promise = request(container, {
+              method: 'DELETE',
+              url: '/v1/projects/1',
+              fulfillProblem: F
+            });
+            return promise.should.be.rejected();
+          })
+          .respondWithProblem();
+      });
+
+      it('fulfills to the response if fulfillProblem returns true', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(async () => {
+            const { data } = await request(container, {
+              method: 'DELETE',
+              url: '/v1/projects/1',
+              fulfillProblem: T
+            });
+            data.code.should.equal(500.1);
+          })
+          .respondWithProblem();
+      });
+
+      it('passes the Problem to fulfillProblem', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(async () => {
+            const fulfillProblem = sinon.fake.returns(true);
+            await request(container, {
+              method: 'DELETE',
+              url: '/v1/projects/1',
+              fulfillProblem
+            });
+            fulfillProblem.getCall(0).args[0].code.should.equal(500.1);
+          })
+          .respondWithProblem();
+      });
+    });
+
+    describe('error logging', () => {
+      it('does not log if there was a response', () => {
+        const http = mockAxios(() => {
+          const error = new Error();
+          error.response = {};
+          return Promise.reject(error);
+        });
+        const log = sinon.fake();
+        const logger = { log };
+        return request(createTestContainer({ http, logger }), '/v1/projects')
+          .catch(noop)
+          .then(() => {
+            log.called.should.be.false();
+          });
+      });
+
+      it('logs the request if there was one', () => {
+        const error = new Error();
+        error.request = {};
+        const http = mockAxios(() => Promise.reject(error));
+        const log = sinon.fake();
+        const logger = { log };
+        return request(createTestContainer({ http, logger }), '/v1/projects')
+          .catch(noop)
+          .then(() => {
+            log.calledWith(error.request).should.be.true();
+          });
+      });
+
+      it('logs the error message if there was no request', () => {
+        const http = mockAxios(() => Promise.reject(new Error('foo')));
+        const log = sinon.fake();
+        const logger = { log };
+        return request(createTestContainer({ http, logger }), '/v1/projects')
+          .catch(noop)
+          .then(() => {
+            log.calledWith('foo').should.be.true();
+          });
+      });
+    });
+
+    describe('alert after unsuccessful response', () => {
+      it('shows an alert if there was no request', () => {
+        const http = mockAxios(() => Promise.reject(new Error()));
+        const container = createTestContainer({ http });
+        return request(container, '/v1/projects/1/forms/f')
+          .catch(noop)
+          .then(() => {
+            const { message } = container.alert.data;
+            message.should.equal('Something went wrong: there was no request.');
+          });
+      });
+
+      it('shows an alert if there was no response', () => {
+        const http = mockAxios(() => {
+          const error = new Error();
+          error.request = {};
+          return Promise.reject(error);
+        });
+        const container = createTestContainer({ http });
+        return request(container, '/v1/projects/1/forms/f')
+          .catch(noop)
+          .then(() => {
+            const { message } = container.alert.data;
+            message.should.equal('Something went wrong: there was no response to your request.');
+          });
+      });
+
+      it('shows a message with status code if request URL does not start with /v1', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => request(container, 'https://www.google.com').catch(noop))
+          .respondWithProblem({ code: 500.1, message: 'Message from Google' })
+          .afterResponse(() => {
+            const { message } = container.alert.data;
+            message.should.equal('Something went wrong: error code 500.');
+          });
+      });
+
+      it('shows a message with status code if response is not a Problem', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+          .respond(() => ({
+            status: 500,
+            data: { x: 1 }
+          }))
+          .afterResponse(() => {
+            const { message } = container.alert.data;
+            message.should.equal('Something went wrong: error code 500.');
+          });
+      });
+
+      it('shows the message of a Problem', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+          .respondWithProblem({ code: 500.1, message: 'Message from API' })
+          .afterResponse(() => {
+            const { message } = container.alert.data;
+            message.should.equal('Message from API');
+          });
+      });
+
+      it('shows a danger alert', () => {
+        const container = createTestContainer();
+        return mockHttp(container)
+          .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+          .respondWithProblem()
+          .afterResponse(() => {
+            const { alert } = container;
+            alert.data.type.should.equal('danger');
+          });
+      });
+
+      describe('problemToAlert', () => {
+        it('shows the message from the function', () => {
+          const container = createTestContainer();
+          return mockHttp(container)
+            .request(() => request(container, {
+              url: '/v1/projects/1/forms/f',
+              problemToAlert: ({ code, message }) =>
+                `Message from problemToAlert: ${message} (${code})`
+            }).catch(noop))
+            .respondWithProblem({ code: 500.1, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message from problemToAlert: Message from API (500.1)');
+            });
+        });
+
+        it('shows the Problem message if the function returns null', () => {
+          const container = createTestContainer();
+          return mockHttp(container)
+            .request(() => request(container, {
+              url: '/v1/projects/1/forms/f',
+              problemToAlert: () => null
+            }).catch(noop))
+            .respondWithProblem({ code: 500.1, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message from API');
+            });
+        });
+      });
+
+      describe('i18n', () => {
+        const i18n = createCentralI18n();
         i18n.setLocaleMessage('la', {
           problem: {
             '401_2': 'Message for locale: {message} ({code})'
           }
         });
         i18n.locale = 'la';
-
         i18n.setLocaleMessage('ett', {
           problem: {
             '401_2': 'Message for fallback (401.2)',
@@ -487,49 +646,67 @@ describe('util/request', () => {
           }
         });
         i18n.fallbackLocale = 'ett';
-      });
-      afterEach(() => {
-        i18n.locale = 'en';
-        i18n.fallbackLocale = 'en';
-        i18n.setLocaleMessage('la', {});
-        i18n.setLocaleMessage('ett', {});
-      });
 
-      it('returns an i18n message for the Problem code', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          component: i18nProps
+        it('shows an i18n message for the Problem code', () => {
+          const container = createTestContainer({ i18n });
+          return mockHttp(container)
+            .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+            .respondWithProblem({ code: 401.2, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message for locale: Message from API (401.2)');
+            });
         });
-        message.should.equal('Message for locale: Message from API (401.2)');
-      });
 
-      it('returns the Problem message if there is no i18n message', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          component: i18nProps
+        it('shows the Problem message if there is no i18n message', () => {
+          const container = createTestContainer({ i18n });
+          return mockHttp(container)
+            .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+            .respondWithProblem({ code: 500.1, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message from API');
+            });
         });
-        message.should.equal('Message from API');
-      });
 
-      it('returns an i18n message for the fallback locale', () => {
-        const message = requestAlertMessage(errorWithProblem(404.1), {
-          component: i18nProps
+        it('shows an i18n message for the fallback locale', () => {
+          const container = createTestContainer({ i18n });
+          return mockHttp(container)
+            .request(() => request(container, '/v1/projects/1/forms/f').catch(noop))
+            .respondWithProblem({ code: 404.1, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message for fallback (404.1)');
+            });
         });
-        message.should.equal('Message for fallback (404.1)');
-      });
 
-      it('does not return i18n message if problemToAlert function returns string', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          problemToAlert: () => 'Message from problemToAlert',
-          component: i18nProps
+        it('does not show i18n message if problemToAlert function returns string', () => {
+          const container = createTestContainer({ i18n });
+          return mockHttp(container)
+            .request(() => request(container, {
+              url: '/v1/projects/1/forms/f',
+              problemToAlert: () => 'Message from problemToAlert'
+            }).catch(noop))
+            .respondWithProblem({ code: 401.2, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message from problemToAlert');
+            });
         });
-        message.should.equal('Message from problemToAlert');
-      });
 
-      it('does not return i18n message if problemToAlert function returns null', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          problemToAlert: () => null,
-          component: i18nProps
+        it('does not show i18n message if problemToAlert function returns null', () => {
+          const container = createTestContainer({ i18n });
+          return mockHttp(container)
+            .request(() => request(container, {
+              url: '/v1/projects/1/forms/f',
+              problemToAlert: () => null
+            }).catch(noop))
+            .respondWithProblem({ code: 401.2, message: 'Message from API' })
+            .afterResponse(() => {
+              const { message } = container.alert.data;
+              message.should.equal('Message from problemToAlert');
+            });
         });
-        message.should.equal('Message from API');
       });
     });
   });
