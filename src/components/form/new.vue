@@ -168,7 +168,7 @@ export default {
         const fallback = this.file.name.replace(/\.xlsx?$/, '');
         headers['X-XlsForm-FormId-Fallback'] = encodeURIComponent(fallback);
       }
-      const { currentRoute } = this.$store.state.router;
+      const initialRoute = this.$route;
       this.request({
         method: 'POST',
         url: this.formDraft == null
@@ -208,8 +208,7 @@ export default {
           }
         })
         .catch(() => {
-          if (this.$store.state.router.currentRoute === currentRoute)
-            this.warnings = null;
+          if (this.$route === initialRoute) this.warnings = null;
         });
     }
   }
