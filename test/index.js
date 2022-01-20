@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import sinon from 'sinon';
+import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
 
-// These files must be imported before the rest.
-import './util/local-vue';
 import '../src/setup';
 
 import i18n from '../src/i18n';
@@ -13,7 +12,6 @@ import { noop } from '../src/util/util';
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { mockAxios } from './util/axios';
-import { unmountAll } from './util/lifecycle';
 import './assertions';
 
 
@@ -48,13 +46,13 @@ Vue.prototype.$logger = { log: noop, error: noop };
 
 beforeEach(testData.seed);
 
-afterEach(() => {
-  unmountAll();
+enableAutoUnmount(afterEach);
 
+afterEach(() => {
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
     console.log(document.body.innerHTML); // eslint-disable-line no-console
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been removed?');
+    throw new Error('Unexpected element after last script element. Have all Bootstrap elements been removed?');
   }
 });
 

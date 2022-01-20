@@ -6,12 +6,14 @@ import { mount } from '../../../util/lifecycle';
 const mountComponent = ({ modelValue = '' } = {}) =>
   mount(SubmissionFiltersSubmitter, {
     props: { modelValue },
-    requestData: {
-      submitters: testData.extendedFieldKeys
-        .sorted()
-        .sort((fieldKey1, fieldKey2) =>
-          fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-        .map(testData.toActor)
+    container: {
+      requestData: {
+        submitters: testData.extendedFieldKeys
+          .sorted()
+          .sort((fieldKey1, fieldKey2) =>
+            fieldKey1.displayName.localeCompare(fieldKey2.displayName))
+          .map(testData.toActor)
+      }
     }
   });
 

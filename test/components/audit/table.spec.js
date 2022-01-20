@@ -11,12 +11,12 @@ import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(AuditRow, {
   props: { audit: new Audit(testData.extendedAudits.last()) },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/system/audits' }
+  container: { router: mockRouter('/system/audits') }
 });
 const testType = (row, type) => {
   const td = row.get('.type');

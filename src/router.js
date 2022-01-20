@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { createMemoryHistory, createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 import routes from './routes';
 import store from './store';
@@ -21,19 +21,8 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-const router = createRouter({
-  // Using memory history mode simplifies testing quite a bit: there were issues
-  // using hash mode. In hash mode, when the router is installed on an
-  // application instance, the router examines the hash to determine the initial
-  // location. But that becomes an issue during testing, because the hash
-  // diverges from the current route over time: Headless Chrome seems to
-  // rate-limit hash changes.
-  history: process.env.NODE_ENV === 'test'
-    ? createMemoryHistory()
-    : createWebHashHistory(),
-  routes
-});
-export default router;
+export default (container, history = createWebHashHistory()) => {
+  const router = createRouter({ history, routes });
 
 
 
@@ -72,7 +61,7 @@ const initialLocale = () => {
 const restoreSessionForRoute = async (to) => {
   if (to.meta.restoreSession) {
     await restoreSession(store);
-    await logIn(router, store, false);
+    await logIn(container, false);
   }
 };
 
@@ -139,7 +128,7 @@ of the `key` attribute.)
     for (const [key, validator] of to.meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
         if (value != null && !validator(value))
-          forceReplace(router, store, '/');
+          forceReplace(container, '/');
       }));
     }
 
@@ -181,9 +170,18 @@ router.afterEach(() => {
 });
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // PAGE TITLES
 
 router.afterEach((to) => {
   updateDocumentTitle(to, store);
 });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RETURN
+
+  return router;
+};

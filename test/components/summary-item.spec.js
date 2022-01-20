@@ -10,7 +10,9 @@ const mountComponent = (options = {}) => mount(SummaryItem, {
     heading: '<span>Some heading</span>',
     body: '<span>Some body</span>'
   },
-  stubs: { RouterLink: RouterLinkStub }
+  global: {
+    stubs: { RouterLink: RouterLinkStub }
+  }
 });
 
 describe('SummaryItem', () => {

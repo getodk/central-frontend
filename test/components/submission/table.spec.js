@@ -22,8 +22,10 @@ const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
     originalCount: testData.extendedSubmissions.size,
     ...mountOptions.props
   },
-  requestData: { project: testData.extendedProjects.last() },
-  stubs: { RouterLink: RouterLinkStub }
+  container: {
+    requestData: { project: testData.extendedProjects.last() },
+    stubs: { RouterLink: RouterLinkStub }
+  }
 });
 
 const headers = (table) => table.findAll('th').map(th => th.text());

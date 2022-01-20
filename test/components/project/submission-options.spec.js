@@ -3,14 +3,14 @@ import { RouterLinkStub } from '@vue/test-utils';
 import LinkIfCan from '../../../src/components/link-if-can.vue';
 import ProjectSubmissionOptions from '../../../src/components/project/submission-options.vue';
 
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
-const mountComponent = (options) => mount(ProjectSubmissionOptions, {
-  props: { state: true },
-  stubs: { RouterLink: RouterLinkStub },
-  ...options
-});
+const mountComponent = (options) =>
+  mount(ProjectSubmissionOptions, mergeMountOptions(options, {
+    props: { state: true }
+  }));
 
 describe('ProjectSubmissionOptions', () => {
   beforeEach(mockLogin);
@@ -18,7 +18,7 @@ describe('ProjectSubmissionOptions', () => {
   describe('link to .../app-users', () => {
     it('links to .../app-users', () => {
       const modal = mountComponent({
-        mocks: { $route: '/projects/1/forms/f' }
+        container: { router: mockRouter('/projects/1/forms/f') }
       });
       const link = modal.getComponent(RouterLinkStub);
       modal.get('li').element.contains(link.element).should.be.true();
@@ -28,7 +28,7 @@ describe('ProjectSubmissionOptions', () => {
 
     it('hides modal if user has already navigated to .../app-users', async () => {
       const modal = mountComponent({
-        mocks: { $route: '/projects/1/app-users' }
+        container: { router: mockRouter('/projects/1/app-users') }
       });
       const a = modal.get('li').get('a');
       a.attributes().href.should.equal('#');
@@ -41,7 +41,7 @@ describe('ProjectSubmissionOptions', () => {
   describe('link to .../public-links', () => {
     it('links to .../public-links', () => {
       const modal = mountComponent({
-        mocks: { $route: '/projects/1/forms/f' }
+        container: { router: mockRouter('/projects/1/forms/f') }
       });
       const link = modal.findAllComponents(RouterLinkStub)[1];
       modal.findAll('li')[1].element.contains(link.element).should.be.true();
@@ -51,7 +51,7 @@ describe('ProjectSubmissionOptions', () => {
 
     it('hides modal if user has already navigated to .../public-links', async () => {
       const modal = mountComponent({
-        mocks: { $route: '/projects/1/forms/f/public-links' }
+        container: { router: mockRouter('/projects/1/forms/f/public-links') }
       });
       const a = modal.findAll('li')[1].get('a');
       a.attributes().href.should.equal('#');
@@ -62,7 +62,7 @@ describe('ProjectSubmissionOptions', () => {
 
     it('does not render a link if user has navigated to a project route', () => {
       const modal = mountComponent({
-        mocks: { $route: '/projects/1/app-users' }
+        container: { router: mockRouter('/projects/1/app-users') }
       });
       const li = modal.findAll('li')[1];
       li.find('a').exists().should.be.false();
@@ -72,7 +72,7 @@ describe('ProjectSubmissionOptions', () => {
 
   it('renders a LinkIfCan component to /users', () => {
     const modal = mountComponent({
-      mocks: { $route: '/projects/1/app-users' }
+      container: { router: mockRouter('/projects/1/app-users') }
     });
     modal.getComponent(LinkIfCan).props().to.should.equal('/users');
   });

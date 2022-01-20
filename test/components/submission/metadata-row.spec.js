@@ -9,19 +9,20 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (props = undefined) => mount(SubmissionMetadataRow, {
   props: {
     projectId: '1',
-    xmlFormId: testData.extendedForms.last().xmlFormId,
+    xmlFormId: 'f',
     draft: false,
     submission: testData.submissionOData().value[0],
     rowNumber: 1,
     canUpdate: true,
     ...props
   },
-  stubs: { RouterLink: RouterLinkStub }
+  container: { router: mockRouter('/projects/1/forms/f/submissions') }
 });
 
 describe('SubmissionMetadataRow', () => {

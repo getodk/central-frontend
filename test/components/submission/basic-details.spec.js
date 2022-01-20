@@ -6,7 +6,9 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(SubmissionBasicDetails, {
-  requestData: { submission: testData.submissionOData() }
+  container: {
+    requestData: { submission: testData.submissionOData() }
+  }
 });
 
 describe('SubmissionBasicDetails', () => {

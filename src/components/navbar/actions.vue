@@ -47,6 +47,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'NavbarActions',
   mixins: [request()],
+  inject: ['container'],
   props: {
     loggedIn: {
       type: Boolean,
@@ -59,7 +60,7 @@ export default {
   methods: {
     logOut() {
       if (confirmUnsavedChanges(this.$store)) {
-        logOut(this.$router, this.$store, false)
+        logOut(this.container, false)
           .then(() => {
             this.$alert().success(this.$t('alert.logOut'));
           })

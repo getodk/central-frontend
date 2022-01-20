@@ -6,6 +6,7 @@ import testData from '../../data';
 import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => {
@@ -16,11 +17,11 @@ const mountOptions = () => {
   }
   return {
     props: { state: true },
-    requestData,
-    mocks: {
-      $route: requestData.formDraft == null
+    container: {
+      requestData,
+      router: mockRouter(requestData.formDraft == null
         ? '/projects/1'
-        : '/projects/1/forms/f/draft'
+        : '/projects/1/forms/f/draft')
     }
   };
 };

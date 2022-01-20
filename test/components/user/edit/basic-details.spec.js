@@ -6,7 +6,9 @@ import { mockLogin } from '../../../util/session';
 import { mount } from '../../../util/lifecycle';
 
 const mountOptions = () => ({
-  requestData: { user: testData.standardUsers.first() }
+  container: {
+    requestData: { user: testData.standardUsers.first() }
+  }
 });
 
 describe('UserEditBasicDetails', () => {

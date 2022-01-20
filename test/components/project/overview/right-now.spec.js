@@ -1,18 +1,18 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ProjectOverviewRightNow from '../../../../src/components/project/overview/right-now.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
 
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
+import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 import { wait } from '../../../util/util';
 
 const mountComponent = () => mount(ProjectOverviewRightNow, {
-  requestData: { project: testData.extendedProjects.last() },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1' }
+  container: {
+    requestData: { project: testData.extendedProjects.last() },
+    router: mockRouter('/projects/1')
+  }
 });
 
 describe('ProjectOverviewRightNow', () => {

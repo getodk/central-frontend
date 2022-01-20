@@ -15,12 +15,8 @@ import './setup';
 
 import App from './components/app.vue';
 
-import i18n from './i18n';
-import router from './router';
-import store from './store';
+import createContainer from './container';
 
 createApp(App)
-  .use(i18n)
-  .use(store)
-  .use(router)
+  .use(createContainer())
   .mount('#app');

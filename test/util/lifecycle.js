@@ -1,113 +1,59 @@
+import { last, lensPath, view } from 'ramda';
 import { mount as vtuMount } from '@vue/test-utils';
-import { ref } from 'vue';
 
-import i18n from '../../src/i18n';
-import router from '../../src/router';
-import store from '../../src/store';
-
-import localVues from './local-vue';
-import { setData } from './store';
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// UNMOUNT
-
-const componentsToUnmount = [];
-
-export const unmountAll = () => {
-  for (const component of componentsToUnmount) {
-    // Vue Test Utils always seems to create a parent component, so we also
-    // unmount that. This is particularly important when the router is injected
-    // into the component: see
-    // https://github.com/vuejs/vue-test-utils/issues/1862
-    const parent = component.vm.$parent;
-    if (parent.$el.parentNode != null)
-      parent.$el.parentNode.removeChild(parent.$el);
-    // This will also unmount `component`.
-    parent.$unmount();
-  }
-  componentsToUnmount.splice(0);
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// MOUNT
+import createTestContainer from './container';
 
 /*
 Our mount() function is similar to mount() from Vue Test Utils. It automatically
-specifies useful options to Vue Test Utils' mount(). It also accepts additional
-options:
+creates application-wide objects and passes them to Vue Test Utils' mount()
+using the `global` option. It also accepts these additional `global` options:
 
-  - mocks
-    - $route. Vue Test Utils' mount() expects $route to be similar to a Route
-      object. However, our mount() function also allows $route to be a string
-      location; it will automatically convert it to a Route object.
-      Additionally, because it is so common for $route and $router to be used
-      together, if you specify $route without $router, our mount() function will
-      pass a minimal mock of $router with read-only functionality. If you need
-      additional router functionality, you should probably inject the router.
-  - requestData. Passed to setData() before the component is mounted.
-  - throwIfEmit. A message to throw if the component emits an event. Used
-    internally by load() when the `root` option is `false`.
-
-Our mount() function will also set it up so that the component is unmounted
-after the test.
+  - global
+    - router (optional). By default, our mount() function does not install a
+      router. To install a real router, specify `true`. You can also specify a
+      mock router: doing so will mock $router and $route and stub <router-link>
+      and <router-view>. To learn more about testing strategies related to the
+      router, see test/util/http.js.
+    - requestData (optional). Passed to setData() before the component is
+      mounted.
 */
 export const mount = (component, options = {}) => {
-  const { requestData, throwIfEmit, ...mountOptions } = options;
+  const { container, ...vtuOptions } = options;
+  vtuOptions.global = {
+    ...vtuOptions.global,
+    plugins: [container.install != null ? container : createTestContainer(container)],
+  };
+  return vtuMount(component, vtuOptions);
+};
 
-  /* Vue Test Utils doesn't seem to mount `component` as the root component:
-  `component` seems to have a parent component that is the root component.
-  However, if a component uses an i18n custom block, it falls back to the
-  VueI18n instance of the root component. That means that we need to pass the
-  root VueI18n instance (`i18n`) to the root component, which we can do using
-  the parentComponent option. This can be helpful even if `component` itself
-  doesn't use an i18n custom block, because a child component may use one. Since
-  we are passing `i18n` to the parent component, it also feels right to pass
-  `store`. */
-  mountOptions.parentComponent = { store, i18n };
+const optionsToMerge = [
+  ['props'],
+  ['slots'],
+  ['attrs'],
+  ['global'],
+  ['global', 'mocks'],
+  ['global', 'provide'],
+  ['global', 'stubs'],
+  ['container'],
+  ['container', 'requestData']
+];
 
-  if (requestData != null) setData(requestData);
-
-  if (mountOptions.router != null) {
-    mountOptions.localVue = localVues.withRouter;
-    mountOptions.parentComponent.router = mountOptions.router;
-    delete mountOptions.router;
-  } else {
-    mountOptions.localVue = localVues.withoutRouter;
-
-    if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
-      const mocks = { ...mountOptions.mocks };
-      if (typeof mocks.$route === 'string')
-        mocks.$route = router.resolve(mocks.$route);
-      if (mocks.$router == null) {
-        mocks.$router = {
-          currentRoute: ref(mocks.$route),
-          resolve: router.resolve.bind(router)
-        };
+// Merges two sets of options for mount().
+export const mergeMountOptions = (options, defaults) => {
+  if (options == null) return defaults;
+  const merged = { ...defaults, ...options };
+  for (const path of optionsToMerge) {
+    const lens = lensPath(path);
+    const option = view(lens, options);
+    if (option != null) {
+      const defaultOption = view(lens, defaults);
+      if (defaultOption != null) {
+        let obj = merged;
+        for (let i = 0; i < path.length - 1; i += 1)
+          obj = obj[path[i]];
+        obj[last(path)] = { ...defaultOption, ...option };
       }
-      mountOptions.mocks = mocks;
     }
   }
-
-  const wrapper = vtuMount(component, mountOptions);
-  componentsToUnmount.push(wrapper);
-
-  if (throwIfEmit != null) {
-    const emitted = wrapper.emitted();
-    if (emitted != null) {
-      let any = false;
-      for (const [name, calls] of Object.entries(emitted)) {
-        if (!name.startsWith('hook:')) {
-          console.error(name, calls[0]); // eslint-disable-line no-console
-          any = true;
-        }
-      }
-      if (any) throw new Error(throwIfEmit);
-    }
-  }
-
-  return wrapper;
+  return merged;
 };

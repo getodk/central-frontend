@@ -10,7 +10,7 @@ import { load } from './util/http';
 import { mockLogin } from './util/session';
 import { mockResponse } from './util/axios';
 
-describe('router', () => {
+describe('createRouter()', () => {
   describe('i18n', () => {
     before(() => {
       const has = Object.prototype.hasOwnProperty.call(navigator, 'language');

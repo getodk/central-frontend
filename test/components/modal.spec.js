@@ -3,22 +3,19 @@ import sinon from 'sinon';
 import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
 
-import { mount } from '../util/lifecycle';
+import { mergeMountOptions, mount } from '../util/lifecycle';
 
-const mountComponent = (options = {}) => mount(Modal, {
-  ...options,
+const mountComponent = (options = undefined) => mount(Modal, mergeMountOptions(options, {
   props: {
     state: true,
     hideable: true,
-    backdrop: true,
-    ...options.props
+    backdrop: true
   },
   slots: {
     title: 'Some Title',
-    body: '<p>Some text</p>',
-    ...options.slots
+    body: '<p>Some text</p>'
   }
-});
+}));
 
 describe('Modal', () => {
   it('uses the title slot', () => {

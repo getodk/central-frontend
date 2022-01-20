@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FormChecklist from '../../../src/components/form/checklist.vue';
 import ProjectSubmissionOptions from '../../../src/components/project/submission-options.vue';
@@ -7,15 +5,17 @@ import ProjectSubmissionOptions from '../../../src/components/project/submission
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(FormChecklist, {
-  requestData: {
-    project: testData.extendedProjects.last(),
-    form: testData.extendedForms.last()
-  },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1/forms/f' }
+  container: {
+    requestData: {
+      project: testData.extendedProjects.last(),
+      form: testData.extendedForms.last()
+    },
+    router: mockRouter('/projects/1/forms/f')
+  }
 });
 
 describe('FormChecklist', () => {

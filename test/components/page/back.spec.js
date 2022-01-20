@@ -11,7 +11,9 @@ describe('PageBack', () => {
     it('renders a link', () => {
       const component = mount(PageBack, {
         props: { to: '/users', linkTitle: true },
-        stubs: { RouterLink: RouterLinkStub }
+        global: {
+          stubs: { RouterLink: RouterLinkStub }
+        }
       });
       const link = component.getComponent(RouterLinkStub);
       should.exist(link.element.closest('#page-back-title'));
@@ -22,7 +24,9 @@ describe('PageBack', () => {
       const component = mount(PageBack, {
         props: { to: '/users', linkTitle: true },
         slots: { title: TestUtilSpan },
-        stubs: { RouterLink: RouterLinkStub }
+        global: {
+          stubs: { RouterLink: RouterLinkStub }
+        }
       });
       const text = component.getComponent(RouterLinkStub).get('span').text();
       text.should.equal('Some span text');
@@ -33,7 +37,9 @@ describe('PageBack', () => {
     it('does not render a link', () => {
       const component = mount(PageBack, {
         props: { to: '/users', linkTitle: false },
-        stubs: { RouterLink: RouterLinkStub }
+        global: {
+          stubs: { RouterLink: RouterLinkStub }
+        }
       });
       component.find('#page-back-title a').exists().should.be.false();
     });
@@ -42,7 +48,9 @@ describe('PageBack', () => {
       const component = mount(PageBack, {
         props: { to: '/users', linkTitle: false },
         slots: { title: TestUtilSpan },
-        stubs: { RouterLink: RouterLinkStub }
+        global: {
+          stubs: { RouterLink: RouterLinkStub }
+        }
       });
       const text = component.get('#page-back-title span').text();
       text.should.equal('Some span text');
@@ -52,7 +60,9 @@ describe('PageBack', () => {
   it('renders a link for the back slot', () => {
     const component = mount(PageBack, {
       props: { to: '/users' },
-      stubs: { RouterLink: RouterLinkStub }
+      global: {
+        stubs: { RouterLink: RouterLinkStub }
+      }
     });
     const link = component.getComponent(RouterLinkStub);
     link.attributes().id.should.equal('page-back-back');
@@ -63,7 +73,9 @@ describe('PageBack', () => {
     const component = mount(PageBack, {
       props: { to: '/users' },
       slots: { back: TestUtilSpan },
-      stubs: { RouterLink: RouterLinkStub }
+      global: {
+        stubs: { RouterLink: RouterLinkStub }
+      }
     });
     component.get('#page-back-back span').text().should.equal('Some span text');
   });

@@ -4,8 +4,8 @@ import SubmissionDecrypt from '../../../src/components/submission/decrypt.vue';
 
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
 const createData = () => {
@@ -20,11 +20,13 @@ const createData = () => {
     fields: [testData.fields.binary('/b')]
   });
 };
-const mountComponent = (options = {}) => mount(SubmissionDecrypt, {
-  ...options,
-  props: { state: true, ...options.props },
-  requestData: { keys: testData.standardKeys.sorted() }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionDecrypt, mergeMountOptions(options, {
+    props: { state: true },
+    container: {
+      requestData: { keys: testData.standardKeys.sorted() }
+    }
+  }));
 
 describe('SubmissionDecrypt', () => {
   beforeEach(mockLogin);

@@ -4,16 +4,15 @@ import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountOptions = (options = undefined) => ({
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: {
     state: false,
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     submission: testData.submissionOData().value[0]
-  },
-  ...options
+  }
 });
 const mountComponent = (options = undefined) =>
   mount(SubmissionUpdateReviewState, mountOptions(options));

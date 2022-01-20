@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import DateRangePicker from '../../src/components/date-range-picker.vue';
 
 import { loadLocale } from '../../src/util/i18n';
-import { mount } from '../util/lifecycle';
+import { mergeMountOptions, mount } from '../util/lifecycle';
 import { setLuxon } from '../util/date-time';
 import { wait } from '../util/util';
 
@@ -13,19 +13,15 @@ const toISO = (dateTime) => dateTime.toISO({
   suppressSeconds: true,
   includeOffset: false
 });
-const mountComponent = (options = {}) => {
-  const props = options.props != null ? options.props : {};
-  const modelValue = props.modelValue != null
-    ? props.modelValue
-    : ['1970-01-01', '1970-01-01'];
-  return mount(DateRangePicker, {
-    ...options,
+const mountComponent = (options = undefined) => {
+  const merged = mergeMountOptions(options, {
     props: {
-      ...props,
-      modelValue: modelValue.map(fromISO),
-      placeholder: props.placeholder != null ? props.placeholder : 'Date range'
+      modelValue: ['1970-01-01', '1970-01-01'],
+      placeholder: 'Date range'
     }
   });
+  merged.props.modelValue = merged.props.modelValue.map(fromISO);
+  return mount(DateRangePicker, merged);
 };
 const close = (component, selectedDatesAsISO) => {
   const asDates = selectedDatesAsISO.map(iso => DateTime.fromISO(iso).toJSDate());

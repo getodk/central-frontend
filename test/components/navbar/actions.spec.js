@@ -1,19 +1,21 @@
 import sinon from 'sinon';
-import { RouterLinkStub } from '@vue/test-utils';
 
 import Navbar from '../../../src/components/navbar.vue';
 import NavbarActions from '../../../src/components/navbar/actions.vue';
 
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 describe('NavbarActions', () => {
   it('indicates if the user is not logged in', () => {
     const navbar = mount(Navbar, {
-      // Stubbing AnalyticsIntroduction because of its custom <router-link>
-      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
-      mocks: { $route: '/login' }
+      container: { router: mockRouter('/login') },
+      global: {
+        // Stubbing AnalyticsIntroduction because of its custom <router-link>
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     const text = navbar.getComponent(NavbarActions).get('a').text();
     text.should.equal('Not logged in');
@@ -22,8 +24,10 @@ describe('NavbarActions', () => {
   it("shows the user's display name", () => {
     mockLogin({ displayName: 'Alice' });
     const navbar = mount(Navbar, {
-      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
-      mocks: { $route: '/' }
+      container: { router: mockRouter('/') },
+      global: {
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     navbar.getComponent(NavbarActions).get('a').text().should.equal('Alice');
   });

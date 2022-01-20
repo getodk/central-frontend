@@ -1,14 +1,15 @@
 import ProjectEnableEncryption from '../../../src/components/project/enable-encryption.vue';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountOptions = (options) => ({
+const mountOptions = (options) => mergeMountOptions(options, {
   props: { state: true },
-  requestData: { project: testData.extendedProjects.last() },
-  ...options
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe('ProjectEnableEncryption', () => {

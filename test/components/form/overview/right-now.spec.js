@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
 import FormVersionSummaryItem from '../../../../src/components/form-version/summary-item.vue';
 import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
@@ -8,14 +6,16 @@ import SummaryItem from '../../../../src/components/summary-item.vue';
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
+import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
 const mountComponent = () => {
   const form = testData.extendedForms.last();
   return mount(FormOverviewRightNow, {
-    requestData: { form },
-    stubs: { RouterLink: RouterLinkStub },
-    mocks: { $route: `/projects/1/forms/${encodeURIComponent(form.xmlFormId)}` }
+    container: {
+      requestData: { form },
+      router: mockRouter(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`)
+    }
   });
 };
 

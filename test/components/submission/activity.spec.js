@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import SubmissionActivity from '../../../src/components/submission/activity.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -7,6 +5,7 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
@@ -14,19 +13,17 @@ const mountComponent = () => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const submission = testData.submissionOData();
+  const instanceId = submission.value[0].__id;
   const fields = form._fields;
   const audits = testData.extendedAudits.sorted();
   const comments = testData.extendedComments.sorted();
   const diffs = {};
   return mount(SubmissionActivity, {
-    props: {
-      projectId: '1',
-      xmlFormId: form.xmlFormId,
-      instanceId: submission.value[0].__id
-    },
-    requestData: { project, submission, fields, audits, comments, diffs },
-    stubs: { RouterLink: RouterLinkStub },
-    mocks: { $route: '/projects/1/submissions/s' }
+    props: { projectId: '1', xmlFormId: form.xmlFormId, instanceId },
+    container: {
+      requestData: { project, submission, fields, audits, comments, diffs },
+      router: mockRouter(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}/submissions/${encodeURIComponent(instanceId)}`)
+    }
   });
 };
 

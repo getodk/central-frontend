@@ -5,19 +5,20 @@ import FormVersionRow from '../../../src/components/form-version/row.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
-const mountOptions = (options = undefined) => ({
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: false },
-  requestData: {
-    formVersions: testData.extendedFormVersions.published(),
-    formDraft: testData.extendedFormDrafts.last(),
-    attachments: testData.standardFormAttachments.sorted()
-  },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1/forms/f/draft' },
-  ...options
+  container: {
+    requestData: {
+      formVersions: testData.extendedFormVersions.published(),
+      formDraft: testData.extendedFormDrafts.last(),
+      attachments: testData.standardFormAttachments.sorted()
+    },
+    router: mockRouter('/projects/1/forms/f/draft')
+  }
 });
 
 describe('FormDraftPublish', () => {

@@ -10,7 +10,9 @@ const mountComponent = (props) => mount(FieldKeyQrPanel, {
     fieldKey: new FieldKey(testData.extendedFieldKeys.last()),
     ...props
   },
-  requestData: { project: testData.extendedProjects.last() }
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe('FieldKeyQrPanel', () => {

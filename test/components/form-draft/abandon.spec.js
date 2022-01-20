@@ -6,13 +6,11 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(FormDraftAbandon, {
+const mountOptions = () => ({
   props: { state: true },
-  requestData: { form: testData.extendedForms.last() }
-});
-const mockHttpForComponent = () => mockHttp().mount(FormDraftAbandon, {
-  props: { state: true },
-  requestData: { form: testData.extendedForms.last() }
+  container: {
+    requestData: { form: testData.extendedForms.last() }
+  }
 });
 
 describe('FormDraftAbandon', () => {
@@ -31,13 +29,14 @@ describe('FormDraftAbandon', () => {
     it('shows the correct title for a form with a published version', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
-      const text = mountComponent().get('.modal-title').text();
-      text.should.equal('Abandon Draft');
+      const modal = mount(FormDraftAbandon, mountOptions());
+      modal.get('.modal-title').text().should.equal('Abandon Draft');
     });
 
     it('shows the correct title for a form without a published version', () => {
       testData.extendedForms.createPast(1, { draft: true });
-      const text = mountComponent().get('.modal-title').text();
+      const modal = mount(FormDraftAbandon, mountOptions());
+      const text = modal.get('.modal-title').text();
       text.should.equal('Abandon Draft and Delete Form');
     });
   });
@@ -50,12 +49,14 @@ describe('FormDraftAbandon', () => {
       });
 
       it('shows the correct text for the first paragraph', () => {
-        const text = mountComponent().get('.modal-introduction p').text();
+        const modal = mount(FormDraftAbandon, mountOptions());
+        const text = modal.get('.modal-introduction p').text();
         text.should.endWith('all test Submissions will be removed.');
       });
 
       it('renders an additional paragraph', () => {
-        mountComponent().findAll('.modal-introduction p').length.should.equal(3);
+        const modal = mount(FormDraftAbandon, mountOptions());
+        modal.findAll('.modal-introduction p').length.should.equal(3);
       });
     });
 
@@ -65,12 +66,14 @@ describe('FormDraftAbandon', () => {
       });
 
       it('shows the correct text for the first paragraph', () => {
-        const text = mountComponent().get('.modal-introduction p').text();
+        const modal = mount(FormDraftAbandon, mountOptions());
+        const text = modal.get('.modal-introduction p').text();
         text.should.endWith('this Form will be entirely deleted.');
       });
 
       it('does not render an additional paragraph', () => {
-        mountComponent().findAll('.modal-introduction p').length.should.equal(2);
+        const modal = mount(FormDraftAbandon, mountOptions());
+        modal.findAll('.modal-introduction p').length.should.equal(2);
       });
     });
   });
@@ -79,7 +82,8 @@ describe('FormDraftAbandon', () => {
     it('sends the correct request for a form with a published version', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
-      return mockHttpForComponent()
+      return mockHttp()
+        .mount(FormDraftAbandon, mountOptions())
         .request(modal => modal.get('.btn-danger').trigger('click'))
         .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
@@ -90,7 +94,8 @@ describe('FormDraftAbandon', () => {
 
     it('sends correct request for a form without a published version', () => {
       testData.extendedForms.createPast(1, { draft: true });
-      return mockHttpForComponent()
+      return mockHttp()
+        .mount(FormDraftAbandon, mountOptions())
         .request(modal => modal.get('.btn-danger').trigger('click'))
         .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
@@ -103,11 +108,13 @@ describe('FormDraftAbandon', () => {
   it('implements some standard button things', () => {
     testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { draft: true });
-    return mockHttpForComponent().testStandardButton({
-      button: '.btn-danger',
-      disabled: ['.btn-link'],
-      modal: true
-    });
+    return mockHttp()
+      .mount(FormDraftAbandon, mountOptions())
+      .testStandardButton({
+        button: '.btn-danger',
+        disabled: ['.btn-link'],
+        modal: true
+      });
   });
 
   describe('after abandoning draft for a form with a published version', () => {

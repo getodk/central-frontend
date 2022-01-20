@@ -13,9 +13,11 @@ import { mount } from '../../util/lifecycle';
 const mountComponent = () => {
   const config = testData.standardConfigs.forKey('backups');
   return mount(BackupStatus, {
-    requestData: {
-      backupsConfig: config != null ? config : mockResponse.problem(404.1),
-      audits: testData.standardAudits.sorted()
+    container: {
+      requestData: {
+        backupsConfig: config != null ? config : mockResponse.problem(404.1),
+        audits: testData.standardAudits.sorted()
+      }
     }
   });
 };

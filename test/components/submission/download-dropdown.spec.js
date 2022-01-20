@@ -9,10 +9,11 @@ const mountComponent = (options = {}) => {
   const form = testData.extendedForms.last();
   return mount(SubmissionDownloadDropdown, {
     props: { formVersion: new Form(form), ...options.props },
-    requestData: {
-      fields: form._fields,
-      keys: testData.standardKeys.sorted(),
-      ...options.requestData
+    container: {
+      requestData: {
+        fields: form._fields,
+        keys: testData.standardKeys.sorted()
+      }
     }
   });
 };

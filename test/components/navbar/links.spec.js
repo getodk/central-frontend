@@ -6,27 +6,25 @@ import NavbarLinks from '../../../src/components/navbar/links.vue';
 import store from '../../../src/store';
 
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
-
-const mountComponent = (options) => mount(NavbarLinks, {
-  stubs: { RouterLink: RouterLinkStub },
-  ...options
-});
 
 describe('NavbarLinks', () => {
   it('does not render the links before login', () => {
     const navbar = mount(Navbar, {
-      // Stubbing AnalyticsIntroduction because of its custom <router-link>
-      stubs: { RouterLink: RouterLinkStub, AnalyticsIntroduction: true },
-      mocks: { $route: '/login' }
+      container: { router: mockRouter('/login') },
+      global: {
+        // Stubbing AnalyticsIntroduction because of its custom <router-link>
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     navbar.findComponent(NavbarLinks).exists().should.be.false();
   });
 
   it('renders the correct links for a sitewide administrator', () => {
     mockLogin();
-    const component = mountComponent({
-      mocks: { $route: '/' }
+    const component = mount(NavbarLinks, {
+      container: { router: mockRouter('/') }
     });
     const links = component.findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
@@ -35,8 +33,8 @@ describe('NavbarLinks', () => {
 
   it('renders the correct links for a user without a sitewide role', () => {
     mockLogin({ role: 'none' });
-    const component = mountComponent({
-      mocks: { $route: '/' }
+    const component = mount(NavbarLinks, {
+      container: { router: mockRouter('/') }
     });
     const links = component.findAllComponents(RouterLinkStub);
     links.map(link => link.props().to).should.eql(['/']);
@@ -45,8 +43,8 @@ describe('NavbarLinks', () => {
   it('links to /system/audits if the showsBackups config is false', () => {
     store.commit('setConfig', { key: 'showsBackups', value: false });
     mockLogin();
-    const component = mountComponent({
-      mocks: { $route: '/' }
+    const component = mount(NavbarLinks, {
+      container: { router: mockRouter('/') }
     });
     const { to } = component.findAllComponents(RouterLinkStub)[2].props();
     to.should.equal('/system/audits');
@@ -65,8 +63,8 @@ describe('NavbarLinks', () => {
     ];
     for (const [location, activeLink] of cases) {
       it(`marks ${activeLink} as active for ${location}`, () => {
-        const component = mountComponent({
-          mocks: { $route: location }
+        const component = mount(NavbarLinks, {
+          container: { router: mockRouter(location) }
         });
         const active = component.findAll('.active');
         active.length.should.equal(1);
@@ -77,8 +75,8 @@ describe('NavbarLinks', () => {
     }
 
     it('marks no link as active for /account/edit', () => {
-      const component = mountComponent({
-        mocks: { $route: '/account/edit' }
+      const component = mount(NavbarLinks, {
+        container: { router: mockRouter('/account/edit') }
       });
       component.find('.active').exists().should.be.false();
     });
