@@ -649,13 +649,14 @@ class Translations {
     if (this.isArray()) {
       const result = [];
       let emptyPluralForms = 0;
+      // Number of empty objects or arrays
       let emptyObjects = 0;
       for (let i = 0; i < this.size; i += 1) {
         const value = this.get(i).toJSON(i.toString());
         result.push(value);
         if (value === undefined)
           emptyPluralForms += 1;
-        else if (Object.keys(value).length === 0)
+        else if (typeof value === 'object' && Object.keys(value).length === 0)
           emptyObjects += 1;
       }
       if (emptyPluralForms + emptyObjects === this.size) {
