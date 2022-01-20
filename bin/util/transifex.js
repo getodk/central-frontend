@@ -282,7 +282,7 @@ class ComponentInterpolationNode {
         parentNode._childNodes.push(node);
       }
     }
-    if (!nodesByKey.full.hasChildNodes())
+    if (nodesByKey.full.childNodes.length === 0)
       logThenThrow(messages, 'invalid component interpolation');
     return nodesByKey.full;
   }
@@ -298,8 +298,6 @@ class ComponentInterpolationNode {
   get childNodes() { return this._childNodes; }
   get key() { return this._key; }
   get pluralForms() { return this._pluralForms; }
-
-  hasChildNodes() { return this._childNodes.length !== 0; }
 
   visitDescendants(callback) {
     for (const childNode of this._childNodes) {
@@ -322,7 +320,7 @@ const generateCommentsForFull = (messages) => {
       : `It will be inserted where {${node.key}} is in the following text. (The plural form of the text is shown.)`;
     comments[node.key] += `\n\n${expandedMessage}`;
 
-    if (node.hasChildNodes()) {
+    if (node.childNodes.length !== 0) {
       const messageForChildNodes = expandedMessage.replace(
         `{${node.key}}`,
         node.pluralForms[node.pluralForms.length - 1]
@@ -339,7 +337,8 @@ const generateCommentsForFull = (messages) => {
   const commentOnParentNode = (node) => {
     if (comments[node.key] !== '') comments[node.key] += '\n\n';
 
-    if (node.childNodes.length === 1 && !node.childNodes[0].hasChildNodes()) {
+    if (node.childNodes.length === 1 &&
+      node.childNodes[0].childNodes.length === 0) {
       const childNode = node.childNodes[0];
       comments[node.key] += node.parentNode == null
         ? `{${childNode.key}} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link.`
@@ -361,7 +360,7 @@ const generateCommentsForFull = (messages) => {
       });
 
       for (const childNode of node.childNodes)
-        if (childNode.hasChildNodes()) commentOnParentNode(childNode);
+        if (childNode.childNodes.length !== 0) commentOnParentNode(childNode);
     }
   };
   commentOnParentNode(rootNode);
