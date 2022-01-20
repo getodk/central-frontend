@@ -1,4 +1,5 @@
 import { mount as vtuMount } from '@vue/test-utils';
+import { ref } from 'vue';
 
 import i18n from '../../src/i18n';
 import router from '../../src/router';
@@ -83,7 +84,7 @@ export const mount = (component, options = {}) => {
         mocks.$route = router.resolve(mocks.$route);
       if (mocks.$router == null) {
         mocks.$router = {
-          currentRoute: mocks.$route,
+          currentRoute: ref(mocks.$route),
           resolve: router.resolve.bind(router)
         };
       }

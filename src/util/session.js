@@ -134,9 +134,9 @@ export const logOut = (router, store, setNext) => {
   // initial navigation. After the initial navigation, navigation is
   // synchronous, so a logout during navigation is not possible.
   if (store.state.router.anyNavigationConfirmed &&
-    router.currentRoute.path !== '/login') {
+    router.currentRoute.value.path !== '/login') {
     const location = { path: '/login' };
-    if (setNext) location.query = { next: router.currentRoute.fullPath };
+    if (setNext) location.query = { next: router.currentRoute.value.fullPath };
     forceReplace(router, store, location);
   }
 
