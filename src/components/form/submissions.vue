@@ -83,10 +83,13 @@ export default {
     const rendersEnketoFill = computed(() => project.data != null &&
       project.data.permits('submission.create') && form.data != null);
 
+    provide('projectId', props.projectId);
+    provide('xmlFormId', props.xmlFormId);
+    provide('draft', false);
+
     return {
       t: useI18n().t,
       form: form.ref, keys: keys.ref, initiallyLoading,
-      projectId: props.projectId, xmlFormId: props.xmlFormId,
       analyze: modalData(),
       rendersEnketoFill
     };

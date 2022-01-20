@@ -26,8 +26,7 @@ except according to the terms contained in the LICENSE file.
         @focusin="setActionsTrigger('focus')" @click="review">
         <template v-if="submissions != null">
           <submission-metadata-row v-for="(submission, index) in submissions"
-            :key="submission.__id" :project-id="projectId"
-            :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
+            :key="submission.__id" :submission="submission"
             :row-number="originalCount - index" :can-update="canUpdate"
             :data-index="index"/>
         </template>
@@ -50,9 +49,8 @@ except according to the terms contained in the LICENSE file.
           @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
           <template v-if="submissions != null && fields != null">
             <submission-data-row v-for="(submission, index) in submissions"
-              :key="submission.__id" :project-id="projectId"
-              :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-              :fields="fields" :data-index="index"/>
+              :key="submission.__id" :submission="submission" :fields="fields"
+              :data-index="index"/>
           </template>
         </tbody>
       </table>
@@ -72,17 +70,8 @@ import { requestDataComputed } from '../../reusables/request-data';
 export default {
   name: 'SubmissionTable',
   components: { SubmissionDataRow, SubmissionMetadataRow },
-  inject: ['requestData'],
+  inject: ['requestData', 'draft'],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    draft: Boolean,
     submissions: Array,
     fields: Array,
     originalCount: Number

@@ -34,8 +34,7 @@ except according to the terms contained in the LICENSE file.
           @decrypt="decryptModal.show"/>
       </div>
       <submission-table v-show="submissions != null && submissions.length !== 0"
-        ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submissions="submissions" :fields="selectedFields"
+        ref="table" :submissions="submissions" :fields="selectedFields"
         :original-count="originalCount" @review="reviewModal.show"/>
       <p v-show="submissions != null && submissions.length === 0"
         class="empty-table-message">
@@ -51,7 +50,6 @@ except according to the terms contained in the LICENSE file.
 
     <submission-decrypt v-bind="decryptModal.data" @hide="decryptModal.hide"/>
     <submission-update-review-state v-bind="reviewModal.data"
-      :project-id="projectId" :xml-form-id="xmlFormId"
       @hide="reviewModal.hide" @success="afterReview"/>
   </div>
 </template>
@@ -85,17 +83,8 @@ export default {
     SubmissionTable,
     SubmissionUpdateReviewState
   },
-  inject: ['requestData', 'alert'],
+  inject: ['requestData', 'alert', 'projectId', 'xmlFormId', 'draft'],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    draft: Boolean,
     // Returns the value of the $top query parameter.
     top: {
       type: Function,

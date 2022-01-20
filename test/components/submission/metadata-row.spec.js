@@ -8,28 +8,29 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (props = undefined) => mount(SubmissionMetadataRow, {
-  props: {
-    projectId: '1',
-    xmlFormId: 'f',
-    draft: false,
-    submission: testData.submissionOData().value[0],
-    rowNumber: 1,
-    canUpdate: true,
-    ...props
-  },
-  container: { router: mockRouter('/projects/1/forms/f/submissions') }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionMetadataRow, mergeMountOptions(options, {
+    provide: { projectId: '1', xmlFormId: 'f', draft: false },
+    props: {
+      submission: testData.submissionOData().value[0],
+      rowNumber: 1,
+      canUpdate: true
+    },
+    container: { router: mockRouter('/projects/1/forms/f/submissions') }
+  }));
 
 describe('SubmissionMetadataRow', () => {
   it('shows the row number', () => {
     testData.extendedForms.createPast(1, { submissions: 1000 });
     testData.extendedSubmissions.createPast(1);
-    const td = mountComponent({ rowNumber: 1000 }).get('td');
+    const row = mountComponent({
+      props: { rowNumber: 1000 }
+    });
+    const td = row.get('td');
     td.classes('row-number').should.be.true();
     td.text().should.equal('1000');
   });
@@ -38,7 +39,9 @@ describe('SubmissionMetadataRow', () => {
     it('shows the submitter name for a form', () => {
       mockLogin({ displayName: 'Alice' });
       testData.extendedSubmissions.createPast(1);
-      const row = mountComponent({ draft: false });
+      const row = mountComponent({
+        provide: { draft: false }
+      });
       const td = row.findAll('td')[1];
       td.classes('submitter-name').should.be.true();
       td.text().should.equal('Alice');
@@ -48,7 +51,9 @@ describe('SubmissionMetadataRow', () => {
     it('does not show the submitter name for a form draft', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
-      const row = mountComponent({ draft: true });
+      const row = mountComponent({
+        provide: { draft: true }
+      });
       row.find('.submitter-name').exists().should.be.false();
     });
   });
@@ -234,7 +239,9 @@ describe('SubmissionMetadataRow', () => {
     mockLogin({ role: 'none' });
     testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
     testData.extendedSubmissions.createPast(1);
-    const row = mountComponent({ canUpdate: false });
+    const row = mountComponent({
+      props: { canUpdate: false }
+    });
     // Selecting this way because RouterLinkStub doesn't use the scoped slot.
     row.findAll('.btn-group > *').length.should.equal(1);
   });
@@ -242,7 +249,9 @@ describe('SubmissionMetadataRow', () => {
   it('does not render the "State and actions" column for a form draft', () => {
     testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
     testData.extendedSubmissions.createPast(1);
-    const row = mountComponent({ draft: true });
+    const row = mountComponent({
+      provide: { draft: true }
+    });
     row.find('.state-and-actions').exists().should.be.false();
   });
 });

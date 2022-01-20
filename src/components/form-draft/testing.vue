@@ -129,10 +129,13 @@ export default {
       };
     });
 
+    provide('projectId', props.projectId);
+    provide('xmlFormId', props.xmlFormId);
+    provide('draft', true);
+
     return {
       t,
       formDraft: computed(() => formDraft.data.get()), keys: keys.ref, initiallyLoading,
-      projectId: props.projectId, xmlFormId: props.xmlFormId,
       qrSettings
     };
   }

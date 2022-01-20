@@ -33,8 +33,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </page-body>
     <submission-update-review-state :state="updateReviewState.state"
-      :project-id="projectId" :xml-form-id="xmlFormId" :submission="submission"
-      @hide="hideModal('updateReviewState')" @success="afterUpdateReviewState"/>
+      :submission="submission" @hide="hideModal('updateReviewState')"
+      @success="afterUpdateReviewState"/>
   </div>
 </template>
 
@@ -66,6 +66,14 @@ export default {
     SubmissionUpdateReviewState
   },
   mixins: [mixinModals, mixinPaths],
+  provide: {
+    projectId() {
+      return this.projectId;
+    },
+    xmlFormId() {
+      return this.xmlFormId;
+    }
+  },
   inject: ['requestData', 'alert'],
   props: {
     projectId: {

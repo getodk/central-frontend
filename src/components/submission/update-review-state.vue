@@ -63,16 +63,9 @@ export default {
   name: 'SubmissionUpdateReviewState',
   components: { Modal, Spinner, MarkdownTextarea },
   mixins: [mixinRequests, mixinReviewState],
+  provide: ['projectId', 'xmlFormId'],
   props: {
     state: Boolean,
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
     submission: Object
   },
   emits: ['hide', 'success'],

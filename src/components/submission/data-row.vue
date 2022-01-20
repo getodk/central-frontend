@@ -55,16 +55,8 @@ but that again was significantly slower.
 
 export default {
   name: 'SubmissionDataRow',
+  inject: ['projectId', 'xmlFormId', 'draft'],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    draft: Boolean,
     submission: {
       type: Object,
       required: true

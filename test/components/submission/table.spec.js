@@ -10,10 +10,8 @@ import { mockRouter } from '../../util/router';
 
 const mountOptions = (options = undefined) => {
   const merged = mergeMountOptions(options, {
+    provide: { projectId: '1', xmlFormId: 'f', draft: false },
     props: {
-      projectId: '1',
-      xmlFormId: 'f',
-      draft: false,
       submissions: testData.submissionOData().value,
       originalCount: testData.extendedSubmissions.size
     },
@@ -24,7 +22,7 @@ const mountOptions = (options = undefined) => {
       }
     }
   });
-  merged.container.router = mockRouter(!merged.props.draft
+  merged.container.router = mockRouter(!merged.provide.draft
     ? '/projects/1/forms/f/submissions'
     : '/projects/1/forms/f/draft/testing');
   merged.container = createTestContainer(merged.container);
@@ -42,7 +40,7 @@ describe('SubmissionTable', () => {
     it('renders the correct headers for a form', () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        props: { draft: false }
+        provide: { draft: false }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
@@ -52,7 +50,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        props: { draft: true }
+        provide: { draft: true }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted at']);

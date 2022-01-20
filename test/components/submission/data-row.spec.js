@@ -13,10 +13,8 @@ const mountOptions = () => {
   });
   const { requestData } = container;
   return {
+    provide: { projectId: '1', xmlFormId: 'f', draft: false },
     props: {
-      projectId: '1',
-      xmlFormId: 'f',
-      draft: false,
       submission: testData.submissionOData().value[0],
       fields: requestData.fields.data
     },

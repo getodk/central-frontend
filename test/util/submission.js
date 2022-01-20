@@ -11,12 +11,12 @@ export const loadSubmissionList = (mountOptions = undefined) => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const mergedOptions = mergeMountOptions(mountOptions, {
-    props: {
+    provide: {
       projectId: project.id.toString(),
       xmlFormId: form.xmlFormId,
       draft: form.publishedAt == null
-      top: SubmissionList.props.top.default
     },
+    props: { top: SubmissionList.props.top.default },
     container: {
       requestData: {
         project,

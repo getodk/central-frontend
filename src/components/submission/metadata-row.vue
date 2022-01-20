@@ -62,16 +62,8 @@ export default {
   name: 'SubmissionMetadataRow',
   components: { DateTime },
   mixins: [mixinReviewState],
+  inject: ['projectId', 'xmlFormId', 'draft'],
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    draft: Boolean,
     submission: {
       type: Object,
       required: true

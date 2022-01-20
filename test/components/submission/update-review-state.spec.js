@@ -7,12 +7,11 @@ import { mockLogin } from '../../util/session';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
-  props: {
-    state: false,
+  provide: {
     projectId: '1',
-    xmlFormId: testData.extendedForms.last().xmlFormId,
-    submission: testData.submissionOData().value[0]
-  }
+    xmlFormId: testData.extendedForms.last().xmlFormId
+  },
+  props: { state: false, submission: testData.submissionOData().value[0] }
 });
 const mountComponent = (options = undefined) =>
   mount(SubmissionUpdateReviewState, mountOptions(options));
