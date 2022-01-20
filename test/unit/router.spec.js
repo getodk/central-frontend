@@ -10,7 +10,7 @@ import { mockLogin } from '../util/session';
 
 describe('util/router', () => {
   describe('routeProps()', () => {
-    const { route } = router.resolve('/projects/1');
+    const route = router.resolve('/projects/1');
 
     it('returns an empty object if props is undefined', () => {
       routeProps(route, undefined).should.eql({});

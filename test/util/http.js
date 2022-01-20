@@ -442,7 +442,7 @@ class MockHttp {
   The property names of `options` correspond to request keys.
   */
   respondFor(location, options = undefined) {
-    return routeComponents(router.resolve(location).route).reduce(
+    return routeComponents(router.resolve(location)).reduce(
       (series, component) => series.respondForComponent(component, options),
       this
     );
@@ -782,7 +782,7 @@ export const mockHttp = () => new MockHttp();
 // also set requestData and respond to the initial requests that the component
 // sends.
 const loadBottomComponent = (location, mountOptions, respondForOptions) => {
-  const { route } = router.resolve(location);
+  const route = router.resolve(location);
   const components = routeComponents(route);
   const bottomComponent = last(components);
 

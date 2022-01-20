@@ -80,7 +80,7 @@ export const mount = (component, options = {}) => {
     if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
       const mocks = { ...mountOptions.mocks };
       if (typeof mocks.$route === 'string')
-        mocks.$route = router.resolve(mocks.$route).route;
+        mocks.$route = router.resolve(mocks.$route);
       if (mocks.$router == null) {
         mocks.$router = {
           currentRoute: mocks.$route,
