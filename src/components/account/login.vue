@@ -54,6 +54,9 @@ export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
   inject: ['container', 'requestData', 'alert'],
+  beforeRouteLeave() {
+    return !this.disabled;
+  },
   data() {
     return {
       disabled: false,
@@ -63,9 +66,6 @@ export default {
   },
   mounted() {
     this.$refs.email.focus();
-  },
-  beforeRouteLeave() {
-    return !this.disabled;
   },
   methods: {
     navigateToNext(

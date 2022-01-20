@@ -4,7 +4,7 @@ module.exports = {
     ecmaVersion: 2020
   },
   extends: [
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
     '@vue/airbnb'
   ],
   env: {
