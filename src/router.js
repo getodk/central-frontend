@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { createMemoryHistory, createRouter, createWebHashHistory } from 'vue-router';
-import { last } from 'ramda';
 
 import routes from './routes';
 import store from './store';
@@ -81,7 +80,7 @@ const initialLocale = () => {
 
 // Implements the restoreSession meta field.
 const restoreSessionForRoute = async (to) => {
-  if (last(to.matched).meta.restoreSession) {
+  if (to.meta.restoreSession) {
     await restoreSession(store);
     await logIn(router, store, false);
   }
@@ -102,13 +101,12 @@ router.beforeEach(to => {
 
 // Implements the requireLogin and requireAnonymity meta fields.
 router.beforeEach(to => {
-  const { meta } = last(to.matched);
-  if (meta.requireLogin) {
+  if (to.meta.requireLogin) {
     return store.state.request.data.session != null
       ? true
       : { path: '/login', query: { next: to.fullPath } };
   }
-  if (meta.requireAnonymity)
+  if (to.meta.requireAnonymity)
     return store.state.request.data.session != null ? '/' : true;
   return true;
 });
@@ -148,16 +146,15 @@ of the `key` attribute.)
     while (unwatch.length !== 0)
       unwatch.pop()();
 
-    const { meta } = last(to.matched);
-    for (const [key, validator] of meta.validateData) {
+    for (const [key, validator] of to.meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
         if (value != null && !validator(value))
           forceReplace(router, store, '/');
       }));
     }
 
-    if (meta.title.key != null) {
-      const { key } = meta.title;
+    if (to.meta.title.key != null) {
+      const { key } = to.meta.title;
       unwatch.push(store.watch((state) => state.request.data[key], () => {
         updateDocumentTitle(to, store);
       }));

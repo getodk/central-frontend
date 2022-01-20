@@ -54,7 +54,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
 export const preservesData = (key, to, from) => {
   // Initial navigation
   if (from.matched.length === 0) return true;
-  const forKey = last(to.matched).meta.preserveData[key];
+  const forKey = to.meta.preserveData[key];
   if (forKey == null) return false;
   const params = forKey[last(from.matched).name];
   if (params == null) return false;
@@ -70,7 +70,7 @@ condition specified for the `to` route. Otherwise it returns `true`.
   - store. The Vuex store.
 */
 export const canRoute = (to, from, store) => {
-  const { validateData } = last(to.matched).meta;
+  const { validateData } = to.meta;
   for (const [key, validator] of validateData) {
     // If the data for the request key will be cleared after the navigation is
     // confirmed, we do not need to validate it.
