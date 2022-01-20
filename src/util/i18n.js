@@ -42,7 +42,6 @@ export const loadLocale = ({ i18n }, locale) => {
 };
 
 // Combination of $tc() and $n()
-export function $tcn(path, choice, values = undefined) {
-  const count = this.$n(choice, 'default');
-  return this.$tc(path, choice, { count, ...values });
+export function $tcn(path, count, values = undefined) {
+  return this.$tc(path, count, { count: this.$n(count, 'default'), ...values });
 }
