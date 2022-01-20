@@ -11,25 +11,27 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
+    <loading :state="initiallyLoading"/>
     <page-section v-show="keys != null" condensed>
       <template #heading>
-        <span>{{ $t('resource.submissions') }}</span>
+        <span>{{ t('resource.submissions') }}</span>
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">
-          <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+          <span class="icon-plus-circle"></span>{{ t('action.createSubmission') }}
         </enketo-fill>
-        <submission-data-access :form-version="form"
-          @analyze="showModal('analyze')"/>
+        <submission-data-access :form-version="form" @analyze="analyze.show"/>
       </template>
       <template #body>
         <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
       </template>
     </page-section>
-    <submission-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
+    <submission-analyze v-bind="analyzeModal.data" @hide="analyzeModal.hide"/>
   </div>
 </template>
 
 <script>
+import { computed, inject, provide, watchSyncEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -37,11 +39,9 @@ import SubmissionAnalyze from '../submission/analyze.vue';
 import SubmissionDataAccess from '../submission/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
-import modal from '../../mixins/modal';
-import reconcileData from '../../store/modules/request/reconcile';
+import modalData from '../../util/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormSubmissions',
@@ -53,7 +53,6 @@ export default {
     SubmissionDataAccess,
     SubmissionList
   },
-  mixins: [modal()],
   props: {
     projectId: {
       type: String,
@@ -64,50 +63,33 @@ export default {
       required: true
     }
   },
-  data() {
+  setup(props) {
+    const requestData = inject('requestData');
+    const { project, form, odataChunk, keys } = requestData;
+    keys.request({
+      url: apiPaths.submissionKeys(props.projectId, props.xmlFormId)
+    }).catch(noop);
+    const initiallyLoading = requestData.initiallyLoading(['keys']);
+
+    // We do not reconcile odataChunk with either form.lastSubmission or
+    // project.lastSubmission.
+    watchSyncEffect(() => {
+      if (form.data == null || odataChunk.data == null) return;
+      const odataCount = odataChunk.data['@odata.count'];
+      if (form.data.submissions !== odataCount && !odataChunk.data.filtered)
+        form.update({ submissions: odataCount });
+    });
+
+    const rendersEnketoFill = computed(() => project.data != null &&
+      project.data.permits('submission.create') && form.data != null);
+
     return {
-      analyze: {
-        state: false
-      }
+      t: useI18n().t,
+      form: form.ref, keys: keys.ref, initiallyLoading,
+      projectId: props.projectId, xmlFormId: props.xmlFormId,
+      analyze: modalData(),
+      rendersEnketoFill
     };
-  },
-  computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', 'form', 'keys']),
-    rendersEnketoFill() {
-      return this.project != null &&
-        this.project.permits('submission.create') && this.form != null;
-    }
-  },
-  created() {
-    this.fetchData();
-    this.reconcileSubmissionCount();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'keys',
-        url: apiPaths.submissionKeys(this.projectId, this.xmlFormId)
-      }]).catch(noop);
-    },
-    reconcileSubmissionCount() {
-      // We do not reconcile odataChunk with either form.lastSubmission or
-      // project.lastSubmission.
-      const deactivate = reconcileData.add(
-        'form', 'odataChunk',
-        (form, odataChunk, commit) => {
-          if (form.submissions !== odataChunk['@odata.count'] &&
-            !odataChunk.filtered) {
-            commit('setData', {
-              key: 'form',
-              value: this.form.with({ submissions: odataChunk['@odata.count'] })
-            });
-          }
-        }
-      );
-      this.$once('hook:beforeDestroy', deactivate);
-    }
   }
 };
 </script>

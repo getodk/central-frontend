@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="user != null" #title>{{ user.displayName }}</template>
     </page-head>
     <page-body>
-      <loading :state="$store.getters.initiallyLoading(['user'])"/>
+      <loading :state="initiallyLoading"/>
       <div v-show="user != null" class="row">
         <div class="col-xs-7">
           <user-edit-basic-details v-if="user != null"/>
@@ -29,27 +29,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, watchSyncEffect } from 'vue';
+
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
-import reconcileData from '../../store/modules/request/reconcile';
+
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-reconcileData.add(
-  'user', 'currentUser',
-  (user, currentUser, commit) => {
-    if (user.id === currentUser.id) {
-      commit('setData', {
-        key: 'currentUser',
-        value: currentUser.with(user.object)
-      });
-    }
-  }
-);
 
 export default {
   name: 'UserEdit',
@@ -66,18 +55,17 @@ export default {
       required: true
     }
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['user']),
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [
-        { key: 'user', url: apiPaths.user(this.id) }
-      ]).catch(noop);
-    }
+  setup(props) {
+    const requestData = inject('requestData');
+    const { currentUser, user } = requestData;
+    user.request(apiPaths.user(props.id)).catch(noop);
+    watchSyncEffect(() => {
+      if (user.data != null && user.data.id === currentUser.data.id)
+        currentUser.update(user.data.object);
+    });
+    const initiallyLoading = requestData.initiallyLoading(['user']);
+
+    return { user: user.ref, initiallyLoading };
   }
 };
 </script>

@@ -41,6 +41,7 @@ module.exports = {
       minProperties: 0,
       consistent: true
     }],
+    'object-property-newline': 'off',
     'operator-linebreak': ['error', 'after', {
       overrides: { '?': 'before', ':': 'before' }
     }],

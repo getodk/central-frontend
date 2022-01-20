@@ -7,7 +7,7 @@ import { mount } from '../../../util/lifecycle';
 
 const mountOptions = () => ({
   container: {
-    requestData: { user: testData.standardUsers.first() }
+    requestData: { user: testData.standardUsers.last() }
   }
 });
 
@@ -76,27 +76,47 @@ describe('UserEditBasicDetails', () => {
       }));
 
   describe('after a successful response', () => {
-    const submit = () => load('/account/edit')
-      .complete()
-      .request(async (app) => {
-        const component = app.getComponent(UserEditBasicDetails);
-        await component.get('input[type="text"]').setValue('New Name');
-        return component.get('form').trigger('submit');
-      })
-      .respondWithData(() => {
-        testData.extendedUsers.update(-1, { displayName: 'New Name' });
-        return testData.standardUsers.last();
-      });
+    const submit = () => {
+      const { id } = testData.extendedUsers.last();
+      return load(`/users/${id}/edit`, { root: false })
+        .complete()
+        .request(async (component) => {
+          const basicDetails = component.getComponent(UserEditBasicDetails);
+          await basicDetails.get('input[type="text"]').setValue('New Name');
+          return basicDetails.get('form').trigger('submit');
+        })
+        .respondWithData(() => {
+          testData.extendedUsers.update(-1, { displayName: 'New Name' });
+          return testData.standardUsers.last();
+        });
+    };
 
     it('shows a success alert', async () => {
-      const app = await submit();
-      app.should.alert('success');
+      const component = await submit();
+      component.should.alert('success');
     });
 
     it("updates the user's display name", async () => {
-      const app = await submit();
-      app.get('#navbar-actions a').text().should.equal('New Name');
-      app.get('#page-head-title').text().should.equal('New Name');
+      const component = await submit();
+      component.get('#page-head-title').text().should.equal('New Name');
+    });
+
+    describe('requestData reconciliation', () => {
+      it('updates requestData.currentUser if editing current user', async () => {
+        const component = await submit();
+        const { requestData } = component.vm.$container;
+        requestData.currentUser.data.displayName.should.equal('New Name');
+      });
+
+      it('does not update it if editing a different user', async () => {
+        testData.extendedUsers.createPast(1, {
+          email: 'another@email.com',
+          displayName: 'Another Name'
+        });
+        const component = await submit();
+        const { requestData } = component.vm.$container;
+        requestData.currentUser.data.displayName.should.equal('Old Name');
+      });
     });
   });
 });

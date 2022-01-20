@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="$store.getters.initiallyLoading(['project'])"/>
+      <loading :state="initiallyLoading"/>
       <!-- <router-view> may send its own requests before the server has
       responded to ProjectShow's request for the project. -->
       <router-view v-show="project != null" @fetch-project="fetchProject"
@@ -58,83 +58,70 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { computed, inject, watchSyncEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import reconcileData from '../../store/modules/request/reconcile';
-import routes from '../../mixins/routes';
-import tab from '../../mixins/tab';
+
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-reconcileData.add(
-  'project', 'forms',
-  (project, forms, commit) => {
-    if (project.forms !== forms.length) {
-      commit('setData', {
-        key: 'project',
-        value: project.with({ forms: forms.length })
-      });
-    }
-  }
-);
-reconcileData.add(
-  'project', 'fieldKeys',
-  (project, fieldKeys, commit) => {
-    if (project.appUsers !== fieldKeys.length) {
-      commit('setData', {
-        key: 'project',
-        value: project.with({ appUsers: fieldKeys.length })
-      });
-    }
-  }
-);
+import { usePaths } from '../../reusables/paths';
+import { useTabs } from '../../reusables/tabs';
 
 export default {
   name: 'ProjectShow',
   components: { Loading, PageBody, PageHead },
-  mixins: [routes(), tab()],
   props: {
     projectId: {
       type: String,
       required: true
     }
   },
-  computed: {
-    ...requestData(['project']),
-    tabPathPrefix() {
-      return this.projectPath();
-    }
-  },
-  created() {
-    this.fetchProject(false);
-  },
-  methods: {
-    fetchProject(resend) {
-      this.$store.dispatch('get', [{
-        key: 'project',
-        url: apiPaths.project(this.projectId),
-        extended: true,
-        resend
-      }]).catch(noop);
-    },
-    fetchForms(resend) {
-      this.$store.dispatch('get', [{
-        key: 'forms',
-        url: apiPaths.forms(this.projectId),
-        extended: true,
-        resend
-      }]).catch(noop);
-    },
-    fetchFieldKeys(resend) {
-      this.$store.dispatch('get', [{
-        key: 'fieldKeys',
-        url: apiPaths.fieldKeys(this.projectId),
-        extended: true,
-        resend
-      }]).catch(noop);
-    }
+  setup(props) {
+    const requestData = inject('requestData');
+    const { project, forms, fieldKeys } = requestData;
+
+    const fetchProject = (resend) => project.request({
+      url: apiPaths.project(props.projectId),
+      extended: true,
+      resend
+    }).catch(noop);
+    fetchProject(false);
+    const initiallyLoading = requestData.initiallyLoading(['project']);
+
+    const fetchForms = (resend) => forms.request({
+      url: apiPaths.forms(props.projectId),
+      extended: true,
+      resend
+    }).catch(noop);
+    watchSyncEffect(() => {
+      if (project.data != null && forms.data != null &&
+        project.data.forms !== forms.data.length)
+        project.update({ forms: forms.data.length });
+    });
+
+    const fetchFieldKeys = (resend) => fieldKeys.request({
+      url: apiPaths.fieldKeys(props.projectId),
+      extended: true,
+      resend
+    }).catch(noop);
+    watchSyncEffect(() => {
+      if (project.data != null && fieldKeys.data != null &&
+        project.data.appUsers !== fieldKeys.data.length)
+        project.update({ appUsers: fieldKeys.data.length });
+    });
+
+    const { projectPath } = usePaths(useRouter());
+    const tabs = useTabs(useRoute(), computed(projectPath));
+
+    return {
+      t: useI18n().t,
+      initiallyLoading, fetchProject, fetchForms, fetchFieldKeys,
+      ...tabs
+    };
   }
 };
 </script>

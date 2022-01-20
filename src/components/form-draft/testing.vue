@@ -15,19 +15,19 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-8">
         <page-section condensed>
           <template #heading>
-            <span>{{ $t('title') }}</span>
+            <span>{{ t('title') }}</span>
             <enketo-fill v-if="formDraft != null" :form-version="formDraft">
-              <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+              <span class="icon-plus-circle"></span>{{ t('action.createSubmission') }}
             </enketo-fill>
           </template>
           <template #body>
-            <p>{{ $t('body[0]') }}</p>
+            <p>{{ t('body[0]') }}</p>
             <p>
-              <span>{{ $t('body[1]') }}</span>
+              <span>{{ t('body[1]') }}</span>
               <sentence-separator/>
               <i18n-t keypath="moreInfo.helpArticle.full">
                 <template #helpArticle>
-                  <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+                  <doc-link to="central-forms/#working-with-form-drafts">{{ t('moreInfo.helpArticle.helpArticle') }}</doc-link>
                 </template>
               </i18n-t>
             </p>
@@ -42,13 +42,16 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
+    <loading :state="initiallyLoading"/>
     <submission-list v-show="keys != null" :project-id="projectId"
       :xml-form-id="xmlFormId" draft/>
   </div>
 </template>
 
 <script>
+import { computed, inject, provide, watchSyncEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 // Import PageSection before FloatRow in order to have the same import order as
 // FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
 import PageSection from '../page/section.vue';
@@ -60,11 +63,8 @@ import Loading from '../loading.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
-import Option from '../../util/option';
-import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormDraftTesting',
@@ -88,15 +88,31 @@ export default {
       required: true
     }
   },
-  computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData([{ key: 'formDraft', getOption: true }, 'keys']),
-    qrSettings() {
+  setup(props) {
+    const requestData = inject('requestData');
+    const { formDraft, odataChunk, keys } = requestData;
+    // We do not reconcile `keys` and formDraft.keyId.
+    keys.request({
+      url: apiPaths.submissionKeys(props.projectId, props.xmlFormId, true)
+    }).catch(noop);
+    const initiallyLoading = requestData.initiallyLoading(['keys']);
+
+    watchSyncEffect(() => {
+      if (formDraft.data == null || formDraft.data.isEmpty() ||
+        odataChunk.data == null)
+        return;
+      const odataCount = odataChunk.data['@odata.count'];
+      if (formDraft.data.get().submissions !== odataCount &&
+        !odataChunk.data.filtered)
+        formDraft.update({ submissions: odataCount });
+    });
+
+    const { t } = useI18n();
+    const qrSettings = computed(() => {
       const url = apiPaths.serverUrlForFormDraft(
-        this.formDraft.draftToken,
-        this.projectId,
-        this.xmlFormId
+        formDraft.data.get().draftToken,
+        props.projectId,
+        props.xmlFormId
       );
       return {
         general: {
@@ -105,44 +121,20 @@ export default {
           autosend: 'wifi_and_cellular'
         },
         project: {
-          name: this.$t('collectProjectName', this.formDraft),
+          name: t('collectProjectName', formDraft.data.get()),
           icon: '📝'
         },
         // Collect requires the settings to have an `admin` property.
         admin: {}
       };
-    }
-  },
-  created() {
-    this.fetchData();
-    this.reconcileSubmissionCount();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        // We do not reconcile `keys` and formDraft.keyId.
-        key: 'keys',
-        url: apiPaths.submissionKeys(this.projectId, this.xmlFormId, true)
-      }]).catch(noop);
-    },
-    reconcileSubmissionCount() {
-      const deactivate = reconcileData.add(
-        'formDraft', 'odataChunk',
-        (formDraft, odataChunk, commit) => {
-          if (formDraft.isDefined() &&
-            formDraft.get().submissions !== odataChunk['@odata.count'] &&
-            !odataChunk.filtered) {
-            commit('setData', {
-              key: 'formDraft',
-              value: Option.of(formDraft.get().with({
-                submissions: odataChunk['@odata.count']
-              }))
-            });
-          }
-        }
-      );
-      this.$once('hook:beforeDestroy', deactivate);
-    }
+    });
+
+    return {
+      t,
+      formDraft: computed(() => formDraft.data.get()), keys: keys.ref, initiallyLoading,
+      projectId: props.projectId, xmlFormId: props.xmlFormId,
+      qrSettings
+    };
   }
 };
 </script>
