@@ -34,12 +34,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import tab from '../../mixins/tab';
+
+import { mixinTabs } from '../../reusables/tabs';
 
 export default {
   name: 'UserHome',
   components: { PageBody, PageHead },
-  mixins: [tab()],
+  mixins: [mixinTabs],
   computed: {
     tabPathPrefix() {
       return '/users';

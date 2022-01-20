@@ -11,19 +11,20 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-A component that contains tabs may use this mixin, which includes related helper
-methods.
+A component that contains tabs may use this composable/mixin, which includes
+related helper functions/methods.
 
-The mixin factory does not take any options.
+If the component using this composable/mixin contains a tab that uses a relative
+path, the component must specify the prefix for relative paths:
 
-If the component using this mixin contains at least one tab that uses a relative
-path, the component must define the following property:
-
-  - tabPathPrefix. The prefix for relative paths.
+  - Composable: Specify a ref whose value is the prefix.
+  - Mixin: Define a property named tabPathPrefix to hold the prefix.
 */
 
+import { map } from 'ramda';
+
 // @vue/component
-const mixin = {
+export const mixinTabs = {
   methods: {
     tabPath(path) {
       if (path.startsWith('/')) return path;
@@ -37,4 +38,12 @@ const mixin = {
   }
 };
 
-export default () => mixin;
+export const useTabs = (route, tabPathPrefix = undefined) => {
+  const obj = { $route: route, ...mixinTabs.methods };
+  if (tabPathPrefix != null) {
+    Object.defineProperty(obj, 'tabPathPrefix', {
+      get() { return tabPathPrefix.value; }
+    });
+  }
+  return map((f) => f.bind(obj), mixinTabs.methods);
+};

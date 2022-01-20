@@ -43,12 +43,12 @@ except according to the terms contained in the LICENSE file.
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
-import tab from '../../mixins/tab';
+import { mixinTabs } from '../../reusables/tabs';
 
 export default {
   name: 'SystemHome',
   components: { PageBody, PageHead },
-  mixins: [tab()],
+  mixins: [mixinTabs],
   inject: ['staticConfig'],
   computed: {
     showsBackups() {

@@ -109,14 +109,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageBack from '../page/back.vue';
 
-import tab from '../../mixins/tab';
 import { mixinPaths } from '../../reusables/paths';
+import { mixinTabs } from '../../reusables/tabs';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormHead',
   components: { PageBack },
-  mixins: [mixinPaths, tab()],
+  mixins: [mixinPaths, mixinTabs],
   inject: ['requestData'],
   emits: ['create-draft'],
   computed: {
