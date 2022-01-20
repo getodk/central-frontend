@@ -89,6 +89,7 @@ import { requestData } from '../../../store/modules/request';
 export default {
   name: 'ProjectUserList',
   components: { DocLink, Loading, ProjectUserRow },
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -230,14 +231,14 @@ export default {
 
       // Show the alert.
       if (deleteWithoutPost) {
-        this.$alert().danger(this.$t('alert.unassignWithoutReassign', actor));
+        this.alert.danger(this.$t('alert.unassignWithoutReassign', actor));
       } else if (role != null) {
-        this.$alert().success(this.$t('alert.assignRole', {
+        this.alert.success(this.$t('alert.assignRole', {
           displayName: actor.displayName,
           roleName: this.$t(`role.${role.system}`)
         }));
       } else {
-        this.$alert().success(this.$t('alert.unassignRole', actor));
+        this.alert.success(this.$t('alert.unassignRole', actor));
       }
     }
   }

@@ -32,6 +32,7 @@ import { noop } from '../util/util';
 export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
+  inject: ['alert'],
   inheritAttrs: false,
   // See routes.js for more information about these props.
   props: {
@@ -117,7 +118,7 @@ export default {
             // example, if there is a 404 because Frontend was rebuilt, the
             // resulting error is a ChunkLoadError with a `type` property equal
             // to 'error'.
-            this.$alert().danger(this.$t('alert.loadError'));
+            this.alert.danger(this.$t('alert.loadError'));
             this.showsLoading = false;
           }
         });

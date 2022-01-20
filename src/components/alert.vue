@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     the Bootstrap alert plugin and calling $().alert('close'): the plugin would
     remove the alert from the DOM. -->
     <button type="button" class="close" :aria-label="$t('action.close')"
-      @click="hideAlert">
+      @click="blank">
       <span aria-hidden="true">&times;</span>
     </button>
     <span class="alert-message">{{ message }}</span>
@@ -23,23 +23,28 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
-
 export default {
   name: 'Alert',
+  inject: ['alert'],
   computed: {
-    ...mapState({
-      type: (state) => state.alert.type,
-      message: (state) => state.alert.message,
-      state: (state) => state.alert.state,
-      at: (state) => state.alert.at
-    }),
-    htmlClass() {
-      return ['alert', 'alert-dismissible', `alert-${this.type}`];
+    state() {
+      return this.alert.data.state;
     },
-    atEpoch() { return this.at.getTime(); }
+    atEpoch() {
+      return this.alert.data.at.getTime();
+    },
+    htmlClass() {
+      return ['alert', 'alert-dismissible', `alert-${this.alert.data.type}`];
+    },
+    message() {
+      return this.alert.data.message;
+    }
   },
-  methods: mapMutations(['hideAlert'])
+  methods: {
+    blank() {
+      this.alert.blank();
+    }
+  }
 };
 </script>
 

@@ -66,6 +66,7 @@ export default {
     SubmissionUpdateReviewState
   },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -164,7 +165,7 @@ export default {
     afterUpdateReviewState(submission, reviewState) {
       this.fetchActivityData();
       this.hideModal('updateReviewState');
-      this.$alert().success(this.$t('alert.updateReviewState'));
+      this.alert.success(this.$t('alert.updateReviewState'));
       this.$store.commit('setData', {
         key: 'submission',
         value: {

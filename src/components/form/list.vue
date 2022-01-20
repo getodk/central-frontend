@@ -47,6 +47,7 @@ export default {
   name: 'FormList',
   components: { FormTable, FormNew, Loading, PageSection },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   props: {
     condensed: {
       type: Boolean,
@@ -67,7 +68,7 @@ export default {
     afterCreate(form) {
       this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
         .then(() => {
-          this.$alert().success(this.$t('alert.create', {
+          this.alert.success(this.$t('alert.create', {
             name: form.nameOrId()
           }));
         });

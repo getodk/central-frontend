@@ -57,6 +57,7 @@ export default {
     PageSection
   },
   mixins: [modal()],
+  inject: ['alert'],
   data() {
     return {
       newBackup: {
@@ -100,11 +101,11 @@ export default {
     afterCreate() {
       this.fetchData();
       this.hideModal('newBackup');
-      this.$alert().success(this.$t('alert.create'));
+      this.alert.success(this.$t('alert.create'));
     },
     afterTerminate() {
       this.hideModal('terminate');
-      this.$alert().success(this.$t('alert.terminate'));
+      this.alert.success(this.$t('alert.terminate'));
       this.$store.commit('setData', {
         key: 'backupsConfig',
         value: Option.none()

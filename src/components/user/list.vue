@@ -75,6 +75,7 @@ export default {
     UserRow
   },
   mixins: [modal()],
+  inject: ['alert'],
   data() {
     return {
       // The ids of the users who are administrators
@@ -123,12 +124,12 @@ export default {
     afterCreate(user) {
       this.fetchData();
       this.hideModal('newUser');
-      this.$alert().success(this.$t('alert.create', user));
+      this.alert.success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
     // Called after a user is assigned a new role (including None).
     afterAssignRole(user, admin) {
-      this.$alert().success(this.$t('alert.assignRole', {
+      this.alert.success(this.$t('alert.assignRole', {
         displayName: user.displayName,
         roleName: admin ? this.$t('role.admin') : this.$t('role.none')
       }));
@@ -167,7 +168,7 @@ export default {
     afterResetPassword(user) {
       this.hideResetPassword();
       this.hideModal('resetPassword');
-      this.$alert().success(this.$t('alert.resetPassword', user));
+      this.alert.success(this.$t('alert.resetPassword', user));
     },
     showRetire(user) {
       this.retire.user = user;
@@ -180,7 +181,7 @@ export default {
     afterRetire(user) {
       this.fetchData();
       this.hideRetire();
-      this.$alert().success(this.$t('alert.retire', user));
+      this.alert.success(this.$t('alert.retire', user));
       this.highlighted = null;
     }
   }

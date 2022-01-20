@@ -150,6 +150,7 @@ export default {
     SummaryItem
   },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   data() {
     return {
       newProject: {
@@ -199,7 +200,7 @@ export default {
     afterCreate(project) {
       this.$router.push(this.projectPath(project.id))
         .then(() => {
-          this.$alert().success(this.$t('alert.create'));
+          this.alert.success(this.$t('alert.create'));
         });
     }
   }

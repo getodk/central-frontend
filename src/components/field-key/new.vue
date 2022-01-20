@@ -81,6 +81,7 @@ export default {
   name: 'FieldKeyNew',
   components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
   mixins: [request(), routes()],
+  inject: ['alert'],
   props: {
     state: {
       type: Boolean,
@@ -125,7 +126,7 @@ export default {
       })
         .then(({ data }) => {
           // Reset the form.
-          this.$alert().blank();
+          this.alert.blank();
           this.displayName = '';
 
           this.step = 1;

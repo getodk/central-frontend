@@ -51,6 +51,7 @@ export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -66,18 +67,18 @@ export default {
     submit() {
       this.invalidPassword = this.newPassword.length < 10;
       if (this.invalidPassword) {
-        this.$alert().danger('Please input a password at least 10 characters long.');
+        this.alert.danger('Please input a password at least 10 characters long.');
         return;
       }
       this.mismatch = this.newPassword !== this.confirm;
       if (this.mismatch) {
-        this.$alert().danger(this.$t('alert.mismatch'));
+        this.alert.danger(this.$t('alert.mismatch'));
         return;
       }
       const data = { old: this.oldPassword, new: this.newPassword };
       this.put(apiPaths.password(this.user.id), data)
         .then(() => {
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
 
           // The Chrome password manager does not realize that the form was
           // submitted. Should we navigate to a different page so that it does?

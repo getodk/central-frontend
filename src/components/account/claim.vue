@@ -47,6 +47,7 @@ export default {
   name: 'AccountClaim',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -59,7 +60,7 @@ export default {
   methods: {
     submit() {
       if (this.password.length < 10) {
-        this.$alert().danger('Please input a password at least 10 characters long.');
+        this.alert.danger('Please input a password at least 10 characters long.');
         return;
       }
       const headers = {};
@@ -73,7 +74,7 @@ export default {
       })
         .then(() => this.$router.push('/login'))
         .then(() => {
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);
     }

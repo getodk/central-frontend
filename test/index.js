@@ -61,7 +61,6 @@ afterEach(() => {
 });
 
 afterEach(() => {
-  store.commit('resetAlert');
   store.commit('resetConfig');
   store.commit('resetRequests');
   store.commit('clearData');

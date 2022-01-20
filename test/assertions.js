@@ -37,8 +37,8 @@ should.Assertion.add('focused', function focused() {
 
 should.Assertion.add('alert', function assertAlert(type = undefined, message = undefined) {
   this.params = { operator: 'to show an alert' };
-  const { alert } = this.obj.vm.$store.state;
-  alert.state.should.be.true();
-  if (type != null) alert.type.should.equal(type);
-  if (message != null) alert.message.should.match(message);
+  const { data } = this.obj.vm.$container;
+  data.state.should.be.true();
+  if (type != null) data.type.should.equal(type);
+  if (message != null) data.message.should.match(message);
 });

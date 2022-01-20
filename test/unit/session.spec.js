@@ -381,6 +381,7 @@ describe('util/session', () => {
 
       it('shows a danger alert', () => {
         const container = createTestContainer({ router: mockRouter() });
+        const { alert } = container;
         return mockHttp()
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
@@ -391,11 +392,10 @@ describe('util/session', () => {
             message: 'logOut() problem.'
           })
           .afterResponse(() => {
-            const { alert } = store.state;
-            alert.state.should.be.true();
-            alert.type.should.equal('danger');
-            alert.message.should.startWith('There was a problem, and you were not fully logged out.');
-            alert.message.should.endWith('logOut() problem.');
+            alert.data.state.should.be.true();
+            alert.data.type.should.equal('danger');
+            alert.data.message.should.startWith('There was a problem, and you were not fully logged out.');
+            alert.data.message.should.endWith('logOut() problem.');
           });
       });
 
@@ -589,6 +589,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
+      const { alert } = container;
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -603,10 +604,9 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(() => {
-          const { alert } = store.state;
-          alert.state.should.be.true();
-          alert.type.should.equal('info');
-          alert.message.should.startWith('Your session has expired.');
+          alert.data.state.should.be.true();
+          alert.data.type.should.equal('info');
+          alert.data.message.should.startWith('Your session has expired.');
         })
         .finally(cleanup);
     });
@@ -680,6 +680,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
+      const { alert } = container;
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -690,12 +691,11 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(119000);
-          const { alert } = store.state;
-          alert.state.should.be.false();
+          alert.data.state.should.be.false();
           clock.tick(1000);
-          alert.state.should.be.true();
-          alert.type.should.equal('info');
-          alert.message.should.startWith('Your session will expire in 2 minutes,');
+          alert.data.state.should.be.true();
+          alert.data.type.should.equal('info');
+          alert.data.message.should.startWith('Your session will expire in 2 minutes,');
         })
         .finally(cleanup);
     });
@@ -705,6 +705,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
+      const { alert } = container;
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -715,11 +716,10 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          const { alert } = store.state;
-          alert.state.should.be.true();
-          store.commit('hideAlert');
+          alert.data.state.should.be.true();
+          alert.blank();
           clock.tick(30000);
-          alert.state.should.be.false();
+          alert.data.state.should.be.false();
         })
         .request(() => logOut(container, false))
         .respondWithSuccess()
@@ -735,7 +735,7 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          store.state.alert.state.should.be.true();
+          alert.data.state.should.be.true();
         })
         .finally(cleanup);
     });
@@ -745,6 +745,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
+      const { alert } = container;
       setData({
         session: testData.sessions.createNew({
           expiresAt: '1970-01-01T00:05:00Z'
@@ -757,9 +758,9 @@ describe('util/session', () => {
         .request(() => logOut(container, false))
         .respondWithSuccess()
         .afterResponse(() => {
-          store.commit('hideAlert');
+          alert.blank();
           clock.tick(120000);
-          store.state.alert.state.should.be.false();
+          alert.data.state.should.be.false();
         })
         .finally(cleanup);
     });

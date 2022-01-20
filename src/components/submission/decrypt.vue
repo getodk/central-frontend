@@ -52,6 +52,7 @@ export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
+  inject: ['alert'],
   props: {
     state: Boolean,
     formAction: String,
@@ -140,7 +141,7 @@ export default {
       }
       if (isProblem(problem)) {
         this.$logger.error(problem);
-        this.$alert().danger(problem.message);
+        this.alert.danger(problem.message);
       }
       return true;
     },
@@ -169,7 +170,7 @@ export default {
       // the result of the request if a Problem is returned: if a Problem is
       // returned, the iframe will change pages, but if the download is
       // successful, the iframe seems not to change.
-      this.$alert().info(this.$t('alert.submit'));
+      this.alert.info(this.$t('alert.submit'));
 
       this.scheduleProblemCheck();
     }

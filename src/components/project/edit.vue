@@ -40,6 +40,7 @@ export default {
   name: 'ProjectEdit',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -61,7 +62,7 @@ export default {
               updatedAt: response.data.updatedAt
             })
           });
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);
     }

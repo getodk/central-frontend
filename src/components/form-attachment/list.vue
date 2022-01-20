@@ -77,6 +77,7 @@ export default {
     FormAttachmentUploadFiles
   },
   mixins: [dropZone(), modal(), request()],
+  inject: ['alert'],
   data() {
     return {
       dragDepth: 0,
@@ -259,7 +260,7 @@ export default {
         };
         reader.onerror = () => {
           if (this.$route === initialRoute) {
-            this.$alert().danger(this.$t('alert.readError', {
+            this.alert.danger(this.$t('alert.readError', {
               filename: file.name
             }));
           }
@@ -327,7 +328,7 @@ export default {
     },
     uploadFiles() {
       this.uploading = true;
-      this.$alert().blank();
+      this.alert.blank();
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
@@ -347,7 +348,7 @@ export default {
         .finally(() => {
           if (this.$route !== initialRoute) return;
           if (updated.length === this.uploadStatus.total)
-            this.$alert().success(this.$tcn('alert.success', updated.length));
+            this.alert.success(this.$tcn('alert.success', updated.length));
           for (const attachment of updated)
             this.updateAttachment(attachment);
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };

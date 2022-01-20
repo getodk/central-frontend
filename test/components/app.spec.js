@@ -153,7 +153,7 @@ describe('App', () => {
           })
           .beforeEachResponse((app, { url }) => {
             if (url === '/version.txt')
-              logOut(app.vm.$router, app.vm.$store, false);
+              logOut(app.vm.$router, app.vm.$store, app.vm.alert, false);
           })
           .respondWithData(() => 'v1.2')
           .respondWithSuccess()

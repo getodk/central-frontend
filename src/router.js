@@ -22,6 +22,7 @@ import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
 export default (container, history = createWebHashHistory()) => {
+  const { alert } = container;
   const router = createRouter({ history, routes });
 
 
@@ -166,7 +167,7 @@ router.afterEach(() => {
 // OTHER NAVIGATION GUARDS
 
 router.afterEach(() => {
-  if (store.state.alert.state) store.commit('hideAlert');
+  if (alert.data.state) alert.blank();
 });
 
 
