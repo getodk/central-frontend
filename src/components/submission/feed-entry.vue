@@ -16,13 +16,12 @@ except according to the terms contained in the LICENSE file.
       <div class="title">
         <template v-if="entry.action === 'submission.create'">
           <span class="icon-cloud-upload submission-feed-entry-icon"></span>
-          <i18n :tag="false" path="title.create">
+          <i18n-t keypath="title.create">
             <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n>
+          </i18n-t>
         </template>
         <template v-else-if="updateOrEdit">
-          <i18n :tag="false"
-            :path="`title.updateReviewState.${reviewState}.full`">
+          <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
             <template #reviewState>
               <span class="review-state" :class="reviewState">
                 <span :class="updateOrEditIcon(reviewState)"></span>
@@ -30,13 +29,13 @@ except according to the terms contained in the LICENSE file.
               </span>
             </template>
             <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n>
+          </i18n-t>
         </template>
         <template v-else>
           <span class="icon-comment submission-feed-entry-icon"></span>
-          <i18n :tag="false" path="title.comment">
+          <i18n-t keypath="title.comment">
             <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n>
+          </i18n-t>
         </template>
       </div>
     </div>

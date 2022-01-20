@@ -15,11 +15,11 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" path="introduction[0]">
+        <i18n-t tag="p" keypath="introduction[0]">
           <template #displayName>
             <strong>{{ fieldKey != null ? fieldKey.displayName : '' }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
         <p>{{ $t('introduction[2]') }}</p>
       </div>

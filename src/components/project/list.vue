@@ -21,16 +21,16 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('gettingStarted.title') }}</span>
           </template>
           <template #body>
-            <i18n tag="p" path="gettingStarted.body[0].full">
+            <i18n-t tag="p" keypath="gettingStarted.body[0].full">
               <template #docsWebsite>
                 <doc-link to="central-intro/">{{ $t('gettingStarted.body[0].docsWebsite') }}</doc-link>
               </template>
-            </i18n>
-            <i18n tag="p" path="gettingStarted.body[1].full">
+            </i18n-t>
+            <i18n-t tag="p" keypath="gettingStarted.body[1].full">
               <template #forum>
                 <a href="https://forum.getodk.org/" target="_blank">{{ $t('gettingStarted.body[1].forum') }}</a>
               </template>
-            </i18n>
+            </i18n-t>
           </template>
         </page-section>
         <page-section>
@@ -59,12 +59,12 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <i18n tag="p"
-                    :path="$tcPath('rightNow.users.full', users.length)">
+                  <i18n-t tag="p" keypath="rightNow.users.full"
+                    :plural="users.length">
                     <template #webUsers>
                       <strong>{{ $tc('rightNow.users.webUsers', users.length) }}</strong>
                     </template>
-                  </i18n>
+                  </i18n-t>
                 </template>
               </summary-item>
               <summary-item clickable icon="archive" @click="scrollToProjects">
@@ -73,12 +73,12 @@ except according to the terms contained in the LICENSE file.
                   <span class="icon-angle-right"></span>
                 </template>
                 <template #body>
-                  <i18n tag="p"
-                    :path="$tcPath('rightNow.projects.full', projects.length)">
+                  <i18n-t tag="p" keypath="rightNow.projects.full"
+                    :plural="projects.length">
                     <template #projects>
                       <strong>{{ $tc('rightNow.projects.projects', projects.length) }}</strong>
                     </template>
-                  </i18n>
+                  </i18n-t>
                 </template>
               </summary-item>
             </template>
@@ -272,18 +272,12 @@ export default {
     "rightNow": {
       "users": {
         // The count of Web Users is shown separately above this text.
-        "full": [
-          "{webUsers} who can administer Projects through this website.",
-          "{webUsers} who can administer Projects through this website."
-        ],
+        "full": "{webUsers} who can administer Projects through this website. | {webUsers} who can administer Projects through this website.",
         "webUsers": "Web User | Web Users"
       },
       "projects": {
         // The count of Projects is shown separately above this text.
-        "full": [
-          "{projects} which can organize Forms and App Users for device deployment.",
-          "{projects} which can organize Forms and App Users for device deployment."
-        ],
+        "full": "{projects} which can organize Forms and App Users for device deployment. | {projects} which can organize Forms and App Users for device deployment.",
         "projects": "Project | Projects"
       }
     },
@@ -328,21 +322,11 @@ export default {
     "news": "Novinky",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers} který může spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu."
-        ],
+        "full": "{webUsers} který může spravovat projekty prostřednictvím tohoto webu. | {webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu. | {webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu. | {webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
         "webUsers": "Webový uživatel | Weboví uživatelé | Weboví uživatelé | Weboví uživatelé"
       },
       "projects": {
-        "full": [
-          "{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení."
-        ],
+        "full": "{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení. | {projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení. | {projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení. | {projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
         "projects": "Projekt | Projekty | Projektů | Projektů"
       }
     },
@@ -379,17 +363,11 @@ export default {
     "news": "Neuigkeiten",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers}, der Projekte auf dieser Webseite verwalten kann.",
-          "{webUsers}, die Projekte auf dieser Webseite verwalten können."
-        ],
+        "full": "{webUsers}, der Projekte auf dieser Webseite verwalten kann. | {webUsers}, die Projekte auf dieser Webseite verwalten können.",
         "webUsers": "Web-Benutzer | Web-Benutzer"
       },
       "projects": {
-        "full": [
-          "{projects}, das Formulare und App-Benutzer von Mobilgeräten verwaltet.",
-          "{projects}, die Formulare und App-Benutzer von Mobilgeräten verwalten."
-        ],
+        "full": "{projects}, das Formulare und App-Benutzer von Mobilgeräten verwaltet. | {projects}, die Formulare und App-Benutzer von Mobilgeräten verwalten.",
         "projects": "Projekt | Projekte"
       }
     },
@@ -426,17 +404,11 @@ export default {
     "news": "Novedades",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers} que puede administrar proyectos a través de este sitio web.",
-          "{webUsers} que pueden administrar proyectos a través de este sitios web."
-        ],
+        "full": "{webUsers} que puede administrar proyectos a través de este sitio web. | {webUsers} que pueden administrar proyectos a través de este sitios web.",
         "webUsers": "Usuario web | Usuarios web"
       },
       "projects": {
-        "full": [
-          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.",
-          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos."
-        ],
+        "full": "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos. | {projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.",
         "projects": "Proyecto | Proyectos"
       }
     },
@@ -473,17 +445,11 @@ export default {
     "news": "Nouvelles",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers} pouvant administrer les projets à travers ce site.",
-          "{webUsers} pouvant administrer les projets à travers ce site."
-        ],
+        "full": "{webUsers} pouvant administrer les projets à travers ce site. | {webUsers} pouvant administrer les projets à travers ce site.",
         "webUsers": "Utilisateur Web | Utilisateurs web"
       },
       "projects": {
-        "full": [
-          "{projects} qui regroupe des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.",
-          "{projects} qui regroupent des formulaires et des utilisateurs mobiles pour le déploiement d'appareils."
-        ],
+        "full": "{projects} qui regroupe des formulaires et des utilisateurs mobiles pour le déploiement d'appareils. | {projects} qui regroupent des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.",
         "projects": "Projet | Projets"
       }
     },
@@ -520,15 +486,11 @@ export default {
     "news": "Berita",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers} dapat mengelola Proyek lewat website ini."
-        ],
+        "full": "{webUsers} dapat mengelola Proyek lewat website ini.",
         "webUsers": "Pengguna Web"
       },
       "projects": {
-        "full": [
-          "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat."
-        ],
+        "full": "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat.",
         "projects": "Proyek"
       }
     },
@@ -565,17 +527,11 @@ export default {
     "news": "Novità",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers} che può amministrare i Progetti attraverso questo sito web.",
-          "{webUsers} che possono amministrare i Progetti attraverso questo sito web."
-        ],
+        "full": "{webUsers} che può amministrare i Progetti attraverso questo sito web. | {webUsers} che possono amministrare i Progetti attraverso questo sito web.",
         "webUsers": "Utente Web | Utenti web"
       },
       "projects": {
-        "full": [
-          "{projects} che può organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi.",
-          "{projects} che possono organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi."
-        ],
+        "full": "{projects} che può organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi. | {projects} che possono organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi.",
         "projects": "Progetto | Progetti"
       }
     },
@@ -612,15 +568,11 @@ export default {
     "news": "ニュース",
     "rightNow": {
       "users": {
-        "full": [
-          "{webUsers}は、プロジェクトの管理ができます。"
-        ],
+        "full": "{webUsers}は、プロジェクトの管理ができます。",
         "webUsers": "Webユーザー"
       },
       "projects": {
-        "full": [
-          "{projects}はデバイスに対してフォームとアプリユーザーの管理ができます。"
-        ],
+        "full": "{projects}はデバイスに対してフォームとアプリユーザーの管理ができます。",
         "projects": "プロジェクト"
       }
     },

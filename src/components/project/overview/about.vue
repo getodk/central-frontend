@@ -15,23 +15,23 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('title') }}</span>
     </template>
     <template #body>
-      <i18n tag="p" path="body[0].full">
+      <i18n-t tag="p" keypath="body[0].full">
         <template #accessTo>
           <router-link :to="projectPath('form-access')">{{ $t('body[0].accessTo') }}</router-link>
         </template>
-      </i18n>
+      </i18n-t>
       <p>
-        <i18n :tag="false" path="moreInfo.helpArticle.full">
+        <i18n-t keypath="moreInfo.helpArticle.full">
           <template #helpArticle>
             <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
-        <i18n :tag="false" path="body[1].full">
+        <i18n-t keypath="body[1].full">
           <template #forumThread>
             <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[1].forumThread') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
     </template>
   </page-section>

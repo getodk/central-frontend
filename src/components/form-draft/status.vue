@@ -32,11 +32,11 @@ except according to the terms contained in the LICENSE file.
             <form-version-summary-item v-if="formDraft != null"
               :version="formDraft">
               <template #body>
-                <i18n tag="p" path="currentDraft.versionCaption.full">
+                <i18n-t tag="p" keypath="currentDraft.versionCaption.full">
                   <template #draftVersion>
                     <strong>{{ $t('currentDraft.versionCaption.draftVersion') }}</strong>
                   </template>
-                </i18n>
+                </i18n-t>
                 <div id="form-draft-status-standard-buttons-container">
                   <form-version-standard-buttons :version="formDraft"
                     @view-xml="showModal('viewXml')"/>

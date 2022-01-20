@@ -18,11 +18,11 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('state.title') }}</h1>
           </div>
           <div class="panel-body">
-            <i18n tag="p" path="state.body.full">
+            <i18n-t tag="p" keypath="state.body.full">
               <template #formAccessSettings>
                 <router-link :to="projectPath('form-access')">{{ $t('state.body.formAccessSettings') }}</router-link>
               </template>
-            </i18n>
+            </i18n-t>
           </div>
         </div>
       </div>

@@ -15,12 +15,12 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" path="introduction[0].full">
+        <i18n-t tag="p" keypath="introduction[0].full">
           <template #dragAndDrop>
             <strong>{{ $t('introduction[0].dragAndDrop') }}</strong>
           </template>
-        </i18n>
-        <i18n tag="p" path="introduction[1].full">
+        </i18n-t>
+        <i18n-t tag="p" keypath="introduction[1].full">
           <template #clickHere>
             <input v-show="false" ref="input" type="file" multiple
               @change="afterChange">
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
               <span>{{ $t('introduction[1].clickHere') }}</span>
             </a>
           </template>
-        </i18n>
+        </i18n-t>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">

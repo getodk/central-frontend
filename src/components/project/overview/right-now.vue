@@ -21,11 +21,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <i18n tag="p" :path="$tcPath('appUsers.full', project.appUsers)">
+          <i18n-t tag="p" keypath="appUsers.full" :plural="project.appUsers">
             <template #appUsers>
               <strong>{{ $tc('appUsers.appUsers', project.appUsers) }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
         </template>
       </summary-item>
       <summary-item clickable icon="file-text"
@@ -35,11 +35,11 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <i18n tag="p" :path="$tcPath('forms.full', project.forms)">
+          <i18n-t tag="p" keypath="forms.full" :plural="project.forms">
             <template #forms>
               <strong>{{ $tc('forms.forms', project.forms) }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
         </template>
       </summary-item>
     </template>
@@ -75,18 +75,12 @@ export default {
   "en": {
     "appUsers": {
       // The count of App Users is shown separately above this text.
-      "full": [
-        "{appUsers} who can use a data collection client to download and submit Form data to this Project.",
-        "{appUsers} who can use a data collection client to download and submit Form data to this Project."
-      ],
+      "full": "{appUsers} who can use a data collection client to download and submit Form data to this Project. | {appUsers} who can use a data collection client to download and submit Form data to this Project.",
       "appUsers": "App User | App Users"
     },
     "forms": {
       // The count of Forms is shown separately above this text.
-      "full": [
-        "{forms} which can be downloaded and given as a survey.",
-        "{forms} which can be downloaded and given as surveys."
-      ],
+      "full": "{forms} which can be downloaded and given as a survey. | {forms} which can be downloaded and given as surveys.",
       "forms": "Form | Forms"
     }
   }
@@ -98,79 +92,51 @@ export default {
 {
   "cs": {
     "appUsers": {
-      "full": [
-        "{appUsers} který může pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.",
-        "{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.",
-        "{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.",
-        "{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu."
-      ],
+      "full": "{appUsers} který může pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu. | {appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu. | {appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu. | {appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.",
       "appUsers": "Uživatel aplikace | Uživatelů aplikace | Uživatelů aplikace | Uživatelé aplikace"
     },
     "forms": {
-      "full": [
-        "{forms} který lze stáhnout a zadat jako dotazník.",
-        "{forms} které lze stáhnout a zadat jako dotazník.",
-        "{forms} které lze stáhnout a zadat jako dotazník.",
-        "{forms} které lze stáhnout a zadat jako dotazník."
-      ],
+      "full": "{forms} který lze stáhnout a zadat jako dotazník. | {forms} které lze stáhnout a zadat jako dotazník. | {forms} které lze stáhnout a zadat jako dotazník. | {forms} které lze stáhnout a zadat jako dotazník.",
       "forms": "Formulář | Formulářů | Formulářů | Formuláře"
     }
   },
   "de": {
     "appUsers": {
-      "full": [
-        "{appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können.",
-        "{appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können."
-      ],
+      "full": "{appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können. | {appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können.",
       "appUsers": "App-Benutzer | App-Benutzer"
     }
   },
   "es": {
     "appUsers": {
-      "full": [
-        "{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto.",
-        "{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto."
-      ],
+      "full": "{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto. | {appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto.",
       "appUsers": "Usuario móvil | Usuarios móviles"
     }
   },
   "fr": {
     "appUsers": {
-      "full": [
-        "{appUsers} qui peut utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.",
-        "{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données."
-      ],
+      "full": "{appUsers} qui peut utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données. | {appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.",
       "appUsers": "Utilisateur mobile | Utilisateurs mobiles"
     }
   },
   "id": {
     "appUsers": {
-      "full": [
-        "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini."
-      ],
+      "full": "{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini.",
       "appUsers": "Pengguna Aplikasi"
     }
   },
   "it": {
     "appUsers": {
-      "full": [
-        "{appUsers} che può utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.",
-        "{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto."
-      ],
+      "full": "{appUsers} che può utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto. | {appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.",
       "appUsers": "Utente dell'applicazione | Utenti dell'applicazione"
     }
   },
   "ja": {
     "appUsers": {
-      "full": [
-        "{appUsers}は、データ収集クライアントを用い、このプロジェクトのフォームのダウンロードと提出が可能です。"
-      ],
+      "full": "{appUsers}は、データ収集クライアントを用い、このプロジェクトのフォームのダウンロードと提出が可能です。",
       "appUsers": "アプリユーザー"
     },
     "forms": {
-      "full": [
-        "{forms}は、ダウンロードし、調査が可能です。"
-      ],
+      "full": "{forms}は、ダウンロードし、調査が可能です。",
       "forms": "フォーム"
     }
   }

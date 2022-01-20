@@ -27,11 +27,11 @@ except according to the terms contained in the LICENSE file.
         <template v-if="form.submissions === 0">{{ $t('steps[1].body[0].none') }}</template>
         <template v-else>{{ $tcn('steps[1].body[0].any', form.submissions) }}</template>
         <sentence-separator/>
-        <i18n :tag="false" path="steps[1].body[1].full">
+        <i18n-t keypath="steps[1].body[1].full">
           <template #clickHere>
             <a href="#" @click.prevent="$emit('show-submission-options')">{{ $t('steps[1].body[1].clickHere') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
     </checklist-step>
     <checklist-step :stage="stepStage(2)">
@@ -40,11 +40,11 @@ except according to the terms contained in the LICENSE file.
         <template v-if="form.submissions === 0">{{ $t('steps[2].body[0].none') }}</template>
         <template v-else>{{ $tcn('steps[2].body[0].any', form.submissions) }}</template>
         <sentence-separator/>
-        <i18n :tag="false" path="steps[2].body[1].full">
+        <i18n-t keypath="steps[2].body[1].full">
           <template #submissionsTab>
             <router-link :to="formPath('submissions')">{{ $t('steps[2].body[1].submissionsTab') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <doc-link to="central-submissions/">{{ $t('clickForInfo') }}</doc-link>
       </p>
@@ -52,11 +52,11 @@ except according to the terms contained in the LICENSE file.
     <checklist-step :stage="stepStage(3)">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n :tag="false" path="steps[3].body[0].full">
+        <i18n-t keypath="steps[3].body[0].full">
           <template #formAccessTab>
             <router-link :to="projectPath('form-access')">{{ $t('steps[3].body[0].formAccessTab') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <doc-link to="central-forms/#managing-form-lifecycle">{{ $t('clickForInfo') }}</doc-link>
       </p>

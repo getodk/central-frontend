@@ -15,11 +15,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
-        <i18n tag="p" path="moreInfo.helpArticle.full">
+        <i18n-t tag="p" keypath="moreInfo.helpArticle.full">
           <template #helpArticle>
             <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
           </template>
-        </i18n>
+        </i18n-t>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">

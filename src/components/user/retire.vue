@@ -16,11 +16,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p v-if="user != null">{{ $t('introduction[0]', user) }}</p>
-        <i18n tag="p" path="introduction[1].full">
+        <i18n-t tag="p" keypath="introduction[1].full">
           <template #noUndo>
             <strong>{{ $t('introduction[1].noUndo') }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">

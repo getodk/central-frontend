@@ -20,11 +20,11 @@ either is an Administrator or has no role. -->
         @click="showModal('newUser')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n tag="p" path="heading[0]">
+      <i18n-t tag="p" keypath="heading[0]">
         <template #collect>
           <doc-link to="collect-intro/">ODK Collect</doc-link>
         </template>
-      </i18n>
+      </i18n-t>
     </div>
     <table id="user-list-table" class="table">
       <thead>

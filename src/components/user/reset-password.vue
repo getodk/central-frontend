@@ -14,14 +14,14 @@ except according to the terms contained in the LICENSE file.
     backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <i18n v-if="user != null" tag="p" path="introduction.full"
+      <i18n-t v-if="user != null" tag="p" keypath="introduction.full"
         class="modal-introduction">
         <template #resetPassword>
           <strong>{{ $t('introduction.resetPassword') }}</strong>
         </template>
         <template #displayName>{{ user.displayName }}</template>
         <template #email>{{ user.email }}</template>
-      </i18n>
+      </i18n-t>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           :disabled="awaitingResponse" @click="resetPassword">

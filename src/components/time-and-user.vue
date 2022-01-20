@@ -12,14 +12,14 @@ except according to the terms contained in the LICENSE file.
 
 <!-- TODO. Add unit tests. -->
 <template>
-  <i18n v-if="user != null" tag="div" path="text" class="time-and-user">
+  <i18n-t v-if="user != null" tag="div" keypath="text" class="time-and-user">
     <template #dateTime>
       <date-time :iso="iso"/>
     </template>
     <template #displayName>
       <link-if-can :to="userPath(user.id)" :title="user.displayName">{{ user.displayName }}</link-if-can>
     </template>
-  </i18n>
+  </i18n-t>
   <div v-else>
     <date-time :iso="iso"/>
   </div>

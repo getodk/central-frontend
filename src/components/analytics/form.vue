@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
     <div class="radio">
       <label>
         <input v-model="enabled" type="radio" :value="true">
-        <i18n :tag="false" path="enabled.true[0].full">
+        <i18n-t keypath="enabled.true[0].full">
           <template #weWillShare>
             <strong>{{ $t('enabled.true[0].weWillShare') }}</strong>
           </template>
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
           <template #privacyPolicy>
             <a href="https://getodk.org/legal/privacy.html" target="_blank">{{ $t('enabled.true[0].privacyPolicy') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </label>
       <p id="analytics-form-enabled-true-help" class="help-block">
         <a href="#" @click.prevent="$emit('preview')">

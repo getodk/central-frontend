@@ -16,14 +16,14 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div id="submission-analyze-head">
         <div class="modal-introduction">
-          <i18n tag="p" path="introduction[0]">
+          <i18n-t tag="p" keypath="introduction[0]">
             <template #powerBi>
               <a href="https://powerbi.microsoft.com/en-us/" target="_blank" rel="noopener">Microsoft Power BI</a>
             </template>
             <template #r>
               <a href="https://www.r-project.org" target="_blank" rel="noopener">R</a>
             </template>
-          </i18n>
+          </i18n-t>
           <p>{{ $t('introduction[1]') }}</p>
           <p>{{ $t('introduction[2]') }}</p>
         </div>
@@ -43,16 +43,16 @@ except according to the terms contained in the LICENSE file.
         <selectable>{{ odataUrl }}</selectable>
       </div>
       <div id="submission-analyze-tool-help" class="modal-introduction">
-        <i18n v-if="tool === 'microsoft'" tag="p" path="help.microsoft.full">
+        <i18n-t v-if="tool === 'microsoft'" tag="p" keypath="help.microsoft.full">
           <template #pageForExcel>
             <a href="https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500" target="_blank" rel="noopener">{{ $t('help.microsoft.pageForExcel') }}</a>
           </template>
           <template #pageForPowerBi>
             <a href="https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata" target="_blank" rel="noopener">{{ $t('help.microsoft.pageForPowerBi') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
         <template v-else-if="tool === 'r'">
-          <i18n tag="p" path="help.r[0].full">
+          <i18n-t tag="p" keypath="help.r[0].full">
             <template #r>
               <a href="https://www.r-project.org" target="_blank" rel="noopener">R</a>
             </template>
@@ -65,18 +65,18 @@ except according to the terms contained in the LICENSE file.
             <template #restful>
               <a href="https://docs.ropensci.org/ruODK/articles/restful-api.html" target="_blank" rel="noopener">{{ $t('help.r[0].restful') }}</a>
             </template>
-          </i18n>
-          <i18n tag="p" path="help.r[1].full">
+          </i18n-t>
+          <i18n-t tag="p" keypath="help.r[1].full">
             <template #here>
               <a href="https://docs.ropensci.org/ruODK/CONTRIBUTING.html" target="_blank" rel="noopener">{{ $t('help.r[1].here') }}</a>
             </template>
-          </i18n>
+          </i18n-t>
         </template>
-        <i18n v-else-if="tool === 'other'" tag="p" path="help.other.full">
+        <i18n-t v-else-if="tool === 'other'" tag="p" keypath="help.other.full">
           <template #article>
             <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </div>
       <div id="submission-analyze-actions-container">
         <div class="modal-actions">

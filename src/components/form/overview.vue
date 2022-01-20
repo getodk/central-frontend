@@ -33,11 +33,11 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <form-version-summary-item :version="formDraft.get()">
               <template #body>
-                <i18n tag="p" path="draft.any.versionCaption.full">
+                <i18n-t tag="p" keypath="draft.any.versionCaption.full">
                   <template #draftVersion>
                     <strong>{{ $t('draft.any.versionCaption.draftVersion') }}</strong>
                   </template>
-                </i18n>
+                </i18n-t>
                 <div>
                   <form-version-standard-buttons :version="formDraft.get()"
                     @view-xml="showModal('viewXml')"/>

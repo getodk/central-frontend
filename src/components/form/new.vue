@@ -43,16 +43,16 @@ definition for an existing form -->
           <template v-if="formDraft == null">{{ $t('introduction[0].create') }}</template>
           <template v-else>{{ $t('introduction[0].update') }}</template>
           <sentence-separator/>
-          <i18n :tag="false" path="introduction[1].full">
+          <i18n-t keypath="introduction[1].full">
             <template #tools>
               <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
             </template>
-          </i18n>
+          </i18n-t>
         </p>
         <p v-if="formDraft == null">{{ $t('introduction[2]') }}</p>
       </div>
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
-        <i18n tag="div" path="dropZone.full">
+        <i18n-t tag="div" keypath="dropZone.full">
           <template #chooseOne>
             <input v-show="false" ref="input" type="file" @change="afterChange">
             <button type="button" class="btn btn-primary"
@@ -60,7 +60,7 @@ definition for an existing form -->
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
             </button>
           </template>
-        </i18n>
+        </i18n-t>
         <div v-show="file != null" id="form-new-filename">
           {{ file != null ? file.name : '' }}
         </div>

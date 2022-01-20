@@ -30,7 +30,7 @@ import './assets/css/icomoon.css';
 import './assets/scss/app.scss';
 
 import { StoreAlert } from './util/alert';
-import { $tcPath, $tcn } from './util/i18n';
+import { $tcn } from './util/i18n';
 
 
 
@@ -46,7 +46,4 @@ Vue.prototype.$alert = function $alert() {
 Vue.prototype.$http = axios;
 // Adding $logger makes it easier to silence certain logging during testing.
 Vue.prototype.$logger = console;
-
-// i18n
 Vue.prototype.$tcn = $tcn;
-Vue.prototype.$tcPath = $tcPath;

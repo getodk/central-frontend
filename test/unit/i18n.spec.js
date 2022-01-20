@@ -1,5 +1,6 @@
 import i18n from '../../src/i18n';
 import { flatpickrLocales, loadLocale } from '../../src/util/i18n';
+
 import { i18nProps } from '../util/i18n';
 
 describe('util/i18n', () => {
@@ -65,12 +66,6 @@ describe('util/i18n', () => {
       i18n.setLocaleMessage('la', {
         forms: '{count} Forma | {count} Formae',
         parts: '{name} est omnis divisa in partes {count}.',
-        interpolation: {
-          full: {
-            0: 'Singular',
-            1: 'Plural'
-          }
-        }
       });
       i18n.locale = 'la';
     });
@@ -91,18 +86,6 @@ describe('util/i18n', () => {
       it('uses values', () => {
         const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
         message.should.equal('Gallia est omnis divisa in partes 3.');
-      });
-    });
-
-    describe('$tcPath()', () => {
-      it('returns the correct path for the singular', () => {
-        const path = i18nProps.$tcPath('interpolation.full', 1);
-        path.should.equal('interpolation.full[0]');
-      });
-
-      it('returns the correct path for the plural', () => {
-        const path = i18nProps.$tcPath('interpolation.full', 10);
-        path.should.equal('interpolation.full[1]');
       });
     });
   });

@@ -16,19 +16,19 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="showModal('newFieldKey')">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n tag="p" path="heading[0].full">
+      <i18n-t tag="p" keypath="heading[0].full">
         <template #collect>
           <doc-link to="collect-intro/">ODK Collect</doc-link>
         </template>
         <template #formAccess>
           <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
         </template>
-      </i18n>
-      <i18n tag="p" path="heading[1].full">
+      </i18n-t>
+      <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
           <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
         </template>
-      </i18n>
+      </i18n-t>
     </div>
     <table id="field-key-list-table" class="table">
       <thead>

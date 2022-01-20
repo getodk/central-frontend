@@ -24,21 +24,21 @@ except according to the terms contained in the LICENSE file.
       <p v-if="status">
         {{ $t('steps[1].body[0].status') }}
       </p>
-      <i18n v-else tag="p" path="steps[1].body[0].link.full">
+      <i18n-t v-else tag="p" keypath="steps[1].body[0].link.full">
         <template #upload>
           <router-link :to="formPath('draft')">{{ $t('steps[1].body[0].link.upload') }}</router-link>
         </template>
-      </i18n>
+      </i18n-t>
     </checklist-step>
     <checklist-step v-if="attachments.length !== 0"
       :stage="missingAttachmentCount === 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
-        <i18n :tag="false" path="steps[2].body[0].full">
+        <i18n-t keypath="steps[2].body[0].full">
           <template #mediaFiles>
             <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <doc-link to="central-forms/#forms-with-attachments">{{ $t('clickForInfo') }}</doc-link>
       </p>
@@ -47,11 +47,11 @@ except according to the terms contained in the LICENSE file.
       :stage="formDraft.submissions !== 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[3].title') }}</template>
       <p>
-        <i18n :tag="false" path="steps[3].body[0].full">
+        <i18n-t keypath="steps[3].body[0].full">
           <template #test>
             <router-link :to="formPath('draft/testing')">{{ $t('steps[3].body[0].test') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
@@ -60,11 +60,11 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[4].title') }}</template>
       <p>
         <template v-if="status">{{ $t('steps[4].body[0].status') }}</template>
-        <i18n v-else :tag="false" path="steps[4].body[0].link.full">
+        <i18n-t v-else keypath="steps[4].body[0].link.full">
           <template #publish>
             <router-link :to="formPath('draft')">{{ $t('steps[4].body[0].link.publish') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <doc-link to="central-forms/#working-with-form-drafts">{{ $t('clickForInfo') }}</doc-link>
       </p>
